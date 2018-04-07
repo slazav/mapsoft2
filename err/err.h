@@ -3,16 +3,17 @@
 
 ///\addtogroup libmapsoft
 ///@{
-///\defgroup Err
-///Simple class for exceptions
-///@{
 
 #include <iostream>
 #include <sstream>
 #include <string>
 
 /***********************************************************/
-/** Err -- a simple class for exceptions.
+/** A simple class for exceptions.
+All mapsoft libraries throw human-readable text exceptions using a
+simple Err class. There is also a possibility to transfer an integer error
+code (default -1).
+
 Example:
 ```
 try {
@@ -36,7 +37,10 @@ class Err {
   int c;
 
   public:
+    /// Constructor with optional error code.
     Err(int c_ = -1): c(c_) {}
+
+    /// Copy constructor.
     Err(const Err & o) { c=o.c; s << o.s.str(); }
 
     /// Operator << for error messages.
@@ -46,7 +50,7 @@ class Err {
     /// Get error code.
     int code() const {return c;}
 
-    /// Return error message.
+    /// Get error message.
     std::string str() const { return s.str(); }
 
 };

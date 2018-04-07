@@ -1,23 +1,29 @@
-#ifndef MAPSOFT_POINT_H
-#define MAPSOFT_POINT_H
+#ifndef POINT_H
+#define POINT_H
 
 #include <iostream> // for << and >> operators
+#include <iomanip>
+#include <ios>
 #include <cmath>    // for rint
+#include "err/err.h" // for Err
 
-///\addtogroup 2d
-///@{
-///\defgroup point
+///\addtogroup libmapsoft
 ///@{
 
-/// 2-d point
+/** 2-d point
+  - coordinates of any type
+  - arithmetic (point+point, point*number, -point)
+  - comparison operators
+  - scalar multiplication, vector length
+  - input/output as two-element json arrays
+*/
 template <typename T>
 struct Point {
   T x; ///< x coordinate
   T y; ///< y coordinate
 
-  /// Constructors
-  Point(T _x, T _y): x(_x), y(_y) { }
-  Point(): x(0), y(0) { }
+  /// Constructor
+  Point(T _x=0, T _y=0): x(_x), y(_y) { }
 
   /// Swap point with other one.
   void swap (Point & other) {
@@ -25,163 +31,187 @@ struct Point {
     std::swap (y, other.y);
   }
 
-  /// Subtract corresponding coordinates: p=Point(p.x-other.x, p.y-other.y).
-  Point<T> & operator-= (Point const & other) {
-    x -= other.x;
-    y -= other.y;
-    return *this;
-  }
-  Point<T> & operator- (Point const & other) {
-    x -= other.x;
-    y -= other.y;
-    return *this;
-  }
+  /******************************************************************/
+  // operators +,-,/,*
 
-  /// Add corresponding coordinates: p=Point(p.x+other.x, p.y+other.y).
-  Point<T> & operator+= (Point const & other) {
-    x += other.x;
-    y += other.y;
-    return *this;
-  }
-  Point<T> & operator+ (Point const & other) {
-    x += other.x;
-    y += other.y;
-    return *this;
-  }
+  /// Subtract coordinates
+  Point<T> & operator-= (Point const & other) { x -= other.x; y -= other.y; return *this; }
 
-  /// Divide coordinates by k: p=Point(p.x/k, p.y/k).
-  Point<T> & operator/= (T k) {
-    x /= k;
-    y /= k;
-    return *this;
-  }
-  Point<T> & operator/ (T k) {
-    x /= k;
-    y /= k;
-    return *this;
-  }
+  /// Subtract coordinates
+  Point<T> operator- (Point<T> const & other) const { return Point<T>(x-other.x, y-other.y); }
 
-  /// Multiply coordinates by k: p=Point(p.x*k, p.y*k).
-  Point<T> & operator*= (T k) {
-    x *= k;
-    y *= k;
-    return *this;
-  }
-  Point<T> & operator* (T k) {
-    x *= k;
-    y *= k;
-    return *this;
-  }
+  /// Add coordinates
+  Point<T> & operator+= (Point<T> const & other) { x += other.x; y += other.y; return *this; }
 
-  /// Invert point coordinates.
-  Point<T> & operator- () {
-    x = -x;
-    y = -y;
-    return *this;
-  }
+  /// Add coordinates
+  Point<T> operator+ (Point<T> const & other) const { return Point<T>(x+other.x, y+other.y); }
 
-  /// Less then operator: (x < other.x)  || ((x == other.x) && (y < other.y)).
-  bool operator< (const Point<T> & other) const {
-    return (x<other.x) || ((x==other.x)&&(y<other.y));
-  }
+  /// Divide coordinates by k
+  Point<T> & operator/= (const T k) { x /= k; y /= k; return *this; }
 
-  /// Equal opertator: (x==other.x) && (y==other.y).
-  bool operator== (const Point<T> & other) const {
-    return (x==other.x)&&(y==other.y);
-  }
+  /// Divide coordinates by k
+  Point<T> operator/ (const T k) const { return Point<T>(x/k, y/k); }
 
-  /// Equal opertator: (x==other.x) && (y==other.y).
-  bool operator!= (const Point<T> & other) const {
-    return (x!=other.x)||(y!=other.y);
-  }
+  /// Multiply coordinates by k
+  Point<T> & operator*= (const T k) { x *= k; y *= k; return *this; }
 
-  /// Cast to Point<double>.
+  /// Multiply coordinates by k
+  Point<T> operator* (T k) const { return Point<T>(x*k, y*k); }
+
+  /// Invert point coordinates
+  Point<T> operator- () const { return Point<T>(-x,-y); }
+
+  /******************************************************************/
+  // operators <=>
+
+  /// Less then operator
+  bool operator< (const Point<T> & other) const { return (x<other.x) || ((x==other.x)&&(y<other.y)); }
+
+  /// Equal opertator: (x==other.x) && (y==other.y)
+  bool operator== (const Point<T> & other) const { return (x==other.x)&&(y==other.y); }
+
+  // derived operators:
+  bool operator!= (const Point<T> & other) const { return !(*this==other); } ///< operator!=
+  bool operator>= (const Point<T> & other) const { return !(*this<other);  } ///< operator>=
+  bool operator<= (const Point<T> & other) const { return *this<other || *this==other; } ///< operator<=
+  bool operator>  (const Point<T> & other) const { return !(*this<=other); } ///< operator>
+
+  /******************************************************************/
+
+  /// Cast to Point<double>
   operator Point<double>() const{
     return Point<double>(double(this->x), double(this->y));
   }
 
-  /// Cast to Point<int>.
+  /// Cast to Point<int>
   operator Point<int>() const{
-    return Point<int>(int(rint(this->x)), int(rint(this->y)));
+    return Point<int>(int(this->x), int(this->y));
   }
-//  Point<T> operator+ (Point<T> const & t) { return *$self + t; }
-//  Point<T> operator- (Point<T> const & t) { return *$self - t; }
-//  Point<T> operator/ (T k) { return *$self / k; }
-//  Point<T> operator* (T k) { return *$self * k; }
 
-  /// Calculate manhattan length: abs(x)+abs(y).
-  T mlen () const { return abs(x) + abs(y); }
+  /******************************************************************/
+
+  /// Calculate manhattan length: abs(x) + abs(y)
+  T mlen() const { return ::abs(x) + ::abs(y); }
+
+  /// Calculate length: sqrt(x^2 + y^2).
   double len() const { return sqrt((double)(x*x+y*y));}
-  Point<T> abs() const { return Point<T>(abs(x), abs(y));}
+
+  /// Normalize: *this/len(*this). Error if point is 0
+  /// Throw error i
+  Point<double> norm() const {
+     if (x==0 && y==0) throw Err() << "Point norm: zero length";
+     return Point<double>(*this)/this->len();
+  }
+
+  /// rint function: change coordinates to the nearest integers
+  Point<T> rint() const { return Point<T>((T)::rint(x),(T)::rint(y)); }
+
+  /// floor function: change coordinates to nearest smaller integers
+  Point<T> floor() const { return Point<T>((T)::floor(x),(T)::floor(y)); }
+
+  /// ceil function: change coordinates to nearest larger integers
+  Point<T> ceil() const { return Point<T>((T)::ceil(x),(T)::ceil(y)); }
+
+  /// abs function: change coordinates to their absolute values
+  Point<T> abs() const { return Point<T>(x>0?x:-x, y>0?y:-y); }
 
 };
 
+/******************************************************************/
+
+/// Calculate manhattan length: abs(x) + abs(y)
 /// \relates Point
-/// \brief Output operator: print point as a comma-separated pair of coordinartes.
+template <typename T>
+T mlen (const Point<T> & p) { return p.mlen(); }
+
+/// Calculate length: sqrt(x^2 + y^2)
+/// \relates Point
+template <typename T>
+double len(const Point<T> & p) { return p.len();}
+
+/// Normalize: *this/len(*this). Throw error if point is 0
+/// \relates Point
+template <typename T>
+Point<double> norm(const Point<T> & p) { return p.norm(); }
+
+/// rint function
+/// \relates Point
+template <typename T>
+Point<T> rint(const Point<T> & p){ return p.rint(); }
+
+/// floor function
+/// \relates Point
+template <typename T>
+Point<T> floor(const Point<T> & p){ return p.floor(); }
+
+/// ceil function
+/// \relates Point
+template <typename T>
+Point<T> ceil(const Point<T> & p){ return p.ceil(); }
+
+/// abs function
+/// \relates Point
+template <typename T>
+Point<T> abs(const Point<T> & p){ return p.abs(); }
+
+/******************************************************************/
+
+/// Scalar multiplication: p1.x*p2.x + p1.y*p2.y
+/// \relates Point
+template <typename T>
+double pscal(const Point<T> & p1, const Point<T> & p2){
+  return p1.x*p2.x + p1.y*p2.y;
+}
+
+/// Distance between two points: (p1-p2).len()
+/// \relates Point
+template <typename T>
+double dist(const Point<T> & p1, const Point<T> & p2){
+  return (p1-p2).len();
+}
+
+/******************************************************************/
+
+/// Output operator: print point as a two-element json array
+/// \relates Point
 template <typename T>
 std::ostream & operator<< (std::ostream & s, const Point<T> & p){
-  s << p.x << "," << p.y;
+  s << std::setprecision(8) << "[" << p.x << "," << p.y << "]";
   return s;
 }
 
+/// Input operator: read point from a two-element json array
 /// \relates Point
-/// \brief Input operator: read point from a comma-separated pair of coordainates.
 template <typename T>
 std::istream & operator>> (std::istream & s, Point<T> & p){
   char sep;
+  s >> std::ws >> sep;
+  if (sep!='['){
+    s.setstate(std::ios::failbit);
+    return s;
+  }
   s >> std::ws >> p.x >> std::ws >> sep;
   if (sep!=','){
     s.setstate(std::ios::failbit);
     return s;
   }
-  s >> std::ws >> p.y >> std::ws;
+  s >> std::ws >> p.y >> std::ws >> sep >> std::ws;
+  if (sep!=']'){
+    s.setstate(std::ios::failbit);
+    return s;
+  }
   s.setstate(std::ios::goodbit);
   return s;
 }
 
-/// \relates Point
-/// \brief Scalar multiplication: p1.x*p2.x + p1.y*p2.y.
-template <typename T>
-double pscal(const Point<T> & p1, const Point<T> & p2){
-  return p1.x*p2.x + p1.y*p2.y;
-}
-/// \relates Point
-/// \brief Length: sqrt(double(p.x*p.x + p.y*p.y)).
-/// \todo move to Point class?
-template <typename T>
-double pdist(const Point<T> & p){
-  return sqrt((double)(pscal(p,p)));
-}
-/// \relates Point
-/// \brief Distance: pdist(p1-p2).
-template <typename T>
-double pdist(const Point<T> & p1, const Point<T> & p2){
-  return pdist(p1-p2);
-}
-/// \relates Point
-/// \brief Normalize.
-/// \todo move to Point class?
-template <typename T>
-Point<double> pnorm(const Point<T> & p){
-  double l = pdist(p);
-  return Point<double>(double(p.x)/l, double(p.y/l));
-}
-/// \relates Point
-/// \brief Absolute value.
-/// \todo move to Point class?
-template <typename T>
-Point<T> pabs(const Point<T> & p){
-  return Point<T>(
-    p.x>0?p.x:-p.x,
-    p.y>0?p.y:-p.y
-  );
-}
+/******************************************************************/
 
+/// Point with double coordinates
 /// \relates Point
-/// \brief Point with double coordinates
 typedef Point<double> dPoint;
-/// \relates Point
-/// \brief Point with int coordinates
-typedef Point<int>    iPoint;
 
-#endif /* MAPSOFT_POINT_H */
+/// Point with int coordinates
+/// \relates Point
+typedef Point<int> iPoint;
+
+#endif

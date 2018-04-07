@@ -29,10 +29,12 @@ if os.getenv('PKG_CONFIG_PATH'):
 # env_loc.UseLibs('glibmm-2.4 gtkmm-2.4 gthread-2.0')
 # env_loc.UseLibs('cairomm-1.0 pixman-1 freetype2 libusb-1.0')
 
+env_loc.UseLibs('jansson')
+
 # all source files
 objects = Split ("""
+  opt/opt.cpp
 """)
-#  err/err.cpp
 
 env_loc.StaticLibrary('mapsoft', objects)
 
@@ -49,8 +51,12 @@ map(env_loc.Program, programs)
 
 simple_tests=Split("""
   err/err.test.cpp
-  ozi/ozi.test.cpp
+  opt/opt.test.cpp
   2d/point.test.cpp
+  2d/rect.test.cpp
+  2d/line.test.cpp
+
+  ozi/ozi.test.cpp
 """)
 
 import os

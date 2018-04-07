@@ -1,5 +1,5 @@
 #include <cassert>
-#include "point.h"
+#include "multiline.h"
 #include "opt/opt.h"
 
 main(){
@@ -112,45 +112,31 @@ main(){
   assert(dist(p1,iPoint(0,0)) == 5);
 
   // input/output (also check that dPoint is printed with setprecision(8))
-  assert(type_to_str(dPoint(0,0)) == "[0,0]");
-  assert(type_to_str(iPoint(1,3)) == "[1,3]");
-  assert(type_to_str(iPoint(1000000000,-1000000000)) == "[1000000000,-1000000000]");
-  assert(type_to_str(dPoint(1.23,3.45)) == "[1.23,3.45]");
-  assert(type_to_str(dPoint(-1.23,-3.45)) == "[-1.23,-3.45]");
-  assert(type_to_str(dPoint(-1.23e1,-3.45e-1)) == "[-12.3,-0.345]");
-  assert(type_to_str(dPoint(-1.23e5,-3.45e-5)) == "[-123000,-3.45e-05]");
-  assert(type_to_str(dPoint(-1.23e8,-3.45e-8)) == "[-1.23e+08,-3.45e-08]");
-  assert(type_to_str(dPoint(-1.23e15,-3.45e-12)) == "[-1.23e+15,-3.45e-12]");
-  assert(type_to_str(dPoint(8000000,9000000)) == "[8000000,9000000]");
-  assert(type_to_str(dPoint(80000000,90000000)) == "[80000000,90000000]");
-  assert(type_to_str(dPoint(800000001,900000001)) == "[8e+08,9e+08]");
+  assert(type_to_str(dPoint()) == "0,0");
+  assert(type_to_str(iPoint(1,3)) == "1,3");
+  assert(type_to_str(iPoint(1000000000,-1000000000)) == "1000000000,-1000000000");
+  assert(type_to_str(dPoint(1.23,3.45)) == "1.23,3.45");
+  assert(type_to_str(dPoint(-1.23,-3.45)) == "-1.23,-3.45");
+  assert(type_to_str(dPoint(-1.23e1,-3.45e-1)) == "-12.3,-0.345");
+  assert(type_to_str(dPoint(-1.23e5,-3.45e-5)) == "-123000,-3.45e-05");
+  assert(type_to_str(dPoint(-1.23e8,-3.45e-8)) == "-1.23e+08,-3.45e-08");
+  assert(type_to_str(dPoint(-1.23e15,-3.45e-12)) == "-1.23e+15,-3.45e-12");
+  assert(type_to_str(dPoint(8000000,9000000)) == "8000000,9000000");
+  assert(type_to_str(dPoint(80000000,90000000)) == "80000000,90000000");
+  assert(type_to_str(dPoint(800000001,900000001)) == "8e+08,9e+08");
 
-  assert(str_to_type<dPoint>("[0,0]") == dPoint(0,0));
-  assert(str_to_type<iPoint>("[1,3]") == iPoint(1,3));
-  assert(str_to_type<iPoint>("[1000000000,-1000000000]") == iPoint(1000000000,-1000000000));
-  assert(str_to_type<dPoint>("[1.23,3.45]") == dPoint(1.23,3.45));
-  assert(str_to_type<dPoint>("[-1.23,-3.45]") == dPoint(-1.23,-3.45));
-  assert(str_to_type<dPoint>("[-1.23e1,-3.45e-1]") == dPoint(-1.23e1,-3.45e-1));
-  assert(str_to_type<dPoint>("[-1.23e5,-3.45e-5]") == dPoint(-1.23e5,-3.45e-5));
-  assert(str_to_type<dPoint>("[-1.23e8,-3.45e-8]") == dPoint(-1.23e8,-3.45e-8));
-  assert(str_to_type<dPoint>("[-1.23e15,-3.45e-12]") == dPoint(-1.23e15,-3.45e-12));
-  assert(str_to_type<dPoint>("[8000000,9000000]") == dPoint(8000000,9000000));
-  assert(str_to_type<dPoint>("[80000000,90000000]") == dPoint(80000000,90000000));
-  assert(str_to_type<dPoint>("[800000001,900000001]") == dPoint(800000001,900000001));
-
-  assert(str_to_type<dPoint>(" [ 0 , 1 ] ") == dPoint(0,1));
-
-  try { str_to_type<dPoint>(" [ 0 , 1 "); }
-  catch (Err e) { assert(e.str() == "can't parse value:  [ 0 , 1 "); }
-
-  try { str_to_type<dPoint>("0,1"); }
-  catch (Err e) { assert(e.str() == "can't parse value: 0,1"); }
-
-  try { str_to_type<dPoint>("[0.1]"); }
-  catch (Err e) { assert(e.str() == "can't parse value: [0.1]"); }
-
-  try { str_to_type<dPoint>("[0,1]a"); }
-  catch (Err e) { assert(e.str() == "can't parse value: [0,1]a"); }
+  assert(str_to_type<dPoint>("0,0") == dPoint());
+  assert(str_to_type<iPoint>("1,3") == iPoint(1,3));
+  assert(str_to_type<iPoint>("1000000000,-1000000000") == iPoint(1000000000,-1000000000));
+  assert(str_to_type<dPoint>("1.23,3.45") == dPoint(1.23,3.45));
+  assert(str_to_type<dPoint>("-1.23,-3.45") == dPoint(-1.23,-3.45));
+  assert(str_to_type<dPoint>("-1.23e1,-3.45e-1") == dPoint(-1.23e1,-3.45e-1));
+  assert(str_to_type<dPoint>("-1.23e5,-3.45e-5") == dPoint(-1.23e5,-3.45e-5));
+  assert(str_to_type<dPoint>("-1.23e8,-3.45e-8") == dPoint(-1.23e8,-3.45e-8));
+  assert(str_to_type<dPoint>("-1.23e15,-3.45e-12") == dPoint(-1.23e15,-3.45e-12));
+  assert(str_to_type<dPoint>("8000000,9000000") == dPoint(8000000,9000000));
+  assert(str_to_type<dPoint>("80000000,90000000") == dPoint(80000000,90000000));
+  assert(str_to_type<dPoint>("800000001,900000001") == dPoint(800000001,900000001));
 
   }
   catch (Err e) {

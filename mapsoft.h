@@ -4,8 +4,13 @@
 // error handling
 #include <err/err.h>
 
-// reading/writing OziExplorer files
-#include <2d/2d.h>
+// mapsoft options
+#include <opt/opt.h>
+
+// 2D points, lines, rectangles
+#include <2d/point.h>
+#include <2d/line.h>
+#include <2d/multiline.h>
 
 // reading/writing OziExplorer files
 #include <ozi/ozi.h>
