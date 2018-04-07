@@ -11,7 +11,7 @@
 #include "err/err.h"
 #include "jansson.h"
 
-///\addtogroup mapsoft
+///\addtogroup libmapsoft
 ///@{
 
 
@@ -191,20 +191,24 @@ struct Line : std::vector<Point<T> > {
 /******************************************************************/
 
 /// Calculate line length.
+/// \relates Line
 template <typename T>
 double length(const Line<T> & l){ return l.length(); }
 
 /// Invert line.
+/// \relates Line
 template <typename T>
 Line<T> invert(const Line<T> & l) { return l.invert(); }
 
 /// Is line l just shifted version of this. Shift is returned
+/// \relates Line
 template <typename T>
 bool is_shifted(const Line<T> & l1, const Line<T> & l2, Point<T> & shift){
   return l1.is_shifted(l2, shift);
 }
 
 /// Line bounding box
+/// \relates Line
 template <typename T>
 Rect<T> bbox(const Line<T> & l) { return l.bbox(); }
 
@@ -221,17 +225,14 @@ std::ostream & operator<< (std::ostream & s, const Line<T> & l){
   return s;
 }
 
-/// \relates Rect
-/// \brief Input operator: read Line from a JSON array of points
-/// \note This >> operator is different from that in
+/// Input operator: read Line from a JSON array of points
+/// This >> operator is different from that in
 /// Point or Rect. It always reads the whole stream and
 /// returns error if there are extra characters.
 /// No possibility to read two objects from one stream.
+/// \relates Line
 template <typename T>
 std::istream & operator>> (std::istream & s, Line<T> & l){
-  Point<T> pt;
-  char sep;
-
   // read the whole stream into a string
   std::ostringstream os;
   s>>os.rdbuf();

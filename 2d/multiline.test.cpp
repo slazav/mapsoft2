@@ -5,138 +5,101 @@
 main(){
   try{
 
-  // constructors
-  iPoint p1, p2(1,1), p3(-1,-2);
-  assert(p1==iPoint(0,0));
+  iMultiLine ml1;
+  iLine l1 = str_to_type<iLine>("[[0,1],[2,3]]");
+  iLine l2 = str_to_type<iLine>("[[4,5],[6,7]]");
+  iMultiLine ml2;
+  ml2.push_back(l1);
+  ml2.push_back(l2);
+  assert(ml1.size() == 0);
+  assert(ml2.size() == 2);
 
-  // =, !=
-  assert(iPoint(0,0)==iPoint(0,0));
-  assert(iPoint(0,0)!=iPoint(1,1));
+  assert(type_to_str(ml2) == "[[[0,1],[2,3]],[[4,5],[6,7]]]");
+  assert(type_to_str(ml1) == "[]");
 
-  // swap
-  p1.swap(p2);
-  assert(p1==iPoint(1,1));
+  // +,-,*,/
+  iPoint p(1,2);
+  assert(type_to_str(ml2+p) == "[[[1,3],[3,5]],[[5,7],[7,9]]]");
+  assert(type_to_str(ml2-p) == "[[[-1,-1],[1,1]],[[3,3],[5,5]]]");
+  assert(type_to_str(ml2*2) == "[[[0,2],[4,6]],[[8,10],[12,14]]]");
+  assert(type_to_str(ml2/2) == "[[[0,0],[1,1]],[[2,2],[3,3]]]");
 
-  // += -= *= /=
-  p1+=p1;
-  assert(p1==iPoint(2,2));
-  p1/=2;
-  assert(p1==iPoint(1,1));
-  p1*=10;
-  assert(p1==iPoint(10,10));
-  p1-=p1;
-  assert(p1==iPoint(0,0));
+  assert(type_to_str(ml2+=p) == "[[[1,3],[3,5]],[[5,7],[7,9]]]");
+  assert(type_to_str(ml2-=p) == "[[[0,1],[2,3]],[[4,5],[6,7]]]");
+  assert(type_to_str(ml2*=2) == "[[[0,2],[4,6]],[[8,10],[12,14]]]");
+  assert(type_to_str(ml2/=2) == "[[[0,1],[2,3]],[[4,5],[6,7]]]");
 
-  // + - * /
-  assert(iPoint(1,2) + iPoint(2,3) == iPoint(3,5));
-  assert(iPoint(3,4) - iPoint(1,-1) == iPoint(2,5));
-  assert(iPoint(3,4)*2 == iPoint(6,8));
-  assert(iPoint(3,4)/2 == iPoint(1,2));
+  // <=>
+  assert(ml1 == iMultiLine());
+  ml1=ml2; // Multilines are equal
+  assert(  ml1==ml2);
+  assert(!(ml1!=ml2));
+  assert(ml1 >= ml2);
+  assert(ml1 <= ml2);
+  assert(!(ml1>ml2));
+  assert(!(ml1<ml2));
+  *(ml1.rbegin()->rbegin()) = iPoint(10,10); // Last segment of ml1 shorter
+  assert(ml1 !=  ml2);
+  assert(ml1 >  ml2);
+  assert(ml1 >= ml2);
+  assert(ml2 <  ml1);
+  assert(ml2 <= ml1);
+  ml1.rbegin()->resize(ml1.rbegin()->size()-1); // ml2 shorter
+  assert(ml1 !=  ml2);
+  assert(ml1 <  ml2);
+  assert(ml1 <= ml2);
+  assert(ml2 >  ml1);
+  assert(ml2 >= ml1);
+  ml2.resize(ml2.size()-1);
+  assert(ml1 !=  ml2);
+  assert(ml1 >  ml2);
+  assert(ml1 >= ml2);
+  assert(ml2 <  ml1);
+  assert(ml2 <= ml1);
 
-  assert(dPoint(1,2) + dPoint(2,3) == dPoint(3,5));
-  assert(dPoint(3,4) - dPoint(1,-1) == dPoint(2,5));
-  assert(dPoint(3,4)*2 == dPoint(6,8));
-  assert(dPoint(3,4)/2 == dPoint(1.5,2));
+  // length, bbox
+  ml2.clear();
+  ml1.clear();
+  ml2.push_back(l1);
+  ml2.push_back(l2);
+  assert(ml1.length() == 0);
+  assert(ml2.length() == l1.length()+l2.length());
+  assert(length(ml2) == l1.length()+l2.length());
 
-  p1=iPoint(1,2);
-  p1-5;
-  assert(p1 == iPoint(1,2));
-  p1+5;
-  assert(p1 == iPoint(1,2));
-  p1*5;
-  assert(p1 == iPoint(1,2));
-  p1/5;
-  assert(p1 == iPoint(1,2));
+  assert(ml1.bbox() == iRect());
+  assert(ml2.bbox() == expand(l1.bbox(),l2.bbox()));
+  assert(bbox(ml2) == ml2.bbox());
 
-  // -
-  assert(-iPoint(1,2) == iPoint(-1,-2));
+  // iLine <-> dLine casting
+  assert(dMultiLine(str_to_type<iMultiLine>("[[[0,0],[2,0],[2,2]],[]]")) ==
+                    str_to_type<dMultiLine>("[[[0,0],[2,0],[2,2]],[]]"));
+  assert(iMultiLine(str_to_type<dMultiLine>("[[[0.8,0.2],[2.1,0.2],[2.2,2.9]],[]]")) ==
+                    str_to_type<iMultiLine>("[[[0,0],[2,0],[2,2]],[]]"));
 
-  // < > =
-  assert(iPoint(1,2) < iPoint(1,3));
-  assert(iPoint(1,2) <= iPoint(1,3));
-  assert(iPoint(1,2) <= iPoint(1,2));
-  assert(iPoint(2,1) >= iPoint(1,2));
-  assert(iPoint(2,1) >= iPoint(2,1));
-  assert(iPoint(2,1) > iPoint(2,0));
+  // input/output
+  assert(type_to_str(str_to_type<iMultiLine>("[[[0,0],[2,0],[2,2]],[]]")) ==
+         "[[[0,0],[2,0],[2,2]],[]]");
 
-  // dPoint -> iPoint
-  assert(iPoint(2,1) == (iPoint)(dPoint(2,1)));
-  assert(iPoint(2,1) == (iPoint)(dPoint(2.8,1.2)));
+  assert(type_to_str(str_to_type<iMultiLine>("[[[0,0],[2,0],[2,2]],[]] ")) ==
+         "[[[0,0],[2,0],[2,2]],[]]");
 
+  assert(type_to_str(str_to_type<iMultiLine>("[]")) ==
+         "[]");
 
-  // mlen/len/norm
-  p1=iPoint(3,4);
-  p2=iPoint(10,0);
-  assert(p1.mlen() == 7);
-  assert(mlen(p1) == 7);
-  assert(p1.len() == 5);
-  assert(len(p1) == 5);
+  assert(type_to_str(str_to_type<iMultiLine>("[[]]")) ==
+         "[[]]");
+  assert(type_to_str(str_to_type<iMultiLine>("[[],[]]")) ==
+         "[[],[]]");
 
-  assert(p2.norm() == dPoint(1,0));
-  assert(norm(p2) == dPoint(1,0));
+  try { str_to_type<iMultiLine>("[[[0,0],[2,0],[2,2]]]a"); }
+  catch (Err e) {assert(e.str() == "end of file expected near 'a'");}
 
-  try {
-    norm(dPoint(0,0));
-    assert(false);
-  }
-  catch (Err e){
-    assert(e.str() == "Point norm: zero length");
-  }
+  try { str_to_type<iMultiLine>("[[[0,0],[2,0],[2,2"); }
+  catch (Err e) {assert(e.str() == "']' expected near end of file");}
 
-  // rint/floor/ceil/abs
-  dPoint dp1(1.1,2.8), dp2(-0.1,-3.9);
+  try { str_to_type<iMultiLine>("[0,0],[2,0],[2,2]"); }
+  catch (Err e) {assert(e.str() == "end of file expected near ','");}
 
-  assert(iPoint(rint(dp1)) == iPoint(1,3));
-  assert(iPoint(dp1.rint()) == iPoint(1,3));
-  assert(iPoint(rint(dp2)) == iPoint(0,-4));
-  assert(iPoint(dp2.rint()) == iPoint(0,-4));
-
-  assert(iPoint(floor(dp1)) == iPoint(1,2));
-  assert(iPoint(dp1.floor()) == iPoint(1,2));
-  assert(iPoint(floor(dp2)) == iPoint(-1,-4));
-  assert(iPoint(dp2.floor()) == iPoint(-1,-4));
-  assert(iPoint(ceil(dp2)) == iPoint(0,-3));
-  assert(iPoint(dp2.ceil()) == iPoint(0,-3));
-
-  assert(abs(dp1) == dp1);
-  assert(dp1.abs() == dp1);
-  assert(abs(dp2) == -dp2);
-  assert(dp2.abs() == -dp2);
-
-  // pscal, dist
-  p1=iPoint(3,4);
-  p2=iPoint(10,0);
-  assert(pscal(p1,p2) == 30);
-  assert(pscal(p1,p1) == 25);
-  assert(dist(p1,p1) == 0);
-  assert(dist(p1,iPoint(0,0)) == 5);
-
-  // input/output (also check that dPoint is printed with setprecision(8))
-  assert(type_to_str(dPoint()) == "0,0");
-  assert(type_to_str(iPoint(1,3)) == "1,3");
-  assert(type_to_str(iPoint(1000000000,-1000000000)) == "1000000000,-1000000000");
-  assert(type_to_str(dPoint(1.23,3.45)) == "1.23,3.45");
-  assert(type_to_str(dPoint(-1.23,-3.45)) == "-1.23,-3.45");
-  assert(type_to_str(dPoint(-1.23e1,-3.45e-1)) == "-12.3,-0.345");
-  assert(type_to_str(dPoint(-1.23e5,-3.45e-5)) == "-123000,-3.45e-05");
-  assert(type_to_str(dPoint(-1.23e8,-3.45e-8)) == "-1.23e+08,-3.45e-08");
-  assert(type_to_str(dPoint(-1.23e15,-3.45e-12)) == "-1.23e+15,-3.45e-12");
-  assert(type_to_str(dPoint(8000000,9000000)) == "8000000,9000000");
-  assert(type_to_str(dPoint(80000000,90000000)) == "80000000,90000000");
-  assert(type_to_str(dPoint(800000001,900000001)) == "8e+08,9e+08");
-
-  assert(str_to_type<dPoint>("0,0") == dPoint());
-  assert(str_to_type<iPoint>("1,3") == iPoint(1,3));
-  assert(str_to_type<iPoint>("1000000000,-1000000000") == iPoint(1000000000,-1000000000));
-  assert(str_to_type<dPoint>("1.23,3.45") == dPoint(1.23,3.45));
-  assert(str_to_type<dPoint>("-1.23,-3.45") == dPoint(-1.23,-3.45));
-  assert(str_to_type<dPoint>("-1.23e1,-3.45e-1") == dPoint(-1.23e1,-3.45e-1));
-  assert(str_to_type<dPoint>("-1.23e5,-3.45e-5") == dPoint(-1.23e5,-3.45e-5));
-  assert(str_to_type<dPoint>("-1.23e8,-3.45e-8") == dPoint(-1.23e8,-3.45e-8));
-  assert(str_to_type<dPoint>("-1.23e15,-3.45e-12") == dPoint(-1.23e15,-3.45e-12));
-  assert(str_to_type<dPoint>("8000000,9000000") == dPoint(8000000,9000000));
-  assert(str_to_type<dPoint>("80000000,90000000") == dPoint(80000000,90000000));
-  assert(str_to_type<dPoint>("800000001,900000001") == dPoint(800000001,900000001));
 
   }
   catch (Err e) {

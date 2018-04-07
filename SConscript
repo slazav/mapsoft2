@@ -55,6 +55,7 @@ simple_tests=Split("""
   2d/point.test.cpp
   2d/rect.test.cpp
   2d/line.test.cpp
+  2d/multiline.test.cpp
 
   ozi/ozi.test.cpp
 """)

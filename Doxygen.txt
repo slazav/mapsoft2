@@ -8,6 +8,7 @@ There is some global information for doxyden documentation.
 - \ref Opt        "Opt: Mapsoft options"
 - \ref Point      "Point: 2D point/vector"
 - \ref Rect       "Rect:  2D rectangle"
-- \ref Line       "Line:  2D line, std::vector<Point>"
+- \ref Line       "Line:  2D line (std::vector of Point)"
+- \ref MultiLine  "MultiLine: Line with multiple segments (std::vector of Line)"
 
 */

@@ -169,6 +169,53 @@ main(){
     assert(!iRect(p0,p1).contains(iRect()));
   }
 
+  //same with separate functions
+  {
+    assert (pump(iRect(1,1,2,2),1)    == iRect(0,0,4,4));
+    assert (pump(iRect(1,1,2,2),-1)   == iRect(2,2,0,0));
+    assert (pump(iRect(1,1,2,2),-2)   == iRect());
+    assert (pump(iRect(1,1,2,2),1,0)  == iRect(0,1,4,2));
+    assert (pump(iRect(1,1,2,2),-1,0) == iRect(2,1,0,2));
+    assert (pump(iRect(1,1,2,2),-2,0) == iRect());
+    assert (pump(iRect(1,1,2,2),0,1)  == iRect(1,0,2,4));
+    assert (pump(iRect(1,1,2,2),0,-1) == iRect(1,2,2,0));
+    assert (pump(iRect(1,1,2,2),0,-2) == iRect());
+    try { pump(iRect(),1); } catch (Err e) { assert(e.str() == "Empty rectangle in pump()"); }
+    try { pump(iRect(),1,2); } catch (Err e) { assert(e.str() == "Empty rectangle in pump()"); }
+
+    iPoint p0(0,0), p1(1,2), p2(2,3);
+    assert(expand(iRect(),p1) == iRect(p1,p1));
+    assert(expand(iRect(p0,p0),p1) == iRect(p0,p1));
+    assert(expand(iRect(p1,p2),p0) == iRect(p0,p2));
+
+    assert(expand(iRect(),iRect(p0,p0)) == iRect(p0,p0));
+    assert(expand(iRect(p0,p0),iRect()) == iRect(p0,p0));
+    assert(expand(iRect(p0,p1),iRect(p0,p0)) == iRect(p0,p1));
+    assert(expand(iRect(p0,p1),iRect(p1,p2)) == iRect(p0,p2));
+    assert(expand(iRect(p1,p2),iRect(p0,p1)) == iRect(p0,p2));
+    assert(expand(iRect(p1,p2),iRect(p0,p2)) == iRect(p0,p2));
+
+    assert(intersect(iRect(),iRect(p0,p0)) == iRect());
+    assert(intersect(iRect(p1,p2),iRect()) == iRect());
+    assert(intersect(iRect(p1,p2),iRect(p0,p0)) == iRect());
+    assert(intersect(iRect(p1,p2),iRect(p0,p1)) == iRect(p1,p1));
+    assert(intersect(iRect(p0,p1),iRect(p1,p2)) == iRect(p1,p1));
+    assert(intersect(iRect(p0,p2),iRect(p1,p2)) == iRect(p1,p2));
+
+    assert(!contains(iRect(),p0));
+    assert(contains(iRect(p0,p2),p0));
+    assert(contains(iRect(p0,p2),p2));
+    assert(contains(iRect(p0,p2),iRect(p0,p0)));
+    assert(contains(iRect(p0,p2),iRect(p2,p2)));
+    assert(contains(iRect(p0,p2),iRect(p1,p1)));
+    assert(contains(iRect(p0,p2),iRect(p1,p2)));
+    assert(contains(iRect(p0,p2),iRect(p0,p2)));
+    assert(!contains(iRect(p0,p1),iRect(p0,p2)));
+    assert(!contains(iRect(p0,p1),iRect(p2,p2)));
+    assert(!contains(iRect(p0,p1),iRect()));
+  }
+
+
 /*
   // tile_cover, tile_in
   {

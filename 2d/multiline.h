@@ -2,66 +2,70 @@
 #define MULTILINE_H
 
 #include <iostream>
-//#include <ios>
+#include <ios>
 #include <cmath>
 #include <list>
 #include <vector>
+#include "line.h"
 #include "point.h"
 
-///\addtogroup mapsoft
+///\addtogroup libmapsoft
 ///@{
 
-/// 2d line:  std::vector<Point<T> >.
-
-/// Line with multiple segments (std::vector<Line<T> >)
+/// Line with multiple segments (std::vector of Line)
 template <typename T>
-struct MultiLine : std::vector<Line<T> >
-#ifndef SWIG
-    , public boost::additive<MultiLine<T> >,
-    public boost::additive<MultiLine<T>, Point<T> >,
-    public boost::multiplicative<MultiLine<T>,T>,
-    public boost::less_than_comparable<MultiLine<T> >,
-    public boost::equality_comparable<MultiLine<T> >
-#endif  //SWIG
-{
+struct MultiLine : std::vector<Line<T> > {
 
-  /// Divide coordinates by k.
-  MultiLine<T> & operator/= (T k) {
-    for (typename MultiLine<T>::iterator i=this->begin(); i!=this->end(); i++) (*i)/=k;
-    return *this;
-  }
+  /******************************************************************/
+  // operators +,-,/,*
 
-  /// Multiply coordinates by k.
-  MultiLine<T> & operator*= (T k) {
-    for (typename MultiLine<T>::iterator i=this->begin(); i!=this->end(); i++) (*i)*=k;
-    return *this;
-  }
-
-  /// Add p to every point of line.
-  MultiLine<T> & operator+= (Point<T> p) {
+  /// Add p to every point (shift the line)
+  MultiLine<T> & operator+= (const Point<T> & p) {
     for (typename MultiLine<T>::iterator i=this->begin(); i!=this->end(); i++) (*i)+=p;
     return *this;
   }
 
-  /// Subtract p from every point of line.
-  MultiLine<T> & operator-= (Point<T> p) {
+  /// Subtract p from every point of line
+  MultiLine<T> & operator-= (const Point<T> & p) {
     for (typename MultiLine<T>::iterator i=this->begin(); i!=this->end(); i++) (*i)-=p;
     return *this;
   }
 
-  /// Calculate sum of line lengths.
-  double length () const {
-    double ret=0;
-    for(typename MultiLine<T>::const_iterator i=this->begin(); i!=this->end(); i++)
-      ret+=i->length();
-    return ret;
+  /// Divide coordinates by k
+  MultiLine<T> & operator/= (const T k) {
+    for (typename MultiLine<T>::iterator i=this->begin(); i!=this->end(); i++) (*i)/=k;
+    return *this;
   }
 
-#ifndef SWIG
+  /// Multiply coordinates by k
+  MultiLine<T> & operator*= (const T k) {
+    for (typename MultiLine<T>::iterator i=this->begin(); i!=this->end(); i++) (*i)*=k;
+    return *this;
+  }
+
+  /// Add p to every point (shift the line)
+  MultiLine<T> operator+ (const Point<T> & p) const { MultiLine<T> ret(*this); return ret+=p; }
+
+  /// Subtract p from every point (shift the line)
+  MultiLine<T> operator- (const Point<T> & p) const { MultiLine<T> ret(*this); return ret-=p; }
+
+  /// Divide coordinates by k
+  MultiLine<T> operator/ (const T k) const { MultiLine<T> ret(*this); return ret/=k; }
+
+  /// Multiply coordinates by k
+  MultiLine<T> operator* (const T k) const { MultiLine<T> ret(*this); return ret*=k; }
+
+  /// Invert coordinates
+  MultiLine<T> & operator- () const {
+    for (typename MultiLine<T>::iterator i=this->begin(); i!=this->end(); i++) (*i)=-(*i);
+    return *this;
+  }
+
+  /******************************************************************/
+  // operators <=>
   /// Less then operator.
-  /// меньше, если первая отличающаяся линия меньше,
-  /// или не существует
-  bool operator< (const MultiLine<T> & p) const {
+  /// L1 is smaller then L2 if first different line in L1 is smaller or does not exist.
+  bool operator< (const Line<T> & p) const {
     typename MultiLine<T>::const_iterator i1=this->begin(), i2=p.begin();
     do {
       if (i1==this->end()){
@@ -76,7 +80,7 @@ struct MultiLine : std::vector<Line<T> >
   }
 
   /// Equal opertator.
-  bool operator== (const MultiLine<T> & p) const {
+  bool operator== (const Line<T> & p) const {
     if (this->size()!=p.size()) return false;
     typename MultiLine<T>::const_iterator i1=this->begin(), i2=p.begin();
     do {
@@ -85,25 +89,35 @@ struct MultiLine : std::vector<Line<T> >
       i1++; i2++;
     } while(1);
   }
-#endif
 
-  /// MultiLine range.
-  Rect<T> range() const{
-    if (this->size()<1) return Rect<T>(0,0,0,0);
-    typename MultiLine<T>::const_iterator i=this->begin();
-    Rect<T> ret=i->range();
-    while ((++i) != this->end())  ret = rect_bounding_box(ret, i->range());
+  // derived operators:
+  bool operator!= (const Point<T> & other) const { return !(*this==other); } ///< operator!=
+  bool operator>= (const Point<T> & other) const { return !(*this<other);  } ///< operator>=
+  bool operator<= (const Point<T> & other) const { return *this<other || *this==other; } ///< ope
+  bool operator>  (const Point<T> & other) const { return !(*this<=other); } ///< operator>
+
+  /******************************************************************/
+
+  /// MultiLine length (sum of segment lengths).
+  double length () const {
+    double ret=0;
+    typename MultiLine<T>::const_iterator i;
+    for(i=this->begin(); i!=this->end(); i++) ret+=i->length();
     return ret;
   }
 
-  /// Center of the range.
-  /// \todo use the same name for Line, MultiLine and Rect?
-  Point<T> center() const{
-    return range().CNT();
+  /// MultiLine bounding box.
+  Rect<T> bbox() const{
+    if (this->size()<1) return Rect<T>();
+    typename MultiLine<T>::const_iterator i=this->begin();
+    Rect<T> ret=i->bbox();
+    while ((++i) != this->end())  ret = expand(ret, i->bbox());
+    return ret;
   }
 
-#ifndef SWIG
-  /// Cast to MultiLine<double>
+  /******************************************************************/
+
+  /// Cast to MultiLine<double>.
   operator MultiLine<double>() const{
     MultiLine<double> ret;
     for (typename MultiLine<T>::const_iterator i=this->begin(); i!=this->end(); i++)
@@ -111,23 +125,96 @@ struct MultiLine : std::vector<Line<T> >
     return ret;
   }
 
-  /// Cast to MultiLine<int>
+  /// Cast to MultiLine<int>.
   operator MultiLine<int>() const{
     MultiLine<int> ret;
     for (typename MultiLine<T>::const_iterator i=this->begin(); i!=this->end(); i++)
       ret.push_back(iLine(*i));
     return ret;
   }
-#else  //SWIG
-  %extend {
-    MultiLine<T> operator+ (Point<T> &p) { return *$self + p; }
-    MultiLine<T> operator- (Point<T> &p) { return *$self - p; }
-    MultiLine<T> operator* (T p) { return *$self * p; }
-    MultiLine<T> operator/ (T p) { return *$self / p; }
-    swig_cmp(MultiLine<T>);
-  }
-#endif  //SWIG  
 };
+
+/******************************************************************/
+
+/// Calculate MultiLine length.
+/// \relates MultiLine
+template <typename T>
+double length(const MultiLine<T> & l){ return l.length(); }
+
+/// MultiLine bounding box
+/// \relates MultiLine
+template <typename T>
+Rect<T> bbox(const MultiLine<T> & l) { return l.bbox(); }
+
+/******************************************************************/
+
+/// \relates MultiLine
+/// \brief Output operator: print Line as a JSON array of lines
+template <typename T>
+std::ostream & operator<< (std::ostream & s, const MultiLine<T> & l){
+  s << "[";
+  for (typename MultiLine<T>::const_iterator i=l.begin(); i!=l.end(); i++)
+    s << ((i==l.begin())? "":",") << *i;
+  s << "]";
+  return s;
+}
+
+/// \brief Input operator: read Line from a JSON array of points
+/// \note This >> operator is different from that in
+/// Point or Rect. It always reads the whole stream and
+/// returns error if there are extra characters.
+/// No possibility to read two objects from one stream.
+
+/// \todo Move json code somewhere else.
+
+/// \relates MultiLine
+template <typename T>
+std::istream & operator>> (std::istream & s, MultiLine<T> & ml){
+  // read the whole stream into a string
+  std::ostringstream os;
+  s>>os.rdbuf();
+  std::string str=os.str();
+
+  json_error_t e;
+  json_t *J = json_loadb(str.data(), str.size(), 0, &e);
+  ml.clear();  // clear old contents
+
+  try {
+    if (!J)
+      throw Err() << e.text;
+    if (!json_is_array(J))
+      throw Err() << "Reading MultiLine: a JSON array is expected";
+
+    json_t *L;
+    size_t il;
+    json_array_foreach(J, il, L){
+      if (!json_is_array(L))
+        throw Err() << "Reading MultiLine segment: a JSON array is expected";
+      json_t *P;
+      size_t ip;
+      Line<T> ll;
+      json_array_foreach(L, ip, P){
+        if (!json_is_array(P) || json_array_size(P)!=2)
+          throw Err() << "Reading line point: a JSON two-element array is expected";
+        json_t *X = json_array_get(P, 0);
+        json_t *Y = json_array_get(P, 1);
+        if (!X || !Y || !json_is_number(X) || !json_is_number(Y))
+          throw Err() << "Reading line point: a numerical values expected";
+        ll.push_back(Point<T>(json_number_value(X), json_number_value(Y)));
+      }
+      ml.push_back(ll);
+    }
+  }
+  catch (Err e){
+    json_decref(J);
+    throw e;
+  }
+  json_decref(J);
+  return s;
+}
+
+
+/******************************************************************/
 
 /// MultiLine with double coordinates
 /// \relates MultiLine
@@ -135,6 +222,6 @@ typedef MultiLine<double> dMultiLine;
 
 /// MultiLine with int coordinates
 /// \relates MultiLine
-typedef MultiLine<int>    iMultiLine;
+typedef MultiLine<int> iMultiLine;
 
 #endif

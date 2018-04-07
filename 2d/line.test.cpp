@@ -80,7 +80,7 @@ main(){
   assert(dLine(str_to_type<iLine>("[[0,0],[2,0],[2,2]]")) ==
                str_to_type<dLine>("[[0,0],[2,0],[2,2]]"));
   assert(iLine(str_to_type<dLine>("[[0.8,0.2],[2.1,0.2],[2.2,2.9]]")) ==
-               str_to_type<dLine>("[[0,0],[2,0],[2,2]]"));
+               str_to_type<iLine>("[[0,0],[2,0],[2,2]]"));
 
 
 

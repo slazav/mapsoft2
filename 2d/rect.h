@@ -265,6 +265,48 @@ struct Rect {
 
 };
 
+/******************************************************************/
+// same functions as in the class
+
+/// Pump rectangle to each side by val value.
+/// \relates Rect
+template <typename T>
+Rect<T> pump(const Rect<T> & r, T val) { return r.pump(val); }
+
+/// Pump rectangle by vx and vy values.
+/// If the rectangle is empty throw an error.
+/// If val is negative rectangle can shrink to an empty one.
+/// \relates Rect
+template <typename T>
+Rect<T> pump(const Rect<T> & r, T vx, T vy) { return r.pump(vx,vy); }
+
+/// Expand rectangle to cover point p. Can be used with empty rectangle.
+/// \relates Rect
+template <typename T>
+Rect<T> expand (const Rect<T> & r, const Point<T> & p) { return r.expand(p); }
+
+/// Expand rectangle to cover rectangle r. Can be used with empty rectangle.
+/// \relates Rect
+template <typename T>
+Rect<T> expand (const Rect<T> & r1, const Rect<T> & r2) { return r1.expand(r2); }
+
+/// Calculate intersection with rectangle r. Can be used with empty rectangle.
+/// \relates Rect
+template <typename T>
+Rect<T> intersect (const Rect<T> & r1, const Rect<T> & r2) { return r1.intersect(r2); }
+
+/// Is rectangle contains a point
+/// \relates Rect
+template <typename T>
+bool contains (const Rect<T> & r, const Point<T> & p) { return r.contains(p); }
+
+/// Is rectangle contains another rectangle.
+/// If any of two rectangles is empty false is returned.
+/// \relates Rect
+template <typename T>
+bool contains (const Rect<T> & r1, const Rect<T> & r2) { return r1.contains(r2); }
+
+/******************************************************************/
 
 /// Rect with double coordinates
 /// \relates Rect
