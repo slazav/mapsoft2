@@ -34,6 +34,7 @@ env_loc.UseLibs('jansson')
 # all source files
 objects = Split ("""
   opt/opt.cpp
+  iconv/iconv.cpp
 """)
 
 env_loc.StaticLibrary('mapsoft', objects)
@@ -56,6 +57,7 @@ simple_tests=Split("""
   2d/rect.test.cpp
   2d/line.test.cpp
   2d/multiline.test.cpp
+  iconv/iconv.test.cpp
 
   ozi/ozi.test.cpp
 """)
