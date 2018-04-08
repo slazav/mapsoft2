@@ -41,11 +41,10 @@ library_objects = Split ("""
 env_loc.StaticLibrary('mapsoft', library_objects)
 
 ##################################################
-## strange programs inside the core folder
+## strange programs inside the lib folder
 programs=Split("""
-  conv/conv_base.test.frw_acc.cpp
+  conv/conv_base.acc_test.cpp
 """)
-#  fig/catfig.cpp
 
 map(env_loc.Program, programs)
 

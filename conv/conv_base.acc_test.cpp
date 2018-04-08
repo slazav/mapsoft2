@@ -18,7 +18,7 @@ class MyConv : public ConvBase {
     p.y*=10;
   }
   void bck_pt(dPoint & p) const {
-    p.x=sqrt(p.x)/10;
+    p.x=sqrt(p.x/10);
     p.y/=10;
   }
 };
@@ -30,8 +30,8 @@ main(){
 
     dLine l1("[[0,0],[1,1]]");
     dLine l2("[[0,0],[10,10]]");
-    std::ofstream ff1("conv.test.frw_acc1.tmp");
-    std::ofstream ff2("conv.test.frw_acc2.tmp");
+    std::ofstream ff1("conv_base.acc_test1.tmp");
+    std::ofstream ff2("conv_base.acc_test2.tmp");
     double acc[] = {0.5,0.1,0.01,0.002};
     for (int i=0; i<sizeof(acc)/sizeof(double); i++) {
       std::cerr << acc[i] << "\n";
