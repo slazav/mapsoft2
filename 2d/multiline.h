@@ -104,6 +104,25 @@ struct MultiLine : std::vector<Line<T> > {
 
   /******************************************************************/
 
+  /// Cast to MultiLine<double>.
+  operator MultiLine<double>() const{
+    MultiLine<double> ret;
+    for (typename MultiLine<T>::const_iterator i=this->begin(); i!=this->end(); i++)
+      ret.push_back(dLine(*i));
+    return ret;
+  }
+
+  /// Cast to MultiLine<int>.
+  operator MultiLine<int>() const{
+    MultiLine<int> ret;
+    for (typename MultiLine<T>::const_iterator i=this->begin(); i!=this->end(); i++)
+      ret.push_back(iLine(*i));
+    return ret;
+  }
+
+  /******************************************************************/
+  // Some functions. Below same functions are defined outside the class
+
   /// MultiLine length (sum of segment lengths).
   double length () const {
     double ret=0;
@@ -121,26 +140,23 @@ struct MultiLine : std::vector<Line<T> > {
     return ret;
   }
 
-  /******************************************************************/
-
-  /// Cast to MultiLine<double>.
-  operator MultiLine<double>() const{
-    MultiLine<double> ret;
-    for (typename MultiLine<T>::const_iterator i=this->begin(); i!=this->end(); i++)
-      ret.push_back(dLine(*i));
-    return ret;
-  }
-
-  /// Cast to MultiLine<int>.
-  operator MultiLine<int>() const{
-    MultiLine<int> ret;
-    for (typename MultiLine<T>::const_iterator i=this->begin(); i!=this->end(); i++)
-      ret.push_back(iLine(*i));
-    return ret;
-  }
 };
 
 /******************************************************************/
+// additional operators
+
+/// Multiply coordinates by k (k*multiline = multiline*k)
+/// \relates MultiLine
+template <typename T>
+MultiLine<T> operator* (const T k, const MultiLine<T> & l) { return l*k; }
+
+/// Add p to every point (shift the line) (p+multiline = multiline+p)
+/// \relates MultiLine
+template <typename T>
+MultiLine<T> operator+ (const Point<T> & p, const MultiLine<T> & l) { return l+p; }
+
+/******************************************************************/
+// functions, similar to ones inside the class
 
 /// Calculate MultiLine length.
 /// \relates MultiLine
@@ -153,6 +169,7 @@ template <typename T>
 Rect<T> bbox(const MultiLine<T> & l) { return l.bbox(); }
 
 /******************************************************************/
+// input/output
 
 /// \relates MultiLine
 /// \brief Output operator: print Line as a JSON array of lines
@@ -221,6 +238,7 @@ std::istream & operator>> (std::istream & s, MultiLine<T> & ml){
 
 
 /******************************************************************/
+// type definitions
 
 /// MultiLine with double coordinates
 /// \relates MultiLine

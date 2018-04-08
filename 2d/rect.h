@@ -67,6 +67,7 @@ struct Rect {
   bool zsize() const { return (w==0 || h==0) && !e; }
 
   /******************************************************************/
+  // corners
 
   /// Top-left corner
   Point<T> tlc() const {
@@ -99,6 +100,7 @@ struct Rect {
   }
 
   /******************************************************************/
+  // operators +,-,/,*
 
   /// Divide all coordinates by k
   Rect<T> & operator/= (T k) {
@@ -132,13 +134,14 @@ struct Rect {
   /// Add point to the rectangle (shift the rectangle)
   Rect<T> operator+ (Point<T> p) const { Rect<T> ret(*this); return ret+=p; }
 
-  /// operator-: invert 
+  /// operator-: invert
   Rect<T> operator- () const {
     if (e) throw Err() << "Empty rectangle in operator-";
     Rect<T> ret(-this->tlc(), -this->brc()); return ret;
   }
 
   /******************************************************************/
+  // operators <=>
 
   /// Less-then operator: compare TLC, then BRC.
   /// Empty rectungles are smaller then non-empty ones.
@@ -179,6 +182,7 @@ struct Rect {
   }
 
   /******************************************************************/
+  // Some functions. Below same functions are defined outside the class
 
   /// rint function: change corner coordenates to nearest integers
   Rect<T> rint() const {
@@ -198,7 +202,6 @@ struct Rect {
     return Rect<T>(tlc().floor(), brc().ceil());
   }
 
-  /******************************************************************/
   /// Pump rectangle to each side by val value.
   /// If the rectangle is empty throw an error.
   /// If val is negative rectangle can shrink to an empty one.
@@ -269,6 +272,19 @@ struct Rect {
 };
 
 /******************************************************************/
+// additional operators
+
+/// Multiply coordinates by k (k*rect = rect*k)
+/// \relates Rect
+template <typename T>
+Rect<T> operator* (const T k, const Rect<T> & r) { return r*k; }
+
+/// Add p to every point (p+rect = rect+p)
+/// \relates Rect
+template <typename T>
+Rect<T> operator+ (const Point<T> & p, const Rect<T> & r) { return r+p; }
+
+/******************************************************************/
 // same functions as in the class
 
 /// Pump rectangle to each side by val value.
@@ -310,16 +326,7 @@ template <typename T>
 bool contains (const Rect<T> & r1, const Rect<T> & r2) { return r1.contains(r2); }
 
 /******************************************************************/
-
-/// Rect with double coordinates
-/// \relates Rect
-typedef Rect<double> dRect;
-
-/// Rect with int coordinates
-/// \relates Rect
-typedef Rect<int> iRect;
-
-
+// input/output
 
 /// \relates Rect
 /// \brief Output operator: print Rect as a json array: [] or [x,y,w,h]
@@ -368,5 +375,15 @@ std::istream & operator>> (std::istream & s, Rect<T> & r){
   return s;
 }
 
+/******************************************************************/
+// type definitions
+
+/// Rect with double coordinates
+/// \relates Rect
+typedef Rect<double> dRect;
+
+/// Rect with int coordinates
+/// \relates Rect
+typedef Rect<int> iRect;
 
 #endif

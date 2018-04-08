@@ -42,46 +42,46 @@ struct Point {
   // operators +,-,/,*
 
   /// Subtract coordinates
-  Point<T> & operator-= (Point const & other) { x -= other.x; y -= other.y; return *this; }
+  Point & operator-= (Point const & other) { x -= other.x; y -= other.y; return *this; }
+
+  /// Add coordinates
+  Point & operator+= (Point const & other) { x += other.x; y += other.y; return *this; }
+
+  /// Divide coordinates by k
+  Point & operator/= (const T k) { x /= k; y /= k; return *this; }
+
+  /// Multiply coordinates by k
+  Point & operator*= (const T k) { x *= k; y *= k; return *this; }
 
   /// Subtract coordinates
-  Point<T> operator- (Point<T> const & other) const { return Point<T>(x-other.x, y-other.y); }
+  Point operator- (Point const & other) const { return Point(x-other.x, y-other.y); }
 
   /// Add coordinates
-  Point<T> & operator+= (Point<T> const & other) { x += other.x; y += other.y; return *this; }
-
-  /// Add coordinates
-  Point<T> operator+ (Point<T> const & other) const { return Point<T>(x+other.x, y+other.y); }
-
-  /// Divide coordinates by k
-  Point<T> & operator/= (const T k) { x /= k; y /= k; return *this; }
-
-  /// Divide coordinates by k
-  Point<T> operator/ (const T k) const { return Point<T>(x/k, y/k); }
-
-  /// Multiply coordinates by k
-  Point<T> & operator*= (const T k) { x *= k; y *= k; return *this; }
-
-  /// Multiply coordinates by k
-  Point<T> operator* (T k) const { return Point<T>(x*k, y*k); }
+  Point operator+ (Point const & other) const { return Point(x+other.x, y+other.y); }
 
   /// Invert point coordinates
-  Point<T> operator- () const { return Point<T>(-x,-y); }
+  Point operator- () const { return Point(-x,-y); }
+
+  /// Divide coordinates by k
+  Point operator/ (const T k) const { return Point(x/k, y/k); }
+
+  /// Multiply coordinates by k
+  Point operator* (const T k) const { return Point(x*k, y*k); }
 
   /******************************************************************/
   // operators <=>
 
   /// Less then operator
-  bool operator< (const Point<T> & other) const { return (x<other.x) || ((x==other.x)&&(y<other.y)); }
+  bool operator< (const Point & other) const { return (x<other.x) || ((x==other.x)&&(y<other.y)); }
 
   /// Equal opertator: (x==other.x) && (y==other.y)
-  bool operator== (const Point<T> & other) const { return (x==other.x)&&(y==other.y); }
+  bool operator== (const Point & other) const { return (x==other.x)&&(y==other.y); }
 
   // derived operators:
-  bool operator!= (const Point<T> & other) const { return !(*this==other); } ///< operator!=
-  bool operator>= (const Point<T> & other) const { return !(*this<other);  } ///< operator>=
-  bool operator<= (const Point<T> & other) const { return *this<other || *this==other; } ///< operator<=
-  bool operator>  (const Point<T> & other) const { return !(*this<=other); } ///< operator>
+  bool operator!= (const Point & other) const { return !(*this==other); } ///< operator!=
+  bool operator>= (const Point & other) const { return !(*this<other);  } ///< operator>=
+  bool operator<= (const Point & other) const { return *this<other || *this==other; } ///< operator<=
+  bool operator>  (const Point & other) const { return !(*this<=other); } ///< operator>
 
   /******************************************************************/
 
@@ -96,6 +96,7 @@ struct Point {
   }
 
   /******************************************************************/
+  // Some functions. Below same functions are defined outside the class
 
   /// Calculate manhattan length: abs(x) + abs(y)
   T mlen() const { return ::abs(x) + ::abs(y); }
@@ -111,20 +112,29 @@ struct Point {
   }
 
   /// rint function: change coordinates to the nearest integers
-  Point<T> rint() const { return Point<T>((T)::rint(x),(T)::rint(y)); }
+  Point rint() const { return Point((T)::rint(x),(T)::rint(y)); }
 
   /// floor function: change coordinates to nearest smaller integers
-  Point<T> floor() const { return Point<T>((T)::floor(x),(T)::floor(y)); }
+  Point floor() const { return Point((T)::floor(x),(T)::floor(y)); }
 
   /// ceil function: change coordinates to nearest larger integers
-  Point<T> ceil() const { return Point<T>((T)::ceil(x),(T)::ceil(y)); }
+  Point ceil() const { return Point((T)::ceil(x),(T)::ceil(y)); }
 
   /// abs function: change coordinates to their absolute values
-  Point<T> abs() const { return Point<T>(x>0?x:-x, y>0?y:-y); }
+  Point abs() const { return Point(x>0?x:-x, y>0?y:-y); }
 
 };
 
 /******************************************************************/
+// additional operators
+
+/// Multiply coordinates by k (k*point = point*k)
+/// \relates Point
+template <typename T>
+Point<T> operator* (const T k, const Point<T> & p) { return p*k; }
+
+/******************************************************************/
+// functions, similar to ones in the class
 
 /// Calculate manhattan length: abs(x) + abs(y)
 /// \relates Point
@@ -162,6 +172,7 @@ template <typename T>
 Point<T> abs(const Point<T> & p){ return p.abs(); }
 
 /******************************************************************/
+// extra functions
 
 /// Scalar multiplication: p1.x*p2.x + p1.y*p2.y
 /// \relates Point
@@ -178,6 +189,7 @@ double dist(const Point<T> & p1, const Point<T> & p2){
 }
 
 /******************************************************************/
+// input/output
 
 /// Output operator: print point as a two-element json array
 /// \relates Point
@@ -212,6 +224,7 @@ std::istream & operator>> (std::istream & s, Point<T> & p){
 }
 
 /******************************************************************/
+// type definitions
 
 /// Point with double coordinates
 /// \relates Point

@@ -58,9 +58,11 @@ main(){
   // +,-,*,-
   r1=iRect(10,10, 20,20);
   assert(r1+iPoint(2,2) == iRect(12,12,20,20));
+  assert(iPoint(2,2)+r1 == iRect(12,12,20,20));
   assert(r1-iPoint(2,2) == iRect(8,8,20,20));
   assert(r1/5 == iRect(2,2,4,4));
   assert(r1*2 == iRect(20,20,40,40));
+  assert(2*r1 == iRect(20,20,40,40));
 
   assert((r1+=iPoint(2,2)) == iRect(12,12,20,20));
   assert((r1-=iPoint(2,2)) == iRect(10,10,20,20));

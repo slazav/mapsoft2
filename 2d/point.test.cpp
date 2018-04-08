@@ -38,6 +38,7 @@ main(){
     assert(dPoint(1,2) + dPoint(2,3) == dPoint(3,5));
     assert(dPoint(3,4) - dPoint(1,-1) == dPoint(2,5));
     assert(dPoint(3,4)*2 == dPoint(6,8));
+    assert(2*dPoint(3,4) == dPoint(6,8));
     assert(dPoint(3,4)/2 == dPoint(1.5,2));
 
     assert(-iPoint(1,2) == iPoint(-1,-2));

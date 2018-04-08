@@ -121,6 +121,25 @@ struct Line : std::vector<Point<T> > {
 
   /******************************************************************/
 
+  /// Cast to Line<double>
+  operator Line<double>() const{
+    Line<double> ret;
+    for (typename Line<T>::const_iterator i=this->begin(); i!=this->end(); i++)
+      ret.push_back(dPoint(*i));
+    return ret;
+  }
+
+  /// Cast to Line<int>
+  operator Line<int>() const{
+    Line<int> ret;
+    for (typename Line<T>::const_iterator i=this->begin(); i!=this->end(); i++)
+      ret.push_back(iPoint(*i));
+    return ret;
+  }
+
+  /******************************************************************/
+  // Some functions. Below same functions are defined outside the class
+
   /// Calculate line length.
   double length() const {
     double ret=0;
@@ -173,29 +192,23 @@ struct Line : std::vector<Point<T> > {
     return ret;
   }
 
-  /******************************************************************/
-
-  /// Cast to Line<double>
-  operator Line<double>() const{
-    Line<double> ret;
-    for (typename Line<T>::const_iterator i=this->begin(); i!=this->end(); i++)
-      ret.push_back(dPoint(*i));
-    return ret;
-  }
-
-  /// Cast to Line<int>
-  operator Line<int>() const{
-    Line<int> ret;
-    for (typename Line<T>::const_iterator i=this->begin(); i!=this->end(); i++)
-      ret.push_back(iPoint(*i));
-    return ret;
-  }
-
-
-
 };
 
 /******************************************************************/
+// additional operators
+
+/// Multiply coordinates by k (k*line = line*k)
+/// \relates Line
+template <typename T>
+Line<T> operator* (const T k, const Line<T> & l) { return l*k; }
+
+/// Add p to every point (p+line = line+p)
+/// \relates Line
+template <typename T>
+Line<T> operator+ (const Point<T> & p, const Line<T> & l) { return l+p; }
+
+/******************************************************************/
+// functions, similar to ones in the class
 
 /// Calculate line length.
 /// \relates Line
@@ -220,6 +233,7 @@ template <typename T>
 Rect<T> bbox(const Line<T> & l) { return l.bbox(); }
 
 /******************************************************************/
+// input/output
 
 /// \relates Line
 /// \brief Output operator: print Line as a JSON array of points
@@ -276,6 +290,7 @@ std::istream & operator>> (std::istream & s, Line<T> & l){
 }
 
 /******************************************************************/
+// type definitions
 
 /// Line with double coordinates
 /// \relates Line
