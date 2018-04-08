@@ -32,16 +32,18 @@ if os.getenv('PKG_CONFIG_PATH'):
 env_loc.UseLibs('jansson')
 
 # all source files
-objects = Split ("""
+library_objects = Split ("""
   opt/opt.cpp
   iconv/iconv.cpp
+  conv/conv.cpp
 """)
 
-env_loc.StaticLibrary('mapsoft', objects)
+env_loc.StaticLibrary('mapsoft', library_objects)
 
 ##################################################
 ## strange programs inside the core folder
 programs=Split("""
+  conv/conv.test.frw_acc.cpp
 """)
 #  fig/catfig.cpp
 
@@ -58,6 +60,7 @@ simple_tests=Split("""
   2d/line.test.cpp
   2d/multiline.test.cpp
   iconv/iconv.test.cpp
+  conv/conv.test.cpp
 
   ozi/ozi.test.cpp
 """)

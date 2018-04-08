@@ -1,0 +1,103 @@
+#ifndef CONV_H
+#define CONV_H
+
+#include "2d/point.h"
+#include "2d/line.h"
+#include "2d/multiline.h"
+#include "2d/rect.h"
+//#include "image.h"
+
+///\addtogroup libmapsoft
+///@{
+///\defgroup conv
+///@{
+
+/// Abstract point transformation. Children have to
+/// define frw() and bck() methods.
+/// Also sc_src and sc_dst parameters should be used (or
+/// rescale_src/rescale_dst redifined).
+struct Conv{
+
+  /// Costructor.
+  Conv(): sc_dst(1.0), sc_src(1.0) {} 
+
+  /// Forward point transformation. Not defined in this class.
+  virtual void frw_pt(dPoint & p) const =0;
+
+  /// Backward point transformation. Not defined in this class.
+  virtual void bck_pt(dPoint & p) const =0;
+
+
+  /// Forward point transformation.
+  virtual void frw(dPoint & p) const {frw_pt(p);}
+
+  /// Backward point transformation.
+  virtual void bck(dPoint & p) const {bck_pt(p);}
+
+  /// Convert a Line, point to point.
+  virtual void frw(dLine & l) const {
+    for (dLine::iterator i=l.begin(); i!=l.end(); i++) frw(*i); }
+
+  /// Convert a Line, point to point.
+  virtual void bck(dLine & l) const {
+    for (dLine::iterator i=l.begin(); i!=l.end(); i++) bck(*i); }
+
+  /// Convert a MultiLine, point to point.
+  virtual void frw(dMultiLine & l) const {
+    for (dMultiLine::iterator i=l.begin(); i!=l.end(); i++) frw(*i); }
+
+  /// Convert a MultiLine, point to point.
+  virtual void bck(dMultiLine & l) const {
+    for (dMultiLine::iterator i=l.begin(); i!=l.end(); i++) bck(*i); }
+
+
+  /// Convert a line. Each segment can be divided to provide
+  /// accuracy <acc> in source units.
+  virtual dLine frw_acc(const dLine & l, double acc) const;
+
+  /// Convert a line. Each segment can be divided to provide
+  /// accuracy <acc> in source units.
+  // Note that bck_acc and frw_acc are not symmetric
+  // because accuracy is always calculated on the src side.
+  virtual dLine bck_acc(const dLine & l, double acc) const;
+
+/*
+  /// Convert a rectagle and return bounding box of resulting figure.
+  virtual dRect frw_acc(const dRect & R, double acc=1, int max=10) const;
+
+  /// Convert a rectagle and return bounding box of resulting figure.
+  virtual dRect bck_acc(const dRect & R, double acc=1, int max=10) const;
+
+  /// Convert angle from y=const line at point p.
+  /// Radians.
+  virtual double ang_frw(dPoint p, double a, double dx) const;
+  virtual double ang_bck(dPoint p, double a, double dx) const;
+  /// Degrees.
+  virtual double angd_frw(dPoint p, double a, double dx) const;
+  virtual double angd_bck(dPoint p, double a, double dx) const;
+
+  /// Convert units
+  virtual dPoint units_frw(dPoint p) const;
+  virtual dPoint units_bck(dPoint p) const;
+
+  /// Fill dst_image from src_image
+  virtual int image_frw(const iImage & src_img, iImage & dst_img,
+                        const iPoint & shift = iPoint(0,0),
+                        const double scale = 1.0) const;
+  virtual int image_bck(const iImage & src_img, iImage & dst_img,
+                        const iPoint & shift = iPoint(0,0),
+                        const double scale = 1.0) const;
+*/
+
+  /// change sc_src parameter
+  /// Childs can use this parameter in frw/bck or redefine rescale_src()
+  virtual void rescale_src(const double s) { sc_src*=s; }
+
+  /// change sc_dst parameter
+  /// Childs can use this parameter in frw/bck or redefine rescale_dst()
+  virtual void rescale_dst(const double s) { sc_dst*=s; }
+
+  double sc_src, sc_dst;
+};
+
+#endif
