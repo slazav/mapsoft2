@@ -4,9 +4,7 @@
 #include "conv.h"
 #include <map>
 
-///\addtogroup lib2d
-///@{
-///\defgroup conv_triv
+///\addtogroup libmapsoft
 ///@{
 
 /// Trivial transformation with scaling
@@ -30,4 +28,5 @@ public:
   void rescale_dst(const double sc) { scale*=sc; }
 };
 
+///@}
 #endif

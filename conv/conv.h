@@ -9,8 +9,6 @@
 
 ///\addtogroup libmapsoft
 ///@{
-///\defgroup conv
-///@{
 
 /// Abstract point transformation. Children have to
 /// define frw() and bck() methods.

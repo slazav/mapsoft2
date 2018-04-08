@@ -6,9 +6,13 @@ There is some global information for doxyden documentation.
 \section libmapsoft
 - \ref Err        "Err:  A simple class for exceptions"
 - \ref Opt        "Opt: Mapsoft options"
+
 - \ref Point      "Point: 2D point/vector"
 - \ref Rect       "Rect:  2D rectangle"
 - \ref Line       "Line:  2D line (std::vector of Point)"
 - \ref MultiLine  "MultiLine: Line with multiple segments (std::vector of Line)"
+
+- \ref Conv       "Conv: Abstract point transformation"
+- \ref ConvTriv   "ConvTriv: Trivial transformation with scaling"
 
 */

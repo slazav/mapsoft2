@@ -1,5 +1,4 @@
 #include <cassert>
-#include <fstream>
 #include "conv.h"
 
 // simple conversion x->x^2, y->2y
