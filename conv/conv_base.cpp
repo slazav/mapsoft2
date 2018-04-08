@@ -1,9 +1,9 @@
-#include "conv.h"
+#include "conv_base.h"
 //#include "line_utils.h"
 
 
 dLine
-Conv::frw_acc(const dLine & l, double acc) const {
+ConvBase::frw_acc(const dLine & l, double acc) const {
   dLine ret;
   if (l.size()==0) return ret;
   dPoint P1 = l[0], P1a =P1;
@@ -44,7 +44,7 @@ Conv::frw_acc(const dLine & l, double acc) const {
 }
 
 dLine
-Conv::bck_acc(const dLine & l, double acc) const {
+ConvBase::bck_acc(const dLine & l, double acc) const {
   // Note that bck_acc and frw_acc are not symmetric
   // because accuracy is always calculated on the src side.
 
@@ -84,7 +84,7 @@ Conv::bck_acc(const dLine & l, double acc) const {
 /*
 
 double
-Conv::ang_frw(dPoint p, double a, double dx) const{
+ConvBase::ang_frw(dPoint p, double a, double dx) const{
   dPoint p1 = p + dPoint(dx*cos(a), dx*sin(a));
   dPoint p2 = p - dPoint(dx*cos(a), dx*sin(a));
  frw(p1); frw(p2);
@@ -93,7 +93,7 @@ Conv::ang_frw(dPoint p, double a, double dx) const{
 }
 
 double
-Conv::ang_bck(dPoint p, double a, double dx) const{
+ConvBase::ang_bck(dPoint p, double a, double dx) const{
   dPoint p1 = p + dPoint(dx*cos(a), dx*sin(a));
   dPoint p2 = p - dPoint(dx*cos(a), dx*sin(a));
   bck(p1); bck(p2);
@@ -102,17 +102,17 @@ Conv::ang_bck(dPoint p, double a, double dx) const{
 }
 
 double
-Conv::angd_frw(dPoint p, double a, double dx) const{
+ConvBase::angd_frw(dPoint p, double a, double dx) const{
   return 180.0/M_PI * ang_frw(p, M_PI/180.0*a, dx);
 }
 
 double
-Conv::angd_bck(dPoint p, double a, double dx) const{
+ConvBase::angd_bck(dPoint p, double a, double dx) const{
   return 180.0/M_PI * ang_bck(p, M_PI/180.0*a, dx);
 }
 
 dPoint
-Conv::units_frw(dPoint p) const{
+ConvBase::units_frw(dPoint p) const{
   dPoint p1 = p + dPoint(1,0);
   dPoint p2 = p + dPoint(0,1);
   frw(p), frw(p1), frw(p2);
@@ -120,7 +120,7 @@ Conv::units_frw(dPoint p) const{
 }
 
 dPoint
-Conv::units_bck(dPoint p) const{
+ConvBase::units_bck(dPoint p) const{
   dPoint p1 = p + dPoint(1,0);
   dPoint p2 = p + dPoint(0,1);
   bck(p), bck(p1), bck(p2);
@@ -128,7 +128,7 @@ Conv::units_bck(dPoint p) const{
 }
 
 int
-Conv::image_frw(const iImage & src_img, iImage & dst_img,
+ConvBase::image_frw(const iImage & src_img, iImage & dst_img,
                 const iPoint & shift, const double scale) const{
   for (int y=0; y<dst_img.h; y++){
     for (int x=0; x<dst_img.w; x++){
@@ -140,7 +140,7 @@ Conv::image_frw(const iImage & src_img, iImage & dst_img,
 }
 
 int
-Conv::image_bck(const iImage & src_img, iImage & dst_img,
+ConvBase::image_bck(const iImage & src_img, iImage & dst_img,
                 const iPoint & shift, const double scale) const{
   for (int y=0; y<dst_img.h; y++){
     for (int x=0; x<dst_img.w; x++){

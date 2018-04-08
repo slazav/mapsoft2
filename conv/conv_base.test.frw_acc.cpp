@@ -1,6 +1,6 @@
 #include <cassert>
 #include <fstream>
-#include "conv.h"
+#include "conv_base.h"
 
 // Build a conversion x->10*x^2, y->10*y.
 // convert a line [0,0],[1,1] with frw_acc
@@ -11,7 +11,7 @@
 // accuracy in both forward and backwart conversion.
 
 // simple conversion x->x^2, y->y
-class MyConv : public Conv {
+class MyConv : public ConvBase {
   public:
   void frw_pt(dPoint & p) const {
     p.x*=10*p.x;

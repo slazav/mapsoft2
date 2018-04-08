@@ -12,7 +12,7 @@ There is some global information for doxyden documentation.
 - \ref Line       "Line:  2D line (std::vector of Point)"
 - \ref MultiLine  "MultiLine: Line with multiple segments (std::vector of Line)"
 
-- \ref Conv       "Conv: Abstract point transformation"
+- \ref ConvBase   "ConvBase: Abstract point transformation"
 - \ref ConvTriv   "ConvTriv: Trivial transformation with scaling"
 
 */

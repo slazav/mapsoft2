@@ -1,14 +1,14 @@
 #ifndef CONV_TRIV_H
 #define CONV_TRIV_H
 
-#include "conv.h"
+#include "conv_base.h"
 #include <map>
 
 ///\addtogroup libmapsoft
 ///@{
 
 /// Trivial transformation with scaling
-class ConvTriv : public Conv {
+class ConvTriv : public ConvBase {
   double scale;
 public:
   /// constructor - trivial transformation

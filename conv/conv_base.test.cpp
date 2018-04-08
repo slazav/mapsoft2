@@ -1,8 +1,8 @@
 #include <cassert>
-#include "conv.h"
+#include "conv_base.h"
 
 // simple conversion x->x^2, y->2y
-class MyConv : public Conv {
+class MyConv : public ConvBase {
   public:
   void frw_pt(dPoint & p) const {
     if (sc_src!=1.0) p*=sc_src;

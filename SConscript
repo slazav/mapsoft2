@@ -35,7 +35,7 @@ env_loc.UseLibs('jansson')
 library_objects = Split ("""
   opt/opt.cpp
   iconv/iconv.cpp
-  conv/conv.cpp
+  conv/conv_base.cpp
 """)
 
 env_loc.StaticLibrary('mapsoft', library_objects)
@@ -43,7 +43,7 @@ env_loc.StaticLibrary('mapsoft', library_objects)
 ##################################################
 ## strange programs inside the core folder
 programs=Split("""
-  conv/conv.test.frw_acc.cpp
+  conv/conv_base.test.frw_acc.cpp
 """)
 #  fig/catfig.cpp
 
@@ -60,7 +60,7 @@ simple_tests=Split("""
   2d/line.test.cpp
   2d/multiline.test.cpp
   iconv/iconv.test.cpp
-  conv/conv.test.cpp
+  conv/conv_base.test.cpp
   conv/conv_triv.test.cpp
 
   ozi/ozi.test.cpp

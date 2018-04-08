@@ -1,5 +1,5 @@
-#ifndef CONV_H
-#define CONV_H
+#ifndef CONV_BASE_H
+#define CONV_BASE_H
 
 #include "2d/point.h"
 #include "2d/line.h"
@@ -14,10 +14,10 @@
 /// define frw() and bck() methods.
 /// Also sc_src and sc_dst parameters should be used (or
 /// rescale_src/rescale_dst redifined).
-struct Conv{
+struct ConvBase{
 
   /// Costructor.
-  Conv(): sc_dst(1.0), sc_src(1.0) {} 
+  ConvBase(): sc_dst(1.0), sc_src(1.0) {} 
 
   /// Forward point transformation. Not defined in this class.
   virtual void frw_pt(dPoint & p) const =0;
