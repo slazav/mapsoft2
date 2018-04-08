@@ -81,19 +81,7 @@ Conv::bck_acc(const dLine & l, double acc) const {
   }
   return ret;
 }
-
 /*
-// convert a rectagle and return bounding box of resulting figure
-dRect
-Conv::bb_frw(const dRect & R, double acc, int max) const {
-  dLine l = line_frw(rect2line(R), acc, max);
-  return l.range();
-}
-dRect
-Conv::bb_bck(const dRect & R, double acc, int max) const {
-  dLine l = line_bck(rect2line(R),acc, max);
-  return l.range();
-}
 
 double
 Conv::ang_frw(dPoint p, double a, double dx) const{

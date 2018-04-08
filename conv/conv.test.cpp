@@ -60,6 +60,11 @@ main(){
        cnv.rescale_dst(0.1);
     }
 
+    { // test frw_acc/bck_acc rect conversions
+      // cnv is not so interesting here, rectangle converts to rectungle:
+      assert (cnv.frw_acc(dRect(0,0,10,10),0.005) == dRect(0,0,100,20));
+      assert (cnv.bck_acc(dRect(0,0,100,20),0.005) == dRect(0,0,10,10));
+    }
 
 
   }

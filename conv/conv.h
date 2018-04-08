@@ -61,13 +61,18 @@ struct Conv{
   // because accuracy is always calculated on the src side.
   virtual dLine bck_acc(const dLine & l, double acc) const;
 
+  /// Convert a rectagle and return bounding box of resulting figure.
+  /// Accuracy <acc> is measured in source units.
+  virtual dRect frw_acc(const dRect & R, double acc) const {
+    return frw_acc(rect_to_line(R), acc).bbox(); }
+
+  /// Convert a rectagle and return bounding box of resulting figure.
+  /// Accuracy <acc> is measured in source units (and thus bck_acc and
+  /// frw_acc are not symmetric).
+  virtual dRect bck_acc(const dRect & R, double acc) const {
+    return bck_acc(rect_to_line(R), acc).bbox(); }
+
 /*
-  /// Convert a rectagle and return bounding box of resulting figure.
-  virtual dRect frw_acc(const dRect & R, double acc=1, int max=10) const;
-
-  /// Convert a rectagle and return bounding box of resulting figure.
-  virtual dRect bck_acc(const dRect & R, double acc=1, int max=10) const;
-
   /// Convert angle from y=const line at point p.
   /// Radians.
   virtual double ang_frw(dPoint p, double a, double dx) const;
