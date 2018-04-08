@@ -80,6 +80,9 @@ main(){
   assert(l2.bbox() == iRect(0,0,1,2));
   assert(l2.bbox() == bbox(l2));
 
+  // rint
+  assert(rint(dLine("[[1.1,1.8],[3.9,1.1]]")) == dLine("[[1,2],[4,1]]"));
+
   // rect_to_line
   assert(rect_to_line(iRect(1,1,2,2)) == iLine("[[1,1],[3,1],[3,3],[1,3],[1,1]]"));
   assert(rect_to_line(iRect(1,1,2,2), true)  == iLine("[[1,1],[3,1],[3,3],[1,3],[1,1]]"));

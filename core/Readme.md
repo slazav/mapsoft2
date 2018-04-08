@@ -159,10 +159,65 @@ height `h` and empty flag `e`.
 -----------------
 ## Line class
 
+Line is a std::vector of Point.
+
+- Constructors:
+  - `Line()` -- empty line,
+  - `Line(string)` -- read from std::string (see below)
+
+- Typedefs:
+  - `dLine` is a `Line<double>`,
+  - `iLine` is a `Line<int>`.
+
+- Arithmetic operations (`l` are lines, `p` points, `k` numbers):
+  - `l+=p, l-=p, l+p, p+l, l-p, -l`
+  - `l*=k, l/=k, l*k, k*l, l/k`
+  - `l==l, l!=l`
+  - `l<l, l<=l, l>=l, l>l`
+
+- Other operations:
+  - `dLine(l)`, `iLine(l)` -- cast to double- or integer-coordinate line
+  - `l.length`, `length(l)` -- line length
+  - `l.invert`, `invert(l)` -- invert length
+  - `l1.is_shifted(l2, sh)`, `is_shifted(l1, l2, sh)` -- check if line l2 is a shifted version of l1, return the shift
+  - `l.bbox()`, `bbox(l)` -- return a bounding box (Rect object),
+  - `l.rint()`, `rint(l)` -- set coordinates to nearest integer values,
+  - `rect_to_line(r)` -- convert a rectangle to line
+`
+- Line can be converted to a string and back
+  (and thus used inside Opt). String representation is a
+  JSON array with zero or more points (example: "[[1,2],[3,4]]").
+
 \ref Line "Class reference..."
 
 -----------------
 ## MultiLine class
+
+Line with multiple segments (std::vector of Line).
+
+- Constructors:
+  - `MiltiLine()` -- empty line,
+  - `MiltiLine(string)` -- read from std::string (see below)
+
+- Typedefs:
+  - `dMultiLine` is a `MultiLine<double>`,
+  - `iMultiLine` is a `MultiLine<int>`.
+
+- Arithmetic operations (`l` are MultiLines, `p` points, `k` numbers):
+  - `l+=p, l-=p, l+p, p+l, l-p, -l`
+  - `l*=k, l/=k, l*k, k*l, l/k`
+  - `l==l, l!=l`
+  - `l<l, l<=l, l>=l, l>l`
+
+- Other operations:
+  - `dMultiLine(l)`, `iMultiLine(l)` -- cast to double- or integer-coordinate MultiLine
+  - `l.length`, `length(l)` -- line length (sum of segments' lengths)
+  - `l.bbox()`, `bbox(l)` -- return a bounding box (Rect object),
+  - `l.rint()`, `rint(l)` -- set coordinates to nearest integer values,
+`
+- MultiLine can be converted to a string and back
+  (and thus used inside Opt). String representation is a
+  JSON array with zero or more lines.
 
 \ref MultiLine "Class reference..."
 

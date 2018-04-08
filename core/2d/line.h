@@ -185,7 +185,7 @@ struct Line : std::vector<Point<T> > {
   }
 
   /// rint function: change corner coordenates to nearest integers
-  Point<T> rint() const{
+  Line<T> rint() const{
     Line<T> ret;
     for (typename Line<T>::const_iterator i=this->begin(); i!=this->end(); i++)
       ret.push_back(i->rint());
@@ -231,6 +231,11 @@ bool is_shifted(const Line<T> & l1, const Line<T> & l2, Point<T> & shift){
 /// \relates Line
 template <typename T>
 Rect<T> bbox(const Line<T> & l) { return l.bbox(); }
+
+/// rint function: change corner coordenates to nearest integers
+/// \relates Line
+template <typename T>
+Line<T> rint(const Line<T> & l) { return l.rint(); }
 
 /******************************************************************/
 // additional functions

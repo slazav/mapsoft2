@@ -140,6 +140,15 @@ struct MultiLine : std::vector<Line<T> > {
     return ret;
   }
 
+  /// rint function: change corner coordenates to nearest integers
+  MultiLine<T> rint() const{
+    MultiLine<T> ret;
+    for (typename MultiLine<T>::const_iterator i=this->begin(); i!=this->end(); i++)
+      ret.push_back(i->rint());
+    return ret;
+  }
+
+
 };
 
 /******************************************************************/
@@ -167,6 +176,11 @@ double length(const MultiLine<T> & l){ return l.length(); }
 /// \relates MultiLine
 template <typename T>
 Rect<T> bbox(const MultiLine<T> & l) { return l.bbox(); }
+
+/// rint function: change corner coordenates to nearest integers
+/// \relates Line
+template <typename T>
+MultiLine<T> rint(const MultiLine<T> & l) { return l.rint(); }
 
 /******************************************************************/
 // input/output

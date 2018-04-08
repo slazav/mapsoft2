@@ -57,7 +57,7 @@ main(){
   assert(ml2 <  ml1);
   assert(ml2 <= ml1);
 
-  // length, bbox
+  // length, bbox, rint
   ml2.clear();
   ml1.clear();
   ml2.push_back(l1);
@@ -69,6 +69,8 @@ main(){
   assert(ml1.bbox() == iRect());
   assert(ml2.bbox() == expand(l1.bbox(),l2.bbox()));
   assert(bbox(ml2) == ml2.bbox());
+
+  assert(rint(dMultiLine("[[[1.1,1.8],[3.9,1.1]],[]]")) == dMultiLine("[[[1,2],[4,1]],[]]"));
 
   // iLine <-> dLine casting
   assert(dMultiLine(str_to_type<iMultiLine>("[[[0,0],[2,0],[2,2]],[]]")) ==
