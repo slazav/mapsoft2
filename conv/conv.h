@@ -105,4 +105,5 @@ struct Conv{
   double sc_src, sc_dst;
 };
 
+///@}
 #endif

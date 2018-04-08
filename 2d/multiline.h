@@ -248,4 +248,5 @@ typedef MultiLine<double> dMultiLine;
 /// \relates MultiLine
 typedef MultiLine<int> iMultiLine;
 
+///@}
 #endif

@@ -386,4 +386,5 @@ typedef Rect<double> dRect;
 /// \relates Rect
 typedef Rect<int> iRect;
 
+///@}
 #endif

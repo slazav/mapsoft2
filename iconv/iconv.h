@@ -36,4 +36,6 @@ class IConv{
   /// convert
   std::string cnv(const std::string & s);
 };
+
+///@}
 #endif

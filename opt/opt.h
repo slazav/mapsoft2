@@ -10,8 +10,6 @@
 ///\addtogroup libmapsoft
 ///@{
 
-
-
 /// Convert std::string to any type (similar to boost::lexical_cast).
 /// \relates Opt
 template<typename T>
@@ -104,5 +102,5 @@ std::ostream & operator<< (std::ostream & s, const Opt & o);
 /// No possibility to read two Opt objects from one stream.
 std::istream & operator>> (std::istream & s, Opt & o);
 
-
+///@}
 #endif

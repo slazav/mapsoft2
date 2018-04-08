@@ -234,4 +234,5 @@ typedef Point<double> dPoint;
 /// \relates Point
 typedef Point<int> iPoint;
 
+///@}
 #endif
