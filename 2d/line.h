@@ -233,6 +233,24 @@ template <typename T>
 Rect<T> bbox(const Line<T> & l) { return l.bbox(); }
 
 /******************************************************************/
+// additional functions
+
+/// Convert rectangle to a line. Line goes clockwise,
+/// starting from top-left corner (<tlc>, <trc>, <brc>, <blc>, and
+/// if <closed> parameter is true back to <tlc>).
+/// \relates Line
+template <typename T>
+Line<T> rect_to_line(const Rect<T> & r, bool closed=true) {
+  Line<T> ret;
+  ret.push_back(r.tlc());
+  ret.push_back(r.trc());
+  ret.push_back(r.brc());
+  ret.push_back(r.blc());
+  if (closed) ret.push_back(r.tlc());
+  return ret;
+}
+
+/******************************************************************/
 // input/output
 
 /// \relates Line
@@ -300,4 +318,5 @@ typedef Line<double> dLine;
 /// \relates Line
 typedef Line<int> iLine;
 
+///@}
 #endif

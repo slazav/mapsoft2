@@ -80,6 +80,12 @@ main(){
   assert(l2.bbox() == iRect(0,0,1,2));
   assert(l2.bbox() == bbox(l2));
 
+  // rect_to_line
+  assert(rect_to_line(iRect(1,1,2,2)) == iLine("[[1,1],[3,1],[3,3],[1,3],[1,1]]"));
+  assert(rect_to_line(iRect(1,1,2,2), true)  == iLine("[[1,1],[3,1],[3,3],[1,3],[1,1]]"));
+  assert(rect_to_line(iRect(1,1,2,2), false) == iLine("[[1,1],[3,1],[3,3],[1,3]]"));
+
+
   // iLine <-> dLine casting
   assert(dLine(str_to_type<iLine>("[[0,0],[2,0],[2,2]]")) ==
                str_to_type<dLine>("[[0,0],[2,0],[2,2]]"));
