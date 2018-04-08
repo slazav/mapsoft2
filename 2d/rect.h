@@ -254,14 +254,14 @@ struct Rect {
     return Rect<T>(x1,y1,w,h);
   }
 
-  /// Is rectangle contains a point
+  /// If rectangle contains a point
   bool contains (const Point<T> & p) const {
     if (e) return false;
     return (p.x >= x) && (p.x <= x+w) &&
            (p.y >= y) && (p.y <= y+h);
   }
 
-  /// Is rectangle contains another rectangle.
+  /// If rectangle contains another rectangle.
   /// If any of two rectangles is empty false is returned.
   bool contains (const Rect<T> & r) const {
     if (e || r.e) return false;

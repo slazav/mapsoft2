@@ -27,7 +27,7 @@ try {
 
 // catch an error:
 catch (Err E){
-  cerr << E.get_error();
+  cerr << "Error: " << E.str() << "\n";
 }
 ```
 */
