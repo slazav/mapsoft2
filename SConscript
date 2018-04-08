@@ -61,6 +61,7 @@ simple_tests=Split("""
   2d/multiline.test.cpp
   iconv/iconv.test.cpp
   conv/conv.test.cpp
+  conv/conv_triv.test.cpp
 
   ozi/ozi.test.cpp
 """)
