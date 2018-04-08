@@ -65,7 +65,7 @@ USE_WINDOWS_ENCODING   = NO
 
 # Set input encoding
 
-INPUT_ENCODING = utf8
+INPUT_ENCODING =
 
 # If the BRIEF_MEMBER_DESC tag is set to YES (the default) Doxygen will 
 # include brief member descriptions after the members that are listed in 
