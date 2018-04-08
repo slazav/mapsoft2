@@ -4,8 +4,8 @@ env_loc=env.Clone()
 
 
 # add CPPPATH and PKG_CONFIG_PATH to global env
-env_loc.Replace (CPPPATH = "#lib")
-env_loc.Replace (LIBPATH = "#lib")
+env_loc.Replace (CPPPATH = "#core")
+env_loc.Replace (LIBPATH = "#core")
 env_loc.Replace (LIBS    = "mapsoft")
 
 env_loc.Append (ENV = {'PKG_CONFIG_PATH': os.getcwd()+'/pc'})
