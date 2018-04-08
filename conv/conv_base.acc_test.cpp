@@ -11,6 +11,8 @@
 // accuracy in both forward and backwart conversion.
 
 // simple conversion x->x^2, y->y
+///\cond HIDDEN
+/// (do not show this in Doxyden)
 class MyConv : public ConvBase {
   public:
   void frw_pt(dPoint & p) const {
@@ -22,6 +24,7 @@ class MyConv : public ConvBase {
     p.y/=10;
   }
 };
+///\endcond
 
 main(){
   try{
