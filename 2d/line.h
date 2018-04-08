@@ -9,6 +9,7 @@
 #include "point.h"
 #include "rect.h"
 #include "err/err.h"
+#include "opt/opt.h"
 #include "jansson.h"
 
 ///\addtogroup libmapsoft
@@ -18,6 +19,12 @@
 /// 2d line: std::vector of Point.
 template <typename T>
 struct Line : std::vector<Point<T> > {
+
+  /// Constructor: make an empty line
+  Line() {}
+
+  /// Constructor: make a line using string "[[x1,y1],[x2,y2]]"
+  Line(const std::string & s) { *this = str_to_type<Line>(s);}
 
   /******************************************************************/
   // operators +,-,/,*

@@ -26,6 +26,10 @@ main(){
   assert (iRect(iPoint(3,2),iPoint(1,4)) == iRect(1,2,2,2));
   assert (iRect(0,0,-1,-1) == iRect(-1,-1,1,1));
 
+  assert (iRect(1,2,3,4) == iRect("[1,2,3,4]"));
+  assert (iRect(0,0,0,0) == iRect("[0,0,0,0]"));
+  assert (iRect() == iRect("[]"));
+
   // swap
   r1.swap(r2);
   assert(r2.empty());

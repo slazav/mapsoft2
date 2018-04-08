@@ -14,20 +14,20 @@ main(){
   assert(ml1.size() == 0);
   assert(ml2.size() == 2);
 
-  assert(type_to_str(ml2) == "[[[0,1],[2,3]],[[4,5],[6,7]]]");
-  assert(type_to_str(ml1) == "[]");
+  assert(ml2 == iMultiLine("[[[0,1],[2,3]],[[4,5],[6,7]]]"));
+  assert(ml1 == iMultiLine("[]"));
 
   // +,-,*,/
   iPoint p(1,2);
-  assert(type_to_str(ml2+p) == "[[[1,3],[3,5]],[[5,7],[7,9]]]");
-  assert(type_to_str(ml2-p) == "[[[-1,-1],[1,1]],[[3,3],[5,5]]]");
-  assert(type_to_str(ml2*2) == "[[[0,2],[4,6]],[[8,10],[12,14]]]");
-  assert(type_to_str(ml2/2) == "[[[0,0],[1,1]],[[2,2],[3,3]]]");
+  assert((ml2+p) == iMultiLine("[[[1,3],[3,5]],[[5,7],[7,9]]]"));
+  assert((ml2-p) == iMultiLine("[[[-1,-1],[1,1]],[[3,3],[5,5]]]"));
+  assert((ml2*2) == iMultiLine("[[[0,2],[4,6]],[[8,10],[12,14]]]"));
+  assert((ml2/2) == iMultiLine("[[[0,0],[1,1]],[[2,2],[3,3]]]"));
 
-  assert(type_to_str(ml2+=p) == "[[[1,3],[3,5]],[[5,7],[7,9]]]");
-  assert(type_to_str(ml2-=p) == "[[[0,1],[2,3]],[[4,5],[6,7]]]");
-  assert(type_to_str(ml2*=2) == "[[[0,2],[4,6]],[[8,10],[12,14]]]");
-  assert(type_to_str(ml2/=2) == "[[[0,1],[2,3]],[[4,5],[6,7]]]");
+  assert((ml2+=p) == iMultiLine("[[[1,3],[3,5]],[[5,7],[7,9]]]"));
+  assert((ml2-=p) == iMultiLine("[[[0,1],[2,3]],[[4,5],[6,7]]]"));
+  assert((ml2*=2) == iMultiLine("[[[0,2],[4,6]],[[8,10],[12,14]]]"));
+  assert((ml2/=2) == iMultiLine("[[[0,1],[2,3]],[[4,5],[6,7]]]"));
 
   // <=>
   assert(ml1 == iMultiLine());

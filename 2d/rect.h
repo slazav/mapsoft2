@@ -48,6 +48,9 @@ struct Rect {
       w(_w>=0?_w:-_w), h(_h>=0?_h:-_h),
       e(false) { }
 
+  /// Constructor: create a rectangle string "[]" or "[x,y,w,h]"
+  Rect(const std::string & s) { *this = str_to_type<Rect>(s);}
+
   /// Swap rectangle with other one
   void swap (Rect & other){
     std::swap (x, other.x);

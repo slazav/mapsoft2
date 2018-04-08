@@ -6,6 +6,7 @@
 #include <ios>
 #include <cmath>    // for rint
 #include "err/err.h" // for Err
+#include "opt/opt.h" // for str_to_type
 
 ///\addtogroup libmapsoft
 ///@{
@@ -22,8 +23,14 @@ struct Point {
   T x; ///< x coordinate
   T y; ///< y coordinate
 
-  /// Constructor
-  Point(T _x=0, T _y=0): x(_x), y(_y) { }
+  /// Constructor: make a point using two coordinates
+  Point(): x(0), y(0) { }
+
+  /// Constructor: make a point using two coordinates
+  Point(T _x, T _y): x(_x), y(_y) { }
+
+  /// Constructor: make a point using string "[x,y]"
+  Point(const std::string & s) { *this = str_to_type<Point>(s);}
 
   /// Swap point with other one.
   void swap (Point & other) {

@@ -16,6 +16,12 @@
 template <typename T>
 struct MultiLine : std::vector<Line<T> > {
 
+  /// Constructor: make an empty line
+  MultiLine() {}
+
+  /// Constructor: make a line using string "[ [[x1,y1],[x2,y2]] , [[x3,y4],[x5,y5]]]"
+  MultiLine(const std::string & s) { *this = str_to_type<MultiLine>(s);}
+
   /******************************************************************/
   // operators +,-,/,*
 
