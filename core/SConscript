@@ -10,6 +10,7 @@ library_objects = Split ("""
   opt/opt.cpp
   iconv/iconv.cpp
   conv/conv_base.cpp
+  getopt/getopt.cpp
 """)
 
 # strange programs inside the lib folder
@@ -17,7 +18,7 @@ programs=Split("""
   conv/conv_base.acc_test.cpp
 """)
 
-# simple tests: fail if error code is not zero
+# Simple tests: Build and run program, fail if error code is not zero.
 simple_tests=Split("""
   err/err.test.cpp
   opt/opt.test.cpp
@@ -33,8 +34,11 @@ simple_tests=Split("""
   ozi/ozi.test.cpp
 """)
 
-# script tests: build a program, then run a script
+# Script tests: Build a program <prog>, then run a script
+# <prog>.script with program path as argument. Fail if error
+# code is not zero.
 script_tests=Split("""
+  getopt/getopt.test.cpp
 """)
 
 ##################################################
@@ -101,7 +105,7 @@ map(build_and_run_simple, simple_tests)
 def builder_test_script(target, source, env):
     prg = str(source[0].abspath)
     scr = str(source[1].abspath)
-    if os.spawnl(os.P_WAIT, scr, scr)==0:
+    if os.spawnl(os.P_WAIT, scr, scr, prg)==0:
       open(str(target[0]),'w').write("PASSED\n")
     else:
       return 1

@@ -6,6 +6,7 @@
 
 // mapsoft options
 #include <opt/opt.h>
+#include <getopt/getopt.h>
 
 // 2D points, lines, rectangles
 #include <2d/point.h>
