@@ -1,20 +1,18 @@
 #ifndef CONV_MULTI_H
 #define CONV_MULTI_H
 
-#include "conv.h"
+#include "conv_base.h"
 #include <list>
 
-///\addtogroup lib2d
-///@{
-///\defgroup conv_multi
+///\addtogroup libmapsoft
 ///@{
 
 /// Composite conversion
 /// User must keep all parts until this conversion is used
-class ConvMulti : public Conv {
+class ConvMulti : public ConvBase {
 
-  std::list<const Conv *> cnvs;
-  std::list<bool>   dirs;
+  std::list<const ConvBase *> cnvs;
+  std::list<bool> dirs;
 
 public:
 
@@ -22,40 +20,46 @@ public:
   ConvMulti(){}
 
   /// constructor - 2 conversions
-  ConvMulti(const Conv * c1, const Conv * c2, bool dir1=true, bool dir2=true){
-    cnvs.push_back(c1);
-    cnvs.push_back(c2);
-    dirs.push_back(dir1);
-    dirs.push_back(dir2);
+  ConvMulti(const ConvBase *cnv1, const ConvBase *cnv2, bool frw1=true, bool frw2=true){
+    cnvs.push_back(cnv1);
+    cnvs.push_back(cnv2);
+    dirs.push_back(frw1);
+    dirs.push_back(frw2);
   }
 
-  void push_front (const Conv * c, bool d=true){
-    cnvs.push_front(c);
-    dirs.push_front(d);
-  }
-  void push_back (const Conv * c, bool d=true){
-    cnvs.push_back(c);
-    dirs.push_back(d);
+  /// add a conversion in front of the list
+  void push_front(const ConvBase *cnv, bool frw=true){
+    cnvs.push_front(cnv);
+    dirs.push_front(frw);
   }
 
-  void frw(dPoint & p) const{
-    p/=Conv::sc_src;
-    std::list<const Conv *>::const_iterator c;
-    std::list<bool>::const_iterator d;
-    for (c=cnvs.begin(), d=dirs.begin(); c!=cnvs.end(); c++, d++)
-      if (*d) (*c)->frw(p); else (*c)->bck(p);
-    p*=Conv::sc_dst;
+  /// add a conversion at the end of the list
+  void push_back(const ConvBase *cnv, bool frw=true){
+    cnvs.push_back(cnv);
+    dirs.push_back(frw);
   }
 
-  void bck(dPoint & p) const{
-    p/=Conv::sc_dst;
-    std::list<const Conv *>::const_reverse_iterator c;
-    std::list<bool>::const_reverse_iterator d;
-    for (c=cnvs.rbegin(), d=dirs.rbegin(); c!=cnvs.rend(); c++, d++)
-      if (*d) (*c)->bck(p); else (*c)->frw(p);
-    p*=Conv::sc_src;
+  /// redefine a forward point conversion
+  void frw_pt(dPoint & p) const{
+    p*=ConvBase::sc_src; // use sc_src/sc_dst from the base class
+    std::list<const ConvBase *>::const_iterator c;
+    std::list<bool>::const_iterator f;
+    for (c=cnvs.begin(), f=dirs.begin(); c!=cnvs.end(); c++, f++)
+      if (*f) (*c)->frw(p); else (*c)->bck(p);
+    p*=ConvBase::sc_dst;
+  }
+
+  /// redefine a backward point conversion
+  void bck_pt(dPoint & p) const{
+    p/=ConvBase::sc_dst; // use sc_src/sc_dst from the base class
+    std::list<const ConvBase *>::const_reverse_iterator c;
+    std::list<bool>::const_reverse_iterator f;
+    for (c=cnvs.rbegin(), f=dirs.rbegin(); c!=cnvs.rend(); c++, f++)
+      if (*f) (*c)->bck(p); else (*c)->frw(p);
+    p/=ConvBase::sc_src;
   }
 
 };
 
+///@}
 #endif

@@ -15,6 +15,7 @@
 // 2D conversions
 #include <conv/conv_base.h>
 #include <conv/conv_triv.h>
+#include <conv/conv_multi.h>
 
 // reading/writing OziExplorer files
 #include <ozi/ozi.h>

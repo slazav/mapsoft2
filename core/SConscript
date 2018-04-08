@@ -28,6 +28,7 @@ simple_tests=Split("""
   iconv/iconv.test.cpp
   conv/conv_base.test.cpp
   conv/conv_triv.test.cpp
+  conv/conv_multi.test.cpp
 
   ozi/ozi.test.cpp
 """)

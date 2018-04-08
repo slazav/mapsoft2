@@ -14,7 +14,7 @@ public:
   /// constructor - trivial transformation
   ConvTriv(double sc=1.0):scale(sc){}
 
-  // redefine porward point conversion
+  // redefine forward point conversion
   void frw_pt(dPoint & p) const {p*=scale;}
 
   // redefine backward point conversion
