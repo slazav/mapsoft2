@@ -1,12 +1,14 @@
 #ifndef ICONV_H
 #define ICONV_H
 
-#include <iconv.h>
 #include <string>
 #include <cassert>
 
 ///\addtogroup libmapsoft
 ///@{
+
+/// Declare iconv_t to avoid including <iconv.h> here
+typedef void * iconv_t;
 
 /// wrapper for libiconv
 class IConv{
