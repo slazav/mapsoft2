@@ -314,4 +314,7 @@ size of object.
 
 \ref SizeCache "Class reference..."
 
+-----------------
+## IConv class
 
+\ref ConvTriv "Class reference..."

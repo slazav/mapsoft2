@@ -22,6 +22,9 @@
 #include <cache/cache.h>
 #include <cache/sizecache.h>
 
+// wrapper for iconf library
+#include <iconv/iconv.h>
+
 
 // reading/writing OziExplorer files
 #include <ozi/ozi.h>
