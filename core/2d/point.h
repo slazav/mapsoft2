@@ -99,7 +99,7 @@ struct Point {
   // Some functions. Below same functions are defined outside the class
 
   /// Calculate manhattan length: abs(x) + abs(y)
-  T mlen() const { return ::abs(x) + ::abs(y); }
+  T mlen() const { return std::abs(x) + std::abs(y); }
 
   /// Calculate length: sqrt(x^2 + y^2).
   double len() const { return sqrt((double)(x*x+y*y));}
