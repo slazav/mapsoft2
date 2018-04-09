@@ -10,7 +10,7 @@
 #include "rect.h"
 #include "err/err.h"
 #include "opt/opt.h"
-#include "jansson.h"
+#include <jansson.h>
 
 ///\addtogroup libmapsoft
 ///@{

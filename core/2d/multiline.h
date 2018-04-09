@@ -8,6 +8,7 @@
 #include <vector>
 #include "line.h"
 #include "point.h"
+#include <jansson.h>
 
 ///\addtogroup libmapsoft
 ///@{
