@@ -18,6 +18,11 @@
 #include <conv/conv_triv.h>
 #include <conv/conv_multi.h>
 
+// cache
+#include <cache/cache.h>
+#include <cache/sizecache.h>
+
+
 // reading/writing OziExplorer files
 #include <ozi/ozi.h>
 

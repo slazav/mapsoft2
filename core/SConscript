@@ -30,6 +30,8 @@ simple_tests=Split("""
   conv/conv_base.test.cpp
   conv/conv_triv.test.cpp
   conv/conv_multi.test.cpp
+  cache/cache.test.cpp
+  cache/sizecache.test.cpp
 
   ozi/ozi.test.cpp
 """)
@@ -85,6 +87,7 @@ import os
 def builder_test_simple(target, source, env):
     prg = str(source[0].abspath)
     if os.spawnl(os.P_WAIT, prg, prg)==0:
+      print "Test OK: " + prg
       open(str(target[0]),'w').write("PASSED\n")
     else:
       return 1
