@@ -51,14 +51,6 @@ Import ('env')
 # - for bilding libraries, without -lmapsoft
 
 env_lib=env.Clone()
-env_lib.Replace (CPPPATH = "#core")
-env_lib.Replace (LIBPATH = "#core")
-
-# add CPPPATH and PKG_CONFIG_PATH to global env
-env_lib.Append (ENV = {'PKG_CONFIG_PATH': os.getcwd()+'/pc'})
-if os.getenv('PKG_CONFIG_PATH'):
-  env_lib.Append (ENV = {'PKG_CONFIG_PATH':
-    [ os.getcwd()+'/pc', os.getenv('PKG_CONFIG_PATH')]})
 
 env_lib.UseLibs('jansson')
 # env_lib.UseLibs('libxml-2.0 libzip libproj libgif libjpeg libpng libtiff-4 libcurl zlib yaml-0.1 shp jansson')
@@ -82,14 +74,16 @@ env_prg.Prepend(LIBS = "-lmapsoft-static")
 ##################################################
 ## build mapsoft library
 
-# no need to link with libmapsoft when building libmapsoft...
-env_lib.SharedLibrary('mapsoft', library_objects)
-lib=env_lib.Library('mapsoft-static', library_objects)
+sh_lib=env_lib.SharedLibrary('mapsoft', library_objects)
+st_lib=env_lib.Library('mapsoft-static', library_objects)
+
+env.Install(env.libdir, sh_lib)
+env.Install(env.incdir, 'mapsoft.h')
 
 ## build programs inside the lib folder
 for x in programs:
   prg=env_prg.Program(x)
-  lib=env_prg.Depends(prg, lib)
+  env_prg.Depends(prg, st_lib)
 
 ## build and run simple tests: fail if error code is not zero
 for x in simple_tests:
@@ -97,8 +91,7 @@ for x in simple_tests:
   res = str(prg[0]) + '.passed'
   env_prg.Command(res, prg,\
          "${SOURCE} && echo PASSED > $TARGET")
-  env_prg.Depends(prg, lib)
-#  env_prg.Depends(res, prg)
+  env_prg.Depends(prg, st_lib)
 
 ## script tests: build a program, then run a script
 
@@ -108,8 +101,6 @@ for x in script_tests:
   scr = str(prg[0]) + ".script"
   env_prg.Command(res, [prg, scr],\
          "${SOURCE}.script $SOURCE && echo PASSED > $TARGET")
-  env_prg.Depends(prg, lib)
-#  env_prg.Depends(res, prg)
-#  env_prg.Depends(res, scr)
+  env_prg.Depends(prg, st_lib)
 
 ##################################################
