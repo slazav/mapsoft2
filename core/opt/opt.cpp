@@ -1,6 +1,6 @@
 #include "opt.h"
 #include <algorithm>
-#include "jansson.h"
+#include <jansson.h>
 
 void
 Opt::check_unknown (std::list<std::string> known) const {

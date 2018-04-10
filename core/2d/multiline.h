@@ -8,10 +8,14 @@
 #include <vector>
 #include "line.h"
 #include "point.h"
-#include <jansson.h>
 
 ///\addtogroup libmapsoft
 ///@{
+
+template <typename T>
+class MultiLine;
+MultiLine<double> string_to_mline(const std::string & s);
+
 
 /// Line with multiple segments (std::vector of Line)
 template <typename T>
@@ -21,7 +25,7 @@ struct MultiLine : std::vector<Line<T> > {
   MultiLine() {}
 
   /// Constructor: make a line using string "[ [[x1,y1],[x2,y2]] , [[x3,y4],[x5,y5]]]"
-  MultiLine(const std::string & s) { *this = str_to_type<MultiLine>(s);}
+  MultiLine(const std::string & s) { *this = string_to_mline(s);}
 
   /******************************************************************/
   // operators +,-,/,*
@@ -211,43 +215,7 @@ std::istream & operator>> (std::istream & s, MultiLine<T> & ml){
   // read the whole stream into a string
   std::ostringstream os;
   s>>os.rdbuf();
-  std::string str=os.str();
-
-  json_error_t e;
-  json_t *J = json_loadb(str.data(), str.size(), 0, &e);
-  ml.clear();  // clear old contents
-
-  try {
-    if (!J)
-      throw Err() << e.text;
-    if (!json_is_array(J))
-      throw Err() << "Reading MultiLine: a JSON array is expected";
-
-    json_t *L;
-    size_t il;
-    json_array_foreach(J, il, L){
-      if (!json_is_array(L))
-        throw Err() << "Reading MultiLine segment: a JSON array is expected";
-      json_t *P;
-      size_t ip;
-      Line<T> ll;
-      json_array_foreach(L, ip, P){
-        if (!json_is_array(P) || json_array_size(P)!=2)
-          throw Err() << "Reading line point: a JSON two-element array is expected";
-        json_t *X = json_array_get(P, 0);
-        json_t *Y = json_array_get(P, 1);
-        if (!X || !Y || !json_is_number(X) || !json_is_number(Y))
-          throw Err() << "Reading line point: a numerical values expected";
-        ll.push_back(Point<T>(json_number_value(X), json_number_value(Y)));
-      }
-      ml.push_back(ll);
-    }
-  }
-  catch (Err e){
-    json_decref(J);
-    throw e;
-  }
-  json_decref(J);
+  ml=string_to_mline(os.str());
   return s;
 }
 

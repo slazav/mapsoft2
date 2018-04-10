@@ -10,11 +10,13 @@
 #include "rect.h"
 #include "err/err.h"
 #include "opt/opt.h"
-#include <jansson.h>
 
 ///\addtogroup libmapsoft
 ///@{
 
+template <typename T> class Line;
+/// convert string to line
+Line<double> string_to_line(const std::string & s);
 
 /// 2d line: std::vector of Point.
 template <typename T>
@@ -24,7 +26,7 @@ struct Line : std::vector<Point<T> > {
   Line() {}
 
   /// Constructor: make a line using string "[[x1,y1],[x2,y2]]"
-  Line(const std::string & s) { *this = str_to_type<Line>(s);}
+  Line(const std::string & s) { *this = string_to_line(s);}
 
   /******************************************************************/
   // operators +,-,/,*
@@ -280,35 +282,7 @@ std::istream & operator>> (std::istream & s, Line<T> & l){
   // read the whole stream into a string
   std::ostringstream os;
   s>>os.rdbuf();
-  std::string str=os.str();
-
-  json_error_t e;
-  json_t *J = json_loadb(str.data(), str.size(), 0, &e);
-  l.clear();  // clear old contents
-
-  try {
-    if (!J)
-      throw Err() << e.text;
-    if (!json_is_array(J))
-      throw Err() << "Reading line: a JSON array is expected";
-
-    json_t *P;
-    size_t index;
-    json_array_foreach(J, index, P){
-      if (!json_is_array(P) || json_array_size(P)!=2)
-        throw Err() << "Reading line point: a JSON two-element array is expected";
-      json_t *X = json_array_get(P, 0);
-      json_t *Y = json_array_get(P, 1);
-      if (!X || !Y || !json_is_number(X) || !json_is_number(Y))
-        throw Err() << "Reading line point: a numerical values expected";
-      l.push_back(Point<T>(json_number_value(X), json_number_value(Y)));
-    }
-  }
-  catch (Err e){
-    json_decref(J);
-    throw e;
-  }
-  json_decref(J);
+  l=string_to_line(os.str());
   return s;
 }
 
