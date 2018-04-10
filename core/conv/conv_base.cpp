@@ -1,6 +1,4 @@
 #include "conv_base.h"
-//#include "line_utils.h"
-
 
 dLine
 ConvBase::frw_acc(const dLine & l, double acc) const {

@@ -6,6 +6,7 @@ library_objects = Split ("""
   opt/opt.cpp
   iconv/iconv.cpp
   conv/conv_base.cpp
+  conv/conv_geo.cpp
   getopt/getopt.cpp
   2d/2d_json.cpp
 """)
@@ -27,6 +28,7 @@ simple_tests=Split("""
   conv/conv_base.test.cpp
   conv/conv_triv.test.cpp
   conv/conv_multi.test.cpp
+  conv/conv_geo.test.cpp
   cache/cache.test.cpp
   cache/sizecache.test.cpp
 
@@ -52,8 +54,8 @@ Import ('env')
 
 env_lib=env.Clone()
 
-env_lib.UseLibs('jansson')
-# env_lib.UseLibs('libxml-2.0 libzip libproj libgif libjpeg libpng libtiff-4 libcurl zlib yaml-0.1 shp jansson')
+env_lib.UseLibs('jansson libproj')
+# env_lib.UseLibs('libxml-2.0 libzip libgif libjpeg libpng libtiff-4 libcurl zlib yaml-0.1 shp jansson')
 # env_lib.UseLibs('glibmm-2.4 gtkmm-2.4 gthread-2.0')
 # env_lib.UseLibs('cairomm-1.0 pixman-1 freetype2 libusb-1.0')
 

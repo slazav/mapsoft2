@@ -264,6 +264,11 @@ Line with multiple segments (std::vector of Line).
 \ref ConvMulti "Class reference..."
 
 -----------------
+## ConvGeo class
+
+\ref ConvGeo "Class reference..."
+
+-----------------
 ## Cache class
 
 `Cache<K,V>` is a cache of objects of type V, keyed by type K.
