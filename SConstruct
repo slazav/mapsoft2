@@ -56,7 +56,6 @@ if os.getenv('PKG_CONFIG_PATH'):
 
 env.Append (CPPPATH = "#core")
 env.Append (LIBPATH = "#core")
-env.Append (LIBS    = "mapsoft")
 
 ######################################
 ## Parse command-line arguments:

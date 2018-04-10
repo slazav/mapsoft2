@@ -1,7 +1,3 @@
-import os
-Import ('env')
-env_loc=env.Clone()
-
 ##################################################
 ### lists of files:
 
@@ -11,9 +7,10 @@ library_objects = Split ("""
   iconv/iconv.cpp
   conv/conv_base.cpp
   getopt/getopt.cpp
+  2d/2d_json.cpp
 """)
 
-# strange programs inside the lib folder
+# Programs inside the lib folder
 programs=Split("""
   conv/conv_base.acc_test.cpp
 """)
@@ -45,83 +42,74 @@ script_tests=Split("""
 
 ##################################################
 ##################################################
+# import and configure environments
+import os
+Import ('env')
+
+# We need three environments:
+# - for building programs, with -lmapsoft and other libs
+# - for bilding libraries, without -lmapsoft
+
+env_lib=env.Clone()
+env_lib.Replace (CPPPATH = "#core")
+env_lib.Replace (LIBPATH = "#core")
 
 # add CPPPATH and PKG_CONFIG_PATH to global env
-env_loc.Replace (CPPPATH = "#core")
-env_loc.Replace (LIBPATH = "#core")
-env_loc.Replace (LIBS    = "mapsoft")
-
-env_loc.Append (ENV = {'PKG_CONFIG_PATH': os.getcwd()+'/pc'})
+env_lib.Append (ENV = {'PKG_CONFIG_PATH': os.getcwd()+'/pc'})
 if os.getenv('PKG_CONFIG_PATH'):
-  env_loc.Append (ENV = {'PKG_CONFIG_PATH':
+  env_lib.Append (ENV = {'PKG_CONFIG_PATH':
     [ os.getcwd()+'/pc', os.getenv('PKG_CONFIG_PATH')]})
 
-# swig = env_loc.Clone()
+env_lib.UseLibs('jansson')
+# env_lib.UseLibs('libxml-2.0 libzip libproj libgif libjpeg libpng libtiff-4 libcurl zlib yaml-0.1 shp jansson')
+# env_lib.UseLibs('glibmm-2.4 gtkmm-2.4 gthread-2.0')
+# env_lib.UseLibs('cairomm-1.0 pixman-1 freetype2 libusb-1.0')
+
+env_prg=env_lib.Clone()
+env_prg.Prepend(LIBS = "-lmapsoft-static")
+
+
+##################################################
+## build swig
+
+# swig = env_prg.Clone()
 # swig.Append(CPPPATH = [distutils.sysconfig.get_python_inc()])
 # swig.Replace(SWIGFLAGS = ['-c++', '-python'])
 # swig.Replace(SHLIBPREFIX = "")
 # swig.Append(LIBS = Split("geo_io geo 2d fig utils jeeps loaders tiff jpeg png curl"))
 # swig.SharedLibrary("_core.so", ["swig.i"])
 
-
-
 ##################################################
 ## build mapsoft library
 
-# env_loc.UseLibs('libxml-2.0 libzip libproj libgif libjpeg libpng libtiff-4 libcurl zlib yaml-0.1 shp jansson')
-# env_loc.UseLibs('glibmm-2.4 gtkmm-2.4 gthread-2.0')
-# env_loc.UseLibs('cairomm-1.0 pixman-1 freetype2 libusb-1.0')
+# no need to link with libmapsoft when building libmapsoft...
+env_lib.SharedLibrary('mapsoft', library_objects)
+lib=env_lib.Library('mapsoft-static', library_objects)
 
-env_loc.UseLibs('jansson')
-env_loc.StaticLibrary('mapsoft', library_objects)
+## build programs inside the lib folder
+for x in programs:
+  prg=env_prg.Program(x)
+  lib=env_prg.Depends(prg, lib)
 
-##################################################
-## build strange programs inside the lib folder
-
-map(env_loc.Program, programs)
-
-##################################################
 ## build and run simple tests: fail if error code is not zero
+for x in simple_tests:
+  prg = env_prg.Program(x);
+  res = str(prg[0]) + '.passed'
+  env_prg.Command(res, prg,\
+         "${SOURCE} && echo PASSED > $TARGET")
+  env_prg.Depends(prg, lib)
+#  env_prg.Depends(res, prg)
 
-import os
-def builder_test_simple(target, source, env):
-    prg = str(source[0].abspath)
-    if os.spawnl(os.P_WAIT, prg, prg)==0:
-      print "Test OK: " + prg
-      open(str(target[0]),'w').write("PASSED\n")
-    else:
-      return 1
-
-# Create a builder for tests
-env_loc.Append(BUILDERS = {'TestSimple' : Builder(action = builder_test_simple)})
-
-def build_and_run_simple(src):
-  prg = env_loc.Program(src)
-  res = str(prg[0]) + ".passed"
-  env_loc.TestSimple(res, prg)
-
-map(build_and_run_simple, simple_tests)
-
-##################################################
 ## script tests: build a program, then run a script
 
-def builder_test_script(target, source, env):
-    prg = str(source[0].abspath)
-    scr = str(source[1].abspath)
-    if os.spawnl(os.P_WAIT, scr, scr, prg)==0:
-      open(str(target[0]),'w').write("PASSED\n")
-    else:
-      return 1
-
-# Create a builder for tests
-env_loc.Append(BUILDERS = {'TestScript' : Builder(action = builder_test_script)})
-
-def build_and_run_script(src):
-  prg = env_loc.Program(src)
-  res = str(prg[0]) + ".passed"
+for x in script_tests:
+  prg = env_prg.Program(x);
+  res = str(prg[0]) + '.passed'
   scr = str(prg[0]) + ".script"
-  env_loc.TestScript(res, [prg, scr])
-
-map(build_and_run_script, script_tests)
+  env_prg.Command(res, [prg, scr],\
+         "${SOURCE}.script $SOURCE && echo PASSED > $TARGET")
+  env_prg.Depends(prg, lib)
+#  env_prg.Depends(res, prg)
+#  env_prg.Depends(res, scr)
 
 ##################################################
