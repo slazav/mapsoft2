@@ -14,15 +14,16 @@ main(){
     cnv1.bck(p2);
     assert(p1==p2);
 
-    ConvGeo cnv2("+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=500000 +lon_0=27",
-                "+datum=WGS84 +proj=lonlat");
+    std::string proj1="+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=500000 +lon_0=27";
+
+    ConvGeo cnv2(proj1); // to wgs84
+
     cnv2.bck(p2);
     assert(iPoint(p2) == iPoint(427091, 6763808));
     cnv2.frw(p2);
     assert(iPoint(p2*1e6) == iPoint(p1*1e6));
 
-    ConvGeo cnv3("+datum=WGS84 +proj=lonlat",
-                 "+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=500000 +lon_0=27");
+    ConvGeo cnv3("+datum=WGS84 +proj=lonlat", proj1);
 
     cnv3.frw(p2);
     assert(iPoint(p2) == iPoint(427091, 6763808));
