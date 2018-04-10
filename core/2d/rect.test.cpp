@@ -1,3 +1,5 @@
+///\cond HIDDEN (do not show this in Doxyden)
+
 #include <cassert>
 #include "rect.h"
 #include "opt/opt.h"
@@ -261,5 +263,8 @@ main(){
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";
+    return 1;
   }
 }
+
+///\endcond

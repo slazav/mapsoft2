@@ -1,9 +1,8 @@
+///\cond HIDDEN (do not show this in Doxyden)
+
 #include <cassert>
 #include "conv_base.h"
 
-// simple conversion x->x^2, y->2y
-///\cond HIDDEN
-/// (do not show this in Doxyden)
 class MyConv : public ConvBase {
   public:
   void frw_pt(dPoint & p) const {
@@ -19,7 +18,6 @@ class MyConv : public ConvBase {
     if (sc_src!=1.0) p/=sc_src;
   }
 };
-///\endcond
 
 main(){
   try{
@@ -72,5 +70,8 @@ main(){
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";
+    return 1;
   }
 }
+
+///\endcond

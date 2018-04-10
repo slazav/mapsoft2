@@ -1,3 +1,5 @@
+///\cond HIDDEN (do not show this in Doxyden)
+
 #include <cassert>
 #include "err.h"
 
@@ -18,3 +20,5 @@ main(){
     assert (E.code() == 3);
   }
 }
+
+///\endcond

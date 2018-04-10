@@ -1,3 +1,5 @@
+///\cond HIDDEN (do not show this in Doxyden)
+
 #include <cassert>
 #include <string>
 #include <vector>
@@ -109,3 +111,5 @@ main(int argc, char *argv[]){
     return 1;
   }
 }
+
+///\endcond

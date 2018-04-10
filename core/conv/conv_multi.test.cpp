@@ -1,3 +1,5 @@
+///\cond HIDDEN (do not show this in Doxyden)
+
 #include <cassert>
 #include "conv_triv.h"
 #include "conv_multi.h"
@@ -38,5 +40,8 @@ main(){
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";
+    return 1;
   }
 }
+
+///\endcond

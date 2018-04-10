@@ -1,3 +1,5 @@
+///\cond HIDDEN (do not show this in Doxyden)
+
 #include <cassert>
 #include <sstream>
 #include "opt.h"
@@ -127,3 +129,5 @@ catch (Err e) {
   return 1;
 }
 }
+
+///\endcond

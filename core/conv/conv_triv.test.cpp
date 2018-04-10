@@ -1,3 +1,5 @@
+///\cond HIDDEN (do not show this in Doxyden)
+
 #include <cassert>
 #include "conv_triv.h"
 
@@ -21,9 +23,11 @@ main(){
     cnv.frw(p);  assert(p == dPoint(10,10));
     cnv.bck(p);  assert(p == dPoint(10,10));
 
-
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";
+    return 1;
   }
 }
+
+///\endcond
