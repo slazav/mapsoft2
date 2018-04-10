@@ -85,6 +85,23 @@ main(){
   // rint
   assert(rint(dLine("[[1.1,1.8],[3.9,1.1]]")) == dLine("[[1,2],[4,1]]"));
 
+  // rotate
+  {
+    iLine l1("[[0,0],[1000,0]]");
+    double a=30*M_PI/180.0;
+    assert(l1.rotate(iPoint(0,0),a) == iLine("[[0,0],[866,-499]]")); // sqrt(3)/2, -1/2
+    assert(l1.rotate(iPoint(500,500), a) == iLine("[[-183,317],[683,-183]]"));
+    assert(rotate(l1,iPoint(500,500), a) == iLine("[[-183,317],[683,-183]]"));
+    assert(rotate(iLine(), iPoint(500,500), a) == iLine());
+
+    dLine l2("[[0,0],[1000,0]]");
+    assert(iLine(l2.rotate(dPoint(0,0),a)) == iLine("[[0,0],[866,-499]]"));
+    assert(iLine(l2.rotate(dPoint(500,500), a)) == iLine("[[-183,316],[683,-183]]"));
+    assert(iLine(rotate(l2,dPoint(500,500), a)) == iLine("[[-183,316],[683,-183]]"));
+    assert(rotate(dLine(), dPoint(500,500), a) == dLine());
+  }
+
+
   // rect_to_line
   assert(rect_to_line(iRect(1,1,2,2)) == iLine("[[1,1],[3,1],[3,3],[1,3],[1,1]]"));
   assert(rect_to_line(iRect(1,1,2,2), true)  == iLine("[[1,1],[3,1],[3,3],[1,3],[1,1]]"));

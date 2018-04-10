@@ -123,6 +123,12 @@ struct Point {
   /// abs function: change coordinates to their absolute values
   Point abs() const { return Point(x>0?x:-x, y>0?y:-y); }
 
+  /// rotate the point around c at the angle a (rad, clockwise)
+  Point rotate(const Point & c, const double a) const {
+    double C=cos(a), S=sin(a);
+    return Point(C*(x-c.x)+S*(y-c.y), C*(y-c.y)-S*(x-c.x)) + c;
+  }
+
 };
 
 /******************************************************************/
@@ -170,6 +176,11 @@ Point<T> ceil(const Point<T> & p){ return p.ceil(); }
 /// \relates Point
 template <typename T>
 Point<T> abs(const Point<T> & p){ return p.abs(); }
+
+/// rotate the point around c at the angle a (rad)
+template <typename T>
+Point<T> rotate(const Point<T> & p, const Point<T> & c, const double a){
+  return p.rotate(c,a); }
 
 /******************************************************************/
 // extra functions

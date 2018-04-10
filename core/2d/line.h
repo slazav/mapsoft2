@@ -194,6 +194,15 @@ struct Line : std::vector<Point<T> > {
     return ret;
   }
 
+  /// rotate the line around c at the angle a (rad, clockwise)
+  Line rotate(const Point<T> & c, const double a) const {
+    double C=cos(a), S=sin(a);
+    Line ret(*this);
+    for (typename Line<T>::iterator i=ret.begin(); i!=ret.end(); i++)
+      *i=Point<T>(C*(i->x-c.x)+S*(i->y-c.y), C*(i->y-c.y)-S*(i->x-c.x))+c;
+    return ret;
+  }
+
 };
 
 /******************************************************************/
@@ -238,6 +247,10 @@ Rect<T> bbox(const Line<T> & l) { return l.bbox(); }
 /// \relates Line
 template <typename T>
 Line<T> rint(const Line<T> & l) { return l.rint(); }
+
+/// rotate a line around c at the angle a (rad)
+template <typename T>
+Line<T> rotate(const Line<T> & l, const Point<T> & c, const double a) { return l.rotate(c,a); }
 
 /******************************************************************/
 // additional functions

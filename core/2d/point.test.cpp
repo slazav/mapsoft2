@@ -103,6 +103,14 @@ main(){
     assert(abs(dp2) == -dp2);
     assert(dp2.abs() == -dp2);
   }
+  // rotate
+  {
+    iPoint p(1000,0);
+    double a=30*M_PI/180.0;
+    assert(p.rotate(iPoint(0,0),a) == iPoint(866,-499)); // sqrt(3)/2, -1/2
+    assert(p.rotate(iPoint(500,500), a) == iPoint(683,-183));
+    assert(rotate(p,iPoint(500,500), a) == iPoint(683,-183));
+  }
 
   // pscal, dist
   {

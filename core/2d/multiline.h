@@ -153,6 +153,16 @@ struct MultiLine : std::vector<Line<T> > {
     return ret;
   }
 
+  /// rotate the MultiLine around c at the angle a (rad, clockwise)
+  MultiLine rotate(const Point<T> & c, const double a) const {
+    double C=cos(a), S=sin(a);
+    MultiLine ret(*this);
+    for (typename MultiLine::iterator i=ret.begin(); i!=ret.end(); i++)
+      for (typename Line<T>::iterator j=i->begin(); j!=i->end(); j++)
+        *j = Point<T>(C*(j->x-c.x)+S*(j->y-c.y), C*(j->y-c.y)-S*(j->x-c.x)) + c;
+    return ret;
+  }
+
 
 };
 
@@ -186,6 +196,10 @@ Rect<T> bbox(const MultiLine<T> & l) { return l.bbox(); }
 /// \relates Line
 template <typename T>
 MultiLine<T> rint(const MultiLine<T> & l) { return l.rint(); }
+
+/// rotate a MultiLine around c at the angle a (rad)
+template <typename T>
+MultiLine<T> rotate(const MultiLine<T> & l, const Point<T> & c, const double a) { return l.rotate(c,a); }
 
 /******************************************************************/
 // input/output

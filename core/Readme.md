@@ -113,6 +113,7 @@ and non-option arguments from a command line.
   - `p.floor()`, `floor(p)` -- set coordinates to nearest smaller integers,
   - `p.ceil()`, `ceil(p)` -- set coordinates to nearest larger integers,
   - `p.abs()`,  `abs(p)` -- set coordinates to their absolute values,
+  - `p.rotate(pc,a)`,  `rotate(p,pc,a)` -- rotate around central point pc by angle a (rad, clockwise),
   - `pscal(p1,p2)` -- scalar product: p1.x*p2.x + p1.y*p2.y,
   - `dist(p1,p2)` -- distance between points: (p1-p2).len().
 ```
@@ -209,6 +210,7 @@ Line is a std::vector of Point.
   - `l1.is_shifted(l2, sh)`, `is_shifted(l1, l2, sh)` -- check if line l2 is a shifted version of l1, return the shift
   - `l.bbox()`, `bbox(l)` -- return a bounding box (Rect object),
   - `l.rint()`, `rint(l)` -- set coordinates to nearest integer values,
+  - `l.rotate(pc,a)`,  `rotate(l,pc,a)` -- rotate around central point pc by angle a (rad, clockwise),
   - `rect_to_line(r)` -- convert a rectangle to line
 `
 - Line can be converted to a string and back
@@ -241,6 +243,7 @@ Line with multiple segments (std::vector of Line).
   - `l.length`, `length(l)` -- line length (sum of segments' lengths)
   - `l.bbox()`, `bbox(l)` -- return a bounding box (Rect object),
   - `l.rint()`, `rint(l)` -- set coordinates to nearest integer values,
+  - `l.rotate(pc,a)`,  `rotate(l,pc,a)` -- rotate around central point pc by angle a (rad, clockwise),
 `
 - MultiLine can be converted to a string and back
   (and thus used inside Opt). String representation is a
