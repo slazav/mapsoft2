@@ -7,6 +7,7 @@ library_objects = Split ("""
   iconv/iconv.cpp
   conv/conv_base.cpp
   conv/conv_geo.cpp
+  conv/conv_aff.cpp
   getopt/getopt.cpp
   2d/2d_json.cpp
 """)
@@ -28,6 +29,7 @@ simple_tests=Split("""
   conv/conv_base.test.cpp
   conv/conv_triv.test.cpp
   conv/conv_multi.test.cpp
+  conv/conv_aff.test.cpp
   conv/conv_geo.test.cpp
   cache/cache.test.cpp
   cache/sizecache.test.cpp

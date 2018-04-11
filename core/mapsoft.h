@@ -18,12 +18,13 @@
 #include <conv/conv_triv.h>
 #include <conv/conv_multi.h>
 #include <conv/conv_geo.h>
+#include <conv/conv_aff.h>
 
 // cache
 #include <cache/cache.h>
 #include <cache/sizecache.h>
 
-// wrapper for iconf library
+// wrapper for iconv library
 #include <iconv/iconv.h>
 
 

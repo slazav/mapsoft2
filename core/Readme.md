@@ -267,6 +267,11 @@ Line with multiple segments (std::vector of Line).
 \ref ConvMulti "Class reference..."
 
 -----------------
+## ConvAff class
+
+\ref ConvTriv "Class reference..."
+
+-----------------
 ## ConvGeo class
 
 \ref ConvGeo "Class reference..."
