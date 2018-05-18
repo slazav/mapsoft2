@@ -14,13 +14,13 @@ ConvGeo::ConvGeo(const std::string & src, const std::string & dst){
   pj_src = pj_init_plus(src.c_str());
   if (!pj_src)
     throw Err() << "Can't create projection \""
-                << src << "\": " << pj_errno;
+                << src << "\": " << pj_strerrno(pj_errno);
 
   pj_dst = pj_init_plus(dst.c_str());
   if (!pj_dst){
     pj_free(pj_src);
     throw Err() << "Can't create projection \""
-                << dst << "\": " << pj_errno;
+                << dst << "\": " << pj_strerrno(pj_errno);
   }
   if (pj_is_latlong(pj_src)) sc_src=M_PI/180.0;
   if (pj_is_latlong(pj_dst)) sc_dst=180.0/M_PI;
