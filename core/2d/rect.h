@@ -333,7 +333,7 @@ bool contains (const Rect<T> & r1, const Rect<T> & r2) { return r1.contains(r2);
 template <typename T>
 std::ostream & operator<< (std::ostream & s, const Rect<T> & r){
   if (r.e) {s << "[]"; return s;}
-  s << std::setprecision(8) 
+  s << std::setprecision(9)
     << "[" << r.x << "," << r.y << "," << r.w << "," << r.h << "]";
   return s;
 }

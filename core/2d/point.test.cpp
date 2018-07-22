@@ -122,7 +122,7 @@ main(){
     assert(dist(p1,iPoint(0,0)) == 5);
   }
 
-  // input/output (also check that dPoint is printed with setprecision(8))
+  // input/output (also check that dPoint is printed with setprecision(9))
   {
     assert(type_to_str(dPoint(0,0)) == "[0,0]");
     assert(type_to_str(iPoint(1,3)) == "[1,3]");
@@ -131,11 +131,12 @@ main(){
     assert(type_to_str(dPoint(-1.23,-3.45)) == "[-1.23,-3.45]");
     assert(type_to_str(dPoint(-1.23e1,-3.45e-1)) == "[-12.3,-0.345]");
     assert(type_to_str(dPoint(-1.23e5,-3.45e-5)) == "[-123000,-3.45e-05]");
-    assert(type_to_str(dPoint(-1.23e8,-3.45e-8)) == "[-1.23e+08,-3.45e-08]");
+    assert(type_to_str(dPoint(-1.23e8,-3.45e-8)) == "[-123000000,-3.45e-08]");
     assert(type_to_str(dPoint(-1.23e15,-3.45e-12)) == "[-1.23e+15,-3.45e-12]");
     assert(type_to_str(dPoint(8000000,9000000)) == "[8000000,9000000]");
     assert(type_to_str(dPoint(80000000,90000000)) == "[80000000,90000000]");
-    assert(type_to_str(dPoint(800000001,900000001)) == "[8e+08,9e+08]");
+    assert(type_to_str(dPoint(800000001,900000001)) == "[800000001,900000001]");
+    assert(type_to_str(dPoint(8000000001,9000000001)) == "[8e+09,9e+09]");
 
     assert(str_to_type<dPoint>("[0,0]") == dPoint(0,0));
     assert(str_to_type<iPoint>("[1,3]") == iPoint(1,3));

@@ -206,7 +206,7 @@ double dist(const Point<T> & p1, const Point<T> & p2){
 /// \relates Point
 template <typename T>
 std::ostream & operator<< (std::ostream & s, const Point<T> & p){
-  s << std::setprecision(8) << "[" << p.x << "," << p.y << "]";
+  s << std::setprecision(9) << "[" << p.x << "," << p.y << "]";
   return s;
 }
 
