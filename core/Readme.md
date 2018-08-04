@@ -50,7 +50,7 @@ v = o.get<type>("key", def);
 Here "key" is a string key which is used to access data.
 If no value is set for this key, the `def` object is returned.
 
-- Opt object can be converted to a string and back (and thus used inside Opt).
+- Opt object can be converted to a string and back (and thus used inside Opt class).
   String representation is a JSON object with string fields.
 
 \ref Opt "Class reference..."
@@ -116,11 +116,10 @@ and non-option arguments from a command line.
   - `p.rotate(pc,a)`,  `rotate(p,pc,a)` -- rotate around central point pc by angle a (rad, clockwise),
   - `pscal(p1,p2)` -- scalar product: p1.x*p2.x + p1.y*p2.y,
   - `dist(p1,p2)` -- distance between points: (p1-p2).len().
-```
 
 - Point can be converted to a string and back
-  (and thus used inside Opt). String representation is a
-  JSON array with two numerical fields (x,y).
+  (and thus used inside Opt class). String representation is a
+  JSON array with two numerical fields `[x,y]`.
 
 \ref Point "Class reference..."
 
@@ -128,7 +127,7 @@ and non-option arguments from a command line.
 ## Rect class
 
 Rect<T> is a 2-d rectangle with coordinates of arbitrary numerical type T.
-Rectangle is defined by top-left corner coordinates `(x,y)`, width `w`,
+Rectangle is defined by top-left corner coordinates `x,y`, width `w`,
 height `h` and empty flag `e`.
 
 - Coordinates are counted from top-left.
@@ -177,10 +176,10 @@ height `h` and empty flag `e`.
   - `r1.intersect(r2)`, `intersect(r1,r2)` -- intersection with rectangle r2,
   - `r.contains(p)`, `contains(r,p)` -- check if rectangle contains a point,
   - `r1.contains(r2)`, `contains(r1,r2)` -- check if rectangle contains another rectangle,
-`
+
 - Rect can be converted to a string and back
-  (and thus used inside Opt). String representation is a
-  JSON array with four numerical fields (x,y,w,h) or empty array.
+  (and thus used inside Opt class). String representation is a
+  JSON array with four numerical fields `[x,y,w,h]` or empty array.
 
 \ref Rect "Class reference..."
 
@@ -212,9 +211,9 @@ Line is a std::vector of Point.
   - `l.rint()`, `rint(l)` -- set coordinates to nearest integer values,
   - `l.rotate(pc,a)`,  `rotate(l,pc,a)` -- rotate around central point pc by angle a (rad, clockwise),
   - `rect_to_line(r)` -- convert a rectangle to line
-`
+
 - Line can be converted to a string and back
-  (and thus used inside Opt). String representation is a
+  (and thus used inside Opt class). String representation is a
   JSON array with zero or more points (example: "[[1,2],[3,4]]").
 
 \ref Line "Class reference..."
@@ -244,9 +243,9 @@ Line with multiple segments (std::vector of Line).
   - `l.bbox()`, `bbox(l)` -- return a bounding box (Rect object),
   - `l.rint()`, `rint(l)` -- set coordinates to nearest integer values,
   - `l.rotate(pc,a)`,  `rotate(l,pc,a)` -- rotate around central point pc by angle a (rad, clockwise),
-`
+
 - MultiLine can be converted to a string and back
-  (and thus used inside Opt). String representation is a
+  (and thus used inside Opt class). String representation is a
   JSON array with zero or more lines.
 
 \ref MultiLine "Class reference..."
@@ -274,7 +273,7 @@ Note that in some cases forward and backward conversions are different
 - `dLine frw_acc(const dLine & l, double acc) const`
 - `dLine bck_acc(const dLine & l, double acc) const` --
   Convert a line. Each segment can be divided to provide
-  accuracy <acc> in source units (both for frw_acc and bck_acc).
+  accuracy `<acc>` in source units (both for `frw_acc` and `bck_acc`).
 
 - `dRect frw_acc(const dRect & R, double acc) const`,
 - `dRect bck_acc(const dRect & R, double acc) const` --
