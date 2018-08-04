@@ -11,7 +11,7 @@
 ///@{
 
 /// Abstract point transformation. Children have to
-/// define frw() and bck() methods.
+/// define frw_pt() and bck_pt() methods.
 /// Also sc_src and sc_dst parameters should be used (or
 /// rescale_src/rescale_dst redifined).
 struct ConvBase{
