@@ -283,9 +283,9 @@ Class for walking alone a line (2D).
 -----------------
 ## ConvBase class
 
-Point transformation. Children can redefine frw_pt() and bck_pt()
-methods. Also contains two factors, for scaling before and after actual
-transformation.
+Trivial point transformation with two factors for scaling before
+and after the transformation.. Children can redefine frw_pt() and bck_pt()
+methods to build more complicated transformations.
 
 Note that in some cases forward and backward conversions are different
 (accuracy is always calculated in source units).
@@ -316,28 +316,49 @@ Note that in some cases forward and backward conversions are different
   this.
 
 - TODO: convert angles, convert scales
-- TODO: join with ConvTriv
-
 
 \ref ConvBase "Class reference..."
 
 -----------------
-## ConvTriv class
-
-\ref ConvTriv "Class reference..."
-
------------------
 ## ConvMulti class
+
+Composite point transformation, child of ConvBase.
+
+Methods (&cnv is a pointer to a ConvBase class or its child, frw is
+a boolean flag for direction of the transformation `true` means forward):
+- `ConvMulti()` -- empty (trivial transformation),
+- `ConvMulti(&cnv1, &cnv2, frw1, frw2)` -- combine two transformations,
+- `push_front(&cnv, frw)` -- add a transformation to the beginning of the list,
+- `push_back(&cnv, frw)`  -- add a transformation to the end of the list.
 
 \ref ConvMulti "Class reference..."
 
 -----------------
 ## ConvAff class
 
+2D affine transformation, child of ConvBase.
+Works only with `x` and `y` coordinates.
+
+Methods (map is a std::map(dPoint,dPoint)):
+ - `ConvAff()` -- constructor, trivial transformation,
+ - `ConvAff(map)` -- build a transformation using the map,
+ - `reset()` -- reset to the trivial transformation,
+ - `reset(map)` -- reset using the map,
+ - `det()` -- forward conversion determinant,
+ - `shift_src(p)` -- shift by vector `p` before the transformation,
+ - `shift_dst(p)` -- shift by vector `p` after the transformation,
+ - `rescale_src(kx,ky)` -- rescale `x` and `y` before thetransformation,
+ - `rescale_dst(kx,ky)` -- rescale `x` and `y` after thetransformation,
+
 \ref ConvTriv "Class reference..."
 
 -----------------
 ## ConvGeo class
+
+Geo transformation, libproj wrapper, child of ConvBase.
+
+Constructor:
+ - `ConvGeo(const std::string & src, const std::string & dst = "+datum=WGS84 +proj=lonlat");`
 
 \ref ConvGeo "Class reference..."
 
