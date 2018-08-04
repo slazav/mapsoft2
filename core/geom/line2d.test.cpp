@@ -78,9 +78,9 @@ main(){
   assert (l3.length() == length(l3));
 
   // bbox
-  assert(iLine().bbox() == iRect());
-  assert(l2.bbox() == iRect(0,0,1,2));
-  assert(l2.bbox() == bbox(l2));
+  assert(iLine().bbox2d() == iRect());
+  assert(l2.bbox2d() == iRect(0,0,1,2));
+  assert(l2.bbox2d() == bbox2d(l2));
 
   // rint
   assert(rint(dLine("[[1.1,1.8],[3.9,1.1]]")) == dLine("[[1,2],[4,1]]"));
@@ -89,16 +89,16 @@ main(){
   {
     iLine l1("[[0,0],[1000,0]]");
     double a=30*M_PI/180.0;
-    assert(l1.rotate(iPoint(0,0),a) == iLine("[[0,0],[866,-499]]")); // sqrt(3)/2, -1/2
-    assert(l1.rotate(iPoint(500,500), a) == iLine("[[-183,317],[683,-183]]"));
-    assert(rotate(l1,iPoint(500,500), a) == iLine("[[-183,317],[683,-183]]"));
-    assert(rotate(iLine(), iPoint(500,500), a) == iLine());
+    assert(l1.rotate2d(iPoint(0,0),a) == iLine("[[0,0],[866,-499]]")); // sqrt(3)/2, -1/2
+    assert(l1.rotate2d(iPoint(500,500), a) == iLine("[[-183,317],[683,-183]]"));
+    assert(rotate2d(l1,iPoint(500,500), a) == iLine("[[-183,317],[683,-183]]"));
+    assert(rotate2d(iLine(), iPoint(500,500), a) == iLine());
 
     dLine l2("[[0,0],[1000,0]]");
-    assert(iLine(l2.rotate(dPoint(0,0),a)) == iLine("[[0,0],[866,-499]]"));
-    assert(iLine(l2.rotate(dPoint(500,500), a)) == iLine("[[-183,316],[683,-183]]"));
-    assert(iLine(rotate(l2,dPoint(500,500), a)) == iLine("[[-183,316],[683,-183]]"));
-    assert(rotate(dLine(), dPoint(500,500), a) == dLine());
+    assert(iLine(l2.rotate2d(dPoint(0,0),a)) == iLine("[[0,0],[866,-499]]"));
+    assert(iLine(l2.rotate2d(dPoint(500,500), a)) == iLine("[[-183,316],[683,-183]]"));
+    assert(iLine(rotate2d(l2,dPoint(500,500), a)) == iLine("[[-183,316],[683,-183]]"));
+    assert(rotate2d(dLine(), dPoint(500,500), a) == dLine());
   }
 
 

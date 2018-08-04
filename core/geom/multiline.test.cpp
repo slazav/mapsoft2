@@ -68,9 +68,9 @@ main(){
   assert(ml2.length() == l1.length()+l2.length());
   assert(length(ml2) == l1.length()+l2.length());
 
-  assert(ml1.bbox() == iRect());
-  assert(ml2.bbox() == expand(l1.bbox(),l2.bbox()));
-  assert(bbox(ml2) == ml2.bbox());
+  assert(ml1.bbox2d() == iRect());
+  assert(ml2.bbox2d() == expand(l1.bbox2d(),l2.bbox2d()));
+  assert(bbox2d(ml2) == ml2.bbox2d());
 
   assert(rint(dMultiLine("[[[1.1,1.8],[3.9,1.1]],[]]")) == dMultiLine("[[[1,2],[4,1]],[]]"));
 

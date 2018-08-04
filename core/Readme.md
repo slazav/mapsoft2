@@ -85,11 +85,11 @@ and non-option arguments from a command line.
 -----------------
 ## Point class
 
-`Point<T>` is a 2-d point with coordinates of arbitrary numerical type T.
+`Point<T>` is a 3D point with coordinates of arbitrary numerical type T.
 
 - Constructors:
   - `Point()` -- point with zero coordinates,
-  - `Point(x,y)` -- point with coordinates x and y,
+  - `Point(x,y,z=0)` -- point with coordinates x and y,
   - `Point(string)` -- read from std::string (see below).
 
 - Typedefs:
@@ -113,20 +113,20 @@ and non-option arguments from a command line.
   - `p.floor()`, `floor(p)` -- set coordinates to nearest smaller integers,
   - `p.ceil()`, `ceil(p)` -- set coordinates to nearest larger integers,
   - `p.abs()`,  `abs(p)` -- set coordinates to their absolute values,
-  - `p.rotate(pc,a)`,  `rotate(p,pc,a)` -- rotate around central point pc by angle a (rad, clockwise),
-  - `pscal(p1,p2)` -- scalar product: p1.x*p2.x + p1.y*p2.y,
+  - `p.rotate2d(pc,a)`,  `rotate2d(p,pc,a)` -- rotate around central point pc by angle a (rad, clockwise) in x-y plane
+  - `pscal(p1,p2)` -- scalar product: p1.x*p2.x + p1.y*p2.y + p1.z*p2.z,
   - `dist(p1,p2)` -- distance between points: (p1-p2).len().
 
 - Point can be converted to a string and back
   (and thus used inside Opt class). String representation is a
-  JSON array with two numerical fields `[x,y]`.
+  JSON array with two numerical fields `[x,y,z]` or `[x,y]` if `z==0`.
 
 \ref Point "Class reference..."
 
 -----------------
 ## Rect class
 
-Rect<T> is a 2-d rectangle with coordinates of arbitrary numerical type T.
+Rect<T> is a 2D rectangle with coordinates of arbitrary numerical type T.
 Rectangle is defined by top-left corner coordinates `x,y`, width `w`,
 height `h` and empty flag `e`.
 
@@ -134,12 +134,13 @@ height `h` and empty flag `e`.
   Top-left corner has lowest coordinates, bottom-right corner
   has highest coordinates. Width and height are always non-negative.
 
-- In any range checks all sides are included in the rectangle.
-
 - There is a difference between empty rectangle (such as a
   bounding box of a zero-point line) and zero-size rectangle
   (bounding box of a one-point line). Many functions throw
   error if rectangle is empty.
+
+- If 3D points are used in operations with 2D rectangles, only `x` and `y`
+coordinates are involved.
 
 - Constructors:
   - `Rect()` -- empty rectangle,
@@ -210,14 +211,14 @@ Line is a std::vector of Point.
   - `l.length`, `length(l)` -- line length
   - `l.invert`, `invert(l)` -- invert length
   - `l1.is_shifted(l2, sh)`, `is_shifted(l1, l2, sh)` -- check if line l2 is a shifted version of l1, return the shift
-  - `l.bbox()`, `bbox(l)` -- return a bounding box (Rect object),
   - `l.rint()`, `rint(l)` -- set coordinates to nearest integer values,
-  - `l.rotate(pc,a)`,  `rotate(l,pc,a)` -- rotate around central point pc by angle a (rad, clockwise),
-  - `rect_to_line(r)` -- convert a rectangle to line
+  - `l.bbox2d()`, `bbox2d(l)` -- return a bounding box (Rect object) in x-y plane,
+  - `l.rotate2d(pc,a)`,  `rotate2d(l,pc,a)` -- rotate around central point pc by angle a (rad, clockwise) in x-y plane,
+  - `rect_to_line(r)` -- convert a rectangle to line.
 
 - Line can be converted to a string and back
   (and thus used inside Opt class). String representation is a
-  JSON array with zero or more points (example: "[[1,2],[3,4]]").
+  JSON array with zero or more points (example: "[[1,2,1],[3,4,2],[0,0]]").
 
 \ref Line "Class reference..."
 
@@ -243,9 +244,9 @@ Line with multiple segments (std::vector of Line).
 - Other operations:
   - `dMultiLine(l)`, `iMultiLine(l)` -- cast to double- or integer-coordinate MultiLine,
   - `l.length`, `length(l)` -- line length (sum of segments' lengths),
-  - `l.bbox()`, `bbox(l)` -- return a bounding box (Rect object),
+  - `l.bbox2d()`, `bbox2d(l)` -- return a bounding box in x-y plane (Rect object),
   - `l.rint()`, `rint(l)` -- set coordinates to nearest integer values,
-  - `l.rotate(pc,a)`,  `rotate(l,pc,a)` -- rotate around central point pc by angle a (rad, clockwise).
+  - `l.rotate2d(pc,a)`,  `rotate2d(l,pc,a)` -- rotate around central point pc by angle a (rad, clockwise) in x-y plane.
 
 - MultiLine can be converted to a string and back
   (and thus used inside Opt class). String representation is a

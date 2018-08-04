@@ -1,10 +1,10 @@
 #ifndef CONV_BASE_H
 #define CONV_BASE_H
 
-#include "2d/point.h"
-#include "2d/line.h"
-#include "2d/multiline.h"
-#include "2d/rect.h"
+#include "geom/point.h"
+#include "geom/line.h"
+#include "geom/multiline.h"
+#include "geom/rect.h"
 //#include "image.h"
 
 ///\addtogroup libmapsoft
@@ -62,13 +62,13 @@ struct ConvBase{
   /// Convert a rectagle and return bounding box of resulting figure.
   /// Accuracy <acc> is measured in source units.
   virtual dRect frw_acc(const dRect & R, double acc) const {
-    return frw_acc(rect_to_line(R), acc).bbox(); }
+    return frw_acc(rect_to_line(R), acc).bbox2d(); }
 
   /// Convert a rectagle and return bounding box of resulting figure.
   /// Accuracy <acc> is measured in source units (and thus bck_acc and
   /// frw_acc are not symmetric).
   virtual dRect bck_acc(const dRect & R, double acc) const {
-    return bck_acc(rect_to_line(R), acc).bbox(); }
+    return bck_acc(rect_to_line(R), acc).bbox2d(); }
 
 /*
   /// Convert angle from y=const line at point p.

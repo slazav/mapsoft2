@@ -137,11 +137,11 @@ struct MultiLine : std::vector<Line<T> > {
   }
 
   /// MultiLine bounding box.
-  Rect<T> bbox() const{
+  Rect<T> bbox2d() const{
     if (this->size()<1) return Rect<T>();
     typename MultiLine<T>::const_iterator i=this->begin();
-    Rect<T> ret=i->bbox();
-    while ((++i) != this->end())  ret = expand(ret, i->bbox());
+    Rect<T> ret=i->bbox2d();
+    while ((++i) != this->end())  ret = expand(ret, i->bbox2d());
     return ret;
   }
 
@@ -190,7 +190,7 @@ double length(const MultiLine<T> & l){ return l.length(); }
 /// MultiLine bounding box
 /// \relates MultiLine
 template <typename T>
-Rect<T> bbox(const MultiLine<T> & l) { return l.bbox(); }
+Rect<T> bbox2d(const MultiLine<T> & l) { return l.bbox2d(); }
 
 /// rint function: change corner coordenates to nearest integers
 /// \relates Line

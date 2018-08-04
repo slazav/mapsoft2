@@ -172,8 +172,8 @@ struct Line : std::vector<Point<T> > {
     } while(1);
   }
 
-  /// Line bounding box
-  Rect<T> bbox() const{
+  /// Line bounding box in x-y plane
+  Rect<T> bbox2d() const{
     if (this->size()<1) return Rect<T>();
     Point<T> min((*this)[0]), max((*this)[0]);
 
@@ -194,8 +194,10 @@ struct Line : std::vector<Point<T> > {
     return ret;
   }
 
-  /// rotate the line around c at the angle a (rad, clockwise)
-  Line rotate(const Point<T> & c, const double a) const {
+  /// rotate the line around c at the angle a (rad, clockwise) in x-y plane.
+  /// Here we do not use Point::rotate2d to calculate sin/cos only ones
+  /// and make things faster.
+  Line rotate2d(const Point<T> & c, const double a) const {
     double C=cos(a), S=sin(a);
     Line ret(*this);
     for (typename Line<T>::iterator i=ret.begin(); i!=ret.end(); i++)
@@ -241,7 +243,7 @@ bool is_shifted(const Line<T> & l1, const Line<T> & l2, Point<T> & shift){
 /// Line bounding box
 /// \relates Line
 template <typename T>
-Rect<T> bbox(const Line<T> & l) { return l.bbox(); }
+Rect<T> bbox2d(const Line<T> & l) { return l.bbox2d(); }
 
 /// rint function: change corner coordenates to nearest integers
 /// \relates Line
@@ -250,7 +252,7 @@ Line<T> rint(const Line<T> & l) { return l.rint(); }
 
 /// rotate a line around c at the angle a (rad)
 template <typename T>
-Line<T> rotate(const Line<T> & l, const Point<T> & c, const double a) { return l.rotate(c,a); }
+Line<T> rotate2d(const Line<T> & l, const Point<T> & c, const double a) { return l.rotate2d(c,a); }
 
 /******************************************************************/
 // additional functions

@@ -8,13 +8,13 @@
 #include <opt/opt.h>
 #include <getopt/getopt.h>
 
-// 2D points, lines, rectangles
-#include <2d/point.h>
-#include <2d/line.h>
-#include <2d/line_walker.h>
-#include <2d/multiline.h>
+// points, lines, rectangles
+#include <geom/point.h>
+#include <geom/line.h>
+#include <geom/line_walker.h>
+#include <geom/multiline.h>
 
-// 2D conversions
+// point conversions
 #include <conv/conv_base.h>
 #include <conv/conv_triv.h>
 #include <conv/conv_multi.h>

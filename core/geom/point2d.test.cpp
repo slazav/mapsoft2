@@ -107,9 +107,9 @@ main(){
   {
     iPoint p(1000,0);
     double a=30*M_PI/180.0;
-    assert(p.rotate(iPoint(0,0),a) == iPoint(866,-499)); // sqrt(3)/2, -1/2
-    assert(p.rotate(iPoint(500,500), a) == iPoint(683,-183));
-    assert(rotate(p,iPoint(500,500), a) == iPoint(683,-183));
+    assert(p.rotate2d(iPoint(0,0),a) == iPoint(866,-499)); // sqrt(3)/2, -1/2
+    assert(p.rotate2d(iPoint(500,500), a) == iPoint(683,-183));
+    assert(rotate2d(p,iPoint(500,500), a) == iPoint(683,-183));
   }
 
   // pscal, dist
