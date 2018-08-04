@@ -41,6 +41,13 @@ int main() {
             "a,b");
     assert( pack_ozi_csv(unpack_ozi_csv("a,b,c,,d", 1)) == "a");
 
+    vector<string> v;
+    v.push_back("a,b,c");
+    v.push_back("d");
+    std::string s = pack_ozi_csv(v);
+    assert( s == "aÑbÑc,d");
+    assert( merge_strings(unpack_ozi_csv(s)) == "[a,b,c] [d] ");
+
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";
