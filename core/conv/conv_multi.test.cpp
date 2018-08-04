@@ -1,13 +1,13 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
 #include <cassert>
-#include "conv_triv.h"
+#include "conv_base.h"
 #include "conv_multi.h"
 
 main(){
   try{
 
-    ConvTriv cnv1, cnv2, cnv3;
+    ConvBase cnv1, cnv2, cnv3;
     ConvMulti cnv(&cnv1,&cnv2, true, false);
     cnv.push_front(&cnv3, true);
 

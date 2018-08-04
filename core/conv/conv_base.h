@@ -10,20 +10,20 @@
 ///\addtogroup libmapsoft
 ///@{
 
-/// Abstract point transformation. Children have to
-/// define frw_pt() and bck_pt() methods.
+/// Trivial point transformation. Children can
+/// redefine frw_pt() and bck_pt() methods.
 /// Also sc_src and sc_dst parameters should be used (or
 /// rescale_src/rescale_dst redifined).
 struct ConvBase{
 
-  /// Costructor.
-  ConvBase(): sc_dst(1.0), sc_src(1.0) {} 
+  /// constructor - trivial transformation
+  ConvBase(double sc=1.0): sc_dst(1.0), sc_src(1.0){}
 
-  /// Forward point transformation. Not defined in this class.
-  virtual void frw_pt(dPoint & p) const =0;
+  // forward point conversion (can be redefined)
+  virtual void frw_pt(dPoint & p) const {p*=sc_src*sc_dst;}
 
-  /// Backward point transformation. Not defined in this class.
-  virtual void bck_pt(dPoint & p) const =0;
+  // backward point conversion (can be redefined)
+  virtual void bck_pt(dPoint & p) const {p/=sc_src*sc_dst;}
 
 
   /// Forward point transformation.

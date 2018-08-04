@@ -22,6 +22,25 @@ class MyConv : public ConvBase {
 main(){
   try{
 
+    ConvBase cnv0;
+
+    dPoint p(10,10);
+    cnv0.frw(p);  assert(p == dPoint(10,10));
+    cnv0.bck(p);  assert(p == dPoint(10,10));
+
+    cnv0.rescale_src(3);
+    cnv0.frw(p); assert(p == dPoint(30,30));
+    cnv0.bck(p); assert(p == dPoint(10,10));
+
+    cnv0.rescale_dst(3);
+    cnv0.frw(p);  assert(p == dPoint(90,90));
+    cnv0.bck(p);  assert(p == dPoint(10,10));
+
+    cnv0.rescale_dst(1/9.0);
+    cnv0.frw(p);  assert(p == dPoint(10,10));
+    cnv0.bck(p);  assert(p == dPoint(10,10));
+
+
     MyConv cnv;
 
     { // test frw and bck functions for Point
@@ -43,12 +62,32 @@ main(){
     { // test frw_acc/bck_acc line conversions
        dLine l1("[[0,0],[10,10]]");
        cnv.rescale_dst(10);
-       assert(iLine(cnv.frw_acc(l1, 4)) ==
+       assert(iLine(cnv.frw_acc(l1, 2)) ==
               iLine("[[0,0],[250,100],[1000,200]]"));
        assert(iLine(cnv.frw_acc(l1, 1)) ==
               iLine("[[0,0],[62,50],[390,125],[1000,200]]"));
-       assert(iLine(cnv.frw_acc(l1, 0.1)) ==
+       assert(iLine(cnv.frw_acc(l1, 0.08)) ==
               iLine("[[0,0],[3,12],[14,24],[30,35],[77,55],[136,73],[277,105],[416,129],[676,164],[1000,200]]"));
+
+       l1=dLine("[[0,0],[100,20]]");
+       assert(iLine(10.0*cnv.bck_acc(l1, 1)) ==
+              iLine("[[0,0],[31,10]]"));
+       assert(iLine(10.0*cnv.bck_acc(l1, 0.2)) ==
+              iLine("[[0,0],[7,0],[23,5],[31,10]]"));
+       assert(iLine(10.0*cnv.bck_acc(l1, 0.05)) ==
+              iLine("[[0,0],[1,0],[5,0],[9,0],[14,2],[20,4],[26,7],[31,10]]"));
+       cnv.rescale_dst(0.1);
+    }
+
+    { // test frw_acc/bck_acc line conversions
+       dLine l1("[[0,0],[0,0],[10,10],[10,10,1]]");
+       cnv.rescale_dst(10);
+       assert(iLine(cnv.frw_acc(l1, 2)) ==
+              iLine("[[0,0],[250,100],[1000,200],[1000,200,10]]"));
+       assert(iLine(cnv.frw_acc(l1, 1)) ==
+              iLine("[[0,0],[62,50],[390,125],[1000,200],[1000,200,10]]"));
+       assert(iLine(cnv.frw_acc(l1, 0.08)) ==
+              iLine("[[0,0],[3,12],[14,24],[30,35],[77,55],[136,73],[277,105],[416,129],[676,164],[1000,200],[1000,200,10]]"));
 
        l1=dLine("[[0,0],[100,20]]");
        assert(iLine(10.0*cnv.bck_acc(l1, 1)) ==

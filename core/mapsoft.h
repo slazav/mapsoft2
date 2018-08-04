@@ -16,7 +16,6 @@
 
 // point conversions
 #include <conv/conv_base.h>
-#include <conv/conv_triv.h>
 #include <conv/conv_multi.h>
 #include <conv/conv_geo.h>
 #include <conv/conv_aff.h>

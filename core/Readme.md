@@ -283,18 +283,18 @@ Class for walking alone a line (2D).
 -----------------
 ## ConvBase class
 
-Abstract 2D transformation. Children have to define frw_pt() and bck_pt()
+Point transformation. Children can redefine frw_pt() and bck_pt()
 methods. Also contains two factors, for scaling before and after actual
 transformation.
 
 Note that in some cases forward and backward conversions are different
 (accuracy is always calculated in source units).
 
-
 - `ConvBase()` -- Constructor.
 
-- `frw_pt(dPoint &)=0, bck_pt(dPoint &)=0` -- Functions to be defined in children,
-     forward and backwart point conversion (in place).
+- `frw_pt(dPoint &), bck_pt(dPoint &)` -- Functions to be redefined in children,
+   forward and backwart in-place point conversion. By default is is
+   just a rescaling with `rescale_src*rescale_dst` factor.
 
 - `frw(dPoint &), bck(dPoint &), frw(dLine &), bck(dLine &),
    frw(dMultiLine &), bck(MultidLine &)` -- Convert points

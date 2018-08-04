@@ -13,6 +13,7 @@ ConvBase::frw_acc(const dLine & l, double acc) const {
     // start with a whole segment
     P1 = l[i-1];
     P2 = l[i];
+    if (P2==P1) continue;
     do {
       // convert first and last point
       P1a = P1; frw(P1a);
@@ -20,10 +21,15 @@ ConvBase::frw_acc(const dLine & l, double acc) const {
       // C1 - is a center of (P1-P2)
       // C2-C1 is a perpendicular to (P1-P2) with acc length
       dPoint C1 = (P1+P2)/2.0;
-      dPoint C2 = C1 + acc*norm(dPoint(P1.y-P2.y, -P1.x+P2.x));
-      dPoint C1a = C1; frw(C1a);
-      dPoint C2a = C2; frw(C2a);
-      double acc_dst = dist(C1a,C2a); // accuracy in destination units
+      dPoint C2x = C1 + dPoint(acc,0,0);
+      dPoint C2y = C1 + dPoint(0,acc,0);
+      dPoint C2z = C1 + dPoint(0,0,acc);
+
+      dPoint C1a(C1); frw(C1a);
+      frw(C2x); frw(C2y); frw(C2z);
+
+      // accuracy in destination units:
+      double acc_dst = std::max(std::max(dist(C1a,C2x),dist(C1a,C2y)),dist(C1a,C2z));
 
       if ((dist(C1a, (P1a+P2a)/2.) < acc_dst) ||
           (dist(P1,P2) < acc)){
@@ -56,6 +62,7 @@ ConvBase::bck_acc(const dLine & l, double acc) const {
     // start with a whole segment
     P1 = l[i-1];
     P2 = l[i];
+    if (P2==P1) continue;
     do {
       // convert first and last point
       P1a = P1; bck(P1a);
