@@ -254,6 +254,42 @@ Line with multiple segments (std::vector of Line).
 -----------------
 ## ConvBase class
 
+Abstract 2D transformation. Children have to define frw_pt() and bck_pt()
+methods. Also contains two factors, for scaling before and after actual
+transformation.
+
+Note that in some cases forward and backward conversions are different
+(accuracy is always calculated in source units).
+
+
+- `ConvBase()` -- Constructor.
+
+- `frw_pt(dPoint &)=0, bck_pt(dPoint &)=0` -- Functions to be defined in children,
+     forward and backwart point conversion (in place).
+
+- `frw(dPoint &), bck(dPoint &), frw(dLine &), bck(dLine &),
+   frw(dMultiLine &), bck(MultidLine &)` -- Convert points
+    (save as frw_pt, bck_pt), lines and multilines (without changing number of points).
+
+- `dLine frw_acc(const dLine & l, double acc) const`
+- `dLine bck_acc(const dLine & l, double acc) const` --
+  Convert a line. Each segment can be divided to provide
+  accuracy <acc> in source units (both for frw_acc and bck_acc).
+
+- `dRect frw_acc(const dRect & R, double acc) const`,
+- `dRect bck_acc(const dRect & R, double acc) const` --
+  Convert a rectagle and return bounding box of resulting figure.
+  Accuracy <acc> is measured in source units (both for frw_acc and bck_acc).
+
+- `void rescale_src(const double s)`
+- `void rescale_dst(const double s)` -- change scale factors applied before
+  and after conversions. If childs do not do the scaling they should redefine
+  this.
+
+- TODO: convert angles, convert scales
+- TODO: join with ConvTriv
+
+
 \ref ConvBase "Class reference..."
 
 -----------------
