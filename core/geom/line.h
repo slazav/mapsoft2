@@ -194,7 +194,7 @@ struct Line : std::vector<Point<T> > {
     return ret;
   }
 
-  /// rotate the line around c at the angle a (rad, clockwise) in x-y plane.
+  /// Rotate the line around c at the angle a (rad, clockwise) in x-y plane.
   /// Here we do not use Point::rotate2d to calculate sin/cos only ones
   /// and make things faster.
   Line rotate2d(const Point<T> & c, const double a) const {
@@ -202,6 +202,13 @@ struct Line : std::vector<Point<T> > {
     Line ret(*this);
     for (typename Line<T>::iterator i=ret.begin(); i!=ret.end(); i++)
       *i=Point<T>(C*(i->x-c.x)+S*(i->y-c.y), C*(i->y-c.y)-S*(i->x-c.x))+c;
+    return ret;
+  }
+
+  /// Project the line into x-y plane
+  Line flatten() const {
+    Line ret(*this);
+    for (typename Line<T>::iterator i=ret.begin(); i!=ret.end(); i++) i->z=0;
     return ret;
   }
 
@@ -253,6 +260,10 @@ Line<T> rint(const Line<T> & l) { return l.rint(); }
 /// rotate a line around c at the angle a (rad)
 template <typename T>
 Line<T> rotate2d(const Line<T> & l, const Point<T> & c, const double a) { return l.rotate2d(c,a); }
+
+/// Project the line to x-y plane.
+template <typename T>
+Line<T> flatten(const Line<T> & l) { return l.flatten(); }
 
 /******************************************************************/
 // additional functions

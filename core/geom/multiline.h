@@ -154,7 +154,7 @@ struct MultiLine : std::vector<Line<T> > {
   }
 
   /// rotate the MultiLine around c at the angle a (rad, clockwise)
-  MultiLine rotate(const Point<T> & c, const double a) const {
+  MultiLine rotate2d(const Point<T> & c, const double a) const {
     double C=cos(a), S=sin(a);
     MultiLine ret(*this);
     for (typename MultiLine::iterator i=ret.begin(); i!=ret.end(); i++)
@@ -163,6 +163,13 @@ struct MultiLine : std::vector<Line<T> > {
     return ret;
   }
 
+  /// Project the multiline into x-y plane
+  MultiLine flatten() const {
+    MultiLine ret;
+    for (typename MultiLine<T>::const_iterator i=this->begin(); i!=this->end(); i++)
+      ret.push_back(i->flatten());
+    return ret;
+  }
 
 };
 
@@ -199,7 +206,11 @@ MultiLine<T> rint(const MultiLine<T> & l) { return l.rint(); }
 
 /// rotate a MultiLine around c at the angle a (rad)
 template <typename T>
-MultiLine<T> rotate(const MultiLine<T> & l, const Point<T> & c, const double a) { return l.rotate(c,a); }
+MultiLine<T> rotate2d(const MultiLine<T> & l, const Point<T> & c, const double a) { return l.rotate2d(c,a); }
+
+/// Project the multiline to x-y plane.
+template <typename T>
+MultiLine<T> flatten(const MultiLine<T> & l) { return l.flatten(); }
 
 /******************************************************************/
 // input/output

@@ -7,7 +7,7 @@
 ///\addtogroup libmapsoft
 ///@{
 
-/// Class for walking alone a line.
+/// Class for walking alone a line (2D).
 class LineWalker{
 
   dLine   line; // line copy

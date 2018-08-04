@@ -136,6 +136,9 @@ struct Point {
     return Point(C*(x-c.x)+S*(y-c.y), C*(y-c.y)-S*(x-c.x)) + c;
   }
 
+  /// project the point to x-y plane
+  Point flatten() const { return Point(x,y); }
+
 };
 
 /******************************************************************/
@@ -188,6 +191,10 @@ Point<T> abs(const Point<T> & p){ return p.abs(); }
 template <typename T>
 Point<T> rotate2d(const Point<T> & p, const Point<T> & c, const double a){
   return p.rotate2d(c,a); }
+
+/// project the point to x-y plane
+template <typename T>
+Point<T> flatten(const Point<T> & p) { return p.flatten(); }
 
 /******************************************************************/
 // extra functions

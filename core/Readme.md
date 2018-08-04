@@ -113,7 +113,8 @@ and non-option arguments from a command line.
   - `p.floor()`, `floor(p)` -- set coordinates to nearest smaller integers,
   - `p.ceil()`, `ceil(p)` -- set coordinates to nearest larger integers,
   - `p.abs()`,  `abs(p)` -- set coordinates to their absolute values,
-  - `p.rotate2d(pc,a)`,  `rotate2d(p,pc,a)` -- rotate around central point pc by angle a (rad, clockwise) in x-y plane
+  - `p.rotate2d(pc,a)`,  `rotate2d(p,pc,a)` -- rotate around central point pc by angle a (rad, clockwise) in x-y plane,
+  - `p.flatten()`,  `flatten(p)` -- project the point to x-y plane.
   - `pscal(p1,p2)` -- scalar product: p1.x*p2.x + p1.y*p2.y + p1.z*p2.z,
   - `dist(p1,p2)` -- distance between points: (p1-p2).len().
 
@@ -164,8 +165,7 @@ coordinates are involved.
   - `r1.swap(r2)` -- swap rectangles
   - `r.empty()` -- check if rectangle is empty
   - `r.zsize()` -- check if rectangle has zero size (w==0 or h==0, but not empty)
-  - `r.tcl(), r.trc(), r.brc(), r.blc(), r.cnt()` -- top-left, top-right,
-    bottom-left, bottom-left corners and central point,
+  - `r.tcl(), r.trc(), r.brc(), r.blc(), r.cnt()` -- top-left, top-right, bottom-left, bottom-left corners and central point,
   - `dRect(r)`, `iRect(r)` -- cast to double- or integer-coordinate rectangle
   - `r.rint()`, `rint(r)` -- set coordinates to nearest integer values,
   - `r.floor()`, `floor(r)` -- shrink the rectangle to nearest integers,
@@ -208,12 +208,13 @@ Line is a std::vector of Point.
 
 - Other operations:
   - `dLine(l)`, `iLine(l)` -- cast to double- or integer-coordinate line
-  - `l.length`, `length(l)` -- line length
-  - `l.invert`, `invert(l)` -- invert length
+  - `l.length()`, `length(l)` -- line length
+  - `l.invert()`, `invert(l)` -- invert the line
   - `l1.is_shifted(l2, sh)`, `is_shifted(l1, l2, sh)` -- check if line l2 is a shifted version of l1, return the shift
   - `l.rint()`, `rint(l)` -- set coordinates to nearest integer values,
   - `l.bbox2d()`, `bbox2d(l)` -- return a bounding box (Rect object) in x-y plane,
   - `l.rotate2d(pc,a)`,  `rotate2d(l,pc,a)` -- rotate around central point pc by angle a (rad, clockwise) in x-y plane,
+  - `l.flatten()`,  `flatten(l)` -- project the line to x-y plane.
   - `rect_to_line(r)` -- convert a rectangle to line.
 
 - Line can be converted to a string and back
@@ -243,10 +244,11 @@ Line with multiple segments (std::vector of Line).
 
 - Other operations:
   - `dMultiLine(l)`, `iMultiLine(l)` -- cast to double- or integer-coordinate MultiLine,
-  - `l.length`, `length(l)` -- line length (sum of segments' lengths),
+  - `l.length()`, `length(l)` -- line length (sum of segments' lengths),
   - `l.bbox2d()`, `bbox2d(l)` -- return a bounding box in x-y plane (Rect object),
   - `l.rint()`, `rint(l)` -- set coordinates to nearest integer values,
   - `l.rotate2d(pc,a)`,  `rotate2d(l,pc,a)` -- rotate around central point pc by angle a (rad, clockwise) in x-y plane.
+  - `l.flatten()`,  `flatten(l)` -- project the multiline to x-y plane.
 
 - MultiLine can be converted to a string and back
   (and thus used inside Opt class). String representation is a
@@ -257,7 +259,7 @@ Line with multiple segments (std::vector of Line).
 -----------------
 ## LineWalker class
 
-Class for walking alone a line.
+Class for walking alone a line (2D).
 
 - Constructor: `LineWalker lw(dline)`.
 - Other methods:
@@ -306,7 +308,7 @@ Note that in some cases forward and backward conversions are different
 - `dRect frw_acc(const dRect & R, double acc) const`,
 - `dRect bck_acc(const dRect & R, double acc) const` --
   Convert a rectagle and return bounding box of resulting figure.
-  Accuracy <acc> is measured in source units (both for frw_acc and bck_acc).
+  Accuracy `<acc>` is measured in source units (both for frw_acc and bck_acc).
 
 - `void rescale_src(const double s)`
 - `void rescale_dst(const double s)` -- change scale factors applied before

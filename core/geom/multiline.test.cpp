@@ -74,16 +74,18 @@ main(){
 
   assert(rint(dMultiLine("[[[1.1,1.8],[3.9,1.1]],[]]")) == dMultiLine("[[[1,2],[4,1]],[]]"));
 
+  assert(flatten(iMultiLine("[[[1,8,9],[1,2,3]],[]]")) == iMultiLine("[[[1,8],[1,2]],[]]"));
+
   // rotate
   {
     iMultiLine l("[[],[[0,0],[1000,0]]]");
     double a=30*M_PI/180.0;
-    assert(l.rotate(iPoint(0,0),a) == iMultiLine("[[],[[0,0],[866,-499]]]"));
-    assert(l.rotate(iPoint(500,500), a) == iMultiLine("[[],[[-183,317],[683,-183]]]"));
-    assert(rotate(l,iPoint(500,500), a) == iMultiLine("[[],[[-183,317],[683,-183]]]"));
-    assert(iMultiLine(l.rotate(dPoint(500,500), a)) == iMultiLine("[[],[[-183,317],[683,-183]]]"));
-    assert(rotate(iMultiLine(), iPoint(500,500), a) == iMultiLine());
-    assert(rotate(iMultiLine("[[],[]]"), iPoint(500,500), a) == iMultiLine("[[],[]]"));
+    assert(l.rotate2d(iPoint(0,0),a) == iMultiLine("[[],[[0,0],[866,-499]]]"));
+    assert(l.rotate2d(iPoint(500,500), a) == iMultiLine("[[],[[-183,317],[683,-183]]]"));
+    assert(rotate2d(l,iPoint(500,500), a) == iMultiLine("[[],[[-183,317],[683,-183]]]"));
+    assert(iMultiLine(l.rotate2d(dPoint(500,500), a)) == iMultiLine("[[],[[-183,317],[683,-183]]]"));
+    assert(rotate2d(iMultiLine(), iPoint(500,500), a) == iMultiLine());
+    assert(rotate2d(iMultiLine("[[],[]]"), iPoint(500,500), a) == iMultiLine("[[],[]]"));
   }
 
   // iLine <-> dLine casting

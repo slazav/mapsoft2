@@ -7,7 +7,7 @@
 ///\addtogroup libmapsoft
 ///@{
 
-/// Affine transformation
+/// 2D affine transformation
 class ConvAff : public ConvBase {
 
   std::vector<double> k_frw; ///< transformation parameters (6 numbers)

@@ -1,14 +1,15 @@
 #include "line_walker.h"
 
-LineWalker::LineWalker(const dLine & _line): line(_line){
+LineWalker::LineWalker(const dLine & _line) {
+  line = _line.flatten();
   current_l=0;
   current_n=0;
 
   double l=0;
   ls.push_back(0);
-  for (int j=1; j<_line.size(); j++){
-    dPoint p1 (_line[j-1]);
-    dPoint p2 (_line[j]);
+  for (int j=1; j<line.size(); j++){
+    dPoint p1 (line[j-1]);
+    dPoint p2 (line[j]);
     l+=len(p1-p2);
     ls.push_back(l);
   }
