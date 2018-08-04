@@ -10,6 +10,7 @@ library_objects = Split ("""
   conv/conv_aff.cpp
   getopt/getopt.cpp
   2d/2d_json.cpp
+  2d/line_walker.cpp
 """)
 
 # Programs inside the lib folder
@@ -24,6 +25,7 @@ simple_tests=Split("""
   2d/point.test.cpp
   2d/rect.test.cpp
   2d/line.test.cpp
+  2d/line_walker.test.cpp
   2d/multiline.test.cpp
   iconv/iconv.test.cpp
   conv/conv_base.test.cpp

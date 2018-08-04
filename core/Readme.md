@@ -228,30 +228,54 @@ Line with multiple segments (std::vector of Line).
 
 - Constructors:
   - `MiltiLine()` -- empty line,
-  - `MiltiLine(string)` -- read from std::string (see below)
+  - `MiltiLine(string)` -- read from std::string (see below).
 
 - Typedefs:
   - `dMultiLine` is a `MultiLine<double>`,
   - `iMultiLine` is a `MultiLine<int>`.
 
 - Arithmetic operations (`l` are MultiLines, `p` points, `k` numbers):
-  - `l+=p, l-=p, l+p, p+l, l-p, -l`
-  - `l*=k, l/=k, l*k, k*l, l/k`
-  - `l==l, l!=l`
-  - `l<l, l<=l, l>=l, l>l`
+  - `l+=p, l-=p, l+p, p+l, l-p, -l`,
+  - `l*=k, l/=k, l*k, k*l, l/k`,
+  - `l==l, l!=l`,
+  - `l<l, l<=l, l>=l, l>l`.
 
 - Other operations:
-  - `dMultiLine(l)`, `iMultiLine(l)` -- cast to double- or integer-coordinate MultiLine
-  - `l.length`, `length(l)` -- line length (sum of segments' lengths)
+  - `dMultiLine(l)`, `iMultiLine(l)` -- cast to double- or integer-coordinate MultiLine,
+  - `l.length`, `length(l)` -- line length (sum of segments' lengths),
   - `l.bbox()`, `bbox(l)` -- return a bounding box (Rect object),
   - `l.rint()`, `rint(l)` -- set coordinates to nearest integer values,
-  - `l.rotate(pc,a)`,  `rotate(l,pc,a)` -- rotate around central point pc by angle a (rad, clockwise),
+  - `l.rotate(pc,a)`,  `rotate(l,pc,a)` -- rotate around central point pc by angle a (rad, clockwise).
 
 - MultiLine can be converted to a string and back
   (and thus used inside Opt class). String representation is a
   JSON array with zero or more lines.
 
 \ref MultiLine "Class reference..."
+
+-----------------
+## LineWalker class
+
+Class for walking alone a line.
+
+- Constructor: `LineWalker lw(dline)`.
+- Other methods:
+  - `lw.length()` -- get line length,
+  - `lw.pt()`     -- get current point,
+  - `lw.dist()`   -- get current distance from the line beginning,
+  - `lw.tang()`   -- get unit tangent vector at current point,
+  - `lw.norm()`   -- get unit normal vector at current point,
+  - `lw.get_points(d)` -- get part of line with `d` length, starting from current point, move current point by `d`,
+  - `lw.move_begin()` --  move current point to the first node,
+  - `lw.move_end()` -- move current point to the last node,
+  - `lw.move_frw(d)` -- move current point forward by `d` distance,
+  - `lw.move_bck(d)` -- move current point backward by `d` distance,
+  - `lw.move_frw_to_node()` - move current point forward to the nearest node,
+  - `lw.move_bck_to_node()` - move current point backward to the nearest node,
+  - `lw.is_begin()` -- is current point at the first node,
+  - `lw.is_end()`   -- is current point at the last node.
+
+\ref LineWalker "Class reference..."
 
 -----------------
 ## ConvBase class

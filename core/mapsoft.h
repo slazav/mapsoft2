@@ -11,6 +11,7 @@
 // 2D points, lines, rectangles
 #include <2d/point.h>
 #include <2d/line.h>
+#include <2d/line_walker.h>
 #include <2d/multiline.h>
 
 // 2D conversions
