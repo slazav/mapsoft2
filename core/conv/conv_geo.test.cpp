@@ -10,8 +10,8 @@ main(){
 
     ConvGeo cnv1(proj_wgs,proj_wgs);
 
-    dPoint p1(25.651054, 60.976941);
-    iPoint p1a(427091, 6763808);
+    dPoint p1(25.651054, 60.976941, 0);
+    iPoint p1a(427091, 6763808, -11);
 
     dPoint p2(p1);
     cnv1.frw(p2);
@@ -24,7 +24,7 @@ main(){
     cnv2.bck(p2);
     assert(iPoint(p2) == p1a);
     cnv2.frw(p2);
-    assert(iPoint(p2*1e6) == iPoint(p1*1e6));
+    assert(dist(p1,p2) < 2e-7);
 
     // wgs->krass
     ConvGeo cnv3(proj_wgs, proj_krass);
@@ -32,7 +32,7 @@ main(){
     cnv3.frw(p2);
     assert(iPoint(p2) == p1a);
     cnv3.bck(p2);
-    assert(iPoint(p2*1e6) == iPoint(p1*1e6));
+    assert(dist(p1,p2) < 2e-7);
 
     dLine l1;
     iLine l1a;

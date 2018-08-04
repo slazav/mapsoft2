@@ -32,7 +32,7 @@ public:
   void frw_pt(dPoint & p) const{
     if (sc_src!=1.0) p*=sc_src;  // this if increases speed...
     if (pj_src!=pj_dst) {
-      if (pj_transform(pj_src, pj_dst, 1, 1, &p.x, &p.y, NULL)!=0)
+      if (pj_transform(pj_src, pj_dst, 1, 1, &p.x, &p.y, &p.z)!=0)
         throw Err() << "Can't convert coordinates: " << pj_strerrno(pj_errno);
     }
     if (sc_dst!=1.0) p*=sc_dst;
@@ -42,7 +42,7 @@ public:
   void bck_pt(dPoint & p) const{
     if (sc_dst!=1.0) p/=sc_dst;
     if (pj_src!=pj_dst){
-      if (pj_transform(pj_dst, pj_src, 1, 1, &p.x, &p.y, NULL)!=0)
+      if (pj_transform(pj_dst, pj_src, 1, 1, &p.x, &p.y, &p.z)!=0)
         throw Err() << "Can't convert coordinates: " << pj_strerrno(pj_errno);
     }
     if (sc_src!=1.0) p/=sc_src;
