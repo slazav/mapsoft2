@@ -186,7 +186,7 @@ struct Line : std::vector<Point<T> > {
     return Rect<T>(min,max);
   }
 
-  /// rint function: change corner coordenates to nearest integers
+  /// rint function: change corner coordinates to nearest integers
   Line<T> rint() const{
     Line<T> ret;
     for (typename Line<T>::const_iterator i=this->begin(); i!=this->end(); i++)
