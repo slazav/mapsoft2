@@ -211,8 +211,25 @@ main(){
     assert(intersect(iRect(p0,p2),iRect(p1,p2)) == iRect(p1,p2));
 
     assert(!contains(iRect(),p0));
+    assert(contains(iRect(p0,p2),(p0+p2)/2));
     assert(contains(iRect(p0,p2),p0));
     assert(contains(iRect(p0,p2),p2));
+
+    assert(!contains_l(iRect(),p0));
+    assert(contains_l(iRect(p0,p2),(p0+p2)/2));
+    assert(contains_l(iRect(p0,p2),p0));
+    assert(!contains_l(iRect(p0,p2),p2));
+
+    assert(!contains_u(iRect(),p0));
+    assert(contains_u(iRect(p0,p2),(p0+p2)/2));
+    assert(!contains_u(iRect(p0,p2),p0));
+    assert(contains_u(iRect(p0,p2),p2));
+
+    assert(!contains_n(iRect(),p0));
+    assert(contains_n(iRect(p0,p2),(p0+p2)/2));
+    assert(!contains_n(iRect(p0,p2),p0));
+    assert(!contains_n(iRect(p0,p2),p2));
+
     assert(contains(iRect(p0,p2),iRect(p0,p0)));
     assert(contains(iRect(p0,p2),iRect(p2,p2)));
     assert(contains(iRect(p0,p2),iRect(p1,p1)));

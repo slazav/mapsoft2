@@ -254,7 +254,28 @@ struct Rect {
     return Rect<T>(x1,y1,w,h);
   }
 
-  /// If rectangle contains a point
+  /// If rectangle contains a point (only lower bounds are included).
+  bool contains_l (const Point<T> & p) const {
+    if (e) return false;
+    return (p.x >= x) && (p.x < x+w) &&
+           (p.y >= y) && (p.y < y+h);
+  }
+
+  /// If rectangle contains a point (only upper bounds are included).
+  bool contains_u (const Point<T> & p) const {
+    if (e) return false;
+    return (p.x > x) && (p.x <= x+w) &&
+           (p.y > y) && (p.y <= y+h);
+  }
+
+  /// If rectangle contains a point (bounds are not included).
+  bool contains_n (const Point<T> & p) const {
+    if (e) return false;
+    return (p.x > x) && (p.x < x+w) &&
+           (p.y > y) && (p.y < y+h);
+  }
+
+  /// If rectangle contains a point (all bounds are included).
   bool contains (const Point<T> & p) const {
     if (e) return false;
     return (p.x >= x) && (p.x <= x+w) &&
@@ -314,7 +335,22 @@ Rect<T> expand (const Rect<T> & r1, const Rect<T> & r2) { return r1.expand(r2); 
 template <typename T>
 Rect<T> intersect (const Rect<T> & r1, const Rect<T> & r2) { return r1.intersect(r2); }
 
-/// Is rectangle contains a point
+/// Is rectangle contains a point (only lower bounds are included).
+/// \relates Rect
+template <typename T>
+bool contains_l (const Rect<T> & r, const Point<T> & p) { return r.contains_l(p); }
+
+/// Is rectangle contains a point (only upper bounds are included).
+/// \relates Rect
+template <typename T>
+bool contains_u (const Rect<T> & r, const Point<T> & p) { return r.contains_u(p); }
+
+/// Is rectangle contains a point (bounds are not included).
+/// \relates Rect
+template <typename T>
+bool contains_n (const Rect<T> & r, const Point<T> & p) { return r.contains_n(p); }
+
+/// Is rectangle contains a point (all bounds are included).
 /// \relates Rect
 template <typename T>
 bool contains (const Rect<T> & r, const Point<T> & p) { return r.contains(p); }

@@ -174,7 +174,10 @@ height `h` and empty flag `e`.
   - `r.expand(p)`, `expand(r,p)` -- expand rectangle to cover point p,
   - `r1.expand(r2)`, `expand(r1,r2)` -- expand rectangle to cover rectangle r2,
   - `r1.intersect(r2)`, `intersect(r1,r2)` -- intersection with rectangle r2,
-  - `r.contains(p)`, `contains(r,p)` -- check if rectangle contains a point,
+  - `r.contains_l(p)`, `contains_l(r,p)` -- check if rectangle contains a point, only lower bound is included,
+  - `r.contains_u(p)`, `contains_u(r,p)` -- check if rectangle contains a point, only upper bound is included,
+  - `r.contains_n(p)`, `contains_n(r,p)` -- check if rectangle contains a point, bounds are not included,
+  - `r.contains(p)`, `contains(r,p)` -- check if rectangle contains a point, all bounds are included,
   - `r1.contains(r2)`, `contains(r1,r2)` -- check if rectangle contains another rectangle,
 
 - Rect can be converted to a string and back
