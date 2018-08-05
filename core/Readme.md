@@ -420,3 +420,14 @@ size of object.
 ## IConv class
 
 \ref ConvTriv "Class reference..."
+
+-----------------
+## TimeFmt group
+
+In mapsoft unix time in ms is used.
+
+Functions:
+* `std::string time_utc_iso8601(const time_t t)` --
+   Convert mapsoft time to UTC time represented as ISO 8601 string.
+* `time_t parse_utc_iso8601(const std::string & str)` --
+   Convert UTC time represented as ISO 8601 string (used in GPX) to a mapsoft time.

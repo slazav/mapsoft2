@@ -30,6 +30,9 @@
 // geodata
 #include <geo/geo_data.h>
 
+// time formatting
+#include <time/time_fmt.h>
+
 // reading/writing OziExplorer files
 #include <ozi/ozi.h>
 
