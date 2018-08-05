@@ -4,7 +4,7 @@
 #include <string>
 #include "conv_base.h"
 #include <proj_api.h>
-
+#include "geo/geo_data.h" // for UNDEF_ALT
 
 ///\addtogroup libmapsoft
 ///@{
@@ -32,7 +32,7 @@ public:
   void frw_pt(dPoint & p) const{
     if (sc_src!=1.0) {p.x*=sc_src; p.y*=sc_src;}  // this if increases speed...
     if (pj_src!=pj_dst) {
-      double *z = (p.z<=-1e7)? NULL:&p.z;
+      double *z = (p.z<=UNDEF_ALT)? NULL:&p.z;
       if (pj_transform(pj_src, pj_dst, 1, 1, &p.x, &p.y, z)!=0)
         throw Err() << "Can't convert coordinates: " << pj_strerrno(pj_errno);
     }
@@ -43,7 +43,7 @@ public:
   void bck_pt(dPoint & p) const{
     if (sc_dst!=1.0) {p.x/=sc_dst; p.y/=sc_dst;};
     if (pj_src!=pj_dst){
-      double *z = (p.z<=-1e7)? NULL:&p.z;
+      double *z = (p.z<=UNDEF_ALT)? NULL:&p.z;
       if (pj_transform(pj_dst, pj_src, 1, 1, &p.x, &p.y, z)!=0)
         throw Err() << "Can't convert coordinates: " << pj_strerrno(pj_errno);
     }

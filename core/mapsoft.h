@@ -27,6 +27,8 @@
 // wrapper for iconv library
 #include <iconv/iconv.h>
 
+// geodata
+#include <geo/geo_data.h>
 
 // reading/writing OziExplorer files
 #include <ozi/ozi.h>

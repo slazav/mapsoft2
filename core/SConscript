@@ -11,6 +11,7 @@ library_objects = Split ("""
   getopt/getopt.cpp
   geom/json_pt.cpp
   geom/line_walker.cpp
+  geo/geo_data.cpp
 """)
 
 # Programs inside the lib folder
@@ -36,7 +37,7 @@ simple_tests=Split("""
   conv/conv_geo.test.cpp
   cache/cache.test.cpp
   cache/sizecache.test.cpp
-
+  geo/geo_data.test.cpp
   ozi/ozi.test.cpp
 """)
 
