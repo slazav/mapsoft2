@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/bin/bash -efu
+
+prog=${1:-./io.test}
 
 for f in\
     garmin_etrex20_north_trk\
@@ -6,6 +8,13 @@ for f in\
     garmin_etrex20_south_trk\
     garmin_etrex20_south_wpt; do
 
-  ./io.test gpx/$f.gpx  gpx/_$f.gpx
-
+  cmd="$prog gpx/$f.gpx  gpx/_$f.gpx"
+  diffargs="gpx/_$f.gpx gpx/ref_$f.gpx"
+  $prog gpx/$f.gpx  gpx/_$f.gpx
+  if ! diff -q $diffargs; then
+    echo "different files: $diffargs"
+    echo "command: $cmd"
+    diff $diffargs
+    false
+  fi
 done

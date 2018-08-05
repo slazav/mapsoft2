@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="mapsoft2">
+<wpt lat="-44.5574080" lon="-72.3926320">
+   <ele>213.69</ele>
+   <time>2017-01-06T10:38:00Z</time>
+   <name>RUCH</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="-44.5574230" lon="-72.3925040">
+   <ele>204.59</ele>
+   <time>2017-01-06T10:39:45Z</time>
+   <name>TR7</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="-44.5562080" lon="-72.3919900">
+   <ele>245.62</ele>
+   <time>2017-01-06T11:07:17Z</time>
+   <name>057</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="-44.5543670" lon="-72.3897990">
+   <ele>286.66</ele>
+   <time>2017-01-06T13:32:43Z</time>
+   <name>058</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="-44.5537440" lon="-72.3892720">
+   <ele>286.96</ele>
+   <time>2017-01-06T13:40:41Z</time>
+   <name>059</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="-44.5535320" lon="-72.3884960">
+   <ele>245.71</ele>
+   <time>2017-01-06T14:15:25Z</time>
+   <name>060</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="-44.5531440" lon="-72.3891790">
+   <ele>245.65</ele>
+   <time>2017-01-06T14:43:27Z</time>
+   <name>ZHOPA</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="-44.5527970" lon="-72.3885950">
+   <ele>286.89</ele>
+   <time>2017-01-06T15:33:29Z</time>
+   <name>061</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="-44.5520670" lon="-72.3885530">
+   <ele>292.09</ele>
+   <time>2017-01-06T15:51:51Z</time>
+   <name>062</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="-44.5524320" lon="-72.3884560">
+   <ele>280.45</ele>
+   <time>2017-01-06T16:24:45Z</time>
+   <name>OB2</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="-44.5541440" lon="-72.3899380">
+   <ele>242.83</ele>
+   <time>2017-01-06T18:32:41Z</time>
+   <name>VYLAZ</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="-44.5520400" lon="-72.3907300">
+   <ele>334.91</ele>
+   <time>2017-01-06T19:22:54Z</time>
+   <name>POV</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="-44.5552400" lon="-72.3910540">
+   <ele>230.31</ele>
+   <time>2017-01-06T20:07:09Z</time>
+   <name>ST3</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+</gpx>

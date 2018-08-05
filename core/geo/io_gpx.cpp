@@ -15,6 +15,7 @@ using namespace std;
 Structure:
 <gpx>
   <metadata>
+  <extensions>
   <wpt lat lon>
     <ele> <time> <magvar> <geoidheight>
     <name> <cmt> <desc> <src> <link> <sym> <type>
@@ -24,22 +25,21 @@ Structure:
   <rte>
     <name> <cmt> <desc> <src> <link>
     <number> <type> <extensions>
-    <rtept> [0..*] -- same as wpt
+    <rtept> [0..*] -- same as <wpt>
 
   <trk>
     <name> <cmt> <desc> <src> <link>
     <number> <type> <extensions>
     <trkseg> [0..*]
-      <trkpt> [0..*] -- same as wpt
+      <trkpt> [0..*] -- same as <wpt>
       <extensions>
 
-  <extensions>
 -----------------
 <wpt> fields:
 
-* lat, lon -- The latitude and longitude of the point. Decimal degrees,
-WGS84 datum. (x and y fields in the mapsoft GeoWpt structure). Two
-mandatory fields.
+Attributes: lat, lon -- The latitude and longitude of the point. Decimal
+degrees, WGS84 datum. (x and y fields in the mapsoft GeoWpt structure).
+Two mandatory fields.
 
 * ele -- Elevation (in meters) of the point. (z field in the mapsoft
   GeoWpt structure).
@@ -78,10 +78,10 @@ All other elements are stored in the Opt object and handeled as strings.
 * extensions -- You can add extend GPX by adding your own elements from
   another schema here.
 
-    Rte attributes:
+    Rte/Trk attributes:
 
 * name -- GPS name of route.
-* cmt -- GPS comment for route.
+* cmt -- GPS comment for route. In mapsoft2 field name is "comm".
 * desc -- Text description of route for user. Not sent to GPS.
 * src -- Source of data. Included to give user some idea of reliability
   and accuracy of data.
@@ -90,14 +90,40 @@ All other elements are stored in the Opt object and handeled as strings.
 * type -- Type (classification) of route.
 * extensions -- You can add extend GPX by adding your own elements from
   another schema here.
+
+-----------------
+    support in Mapsoft:
+
+reading:
+- skip gpx attributes, <metadata> and all <extensions>
+- rte -- load as waypoint list, everything except extensions (TODO: test!)
+- wpt: everything except extensions
+- trk: everything except extensions
+- - trkseg: everything except extensions
+- - - trkpt: only <lat> <lon> <ele> <time> tags
+
+writing:
+- skip gpx attributes, <metadata> and all <extensions>
+- wpt - all waypoint lists are written together.
+        everithing except extensions
+- trk - everithing except extensions
+- - trkseg: everything except extensions
+- - - trkpt: only <lat> <lon> <ele> <time> tags
 */
 
 
-// All names which are keps in opt and handeled as strings.
-// "cmt" should be converted to "comm" in mapsoft
+// All names which are keps in opt and handeled as strings
+// and have same spelling in GPX and in mapsoft.
+// comm/cmt, time, ele/z are processed separately.
 const char *gps_wpt_names[] = {
-"magvar", "geoidheight", "name", "cmt", "desc", "src", "link", "sym", "type", "fix",
-"sat", "hdop", "vdop", "pdop", "ageofdgpsdata", "dgpsid", "extensions", NULL};
+  "magvar", "geoidheight", "name", "desc", "src", "link", "sym", "type", "fix",
+  "sat", "hdop", "vdop", "pdop", "ageofdgpsdata", "dgpsid", NULL};
+
+/// Trk/rte fields.
+/// comm/cmt processed separately.
+const char *gps_trk_names[] = {
+  "name", "desc", "src", "link",
+  "number", "type", NULL};
 
 
 /// write GPX
@@ -110,7 +136,7 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opt){
   f << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
   f << "<gpx version=\"1.1\" creator=\"mapsoft2\">" << endl;
 
-  // Write waypoints.
+  // Write waypoints:
   for (int i = 0; i < data.wpts.size(); i++) {
     for (GeoWptList::const_iterator wp = data.wpts[i].begin();
                                          wp != data.wpts[i].end(); ++wp) {
@@ -120,20 +146,24 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opt){
 
        // altitude -- only if defined
        if (wp->have_alt())
-         f << setprecision(1) << "   <ele>" << wp->z << "</ele>" << endl;
+         f << setprecision(2) << "   <ele>" << wp->z << "</ele>" << endl;
 
        // time
        if (wp->opts.exists("time"))
          f << "   <time>" << time_utc_iso8601(wp->opts.get<time_t>("time"))
            << "</time>" << endl;
 
+       // cmt
+       if (wp->opts.exists("comm"))
+         f << "   <cmt>" << wp->opts.get<string>("comm")
+           << "</cmt>" << endl;
+
        // other option elements:
        for (const char **fn = gps_wpt_names; *fn!=NULL; fn++){
          if (!wp->opts.exists(*fn)) continue;
-         f << "   <" << *fn << ">";
-         if (strcmp(*fn, "cmt")!=0) f << wp->opts.get<string>(*fn);
-         else f << wp->opts.get<std::string>("comm");
-         f << "</" << *fn << ">" << endl;
+         f << "   <" << *fn << ">"
+           << wp->opts.get<string>(*fn)
+           << "</" << *fn << ">" << endl;
        }
 
        // close the wpt tag.
@@ -141,11 +171,17 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opt){
     }
   }
 
+  // Write tracks:
   for (int i = 0; i < data.trks.size(); ++i) {
     f << "<trk>" << endl;
 
-    if (data.trks[i].opts.exists("comm"))
-      f << "  <name>" << data.trks[i].opts.get<std::string>("comm") << "</name>" << endl;
+    // other option elements:
+    for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
+      if (!data.trks[i].opts.exists(*fn)) continue;
+      f << "  <" << *fn << ">"
+        << data.trks[i].opts.get<string>(*fn)
+        << "</" << *fn << ">" << endl;
+    }
 
     for (GeoTrk::const_iterator tp = data.trks[i].begin(); tp != data.trks[i].end(); ++tp) {
       if (tp->start || tp == data.trks[i].begin()) {
@@ -156,7 +192,7 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opt){
         << "    <trkpt lat=\"" << tp->y << "\" lon=\"" << tp->x << "\">" << endl;
 
       if (tp->have_alt())
-        f << setprecision(1) << "      <ele>" << tp->z << "</ele>" << endl;
+        f << setprecision(2) << "      <ele>" << tp->z << "</ele>" << endl;
 
       if (tp->t)
         f << "      <time>" << time_utc_iso8601(tp->t) << "</time>" << endl;
@@ -182,14 +218,11 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opt){
 #define NAMECMP(x) (xmlStrcasecmp(name,(const xmlChar *)x)==0)
 #define GETATTR(x) (const char *)xmlTextReaderGetAttribute(reader, (const xmlChar *)x)
 #define GETVAL     (const char *)xmlTextReaderConstValue(reader)
+
+// read <extensions>. In gpx/track/rte/wpt/trkseg
 int
-read_wpt_node(xmlTextReaderPtr reader, GeoData & data){
-  GeoWpt wpt;
-  bool is_ele = false, is_name=false, is_comm=false, is_time=false;
-
-  wpt.y = atof(GETATTR("lat"));
-  wpt.x = atof(GETATTR("lon"));
-
+read_ext_node(xmlTextReaderPtr reader, Opt & opts){
+  std::string state = "";
   while(1){
     int ret =xmlTextReaderRead(reader);
     if (ret != 1) return ret;
@@ -198,43 +231,72 @@ read_wpt_node(xmlTextReaderPtr reader, GeoData & data){
     int type = xmlTextReaderNodeType(reader);
 
     if (type == TYPE_SWS) continue;
-    else if (NAMECMP("ele")){
-      if (type == TYPE_ELEM) is_ele = true;
-      if (type == TYPE_ELEM_END) is_ele = false;
+
+    else if (type == TYPE_ELEM_END) {
+      if (NAMECMP("extensions")) break;
     }
-    else if (NAMECMP("name")){
-      if (type == TYPE_ELEM) is_name = true;
-      if (type == TYPE_ELEM_END) is_name = false;
+
+  }
+  return 1;
+}
+
+
+// read waypoint / rte point
+int
+read_wpt_node(xmlTextReaderPtr reader, GeoWptList & data){
+  GeoWpt wpt;
+  wpt.y = atof(GETATTR("lat"));
+  wpt.x = atof(GETATTR("lon"));
+  std::string state="";
+  while(1){
+    int ret =xmlTextReaderRead(reader);
+    if (ret != 1) return ret;
+
+    const xmlChar *name = xmlTextReaderConstName(reader);
+    int type = xmlTextReaderNodeType(reader);
+
+    if (type == TYPE_SWS) continue;
+
+    else if (NAMECMP("extensions") && (type == TYPE_ELEM)){
+      cerr << "Warning: skip <extensions> in <wpt>/<rtept>\n";
+      ret = read_ext_node(reader, data.opts);
+      if (ret != 1) return ret;
     }
-    else if (NAMECMP("comm")){
-      if (type == TYPE_ELEM) is_comm = true;
-      if (type == TYPE_ELEM_END) is_comm = false;
+
+    else if (type == TYPE_ELEM) {
+      state = "";
+      if (NAMECMP("ele"))  state = "ele";
+      if (NAMECMP("time")) state = "time";
+      if (NAMECMP("cmt"))  state = "comm";
+      for (const char **fn = gps_wpt_names; *fn!=NULL; fn++){
+        if (NAMECMP(*fn)) state = *fn;
+      }
+      if (state == "")
+         cerr << "Warning: Unknown node \"" << name << "\" in wpt (type: " << type << ")\n";
     }
-    else if (NAMECMP("time")){
-      if (type == TYPE_ELEM) is_time = true;
-      if (type == TYPE_ELEM_END) is_time = false;
+    else if (type == TYPE_ELEM_END) {
+      if (NAMECMP("ele") || NAMECMP("time") || NAMECMP("cmt")) state = "";
+      for (const char **fn = gps_wpt_names; *fn!=NULL; fn++){
+        if (NAMECMP(*fn)) state = "";
+      }
+      if (NAMECMP("wpt") || NAMECMP("rtept")) break;
+      if (state != "")
+         cerr << "Warning: Unknown node \"" << name << "\" in wpt (type: " << type << ")\n";
     }
 
     else if (type == TYPE_TEXT){
-      if (is_ele)
-        wpt.z = atof(GETVAL);
-      if (is_name)
-        wpt.opts.put<std::string>("name", GETVAL);
-      if (is_comm)
-        wpt.opts.put<std::string>("comm", GETVAL);
-      if (is_time)
-        wpt.opts.put<time_t>("time", parse_utc_iso8601(GETVAL));
-    }
-
-    else if (NAMECMP("wpt") && (type == TYPE_ELEM_END)){
-      break;
+      if (state == "ele")  wpt.z = atof(GETVAL);
+      if (state == "comm") wpt.opts.put<std::string>("comm", GETVAL);
+      if (state == "time") wpt.opts.put<time_t>("time", parse_utc_iso8601(GETVAL));
+      for (const char **fn = gps_wpt_names; *fn!=NULL; fn++){
+        if (state == *fn) wpt.opts.put<std::string>(*fn, GETVAL);
+      }
     }
     else {
       cerr << "Warning: Unknown node \"" << name << "\" in wpt (type: " << type << ")\n";
     }
   }
-  if (data.wpts.size()<1) data.wpts.push_back(GeoWptList());
-  data.wpts.back().push_back(wpt);
+  data.push_back(wpt);
   return 1;
 }
 
@@ -254,6 +316,14 @@ read_trkpt_node(xmlTextReaderPtr reader, GeoTrk & trk, bool start){
     int type = xmlTextReaderNodeType(reader);
 
     if (type == TYPE_SWS) continue;
+
+    else if (NAMECMP("extensions") && (type == TYPE_ELEM)){
+      Opt o;
+      cerr << "Warning: skip <extensions> in <trkpt>\n";
+      ret = read_ext_node(reader, o);
+      if (ret != 1) return ret;
+    }
+
     else if (NAMECMP("ele")){
       if (type == TYPE_ELEM) is_ele = true;
       if (type == TYPE_ELEM_END) is_ele = false;
@@ -293,14 +363,24 @@ read_trkseg_node(xmlTextReaderPtr reader, GeoTrk & trk){
     int type = xmlTextReaderNodeType(reader);
 
     if (type == TYPE_SWS) continue;
+
+    else if (NAMECMP("extensions") && (type == TYPE_ELEM)){
+      Opt o;
+      cerr << "Warning: skip <extensions> in <trkseg>\n";
+      ret = read_ext_node(reader, o);
+      if (ret != 1) return ret;
+    }
+
     else if (NAMECMP("trkpt") && (type == TYPE_ELEM)){
       ret = read_trkpt_node(reader, trk, start);
       if (ret != 1) return ret;
       start=false;
     }
+
     else if (NAMECMP("trkseg") && (type == TYPE_ELEM_END)){
       break;
     }
+
     else {
       cerr << "Warning: Unknown node \"" << name << "\" in trkseg (type: " << type << ")\n";
     }
@@ -311,8 +391,7 @@ read_trkseg_node(xmlTextReaderPtr reader, GeoTrk & trk){
 int
 read_trk_node(xmlTextReaderPtr reader, GeoData & data){
   GeoTrk trk;
-  bool is_name=false;
-
+  std::string state;
   while(1){
     int ret =xmlTextReaderRead(reader);
     if (ret != 1) return ret;
@@ -321,20 +400,45 @@ read_trk_node(xmlTextReaderPtr reader, GeoData & data){
     int type = xmlTextReaderNodeType(reader);
 
     if (type == TYPE_SWS) continue;
+
+    else if (NAMECMP("extensions") && (type == TYPE_ELEM)){
+      cerr << "Warning: skip <extensions> in <trk>\n";
+      ret = read_ext_node(reader, trk.opts);
+      if (ret != 1) return ret;
+    }
+
     else if (NAMECMP("trkseg") && (type == TYPE_ELEM)){
       ret=read_trkseg_node(reader, trk);
       if (ret != 1) return ret;
     }
-    else if (NAMECMP("name")){
-     if (type == TYPE_ELEM) is_name = true;
-     if (type == TYPE_ELEM_END) is_name = false;
+
+    else if (type == TYPE_ELEM) {
+      state = "";
+      if (NAMECMP("cmt"))  state = "comm";
+      for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
+        if (NAMECMP(*fn)) state = *fn;
+      }
+      if (state == "")
+         cerr << "Warning: Unknown node \"" << name << "\" in trk (type: " << type << ")\n";
     }
+
+    else if (type == TYPE_ELEM_END) {
+      if (NAMECMP("cmt")) state = "";
+      for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
+        if (NAMECMP(*fn)) state = "";
+      }
+      if (NAMECMP("trk")) break;
+      if (state != "")
+         cerr << "Warning: Unknown node \"" << name << "\" in trk (type: " << type << ")\n";
+    }
+
     else if (type == TYPE_TEXT){
-      if (is_name) trk.opts.put<std::string>("comm", GETVAL);
+      if (state == "comm") trk.opts.put<std::string>("comm", GETVAL);
+      for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
+        if (state == *fn) trk.opts.put<std::string>(*fn, GETVAL);
+      }
     }
-    else if (NAMECMP("trk") && (type == TYPE_ELEM_END)){
-      break;
-    }
+
     else {
       cerr << "Warning: Unknown node \"" << name << "\" in trk (type: " << type << ")\n";
     }
@@ -344,7 +448,71 @@ read_trk_node(xmlTextReaderPtr reader, GeoData & data){
 }
 
 int
+read_rte_node(xmlTextReaderPtr reader, GeoData & data){
+  GeoWptList wptl;
+  std::string state;
+  while(1){
+    int ret =xmlTextReaderRead(reader);
+    if (ret != 1) return ret;
+
+    const xmlChar *name = xmlTextReaderConstName(reader);
+    int type = xmlTextReaderNodeType(reader);
+
+    if (type == TYPE_SWS) continue;
+
+    else if (NAMECMP("extensions") && (type == TYPE_ELEM)){
+      cerr << "Warning: skip <extensions> in <rte>\n";
+      ret = read_ext_node(reader, wptl.opts);
+      if (ret != 1) return ret;
+    }
+
+    // points are same as wpt
+    else if (NAMECMP("rtept") && (type == TYPE_ELEM)){
+      ret=read_wpt_node(reader, wptl);
+      if (ret != 1) return ret;
+    }
+
+    // fields are same as in trk!
+    else if (type == TYPE_ELEM) {
+      state = "";
+      if (NAMECMP("cmt"))  state = "comm";
+      for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
+        if (NAMECMP(*fn)) state = *fn;
+      }
+      if (state == "")
+         cerr << "Warning: Unknown node \"" << name << "\" in rte (type: " << type << ")\n";
+    }
+
+    else if (type == TYPE_ELEM_END) {
+      if (NAMECMP("cmt")) state = "";
+      for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
+        if (NAMECMP(*fn)) state = "";
+      }
+      if (NAMECMP("rte")) break;
+      if (state != "")
+         cerr << "Warning: Unknown node \"" << name << "\" in rte (type: " << type << ")\n";
+    }
+
+    else if (type == TYPE_TEXT){
+      if (state == "comm") wptl.opts.put<std::string>("comm", GETVAL);
+      for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
+        if (state == *fn) wptl.opts.put<std::string>(*fn, GETVAL);
+      }
+    }
+
+    else {
+      cerr << "Warning: Unknown node \"" << name << "\" in rte (type: " << type << ")\n";
+    }
+  }
+  data.wpts.push_back(wptl);
+  return 1;
+}
+
+
+
+int
 read_gpx_node(xmlTextReaderPtr reader, GeoData & data){
+  GeoWptList wptl;
   bool is_meta=false;
   while(1){
     int ret =xmlTextReaderRead(reader);
@@ -360,11 +528,20 @@ read_gpx_node(xmlTextReaderPtr reader, GeoData & data){
     }
     else if (is_meta) continue;
     else if (NAMECMP("wpt") && (type == TYPE_ELEM)){
-      ret=read_wpt_node(reader, data);
+      ret=read_wpt_node(reader, wptl);
       if (ret != 1) return ret;
     }
     else if (NAMECMP("trk") && (type == TYPE_ELEM)){
       ret=read_trk_node(reader, data);
+      if (ret != 1) return ret;
+    }
+    else if (NAMECMP("rte") && (type == TYPE_ELEM)){
+      ret=read_rte_node(reader, data);
+      if (ret != 1) return ret;
+    }
+    else if (NAMECMP("extensions") && (type == TYPE_ELEM)){
+      cerr << "Warning: skip <extensions> in <gpx>\n";
+      ret=read_ext_node(reader, data.opts);
       if (ret != 1) return ret;
     }
     else if (NAMECMP("gpx") && (type == TYPE_ELEM_END)){
@@ -374,6 +551,7 @@ read_gpx_node(xmlTextReaderPtr reader, GeoData & data){
       cerr << "Warning: Unknown node \"" << name << "\" in gpx (type: " << type << ")\n";
     }
   }
+  data.wpts.push_back(wptl);
   return 1;
 }
 

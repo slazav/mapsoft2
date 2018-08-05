@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="mapsoft2">
+<wpt lat="79.0121820" lon="17.5146880">
+   <ele>1508.82</ele>
+   <time>2018-04-28T07:55:47Z</time>
+   <name>177</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="79.0122500" lon="17.5149190">
+   <ele>1495.29</ele>
+   <time>2018-04-28T07:57:48Z</time>
+   <name>178</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="79.0122490" lon="17.5151570">
+   <ele>1492.58</ele>
+   <time>2018-04-28T07:57:59Z</time>
+   <name>179</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="79.0121560" lon="17.5149130">
+   <ele>1494.32</ele>
+   <time>2018-04-28T07:58:18Z</time>
+   <name>180</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="79.0105460" lon="17.4913090">
+   <ele>1697.25</ele>
+   <time>2018-04-28T08:25:35Z</time>
+   <name>181</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="79.0105960" lon="17.4914730">
+   <ele>1703.35</ele>
+   <time>2018-04-28T08:35:48Z</time>
+   <name>182</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="79.0105870" lon="17.4915130">
+   <ele>1705.87</ele>
+   <time>2018-04-28T08:35:53Z</time>
+   <name>183</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+<wpt lat="79.0248440" lon="17.4649710">
+   <ele>1175.34</ele>
+   <time>2018-04-28T09:14:18Z</time>
+   <name>184</name>
+   <sym>Flag, Blue</sym>
+</wpt>
+</gpx>

@@ -199,6 +199,7 @@ GeoMap operator+ (const dPoint & p, const GeoMap & l);
 /********************************************************************/
 
 struct GeoData{
+  Opt opts;
   std::vector<GeoWptList> wpts;
   std::vector<GeoTrk>     trks;
   std::vector<GeoMapList> maps;
