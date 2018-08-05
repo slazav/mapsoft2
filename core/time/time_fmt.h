@@ -26,6 +26,14 @@ std::string time_utc_iso8601(const time_t t);
 /// Convert UTC time represented as ISO 8601 string (used in GPX) to a mapsoft time.
 time_t parse_utc_iso8601(const std::string & str);
 
+/// Convert mapsoft time to Ozi format (fractional number of days since 12/30/1899 12:00AM GMT).
+/// Note that in Ozi time accuracy is 1e-7 * 3600*24 = 8.6 ms.
+/// Conversion to Ozi and then back will be accurate within this limit.
+std::string time_ozi(const time_t t);
+
+/// Convert time to Ozi format to mapsoft time.
+time_t parse_ozi(const std::string & str);
+
 ///@}
 ///@}
 #endif

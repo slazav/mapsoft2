@@ -50,10 +50,29 @@ parse_utc_iso8601(const string & str){
     ts.tm_isdst = 1;
     time_t t0 = timegm(&ts);
     if (t0 == -1) throw 9;
-//    t0 += ts.tm_gmtoff;
     return t0*1000 + ms;
   }
   catch (int i){
     throw Err() << "Unsupported time format: \"" << str << "\"";
   }
+}
+
+
+string
+time_ozi(const time_t t){
+  ostringstream str;
+  str << fixed << setprecision(7)
+      << (t/1000.0+2209161600.0)/3600.0/24.0;
+  return str.str();
+}
+
+time_t
+parse_ozi(const string & str){
+  istringstream ss(str);
+  double t;
+  ss >> ws >> t >> ws;
+  if (ss.fail() || !ss.eof())
+    throw Err() << "Unsupported time format: \"" << str << "\"";
+
+  return time_t((t*3600.0*24.0 - 2209161600.0)*1000);
 }

@@ -431,3 +431,10 @@ Functions:
    Convert mapsoft time to UTC time represented as ISO 8601 string.
 * `time_t parse_utc_iso8601(const std::string & str)` --
    Convert UTC time represented as ISO 8601 string (used in GPX) to a mapsoft time.
+
+* `std::string time_ozi(const time_t t)` --
+   Convert mapsoft time to Ozi format (fractional number of days since 12/30/1899 12:00AM GMT).
+
+* `time_t parse_ozi(const std::string & str)` --
+   Convert time to Ozi format to mapsoft time.
+
