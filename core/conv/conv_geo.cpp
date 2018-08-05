@@ -4,10 +4,10 @@
 ConvGeo::ConvGeo(const std::string & src, const std::string & dst){
   refcounter   = new int;
   *refcounter  = 1;
+  sc_src = sc_dst = 1;
 
   if (src==dst) {
     pj_src = pj_dst = NULL;
-    sc_src = sc_dst = 1;
     return;
   }
 

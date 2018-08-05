@@ -28,24 +28,26 @@ public:
   /// destructor
   ~ConvGeo(){ destroy(); }
 
-  /// point conversion
+  /// Forward point conversion.
   void frw_pt(dPoint & p) const{
-    if (sc_src!=1.0) p*=sc_src;  // this if increases speed...
+    if (sc_src!=1.0) {p.x*=sc_src; p.y*=sc_src;}  // this if increases speed...
     if (pj_src!=pj_dst) {
-      if (pj_transform(pj_src, pj_dst, 1, 1, &p.x, &p.y, &p.z)!=0)
+      double *z = (p.z<=-1e7)? NULL:&p.z;
+      if (pj_transform(pj_src, pj_dst, 1, 1, &p.x, &p.y, z)!=0)
         throw Err() << "Can't convert coordinates: " << pj_strerrno(pj_errno);
     }
-    if (sc_dst!=1.0) p*=sc_dst;
+    if (sc_dst!=1.0) {p.x*=sc_dst; p.y*=sc_dst;};
   }
 
-  /// point conversion
+  /// Backward point conversion.
   void bck_pt(dPoint & p) const{
-    if (sc_dst!=1.0) p/=sc_dst;
+    if (sc_dst!=1.0) {p.x/=sc_dst; p.y/=sc_dst;};
     if (pj_src!=pj_dst){
-      if (pj_transform(pj_dst, pj_src, 1, 1, &p.x, &p.y, &p.z)!=0)
+      double *z = (p.z<=-1e7)? NULL:&p.z;
+      if (pj_transform(pj_dst, pj_src, 1, 1, &p.x, &p.y, z)!=0)
         throw Err() << "Can't convert coordinates: " << pj_strerrno(pj_errno);
     }
-    if (sc_src!=1.0) p/=sc_src;
+    if (sc_src!=1.0) {p.x/=sc_src; p.y/=sc_src;}
   }
 
 private:
