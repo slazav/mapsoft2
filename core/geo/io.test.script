@@ -1,0 +1,11 @@
+#!/bin/bash
+
+for f in\
+    garmin_etrex20_north_trk\
+    garmin_etrex20_north_wpt\
+    garmin_etrex20_south_trk\
+    garmin_etrex20_south_wpt; do
+
+  ./io.test gpx/$f.gpx  gpx/_$f.gpx
+
+done
