@@ -71,12 +71,12 @@ env_prg.Prepend(LIBS = "-lmapsoft-static")
 ##################################################
 ## build swig
 
-# swig = env_prg.Clone()
-# swig.Append(CPPPATH = [distutils.sysconfig.get_python_inc()])
+# from distutils.sysconfig import get_python_inc, get_config_var
+# swig = env_lib.Clone()
+# swig.Append(CPPPATH = [get_python_inc()])
 # swig.Replace(SWIGFLAGS = ['-c++', '-python'])
 # swig.Replace(SHLIBPREFIX = "")
-# swig.Append(LIBS = Split("geo_io geo 2d fig utils jeeps loaders tiff jpeg png curl"))
-# swig.SharedLibrary("_core.so", ["swig.i"])
+# swig.SharedLibrary("_mapsoft.so", ["swig.i"])
 
 ##################################################
 ## build mapsoft library

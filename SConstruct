@@ -8,11 +8,7 @@ subdirs_max = subdirs_min + Split("")
 ## import python libraries
 import os
 import platform
-if platform.python_version()<"2.7":
-    import distutils.sysconfig as sysconfig
-else:
-    import sysconfig
-
+from distutils.sysconfig import get_python_inc, get_config_var
 
 ######################################
 # Create environment, add some methods
@@ -36,7 +32,6 @@ def SymLink(env, target, linkname, wd=None):
    else:
       env.Command(linkname, target, "ln -s -- %s %s" % (target, linkname))
 env.AddMethod(SymLink)
-
 
 ######################################
 ## Add default flags
@@ -65,7 +60,7 @@ env.bindir=env.PREFIX+'/usr/bin'
 env.datadir=env.PREFIX+'/usr/share/mapsoft'
 env.man1dir=env.PREFIX+'/usr/share/man/man1'
 env.figlibdir=env.PREFIX+'/usr/share/xfig/Libraries'
-env.libdir=env.PREFIX+ sysconfig.get_config_var('LIBDIR')
+env.libdir=env.PREFIX+ get_config_var('LIBDIR')
 env.incdir=env.PREFIX+'/usr/include'
 
 env.Alias('install', [env.bindir, env.man1dir,
