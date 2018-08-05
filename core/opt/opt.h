@@ -22,6 +22,11 @@ T str_to_type(const std::string & s){
   return val;
 }
 
+/// version for std::string, much simplier
+template<>
+std::string str_to_type<std::string>(const std::string & s);
+
+
 /// Convert any type to std::string (similar to boost::lexical_cast).
 /// \relates Opt
 template<typename T>
@@ -31,6 +36,9 @@ std::string type_to_str(const T & t){
   return ss.str();
 }
 
+/// version for std::string, much simplier
+template<>
+std::string type_to_str<std::string>(const std::string & t);
 
 /***********************************************************/
 /** Mapsoft options

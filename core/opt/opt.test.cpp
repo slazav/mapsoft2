@@ -31,6 +31,12 @@ try{
   assert(O1.exists("e") == false);
   assert(O1.find("d")->second == "123.1 ");
 
+  O1.put<std::string>("d", "1 2 3 4 5");
+  assert(O1.get<std::string>("d", "1 2 3") == "1 2 3 4 5");
+  assert(O1.get<std::string>("x", "1 2 3") == "1 2 3");
+
+  O1.put("d", "123.1 ");
+
   /////////////////////////////////////////////
   // check_unknown()
   try {

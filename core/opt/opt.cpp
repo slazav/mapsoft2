@@ -2,6 +2,12 @@
 #include <algorithm>
 #include <jansson.h>
 
+template<>
+std::string str_to_type<std::string>(const std::string & s){ return s; }
+
+template<>
+std::string type_to_str<std::string>(const std::string & t){ return t; }
+
 void
 Opt::check_unknown (std::list<std::string> known) const {
   std::string unknown;
