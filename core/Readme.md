@@ -427,14 +427,18 @@ size of object.
 In mapsoft unix time in ms is used.
 
 Functions:
-* `std::string time_utc_iso8601(const time_t t)` --
-   Convert mapsoft time to UTC time represented as ISO 8601 string.
-* `time_t parse_utc_iso8601(const std::string & str)` --
-   Convert UTC time represented as ISO 8601 string (used in GPX) to a mapsoft time.
 
-* `std::string time_ozi(const time_t t)` --
+* `std::string write_utc_iso_time(const time_t t)` --
+   Convert mapsoft time to UTC time represented as ISO 8601 string (2018-08-05T12:58:31.001Z).
+
+* `time_t parse_utc_time(const std::string & str)` --
+  Convert UTC time to unix milliseconds (used in mapsoft).
+  Time can be represented in different forms including ISO 8601 (used in GPX)
+  and "yyyy-mm-dd HH:MM:SS".
+
+* `std::string write_ozi_time(const time_t t)` --
    Convert mapsoft time to Ozi format (fractional number of days since 12/30/1899 12:00AM GMT).
 
-* `time_t parse_ozi(const std::string & str)` --
-   Convert time to Ozi format to mapsoft time.
+* `time_t parse_ozi_time(const std::string & str)` --
+   Convert Ozi time format to mapsoft time.
 

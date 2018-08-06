@@ -11,6 +11,7 @@ using namespace std;
 
 /**
  GPX format: http://www.topografix.com/GPX/1/1/
+ example with all fields: https://github.com/tkrajina/gpxgo/tree/master/test_files
 
 Structure:
 <gpx>
@@ -150,7 +151,7 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opt){
 
        // time
        if (wp->opts.exists("time"))
-         f << "   <time>" << time_utc_iso8601(wp->opts.get<time_t>("time"))
+         f << "   <time>" << write_utc_iso_time(wp->opts.get<time_t>("time"))
            << "</time>" << endl;
 
        // cmt
@@ -195,7 +196,7 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opt){
         f << setprecision(2) << "      <ele>" << tp->z << "</ele>" << endl;
 
       if (tp->t)
-        f << "      <time>" << time_utc_iso8601(tp->t) << "</time>" << endl;
+        f << "      <time>" << write_utc_iso_time(tp->t) << "</time>" << endl;
 
       f << "    </trkpt>" << endl;
     }
@@ -287,7 +288,7 @@ read_wpt_node(xmlTextReaderPtr reader, GeoWptList & data){
     else if (type == TYPE_TEXT){
       if (state == "ele")  wpt.z = atof(GETVAL);
       if (state == "comm") wpt.opts.put<std::string>("comm", GETVAL);
-      if (state == "time") wpt.opts.put<time_t>("time", parse_utc_iso8601(GETVAL));
+      if (state == "time") wpt.opts.put<time_t>("time", parse_utc_time(GETVAL));
       for (const char **fn = gps_wpt_names; *fn!=NULL; fn++){
         if (state == *fn) wpt.opts.put<std::string>(*fn, GETVAL);
       }
@@ -336,7 +337,7 @@ read_trkpt_node(xmlTextReaderPtr reader, GeoTrk & trk, bool start){
       if (is_ele)
         pt.z = atof(GETVAL);
       if (is_time)
-        pt.t = parse_utc_iso8601(GETVAL);
+        pt.t = parse_utc_time(GETVAL);
     }
 
     else if (NAMECMP("trkpt") && (type == TYPE_ELEM_END)){

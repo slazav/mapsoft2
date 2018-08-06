@@ -1,12 +1,13 @@
 #include <sstream>
 #include <iomanip>
+#include <cmath>
 #include "time_fmt.h"
 #include "err/err.h"
 
 using namespace std;
 
 string
-time_utc_iso8601(const time_t t){
+write_utc_iso_time(const time_t t){
   time_t s  = t/1000;
   time_t ms = t%1000;
   struct tm ts;
@@ -25,23 +26,43 @@ time_utc_iso8601(const time_t t){
 }
 
 time_t
-parse_utc_iso8601(const string & str){
+parse_utc_time(const string & str){
   istringstream ss(str);
   char sep;
   int ms = 0;
   struct tm ts;
   try {
-    ss >> ws;
-    ss >> ts.tm_year >> sep;  if (sep!='-') throw 1;
-    ss >> ts.tm_mon  >> sep;  if (sep!='-') throw 2;
-    ss >> ts.tm_mday >> sep;  if (sep!='T') throw 3;
+    ss >> noskipws >> ws;
+    ss >> ts.tm_year >> sep;  if (sep!='-' && sep!='/') throw 1;
+    ss >> ts.tm_mon  >> sep;  if (sep!='-' && sep!='/') throw 2;
+    ss >> ts.tm_mday >> sep;  if (sep!='T' && sep!=' ' && sep!='\t') throw 3;
     ss >> ts.tm_hour >> sep;  if (sep!=':') throw 4;
     ss >> ts.tm_min  >> sep;  if (sep!=':') throw 5;
-    ss >> ts.tm_sec >> sep;
-    if (sep == '.') ss >> ms >> sep;
-    if (sep!='Z') throw 6;
-    ss >> ws;
-    if (ss.fail() || !ss.eof()) throw 7;
+    ss >> ts.tm_sec;
+    // Allow end of string here. If not, read milliseconds,
+    // Z or spaces:
+    if (!ss.eof()){
+      ss >> sep;
+      // read milliseconds
+      if (sep == '.'){
+        int n=2;
+        while (!ss.eof()){
+          ss >> sep;
+          if (sep<'0' || sep>'9' || ss.eof()) break;
+          if (n>=0) ms += (sep-'0') * pow(10,n);
+          n--;
+        }
+        if (ss.eof()) sep='Z';
+      }
+      if (sep!='Z' && sep!=' ') throw 6;
+      // Again, allow end of string here.
+      if (!ss.eof()){
+        ss >> ws;
+        // here should be the end:
+        if (!ss.eof()) throw 7;
+      }
+    }
+    if (!ss.eof()) throw 8;
 
     ts.tm_year-=1900;
     ts.tm_mon-=1;
@@ -59,7 +80,7 @@ parse_utc_iso8601(const string & str){
 
 
 string
-time_ozi(const time_t t){
+write_ozi_time(const time_t t){
   ostringstream str;
   str << fixed << setprecision(7)
       << (t/1000.0+2209161600.0)/3600.0/24.0;
@@ -67,7 +88,7 @@ time_ozi(const time_t t){
 }
 
 time_t
-parse_ozi(const string & str){
+parse_ozi_time(const string & str){
   istringstream ss(str);
   double t;
   ss >> ws >> t >> ws;
