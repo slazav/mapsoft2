@@ -30,6 +30,7 @@
 // geodata
 #include <geo/geo_data.h>
 #include <geo/io_gpx.h>
+#include <geo/io_kml.h>
 
 // time formatting
 #include <time/time_fmt.h>

@@ -3,6 +3,7 @@
 #include <cassert>
 #include <fstream>
 #include "io_gpx.h"
+#include "io_kml.h"
 
 int
 main(int argc, char **argv){
@@ -16,8 +17,10 @@ main(int argc, char **argv){
       if (s.fail()) throw Err() << "Can't open file: " << argv[1];
     }
 
-    if (read_gpx(argv[1], D))
+    if (read_gpx(argv[1], D) ||
+        read_kml(argv[1], D))
       throw Err() << "Unknown file format: " << argv[1];
+
 
     write_gpx(argv[2], D);
 
