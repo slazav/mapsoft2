@@ -77,7 +77,7 @@ class Opt : public std::map<std::string,std::string>{
 
   /// Set option value for a given key.
   template<typename T>
-  void put (const std::string & key, T val) {
+  void put (const std::string & key, const T & val) {
     (*this)[key] = type_to_str(val);
   }
 
