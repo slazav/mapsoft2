@@ -6,17 +6,22 @@
 #include "io_gpx.h"
 #include "time/time_fmt.h"
 #include <libxml/xmlreader.h>
+#include <libxml/xmlwriter.h>
 
 using namespace std;
 
 /**
- GPX format: http://www.topografix.com/GPX/1/1/
+ libxml2 manual: http://www.xmlsoft.org/html/index.html
+ xmlreader module: http://www.xmlsoft.org/html/libxml-xmlreader.html
+ xmlwriter module: http://www.xmlsoft.org/html/libxml-xmlwriter.html
+ GPX 1.1 format: http://www.topografix.com/GPX/1/1/
+ GPX 1.0 format: http://www.topografix.com/gpx_manual.asp
  example with all fields: https://github.com/tkrajina/gpxgo/tree/master/test_files
 
-Structure:
-<gpx>
+GPX 1.1 Structure:
+<gpx version creator>
   <metadata>
-  <extensions>
+    <name> <desc> <author> <copyright> <link> <time> <keywords> <bounds> <extensions>
   <wpt lat lon>
     <ele> <time> <magvar> <geoidheight>
     <name> <cmt> <desc> <src> <link> <sym> <type>
@@ -24,16 +29,34 @@ Structure:
     <dgpsid> <extensions>
 
   <rte>
-    <name> <cmt> <desc> <src> <link>
-    <number> <type> <extensions>
+    <name> <cmt> <desc> <src> <link> <number> <type> <extensions>
     <rtept> [0..*] -- same as <wpt>
 
   <trk>
-    <name> <cmt> <desc> <src> <link>
-    <number> <type> <extensions>
+    <name> <cmt> <desc> <src> <link> <number> <type> <extensions> -- same as in rte
     <trkseg> [0..*]
       <trkpt> [0..*] -- same as <wpt>
       <extensions>
+  <extensions>
+
+GPX 1.0 Structure:
+<gpx version creator>
+  <name> <desc> <author> <email> <url> <urlname> <time> <keywords> <bounds>
+  <wpt lat lon>
+    <ele> <time> <magvar> <geoidheight>
+    <name> <cmt> <desc> <src> <url> <urlname> <sym> <type>
+    <fix> <sat> <hdop> <vdop> <pdop> <ageofdgpsdata>
+    <dgpsid>
+
+  <rte>
+    <name> <cmt> <desc> <src> <url> <urlname> <number>
+    <rtept> [0..*] -- same as <wpt>
+
+  <trk>
+    <name> <cmt> <desc> <src> <url> <urlname> <number> -- same as in rte
+    <trkseg> [0..*]
+      <trkpt> [0..*] -- same as <wpt>
+
 
 -----------------
 <wpt> fields:
@@ -113,7 +136,7 @@ writing:
 */
 
 
-// All names which are keps in opt and handeled as strings
+// All names which are keps in opt, handeled as strings
 // and have same spelling in GPX and in mapsoft.
 // comm/cmt, time, ele/z are processed separately.
 const char *gps_wpt_names[] = {
@@ -126,91 +149,168 @@ const char *gps_trk_names[] = {
   "name", "desc", "src", "link",
   "number", "type", NULL};
 
+/********************************************************************/
+/// Write GPX.
+/// options:
+///   xml_compr:   compress the output? 0|1, default 0;
+///   xml_indent:  use indentation? 0|1, default 1;
+///   xml_ind_str: indentation string, default "  ";
+///   xml_qchar:   quoting character for attributes, default \'
+void
+write_gpx (const char* filename, const GeoData & data, const Opt & opts){
 
-/// write GPX
-int
-write_gpx (const char* filename, const GeoData & data, const Opt & opt){
+  LIBXML_TEST_VERSION
 
-  ofstream f(filename);
-  if (!f.good()) throw Err() << "Can't write to file " << filename;
+  // create XML writer
+  xmlTextWriterPtr writer =
+    xmlNewTextWriterFilename(filename, opts.get<int>("xml_compr", 0));
+  if (writer == NULL)
+    throw Err() << "write_gpx: can't write to file: " << filename;
 
-  f << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
-  f << "<gpx version=\"1.1\" creator=\"mapsoft2\">" << endl;
+  try {
+    // set some parameters
+    int indent = opts.get<int>("xml_indent", 1);
+    char qchar = opts.get<char>("xml_qchar", '\'');
+    xmlChar *ind_str = (xmlChar *)opts.get<std::string>("xml_ind_str", "  ").c_str();
 
-  // Write waypoints:
-  for (int i = 0; i < data.wpts.size(); i++) {
-    for (GeoWptList::const_iterator wp = data.wpts[i].begin();
-                                         wp != data.wpts[i].end(); ++wp) {
-       // lat/lot -- mandatory fields
-       f << fixed << setprecision(7)
-         << "<wpt lat=\"" << wp->y << "\" lon=\""  << wp->x << "\">" << endl;
+    if (xmlTextWriterSetIndent(writer, indent)<0 ||
+        xmlTextWriterSetIndentString(writer, ind_str)<0 ||
+        xmlTextWriterSetQuoteChar(writer, qchar)<0)
+      throw "setting xml writer parameters";
 
-       // altitude -- only if defined
-       if (wp->have_alt())
-         f << setprecision(2) << "   <ele>" << wp->z << "</ele>" << endl;
+    // start XML document
+    if (xmlTextWriterStartDocument(writer, "1.0", "UTF-8", NULL)<0)
+      throw "starting the xml document";
 
-       // time
-       if (wp->opts.exists("time"))
-         f << "   <time>" << write_utc_iso_time(wp->opts.get<time_t>("time"))
-           << "</time>" << endl;
+    // start GPX element.
+    // BAD_CAST converts (const char*) to (const xmlChar*)
+    if (xmlTextWriterStartElement(writer, BAD_CAST "gpx")<0 ||
+        xmlTextWriterWriteAttribute(writer,
+          BAD_CAST "version", BAD_CAST "1.1")<0 ||
+        xmlTextWriterWriteAttribute(writer,
+          BAD_CAST "creator", BAD_CAST "mapsoft-2")<0)
+      throw "starting <gpx> element";
 
-       // cmt
-       if (wp->opts.exists("comm"))
-         f << "   <cmt>" << wp->opts.get<string>("comm")
-           << "</cmt>" << endl;
+    // Writing waypoints:
+    for (int i = 0; i < data.wpts.size(); i++) {
+      for (GeoWptList::const_iterator wp = data.wpts[i].begin();
+                                      wp != data.wpts[i].end(); ++wp) {
 
-       // other option elements:
-       for (const char **fn = gps_wpt_names; *fn!=NULL; fn++){
-         if (!wp->opts.exists(*fn)) continue;
-         f << "   <" << *fn << ">"
-           << wp->opts.get<string>(*fn)
-           << "</" << *fn << ">" << endl;
-       }
+        if (xmlTextWriterStartElement(writer, (const xmlChar*)"wpt")<0 ||
+            xmlTextWriterWriteFormatAttribute(writer,
+              (const xmlChar*)"lat", "%.7f", wp->y)<0 ||
+            xmlTextWriterWriteFormatAttribute(writer,
+              (const xmlChar*)"lon", "%.7f", wp->x)<0)
+          throw "starting <wpt> element";
 
-       // close the wpt tag.
-       f << "</wpt>" << endl;
-    }
-  }
+        // altitude
+        if (wp->have_alt() &&
+            xmlTextWriterWriteFormatElement(writer,
+              (const xmlChar*)"ele", "%.2f", wp->z)<0)
+          throw "writing <ele> element";
 
-  // Write tracks:
-  for (int i = 0; i < data.trks.size(); ++i) {
-    f << "<trk>" << endl;
+        // time
+        if (wp->opts.exists("time") &&
+            xmlTextWriterWriteFormatElement(writer,
+              (const xmlChar*)"time", "%s",
+                 write_utc_iso_time(wp->opts.get<time_t>("time")).c_str())<0)
+          throw "writing <time> element";
 
-    // other option elements:
-    for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
-      if (!data.trks[i].opts.exists(*fn)) continue;
-      f << "  <" << *fn << ">"
-        << data.trks[i].opts.get<string>(*fn)
-        << "</" << *fn << ">" << endl;
-    }
+        // cmt
+        if (wp->opts.exists("comm") &&
+            xmlTextWriterWriteFormatElement(writer,
+              (const xmlChar*)"cmt", "%s",
+                 wp->opts.get<string>("comm").c_str())<0)
+          throw "writing <cmt> element";
 
-    for (GeoTrk::const_iterator tp = data.trks[i].begin(); tp != data.trks[i].end(); ++tp) {
-      if (tp->start || tp == data.trks[i].begin()) {
-        if (tp != data.trks[i].begin()) f << "  </trkseg>" << endl;
-        f << "  <trkseg>" << endl;
+        // other option elements:
+        for (const char **fn = gps_wpt_names; *fn!=NULL; fn++){
+          if (!wp->opts.exists(*fn)) continue;
+          if (xmlTextWriterWriteFormatElement(writer,
+             (const xmlChar*)*fn, "%s",
+                 wp->opts.get<string>(*fn).c_str())<0)
+            throw "writing element";
+        }
+
+        if (xmlTextWriterEndElement(writer) < 0)
+          throw "closing <wpt> element";
       }
-      f << fixed << setprecision(7)
-        << "    <trkpt lat=\"" << tp->y << "\" lon=\"" << tp->x << "\">" << endl;
-
-      if (tp->have_alt())
-        f << setprecision(2) << "      <ele>" << tp->z << "</ele>" << endl;
-
-      if (tp->t)
-        f << "      <time>" << write_utc_iso_time(tp->t) << "</time>" << endl;
-
-      f << "    </trkpt>" << endl;
     }
-    f << "  </trkseg>" << endl;
-    f << "</trk>" << endl;
+
+
+    // Write tracks:
+    for (int i = 0; i < data.trks.size(); ++i) {
+
+      if (xmlTextWriterStartElement(writer, BAD_CAST "trk")<0)
+          throw "starting <trk> element";
+
+      // other option elements:
+      for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
+        if (!data.trks[i].opts.exists(*fn)) continue;
+        if (xmlTextWriterWriteFormatElement(writer,
+           (const xmlChar*)*fn, "%s",
+               data.trks[i].opts.get<string>(*fn).c_str())<0)
+          throw "writing element";
+      }
+
+      for (GeoTrk::const_iterator tp = data.trks[i].begin(); tp != data.trks[i].end(); ++tp) {
+
+        // close <trkseg> if needed
+        if (tp->start && tp != data.trks[i].begin() &&
+           xmlTextWriterEndElement(writer) < 0)
+             throw "closing <trkseg> element";
+
+        // open <trkseg> if needed
+        if ((tp->start || tp == data.trks[i].begin()) &&
+           xmlTextWriterStartElement(writer, BAD_CAST "trkseg") < 0)
+             throw "starting <trkseg> element";
+
+        // open <trkpt>
+        if (xmlTextWriterStartElement(writer, (const xmlChar*)"trkpt")<0 ||
+            xmlTextWriterWriteFormatAttribute(writer,
+              (const xmlChar*)"lat", "%.7f", tp->y)<0 ||
+            xmlTextWriterWriteFormatAttribute(writer,
+              (const xmlChar*)"lon", "%.7f", tp->x)<0)
+          throw "starting <trkpt> element";
+
+        // altitude
+        if (tp->have_alt() &&
+            xmlTextWriterWriteFormatElement(writer,
+              (const xmlChar*)"ele", "%.2f", tp->z)<0)
+          throw "writing <ele> element";
+
+        // time
+        if (tp->t && xmlTextWriterWriteFormatElement(writer,
+              (const xmlChar*)"time", "%s",
+                 write_utc_iso_time(tp->t).c_str())<0)
+          throw "writing <time> element";
+
+
+        if (xmlTextWriterEndElement(writer) < 0)
+          throw "closing <trkpt> element";
+      }
+      if (xmlTextWriterEndElement(writer) < 0)
+          throw "closing <trkpt> element";
+
+      if (xmlTextWriterEndElement(writer) < 0)
+          throw "closing <trk> element";
+    }
+
+    if (xmlTextWriterEndDocument(writer) < 0)
+      throw "closing xml document";
+  }
+  catch (const char *c){
+    throw Err() << "write_gpx: error in " << c;
+    xmlFreeTextWriter(writer);
   }
 
-  // close gps
-  f << "</gpx>" << endl;
+  // free resources
+  xmlFreeTextWriter(writer);
 
-  if (!f.good()) throw Err() << "Can't write to file " << filename;
+  return;
 }
 
-
+/********************************************************************/
 #define TYPE_ELEM      1
 #define TYPE_ELEM_END 15
 #define TYPE_TEXT      3
@@ -523,11 +623,15 @@ read_gpx_node(xmlTextReaderPtr reader, GeoData & data){
     int type = xmlTextReaderNodeType(reader);
 
     if (type == TYPE_SWS) continue;
+
+    // skip metadata
     else if (NAMECMP("metadata")){
       if (type == TYPE_ELEM) is_meta=true;
       if (type == TYPE_ELEM_END) is_meta=false;
     }
     else if (is_meta) continue;
+
+    // read wpt,trk,rte tags
     else if (NAMECMP("wpt") && (type == TYPE_ELEM)){
       ret=read_wpt_node(reader, wptl);
       if (ret != 1) return ret;
@@ -540,6 +644,8 @@ read_gpx_node(xmlTextReaderPtr reader, GeoData & data){
       ret=read_rte_node(reader, data);
       if (ret != 1) return ret;
     }
+
+    // skip extensions
     else if (NAMECMP("extensions") && (type == TYPE_ELEM)){
       cerr << "Warning: skip <extensions> in <gpx>\n";
       ret=read_ext_node(reader, data.opts);
@@ -555,6 +661,7 @@ read_gpx_node(xmlTextReaderPtr reader, GeoData & data){
   data.wpts.push_back(wptl);
   return 1;
 }
+
 
 int
 read_gpx(const char* filename, GeoData & data, const Opt & opts) {
@@ -584,8 +691,6 @@ read_gpx(const char* filename, GeoData & data, const Opt & opts) {
 
   // free resources
   xmlFreeTextReader(reader);
-  xmlCleanupParser();
-  xmlMemoryDump();
 
   if (ret != 0) throw Err() << "Can't parse GPX file " << filename;
 
