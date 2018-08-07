@@ -18,6 +18,7 @@ read_gpx (const char* filename, GeoData & data, const Opt & opt = Opt());
 ///   xml_indent:  use indentation? 0|1, default 1;
 ///   xml_ind_str: indentation string, default "  ";
 ///   xml_qchar:   quoting character for attributes, default \'
+///   gpx_write_rte: write waypoint lists as routes, 0|1, default 0
 void
 write_gpx (const char* filename, const GeoData & data, const Opt & opt = Opt());
 

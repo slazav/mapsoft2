@@ -156,6 +156,7 @@ const char *gps_trk_names[] = {
 ///   xml_indent:  use indentation? 0|1, default 1;
 ///   xml_ind_str: indentation string, default "  ";
 ///   xml_qchar:   quoting character for attributes, default \'
+///   gpx_write_rte: write waypoint lists as routes, 0|1, default 0
 void
 write_gpx (const char* filename, const GeoData & data, const Opt & opts){
 
@@ -183,7 +184,7 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
       throw "starting the xml document";
 
     // start GPX element.
-    // BAD_CAST converts (const char*) to (const xmlChar*)
+    // BAD_CAST converts (const char*) to BAD_CAST 
     if (xmlTextWriterStartElement(writer, BAD_CAST "gpx")<0 ||
         xmlTextWriterWriteAttribute(writer,
           BAD_CAST "version", BAD_CAST "1.1")<0 ||
@@ -191,35 +192,51 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
           BAD_CAST "creator", BAD_CAST "mapsoft-2")<0)
       throw "starting <gpx> element";
 
+    int use_rte = opts.get<int>("gpx_write_rte", 0);
+
     // Writing waypoints:
     for (int i = 0; i < data.wpts.size(); i++) {
+      if (use_rte){
+        if (xmlTextWriterStartElement(writer, BAD_CAST "rte")<0)
+          throw "starting <rte> element";
+
+        // other option elements:
+        for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
+          if (!data.wpts[i].opts.exists(*fn)) continue;
+          if (xmlTextWriterWriteFormatElement(writer,
+             BAD_CAST *fn, "%s",
+                 data.wpts[i].opts.get<string>(*fn).c_str())<0)
+            throw "writing element";
+        }
+      }
       for (GeoWptList::const_iterator wp = data.wpts[i].begin();
                                       wp != data.wpts[i].end(); ++wp) {
 
-        if (xmlTextWriterStartElement(writer, (const xmlChar*)"wpt")<0 ||
+        const xmlChar* pt = BAD_CAST (use_rte? "rtept" : "wpt");
+        if (xmlTextWriterStartElement(writer, pt)<0 ||
             xmlTextWriterWriteFormatAttribute(writer,
-              (const xmlChar*)"lat", "%.7f", wp->y)<0 ||
+              BAD_CAST "lat", "%.7f", wp->y)<0 ||
             xmlTextWriterWriteFormatAttribute(writer,
-              (const xmlChar*)"lon", "%.7f", wp->x)<0)
+              BAD_CAST "lon", "%.7f", wp->x)<0)
           throw "starting <wpt> element";
 
         // altitude
         if (wp->have_alt() &&
             xmlTextWriterWriteFormatElement(writer,
-              (const xmlChar*)"ele", "%.2f", wp->z)<0)
+              BAD_CAST "ele", "%.2f", wp->z)<0)
           throw "writing <ele> element";
 
         // time
         if (wp->opts.exists("time") &&
             xmlTextWriterWriteFormatElement(writer,
-              (const xmlChar*)"time", "%s",
+              BAD_CAST "time", "%s",
                  write_utc_iso_time(wp->opts.get<time_t>("time")).c_str())<0)
           throw "writing <time> element";
 
         // cmt
         if (wp->opts.exists("comm") &&
             xmlTextWriterWriteFormatElement(writer,
-              (const xmlChar*)"cmt", "%s",
+              BAD_CAST "cmt", "%s",
                  wp->opts.get<string>("comm").c_str())<0)
           throw "writing <cmt> element";
 
@@ -227,13 +244,17 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
         for (const char **fn = gps_wpt_names; *fn!=NULL; fn++){
           if (!wp->opts.exists(*fn)) continue;
           if (xmlTextWriterWriteFormatElement(writer,
-             (const xmlChar*)*fn, "%s",
+             BAD_CAST *fn, "%s",
                  wp->opts.get<string>(*fn).c_str())<0)
             throw "writing element";
         }
 
         if (xmlTextWriterEndElement(writer) < 0)
           throw "closing <wpt> element";
+      }
+      if (use_rte){
+        if (xmlTextWriterEndElement(writer)<0)
+          throw "closing <rte> element";
       }
     }
 
@@ -248,7 +269,7 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
       for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
         if (!data.trks[i].opts.exists(*fn)) continue;
         if (xmlTextWriterWriteFormatElement(writer,
-           (const xmlChar*)*fn, "%s",
+           BAD_CAST *fn, "%s",
                data.trks[i].opts.get<string>(*fn).c_str())<0)
           throw "writing element";
       }
@@ -266,22 +287,22 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
              throw "starting <trkseg> element";
 
         // open <trkpt>
-        if (xmlTextWriterStartElement(writer, (const xmlChar*)"trkpt")<0 ||
+        if (xmlTextWriterStartElement(writer, BAD_CAST "trkpt")<0 ||
             xmlTextWriterWriteFormatAttribute(writer,
-              (const xmlChar*)"lat", "%.7f", tp->y)<0 ||
+              BAD_CAST "lat", "%.7f", tp->y)<0 ||
             xmlTextWriterWriteFormatAttribute(writer,
-              (const xmlChar*)"lon", "%.7f", tp->x)<0)
+              BAD_CAST "lon", "%.7f", tp->x)<0)
           throw "starting <trkpt> element";
 
         // altitude
         if (tp->have_alt() &&
             xmlTextWriterWriteFormatElement(writer,
-              (const xmlChar*)"ele", "%.2f", tp->z)<0)
+              BAD_CAST "ele", "%.2f", tp->z)<0)
           throw "writing <ele> element";
 
         // time
         if (tp->t && xmlTextWriterWriteFormatElement(writer,
-              (const xmlChar*)"time", "%s",
+              BAD_CAST "time", "%s",
                  write_utc_iso_time(tp->t).c_str())<0)
           throw "writing <time> element";
 
