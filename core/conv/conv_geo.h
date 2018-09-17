@@ -1,15 +1,13 @@
 #ifndef CONV_GEO_H
 #define CONV_GEO_H
 
+#include <memory>
 #include <string>
 #include "conv_base.h"
-#include <proj_api.h>
 #include "geo/geo_data.h" // for UNDEF_ALT
 
 ///\addtogroup libmapsoft
 ///@{
-
-//typedef void* projPJ;
 
 /// Geo transformation, libproj wrapper
 class ConvGeo: public ConvBase {
@@ -19,42 +17,14 @@ public:
   ConvGeo(const std::string & src, const std::string & dst =
     "+datum=WGS84 +proj=lonlat");
 
-  /// Copy constructor
-  ConvGeo(const ConvGeo & other){ copy(other); }
-
-  /// assignment
-  ConvGeo & operator=(const ConvGeo & other);
-
-  /// destructor
-  ~ConvGeo(){ destroy(); }
-
   /// Forward point conversion.
-  void frw_pt(dPoint & p) const{
-    if (sc_src!=1.0) {p.x*=sc_src; p.y*=sc_src;}  // this if increases speed...
-    if (pj_src!=pj_dst) {
-      double *z = (p.z<=UNDEF_ALT)? NULL:&p.z;
-      if (pj_transform(pj_src, pj_dst, 1, 1, &p.x, &p.y, z)!=0)
-        throw Err() << "Can't convert coordinates: " << pj_strerrno(pj_errno);
-    }
-    if (sc_dst!=1.0) {p.x*=sc_dst; p.y*=sc_dst;};
-  }
+  void frw_pt(dPoint & p) const;
 
   /// Backward point conversion.
-  void bck_pt(dPoint & p) const{
-    if (sc_dst!=1.0) {p.x/=sc_dst; p.y/=sc_dst;};
-    if (pj_src!=pj_dst){
-      double *z = (p.z<=UNDEF_ALT)? NULL:&p.z;
-      if (pj_transform(pj_dst, pj_src, 1, 1, &p.x, &p.y, z)!=0)
-        throw Err() << "Can't convert coordinates: " << pj_strerrno(pj_errno);
-    }
-    if (sc_src!=1.0) {p.x/=sc_src; p.y/=sc_src;}
-  }
+  void bck_pt(dPoint & p) const;
 
 private:
-  projPJ pj_src, pj_dst;
-  void copy(const ConvGeo & other);
-  void destroy(void);
-  int * refcounter;
+  std::shared_ptr<void> pj_src, pj_dst;
 };
 
 ///@}
