@@ -4,6 +4,7 @@
 # all library source files
 library_objects = Split ("""
   opt/opt.cpp
+  opt/words.cpp
   iconv/iconv.cpp
   conv/conv_base.cpp
   conv/conv_geo.cpp
@@ -51,6 +52,7 @@ simple_tests=Split("""
 script_tests=Split("""
   geo/io.test.cpp
   getopt/getopt.test.cpp
+  opt/words.test.cpp
 """)
 
 ##################################################

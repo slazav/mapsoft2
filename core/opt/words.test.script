@@ -1,0 +1,35 @@
+#!/bin/sh -efu
+
+prog=${1:-./words.test}
+
+function assert(){
+  res="$1"
+  exp="$2"
+  if [ "$res" != "$exp" ]; then
+    printf "ERROR:\n"
+    printf "  exp:  %s\n" "$exp"
+    printf "  res:  %s\n" "$res"
+    return 1
+  fi
+  return 0
+}
+
+
+assert "$("$prog" <<EOF
+a \# b c " a\' s " # aa
+d e f " a\' s"
+\\\\
+
+#
+abc\\
+def
+aa bb "cc\"\"dd\'\'ee"
+EOF)" \
+"$(cat <<EOF
+ [a] [#] [b] [c] [ a' s ]
+ [d] [e] [f] [ a' s]
+ [\]
+ [abcdef]
+ [aa] [bb] [cc""dd''ee]
+EOF)"
+
