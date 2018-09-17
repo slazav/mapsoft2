@@ -6,6 +6,22 @@ template<>
 std::string str_to_type<std::string>(const std::string & s){ return s; }
 
 template<>
+int str_to_type<int>(const std::string & s){
+  std::istringstream ss(s);
+  int val; ss >> val;
+  if (!ss.eof()){
+    char c; ss>>c;
+    if (val!=0 || c!='x')
+      throw Err() << "can't parse value: " << s;
+    ss >> std::hex >> val;
+  }
+  if (ss.fail() || !ss.eof())
+    throw Err() << "can't parse value: " << s;
+  return val;
+}
+
+
+template<>
 std::string type_to_str<std::string>(const std::string & t){ return t; }
 
 void

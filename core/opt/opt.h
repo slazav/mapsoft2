@@ -16,16 +16,19 @@ template<typename T>
 T str_to_type(const std::string & s){
   std::istringstream ss(s);
   T val;
-  ss >> val;
+  ss >> std::showbase >> val;
   if (ss.fail() || !ss.eof())
     throw Err() << "can't parse value: " << s;
   return val;
 }
 
-/// version for std::string, much simplier
+// version for std::string, much simplier
 template<>
 std::string str_to_type<std::string>(const std::string & s);
 
+// version for int, supports HEX values (starting with 0x)
+template<>
+int str_to_type<int>(const std::string & s);
 
 /// Convert any type to std::string (similar to boost::lexical_cast).
 /// \relates Opt
@@ -35,6 +38,16 @@ std::string type_to_str(const T & t){
   ss << t;
   return ss.str();
 }
+
+/// version for hex values
+/// \relates Opt
+template<typename T>
+std::string type_to_str_hex(const T & t){
+  std::ostringstream ss;
+  ss << std::hex << std::showbase << t;
+  return ss.str();
+}
+
 
 /// version for std::string, much simplier
 template<>
@@ -79,6 +92,12 @@ class Opt : public std::map<std::string,std::string>{
   template<typename T>
   void put (const std::string & key, const T & val) {
     (*this)[key] = type_to_str(val);
+  }
+
+  /// Set option value for a given key (hex version).
+  template<typename T>
+  void put_hex (const std::string & key, const T & val) {
+    (*this)[key] = type_to_str_hex(val);
   }
 
   /// Returns value for a given key.

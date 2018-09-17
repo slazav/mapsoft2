@@ -34,24 +34,32 @@ Opt class is a `map<string,string>` container with functions for
 getting/putting values of arbitrary types. Data types should have `<<`,
 `>>` operators and a constructor without arguments.
 
-- Converting any object to std::string and back:
+- Converting any object to `std::string` and back:
 ```c
-str = str_to_type(v);
-v = type_to_str<type>(str);
+str = type_to_str(v);
+v = str_to_type<type>(str);
 ```
-Here `v` is some object of type `type`.
+Here `v` is some object of type `type`. All types except `std::string` are
+passed through `std::stringstrem` and `<<` or `>>` operators. For type `int`
+it is possible to read hex values (prefixed by `0x`). For writing hex values into
+strinc one can use function
+```c
+int v = type_to_str_hex(str);
+```
 
 - Creating Opt class, putting and extracting values:
 ```c
 Opt o;
 o.put<type>("key", v);
+o.put_hex("key", int_v);
 v = o.get<type>("key", def);
 ```
-Here "key" is a string key which is used to access data.
+Here `"key"` is a string key which is used to access data.
 If no value is set for this key, the `def` object is returned.
 
-- Opt object can be converted to a string and back (and thus used inside Opt class).
-  String representation is a JSON object with string fields.
+
+Opt object can be converted to a string and back (and thus used inside Opt class).
+String representation is a JSON object with string fields.
 
 \ref Opt "Class reference..."
 

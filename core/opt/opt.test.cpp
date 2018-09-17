@@ -129,6 +129,17 @@ try{
     assert(e.str() == "string or '}' expected near 'b'");
   }
 
+  O1.put("h1", "0xFF");
+  O1.put_hex("h2", 254);
+  assert(O1.get("h1", std::string()) == "0xFF");
+  assert(O1.get("h2", std::string()) == "0xfe");
+
+  assert(O1.get("h1", 0) == 255);
+  assert(O1.get("h2", 0) == 254);
+
+//  assert(O1.get("h1", 0.0) == 255);
+//  assert(O1.get("h2", 0.0) == 254);
+
 }
 catch (Err e) {
   std::cerr << "Error: " << e.str() << "\n";
