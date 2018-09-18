@@ -321,8 +321,8 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
       throw "closing xml document";
   }
   catch (const char *c){
-    throw Err() << "write_gpx: error in " << c;
     xmlFreeTextWriter(writer);
+    throw Err() << "write_gpx: error in " << c;
   }
 
   // free resources

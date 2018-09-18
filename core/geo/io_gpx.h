@@ -5,13 +5,14 @@
 #include "opt/opt.h"
 
 /// Read GeoData from a gpx file
-/// Reurn 0 on success, -1 otherwise
+/// Return 0 on success, -1 otherwise
 /// if opt.verbose>0 write warnings about file structure
 int
 read_gpx (const char* filename, GeoData & data, const Opt & opt = Opt());
 
 /// Write data to a gpx file (waypoints, tracks).
-/// - All waypoint lists are mixed together.
+/// - Waypoint lists are mixed together or
+///    written as separate routes (controlled by gpx_write_rte option).
 /// - Throw Err() if file can not be written.
 /// - Options:
 ///   xml_compr:   compress the output? 0|1, default 0;
