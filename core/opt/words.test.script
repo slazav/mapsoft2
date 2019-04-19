@@ -33,3 +33,13 @@ EOF)" \
  [aa] [bb] [cc""dd''ee]
 EOF)"
 
+
+assert "$("$prog" <<EOF
+a 'b "C" d' # aa
+a "b 'C' d" # aa
+EOF)" \
+"$(cat <<EOF
+ [a] [b "C" d]
+ [a] [b 'C' d]
+EOF)"
+

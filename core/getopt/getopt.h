@@ -26,8 +26,8 @@ struct ext_option {
 /**
 Main getopt wrapper. Parse cmdline options up to the first non-option
 argument or to last_opt. Use ext_options structure. Mask is applied to
-the group element of the ext_option structure and a mask to select some
-group of options. All options are returned as Opt object. */
+the group element of the ext_option structure to select some subset of
+options. All options are returned as Opt object. */
 Opt parse_options(int *argc, char ***argv,
                   struct ext_option ext_options[],
                   int mask,
