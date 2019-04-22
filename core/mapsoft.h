@@ -6,7 +6,7 @@
 
 // mapsoft options
 #include <opt/opt.h>
-#include <opt/words.h>
+#include <words/words.h>
 #include <getopt/getopt.h>
 
 // points, lines, rectangles
