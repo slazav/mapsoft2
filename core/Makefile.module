@@ -1,0 +1,77 @@
+# This file should be included from Makefiles inside
+# module subdirs.
+#
+# Module name equals to the subdir name. Module h-file should
+# have the same name (with .h extension)
+#
+# Before using define following variables:
+# SRC   -- list of sources (without extensions, if any)
+# DEPS  -- list of dependencies (module names, if any)
+# SIMPLE_TESTS -- simle tests: programs returning 0/1 (without test extension).
+#                 For each <name> should be a source <name>.test.cpp.
+# SCRIPT_TESTS -- script_tests: programs with testing scripts.
+#                 For each <name> should be a source <name>.test.cpp and
+#                 a script <name>.test.script
+
+######################################################
+
+NAME  := $(shell a=$$(pwd); echo $${a\#\#*/})
+STATIC_LIB := $(NAME).a
+OBJS  := $(patsubst %, %.o, $(SRC))
+HDEPS := $(foreach name,$(DEPS),../$(name)/$(name).h)
+ADEPS := $(foreach name,$(DEPS),../$(name)/$(name).a)
+DEP_DIRS   := $(patsubst %,../%,$(DEPS))
+override CPPFLAGS += -I..
+ALL_TESTS   := $(SIMPLE_TESTS) $(SCRIPT_TESTS)
+SIMPLE_TEST_PROGS := $(patsubst %, %.test, $(SIMPLE_TESTS))
+SCRIPT_TEST_PROGS := $(patsubst %, %.test, $(SCRIPT_TESTS))
+SIMPLE_TEST_RES   := $(patsubst %, %.test.passed, $(SIMPLE_TESTS))
+SCRIPT_TEST_RES   := $(patsubst %, %.test.passed, $(SCRIPT_TESTS))
+ALL_TEST_PROGS    := $(SIMPLE_TEST_PROGS) $(SCRIPT_TEST_PROGS)
+ALL_TEST_RES      := $(SIMPLE_TEST_RES) $(SCRIPT_TEST_RES)
+
+$(SIMPLE_TEST_RES): TEST_DEP := ''
+$(SCRIPT_TEST_RES): TEST_DEP := %.test.script
+
+$(SIMPLE_TEST_RES): TEST_CMD = ./$< && > $<.passed
+$(SCRIPT_TEST_RES): TEST_CMD = ./$<.script && > $<.passed
+
+
+######################################################
+# building a module: static library, tests
+all: $(STATIC_LIB) $(ALL_TEST_RES)
+
+######################################################
+# static library
+$(OBJS): $(HDEPS)
+
+$(STATIC_LIB): $(OBJS)
+	ar rs $(STATIC_LIB) $(OBJS)
+
+######################################################
+# tests
+$(ADEPS):
+	make -C $(DEP_DIRS)
+
+%.test.cpp: $(HDEPS)
+%.test: %.test.cpp $(OBJS) $(ADEPS)
+	$(CXX) $(CPPFLAGS) $+ -o $@
+
+%.test.passed: %.test $(TEST_DEP)
+	$(TEST_CMD)
+
+
+######################################################
+clean:
+	rm -f $(OBJS) $(ALL_TEST_PROGS) $(ALL_TEST_RES) $(STATIC_LIB)
+
+print:
+	@echo NAME:         $(NAME)
+	@echo STATIC_LIB:   $(STATIC_LIB)
+	@echo SRC:          $(SRC)
+	@echo OBJS:         $(OBJS)
+	@echo DEPS:         $(DEPS)
+	@echo HDEPS:        $(HDEPS)
+	@echo ADEPS:        $(ADEPS)
+	@echo SIMPLE_TESTS: $(SIMPLE_TESTS)
+	@echo SCRIPT_TESTS: $(SCRIPT_TESTS)
