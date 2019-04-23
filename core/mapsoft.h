@@ -34,7 +34,7 @@
 #include <geo/io_kml.h>
 
 // time formatting
-#include <time/time_fmt.h>
+#include <time_fmt/time_fmt.h>
 
 // reading/writing OziExplorer files
 #include <ozi/ozi.h>

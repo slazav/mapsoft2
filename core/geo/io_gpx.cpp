@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <cstring>
 #include "io_gpx.h"
-#include "time/time_fmt.h"
+#include "time_fmt/time_fmt.h"
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
