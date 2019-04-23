@@ -50,10 +50,10 @@ simple_tests=Split("""
 # <prog>.script with program path as argument. Fail if error
 # code is not zero.
 script_tests=Split("""
-  geo/io.test.cpp
   getopt/getopt.test.cpp
   words/words.test.cpp
 """)
+#  geo/io.test.cpp
 
 ##################################################
 ##################################################
