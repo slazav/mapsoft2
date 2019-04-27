@@ -7,7 +7,7 @@ PKG_CONFIG := libxml-2.0 jansson
 MODDIR := ../core
 PROGS  := $(patsubst %.cpp,%,$(SOURCES))
 MDEPS  := $(shell $(MODDIR)/get_deps $(MODDIR) $(SOURCES))
-ADEPS  := $(shell for i in $(MDEPS); do echo $(MODDIR)/$$i/$${i\#*/}.a; done)
+ADEPS  := $(shell for i in $(MDEPS); do echo $(MODDIR)/$$i/$${i\#*/}.a; done | tac)
 
 HDEPS := $(shell [ "$(SOURCES)" = "" ] ||\
           sed -rne 's|^\#include +"([^/]*/[^/]*)".*|$(MODDIR)/\1|p'\

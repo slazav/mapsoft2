@@ -33,7 +33,7 @@ HDEPS := $(shell [ "$(SOURCES)$(HEADERS)" = "" ] ||\
 MDEPS := $(shell $(MODDIR)/get_deps $(MODDIR) $(NAME))
 
 # a-files
-ADEPS := $(shell for i in $(MDEPS); do echo $(MODDIR)/$$i/$${i\#*/}.a; done)
+ADEPS := $(shell for i in $(MDEPS); do echo $(MODDIR)/$$i/$${i\#*/}.a; done | tac)
 
 ALL_TESTS   := $(SIMPLE_TESTS) $(SCRIPT_TESTS)
 SIMPLE_TEST_PROGS := $(patsubst %, %.test, $(SIMPLE_TESTS))
