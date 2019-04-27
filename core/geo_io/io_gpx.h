@@ -1,7 +1,7 @@
 #ifndef IO_GPX_H
 #define IO_GPX_H
 
-#include "geo_data.h"
+#include "geo_data/geo_data.h"
 #include "opt/opt.h"
 
 /// Read GeoData from a gpx file
