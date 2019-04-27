@@ -7,7 +7,7 @@
 /// Read GeoData from a gpx file
 /// Return 0 on success, -1 otherwise
 /// if opt.verbose>0 write warnings about file structure
-int
+void
 read_gpx (const char* filename, GeoData & data, const Opt & opt = Opt());
 
 /// Write data to a gpx file (waypoints, tracks).

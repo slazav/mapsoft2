@@ -684,7 +684,7 @@ read_gpx_node(xmlTextReaderPtr reader, GeoData & data){
 }
 
 
-int
+void
 read_gpx(const char* filename, GeoData & data, const Opt & opts) {
 
   LIBXML_TEST_VERSION
@@ -695,7 +695,7 @@ read_gpx(const char* filename, GeoData & data, const Opt & opts) {
   reader = xmlReaderForFile(filename, NULL, 0);
   if (reader == NULL){
     xmlFreeTextReader(reader);
-    return -1;
+    throw Err() << "Can't open GPX file " << filename;
   }
 
   // parse file

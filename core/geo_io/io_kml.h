@@ -4,10 +4,10 @@
 #include "geo_data/geo_data.h"
 #include "opt/opt.h"
 
-int
+void
 read_kml (const char* filename, GeoData & data, const Opt & opt = Opt());
 
-int
+void
 write_kml (const char* filename, const GeoData & data, const Opt & opt = Opt());
 
 #endif

@@ -50,7 +50,7 @@ void usage(bool pod=false){
      << "output file according with output options.\n"
   ;
   cerr << head << "General options:\n";
-  print_options(options, OPT_IN0, cerr, pod);
+  print_options(options, OPT_GG, cerr, pod);
   cerr << head << "Input options:\n";
   print_options(options, OPT_INP, cerr, pod);
   cerr << head << "Common options (can be used as input and output options):\n";

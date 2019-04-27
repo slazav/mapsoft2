@@ -17,7 +17,7 @@ using namespace std;
 
 // Записывает в KML-файл треки и точки
 // Не записывает карты! (хм, а может, надо?)
-int
+void
 write_kml (const char* filename, const GeoData & data, const Opt & opts){
 
   if (opts.exists("verbose")) cerr <<
@@ -530,7 +530,7 @@ read_kml_node(xmlTextReaderPtr reader, GeoData & data){
 }
 
 
-int
+void
 read_kml(const char* filename, GeoData & data, const Opt & opts) {
 
   LIBXML_TEST_VERSION
@@ -539,7 +539,8 @@ read_kml(const char* filename, GeoData & data, const Opt & opts) {
   int ret;
 
   reader = xmlReaderForFile(filename, NULL, 0);
-  if (reader == NULL) return 1;
+  if (reader == NULL)
+    throw Err() << "Can't open GPX file " << filename;
 
   // parse file
   while (1){
