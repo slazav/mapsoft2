@@ -5,8 +5,8 @@
 # have the same name (with .h extension)
 #
 # Before using define following variables:
-# SRC   -- list of sources (without extensions, if any)
-# DEPS  -- list of dependencies (module names, if any)
+# HEADERS -- list of headers (with .h extension)
+# SOURCES -- list of sources (with .cpp extension, if any)
 # SIMPLE_TESTS -- simle tests: programs returning 0/1 (without test extension).
 #                 For each <name> should be a source <name>.test.cpp.
 # SCRIPT_TESTS -- script_tests: programs with testing scripts.
@@ -15,13 +15,23 @@
 
 ######################################################
 
-NAME  := $(shell a=$$(pwd); echo $${a\#\#*/})
+NAME       := $(shell a=$$(pwd); echo $${a\#\#*/})
 STATIC_LIB := $(NAME).a
-OBJS  := $(patsubst %, %.o, $(SRC))
-HDEPS := $(foreach name,$(DEPS),../$(name)/$(name).h)
-ADEPS := $(foreach name,$(DEPS),../$(name)/$(name).a)
-DEP_DIRS   := $(patsubst %,../%,$(DEPS))
+OBJECTS    := $(patsubst %.cpp, %.o, $(SOURCES))
+
+# extract #include statements from SOURCES and HEADERS:
+HDEPS := $(shell [ "$(SOURCES)$(HEADERS)" = "" ] ||\
+          sed -rne 's|^\#include +"([^/]*/[^/]*)".*|../\1|p'\
+          $(SOURCES) $(HEADERS) | sort -u)
+
+# module dirs:
+MDEPS := $(shell for i in $(HDEPS); do echo $${i%/*}; done | sort -u)
+
+# a-files
+ADEPS := $(shell for i in $(MDEPS); do echo $$i/$${i\#*/}.a; done)
+
 override CPPFLAGS += -I..
+
 ALL_TESTS   := $(SIMPLE_TESTS) $(SCRIPT_TESTS)
 SIMPLE_TEST_PROGS := $(patsubst %, %.test, $(SIMPLE_TESTS))
 SCRIPT_TEST_PROGS := $(patsubst %, %.test, $(SCRIPT_TESTS))
@@ -32,46 +42,67 @@ ALL_TEST_RES      := $(SIMPLE_TEST_RES) $(SCRIPT_TEST_RES)
 
 $(SIMPLE_TEST_RES): TEST_DEP := ''
 $(SCRIPT_TEST_RES): TEST_DEP := %.test.script
-
 $(SIMPLE_TEST_RES): TEST_CMD = ./$< && > $<.passed
 $(SCRIPT_TEST_RES): TEST_CMD = ./$<.script && > $<.passed
 
 
 ######################################################
-# building a module: static library, tests
-all: $(STATIC_LIB) $(ALL_TEST_RES)
+# building a module: print info, make dependencies,
+# build static library, build and run tests
+all: make_deps print_info $(STATIC_LIB) $(ALL_TEST_RES)
+
+######################################################
+# dependencies
+.INTERMEDIATE.: %.lock
+make_deps:
+	@if [ -f $ $(NAME).lock ]; then\
+	  echo "### error: infinit dependency loop or outdated lock file for $(NAME) ###";\
+	  rm -f $(NAME).lock;\
+	  false;\
+	fi
+	@touch $(NAME).lock
+	@echo "###########################"
+	@echo "## Building dependencies for $(NAME): $(MDEPS)"
+	@for i in $(MDEPS); do \
+	  $(MAKE) -C $$i || (rm -f $(NAME).lock && false);\
+	done
+	@rm -f $(NAME).lock
+
+%.lock:
+	touch $@
 
 ######################################################
 # static library
-$(OBJS): $(HDEPS)
+$(OBJECTS): $(HEADERS) $(HDEPS)
 
-$(STATIC_LIB): $(OBJS)
-	ar rs $(STATIC_LIB) $(OBJS)
+$(STATIC_LIB): $(OBJECTS) $(ADEPS)
+	@echo "## Building static library for $(NAME)"
+	ar rs $(STATIC_LIB) $(OBJECTS)
 
 ######################################################
 # tests
-$(ADEPS):
-	make -C $(DEP_DIRS)
 
-%.test.cpp: $(HDEPS)
-%.test: %.test.cpp $(OBJS) $(ADEPS)
-	$(CXX) $(CPPFLAGS) $+ -o $@
+%.test: %.test.cpp $(OBJECTS) $(ADEPS) $(HDEPS) $(HEADERS)
+	@echo "## Building test script $@"
+	$(CXX) $(CPPFLAGS) $(LDFLAGS) $< $(OBJECTS) $(ADEPS) $(LDLIBS) -o $@
 
 %.test.passed: %.test $(TEST_DEP)
+	@echo "## Running test command $@"
 	$(TEST_CMD)
-
 
 ######################################################
 clean:
-	rm -f $(OBJS) $(ALL_TEST_PROGS) $(ALL_TEST_RES) $(STATIC_LIB)
+	rm -f *.o $(ALL_TEST_PROGS) $(ALL_TEST_RES) $(STATIC_LIB)
 
-print:
-	@echo NAME:         $(NAME)
-	@echo STATIC_LIB:   $(STATIC_LIB)
-	@echo SRC:          $(SRC)
-	@echo OBJS:         $(OBJS)
-	@echo DEPS:         $(DEPS)
-	@echo HDEPS:        $(HDEPS)
-	@echo ADEPS:        $(ADEPS)
-	@echo SIMPLE_TESTS: $(SIMPLE_TESTS)
-	@echo SCRIPT_TESTS: $(SCRIPT_TESTS)
+print_info:
+	@echo "###########################"
+	@echo "## Module <<$(NAME)>>"
+	@echo "STATIC_LIB:   $(STATIC_LIB)"
+	@echo "SOURCES:      $(SOURCES)"
+	@echo "HEADERS:      $(HEADERS)"
+	@echo "HDEPS:        $(HDEPS)"
+	@echo "MDEPS:        $(MDEPS)"
+	@echo "ADEPS:        $(ADEPS)"
+	@echo "LDLIBS:       $(LDLIBS)"
+	@echo "SIMPLE_TESTS: $(SIMPLE_TESTS)"
+	@echo "SCRIPT_TESTS: $(SCRIPT_TESTS)"

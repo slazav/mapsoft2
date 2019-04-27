@@ -1,5 +1,5 @@
-#ifndef WORDS_H
-#define WORDS_H
+#ifndef READ_WORDS_H
+#define READ_WORDS_H
 
 #include <string>
 #include <vector>
@@ -14,7 +14,7 @@
 /// - words are splitted by ' ' or '\t' symbols,
 /// - words can be quoted by " or ',
 /// - any symbol (including newline) can be escaped by '\',
-std::vector<std::string> get_words(std::istream & ss);
+std::vector<std::string> read_words(std::istream & ss);
 
 ///@}
 #endif

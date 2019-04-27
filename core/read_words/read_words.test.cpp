@@ -1,13 +1,13 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
 #include <iostream>
-#include "words.h"
+#include "read_words.h"
 #include "err/err.h"
 
 main(){
 try{
     while (1){
-      std::vector<std::string> vs = get_words(std::cin);
+      std::vector<std::string> vs = read_words(std::cin);
       if (std::cin.eof() && vs.size()<1) break;
       std::vector<std::string>::const_iterator i;
       for (i=vs.begin(); i!=vs.end(); i++)

@@ -1,6 +1,5 @@
-SRC  :=
-DEPS :=
+HEADERS  := err.h
+SOURCES  :=
 SIMPLE_TESTS := err
-SCRIPT_TESTS :=
 
 include ../Makefile.module

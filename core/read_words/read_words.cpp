@@ -1,7 +1,7 @@
 #include "err/err.h"
-#include "words.h"
+#include "read_words.h"
 
-std::vector<std::string> get_words(std::istream & ss) {
+std::vector<std::string> read_words(std::istream & ss) {
   std::string str;
   std::vector<std::string> ret;
   bool quote1=false, quote2=false, comment=false;

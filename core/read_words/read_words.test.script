@@ -1,6 +1,6 @@
 #!/bin/sh -efu
 
-prog=${1:-./words.test}
+prog=${1:-./read_words.test}
 
 function assert(){
   res="$1"
