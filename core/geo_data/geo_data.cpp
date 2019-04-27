@@ -1,7 +1,7 @@
 #include "geo_data.h"
 
 // see https://en.wikipedia.org/wiki/Haversine_formula
-double geo_dist(const dPoint &p1, const dPoint &p2){
+double geo_dist_2d(const dPoint &p1, const dPoint &p2){
   double R = 6380e3; // metres
   double cy1 = cos(p1.y * M_PI/180.0);
   double cy2 = cos(p2.y * M_PI/180.0);
@@ -43,7 +43,7 @@ double
 GeoTrk::length() const {
   double ret=0;
   for (int i=0; i<(int)size()-1; i++)
-    ret += geo_dist((*this)[i], (*this)[i+1]);
+    ret += geo_dist_2d((*this)[i], (*this)[i+1]);
   return ret;
 }
 

@@ -19,7 +19,7 @@
 
 /********************************************************************/
 /// Distance in m between two points (haversine formula, altitude is ignored).
-double geo_dist(const dPoint &p1, const dPoint &p2);
+double geo_dist_2d(const dPoint &p1, const dPoint &p2);
 
 /********************************************************************/
 /// Single waypoint, a child of dPoint. Can have "undefined" altitude,
