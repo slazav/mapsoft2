@@ -19,9 +19,10 @@ make_deps:
 	@echo "## Building dependencies: $(MDEPS)"
 	@for i in $(MDEPS); do $(MAKE) -C $(MODDIR)/$$i nodep; done
 
-override CXXFLAGS += $(shell pkg-config --cflags '$(PKG_CONFIG)')
-override LDLIBS   += $(shell pkg-config --libs '$(PKG_CONFIG)')
+override CXXFLAGS += $(shell [ "$(PKG_CONFIG)" == "" ] || pkg-config --cflags '$(PKG_CONFIG)')
+override LDLIBS   += $(shell [ "$(PKG_CONFIG)" == "" ] || pkg-config --libs '$(PKG_CONFIG)')
 override CPPFLAGS += -I$(MODDIR)
+override CPPFLAGS += -std=gnu++11 -Werror=return-type -O2
 
 $(SOURCES): $(HDEPS)
 %: %.cpp $(OBJECTS) $(ADEPS)

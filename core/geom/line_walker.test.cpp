@@ -3,13 +3,12 @@
 #include <cassert>
 #include "line_walker.h"
 
+int
 main(){
   try{
 
     dLine l1("[[0,0,0],[2,0,1],[2,2,2],[3,2],[4,3],[5,3]]");
     LineWalker lw(l1);
-std::cerr << "> " << lw.length() << "\n";
-std::cerr << "> " << l1.length() << "\n";
 
     // we are at the beginning
     assert(lw.length() == 6.0+sqrt(2.0));
@@ -107,6 +106,7 @@ std::cerr << "> " << l1.length() << "\n";
     std::cerr << "Error: " << e.str() << "\n";
     return 1;
   }
+  return 0;
 }
 
 ///\endcond

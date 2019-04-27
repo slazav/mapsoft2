@@ -48,9 +48,10 @@ $(SCRIPT_TEST_RES): TEST_DEP := %.test.script
 $(SIMPLE_TEST_RES): TEST_CMD = ./$< && > $<.passed
 $(SCRIPT_TEST_RES): TEST_CMD = ./$<.script && > $<.passed
 
-override CXXFLAGS += $(shell pkg-config --cflags '$(PKG_CONFIG)')
-override LDLIBS   += $(shell pkg-config --libs '$(PKG_CONFIG)')
+override CXXFLAGS += $(shell [ "$(PKG_CONFIG)" == "" ] || pkg-config --cflags '$(PKG_CONFIG)')
+override LDLIBS   += $(shell [ "$(PKG_CONFIG)" == "" ] || pkg-config --libs '$(PKG_CONFIG)')
 override CPPFLAGS += -I$(MODDIR)
+override CPPFLAGS += -std=gnu++11 -Werror=return-type -O2
 
 ######################################################
 # building a module: print info, make dependencies,

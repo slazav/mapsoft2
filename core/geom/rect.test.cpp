@@ -4,6 +4,7 @@
 #include "rect.h"
 #include "opt/opt.h"
 
+int
 main(){
   try{
 
@@ -275,13 +276,12 @@ main(){
     catch (Err e) { assert(e.str() == "can't parse value: [0,1,1,1]m"); }
   }
 
-
-
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";
     return 1;
   }
+  return 0;
 }
 
 ///\endcond

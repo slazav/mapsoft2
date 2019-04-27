@@ -4,6 +4,7 @@
 #include "read_words.h"
 #include "err/err.h"
 
+int
 main(){
 try{
     while (1){
@@ -20,6 +21,7 @@ try{
     std::cerr << "Error: " << e.str() << "\n";
     return 1;
   }
+  return 0;
 }
 
 ///\endcond

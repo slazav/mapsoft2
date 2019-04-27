@@ -4,6 +4,7 @@
 #include <sstream>
 #include "opt.h"
 
+int
 main(){
 try{
   Opt O1;
@@ -145,6 +146,7 @@ catch (Err e) {
   std::cerr << "Error: " << e.str() << "\n";
   return 1;
 }
+return 0;
 }
 
 ///\endcond

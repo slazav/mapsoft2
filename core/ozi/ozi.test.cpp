@@ -15,7 +15,8 @@ string merge_strings(const vector<string> & v){
   return ret;
 }
 
-int main() {
+int
+main() {
   try{
 
     assert( merge_strings(unpack_ozi_csv(",aa,b,c,ddd,,eee")) ==
@@ -53,6 +54,7 @@ int main() {
     std::cerr << "Error: " << e.str() << "\n";
     return 1;
   }
+  return 0;
 }
 
 ///\endcond

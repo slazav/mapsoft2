@@ -24,6 +24,7 @@ main(int argc, char **argv){
     std::cerr << "Error: " << e.str() << "\n";
     return 1;
   }
+  return 0;
 }
 
 ///\endcond

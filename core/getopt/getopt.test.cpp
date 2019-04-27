@@ -34,7 +34,8 @@ static struct ext_option options[] = {
   {0,0,0,0}
 };
 
-void usage(bool pod=false){
+void
+usage(bool pod=false){
   string head = pod? "\n=head1 ":"\n";
   const char * prog = "getopt.test";
   cerr << prog << " -- example of mapsoft-style getopt\n"
@@ -102,14 +103,13 @@ main(int argc, char *argv[]){
                      << " options: " << O << "\n";
     }
     else if (go_out) throw Err() << "output file expected";
-
-    return 0;
   }
 
   catch(Err e){
     if (e.str()!="") cerr << "Error: " << e.str() << "\n";
     return 1;
   }
+  return 0;
 }
 
 ///\endcond
