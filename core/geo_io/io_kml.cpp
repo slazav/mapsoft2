@@ -13,7 +13,6 @@
 #include <math.h>
 #include "err/err.h"
 
-
 using namespace std;
 
 // Записывает в KML-файл треки и точки

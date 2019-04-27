@@ -1,7 +1,7 @@
 #ifndef IO_KML_H
 #define IO_KML_H
 
-#include "geo_data.h"
+#include "geo_data/geo_data.h"
 #include "opt/opt.h"
 
 int

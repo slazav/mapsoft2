@@ -3,18 +3,30 @@
 prog=${1:-./io.test}
 
 for f in\
+    garmin_etrex20_north_rte\
     garmin_etrex20_north_trk\
     garmin_etrex20_north_wpt\
     garmin_etrex20_south_trk\
     garmin_etrex20_south_wpt; do
 
-  cmd="$prog gpx/$f.gpx  gpx/_$f.gpx"
-  diffargs="gpx/_$f.gpx gpx/ref_$f.gpx"
-  $prog gpx/$f.gpx  gpx/_$f.gpx
-  if ! diff -q $diffargs; then
-    echo "different files: $diffargs"
-    echo "command: $cmd"
-    diff $diffargs
+  f1="gpx/$f.gpx"
+  fo="gpx/out_$f.gpx"
+  fr="gpx/ref_$f.gpx"
+
+  cmd="$prog gpx/$f.gpx gpx/out_$f.gpx"
+  diffargs="gpx/out_$f.gpx gpx/ref_$f.gpx"
+
+  $prog $f1 $fo
+  if ! diff -q $fo $fr; then
+    echo "different files: $fo $fr"
     false
   fi
+
+  $prog $fo $fo
+  if ! diff -q $fo $fr; then
+    echo "different files: $fo $fr"
+    false
+  fi
+  rm -f "$fo"
 done
+

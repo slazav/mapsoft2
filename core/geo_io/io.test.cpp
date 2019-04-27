@@ -20,7 +20,6 @@ main(int argc, char **argv){
     if (read_gpx(argv[1], D))
       throw Err() << "Unknown file format: " << argv[1];
 
-
     write_gpx(argv[2], D);
 
 
