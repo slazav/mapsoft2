@@ -682,7 +682,7 @@ read_gpx_node(xmlTextReaderPtr reader, GeoData & data){
       cerr << "Warning: Unknown node \"" << name << "\" in gpx (type: " << type << ")\n";
     }
   }
-  data.wpts.push_back(wptl);
+  if (wptl.size()) data.wpts.push_back(wptl);
   return 1;
 }
 
