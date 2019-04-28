@@ -1,4 +1,5 @@
-SOURCES := mapsoft_convert.cpp
+SOURCES    := mapsoft_convert.cpp
+TESTS      := mapsoft_convert.test1
 
 PKG_CONFIG := libxml-2.0 jansson
 
@@ -13,7 +14,7 @@ HDEPS := $(shell [ "$(SOURCES)" = "" ] ||\
           sed -rne 's|^\#include +"([^/]*/[^/]*)".*|$(MODDIR)/\1|p'\
           $(SOURCES) | sort -u)
 
-all: make_deps $(PROGS)
+all: make_deps $(PROGS) tests
 
 make_deps:
 	@echo "## Building dependencies: $(MDEPS)"
@@ -27,6 +28,9 @@ override CPPFLAGS += -std=gnu++11 -Werror=return-type -O2
 $(SOURCES): $(HDEPS)
 %: %.cpp $(OBJECTS) $(ADEPS)
 	$(CXX) $(CPPFLAGS) $(LDFLAGS) $+ $(LDLIBS) -o $@
+
+tests:
+	for i in $(TESTS); do ./$$i; done
 
 ######################################################
 

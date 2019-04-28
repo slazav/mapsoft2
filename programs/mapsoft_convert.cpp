@@ -34,29 +34,29 @@ static struct ext_option options[] = {
   {0,0,0,0}
 };
 
-void usage(bool pod=false){
+void usage(bool pod=false, ostream & S = cout){
   string head = pod? "\n=head1 ":"\n";
   const char * prog = "getopt.test";
-  cerr << prog << " -- example of mapsoft-style getopt\n"
-     << head << "Usage:\n"
-     << prog << " [<general_options>|<global_input_options>]\\\n"
-     << "         <input_file_1> [<input_options_1>]     \\\n"
-     << "         <input_file_2> [<input_options_2>] ... \\\n"
-     << "         (--out|-o) <output_file> [<output_options>]\n"
-     << "\n"
-     << "Each input file should be read and filtered according\n"
-     << "with global and file-specific input options.\n"
-     << "Then all data should be processed and written to the\n"
-     << "output file according with output options.\n"
+  S << prog << " -- example of mapsoft-style getopt\n"
+    << head << "Usage:\n"
+    << prog << " [<general_options>|<global_input_options>]\\\n"
+    << "         <input_file_1> [<input_options_1>]     \\\n"
+    << "         <input_file_2> [<input_options_2>] ... \\\n"
+    << "         (--out|-o) <output_file> [<output_options>]\n"
+    << "\n"
+    << "Each input file should be read and filtered according\n"
+    << "with global and file-specific input options.\n"
+    << "Then all data should be processed and written to the\n"
+    << "output file according with output options.\n"
   ;
-  cerr << head << "General options:\n";
-  print_options(options, OPT_GG, cerr, pod);
-  cerr << head << "Input options:\n";
-  print_options(options, OPT_INP, cerr, pod);
-  cerr << head << "Common options (can be used as input and output options):\n";
-  print_options(options, OPT_CMN, cerr, pod);
-  cerr << head << "Output options:\n";
-  print_options(options, OPT_OUT, cerr, pod);
+  S << head << "General options:\n";
+  print_options(options, OPT_GG, S, pod);
+  S << head << "Input options:\n";
+  print_options(options, OPT_INP, S, pod);
+  S << head << "Common options (can be used as input and output options):\n";
+  print_options(options, OPT_CMN, S, pod);
+  S << head << "Output options:\n";
+  print_options(options, OPT_OUT, S, pod);
   throw Err();
 }
 

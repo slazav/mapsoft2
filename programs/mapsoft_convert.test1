@@ -1,0 +1,11 @@
+#!/bin/bash -fu
+
+P=${1:-./mapsoft_convert}
+
+. test_lib.sh
+
+help_msg="$($P -h)"
+assert "$P" "$help_msg" 1
+assert "$P --help" "$help_msg" 1
+assert "$P -o " "Error: output file expected" 1
+assert "$P --xxx " "Error: unknown option: --xxx" 1
