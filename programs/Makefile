@@ -5,7 +5,7 @@ PKG_CONFIG := libxml-2.0 jansson
 
 ######################################################
 
-MODDIR := ../core
+MODDIR := ../modules
 PROGS  := $(patsubst %.cpp,%,$(SOURCES))
 MDEPS  := $(shell $(MODDIR)/get_deps $(MODDIR) $(SOURCES))
 ADEPS  := $(shell for i in $(MDEPS); do echo $(MODDIR)/$$i/$${i\#*/}.a; done | tac)
