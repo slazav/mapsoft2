@@ -100,6 +100,9 @@ main(int argc, char *argv[]){
       // parse output options
       O = parse_options(&argc, &argv, options, MASK_OUT);
 
+      // copy verbose option to output options
+      if (GO.exists("verbose")) O.put("verbose", GO["verbose"]);
+
       mapsoft_write(ofile, data, O);
     }
     else if (go_out) throw Err() << "output file expected";
