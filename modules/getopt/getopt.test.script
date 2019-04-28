@@ -52,8 +52,19 @@ writing: -file3 options: {"cmn1": "1", "cmn2": "1"}'
 do_test '-I 1 file1 -C 10 -J file2 -C 20 -o file3 -C 1 -D' ''
 do_test '-I 1 file1 -v -C 10 -J file2 -C 20 -o file3 -C 1 -D'\
         'Error: unknown option: -v'
-
 do_test '-I 1 file1 -C 10 -J file2 -C 20 -o file3 -C 1 -D -o' \
         'Error: unknown option: -o'
+
+# it could be multi-letter options!
+do_test '-o file3 -x'\
+        'Error: unknown option: -x'
+do_test '-o file3 -xx'\
+        'Error: unknown option: -x'
+do_test '-o file3 --xx'\
+        'Error: unknown option: --xx'
+do_test '-v -o file3 -Ox'\
+        'writing: file3 options: {"out1": "x"}'
+do_test '-v -o file3 -Px'\
+        'Error: unknown option: -x'
 
 exit 0

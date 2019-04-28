@@ -19,6 +19,7 @@ parse_options(int * argc, char ***argv,
   Opt O;
   int c;
   opterr=0; // no error printing by getopt_long
+  optind=0; // to check that '+' in optstring is supported
 
   // build optstring
   string optstring="+:"; // note "+" and ":" in optstring
@@ -39,6 +40,10 @@ parse_options(int * argc, char ***argv,
     c = getopt_long(*argc, *argv, optstring.c_str(), long_options, &option_index);
     if (c == -1) break;
 
+    // Here we should care about multi-letter options
+    // in case of -xx option optind will be different from -x or --xx.
+    // For one-letter options optopt should be used instead of (*argv)[optind-1].
+    if (c == '?' && optopt!=0) throw Err() << "unknown option: -" << (char)optopt;
     if (c == '?') throw Err() << "unknown option: " << (*argv)[optind-1];
     if (c == ':') throw Err() << "missing argument: " << (*argv)[optind-1];
 
@@ -49,6 +54,7 @@ parse_options(int * argc, char ***argv,
         i++;
       }
     }
+    // This usually can not happen, but let's check:
     if (!long_options[option_index].name)
       throw Err() << "unknown option: " << (*argv)[optind-1];
 
