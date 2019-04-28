@@ -25,6 +25,8 @@ static struct ext_option options[] = {
   {"pod",                   0, 0 , OPT_GG, "show this message as POD template"},
   {"verbose",               0,'v', OPT_GG, "be verbose\n"},
 
+  {"fmt",                   1, 0,  OPT_CMN, "input/ouput format"},
+
   {"xml_compr",             1, 0,  OPT_OUT, "compress xml output (gpx files)"},
   {"xml_indent",            1, 0,  OPT_OUT, "use xml indentation (gpx files)"},
   {"xml_ind_str",           1, 0,  OPT_OUT, "xml indentation string (gpx files)"},
