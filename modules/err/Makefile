@@ -1,5 +1,5 @@
-HEADERS  := err.h
-SOURCES  :=
+MOD_HEADERS  := err.h
+MOD_SOURCES  :=
 SIMPLE_TESTS := err
 
-include ../Makefile.module
+include ../Makefile.inc

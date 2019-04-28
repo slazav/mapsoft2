@@ -1,5 +1,5 @@
-HEADERS := iconv.h
-SOURCES := iconv.cpp
+MOD_HEADERS := iconv.h
+MOD_SOURCES := iconv.cpp
 SIMPLE_TESTS := iconv
 
-include ../Makefile.module
+include ../Makefile.inc

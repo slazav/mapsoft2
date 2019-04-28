@@ -1,5 +1,5 @@
-HEADERS  := geo_data.h
-SOURCES  := geo_data.cpp
+MOD_HEADERS  := geo_data.h
+MOD_SOURCES  := geo_data.cpp
 SIMPLE_TESTS := geo_data geo_dist
 
-include ../Makefile.module
+include ../Makefile.inc

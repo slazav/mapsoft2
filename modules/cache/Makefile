@@ -1,5 +1,5 @@
-HEADERS := cache.h sizecache.h
+MOD_HEADERS  := cache.h sizecache.h
 SIMPLE_TESTS := cache sizecache
-LDLIBS += -ljansson
+PKG_CONFIG   := jansson
 
-include ../Makefile.module
+include ../Makefile.inc

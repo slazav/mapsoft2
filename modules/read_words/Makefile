@@ -1,5 +1,5 @@
-HEADERS := read_words.h
-SOURCES := read_words.cpp
+MOD_HEADERS  := read_words.h
+MOD_SOURCES  := read_words.cpp
 SCRIPT_TESTS := read_words
 
-include ../Makefile.module
+include ../Makefile.inc

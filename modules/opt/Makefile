@@ -1,6 +1,6 @@
-HEADERS := opt.h
-SOURCES := opt.cpp
+MOD_HEADERS := opt.h
+MOD_SOURCES := opt.cpp
 SIMPLE_TESTS := opt
-LDLIBS += -ljansson
+PKG_CONFIG := jansson
 
-include ../Makefile.module
+include ../Makefile.inc

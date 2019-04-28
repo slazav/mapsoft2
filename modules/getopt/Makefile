@@ -1,6 +1,6 @@
-HEADERS := getopt.h
-SOURCES := getopt.cpp
+MOD_HEADERS  := getopt.h
+MOD_SOURCES  := getopt.cpp
 SCRIPT_TESTS := getopt
-LDLIBS += -ljansson
+PKG_CONFIG   := jansson
 
-include ../Makefile.module
+include ../Makefile.inc
