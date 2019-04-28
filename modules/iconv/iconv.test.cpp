@@ -2,7 +2,7 @@
 
 #include <cassert>
 #include <iostream>
-#include "iconv/iconv.h"
+#include "iconv.h"
 #include "err/err.h"
 
 int

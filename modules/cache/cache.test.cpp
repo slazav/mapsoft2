@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <cassert>
-#include "cache/cache.h"
+#include "cache.h"
 
 using namespace std;
 

@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 #include "conv_base.h"
-#include "geo/geo_data.h" // for UNDEF_ALT
+#include "geo_data/geo_data.h" // for UNDEF_ALT
 
 ///\addtogroup libmapsoft
 ///@{

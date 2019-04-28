@@ -1,7 +1,7 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
 #include <iostream>
-#include "cache/sizecache.h"
+#include "sizecache.h"
 #include "err/err.h"
 
 using namespace std;
