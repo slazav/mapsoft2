@@ -6,4 +6,6 @@ P=${1:-./mapsoft_convert}
 . test_lib.sh
 
 assert "$P x" "Error: Can't determine input format for file: x" 1
-assert "$P x.gpx" "Error: Can't open GPX file x.gpx" 1
+assert "$P x.gpx" "Error: Can't open GPX file: x.gpx" 1
+assert "$P x.kml" "Error: Can't open KML file: x.kml" 1
+

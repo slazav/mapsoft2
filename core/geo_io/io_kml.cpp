@@ -540,7 +540,7 @@ read_kml(const char* filename, GeoData & data, const Opt & opts) {
 
   reader = xmlReaderForFile(filename, NULL, 0);
   if (reader == NULL)
-    throw Err() << "Can't open GPX file " << filename;
+    throw Err() << "Can't open KML file: " << filename;
 
   // parse file
   while (1){
@@ -559,5 +559,5 @@ read_kml(const char* filename, GeoData & data, const Opt & opts) {
   xmlCleanupParser();
   xmlMemoryDump();
 
-  if (ret != 0) throw Err() << "Can't parse KML file " << filename;
+  if (ret != 0) throw Err() << "Can't parse KML file: " << filename;
 }

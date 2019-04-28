@@ -693,10 +693,8 @@ read_gpx(const char* filename, GeoData & data, const Opt & opts) {
   int ret;
 
   reader = xmlReaderForFile(filename, NULL, 0);
-  if (reader == NULL){
-    xmlFreeTextReader(reader);
-    throw Err() << "Can't open GPX file " << filename;
-  }
+  if (reader == NULL)
+    throw Err() << "Can't open GPX file: " << filename;
 
   // parse file
   while (1){
@@ -713,7 +711,7 @@ read_gpx(const char* filename, GeoData & data, const Opt & opts) {
   // free resources
   xmlFreeTextReader(reader);
 
-  if (ret != 0) throw Err() << "Can't parse GPX file " << filename;
+  if (ret != 0) throw Err() << "Can't parse GPX file: " << filename;
 
 }
 
