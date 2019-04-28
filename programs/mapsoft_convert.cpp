@@ -27,10 +27,10 @@ static struct ext_option options[] = {
 
   {"fmt",                   1, 0,  OPT_CMN, "input/ouput format"},
 
-  {"xml_compr",             1, 0,  OPT_OUT, "compress xml output (gpx files)"},
-  {"xml_indent",            1, 0,  OPT_OUT, "use xml indentation (gpx files)"},
-  {"xml_ind_str",           1, 0,  OPT_OUT, "xml indentation string (gpx files)"},
-  {"xml_qchar",             1, 0,  OPT_OUT, "xml quoting character (gpx files)"},
+  {"xml_compr",             1, 0,  OPT_OUT, "compress xml output (gpx, kml files)"},
+  {"xml_indent",            1, 0,  OPT_OUT, "use xml indentation (gpx, kml files)"},
+  {"xml_ind_str",           1, 0,  OPT_OUT, "xml indentation string (gpx, kml files)"},
+  {"xml_qchar",             1, 0,  OPT_OUT, "xml quoting character (gpx, kml files)"},
   {"gpx_write_rte",         1, 0,  OPT_OUT, "write waypoint lists as routes (gpx files)"},
 
   {0,0,0,0}
