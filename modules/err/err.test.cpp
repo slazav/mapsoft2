@@ -3,6 +3,7 @@
 #include <cassert>
 #include "err.h"
 
+int
 main(){
   try {
     throw Err() << "text " << 123;
@@ -19,6 +20,7 @@ main(){
     assert (E.str()  == "text 123");
     assert (E.code() == 3);
   }
+  return 0;
 }
 
 ///\endcond

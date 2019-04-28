@@ -19,6 +19,7 @@ class MyConv : public ConvBase {
   }
 };
 
+int
 main(){
   try{
 
@@ -111,6 +112,7 @@ main(){
     std::cerr << "Error: " << e.str() << "\n";
     return 1;
   }
+  return 0;
 }
 
 ///\endcond

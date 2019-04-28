@@ -3,6 +3,7 @@
 #include <cassert>
 #include "conv_geo.h"
 
+int
 main(){
   try{
     std::string proj_wgs = "+datum=WGS84 +proj=lonlat";
@@ -74,6 +75,7 @@ main(){
     std::cerr << "Error: " << e.str() << "\n";
     return 1;
   }
+  return 0;
 }
 
 ///\endcond
