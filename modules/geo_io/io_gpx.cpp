@@ -168,6 +168,9 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
   if (writer == NULL)
     throw Err() << "write_gpx: can't write to file: " << filename;
 
+  if (opts.exists("verbose")) cerr <<
+    "Writing GPX file: " << filename << endl;
+
   try {
     // set some parameters
     int indent = opts.get<int>("xml_indent", 1);
@@ -695,6 +698,9 @@ read_gpx(const char* filename, GeoData & data, const Opt & opts) {
   reader = xmlReaderForFile(filename, NULL, 0);
   if (reader == NULL)
     throw Err() << "Can't open GPX file: " << filename;
+
+  if (opts.exists("verbose")) cerr <<
+    "Reading GPX file: " << filename << endl;
 
   // parse file
   while (1){
