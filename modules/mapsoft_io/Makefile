@@ -4,4 +4,6 @@
 MOD_HEADERS  := mapsoft_io.h
 MOD_SOURCES  := mapsoft_io.cpp
 
+PKG_CONFIG   := jansson libxml-2.0
+
 include ../Makefile.inc
