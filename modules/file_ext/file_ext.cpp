@@ -1,5 +1,6 @@
-#include <string>
 #include <cstring>
+#include <string>
+#include <vector>
 
 bool
 file_ext_check(const std::string &fname, const char *ext){
@@ -14,4 +15,25 @@ file_ext_repl(const std::string &fname, const char *ext){
   std::string base = fname;
   if (i>=0) base = std::string(fname.begin(), fname.begin()+i);
   return base + ext;
+}
+
+#include <iostream>
+
+std::vector<std::string>
+file_get_dirs(const std::string &fname){
+  std::vector<std::string> ret;
+  std::string s = fname;
+  std::string tail;
+
+  while (1) {
+    int i = s.rfind('/');
+    if (i<=0) return ret;
+    s = std::string(s.begin(), s.begin()+i);
+
+    i = s.rfind('/');
+    tail = std::string(s.begin()+i+1, s.end());
+    if (tail!="." && tail!=".." && tail!="")
+      ret.push_back(s);
+  };
+  return ret;
 }
