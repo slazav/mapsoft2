@@ -1,0 +1,25 @@
+#!/bin/bash -efu
+
+prog=${1:-./tmpdir.test}
+
+$prog f1 f2 f3 a/ a/b/ a/b/c/ a/b/c/f4 a/f5 tmp.zip
+
+a="$(unzip -l tmp.zip | sed -r -e 's/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}/xxxx-xx-xx xx:xx/g')"
+b='Archive:  tmp.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+        8  xxxx-xx-xx xx:xx   f1
+        8  xxxx-xx-xx xx:xx   f2
+        8  xxxx-xx-xx xx:xx   f3
+        0  xxxx-xx-xx xx:xx   a/
+        0  xxxx-xx-xx xx:xx   a/b/
+        0  xxxx-xx-xx xx:xx   a/b/c/
+        8  xxxx-xx-xx xx:xx   a/b/c/f4
+        8  xxxx-xx-xx xx:xx   a/f5
+---------                     -------
+       40                     8 files'
+
+rm -f tmp.zip
+
+[ "$a" = "$b" ] || exit 1
+
