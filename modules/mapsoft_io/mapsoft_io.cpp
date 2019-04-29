@@ -28,6 +28,18 @@ mapsoft_read(const char *fname, MapsoftData & data, const Opt & opt){
     return;
   }
 
+  // ZIP format
+  if (fmt == "zip" || (fmt == "" && file_ext_check(fname, ".zip"))) {
+    TmpDir tmpdir("mapsoft_read_zip_XXXXXX");
+    tmpdir.unzip(fname);
+    std::vector<std::string> paths = tmpdir.get_paths();
+    for (int i=0; i<paths.size(); i++){
+      if (*paths[i].rbegin() == '/') continue;
+      mapsoft_read(paths[i].c_str(), data, opt);
+    }
+    return;
+  }
+
   throw Err() << "Can't determine input format for file: " << fname;
   return;
 }
