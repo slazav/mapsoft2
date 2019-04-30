@@ -20,23 +20,60 @@ TmpDir::TmpDir(const char *mask) {
   std::string etmp = getenv("TMPDIR");
   if (etmp != "") dir = etmp + "/" + dir;
   if (mkdtemp((char *)dir.c_str()) == NULL)
-    throw Err() << "Can't create temporary directory: "
+    throw Err() << "TMPDIR: Can't create directory: "
                 << dir << ": " << strerror(errno);
 }
 
 TmpDir::~TmpDir() {
   std::vector<std::string>::reverse_iterator i;
+
+  // remove files and directories (including the base one)
   paths.insert(paths.begin(), dir);
   for (i=paths.rbegin(); i!=paths.rend(); i++) {
-    if (remove(i->c_str())!=0 && errno != ENOENT)
-      std::cerr << "Can't remove temporary file or directory: "
+    if (remove(i->c_str())!=0)
+      std::cerr << "TMPDIR: Can't remove file or directory: "
                 << *i << ": " << strerror(errno) << endl;
   }
 }
 
 std::string
 TmpDir::add(const std::string & fname) {
+
+  // set is_dir flag
+  bool is_dir = *fname.rbegin() == '/';
+
+  // find sub-folders, add it recursively
+  int i = fname.rfind('/', is_dir?fname.size()-2:-1);
+  if (i>0) {
+    std::string head(fname.begin(), fname.begin()+i);
+    i = head.rfind('/');
+    std::string tail(head.begin()+i+1, head.end());
+    if (tail!="." && tail!=".." && tail!="")
+      add(head + '/');
+  }
+
+  // full path
   std::string fpath = dir + "/" + fname;
+
+  // was it created already?
+  bool exists=false;
+  for (int j=0; j<files.size(); j++)
+    if (files[j] == fname) {exists=true; break;}
+  if (exists) return fpath;
+
+  // create directory
+  if (is_dir) {
+    if (mkdir(fpath.c_str(), 0777)!=0){
+      throw Err() << "TMPDIR: Can't create directory: "
+                  << fpath << ": " << strerror(errno);
+    }
+  }
+  else {
+    // create empty file
+    ofstream s(fpath);
+  }
+
+  // add to lists
   files.push_back(fname);
   paths.push_back(fpath);
   return fpath;
@@ -99,35 +136,22 @@ TmpDir::unzip(const char* zipname) {
 
     std::string fname = zip_get_name(zip_file,i,0);
 
-    // create subfolders
-    std::vector<std::string> dirlist = file_get_dirs(fname);
-    for (int i=0; i<dirlist.size(); i++){
-
-      // was it created already?
-      bool exists=false;
-      for (int j=0; j<files.size(); j++)
-        if (files[j] == dirlist[i] + '/') {exists=true; break;}
-      if (exists) continue;
-
-      // add to file list, build full path
-      std::string fpath = add(dirlist[i] + '/');
-      // create
-      if (mkdir(fpath.c_str(), 0777)!=0){
-        zip_fclose(file_in_zip);
-        zip_close(zip_file);
-        throw Err() << "Reading ZIP file: can't create directory: "
-                    << dirlist[i] << ": " << strerror(errno);
-      }
+    // add the file to TmpDir lists, create subfolders
+    std::string fpath;
+    try {
+      fpath = add(fname);
+    } catch (Err e) {
+      zip_fclose(file_in_zip);
+      zip_close(zip_file);
+      throw e;
     }
 
     // write file content
     if (*fname.rbegin()!='/') {
-      std::string fpath = add(fname);
       ofstream out(fpath.c_str());
       char buffer[1];
       while ( zip_fread(file_in_zip, buffer, sizeof(buffer)) > 0)
         out << buffer[0];
-
       out.close();
     }
     zip_fclose(file_in_zip);

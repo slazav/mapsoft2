@@ -22,9 +22,11 @@ class TmpDir {
 
   ~TmpDir();
 
-  /// Add file or directory, return full path.
-  /// Use <name>/ for a folder.
-  /// Files/folders should be created separately.
+  /// Create (empty) file or directory (if `fname` ends with `/`) in
+  /// the tmp directory, return full path.
+  /// All sub-directories are created automatically.
+  /// If directory or file have been already added the method
+  ///  has no effect.
   std::string add(const std::string & fname);
 
   /// Get directory name.
@@ -35,6 +37,7 @@ class TmpDir {
 
   // Get file list with full paths (dir + '/' + relative paths).
   std::vector<std::string> & get_paths() {return paths;}
+
 
   // Zip all files in the directory.
   void zip(const std::string & zipname) const;

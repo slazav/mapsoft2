@@ -20,11 +20,7 @@ main(int argc, char **argv){
     for (int i=1; i<argc-1; i++) {
        std::string fname = argv[i];
        std::string fpath = tmpdir.add(fname);
-
-       if (*fname.rbegin()=='/'){
-         mkdir(fpath.c_str(), 0777);
-       }
-       else {
+       if (*fname.rbegin()!='/'){
          std::ofstream f(fpath);
          f << "test: " << i << "\n";
        }
