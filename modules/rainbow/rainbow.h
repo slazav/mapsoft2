@@ -38,14 +38,20 @@ it can creates a few types of predefined gradients between
 some values `v1` and `v2`. For reverse gradient direction
 use v1>v2:
 
-`simple_rainbow(v1, v2, type);`
+`  simple_rainbow(double min, double max, rainbow_type type=RAINBOW_NORMAL);`
 where type can be:
-* `RAINBOW_NORMAL`   -- usual rainbow, b-c-g-y-r-m
-* `RAINBOW_BURNING`  -- white-y-r-m-b-dark blue gradient
-* `RAINBOW_BURNING1` -- k-r-y-w
+* `RAINBOW_NORMAL`   -- usual rainbow, B-C-G-Y-R-M
+* `RAINBOW_BURNING`  -- W-Y-R-M-B-b gradient
+* `RAINBOW_BURNING1` -- K-R-Y-W
 
 Another constructor makes a simple two-color gradient:
-`simple_rainbow(v1, v2, c1, c2);`
+`simple_rainbow(double min, double max, int cmin, int cmax);`
+
+Another constructor makes a color gradient using a string:
+`simple_rainbow(double min, double max, const char *colors);`
+Characters in the string: `R`,`G`,`B` for red, green, and blue;
+`C`,`M`,`Y` for cyan, magenta, and yellow; `W` and `K` for white
+and black. `r`,`g`,`b`,`c`,`m`,`y`,`w` for dark colors.
 
 The class provides method `get` for converting value to color:
 int get(double v, int low_c=-1, int high_c=-1);
@@ -70,9 +76,9 @@ int color_shade(int c, double k);
 
 /// predefined gradient types for simple_rainbow class
 enum rainbow_type{
-  RAINBOW_NORMAL,   ///< usual rainbow, b-c-g-y-r-m
-  RAINBOW_BURNING,  ///< white-y-r-m-b-darkblue gradient
-  RAINBOW_BURNING1  ///< k-r-y-w
+  RAINBOW_NORMAL,   ///< usual rainbow, B-C-G-Y-R-M
+  RAINBOW_BURNING,  ///< W-Y-R-M-B-b gradient
+  RAINBOW_BURNING1  ///< K-R-Y-W
 };
 
 /*******************/
@@ -85,8 +91,11 @@ class simple_rainbow{
 public:
   simple_rainbow(double min, double max, rainbow_type type=RAINBOW_NORMAL);
   simple_rainbow(double min, double max, int cmin, int cmax);
+  simple_rainbow(double min, double max, const char *colors);
 
-  void set_range(double min, double max); ///<reset range
+  void set_color_string(double min, double max, const char *colors);
+  void set_range(double min, double max); ///<reset value range for same colors
+
   double get_min() const; ///< get min value which was set in constructor
   double get_max() const; ///< get min value which was set in constructor
 

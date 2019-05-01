@@ -1,5 +1,6 @@
 #include "rainbow.h"
 #include <cmath>
+#include <cstring>
 
 int
 get_rainbow(double val, const std::vector<rainbow_data> & RD,
@@ -45,39 +46,44 @@ color_shade(int c, double k){
 
 simple_rainbow::simple_rainbow(double min, double max, rainbow_type type){
   switch (type){
-    case RAINBOW_NORMAL:
-    RD=std::vector<rainbow_data>(6);
-    RD[0].c = 0xff0000;
-    RD[1].c = 0xffff00;
-    RD[2].c = 0x00ff00;
-    RD[3].c = 0x00ffff;
-    RD[4].c = 0x0000ff;
-    RD[5].c = 0xff00ff;
-    break;
-    case RAINBOW_BURNING:
-    RD=std::vector<rainbow_data>(6);
-    RD[0].c = 0xffffff;
-    RD[1].c = 0xffff00;
-    RD[2].c = 0xff0000;
-    RD[3].c = 0xff00ff;
-    RD[4].c = 0x0000ff;
-    RD[5].c = 0x000040;
-    break;
-    case RAINBOW_BURNING1:
-    RD=std::vector<rainbow_data>(4);
-    RD[0].c = 0x000000;
-    RD[1].c = 0xff0000;
-    RD[2].c = 0xffff00;
-    RD[3].c = 0xffffff;
-    break;
+    case RAINBOW_NORMAL:   set_color_string(min, max, "BCGYRM"); break;
+    case RAINBOW_BURNING:  set_color_string(min, max, "WYRMBb"); break;
+    case RAINBOW_BURNING1: set_color_string(min, max, "KRYW"); break;
   }
-  set_range(min,max);
 }
 
 simple_rainbow::simple_rainbow(double min, double max, int cmin, int cmax){
   RD=std::vector<rainbow_data>(2);
   RD[0].c = cmin; RD[0].v = min;
   RD[1].c = cmax; RD[1].v = max;
+}
+
+simple_rainbow::simple_rainbow(double min, double max, const char *colors){
+  set_color_string(min, max, colors);}
+
+void
+simple_rainbow::set_color_string(double min, double max, const char *colors){
+  RD.resize(0);
+  for (int i=0; i<strlen(colors); i++) {
+    switch (colors[i]){
+      case 'R': RD.push_back({0, 0xff0000}); break;
+      case 'G': RD.push_back({0, 0x00ff00}); break;
+      case 'B': RD.push_back({0, 0x0000ff}); break;
+      case 'C': RD.push_back({0, 0x00ffff}); break;
+      case 'M': RD.push_back({0, 0xff00ff}); break;
+      case 'Y': RD.push_back({0, 0xffff00}); break;
+      case 'W': RD.push_back({0, 0xffffff}); break;
+      case 'K': RD.push_back({0, 0x000000}); break;
+      case 'r': RD.push_back({0, 0x400000}); break;
+      case 'g': RD.push_back({0, 0x004000}); break;
+      case 'b': RD.push_back({0, 0x000040}); break;
+      case 'c': RD.push_back({0, 0x004040}); break;
+      case 'm': RD.push_back({0, 0x400040}); break;
+      case 'y': RD.push_back({0, 0x404000}); break;
+      case 'w': RD.push_back({0, 0x404040}); break;
+    }
+  }
+  set_range(min, max);
 }
 
 void

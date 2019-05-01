@@ -81,16 +81,16 @@ main(){
 
   // normal rainbow b-c-g-y-r-m
   simple_rainbow sr2(0, 5, RAINBOW_NORMAL);
-  assert(sr2.get(0)   == 0xff0000);
-  assert(sr2.get(0.5) == 0xff8000);
-  assert(sr2.get(1)   == 0xffff00);
-  assert(sr2.get(1.5) == 0x7fff00);
+  assert(sr2.get(0)   == 0x0000ff);
+  assert(sr2.get(0.5) == 0x0080ff);
+  assert(sr2.get(1)   == 0x00ffff);
+  assert(sr2.get(1.5) == 0x00ff7f);
   assert(sr2.get(2)   == 0x00ff00);
-  assert(sr2.get(2.5) == 0x00ff80);
-  assert(sr2.get(3)   == 0x00ffff);
-  assert(sr2.get(3.5) == 0x007fff);
-  assert(sr2.get(4)   == 0x0000ff);
-  assert(sr2.get(4.5) == 0x8000ff);
+  assert(sr2.get(2.5) == 0x80ff00);
+  assert(sr2.get(3)   == 0xffff00);
+  assert(sr2.get(3.5) == 0xff7f00);
+  assert(sr2.get(4)   == 0xff0000);
+  assert(sr2.get(4.5) == 0xff0080);
   assert(sr2.get(5)   == 0xff00ff);
 
   simple_rainbow sr3(0, 5, RAINBOW_BURNING);
@@ -113,6 +113,24 @@ main(){
   assert(sr5.get(2)   == 0xff0000);
   assert(sr5.get(1)   == 0xffff00);
   assert(sr5.get(0)   == 0xffffff);
+
+  //string
+  simple_rainbow sr6(0, 14, "RrGgBbCcMmYyKWw");
+  assert(sr6.get(0)   == 0xff0000);
+  assert(sr6.get(1)   == 0x400000);
+  assert(sr6.get(2)   == 0x00ff00);
+  assert(sr6.get(3)   == 0x004000);
+  assert(sr6.get(4)   == 0x0000ff);
+  assert(sr6.get(5)   == 0x000040);
+  assert(sr6.get(6)   == 0x00ffff);
+  assert(sr6.get(7)   == 0x004040);
+  assert(sr6.get(8)   == 0xff00ff);
+  assert(sr6.get(9)   == 0x400040);
+  assert(sr6.get(10)  == 0xffff00);
+  assert(sr6.get(11)  == 0x404000);
+  assert(sr6.get(12)  == 0x000000);
+  assert(sr6.get(13)  == 0xffffff);
+  assert(sr6.get(14)  == 0x404040);
 
   assert(color_shade(0xFFFFFF, 0) == 0x000000);
   assert(color_shade(0xFFFFFF, 0.5) == 0x808080);
