@@ -11,59 +11,57 @@ main(){
 
 /************************************************/
 // user-defined rainbow data
-  struct rainbow_data RD[]={
+  std::vector<rainbow_data> RD={
     {0.1, 0x000000},
     {0.5, 0xFF0000}, // 0.1 - 0.5 black -> blue
     {0.5, 0xFF00FF}, // - color step
     {0.9, 0x000000}, // 0.5 - 0.9 magenta -> black
   };
-  int RDS = sizeof(RD)/sizeof(rainbow_data);
 
   // array size = 0 -> always return 0
   assert(get_rainbow(1.2, RD, 0) == 0);
 
-  assert(get_rainbow(0.0, RD, RDS) == 0);
-  assert(get_rainbow(0.2, RD, RDS) == 0x400000);
-  assert(get_rainbow(0.4999, RD, RDS) == 0xFF0000);
-  assert(get_rainbow(0.5000, RD, RDS) == 0xFF0000);
-  assert(get_rainbow(0.5001, RD, RDS) == 0xFF00FF);
-  assert(get_rainbow(0.9, RD, RDS) == 0);
-  assert(get_rainbow(1.0, RD, RDS) == 0);
+  assert(get_rainbow(0.0, RD) == 0);
+  assert(get_rainbow(0.2, RD) == 0x400000);
+  assert(get_rainbow(0.4999, RD) == 0xFF0000);
+  assert(get_rainbow(0.5000, RD) == 0xFF0000);
+  assert(get_rainbow(0.5001, RD) == 0xFF00FF);
+  assert(get_rainbow(0.9, RD) == 0);
+  assert(get_rainbow(1.0, RD) == 0);
 
-  assert(get_rainbow(0.0, RD, RDS, 0x111111) == 0x111111);
-  assert(get_rainbow(1.0, RD, RDS, 0x111111) == 0);
+  assert(get_rainbow(0.0, RD, 0x111111) == 0x111111);
+  assert(get_rainbow(1.0, RD, 0x111111) == 0);
 
-  assert(get_rainbow(0.0, RD, RDS, 0x111111, 0x222222) == 0x111111);
-  assert(get_rainbow(1.0, RD, RDS, 0x111111, 0x222222) == 0x222222);
+  assert(get_rainbow(0.0, RD, 0x111111, 0x222222) == 0x111111);
+  assert(get_rainbow(1.0, RD, 0x111111, 0x222222) == 0x222222);
 
 /************************************************/
 // same tests but opposite sorting of the data
 
-  struct rainbow_data RD1[]={
+  std::vector<rainbow_data> RD1={
     {0.9, 0x000000},
     {0.5, 0xFF00FF},
     {0.5, 0xFF0000},
     {0.1, 0x000000},
   };
-  RDS = sizeof(RD1)/sizeof(rainbow_data);
 
   // array size = 0 -> always return 0
   assert(get_rainbow(1.2, RD1, 0) == 0);
 
-  assert(get_rainbow(0.0, RD1, RDS) == 0);
-  assert(get_rainbow(0.2, RD1, RDS) == 0x400000);
-  assert(get_rainbow(0.4999, RD1, RDS) == 0xFF0000);
+  assert(get_rainbow(0.0, RD1) == 0);
+  assert(get_rainbow(0.2, RD1) == 0x400000);
+  assert(get_rainbow(0.4999, RD1) == 0xFF0000);
 //step point is different!
-  assert(get_rainbow(0.5000, RD1, RDS) == 0xFF00FF);
-  assert(get_rainbow(0.5001, RD1, RDS) == 0xFF00FF);
-  assert(get_rainbow(0.9, RD1, RDS) == 0);
-  assert(get_rainbow(1.0, RD1, RDS) == 0);
+  assert(get_rainbow(0.5000, RD1) == 0xFF00FF);
+  assert(get_rainbow(0.5001, RD1) == 0xFF00FF);
+  assert(get_rainbow(0.9, RD1) == 0);
+  assert(get_rainbow(1.0, RD1) == 0);
 
-  assert(get_rainbow(0.0, RD1, RDS, 0x111111) == 0x111111);
-  assert(get_rainbow(1.0, RD1, RDS, 0x111111) == 0);
+  assert(get_rainbow(0.0, RD1, 0x111111) == 0x111111);
+  assert(get_rainbow(1.0, RD1, 0x111111) == 0);
 
-  assert(get_rainbow(0.0, RD1, RDS, 0x111111, 0x222222) == 0x111111);
-  assert(get_rainbow(1.0, RD1, RDS, 0x111111, 0x222222) == 0x222222);
+  assert(get_rainbow(0.0, RD1, 0x111111, 0x222222) == 0x111111);
+  assert(get_rainbow(1.0, RD1, 0x111111, 0x222222) == 0x222222);
 
 /************************************************/
 // simple_rainbow

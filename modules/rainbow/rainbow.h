@@ -1,5 +1,6 @@
 #ifndef RAINBOW_H
 #define RAINBOW_H
+#include <vector>
 
 /* rainbow -- convert double values into color gradients.
 
@@ -8,11 +9,11 @@ an array `RD` which maps values into colors (0xRRGGBB), array size
 `rd_size` and optionally colors for small and high values, `low_c`
 and `high_c`.
 ```c++
-int get_rainbow(double val, const rainbow_data RD[], int rd_size,
+int get_rainbow(double val, const std::vector<rainbow_data> & RD,
                 int low_c = -1, int high_c = -1);
 ```
 
-Array `RD` contains records of `rainbow_data` type which is a pair of
+Vector `RD` contains records of `rainbow_data` type which are pairs of
 double and integer value. Array must be sorted by double values,
 increasing or decreasing.
 
@@ -22,13 +23,12 @@ are set to some positive value.
 
 Example:
 ```c++
-struct rainbow_data RD[]={ // user-defined rainbow data
+std::vector<rainbow_data> RD={
   {0.1, 0x000000},
   {0.5, 0xFF0000}, // 0.1 - 0.5 black -> blue
   {0.5, 0xFF00FF}, // - color step
   {0.9, 0x000000}, // 0.5 - 0.9 magenta -> black
 };
-int RDS = sizeof(RD)/sizeof(rainbow_data);
 
 int c1=get_rainbow(v, RD, RDS); // get color for v!
 ```
@@ -62,7 +62,8 @@ struct rainbow_data{
   int c;    ///< color
 };
 
-int get_rainbow(double val, const rainbow_data RD[], int rd_size,
+
+int get_rainbow(double val, const std::vector<rainbow_data> & RD,
                 int low_c = -1, int high_c = -1);
 
 int color_shade(int c, double k);
@@ -79,9 +80,7 @@ enum rainbow_type{
 /** Class for simple gradients
 */
 class simple_rainbow{
-  static const int max_rd_size=6;
-  rainbow_data RD[max_rd_size];
-  int rd_size;
+  std::vector<rainbow_data> RD;
 
 public:
   simple_rainbow(double min, double max, rainbow_type type=RAINBOW_NORMAL);
