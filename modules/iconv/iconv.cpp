@@ -7,35 +7,34 @@
 
 #define ERR (iconv_t)(-1)
 
-void
-IConv::copy(const IConv & other){
-  cd = other.cd;
-  (*refcounter)++;
-  assert(*refcounter >0);
-}
+class IConv::Impl {
+  std::shared_ptr<void> cdp;
 
-void
-IConv::destroy(void){
-  (*refcounter)--;
-  if (*refcounter<=0){
-    // do not throw exceptions in destructor...
-    if (cd) iconv_close(cd);
-    delete refcounter;
+  public:
+
+  Impl(const char *from, const char *to){
+    cdp = std::shared_ptr<void>(iconv_open(to, from), iconv_close);
+    if ((iconv_t)(cdp.get()) == ERR) throw Err() <<
+      "can't do iconv conversion from " << from << " to " << to;
   }
-}
 
-IConv::IConv(const char *from, const char *to) {
-  refcounter   = new int;
-  *refcounter  = 1;
-  cd = iconv_open(to, from);
-  if (cd == ERR) throw Err() <<
-    "can't do iconv conversion from " << from << " to " << to;
-}
+  ~Impl() {}
+
+  std::string cnv(const std::string & s);
+
+};
+
+
+IConv::IConv(const char *from, const char *to):
+  impl(std::unique_ptr<Impl>(new Impl(from,to))) { }
+std::string IConv::cnv(const std::string & s) {return impl->cnv(s);}
+
+IConv::~IConv(){}
 
 std::string
-IConv::cnv(const std::string & s){
+IConv::Impl::cnv(const std::string & s){
 
-  if (cd == ERR) return s;
+  if ((iconv_t)(cdp.get()) == ERR) return s;
   std::string ret;
 
   const size_t ISIZE = s.length();
@@ -49,7 +48,7 @@ IConv::cnv(const std::string & s){
   while(icnt){
     char *obuf_ptr = obuf;
     size_t ocnt = OSIZE;
-    size_t res = iconv(cd, &ibuf_ptr, &icnt, &obuf_ptr, &ocnt);
+    size_t res = iconv((iconv_t)(cdp.get()), &ibuf_ptr, &icnt, &obuf_ptr, &ocnt);
 
     if (( res == -1) && (errno != E2BIG ) && (icnt>0) && (ocnt>0)){
       // skip unknown char

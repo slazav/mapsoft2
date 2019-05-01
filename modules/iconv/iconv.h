@@ -2,41 +2,27 @@
 #define ICONV_H
 
 #include <string>
-#include <cassert>
+#include <memory>
 
 ///\addtogroup libmapsoft
 ///@{
 
-/// Declare iconv_t to avoid including <iconv.h> here
-typedef void * iconv_t;
-
-/// wrapper for libiconv
+/// Wrapper for libiconv.
 class IConv{
 
-  /************************************/
-  /* data and memory management */
-  iconv_t cd; ///< conversion descriptor
-  int *refcounter;
-  void copy(const IConv & other);
-  void destroy(void);
+    class Impl;
+    std::unique_ptr<Impl> impl;
 
-  /************************************/
-  // Copy constructor, destructor, assignment
   public:
 
-    IConv(const IConv & other){ copy(other); }
-    IConv & operator=(const IConv & other){
-      if (this != &other){ destroy(); copy(other); }
-      return *this;
-    }
-    ~IConv(){ destroy(); }
+    /// Constructor
+    IConv(const char *from, const char *to);
 
-  /************************************/
-  /// Constructor
-  IConv(const char *from, const char *to);
+    /// Destructor
+    ~IConv();
 
-  /// convert
-  std::string cnv(const std::string & s);
+    /// convert
+    std::string cnv(const std::string & s);
 };
 
 ///@}

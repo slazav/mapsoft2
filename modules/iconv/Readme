@@ -1,0 +1,19 @@
+==================================================
+Wrapper for libiconv.
+
+Usage:
+   IConv cnv("UTF8", "KOI8-R");
+   std::string s = C1.cnv(text);
+
+==================================================
+Changelog:
+
+2019.05.01 V.Zavjalov 1.2:
+- Use shared_ptr for memory handling.
+- Use "pipl" to hide iconv interface.
+
+2018.04.09 V.Zavjalov 1.1:
+- Hide system iconv.h from the interface.
+
+2018.04.08 V.Zavjalov 1.0:
+- First version, taken from mapsoft.
