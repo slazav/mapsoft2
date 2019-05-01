@@ -2,38 +2,40 @@
 #include <cmath>
 #include <cstring>
 
+#include <iostream>
+
 int
 get_rainbow(double val, const std::vector<rainbow_data> & RD,
              int low_c, int high_c){
-  int r=0, g=0, b=0;
   int N = RD.size();
   if (N<1) return 0;
+
   int dir = RD[N-1].v-RD[0].v > 0 ? 1:-1;
 
   if ((low_c  > 0) && (val < (dir?RD[0].v:RD[N-1].v))) return low_c;
   if ((high_c > 0) && (val > (dir?RD[N-1].v:RD[0].v))) return high_c;
 
-  for (int i=0; i<N; i++){
+  if (dir*(val - RD[0].v)<=0) return RD[0].c;
 
-    r  = (RD[i].c >> 16) & 0xFF;
-    g  = (RD[i].c >> 8) & 0xFF;
-    b  = RD[i].c & 0xFF;
+  int i = 1;
+  while (i<N && (dir*(val - RD[i].v) > 0)) i++;
+  if (i==N) return RD[N-1].c;
 
-    int ip = (i==0)? i : i-1;
-    if (dir*(val - RD[ip].v) <= 0) break;
+//std::cerr << "> " << i << "/" << N << " " << val << " " << RD[i].v << "\n";
 
-    if (dir*(val - RD[i].v) <= 0){
-      int rp = (RD[ip].c >> 16) & 0xFF;
-      int gp = (RD[ip].c >> 8) & 0xFF;
-      int bp = RD[ip].c & 0xFF;
+  int r  = (RD[i].c >> 16) & 0xFF;
+  int g  = (RD[i].c >> 8) & 0xFF;
+  int b  = RD[i].c & 0xFF;
 
-      r =  rp + rint((r - rp) * (val - RD[ip].v) / (RD[i].v-RD[ip].v));
-      g =  gp + rint((g - gp) * (val - RD[ip].v) / (RD[i].v-RD[ip].v));
-      b =  bp + rint((b - bp) * (val - RD[ip].v) / (RD[i].v-RD[ip].v));
+  int rp = (RD[i-1].c >> 16) & 0xFF;
+  int gp = (RD[i-1].c >> 8) & 0xFF;
+  int bp = RD[i-1].c & 0xFF;
 
-      break;
-    }
-  }
+  double k = (val - RD[i-1].v) / (RD[i].v-RD[i-1].v);
+  r =  rp + rint((r - rp)*k);
+  g =  gp + rint((g - gp)*k);
+  b =  bp + rint((b - bp)*k);
+
   return (r << 16) + (g << 8) + b;
 }
 

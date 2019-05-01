@@ -1,0 +1,8 @@
+==================================================
+Convert double values into RGB color gradients.
+
+==================================================
+Changelog:
+
+2019.05.01 V.Zavjalov 1.0:
+- First version, taken from mapsoft, pico_rec.
