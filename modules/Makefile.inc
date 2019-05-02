@@ -67,7 +67,7 @@ override CXXFLAGS += -I$(MODDIR)
 all: make_deps make_nodeps
 make_nodeps: $(MOD_STATIC) $(PROGRAMS) make_tests
 clean:
-	rm -f *.o *.a *.test *.passed
+	rm -f *.o *.a *.test *.passed $(PROGRAMS)
 
 make_deps:
 	@echo "## Building dependencies: [$(MDEPS)]"
