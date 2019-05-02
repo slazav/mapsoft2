@@ -24,7 +24,7 @@ std::vector<std::string> read_words(std::istream & ss) {
 
     // escape character (all chars including newline can be escaped!)
     if (c == '\\') {
-      ss>>c;
+      ss.get(c);
       str += c;
       continue;
     }
