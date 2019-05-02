@@ -5,7 +5,6 @@
 #include <ext/stdio_filebuf.h>
 #include <unistd.h> // pipe
 
-#include "fdstream.h"
 #include "iofilter.h"
 #include "err/err.h"
 
@@ -54,7 +53,10 @@ class IFilter::Impl{
 
       // just copy data from istr to the pipe and exit
       char buf[BUFSIZ];
-      while (size_t size = istr.readsome(buf, BUFSIZ)){
+      while (!istr.eof()){
+        istr.read(buf, BUFSIZ);
+        size_t size = istr.gcount();
+        if (size == 0) continue;
         if (write(fd1[1], buf, size)!=size)
           std::cerr << "iofilter: write error\n";
       }
