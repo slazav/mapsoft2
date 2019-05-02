@@ -15,7 +15,7 @@
 #                 For each <name> should be a source <name>.test.cpp and
 #                 a script <name>.test.script
 # OTHER_TESTS  -- Any programs or scripts which shoukld be run after building
-
+# ALL_SOURCES  -- extra sources and headers to be include in dependency search
 ######################################################
 
 MODDIR ?= ..
