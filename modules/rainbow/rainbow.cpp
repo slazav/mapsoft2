@@ -89,22 +89,6 @@ Rainbow::set_range(double min, double max){
 
 /********************************************************************/
 
-double
-Rainbow::get_min() const{
-  return RD[0].v;
-}
-
-double
-Rainbow::get_max() const{
-  return RD[RD.size()-1].v;
-}
-
-int
-Rainbow::get_size() const{
-  return RD.size();
-}
-
-
 int
 Rainbow::get(double val, int low_c, int high_c) const{
   if (N<1) return 0;

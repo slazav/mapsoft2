@@ -92,11 +92,6 @@ public:
   Rainbow(double min, double max, rainbow_type type=RAINBOW_NORMAL);
   Rainbow(double min, double max, int cmin, int cmax);
 
-  double get_min() const; ///< get min value which was set in constructor
-  double get_max() const; ///< get min value which was set in constructor
-
-  int get_size() const; ///< get color table size
-
   int get(double val, int low_c = -1, int high_c = -1) const;
 
 };
