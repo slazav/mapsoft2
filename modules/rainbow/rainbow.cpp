@@ -109,8 +109,8 @@ int
 Rainbow::get(double val, int low_c, int high_c) const{
   if (N<1) return 0;
 
-  if ((low_c  > 0) && (val < (dir?vv[0]:vv[N-1]))) return low_c;
-  if ((high_c > 0) && (val > (dir?vv[N-1]:vv[0]))) return high_c;
+  if ((low_c  > 0) && (val < (dir>0?vv[0]:vv[N-1]))) return low_c;
+  if ((high_c > 0) && (val > (dir>0?vv[N-1]:vv[0]))) return high_c;
 
   if (dir*(val - vv[0])<=0) return cc[0];
 

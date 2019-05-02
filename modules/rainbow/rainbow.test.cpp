@@ -77,17 +77,33 @@ main(){
 // two-color gradient and limits
   {
     Rainbow R(1, 2, 0x00, 0x4040);
-    assert(R.get(0)   == 0x0000);
+    assert(R.get(0.5) == 0x0000);
     assert(R.get(1)   == 0x0000);
     assert(R.get(1.5) == 0x2020);
     assert(R.get(2)   == 0x4040);
+    assert(R.get(2.5) == 0x4040);
 
-    assert(R.get(0, 1,2)   == 1);
-    assert(R.get(1, 1,2)   == 0);
-    assert(R.get(1.0001, 1,2)   == 0);
-    assert(R.get(2, 1,2)   == 0x4040);
-    assert(R.get(2.0001, 1,2)   == 2);
-    assert(R.get(3, 1,2)   == 2);
+    assert(R.get(0.5, 1,2)   == 1);
+    assert(R.get(1,   1,2)   == 0);
+    assert(R.get(1.5, 1,2)   == 0x2020);
+    assert(R.get(2,   1,2)   == 0x4040);
+    assert(R.get(2.5, 1,2)   == 2);
+  }
+
+  // same, inversed order
+  {
+    Rainbow R(2, 1, 0x4040, 0x00);
+    assert(R.get(0.5) == 0x0000);
+    assert(R.get(1)   == 0x0000);
+    assert(R.get(1.5) == 0x2020);
+    assert(R.get(2)   == 0x4040);
+    assert(R.get(2.5) == 0x4040);
+
+    assert(R.get(0.5, 1,2)   == 1);
+    assert(R.get(1,   1,2)   == 0);
+    assert(R.get(1.5, 1,2)   == 0x2020);
+    assert(R.get(2,   1,2)   == 0x4040);
+    assert(R.get(2.5, 1,2)   == 2);
   }
 
   // normal rainbow b-c-g-y-r-m
