@@ -1,0 +1,7 @@
+This folder contains modules from mapsoft2 source code library:
+https://github.com/slazav/mapsoft2
+
+Fix modules in mapsoft2, bring them to other projects!
+
+A make-based building system from mapsoft2 should be used with
+these modules. See Makefile.inc
