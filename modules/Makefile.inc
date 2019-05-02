@@ -6,29 +6,33 @@
 #
 # Before using define following variables:
 # MODDIR       -- directory where all modiles are located
-# MOD_HEADERS  -- list of headers (*.h, only for modules)
-# MOD_SOURCES  -- list of sources (*.cpp, only for modules)
+# MOD_HEADERS  -- list of module headers (*.h)
+# MOD_SOURCES  -- list of module sources (*.cpp)
 # PROGRAMS     -- programs to be build
+# SHARED_LIB   -- shared library to build (collect all MOD_SOURCES + dependencies)
 # SIMPLE_TESTS -- Programs returning 0/1.
 #                 For each <name> should be a source <name>.test.cpp.
 # SCRIPT_TESTS -- Programs with testing scripts.
 #                 For each <name> should be a source <name>.test.cpp and
 #                 a script <name>.test.script
 # OTHER_TESTS  -- Any programs or scripts which shoukld be run after building
-# ALL_SOURCES  -- extra sources and headers to be include in dependency search
 ######################################################
 
 MODDIR ?= ..
 
+MOD_NAME    :=
+MOD_STATIC  :=
+MOD_OBJECTS :=
+
 ifdef MOD_HEADERS
   MOD_NAME    := $(shell a=$$(pwd); echo $${a\#\#*/})
   MOD_STATIC  := $(MOD_NAME).a
-  MOD_OBJECTS := $(patsubst %.cpp, %.o, $(MOD_SOURCES))
-else
-  MOD_NAME    :=
-  MOD_STATIC  :=
-  MOD_OBJECTS :=
 endif
+ifdef MOD_SOURCES
+  MOD_OBJECTS := $(patsubst %.cpp, %.o, $(MOD_SOURCES))
+endif
+
+SHARED_LIB_SO := $(patsubst %, %.so, $(SHARED_LIB))
 
 ######################################################
 # Dependency search for ALL_SOURCES
@@ -59,15 +63,15 @@ override CXXFLAGS += $(shell [ "$(PKG_CONFIG)" == "" ] ||\
                        pkg-config --cflags '$(PKG_CONFIG)')
 override LDLIBS   += $(shell [ "$(PKG_CONFIG)" == "" ] ||\
                        pkg-config --libs '$(PKG_CONFIG)')
-override CXXFLAGS += -std=gnu++11 -Werror=return-type -O2
+override CXXFLAGS += -std=gnu++11 -Werror=return-type -O2 -fPIC
 override CXXFLAGS += -I$(MODDIR)
 
 ######################################################
 # Building rules
 all: make_deps make_nodeps
-make_nodeps: $(MOD_STATIC) $(PROGRAMS) make_tests
+make_nodeps: $(MOD_STATIC) $(PROGRAMS) $(SHARED_LIB_SO) make_tests
 clean:
-	rm -f *.o *.a *.test *.passed $(PROGRAMS)
+	rm -f *.o *.a *.so *.test *.passed $(PROGRAMS)
 
 make_deps:
 	@echo "## Building dependencies: [$(MDEPS)]"
@@ -99,18 +103,19 @@ make_tests: $(SIMPLE_TEST_RES) $(SCRIPT_TEST_RES)
 	@for i in $(OTHER_TESTS); do echo "## Running test: $$i"; ./$$i; done
 
 ######################################################
-# building rules for programs
+# building rules for programs and shared lib
 PROG_OBJECTS += $(patsubst %,%.o, $(PROGRAMS))
 $(PROGRAMS):     CC:=$(CXX)
 $(PROGRAMS):     %: %.o $(MOD_OBJECTS) $(ADEPS)
 $(PROG_OBJECTS): %.o: %.cpp $(MOD_HEADERS) $(HDEPS)
 
+$(SHARED_LIB_SO):   %.so: $(MOD_OBJECTS) $(ADEPS)
+	$(CXX) -shared $(LDFLAGS) $+ $(LDLIBS) -o $@
 ######################################################
 # Building rules for module static library
 $(MOD_OBJECTS): $(MOD_HEADERS) $(HDEPS)
 
 $(MOD_STATIC): $(MOD_OBJECTS)
-#	rm -f $@
 	ar crs $@ $+
 
 ######################################################
