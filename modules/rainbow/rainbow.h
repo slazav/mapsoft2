@@ -4,15 +4,15 @@
 
 /* rainbow -- convert double values into RGB color gradients.
 
-In the most universal interface to convert a double value into
-RBG color gradient a data structure which maps values into colors
-is needed. It is `std::vector<rainbow_data>` where `rainbow_data`
-is a structure with two fiels, `v` for value and `c` for the color.
-Array must be sorted by `v`, either increasing or decreasing.
+In the most universal interface to convert a double value into RBG color
+gradient a table which maps values into colors is used. It is
+`std::vector<rainbow_data>` where `rainbow_data` has two fiels, `v` for
+value and `c` for the color. The table must be sorted by `v`, either
+increasing or decreasing.
 
 * `Rainbow(const std::vector<rainbow_data> & RD);`
 
-Another constructor makes a color gradient using a string: Characters in
+Another constructor makes a color gradient using a string: characters in
 the string: `R`, `G`, `B` for red, green, and blue; `C`, `M`, `Y` for
 cyan, magenta, and yellow; `W` and `K` for white and black, `r`, `g`,
 `b`, `c`, `m`, `y`, `w` for darker colors. Other characters are ignored.
@@ -47,6 +47,10 @@ Rainbow R(RD);
 int color = R.get(v); // get color for v!
 ```
 
+Method set_limits(c1,c2) sets colors for data values which are
+below minimum and above maximum value in the conversion table;
+Use -1 to set default color which correspond to min/max in the table.
+
 In addition there is `color_shade` function for shading colors:
 `int c=color_shade(c, 0.2);`
 
@@ -80,7 +84,9 @@ class Rainbow{
   // Use update_data() to update it after changing RD.
   std::vector<double> vv;
   std::vector<int> cc,rr,gg,bb;
-  int lc, hc, N, dir;
+  int N, dir; // data size, data order(+/-1)
+  double lv, hv; // min/max data value
+  int lc, hc; // color for data below lv and above hv
 
   void update_data(); ///< update additional data. should be run after changing RD
   void set_color_string(double min, double max, const char *colors);
@@ -92,7 +98,8 @@ public:
   Rainbow(double min, double max, rainbow_type type=RAINBOW_NORMAL);
   Rainbow(double min, double max, int cmin, int cmax);
 
-  int get(double val, int low_c = -1, int high_c = -1) const;
+  int get(double val) const;
+  void set_limits(int low_c = -1, int high_c = -1);
 
 };
 

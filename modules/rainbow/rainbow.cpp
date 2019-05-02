@@ -16,6 +16,7 @@ Rainbow::Rainbow(const std::vector<rainbow_data> & RD_): RD(RD_){
 
 Rainbow::Rainbow(double min, double max, const char *colors){
   set_color_string(min, max, colors);
+  update_data();
 }
 
 Rainbow::Rainbow(double min, double max, rainbow_type type){
@@ -24,6 +25,7 @@ Rainbow::Rainbow(double min, double max, rainbow_type type){
     case RAINBOW_BURNING:  set_color_string(min, max, "WYRMBb"); break;
     case RAINBOW_BURNING1: set_color_string(min, max, "KRYW"); break;
   }
+  update_data();
 }
 
 Rainbow::Rainbow(double min, double max, int cmin, int cmax){
@@ -43,6 +45,8 @@ Rainbow::update_data(){
   rr.resize(N);
   gg.resize(N);
   bb.resize(N);
+  lc=0;
+  hc=0;
   for (int i=0; i<N; i++){
     vv[i] = RD[i].v;
     cc[i] = RD[i].c;
@@ -52,6 +56,10 @@ Rainbow::update_data(){
   }
   if (N>0) {
     dir = (vv[N-1]-vv[0]>0) ? 1:-1;
+    lv = dir>0 ? vv[0] : vv[N-1];
+    hv = dir>0 ? vv[N-1] : vv[0];
+    lc = dir>0 ? cc[0] : cc[N-1];
+    hc = dir>0 ? cc[N-1] : cc[0];
   }
 }
 
@@ -78,7 +86,6 @@ Rainbow::set_color_string(double min, double max, const char *colors){
     }
   }
   set_range(min, max);
-  update_data();
 }
 
 void
@@ -89,18 +96,21 @@ Rainbow::set_range(double min, double max){
 
 /********************************************************************/
 
+void
+Rainbow::set_limits(int low_c, int high_c){
+  lc = low_c; hc = high_c;
+  if (lc==-1) lc = dir>0 ? cc[0] : cc[N-1];
+  if (hc==-1) hc = dir>0 ? cc[N-1] : cc[0];
+}
+
 int
-Rainbow::get(double val, int low_c, int high_c) const{
+Rainbow::get(double val) const{
   if (N<1) return 0;
-
-  if ((low_c  > 0) && (val < (dir>0?vv[0]:vv[N-1]))) return low_c;
-  if ((high_c > 0) && (val > (dir>0?vv[N-1]:vv[0]))) return high_c;
-
-  if (dir*(val - vv[0])<=0) return cc[0];
+  if (val < lv) return lc;
+  if (val > hv) return hc;
 
   int i = 1;
-  while (i<N && (dir*(val - vv[i]) > 0)) i++;
-  if (i==N) return cc[N-1];
+  while (i<N-1 && (dir*(val - vv[i]) > 0)) i++;
 
   double k = (val - vv[i-1]) / (vv[i]-vv[i-1]);
   int r =  rr[i-1] + rint((rr[i] - rr[i-1])*k);

@@ -38,11 +38,13 @@ main(){
     assert(R.get(0.9) == 0);
     assert(R.get(1.0) == 0);
 
-    assert(R.get(0.0, 0x111111) == 0x111111);
-    assert(R.get(1.0, 0x111111) == 0);
+    R.set_limits(0x111111, -1);
+    assert(R.get(0.0) == 0x111111);
+    assert(R.get(1.0) == 0);
 
-    assert(R.get(0.0, 0x111111, 0x222222) == 0x111111);
-    assert(R.get(1.0, 0x111111, 0x222222) == 0x222222);
+    R.set_limits(0x111111, 0x222222);
+    assert(R.get(0.0) == 0x111111);
+    assert(R.get(1.0) == 0x222222);
   }
 
 /************************************************/
@@ -66,11 +68,13 @@ main(){
     assert(R.get(0.9) == 0);
     assert(R.get(1.0) == 0);
 
-    assert(R.get(0.0, 0x111111) == 0x111111);
-    assert(R.get(1.0, 0x111111) == 0);
+    R.set_limits(0x111111, -1);
+    assert(R.get(0.0) == 0x111111);
+    assert(R.get(1.0) == 0);
 
-    assert(R.get(0.0, 0x111111, 0x222222) == 0x111111);
-    assert(R.get(1.0, 0x111111, 0x222222) == 0x222222);
+    R.set_limits(0x111111, 0x222222);
+    assert(R.get(0.0) == 0x111111);
+    assert(R.get(1.0) == 0x222222);
   }
 
 /************************************************/
@@ -83,11 +87,12 @@ main(){
     assert(R.get(2)   == 0x4040);
     assert(R.get(2.5) == 0x4040);
 
-    assert(R.get(0.5, 1,2)   == 1);
-    assert(R.get(1,   1,2)   == 0);
-    assert(R.get(1.5, 1,2)   == 0x2020);
-    assert(R.get(2,   1,2)   == 0x4040);
-    assert(R.get(2.5, 1,2)   == 2);
+    R.set_limits(1, 2);
+    assert(R.get(0.5)   == 1);
+    assert(R.get(1)     == 0);
+    assert(R.get(1.5)   == 0x2020);
+    assert(R.get(2)     == 0x4040);
+    assert(R.get(2.5)   == 2);
   }
 
   // same, inversed order
@@ -99,11 +104,12 @@ main(){
     assert(R.get(2)   == 0x4040);
     assert(R.get(2.5) == 0x4040);
 
-    assert(R.get(0.5, 1,2)   == 1);
-    assert(R.get(1,   1,2)   == 0);
-    assert(R.get(1.5, 1,2)   == 0x2020);
-    assert(R.get(2,   1,2)   == 0x4040);
-    assert(R.get(2.5, 1,2)   == 2);
+    R.set_limits(1, 2);
+    assert(R.get(0.5)   == 1);
+    assert(R.get(1)     == 0);
+    assert(R.get(1.5)   == 0x2020);
+    assert(R.get(2)     == 0x4040);
+    assert(R.get(2.5)   == 2);
   }
 
   // normal rainbow b-c-g-y-r-m
