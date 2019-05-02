@@ -14,13 +14,13 @@ main(){
 
   {
     // empty data -> always return 0
-    simple_rainbow R({});
+    Rainbow R({});
     assert(R.get(1.2) == 0);
     assert(R.get(0.5) == 0);
   }
 
   {
-    simple_rainbow R({
+    Rainbow R({
       {0.1, 0x000000},
       {0.5, 0xFF0000}, // 0.1 - 0.5 black -> blue
       {0.5, 0xFF00FF}, // - color step
@@ -45,7 +45,7 @@ main(){
 /************************************************/
 // same tests but opposite sorting of the data
   {
-    simple_rainbow R({
+    Rainbow R({
       {0.9, 0x000000},
       {0.5, 0xFF00FF},
       {0.5, 0xFF0000},
@@ -69,77 +69,91 @@ main(){
   }
 
 /************************************************/
-// simple_rainbow
+// two-color gradient and limits
+  {
+    Rainbow R(1, 2, 0x00, 0x4040);
+    assert(R.get(0)   == 0x0000);
+    assert(R.get(1)   == 0x0000);
+    assert(R.get(1.5) == 0x2020);
+    assert(R.get(2)   == 0x4040);
 
-  simple_rainbow sr1(1, 2, 0x00, 0x4040);
-  assert(sr1.get(0)   == 0x0000);
-  assert(sr1.get(1)   == 0x0000);
-  assert(sr1.get(1.5) == 0x2020);
-  assert(sr1.get(2)   == 0x4040);
-
-  assert(sr1.get(0, 1,2)   == 1);
-  assert(sr1.get(1, 1,2)   == 0);
-  assert(sr1.get(1.0001, 1,2)   == 0);
-  assert(sr1.get(2, 1,2)   == 0x4040);
-  assert(sr1.get(2.0001, 1,2)   == 2);
-  assert(sr1.get(3, 1,2)   == 2);
+    assert(R.get(0, 1,2)   == 1);
+    assert(R.get(1, 1,2)   == 0);
+    assert(R.get(1.0001, 1,2)   == 0);
+    assert(R.get(2, 1,2)   == 0x4040);
+    assert(R.get(2.0001, 1,2)   == 2);
+    assert(R.get(3, 1,2)   == 2);
+  }
 
   // normal rainbow b-c-g-y-r-m
-  simple_rainbow sr2(0, 5, RAINBOW_NORMAL);
-  assert(sr2.get(0)   == 0x0000ff);
-  assert(sr2.get(0.5) == 0x0080ff);
-  assert(sr2.get(1)   == 0x00ffff);
-  assert(sr2.get(1.5) == 0x00ff7f);
-  assert(sr2.get(2)   == 0x00ff00);
-  assert(sr2.get(2.5) == 0x80ff00);
-  assert(sr2.get(3)   == 0xffff00);
-  assert(sr2.get(3.5) == 0xff7f00);
-  assert(sr2.get(4)   == 0xff0000);
-  assert(sr2.get(4.5) == 0xff0080);
-  assert(sr2.get(5)   == 0xff00ff);
+  {
+    Rainbow R(0, 5, RAINBOW_NORMAL);
+    assert(R.get(0)   == 0x0000ff);
+    assert(R.get(0.5) == 0x0080ff);
+    assert(R.get(1)   == 0x00ffff);
+    assert(R.get(1.5) == 0x00ff7f);
+    assert(R.get(2)   == 0x00ff00);
+    assert(R.get(2.5) == 0x80ff00);
+    assert(R.get(3)   == 0xffff00);
+    assert(R.get(3.5) == 0xff7f00);
+    assert(R.get(4)   == 0xff0000);
+    assert(R.get(4.5) == 0xff0080);
+    assert(R.get(5)   == 0xff00ff);
+  }
 
-  simple_rainbow sr3(0, 5, RAINBOW_BURNING);
-  assert(sr3.get(0)   == 0xffffff);
-  assert(sr3.get(1)   == 0xffff00);
-  assert(sr3.get(2)   == 0xff0000);
-  assert(sr3.get(3)   == 0xff00ff);
-  assert(sr3.get(4)   == 0x0000ff);
-  assert(sr3.get(5)   == 0x000040);
+  {
+    Rainbow R(0, 5, RAINBOW_BURNING);
+    assert(R.get(0)   == 0xffffff);
+    assert(R.get(1)   == 0xffff00);
+    assert(R.get(2)   == 0xff0000);
+    assert(R.get(3)   == 0xff00ff);
+    assert(R.get(4)   == 0x0000ff);
+    assert(R.get(5)   == 0x000040);
+  }
 
-  simple_rainbow sr4(0, 3, RAINBOW_BURNING1);
-  assert(sr4.get(0)   == 0x000000);
-  assert(sr4.get(1)   == 0xff0000);
-  assert(sr4.get(2)   == 0xffff00);
-  assert(sr4.get(3)   == 0xffffff);
+  {
+    Rainbow R(0, 3, RAINBOW_BURNING1);
+    assert(R.get(0)   == 0x000000);
+    assert(R.get(1)   == 0xff0000);
+    assert(R.get(2)   == 0xffff00);
+    assert(R.get(3)   == 0xffffff);
+  }
 
-  //opposite direction
-  simple_rainbow sr5(3, 0, RAINBOW_BURNING1);
-  assert(sr5.get(3)   == 0x000000);
-  assert(sr5.get(2)   == 0xff0000);
-  assert(sr5.get(1)   == 0xffff00);
-  assert(sr5.get(0)   == 0xffffff);
+  {
+    //opposite direction
+    Rainbow R(3, 0, RAINBOW_BURNING1);
+    assert(R.get(3)   == 0x000000);
+    assert(R.get(2)   == 0xff0000);
+    assert(R.get(1)   == 0xffff00);
+    assert(R.get(0)   == 0xffffff);
+  }
 
-  //string
-  simple_rainbow sr6(0, 14, "RrGgBbCcMmYyKWw");
-  assert(sr6.get(0)   == 0xff0000);
-  assert(sr6.get(1)   == 0x400000);
-  assert(sr6.get(2)   == 0x00ff00);
-  assert(sr6.get(3)   == 0x004000);
-  assert(sr6.get(4)   == 0x0000ff);
-  assert(sr6.get(5)   == 0x000040);
-  assert(sr6.get(6)   == 0x00ffff);
-  assert(sr6.get(7)   == 0x004040);
-  assert(sr6.get(8)   == 0xff00ff);
-  assert(sr6.get(9)   == 0x400040);
-  assert(sr6.get(10)  == 0xffff00);
-  assert(sr6.get(11)  == 0x404000);
-  assert(sr6.get(12)  == 0x000000);
-  assert(sr6.get(13)  == 0xffffff);
-  assert(sr6.get(14)  == 0x404040);
+  {
+    //string
+    Rainbow R(0, 14, "RrGgBbCcMmYyKWw");
+    assert(R.get(0)   == 0xff0000);
+    assert(R.get(1)   == 0x400000);
+    assert(R.get(2)   == 0x00ff00);
+    assert(R.get(3)   == 0x004000);
+    assert(R.get(4)   == 0x0000ff);
+    assert(R.get(5)   == 0x000040);
+    assert(R.get(6)   == 0x00ffff);
+    assert(R.get(7)   == 0x004040);
+    assert(R.get(8)   == 0xff00ff);
+    assert(R.get(9)   == 0x400040);
+    assert(R.get(10)  == 0xffff00);
+    assert(R.get(11)  == 0x404000);
+    assert(R.get(12)  == 0x000000);
+    assert(R.get(13)  == 0xffffff);
+    assert(R.get(14)  == 0x404040);
+  }
 
-  assert(color_shade(0xFFFFFF, 0) == 0x000000);
-  assert(color_shade(0xFFFFFF, 0.5) == 0x808080);
-  assert(color_shade(0xFFFFFF, 1) == 0xffffff);
+  // color shade
+  {
+    assert(color_shade(0xFFFFFF, 0) == 0x000000);
+    assert(color_shade(0xFFFFFF, 0.5) == 0x808080);
+    assert(color_shade(0xFFFFFF, 1) == 0xffffff);
+  }
 
   return 0;
 }

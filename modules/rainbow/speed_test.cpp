@@ -13,9 +13,9 @@ main(){
   // 4.66s / 2e8 -- m1
   // 3.78s / 2e8 -- m2
 
-  simple_rainbow sr(0, 1, RAINBOW_NORMAL);
+  Rainbow R(0, 1, RAINBOW_NORMAL);
   for (int i=0; i<2e8; i++) {
-    sr.get(1);
+    R.get(1);
   }
 
   return 0;

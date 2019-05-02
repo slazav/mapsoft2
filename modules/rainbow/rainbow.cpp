@@ -12,7 +12,7 @@ color_shade(int c, double k){
 }
 
 /********************************************************************/
-simple_rainbow::simple_rainbow(double min, double max, rainbow_type type){
+Rainbow::Rainbow(double min, double max, rainbow_type type){
   switch (type){
     case RAINBOW_NORMAL:   set_color_string(min, max, "BCGYRM"); break;
     case RAINBOW_BURNING:  set_color_string(min, max, "WYRMBb"); break;
@@ -20,22 +20,22 @@ simple_rainbow::simple_rainbow(double min, double max, rainbow_type type){
   }
 }
 
-simple_rainbow::simple_rainbow(double min, double max, int cmin, int cmax){
+Rainbow::Rainbow(double min, double max, int cmin, int cmax){
   RD=std::vector<rainbow_data>(2);
   RD[0].c = cmin; RD[0].v = min;
   RD[1].c = cmax; RD[1].v = max;
 }
 
-simple_rainbow::simple_rainbow(double min, double max, const char *colors){
+Rainbow::Rainbow(double min, double max, const char *colors){
   set_color_string(min, max, colors);}
 
-simple_rainbow::simple_rainbow(const std::vector<rainbow_data> & RD_):RD(RD_){
+Rainbow::Rainbow(const std::vector<rainbow_data> & RD_):RD(RD_){
 }
 
 /********************************************************************/
 
 void
-simple_rainbow::set_color_string(double min, double max, const char *colors){
+Rainbow::set_color_string(double min, double max, const char *colors){
   RD.resize(0);
   for (int i=0; i<strlen(colors); i++) {
     switch (colors[i]){
@@ -60,7 +60,7 @@ simple_rainbow::set_color_string(double min, double max, const char *colors){
 }
 
 void
-simple_rainbow::set_range(double min, double max){
+Rainbow::set_range(double min, double max){
   for (int i=0; i<RD.size(); i++)
     RD[i].v = min + (max-min)/double(RD.size()-1)*i;
 }
@@ -68,23 +68,23 @@ simple_rainbow::set_range(double min, double max){
 /********************************************************************/
 
 double
-simple_rainbow::get_min() const{
+Rainbow::get_min() const{
   return RD[0].v;
 }
 
 double
-simple_rainbow::get_max() const{
+Rainbow::get_max() const{
   return RD[RD.size()-1].v;
 }
 
 int
-simple_rainbow::get_size() const{
+Rainbow::get_size() const{
   return RD.size();
 }
 
 
 int
-simple_rainbow::get(double val, int low_c, int high_c) const{
+Rainbow::get(double val, int low_c, int high_c) const{
   int N = RD.size();
   if (N<1) return 0;
 

@@ -10,7 +10,7 @@ is needed. It is `std::vector<rainbow_data>` where `rainbow_data`
 is a structure with two fiels, `v` for value and `c` for the color.
 Array must be sorted by `v`, either increasing or decreasing.
 
-* `simple_rainbow(const std::vector<rainbow_data> & RD);`
+* `Rainbow(const std::vector<rainbow_data> & RD);`
 
 Another constructor makes a color gradient using a string: Characters in
 the string: `R`, `G`, `B` for red, green, and blue; `C`, `M`, `Y` for
@@ -19,11 +19,11 @@ cyan, magenta, and yellow; `W` and `K` for white and black, `r`, `g`,
 Values `min` and `max` are data values which correspond to the first
 and last color. If `max` > `min` the gradient will be reversed.
 
-* `simple_rainbow(double min, double max, const char *colors);`
+* `Rainbow(double min, double max, const char *colors);`
 
 Some predefined gradients can be set by following constructor:
 
-* `simple_rainbow(double min, double max, rainbow_type type=RAINBOW_NORMAL);`
+* `Rainbow(double min, double max, rainbow_type type=RAINBOW_NORMAL);`
 
 where type can be:
 - `RAINBOW_NORMAL`   -- , B-C-G-Y-R-M gradient
@@ -32,11 +32,11 @@ where type can be:
 
 One more constructor makes a simple two-color gradient:
 
-* `simple_rainbow(double min, double max, int cmin, int cmax);`
+* `Rainbow(double min, double max, int cmin, int cmax);`
 
 Method `get(v)` converts value to a color. Example:
 ```c++
-simple_rainbow R({
+Rainbow R({
   {0.1, 0x000000},
   {0.5, 0xFF0000}, // 0.1 - 0.5 black -> blue
   {0.5, 0xFF00FF}, // - color step
@@ -60,7 +60,7 @@ struct rainbow_data{
 
 int color_shade(int c, double k);
 
-/// predefined gradient types for simple_rainbow class
+/// predefined gradient types for Rainbow class
 enum rainbow_type{
   RAINBOW_NORMAL,   ///< usual rainbow, B-C-G-Y-R-M
   RAINBOW_BURNING,  ///< W-Y-R-M-B-b gradient
@@ -71,17 +71,14 @@ enum rainbow_type{
 
 /** Class for simple gradients
 */
-class simple_rainbow{
+class Rainbow{
   std::vector<rainbow_data> RD;
 
 public:
-  simple_rainbow(double min, double max, rainbow_type type=RAINBOW_NORMAL);
-  simple_rainbow(double min, double max, int cmin, int cmax);
-  simple_rainbow(double min, double max, const char *colors);
-  simple_rainbow(const std::vector<rainbow_data> & RD);
-
-  int get_rainbow(double val, const std::vector<rainbow_data> & RD,
-                int low_c = -1, int high_c = -1);
+  Rainbow(double min, double max, rainbow_type type=RAINBOW_NORMAL);
+  Rainbow(double min, double max, int cmin, int cmax);
+  Rainbow(double min, double max, const char *colors);
+  Rainbow(const std::vector<rainbow_data> & RD);
 
   void set_color_string(double min, double max, const char *colors);
   void set_range(double min, double max); ///<reset value range for same colors
