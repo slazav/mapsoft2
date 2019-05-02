@@ -12,20 +12,23 @@ main(){
 /************************************************/
 // user-defined rainbow data
 
+
   {
     // empty data -> always return 0
-    Rainbow R({});
+    std::vector<rainbow_data> RD;
+    Rainbow R(RD);
     assert(R.get(1.2) == 0);
     assert(R.get(0.5) == 0);
   }
 
   {
-    Rainbow R({
+    std::vector<rainbow_data> RD ={
       {0.1, 0x000000},
       {0.5, 0xFF0000}, // 0.1 - 0.5 black -> blue
       {0.5, 0xFF00FF}, // - color step
       {0.9, 0x000000} // 0.5 - 0.9 magenta -> black
-    });
+    };
+    Rainbow R(RD);
 
     assert(R.get(0.0) == 0);
     assert(R.get(0.2) == 0x400000);
@@ -45,12 +48,14 @@ main(){
 /************************************************/
 // same tests but opposite sorting of the data
   {
-    Rainbow R({
+    std::vector<rainbow_data> RD = {
       {0.9, 0x000000},
       {0.5, 0xFF00FF},
       {0.5, 0xFF0000},
       {0.1, 0x000000}
-    });
+    };
+
+    Rainbow R(RD);
 
     assert(R.get(0.0) == 0);
     assert(R.get(0.2) == 0x400000);
