@@ -40,7 +40,10 @@ sub get_hdeps ($$) {
   my $files = shift;
   my (%hdeps, %mdeps);
   foreach my $f (@{$files}) {
-    open F, "$dir/$f" or die "can't open $dir/$f: $!";
+    unless(open F, "$dir/$f"){
+      warn "can't open $dir/$f: $!";
+      next;
+    }
     while (my $l=<F>) {
       next unless $l=~/^#/;
       if ($l=~m|^#include\s+"([^"/]+)/([^"/]+)"|) {
@@ -99,7 +102,7 @@ foreach my $target (@targets) {
     add_mod_dep(\%mods, $_) foreach (keys %mdeps);
   }
   else {
-    die "Unknown target: $target\n";
+    warn "No file or directory: $target\n";
   }
 }
 
