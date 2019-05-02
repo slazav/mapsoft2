@@ -59,8 +59,8 @@ override CXXFLAGS += $(shell [ "$(PKG_CONFIG)" == "" ] ||\
                        pkg-config --cflags '$(PKG_CONFIG)')
 override LDLIBS   += $(shell [ "$(PKG_CONFIG)" == "" ] ||\
                        pkg-config --libs '$(PKG_CONFIG)')
-override CPPFLAGS += -std=gnu++11 -Werror=return-type -O2
-override CPPFLAGS += -I$(MODDIR)
+override CXXFLAGS += -std=gnu++11 -Werror=return-type -O2
+override CXXFLAGS += -I$(MODDIR)
 
 ######################################################
 # Building rules
