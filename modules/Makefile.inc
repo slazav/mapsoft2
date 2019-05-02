@@ -110,7 +110,8 @@ $(PROG_OBJECTS): %.o: %.cpp $(MOD_HEADERS) $(HDEPS)
 $(MOD_OBJECTS): $(MOD_HEADERS) $(HDEPS)
 
 $(MOD_STATIC): $(MOD_OBJECTS)
-	ar rs $@ $+
+#	rm -f $@
+	ar crs $@ $+
 
 ######################################################
 print_info:
