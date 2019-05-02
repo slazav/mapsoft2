@@ -19,15 +19,6 @@ Rainbow::Rainbow(double min, double max, const char *colors){
   update_data();
 }
 
-Rainbow::Rainbow(double min, double max, rainbow_type type){
-  switch (type){
-    case RAINBOW_NORMAL:   set_color_string(min, max, "BCGYRM"); break;
-    case RAINBOW_BURNING:  set_color_string(min, max, "WYRMBb"); break;
-    case RAINBOW_BURNING1: set_color_string(min, max, "KRYW"); break;
-  }
-  update_data();
-}
-
 Rainbow::Rainbow(double min, double max, int cmin, int cmax){
   RD=std::vector<rainbow_data>(2);
   RD[0].c = cmin; RD[0].v = min;

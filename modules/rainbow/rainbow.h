@@ -65,12 +65,9 @@ struct rainbow_data{
 
 int color_shade(int c, double k);
 
-/// predefined gradient types for Rainbow class
-enum rainbow_type{
-  RAINBOW_NORMAL,   ///< usual rainbow, B-C-G-Y-R-M
-  RAINBOW_BURNING,  ///< W-Y-R-M-B-b gradient
-  RAINBOW_BURNING1  ///< K-R-Y-W
-};
+#define RAINBOW_NORMAL   "BCGYRM"
+#define RAINBOW_BURNING  "WYRMBb"
+#define RAINBOW_BURNING1 "KRYW"
 
 /*******************/
 
@@ -94,13 +91,11 @@ class Rainbow{
 
 public:
   Rainbow(const std::vector<rainbow_data> & RD_);
-  Rainbow(double min, double max, const char *colors);
-  Rainbow(double min, double max, rainbow_type type=RAINBOW_NORMAL);
+  Rainbow(double min, double max, const char *colors = RAINBOW_NORMAL);
   Rainbow(double min, double max, int cmin, int cmax);
 
   int get(double val) const;
   void set_limits(int low_c = -1, int high_c = -1);
-
 };
 
 #endif
