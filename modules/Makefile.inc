@@ -43,9 +43,9 @@ ALL_SOURCES += $(patsubst %,%.test.cpp, $(SCRIPT_TESTS))
 ALL_SOURCES += $(patsubst %,%.cpp, $(PROGRAMS))
 
 # Extract #include statements from MOD_SOURCES and MOD_HEADERS:
-HDEPS := $(cat $ALL_SOURCES |\
+HDEPS := $(shell cat $(ALL_SOURCES) |\
           sed -rne 's|^\#include +"([^/]*/[^/]*)".*|$(MODDIR)/\1|p'\
-          $(ALL_SOURCES) | sort -u)
+          | sort -u)
 
 # List of modules which should be rebuilt (in correct order).
 # Here an extenal script is used (get_deps). It is also possble
