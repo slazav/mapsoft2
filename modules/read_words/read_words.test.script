@@ -14,17 +14,7 @@ function assert(){
   return 0
 }
 
-
-assert "$("$prog" <<EOF
-a \# b c " a\' s " # aa
-d e f " a\' s"
-\\\\
-
-#
-abc\\
-def
-aa bb "cc\"\"dd\'\'ee"
-EOF)" \
+assert "$(cat read_words.test_data1 | "$prog")" \
 "$(cat <<EOF
  [a] [#] [b] [c] [ a' s ]
  [d] [e] [f] [ a' s]
@@ -32,15 +22,15 @@ EOF)" \
  [abc
 def]
  [aa] [bb] [cc""dd''ee]
-EOF)"
+EOF
+)"
 
 
-assert "$("$prog" <<EOF
-a 'b "C" d' e\ e# aa
-a "b 'C' d" e\	e# aa
-EOF)" \
+assert "$(cat read_words.test_data2 | "$prog")" \
 "$(cat <<EOF
  [a] [b "C" d] [e e]
  [a] [b 'C' d] [e	e]
-EOF)"
+EOF
+)"
+
 
