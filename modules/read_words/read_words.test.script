@@ -29,17 +29,18 @@ EOF)" \
  [a] [#] [b] [c] [ a' s ]
  [d] [e] [f] [ a' s]
  [\]
- [abcdef]
+ [abc
+def]
  [aa] [bb] [cc""dd''ee]
 EOF)"
 
 
 assert "$("$prog" <<EOF
-a 'b "C" d' # aa
-a "b 'C' d" # aa
+a 'b "C" d' e\ e# aa
+a "b 'C' d" e\	e# aa
 EOF)" \
 "$(cat <<EOF
- [a] [b "C" d]
- [a] [b 'C' d]
+ [a] [b "C" d] [e e]
+ [a] [b 'C' d] [e	e]
 EOF)"
 
