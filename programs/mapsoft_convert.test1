@@ -1,5 +1,8 @@
 #!/bin/bash -fu
 
+# General interface and option tests
+# See also getopt module tests
+
 P=${1:-./mapsoft_convert}
 
 . test_lib.sh
@@ -9,3 +12,7 @@ assert "$P" "$help_msg" 1
 assert "$P --help" "$help_msg" 1
 assert "$P -o " "Error: output file expected" 1
 assert "$P --xxx " "Error: unknown option: --xxx" 1
+
+assert "$P missing_file" "Error: Can't determine input format for file: missing_file" 1
+assert "$P missing_file.gpx" "Error: Can't open GPX file: missing_file.gpx" 1
+assert "$P missing_file.kml" "Error: Can't open KML file: missing_file.kml" 1
