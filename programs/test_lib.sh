@@ -19,3 +19,14 @@ function assert(){
     exit 1
   fi
 }
+
+function assert_diff(){
+  f_exp="$1"
+  f_res="$2"
+    if ! diff -q -- "$f_exp" "$f_res"; then
+    echo "different files: $f_exp $f_res"
+    false
+  else
+    rm -f "$f_res"
+  fi
+}

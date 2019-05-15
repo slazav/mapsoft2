@@ -1,11 +1,42 @@
 #!/bin/bash -fu
 
-## Geodata input/output
+## GPX input/output
 
 P=${1:-./mapsoft_convert}
 . test_lib.sh
 
-assert "$P x" "Error: Can't determine input format for file: x" 1
-assert "$P x.gpx" "Error: Can't open GPX file: x.gpx" 1
-assert "$P x.kml" "Error: Can't open KML file: x.kml" 1
+# read and do nothing
+assert "$P test_data/gpx1.gpx"  "" 0
+
+# Convert a simple gpx with track, waypoints, route.
+# By default all routes are converted to waypoints.
+assert "$P test_data/gpx1.gpx -o tmp.gpx"  "" 0
+assert_diff test_data/gpx1a.gpx tmp.gpx
+
+# Same, but use --gpx_write_rte option --
+# Waypoint lists are written as separate routes.
+assert "$P test_data/gpx1.gpx -o tmp.gpx --gpx_write_rte 1"  "" 0
+assert_diff test_data/gpx1b.gpx tmp.gpx
+
+# Use --xml_indent option
+assert "$P test_data/gpx1.gpx -o tmp.gpx --gpx_write_rte 1 --xml_indent 0"  "" 0
+assert_diff test_data/gpx1c.gpx tmp.gpx
+
+# read written files again
+assert "$P test_data/gpx1a.gpx -o tmp.gpx"  "" 0
+assert_diff test_data/gpx1a.gpx tmp.gpx
+
+assert "$P test_data/gpx1b.gpx -o tmp.gpx --gpx_write_rte 1"  "" 0
+assert_diff test_data/gpx1b.gpx tmp.gpx
+
+assert "$P test_data/gpx1b.gpx -o tmp.gpx"  "" 0
+assert_diff test_data/gpx1a.gpx tmp.gpx
+
+assert "$P test_data/gpx1c.gpx -o tmp.gpx"  "" 0
+assert_diff test_data/gpx1a.gpx tmp.gpx
+
+# set output format manually
+assert "$P test_data/gpx1.gpx -o tmp --fmt gpx"  "" 0
+assert_diff test_data/gpx1a.gpx tmp
+
 
