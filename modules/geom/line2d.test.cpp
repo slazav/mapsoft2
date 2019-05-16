@@ -44,6 +44,8 @@ main(){
   assert(!(l2>l1));
   assert(!(l2!=l1));
   *l1.rbegin() = iPoint(2,2);
+  assert(!l1.operator==(l2));
+  assert(l1.operator!=(l2));
   assert(l2!=l1);
   assert(l2<l1);
   assert(l2<=l1);

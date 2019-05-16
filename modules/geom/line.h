@@ -118,10 +118,10 @@ struct Line : std::vector<Point<T> > {
   }
 
   // derived operators:
-  bool operator!= (const Point<T> & other) const { return !(*this==other); } ///< operator!=
-  bool operator>= (const Point<T> & other) const { return !(*this<other);  } ///< operator>=
-  bool operator<= (const Point<T> & other) const { return *this<other || *this==other; } ///< operator<
-  bool operator>  (const Point<T> & other) const { return !(*this<=other); } ///< operator>
+  bool operator!= (const Line<T> & other) const { return !(*this==other); } ///< operator!=
+  bool operator>= (const Line<T> & other) const { return !(*this<other);  } ///< operator>=
+  bool operator<= (const Line<T> & other) const { return *this<other || *this==other; } ///< operator<
+  bool operator>  (const Line<T> & other) const { return !(*this<=other); } ///< operator>
 
   /******************************************************************/
 
