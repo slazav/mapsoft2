@@ -22,6 +22,9 @@ main(){
     p1.swap(p2);
     assert(p1==iPoint(1,1,3));
 
+    assert(-p1==-iPoint(1,1,3));
+    assert(-p1==iPoint(-1,-1,-3));
+
     assert(iPoint("[3,4]")==iPoint(3,4,0));
     assert(iPoint("[3,4,2]")==iPoint(3,4,2));
   }

@@ -68,9 +68,11 @@ struct Line : std::vector<Point<T> > {
   Line<T> operator* (const T k) const { Line<T> ret(*this); return ret*=k; }
 
   /// Invert coordinates
-  Line<T> & operator- () const {
-    for (typename Line<T>::iterator i=this->begin(); i!=this->end(); i++) (*i)=-(*i);
-    return *this;
+  Line<T> operator- () const {
+    Line<T> ret;
+    for (typename Line<T>::const_iterator i=this->begin(); i!=this->end(); i++)
+      ret.push_back(-(*i));
+    return ret;
   }
 
   /******************************************************************/

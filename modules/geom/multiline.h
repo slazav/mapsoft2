@@ -67,9 +67,11 @@ struct MultiLine : std::vector<Line<T> > {
   MultiLine<T> operator* (const T k) const { MultiLine<T> ret(*this); return ret*=k; }
 
   /// Invert coordinates
-  MultiLine<T> & operator- () const {
-    for (typename MultiLine<T>::iterator i=this->begin(); i!=this->end(); i++) (*i)=-(*i);
-    return *this;
+  MultiLine<T> operator- () const {
+    MultiLine<T> ret;
+    for (typename MultiLine<T>::const_iterator i=this->begin(); i!=this->end(); i++)
+      ret.push_back(-(*i));
+    return ret;
   }
 
   /******************************************************************/
