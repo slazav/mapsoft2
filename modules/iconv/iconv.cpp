@@ -27,7 +27,10 @@ class IConv::Impl {
 
 IConv::IConv(const char *from, const char *to):
   impl(std::unique_ptr<Impl>(new Impl(from,to))) { }
-std::string IConv::cnv(const std::string & s) {return impl->cnv(s);}
+
+IConv::IConv() {}
+
+std::string IConv::cnv(const std::string & s) {return impl? impl->cnv(s) : s;}
 
 IConv::~IConv(){}
 

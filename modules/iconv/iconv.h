@@ -15,7 +15,8 @@ class IConv{
 
   public:
 
-    /// Constructor
+    /// Constructors
+    IConv();
     IConv(const char *from, const char *to);
 
     /// Destructor

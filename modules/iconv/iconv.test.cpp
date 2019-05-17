@@ -16,6 +16,10 @@ main(){
     // non-utf characters are not modified:
     assert( C1.cnv("привет!") == "привет!");
 
+    // trivial conversion:
+    IConv C2;
+    assert( C2.cnv("п©я─п╦п╡п╣я┌!") == "п©я─п╦п╡п╣я┌!");
+
     // unknown charset:
     try { IConv C3("UTF8", "AAA"); }
     catch (Err e) { assert(e.str() == "can't do iconv conversion from UTF8 to AAA"); }
