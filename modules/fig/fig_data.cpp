@@ -1,6 +1,11 @@
-#include "fig_data.h"
 #include <map>
 #include <string>
+#include <iomanip>
+
+#include "iconv/iconv.h"
+#include "err/err.h"
+
+#include "fig_data.h"
 
 using namespace std;
 
@@ -10,6 +15,7 @@ using namespace std;
 // fig units, 1.05/1200in (not 1/1200in, I don't know why...)
 const double Fig::cm2fig = 1200.0 / 1.05 / 2.54;
 const double Fig::fig2cm = 1.0 / cm2fig;
+const char *default_enc = "KOI8-R";
 
 #define O_COLOR_DEF 0
 #define O_ELLIPSE   1
@@ -134,10 +140,8 @@ FigObj::FigObj(){
 }
 
 /*************************************************/
-// read fig text (char by char, with \XXX conversions).
-// returns true for multiline text
 bool
-read_text(std::istream & ss, std::string & text){
+FigObj::read_text(std::istream & ss){
   while (1){
     char c = ss.get();
     if (ss.eof()) return true;
@@ -169,8 +173,35 @@ read_text(std::istream & ss, std::string & text){
 }
 
 /*************************************************/
-FigObj::FigObj(const std::string & header){
-  *this = FigObj(); // defaults
+// read object comments and options, return first non-comment line
+// (object header)
+std::string
+FigObj::read_comments(std::istream & s){
+  std::string ret;
+  while (getline(s, ret)){
+    if (s.fail()) throw Err() << "FigObj: can't read object";
+    if (ret.size()<1) continue; // skip empty lines
+    if (ret[0] != '#') break; // start reading the object ret
+    if (ret.size()<2 || ret[1] != ' ')
+      throw Err() << "FigObj: broken comment: [" << ret << "]\n";
+    // read option
+    if (ret.size()>2 && ret[2] == '\\'){
+      int p1 = 3;
+      int p2 = ret.find('=');
+      if (p2<p1) opts.put(ret.substr(p1,-1), 1);
+      else opts.put(ret.substr(p1,p2-p1), ret.substr(p2+1,-1));
+    }
+    else {
+      // read comment
+      comment.push_back(ret.substr(2, -1));
+    }
+  }
+  return ret;
+}
+
+/*************************************************/
+void
+FigObj::read_header(const std::string & header){
   std::istringstream ss(header);
   ss >> type >> ws;
   if (ss.fail())
@@ -205,6 +236,7 @@ FigObj::FigObj(const std::string & header){
       if (ss.fail() || !ss.eof())
         throw Err() << "FigObj: can't read spline object: [" << header << "]";
       resize(npts);
+      f.resize(npts);
       break;
     case O_TXT:
       ss >> sub_type >> pen_color >> depth >> pen_style
@@ -215,7 +247,8 @@ FigObj::FigObj(const std::string & header){
         throw Err() << "FigObj: can't read text object: [" << header << "]";
 
       try{
-        multiline = read_text(ss, text);
+        text.resize(0);
+        multiline = read_text(ss);
       }
       catch (Err e){
         throw Err() << "FigObj: can't read text: " << e.str()
@@ -252,8 +285,225 @@ FigObj::FigObj(const std::string & header){
     default:
       throw Err() << "FigObj: unknown object type: [" << header << "]";
   }
-  // check/fix color, angle, depth, fillstyle
+}
 
+/*************************************************/
+void
+FigObj::read(std::istream & s){
+
+  *this = FigObj(); // reset defaults
+
+  std::string header = read_comments(s);
+
+  // parse object header
+  read_header(header);
+
+  // read extra text lines if needed
+  if (type == O_TXT && multiline){
+    if (read_text(s))
+      throw Err() << "FigObj: unfinished text";
+  }
+
+  // read arrow parameters if needed
+  if (type == O_POLYLINE || type == O_SPLINE || type == O_ARC){
+    if (forward_arrow) {
+      std::string arr;
+      getline(s, arr);
+      std::istringstream s1(arr);
+      s1 >> farrow_type >> farrow_style >> farrow_thickness
+         >> farrow_width >> farrow_height >> std::ws;
+      if (s1.fail() || !s1.eof())
+        throw Err() << "FigObj: can't read arrow parameters: [" << arr << "]";
+    }
+    if (backward_arrow) {
+      std::string arr;
+      getline(s, arr);
+      std::istringstream s1(arr);
+      s1 >> barrow_type >> barrow_style >> barrow_thickness
+         >> barrow_width >> barrow_height >> std::ws;
+      if (s1.fail() || !s1.eof())
+        throw Err() << "FigObj: can't read arrow parameters: [" << arr << "]";
+    }
+  }
+
+  // read image
+  if (type == O_POLYLINE && sub_type == 5) {
+    s >> image_orient >> std::ws;
+    getline(s, image_file);
+    if (s.fail())
+      throw Err() << "FigObj: can't image parameters";
+    // xfig writes <empty> for empty filenames
+    if (image_file == "<empty>") image_file = "";
+  }
+
+  // read coordinates
+  if (type == O_POLYLINE || type == O_SPLINE) {
+    for (int i=0; i<size(); i++){
+      s >> (*this)[i].x >> (*this)[i].y >> std::ws;
+      if (s.fail()) throw Err() << "FigObj: can't read line coordinates";
+    }
+  }
+
+  // read spline factors
+  if (type == O_SPLINE) {
+    for (int i=0; i<f.size(); i++){
+      s >> f[i] >> std::ws;
+      if (s.fail()) throw Err() << "FigObj: can't read spline coordinates";
+    }
+  }
+}
+
+void
+FigObj::write_comments(std::ostream & s) const{
+  int n;
+  // comments:
+  for (n=0; n<comment.size(); n++){
+    if (n>99) {cerr << "fig comment contains > 100 lines! Cutting...\n"; break;}
+//    string str = cnv.from_utf8(comment[n]);
+    string str = comment[n];
+    if (str.size()>1022){
+      cerr << "fig comment line is > 1022 chars! Cutting...\n";
+      str.resize(1022);
+    }
+    s << "# " << str << "\n";
+  }
+  // options:
+  for (Opt::const_iterator o=opts.begin(); o!=opts.end();o++){
+    if (n++>99) {cerr << "fig comment contains > 100 lines! Cutting...\n"; break;}
+//    string str = cnv.from_utf8(o->first) + "=" + cnv.from_utf8(o->second);
+    string str = o->first + "=" + o->second;
+    if (str.size()>1022){
+      cerr << "fig comment line is > 1022 chars! Cutting...\n";
+      str.resize(1022);
+    }
+    s << "# \\" << str << "\n";
+  }
+}
+
+void
+FigObj::write_arrows(std::ostream & s) const{
+  if (forward_arrow)
+    s << "\t" << setprecision(2)
+      << farrow_type << " "
+      << farrow_style << " "
+      << farrow_thickness << " "
+      << farrow_width << " "
+      << farrow_height << "\n";
+  if (backward_arrow)
+    s << "\t" << setprecision(2)
+      << barrow_type << " "
+      << barrow_style << " "
+      << barrow_thickness << " "
+      << barrow_width << " "
+      << barrow_height << "\n";
+}
+void
+FigObj::write_coords(std::ostream & s, const int add_pt) const{
+  int n = size();
+  for (int i=0; i<n+add_pt; i++)
+    s << ((i%6==0) ? "\t":" ")
+      << (*this)[i%n].x << " " << (*this)[i%n].y
+      << ((i%6==5 || i==n+add_pt-1) ? "\n":"");
+}
+void
+FigObj::write_factors(std::ostream & s) const{
+  int n = f.size();
+  s << setprecision(3);
+  for (int i=0; i<n; i++)
+    s << ((i%6==0) ? "\t":" ")
+      << f[i]
+      << ((i%6==5 || i==n-1) ? "\n":"");
+}
+
+void
+FigObj::write(std::ostream & s) const{
+  write_comments(s);
+  s << type << " " << std::setprecision(3) << std::fixed;
+  int add_pt;
+  switch (type) {
+    case O_ELLIPSE:
+      if (size()!=1) throw Err() << "FigObj: ellipse should have 1 coordinate point";
+      s << sub_type <<" " << line_style << " " << thickness << " "
+        << pen_color << " " << fill_color << " " << depth << " "
+        << pen_style << " " << area_fill << " " << style_val << " "
+        << direction << " " << std::setprecision(4) << angle << " "
+        << (*this)[0].x << " " << (*this)[0].y << " "
+        << radius_x << " " << radius_y << " " << start_x << " " 
+        << start_y << " " << end_x << " " << end_y << "\n";
+      if (s.fail()) throw Err() << "FigObj: can't write ellipse object";
+      break;
+    case O_POLYLINE:
+      if (size()<1) throw Err() << "FigObj: line should have at least 1 coordinate point";
+
+      // If line if closed the last point should be same as first one.
+      // Let's add the missing point if needed:
+      add_pt = (is_closed() && (*this)[size()-1] != (*this)[0]) ? 1:0;
+
+      s << sub_type << " " << line_style << " " << thickness << " "
+        << pen_color << " " << fill_color << " " << depth << " "
+        << pen_style << " " << area_fill << " " << style_val << " "
+        << join_style << " " << cap_style << " " << radius << " "
+        << forward_arrow << " " << backward_arrow << " " << size() + add_pt << "\n";
+      write_arrows(s);
+      if (sub_type==5){ // image
+        s << "\t" << image_orient << " "
+          << (image_file == ""? "<empty>":image_file) << "\n";
+      }
+      write_coords(s, add_pt);
+      if (s.fail()) throw Err() << "FigObj: can't write line object";
+      break;
+    case O_SPLINE:
+      if (is_closed()  && size()<3) throw Err() << "FigObj: closed spline with < 3 points";
+      if (!is_closed() && size()<2) throw Err() << "FigObj: spline with < 2 points";
+      if (size()!=f.size()) throw Err() << "FigObj: different amount of x,y and f values in a spline";
+      s << sub_type << " " << line_style << " " << thickness << " "
+        << pen_color << " " << fill_color << " " << depth << " "
+        << pen_style << " " << area_fill << " " << style_val << " "
+        << cap_style << " " << forward_arrow << " " << backward_arrow << " "
+        << size() << "\n";
+      write_arrows(s);
+      write_coords(s);
+      write_factors(s);
+      if (s.fail()) throw Err() << "FigObj: can't write spline object";
+      break;
+    case O_TXT:
+      // TODO: convert charset, convert chars > 127
+      // TODO: convert text dimensions?
+      if (size()!=1) throw Err() << "FigObj: text should have 1 coordinate point";
+      s << sub_type << " " << pen_color << " " << depth << " "
+        << pen_style << " " << font << " " << font_size << " "
+        << std::setprecision(4) << angle << " " << font_flags << " "
+        << height << " " << length << " " << (*this)[0].x << " " << (*this)[0].y << " ";
+      s << text << "\\001\n";
+      if (s.fail()) throw Err() << "FigObj: can't write text object";
+      break;
+    case O_ARC:
+      if (size()!=3) throw Err() << "FigObj: arc should have 3 coordinate point";
+      // TODO: calculate center!
+      s << sub_type << " " << line_style << " " << thickness << " "
+        << pen_color << " " << fill_color << " " << depth << " "
+        << pen_style << " " << area_fill << " " << style_val << " "
+        << cap_style << " " << direction << " "
+        << forward_arrow << " " << backward_arrow << " "
+        << center_x << " " << center_y << " "
+        << (*this)[0].x << " " << (*this)[0].y << " "
+        << (*this)[1].x << " " << (*this)[1].y << " "
+        << (*this)[2].x << " " << (*this)[2].y << "\n";
+      write_arrows(s);
+      if (s.fail()) throw Err() << "FigObj: can't write arc object";
+      break;
+    case O_COMPOUND:
+      if (size()!=2) throw Err() << "FigObj: compound should have 2 coordinate point";
+      s << (*this)[0].x << " " << (*this)[0].y << " "
+        << (*this)[1].x << " " << (*this)[1].y << "\n";
+      if (s.fail()) throw Err() << "FigObj: can't write compound object";
+      break;
+    case O_END_COMPOUND:
+      if (s.fail()) throw Err() << "FigObj: can't write compound end object";
+      break;
+    default:
+      throw Err() << "FigObj: unknown object type: " << type;
+  }
 }
 
 
@@ -310,6 +560,7 @@ FigObj::operator== (const FigObj & o) const{
   if (comment != o.comment) return false;
   if (opts    != o.opts)    return false;
   if (iLine::operator!=(o)) return false;
+  if (f!=o.f) return false;
   return true;
 }
 
@@ -364,15 +615,16 @@ FigObj::operator< (const FigObj & o) const{
   if (text != o.text) return (text < o.text);
   if (comment != o.comment) return (comment < o.comment);
   if (opts != o.opts) return (opts < o.opts); // ?!
+  if (f != o.f) return (f < o.f);
   return iLine::operator<(o);
 }
-
 
 void FigObj::set_points(const dLine & v){
   clear();
   for (int i=0;i<v.size();i++)
     push_back(iPoint(lround(v[i].x), lround(v[i].y)));
 }
+
 
 /*************************************************/
 
@@ -402,4 +654,105 @@ void Fig::remove_empty_comp(){
   while(removed>0);
 }
 
+template <typename T>
+void read_line(std::istream & s, T val){
+  std::string l;
+  std::getline(s,l);
+  std::istringstream s1(l);
+  s1 >> val >> std::ws;
+  if (s1.fail() || !s1.eof())
+    throw Err() << "Fig: can't read fig file";
+}
 
+void
+Fig::read(std::istream & s, const Opt & ropts){
+  std::string l;
+  std::getline(s,l);
+  if (l.size()<8 || l.substr(0,8) != "#FIG 3.2")
+    throw Err() << "Fig: non-supported format";
+
+  read_line(s, orientation);
+  read_line(s, justification);
+  read_line(s, units);
+  read_line(s, papersize);
+  read_line(s, magnification);
+  read_line(s, multiple_page);
+  read_line(s, transparent_color);
+
+  // Read comments and options. Same as for FigObj,
+  // using same method.
+  FigObj tmp;
+  tmp.read_comments(s);
+  comment = tmp.comment;
+  opts    = tmp.opts;
+
+  // Read custom colors
+
+  // Read objects
+  while (1){
+    FigObj o;
+    o.read(s);
+    if (s.eof()) break;
+    if (s.fail()) throw Err() << "Fig: can't read fig file";
+    push_back(o);
+  }
+
+  // convert colors
+  // convert encoding
+}
+
+// Add new rgb color to custom colormap if needed. Return true if color was added
+bool
+color_rgbadd(const int c, map<int,int> & custom){
+  int maxc=0;
+  map<int,int>::const_iterator i;
+  for (i=Fig::colors.begin(); i!=Fig::colors.end(); i++){
+    if (i->first > maxc) maxc=i->first;
+    if (i->second == c) return false;
+  }
+  for (i=custom.begin(); i!=custom.end(); i++){
+    if (i->first > maxc) maxc=i->first;
+    if (i->second == c) return false;
+  }
+  custom.insert(pair<int,int>(maxc+1, c));
+  return true;
+}
+
+void
+Fig::write(std::ostream & s, const Opt & wopts) const{
+  string enc = opts.get("fig_out_enc", std::string(default_enc));
+  IConv cnv(enc.c_str(), "UTF-8");
+
+  // Writing header:
+  s << "#FIG 3.2\n"
+      << orientation << "\n" << justification << "\n"
+      << units << "\n" << papersize << "\n"
+      << setprecision(2) << fixed << magnification << "\n"
+      << setprecision(3) << multiple_page << "\n"
+      << transparent_color << "\n";
+
+  // Write comments and options. Same as for FigObj,
+  // using same method.
+  FigObj tmp;
+  tmp.comment=comment; tmp.opts=opts;
+  tmp.write_comments(s);
+
+  s << resolution << " " << coord_system << "\n";
+
+  // Looking for custom colors:
+  map<int,int> custom_colors;
+  for (const_iterator i=begin(); i!=end(); i++){
+    color_rgbadd(i->pen_color,  custom_colors);
+    color_rgbadd(i->fill_color, custom_colors);
+  }
+  // writing custom colors
+  for (map<int,int>::const_iterator i = custom_colors.begin();
+    i != custom_colors.end(); i++){
+    s << "0 " << i->first << " #"
+      << setbase(16) << setw(6) << setfill('0')
+      << i->second << setbase(10) << "\n";
+  }
+
+  // writing objects
+  for (const_iterator i=begin(); i!=end(); i++) i->write(s);
+}

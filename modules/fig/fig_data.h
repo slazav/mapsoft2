@@ -38,9 +38,10 @@ struct FigObj : iLine {
   int     start_x, start_y;    ///    (Fig units; the 1st ellipse point entered)
   int     end_x, end_y;        ///    (Fig units; the last ellipse point entered)
   int     font;                ///    (enumeration type)
-  float   font_size;           ///    (font size in points)
+  int     font_size;           ///    (font size in points)
   int     font_flags;          ///    (bit vector)
-  float   height, length;      ///    (text dimensions, should be ignored?)
+  int     height, length;      ///    (text dimensions, should be ignored?)
+  // forward/backward arrow parameters:
   int     farrow_type, barrow_type;
   int     farrow_style, barrow_style;
   float   farrow_thickness, barrow_thickness;
@@ -52,16 +53,47 @@ struct FigObj : iLine {
   int          image_orient;
   std::string  text;
   std::vector<std::string> comment;
-  //std::vector<float>  f;
+  std::vector<float>  f; // spline parameters
   Opt opts;
 
-  /// Constructors
+  /******************************************************************/
+  /// Constructor -- make a default object
   FigObj();
 
-  /// Initialize object using a header string.
-  /// Set forward_arrow, backward_arrow, multiline, point vector size
-  /// for using in further reading if needed.
-  FigObj(const std::string & header);
+  /******************************************************************/
+  /// Reading/writing. These functions will be used from Fig class.
+
+  // Internal function for reading object text (char by char, with \XXX conversions).
+  // Returns true if '\\001' did not found.
+  bool read_text(std::istream & ss);
+
+  // read object comments and options, return first non-comment line
+  // (object header)
+  std::string read_comments(std::istream & s);
+
+  /// Read object parameters from a header string. Object will be incomplete
+  /// if further reading is needed (multiline text, arrowheads, point coordinates).
+  /// The object is not initialized.
+  /// Comments and options are not modofied.
+  /// Text encoding, colors are not modified.
+  void read_header(const std::string & header);
+
+  /// Read a single object from a stream, with comments, multiline text,
+  /// arrows, point coordinates:
+  /// Text encoding, colors are not modified.
+  void read(std::istream & s);
+
+  /// write comments and options
+  void write_comments(std::ostream & s) const;
+  /// write object arrows
+  void write_arrows(std::ostream & s) const;
+  /// write line/spline coordinates
+  void write_coords(std::ostream & s, const int add_pt = 0) const;
+  /// write spline factors
+  void write_factors(std::ostream & s) const;
+
+  /// write a single object to a stream
+  void write(std::ostream & s) const;
 
   /******************************************************************/
   // operators <=>
@@ -181,6 +213,8 @@ struct FigObj : iLine {
 
 };
 
+
+
 /******************************************************************/
 /******************************************************************/
 
@@ -215,6 +249,16 @@ struct Fig:std::list<FigObj>{
     resolution=1200;
     coord_system=2;
   }
+
+  /******************************************************************/
+  /// Reading/writing. These functions will be used from Fig class.
+
+  /// Read Fig-file from a stream. Objects will be appended,
+  /// header will be rewrited.
+  void read(std::istream & s, const Opt & ropts = Opt());
+
+  /// Write Fig-file to a stream.
+  void write(std::ostream & s, const Opt & wopts = Opt()) const;
 
   /******************************************************************/
   // operators +,-,/,*
@@ -280,5 +324,6 @@ struct Fig:std::list<FigObj>{
   /// remove empty compounds
     void remove_empty_comp();
 };
+
 
 #endif
