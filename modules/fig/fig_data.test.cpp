@@ -453,10 +453,10 @@ main(){
       "5 1 1 1 0 7 50 -1 -1 4.000 0 0 1 0 3545.445 7246.849 3150 6930 3645 6750 4050 7200\n"
       "\t0 0 1.00 60.00 120.00\n",
       "# comment1\n"
-      "# comment2\n"
       "# \\opt1=val1\n"
       "# \\opt2=\n"
-      "# \\opt3=1\n"
+      "# \\opt3\n"
+      "# comment2\n"
       "5 1 1 1 0 7 50 -1 -1 4.000 0 0 1 0 3545.445 7246.849 3150 6930 3645 6750 4050 7200\n"
       "\t0 0 1.00 60.00 120.00\n");
 
@@ -573,10 +573,10 @@ main(){
     "Single\n"
     "-2\n"
     "# comm1\n"
+    "# \\opt1=val1\n"
     "# \n"
     "# comm2\n"
-    "# \\opt1=val1\n"
-    "# \\opt2=1\n"
+    "# \\opt2\n"
     "# \\opt3=\n"
     "1200 2\n"
     "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 1 1 4\n"
@@ -610,12 +610,12 @@ main(){
     "4 0 0 50 -1 0 12 0.0000 4 210 150 -1575 6840 �����\\001\n",
     "<in>", 1);
     assert(w.size() == 2);
-    assert(w.comment.size()==1);
-    assert(w.opts.get("ключ1", std::string())=="значение1");
+    assert(w.comment.size()==2);
     assert(w.comment[0]=="коммент1");
-    assert(w.begin()->comment.size() ==1);
+    assert(w.comment[1]=="\\ключ1=значение1");
+    assert(w.begin()->comment.size() ==2);
     assert(w.begin()->comment[0]=="коммент2");
-    assert(w.begin()->opts.get("ключ2", std::string())=="значение2");
+    assert(w.begin()->comment[1]=="\\ключ2=значение2");
     assert(w.rbegin()->is_text());
     assert(w.rbegin()->text == "текст");
     }

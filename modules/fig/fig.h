@@ -61,7 +61,6 @@ struct FigObj : iLine {
   std::string  text;
   std::vector<std::string> comment;
   std::vector<float>  f; // spline parameters
-  Opt opts;
 
   /******************************************************************/
   /// Constructor -- make a default object
@@ -208,7 +207,6 @@ struct Fig:std::list<FigObj>{
   int resolution;
   int coord_system; // ignored in xfig
   std::vector<std::string> comment;
-  Opt opts;
 
   Fig(){
     orientation="Portrait";

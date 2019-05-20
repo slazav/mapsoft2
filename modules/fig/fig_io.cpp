@@ -53,29 +53,18 @@ bool read_text(std::istream & ss, string & text){
   throw Err() << "broken code";
 }
 
-// read object comments and options, return first non-comment line
+// read object comments, return first non-comment line
 // (object header)
 std::string
-read_comments(std::istream & s, vector<string> & comment, Opt & opts, const IConv & cnv){
+read_comments(std::istream & s, vector<string> & comment, const IConv & cnv){
   std::string ret;
   while (getline(s, ret)){
     if (s.fail()) throw Err() << "FigObj: can't read object";
     if (ret.size()<1) continue; // skip empty lines
     if (ret[0] != '#') break; // start reading the object ret
     if (ret.size()<2 || ret[1] != ' ')
-      throw Err() << "FigObj: broken comment: [" << ret << "]\n";
-    // read option
-    if (ret.size()>2 && ret[2] == '\\'){
-      int p1 = 3;
-      int p2 = ret.find('=');
-      std::string key, val;
-      if (p2<p1) opts.put(cnv(ret.substr(p1,-1)), 1);
-      else opts.put(cnv(ret.substr(p1,p2-p1)), cnv(ret.substr(p2+1,-1)));
-    }
-    else {
-      // read comment
-      comment.push_back(cnv(ret.substr(2, -1)));
-    }
+      std::cerr << "FigObj: broken comment: [" << ret << "]\n";
+    comment.push_back(cnv(ret.substr(2, -1)));
   }
   return ret;
 }
@@ -260,7 +249,7 @@ void read_fig(std::istream & s, Fig & w, const Opt & ropts){
 
     // Read comments and options. Same as for FigObj,
     // using same method.
-    l = read_comments(s, w.comment, w.opts, cnv);
+    l = read_comments(s, w.comment, cnv);
 
     // read resolution line
     std::istringstream s1(l);
@@ -289,7 +278,7 @@ void read_fig(std::istream & s, Fig & w, const Opt & ropts){
   while (1){
     if (s.eof()) break;
     FigObj o;
-    std::string header = read_comments(s, o.comment, o.opts, cnv);
+    std::string header = read_comments(s, o.comment, cnv);
     // parse object header
     int hret = read_figobj_header(o, header);
     // read extra text lines if needed
@@ -370,31 +359,18 @@ void read_fig(std::istream & s, Fig & w, const Opt & ropts){
 /******************************************************************/
 
 
-/// write comments and options
+/// write comments
 void
-write_comments(std::ostream & s, const vector<string> & comment, const Opt & opts, const IConv & cnv){
+write_comments(std::ostream & s, const vector<string> & comment, const IConv & cnv){
   int n;
-  // comments:
   for (n=0; n<comment.size(); n++){
     if (n>99) {cerr << "fig comment contains > 100 lines! Cutting...\n"; break;}
-//    string str = cnv.from_utf8(comment[n]);
     string str = comment[n];
     if (str.size()>1022){
       cerr << "fig comment line is > 1022 chars! Cutting...\n";
       str.resize(1022);
     }
     s << "# " << cnv(str) << "\n";
-  }
-  // options:
-  for (Opt::const_iterator o=opts.begin(); o!=opts.end();o++){
-    if (n++>99) {cerr << "fig comment contains > 100 lines! Cutting...\n"; break;}
-//    string str = cnv.from_utf8(o->first) + "=" + cnv.from_utf8(o->second);
-    string str = o->first + "=" + o->second;
-    if (str.size()>1022){
-      cerr << "fig comment line is > 1022 chars! Cutting...\n";
-      str.resize(1022);
-    }
-    s << "# \\" << cnv(str) << "\n";
   }
 }
 
@@ -455,10 +431,8 @@ write_fig(ostream & s, const Fig & w, const Opt & wopts){
         << setprecision(3) << w.multiple_page << "\n"
         << w.transparent_color << "\n";
 
-    // Write comments and options. Same as for FigObj,
-    // using same method.
-    write_comments(s, w.comment, w.opts, cnv);
-
+    // Write comments:
+    write_comments(s, w.comment, cnv);
     s << w.resolution << " " << w.coord_system << "\n";
   }
 
@@ -479,7 +453,7 @@ write_fig(ostream & s, const Fig & w, const Opt & wopts){
 
   // Writing objects
   for (Fig::const_iterator i=w.begin(); i!=w.end(); i++){
-    write_comments(s, i->comment, i->opts, cnv);
+    write_comments(s, i->comment, cnv);
 
 
     int pen_color  = color_rgb2fig(i->pen_color,  custom_colors);

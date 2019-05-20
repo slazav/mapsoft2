@@ -178,7 +178,6 @@ FigObj::operator== (const FigObj & o) const{
   if (image_orient != o.image_orient) return false;
   if (text    != o.text)    return false;
   if (comment != o.comment) return false;
-  if (opts    != o.opts)    return false;
   if (iLine::operator!=(o)) return false;
   if (f!=o.f) return false;
   return true;
@@ -234,7 +233,6 @@ FigObj::operator< (const FigObj & o) const{
   if (image_orient != o.image_orient) return (image_orient < o.image_orient);
   if (text != o.text) return (text < o.text);
   if (comment != o.comment) return (comment < o.comment);
-  if (opts != o.opts) return (opts < o.opts); // ?!
   if (f != o.f) return (f < o.f);
   return iLine::operator<(o);
 }

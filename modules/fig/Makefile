@@ -5,5 +5,4 @@ SIMPLE_TESTS := fig_data
 PROGRAMS := catfig
 PKG_CONFIG += jansson
 
-
 include ../Makefile.inc
