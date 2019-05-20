@@ -1,7 +1,26 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
 #include <cassert>
-#include "fig_data.h"
+#include "fig.h"
+
+Fig test_objs(const std::string & in, std::string out = "<in>", int fig_header = 0){
+  std::istringstream s1(in);
+  std::ostringstream s2;
+  Fig w;
+  Opt opts;
+  opts.put("fig_header", fig_header);
+  read_fig(s1, w, opts);
+  write_fig(s2, w, opts);
+  if (out=="<in>") out = in;
+  if (s2.str() != out) {
+    std:: cerr << "\nIN:  [" << in  << "]\n";
+    std:: cerr << "OUT: [" << out << "]\n";
+    std:: cerr << "RET: [" << s2.str() << "]\n";
+  }
+  assert(s2.str() == out);
+  return w;
+}
+
 
 int
 main(){
@@ -31,7 +50,7 @@ main(){
     // constructing objects from a header string -- ellipse
     {
       FigObj o;
-      o.read_header("1 3 0 2 0 7 50 -1 -1 0.000 1 0.0000 7380 5310 664 664 7380 5310 7695 4725");
+      read_figobj_header(o, "1 3 0 2 0 7 50 -1 -1 0.000 1 0.0000 7380 5310 664 664 7380 5310 7695 4725");
       assert(o.is_ellipse());
       assert(o.is_closed());
       assert(o.size()==1); // center
@@ -59,7 +78,7 @@ main(){
 
     {
       FigObj o;
-      o.read_header("1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990 2658");
+      read_figobj_header(o, "1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990 2658");
       assert(o.is_ellipse());
       assert(o.is_closed());
       assert(o.size()==1); // center
@@ -86,7 +105,7 @@ main(){
     }
     try {
       FigObj o;
-      o.read_header("1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990");
+      read_figobj_header(o, "1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990");
       assert(false);
     }
     catch (Err e) {
@@ -96,7 +115,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 x 8765 4092 10990 2658");
+      read_figobj_header(o, "1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 x 8765 4092 10990 2658");
       assert(false);
     }
     catch (Err e) {
@@ -106,7 +125,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990 2658 1");
+      read_figobj_header(o, "1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990 2658 1");
       assert(false);
     }
     catch (Err e) {
@@ -117,10 +136,10 @@ main(){
     // constructing objects from a header string -- lines
     {
       FigObj o;
-      o.read_header("2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 4");
+      int size = read_figobj_header(o, "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 4");
       assert(o.is_polyline());
       assert(!o.is_closed());
-      assert(o.size()==4);
+      assert(size==4);
 
       assert(o.sub_type==1);
       assert(o.line_style==0);
@@ -140,7 +159,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0");
+      read_figobj_header(o, "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0");
       assert(false);
     }
     catch (Err e) {
@@ -150,7 +169,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("2 1 0.1 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 4");
+      read_figobj_header(o, "2 1 0.1 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 4");
       assert(false);
     }
     catch (Err e) {
@@ -160,7 +179,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 4 1");
+      read_figobj_header(o, "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 4 1");
       assert(false);
     }
     catch (Err e) {
@@ -171,10 +190,10 @@ main(){
     // constructing objects from a header string -- splines
     {
       FigObj o;
-      o.read_header("3 0 0 1 0 7 50 -1 -1 0.000 0 0 0 4");
+      int size = read_figobj_header(o, "3 0 0 1 0 7 50 -1 -1 0.000 0 0 0 4");
       assert(o.is_spline());
       assert(!o.is_closed());
-      assert(o.size()==4);
+      assert(size==4);
 
       assert(o.sub_type==0);
       assert(o.line_style==0);
@@ -192,7 +211,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("3 0 0 1 0 7 50 -1 -1 0.000 0 0 0");
+      read_figobj_header(o, "3 0 0 1 0 7 50 -1 -1 0.000 0 0 0");
       assert(false);
     }
     catch (Err e) {
@@ -202,7 +221,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("3 0 0 1 0 7 50 -1 -1 0.000 a 0 0 4");
+      read_figobj_header(o, "3 0 0 1 0 7 50 -1 -1 0.000 a 0 0 4");
       assert(false);
     }
     catch (Err e) {
@@ -212,7 +231,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("3 0 0 1 0 7 50 -1 -1 0.000 0 0 0 4 1");
+      read_figobj_header(o, "3 0 0 1 0 7 50 -1 -1 0.000 0 0 0 4 1");
       assert(false);
     }
     catch (Err e) {
@@ -223,7 +242,7 @@ main(){
     // constructing objects from a header string -- text
     {
       FigObj o;
-      o.read_header("4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 text\\001");
+      read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 text\\001");
       assert(o.is_text());
       assert(!o.is_closed());
       assert(o.size()==1);
@@ -246,7 +265,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("4 0 0 50 -1 0 12 0.0000 4 210 z -1575 6840 text\\001");
+      read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 z -1575 6840 text\\001");
       assert(false);
     }
     catch (Err e) {
@@ -256,7 +275,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840");
+      read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840");
       assert(false);
     }
     catch (Err e) {
@@ -266,28 +285,29 @@ main(){
 
     {
       FigObj o;
-      o.read_header("4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 text\\001");
+      int m;
+      m = read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 text\\001");
       assert(o.text == "text");
 
-      o.read_header("4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 te\\xt\\001");
+      m = read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 te\\xt\\001");
       assert(o.text == "text");
 
-      o.read_header("4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 te\\170t\\001");
+      m = read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 te\\170t\\001");
       assert(o.text == "text");
 
-      o.read_header("4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 te\\170t\\001aaa");
+      m = read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 te\\170t\\001aaa");
       assert(o.text == "text");
-      assert(o.multiline == false);
+      assert(m == 0);
 
-      o.read_header("4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 text");
+      m = read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 text");
       assert(o.text == "text");
-      assert(o.multiline == true);
+      assert(m == 1);
     }
 
     // constructing objects from a header string -- arc
     {
       FigObj o;
-      o.read_header("5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 7380\n");
+      read_figobj_header(o, "5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 7380\n");
       assert(o.is_arc());
       assert(!o.is_closed());
       assert(o.size()==3);
@@ -317,7 +337,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 x");
+      read_figobj_header(o, "5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 x");
       assert(false);
     }
     catch (Err e) {
@@ -327,7 +347,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 7380 1");
+      read_figobj_header(o, "5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 7380 1");
       assert(false);
     }
     catch (Err e) {
@@ -337,7 +357,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410");
+      read_figobj_header(o, "5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410");
       assert(false);
     }
     catch (Err e) {
@@ -349,7 +369,7 @@ main(){
     // constructing objects from a header string -- compound
     {
       FigObj o;
-      o.read_header("6");
+      read_figobj_header(o, "6");
       assert(o.is_compound());
       assert(!o.is_closed());
       assert(o.size()==2);
@@ -361,7 +381,7 @@ main(){
 
     {
       FigObj o;
-      o.read_header("6 1 2 3 4");
+      read_figobj_header(o, "6 1 2 3 4");
       assert(o.is_compound());
       assert(!o.is_closed());
       assert(o.size()==2);
@@ -373,7 +393,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("6 1 2 3");
+      read_figobj_header(o, "6 1 2 3");
       assert(false);
     }
     catch (Err e) {
@@ -383,7 +403,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("6 1 2 3 4 1");
+      read_figobj_header(o, "6 1 2 3 4 1");
       assert(false);
     }
     catch (Err e) {
@@ -393,7 +413,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("6 1 2 3.2 4");
+      read_figobj_header(o, "6 1 2 3.2 4");
       assert(false);
     }
     catch (Err e) {
@@ -403,7 +423,7 @@ main(){
 
     {
       FigObj o;
-      o.read_header("-6");
+      read_figobj_header(o, "-6");
       assert(o.is_compound_end());
       assert(!o.is_closed());
       assert(o.size()==0);
@@ -411,7 +431,7 @@ main(){
 
     try {
       FigObj o;
-      o.read_header("-6 1");
+      read_figobj_header(o, "-6 1");
       assert(false);
     }
     catch (Err e) {
@@ -420,142 +440,77 @@ main(){
     }
 
     /*********************************************************/
-    // reading objects
+    // reading/writing objects
+
+    // arc with arrow, options, comments
+    test_objs(
+      "# comment1\n"
+      "\n"
+      "# \\opt1=val1\n"
+      "# \\opt2=\n"
+      "# \\opt3\n"
+      "# comment2\n"
+      "5 1 1 1 0 7 50 -1 -1 4.000 0 0 1 0 3545.445 7246.849 3150 6930 3645 6750 4050 7200\n"
+      "\t0 0 1.00 60.00 120.00\n",
+      "# comment1\n"
+      "# comment2\n"
+      "# \\opt1=val1\n"
+      "# \\opt2=\n"
+      "# \\opt3=1\n"
+      "5 1 1 1 0 7 50 -1 -1 4.000 0 0 1 0 3545.445 7246.849 3150 6930 3645 6750 4050 7200\n"
+      "\t0 0 1.00 60.00 120.00\n");
+
+    // object without trailing newline
+    test_objs(
+    "5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 7380",
+    "5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 7380\n");
+
+    // fix closed line, add one more point
+    test_objs(
+    "2 3 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 5\n"
+    "\t945 2250 1935 1935 2925 2430 2790 3240 1170 3105\n",
+    "2 3 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 6\n"
+    "\t945 2250 1935 1935 2925 2430 2790 3240 1170 3105 945 2250\n");
+
+    // color -1 is converted to 0
+    test_objs(
+    "2 1 0 1 -1 7 50 -1 -1 0.000 0 0 -1 0 0 5\n"
+    "\t945 2250 1935 1935 2925 2430 2790 3240 1170 3105\n",
+    "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 5\n"
+    "\t945 2250 1935 1935 2925 2430 2790 3240 1170 3105\n");
 
     {
-      std::string input=
+    // colors
+    Fig w = test_objs(
+    "0 32 #7a8d00\n"
+    "0 33 #7a8d10\n"
+    "2 1 0 1 32 33 50 -1 -1 0.000 0 0 -1 0 0 5\n"
+    "\t945 2250 1935 1935 2925 2430 2790 3240 1170 3105\n"
+    "2 1 0 1 1 11 50 -1 -1 0.000 0 0 -1 0 0 4\n"
+    "\t315 1440 810 945 1800 1215 3330 675\n",
+
+    "0 32 #7a8d00\n"
+    "0 33 #7a8d10\n"
+    "2 1 0 1 32 33 50 -1 -1 0.000 0 0 -1 0 0 5\n"
+    "\t945 2250 1935 1935 2925 2430 2790 3240 1170 3105\n"
+    "2 1 0 1 1 11 50 -1 -1 0.000 0 0 -1 0 0 4\n"
+    "\t315 1440 810 945 1800 1215 3330 675\n");
+
+      assert(w.size()==2);
+      FigObj o1 = *w.begin();
+      FigObj o2 = *(w.rbegin());
+      assert(o1.pen_color = 0x7a8d00);
+      assert(o1.fill_color = 0x7a8d10);
+      assert(o2.pen_color = 0xff0000);
+      assert(o2.fill_color = 0xffce87);
+    }
+
+    {
+    // multiple objects: ellipses, lines, images
+    Fig w = test_objs(
     "# comment1\n"
     "# comment2\n"
     "5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 7380\n"
-    "# comment1\n"
-    "\n"
-    "# \\opt1=val1\n"
-    "# \\opt2=\n"
-    "# \\opt3\n"
-    "# comment2\n"
-    "5 1 1 1 0 7 50 -1 -1 4.000 0 0 1 0 3545.445 7246.849 3150 6930 3645 6750 4050 7200\n"
-    "\t0 0 1.00 60.00 120.00\n"
-    "1 3 0 1 0 7 50 -1 -1 0.000 1 0.0000 7380 5310 664 664 7380 5310 7695 4725\n"
-    "1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990 2658\n"
-    "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 1 1 4\n"
-    "\t0 0 1.00 60.00 120.00\n"
-    "\t0 0 1.00 60.00 120.00\n"
-    "\t 315 1440 810 945 1800 1215 3330 675\n"
-    "2 3 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 6\n"
-    "\t 945 2250 1935 1935 2925 2430 2790 3240 1170 3105 945 2250\n"
-    "2 3 0 1 0 7 50 -1 -1 0.000 0 0 0 0 0 7\n"
-    "\t 6840 7155 6693 6720 6243 6630 5940 6975 6087 7410 6537 7500\n"
-    "\t 6840 7155\n"
-    "2 5 0 1 0 -1 50 -1 -1 0.000 0 0 -1 0 0 5\n"
-    "\t0 <empty>\n"
-    "\t -2610 5085 -1620 5085 -1620 5580 -2610 5580 -2610 5085\n"
-    "2 5 0 1 0 -1 50 -1 -1 0.000 0 0 -1 0 0 5\n"
-    "\t0 some file.jpg\n"
-    "\t -2610 5085 -1620 5085 -1620 5580 -2610 5580 -2610 5085\n"
-    "3 0 0 1 0 7 50 -1 -1 0.000 0 0 1 4\n"
-    "\t0 0 1.00 60.00 120.00\n"
-    "\t 495 3510 1080 4410 2295 4230 3825 4500\n"
-    "\t 0.000 1.000 1.000 0.000\n"
-    "3 5 0 1 0 7 50 -1 -1 0.000 0 0 0 5\n"
-    "\t 5175 5760 5679 5206 6372 5532 5959 4339 4812 4926\n"
-    "\t 0.000 -0.500 -0.600 -0.500 1.000\n"
-    "4 0 0 50 -1 0 12 0.0000 4 210 150 -1575 6840 text\\001\n";
-
-      std::istringstream s(input);
-      std::ostringstream s2;
-      FigObj o;
-      o.read(s);
-      o.write(s2);
-      assert(o.is_arc());
-      assert(o.comment.size() == 2);
-      assert(o.comment[0] == "comment1");
-      assert(o.comment[1] == "comment2");
-      o.read(s);
-      o.write(s2);
-      assert(o.is_arc());
-      assert(o.comment.size() == 2);
-      assert(o.comment[0] == "comment1");
-      assert(o.comment[1] == "comment2");
-      assert(o.opts.size()==3);
-      assert(o.opts.exists("opt1"));
-      assert(o.opts.exists("opt2"));
-      assert(o.opts.exists("opt3"));
-      assert(o.opts["opt1"] == "val1");
-      assert(o.opts["opt2"] == "");
-      assert(o.opts["opt3"] == "1");
-      assert(o.forward_arrow);
-      assert(!o.backward_arrow);
-      assert(o.farrow_thickness == 1);
-      assert(o.farrow_width == 60);
-      assert(o.farrow_height == 120);
-      o.read(s);
-      o.write(s2);
-      assert(o.is_ellipse());
-      o.read(s);
-      o.write(s2);
-      assert(o.is_ellipse());
-      o.read(s);
-      o.write(s2);
-      assert(o.is_polyline());
-      assert(o.size() == 4);
-      assert(o.forward_arrow);
-      assert(o.backward_arrow);
-      assert(o[3].x == 3330);
-      assert(o[3].y == 675);
-      o.read(s);
-      o.write(s2);
-      assert(o.is_polyline());
-      assert(o.size() == 6);
-      assert(o[5].x == 945);
-      assert(o[5].y == 2250);
-      o.read(s);
-      o.write(s2);
-      assert(o.is_polyline());
-      assert(o.size() == 7);
-      assert(o[6].x == 6840);
-      assert(o[6].y == 7155);
-      o.read(s);
-      o.write(s2);
-      assert(o.is_polyline());
-      assert(o.size() == 5);
-      assert(o.image_file == "");
-      assert(o[4].x == -2610);
-      assert(o[4].y == 5085);
-      o.read(s);
-      o.write(s2);
-      assert(o.is_polyline());
-      assert(o.size() == 5);
-      assert(o.image_file == "some file.jpg");
-      assert(o[4].x == -2610);
-      assert(o[4].y == 5085);
-      o.read(s);
-      o.write(s2);
-      assert(o.is_spline());
-      assert(o.size() == 4);
-      assert(!o.forward_arrow);
-      assert(o.backward_arrow);
-      assert(o.f.size() == 4);
-      assert(o[3].x == 3825);
-      assert(o[3].y == 4500);
-      assert(o.f[3] == 0);
-      o.read(s);
-      o.write(s2);
-      o.read(s);
-      o.write(s2);
-      assert(o.is_text());
-      assert(o.text=="text");
-
-      std::string output=
-    "# comment1\n"
-    "# comment2\n"
-    "5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 7380\n"
-    "# comment1\n"
-    "# comment2\n"
-    "# \\opt1=val1\n"
-    "# \\opt2=\n"
-    "# \\opt3=1\n"
-    "5 1 1 1 0 7 50 -1 -1 4.000 0 0 1 0 3545.445 7246.849 3150 6930 3645 6750 4050 7200\n"
-    "\t0 0 1.00 60.00 120.00\n"
     "1 3 0 1 0 7 50 -1 -1 0.000 1 0.0000 7380 5310 664 664 7380 5310 7695 4725\n"
     "1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990 2658\n"
     "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 1 1 4\n"
@@ -567,10 +522,10 @@ main(){
     "2 3 0 1 0 7 50 -1 -1 0.000 0 0 0 0 0 7\n"
     "\t6840 7155 6693 6720 6243 6630 5940 6975 6087 7410 6537 7500\n"
     "\t6840 7155\n"
-    "2 5 0 1 0 -1 50 -1 -1 0.000 0 0 -1 0 0 5\n"
+    "2 5 0 1 0 0 50 -1 -1 0.000 0 0 -1 0 0 5\n"
     "\t0 <empty>\n"
     "\t-2610 5085 -1620 5085 -1620 5580 -2610 5580 -2610 5085\n"
-    "2 5 0 1 0 -1 50 -1 -1 0.000 0 0 -1 0 0 5\n"
+    "2 5 0 1 0 0 50 -1 -1 0.000 0 0 -1 0 0 5\n"
     "\t0 some file.jpg\n"
     "\t-2610 5085 -1620 5085 -1620 5580 -2610 5580 -2610 5085\n"
     "3 0 0 1 0 7 50 -1 -1 0.000 0 0 1 4\n"
@@ -580,17 +535,90 @@ main(){
     "3 5 0 1 0 7 50 -1 -1 0.000 0 0 0 5\n"
     "\t5175 5760 5679 5206 6372 5532 5959 4339 4812 4926\n"
     "\t0.000 -0.500 -0.600 -0.500 1.000\n"
-    "4 0 0 50 -1 0 12 0.0000 4 210 150 -1575 6840 text\\001\n";
-
-      assert(s2.str() == output);
+    "4 0 0 50 -1 0 12 0.0000 4 210 150 -1575 6840 text\\001\n"
+    );
+    assert(w.size() == 11);
     }
 
-
-    /*********************************************************/
-    // reading/writing objects
+    // Fig with header
     {
+    Fig w = test_objs(
+    "#FIG 3.2 ...\n"
+    "Landscape\n"
+    "Center\n"
+    "Metric\n"
+    "A4\n"
+    "100.00\n"
+    "Single\n"
+    "-2\n"
+    "# comm1\n"
+    "# \\opt1=val1\n"
+    "# \n"
+    "# comm2\n"
+    "# \\opt2\n"
+    "# \\opt3=\n"
+    "\n"
+    "1200 2\n"
+    "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 1 1 4\n"
+    "\t0 0 1.00 60.00 120.00\n"
+    "\t0 0 1.00 60.00 120.00\n"
+    "\t315 1440 810 945 1800 1215 3330 675\n", 
+
+    "#FIG 3.2\n"
+    "Landscape\n"
+    "Center\n"
+    "Metric\n"
+    "A4\n"
+    "100.00\n"
+    "Single\n"
+    "-2\n"
+    "# comm1\n"
+    "# \n"
+    "# comm2\n"
+    "# \\opt1=val1\n"
+    "# \\opt2=1\n"
+    "# \\opt3=\n"
+    "1200 2\n"
+    "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 1 1 4\n"
+    "\t0 0 1.00 60.00 120.00\n"
+    "\t0 0 1.00 60.00 120.00\n"
+    "\t315 1440 810 945 1800 1215 3330 675\n",
+    1);
+    assert(w.size() == 1);
     }
 
+    {
+    // encodings
+    Fig w = test_objs(
+    "#FIG 3.2\n"
+    "Landscape\n"
+    "Center\n"
+    "Metric\n"
+    "A4\n"
+    "100.00\n"
+    "Single\n"
+    "-2\n"
+    "# ÀœÕÕ≈Œ‘1\n"
+    "# \\ÀÃ¿ﬁ1=⁄Œ¡ﬁ≈Œ…≈1\n"
+    "1200 2\n"
+    "# ÀœÕÕ≈Œ‘2\n"
+    "# \\ÀÃ¿ﬁ2=⁄Œ¡ﬁ≈Œ…≈2\n"
+    "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 1 1 4\n"
+    "\t0 0 1.00 60.00 120.00\n"
+    "\t0 0 1.00 60.00 120.00\n"
+    "\t315 1440 810 945 1800 1215 3330 675\n"
+    "4 0 0 50 -1 0 12 0.0000 4 210 150 -1575 6840 ‘≈À”‘\\001\n",
+    "<in>", 1);
+    assert(w.size() == 2);
+    assert(w.comment.size()==1);
+    assert(w.opts.get("–∫–ª—é—á1", std::string())=="–∑–Ω–∞—á–µ–Ω–∏–µ1");
+    assert(w.comment[0]=="–∫–æ–º–º–µ–Ω—Ç1");
+    assert(w.begin()->comment.size() ==1);
+    assert(w.begin()->comment[0]=="–∫–æ–º–º–µ–Ω—Ç2");
+    assert(w.begin()->opts.get("–∫–ª—é—á2", std::string())=="–∑–Ω–∞—á–µ–Ω–∏–µ2");
+    assert(w.rbegin()->is_text());
+    assert(w.rbegin()->text == "—Ç–µ–∫—Å—Ç");
+    }
 
   }
   catch (Err E){

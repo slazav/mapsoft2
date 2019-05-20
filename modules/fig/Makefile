@@ -1,5 +1,5 @@
-MOD_SOURCES := fig_data.cpp
-MOD_HEADERS := fig_data.h
+MOD_SOURCES := fig_data.cpp fig_io.cpp
+MOD_HEADERS := fig.h
 
 SIMPLE_TESTS := fig_data
 PROGRAMS := catfig

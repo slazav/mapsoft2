@@ -1,7 +1,7 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 #include <fstream>
 #include "err/err.h"
-#include "fig_data.h"
+#include "fig.h"
 
 int
 main(int argc, char* argv[]){
@@ -17,10 +17,10 @@ main(int argc, char* argv[]){
     for (int i=1; i<argc; i++){
       std::cerr << "Reading " << argv[i] << "\n";
       std::ifstream s(argv[i]);
-      W.read(s);
+      read_fig(s, W);
     }
 
-    W.write(std::cout);
+    write_fig(std::cout, W);
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";

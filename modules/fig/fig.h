@@ -1,5 +1,5 @@
-#ifndef FIG_DATA_H
-#define FIG_DATA_H
+#ifndef FIG_H
+#define FIG_H
 
 #include <list>
 #include <vector>
@@ -10,6 +10,14 @@
 #include "geom/line.h"
 #include "opt/opt.h"
 
+#define FIG_COLOR_DEF 0
+#define FIG_ELLIPSE   1
+#define FIG_POLYLINE  2
+#define FIG_SPLINE    3
+#define FIG_TXT       4
+#define FIG_ARC       5
+#define FIG_COMPOUND  6
+#define FIG_END_COMPOUND -FIG_COMPOUND
 
 
 /// fig object
@@ -59,41 +67,6 @@ struct FigObj : iLine {
   /******************************************************************/
   /// Constructor -- make a default object
   FigObj();
-
-  /******************************************************************/
-  /// Reading/writing. These functions will be used from Fig class.
-
-  // Internal function for reading object text (char by char, with \XXX conversions).
-  // Returns true if '\\001' did not found.
-  bool read_text(std::istream & ss);
-
-  // read object comments and options, return first non-comment line
-  // (object header)
-  std::string read_comments(std::istream & s);
-
-  /// Read object parameters from a header string. Object will be incomplete
-  /// if further reading is needed (multiline text, arrowheads, point coordinates).
-  /// The object is not initialized.
-  /// Comments and options are not modofied.
-  /// Text encoding, colors are not modified.
-  void read_header(const std::string & header);
-
-  /// Read a single object from a stream, with comments, multiline text,
-  /// arrows, point coordinates:
-  /// Text encoding, colors are not modified.
-  void read(std::istream & s);
-
-  /// write comments and options
-  void write_comments(std::ostream & s) const;
-  /// write object arrows
-  void write_arrows(std::ostream & s) const;
-  /// write line/spline coordinates
-  void write_coords(std::ostream & s, const int add_pt = 0) const;
-  /// write spline factors
-  void write_factors(std::ostream & s) const;
-
-  /// write a single object to a stream
-  void write(std::ostream & s) const;
 
   /******************************************************************/
   // operators <=>
@@ -234,7 +207,7 @@ struct Fig:std::list<FigObj>{
   std::string multiple_page;
   int transparent_color;
   int resolution;
-  int coord_system;
+  int coord_system; // ignored in xfig
   std::vector<std::string> comment;
   Opt opts;
 
@@ -249,16 +222,6 @@ struct Fig:std::list<FigObj>{
     resolution=1200;
     coord_system=2;
   }
-
-  /******************************************************************/
-  /// Reading/writing. These functions will be used from Fig class.
-
-  /// Read Fig-file from a stream. Objects will be appended,
-  /// header will be rewrited.
-  void read(std::istream & s, const Opt & ropts = Opt());
-
-  /// Write Fig-file to a stream.
-  void write(std::ostream & s, const Opt & wopts = Opt()) const;
 
   /******************************************************************/
   // operators +,-,/,*
@@ -324,6 +287,30 @@ struct Fig:std::list<FigObj>{
   /// remove empty compounds
     void remove_empty_comp();
 };
+
+/******************************************************************/
+/* Read Fig-file from a stream. Objects will be appended,
+   header will be rewrited (unless fig_header=0 is used).
+   Options:
+     fig_enc      -- encoding (default "KOI8-R")
+     fig_header   -- read header (default 1)
+*/
+void read_fig(std::istream & s, Fig & w, const Opt & ropts = Opt());
+
+/// Read object header string. Object will be incomplete
+/// if further reading is needed (multiline text, arrowheads, point coordinates).
+/// The object is not initialized.
+/// Comments and options are not modified.
+/// Text encoding, colors are not modified.
+/// Returns number of points for lines and splines; multiline flag for text objects.
+int read_figobj_header(FigObj &o, const std::string & header);
+
+/* Write data in FIG file format
+   Options:
+     fig_enc      -- encoding (default "KOI8-R")
+     fig_header   -- write header (default 1, used for tests)
+*/
+void write_fig(std::ostream & s, const Fig & w, const Opt & wopts = Opt());
 
 
 #endif

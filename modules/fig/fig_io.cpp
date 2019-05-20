@@ -3,157 +3,114 @@
 #include <sstream>
 #include <iostream>
 
-#include "fig_io.h"
+#include "fig.h"
 #include "iconv/iconv.h"
 
 using namespace std;
 string default_enc("KOI8-R");
 
-/****************************************************************/
-FigObj
-read_figobj_header(const std::string & header){
-  FigObj ret;
-  std::istringstream ss(header);
-  ss >> type >> ws;
-  if (ss.fail())
-    throw Err() << "FigObj: can't read object: [" << header << "]";
+/******************************************************************/
+// extract a value from a single line
+template <typename T>
+void read_line(std::istream & s, T & val){
+  std::string l;
+  std::getline(s,l);
+  std::istringstream s1(l);
+  s1 >> val >> std::ws;
+  if (s1.fail() || !s1.eof())
+    throw Err() << "Fig: can't read fig file";
+}
 
-  int npts, n;
-  int x1,x2,x3,y1,y2,y3;
-  switch (type) {
-    case O_ELLIPSE:
-      ss >> o.sub_type >> o.line_style >> o.thickness
-         >> o.pen_color >> o.fill_color >> o.depth
-         >> o.pen_style >> o.area_fill >> o.style_val
-         >> o.direction >> o.angle
-         >> x1 >> y1 >> o.radius_x >> o.radius_y
-         >> o.start_x >> o.start_y >> o.end_x >> o.end_y
-         >> std::ws;
-      if (ss.fail() || !ss.eof())
-        throw Err() << "FigObj: can't read ellipse object: [" << header << "]";
-      o.push_back(iPoint(x1,y1));
-      break;
-    case O_POLYLINE:
-      ss >> o.sub_type >> o.line_style >> o.thickness
-         >> o.pen_color >> o.fill_color >> o.depth
-         >> o.pen_style >> o.area_fill >> o.style_val
-         >> o.join_style >> o.cap_style >> o.radius
-         >> o.forward_arrow >> o.backward_arrow >> npts
-         >> std::ws;
-      if (ss.fail() || !ss.eof())
-        throw Err() << "FigObj: can't read line object: [" << header << "]";
-      o.resize(npts);
-      break;
-    case O_SPLINE:
-      ss >> o.sub_type >> o.line_style >> o.thickness
-         >> o.pen_color >> fill_color >> depth
-         >> o.pen_style >> o.area_fill >> o.style_val >> o.cap_style
-         >> o.forward_arrow >> o.backward_arrow >> npts
-         >> std::ws;
-      if (ss.fail() || !ss.eof())
-        throw Err() << "FigObj: can't read spline object: [" << header << "]";
-      o.resize(npts);
-      o.f.resize(npts);
-      break;
-    case O_TXT:
-      ss >> o.sub_type >> o.pen_color >> o.depth >> o.pen_style
-         >> o.font >> o.font_size >> o.angle >> o.font_flags
-         >> o.height >> o.length >> x1 >> y1;
-      ss.get(); // read space;
+// read object text (char by char, with \XXX conversions).
+// Returns true if '\\001' did not found.
+// Data will be appended to text variable
+bool read_text(std::istream & ss, string & text){
+  while (1){
+    char c = ss.get();
+    if (ss.eof()) return true;
+    if (ss.fail())
+      throw Err() << "";
+    if (c == '\\'){
+      char c1,c2,c3;
+      c1 = ss.get();
       if (ss.fail())
-        throw Err() << "FigObj: can't read text object: [" << header << "]";
+        throw Err() << "";
+      if (c1 < '0' || c1 > '3'){
+        c = c1;
+      }
+      else {
+        if ((c2 = ss.get()) < '0' || c2 > '7' || ss.fail() ||
+            (c3 = ss.get()) < '0' || c3 > '7' || ss.fail())
+          throw Err() << "bad \\nnn octal number";
 
-      try{
-        o.multiline = read_text(ss, text);
+        c1 -= '0'; c2 -= '0'; c3 -= '0';
+        c = (c1 << 6) +  (c2 << 3) + c3;
       }
-      catch (Err e){
-        throw Err() << "FigObj: can't read text: " << e.str()
-                    << ": [" << header << "]";
-      }
-      o.push_back(iPoint(x1,y1));
-      break;
-    case O_ARC:
-      ss >> o.sub_type >> o.line_style >> o.thickness
-         >> o.pen_color >> o.fill_color >> o.depth
-         >> o.pen_style >> o.area_fill >> o.style_val
-         >> o.cap_style >> o.direction
-         >> o.forward_arrow >> o.backward_arrow
-         >> o.center_x >> o.center_y >> x1 >> y1 >> x2 >> y2 >> x3 >> y3
-         >> std::ws;
-      if (ss.fail() || !ss.eof())
-         throw Err() << "FigObj: can't read arc object: [" << header << "]";
-      o.push_back(iPoint(x1,y1));
-      o.push_back(iPoint(x2,y2));
-      o.push_back(iPoint(x3,y3));
-      break;
-    case O_COMPOUND:
-      if (!ss.eof()) ss >> x1 >> y1 >> x2 >> y2 >> std::ws;
-      else x1=x2=y1=y2=0;
-      if (ss.fail() || !ss.eof())
-        throw Err() << "FigObj: can't read compound object: [" << header << "]";
-      o.push_back(iPoint(x1,y1));
-      o.push_back(iPoint(x2,y2));
-      break;
-    case O_END_COMPOUND:
-      if (ss.fail() || !ss.eof())
-        throw Err() << "FigObj: can't read compound end object: [" << header << "]";
-      break;
-    case O_COLOR_DEF:
-      throw Err() << "FigObj: color definitions must come before other objects: [" << header <
-    default:
-      throw Err() << "FigObj: unknown object type: [" << header << "]";
+    }
+    if (c == 1) return false;
+    text.push_back(c);
   }
-  return o;
-}
-/****************************************************************/
-
-
-bool read_fig(const char* filename, Fig & data, const Opt & opts = Opt()){
+  throw Err() << "broken code";
 }
 
-
-/****************************************************************/
-/****************************************************************/
-
-int f_arr, b_arr;
-bool no_f_arr(){return f_arr==0;}
-bool no_b_arr(){return b_arr==0;}
-int npoints, npoints_f;
-bool point_counter(){npoints--; return npoints>=0;}
-bool point_f_counter(){npoints_f--; return npoints_f>=0;}
-int sub_type;
-bool no_picture(){return sub_type!=5;}
+// read object comments and options, return first non-comment line
+// (object header)
+std::string
+read_comments(std::istream & s, vector<string> & comment, Opt & opts, const IConv & cnv){
+  std::string ret;
+  while (getline(s, ret)){
+    if (s.fail()) throw Err() << "FigObj: can't read object";
+    if (ret.size()<1) continue; // skip empty lines
+    if (ret[0] != '#') break; // start reading the object ret
+    if (ret.size()<2 || ret[1] != ' ')
+      throw Err() << "FigObj: broken comment: [" << ret << "]\n";
+    // read option
+    if (ret.size()>2 && ret[2] == '\\'){
+      int p1 = 3;
+      int p2 = ret.find('=');
+      std::string key, val;
+      if (p2<p1) opts.put(cnv(ret.substr(p1,-1)), 1);
+      else opts.put(cnv(ret.substr(p1,p2-p1)), cnv(ret.substr(p2+1,-1)));
+    }
+    else {
+      // read comment
+      comment.push_back(cnv(ret.substr(2, -1)));
+    }
+  }
+  return ret;
+}
 
 // convert fig colors to/from rgb
 int
 color_fig2rgb(const int c, const map<int,int> & custom){
   map<int,int>::const_iterator i;
-  i=colors.find(c);
-  if (i!=colors.end()) return i->second;
+  i=Fig::colors.find(c);
+  if (i!=Fig::colors.end()) return i->second;
   i=custom.find(c);
   if (i!=custom.end()) return i->second;
-  cerr << "Unknown fig color: " << c << "\n";
+  cerr << "Fig: Unknown color: " << c << "\n";
   return c;
 }
 int
 color_rgb2fig(const int c, const map<int,int> & custom){
   map<int,int>::const_iterator i;
-  for (i=colors.begin(); i!=colors.end(); i++){
+  for (i=Fig::colors.begin(); i!=Fig::colors.end(); i++){
     if (i->first == -1 ) continue; // avoid -1 value ("default color")
     if (i->second == c) return i->first;
   }
   for (i=custom.begin(); i!=custom.end(); i++){
     if (i->second == c) return i->first;
   }
-  cerr << "Unknown fig color: " << c << "\n";
+  cerr << "Fig: Unknown color: " << c << "\n";
   return -1;
 }
+
 // Add new rgb color to custom colormap if needed. Return true if color was added
 bool
 color_rgbadd(const int c, map<int,int> & custom){
   int maxc=0;
   map<int,int>::const_iterator i;
-  for (i=colors.begin(); i!=colors.end(); i++){
+  for (i=Fig::colors.begin(); i!=Fig::colors.end(); i++){
     if (i->first > maxc) maxc=i->first;
     if (i->second == c) return false;
   }
@@ -165,513 +122,454 @@ color_rgbadd(const int c, map<int,int> & custom){
   return true;
 }
 
-// function for reading objects from file
-bool read(const char* filename, fig_world & world, const Options & opts){
+/******************************************************************/
+// Read object header string
+int read_figobj_header(FigObj & o, const std::string & header){
+  std::istringstream ss(header);
+  ss >> o.type >> ws;
+  if (ss.fail())
+    throw Err() << "FigObj: can't read object: [" << header << "]";
 
-  fig_world ret;
+  int ret = 0;
+  int n;
+  int x1,x2,x3,y1,y2,y3;
+  switch (o.type) {
+    case FIG_ELLIPSE:
+      ss >> o.sub_type >> o.line_style >> o.thickness >> o.pen_color >> o.fill_color >> o.depth
+         >> o.pen_style >> o.area_fill >> o.style_val >> o.direction >> o.angle
+         >> x1 >> y1 >> o.radius_x >> o.radius_y >> o.start_x >> o.start_y >> o.end_x >> o.end_y
+         >> std::ws;
+      if (ss.fail() || !ss.eof())
+        throw Err() << "FigObj: can't read ellipse object: [" << header << "]";
+      o.push_back(iPoint(x1,y1));
+      break;
+    case FIG_POLYLINE:
+      ss >> o.sub_type >> o.line_style >> o.thickness >> o.pen_color >> o.fill_color >> o.depth
+         >> o.pen_style >> o.area_fill >> o.style_val >> o.join_style >> o.cap_style >> o.radius
+         >> o.forward_arrow >> o.backward_arrow >> ret
+         >> std::ws;
+      if (ss.fail() || !ss.eof())
+        throw Err() << "FigObj: can't read line object: [" << header << "]";
+      break;
+    case FIG_SPLINE:
+      ss >> o.sub_type >> o.line_style >> o.thickness >> o.pen_color >> o.fill_color >> o.depth
+         >> o.pen_style >> o.area_fill >> o.style_val >> o.cap_style
+         >> o.forward_arrow >> o.backward_arrow >> ret
+         >> std::ws;
+      if (ss.fail() || !ss.eof())
+        throw Err() << "FigObj: can't read spline object: [" << header << "]";
+      break;
+    case FIG_TXT:
+      ss >> o.sub_type >> o.pen_color >> o.depth >> o.pen_style
+         >> o.font >> o.font_size >> o.angle >> o.font_flags
+         >> o.height >> o.length >> x1 >> y1;
+      ss.get(); // read space;
+      if (ss.fail())
+        throw Err() << "FigObj: can't read text object: [" << header << "]";
 
-  fig_object o, o0;
-  iPoint p;
-  vector<string> comment;
-  map<int,int> custom_colors;
-
-  int color_num=0;
-
-  string key;
-  Options tmp_opts;
-
-  rule_t ch = anychar_p - eol_p;
-
-  rule_t comm = eps_p[clear_a(comment)][clear_a(tmp_opts)] >>
-           *( (str_p("# \\") >> (*(ch-'='))[assign_a(key)] >> '=' >>
-                (*ch)[insert_at_a(tmp_opts,key)] >> eol_p) |
-              (str_p("# \\") >> (*(ch-'='))[assign_a(key)] >>
-                eol_p)[insert_at_a(tmp_opts,key,"1")] |
-              (str_p("# ") >> (*ch)[push_back_a(comment)] >> eol_p) );
-
-  rule_t header = str_p("#FIG 3.2") >> *ch >> eol_p >>
-	(*ch)[assign_a(ret.orientation)] >> eol_p >>       // orientation ("Landscape" or "Portrait")
-	(*ch)[assign_a(ret.justification)] >> eol_p >>     // justification ("Center" or "Flush Left")
-	(*ch)[assign_a(ret.units)] >> eol_p >>             // units ("Metric" or "Inches")
-	(*ch)[assign_a(ret.papersize)] >> eol_p >>         // papersize ("A4", etc.)
-	ureal_p[assign_a(ret.magnification)] >> eol_p >>   // magnification (export and print magnification, %)
-	(*ch)[assign_a(ret.multiple_page)] >> eol_p >>     // multiple-page ("Single" or "Multiple" pages)
-	int_p[assign_a(ret.transparent_color)] >> eol_p >> // transparent color
-	comm[assign_a(ret.comment, comment)][assign_a(ret.opts, tmp_opts)] >>  // comments and options
-	uint_p[assign_a(ret.resolution)] >> +space_p >>    // resolution
-                uint_p[assign_a(ret.coord_system)] >> eol_p;       // coord_system
-
-  /****************************************************************/
-  rule_t r_sub_type       = +blank_p >> uint_p[assign_a(o.sub_type)][assign_a(sub_type)];
-  rule_t r_line_style     = +blank_p >> int_p[assign_a(o.line_style)];
-  rule_t r_thickness      = +blank_p >> int_p[assign_a(o.thickness)];
-  rule_t r_pen_color      = +blank_p >> int_p[assign_a(o.pen_color)];
-  rule_t r_fill_color     = +blank_p >> int_p[assign_a(o.fill_color)];
-  rule_t r_depth          = +blank_p >> uint_p[assign_a(o.depth)];
-  rule_t r_pen_style      = +blank_p >> int_p[assign_a(o.pen_style)];
-  rule_t r_area_fill      = +blank_p >> int_p[assign_a(o.area_fill)];
-  rule_t r_style_val      = +blank_p >> real_p[assign_a(o.style_val)];
-  rule_t r_cap_style      = +blank_p >> int_p[assign_a(o.cap_style)];
-  rule_t r_join_style     = +blank_p >> int_p[assign_a(o.join_style)];
-  rule_t r_direction      = +blank_p >> int_p[assign_a(o.direction)];
-  rule_t r_radius         = +blank_p >> int_p[assign_a(o.radius)];
-  rule_t r_arrows         = +blank_p >> uint_p[assign_a(f_arr)][assign_a(o.forward_arrow)] >> 
-                          +blank_p >> uint_p[assign_a(b_arr)][assign_a(o.backward_arrow)];
-  rule_t r_arrows_p = (eps_p(&no_f_arr) | (
-                     +space_p >> int_p[assign_a(o.farrow_type)]  
-                  >> +blank_p >> int_p[assign_a(o.farrow_style)]   
-                  >> +blank_p >> real_p[assign_a(o.farrow_thickness)]
-                  >> +blank_p >> real_p[assign_a(o.farrow_width)]
-                  >> +blank_p >> real_p[assign_a(o.farrow_height)]
-                )) >> (eps_p(&no_b_arr) | (
-                     +space_p >> int_p[assign_a(o.barrow_type)]    
-                  >> +blank_p >> int_p[assign_a(o.barrow_style)]   
-                  >> +blank_p >> real_p[assign_a(o.barrow_thickness)]
-                  >> +blank_p >> real_p[assign_a(o.barrow_width)]
-                  >> +blank_p >> real_p[assign_a(o.barrow_height)]
-                ));
-  rule_t r_angle          = +blank_p >> real_p[assign_a(o.angle)];
-  rule_t r_center_xy      = +blank_p >> real_p[assign_a(o.center_x)] >>
-                            +blank_p >> real_p[assign_a(o.center_y)];
-  rule_t r_radius_xy      = +blank_p >> int_p[assign_a(o.radius_x)] >>
-                            +blank_p >> int_p[assign_a(o.radius_y)];
-  rule_t r_start_xy       = +blank_p >> int_p[assign_a(o.start_x)] >> 
-                            +blank_p >> int_p[assign_a(o.start_y)];
-  rule_t r_end_xy         = +blank_p >> int_p[assign_a(o.end_x)] >> 
-                            +blank_p >> int_p[assign_a(o.end_y)];
-  rule_t r_npoints        = +blank_p >> int_p[assign_a(npoints)][assign_a(npoints_f)];
-  rule_t r_push_xy        = +space_p >> int_p[assign_a(p.x)] >>
-                            +space_p >> int_p[assign_a(p.y)][push_back_a(o,p)];
-  rule_t r_image          = (eps_p(&no_picture) | (
-                            +space_p >> uint_p[assign_a(o.image_orient)] >> // orientation = normal (0) or flipped (1)
-                            +blank_p >> (+ch)[assign_a(o.image_file)]));
-  rule_t r_points         = *( eps_p(&point_counter) >> r_push_xy );
-  rule_t r_fpoints        = *( eps_p(&point_f_counter) >> +space_p >> real_p[push_back_a(o.f)] );
-
-  /*******************************************/
-  rule_t c0_color = ch_p('0')
-	>> +blank_p >> uint_p[assign_a(color_num)]
-	>> +blank_p >> '#' >> hex_p[insert_at_a(custom_colors,color_num)]
-	>> eol_p;
-  /*******************************************/
-  const int type5=5;
-  rule_t c5_arc   = ch_p('5')[assign_a(o.type,type5)]  // Arc
-	>> r_sub_type >> r_line_style >> r_thickness
-	>> r_pen_color >> r_fill_color >> r_depth
-	>> r_pen_style >> r_area_fill >> r_style_val
-        >> r_cap_style >> r_direction >> r_arrows >> r_center_xy
-        >> r_push_xy >> r_push_xy >> r_push_xy
-	>> r_arrows_p >> eol_p;
-  /*******************************************/
-  const int type6=6;
-  rule_t c6_compound_start = ch_p('6')[assign_a(o.type,type6)] // Compound
-        >> r_push_xy >> r_push_xy >> eol_p;
-  /*******************************************/
-  const int typem6=-6;
-  rule_t c6_compound_end = str_p("-6")[assign_a(o.type,typem6)] >> eol_p;
-  /*******************************************/
-  const int type1=1;
-  rule_t c1_ellipse = ch_p('1')[assign_a(o.type,type1)] // Ellipse
-	>> r_sub_type >> r_line_style >> r_thickness
-	>> r_pen_color >> r_fill_color >> r_depth
-        >> r_pen_style >> r_area_fill >> r_style_val
-        >> r_direction /*(always 1)*/ >> r_angle /*(radians, the angle of the x-axis)*/
-	>> r_center_xy >> r_radius_xy 
-        >> r_start_xy >> r_end_xy >> eol_p;
-  /*******************************************/
-  const int type2=2;
-  rule_t c2_polyline = ch_p('2')[assign_a(o.type,type2)] // Polyline
-	>> r_sub_type >> r_line_style >> r_thickness
-	>> r_pen_color >> r_fill_color >> r_depth
-	>> r_pen_style >> r_area_fill >> r_style_val 
-        >> r_join_style >> r_cap_style >> r_radius
-	>> r_arrows >> r_npoints >> r_arrows_p
-	>> r_image >> r_points >> eol_p;
-  /*******************************************/
-  const int type3=3;
-  rule_t c3_spline = ch_p('3')[assign_a(o.type,type3)] // Spline
-	>> r_sub_type >> r_line_style >> r_thickness
-	>> r_pen_color >> r_fill_color
-	>> r_depth >> r_pen_style >> r_area_fill
-	>> r_style_val >> r_cap_style
-	>> r_arrows >> r_npoints >> r_arrows_p
-        >> r_points >> r_fpoints >> eol_p;
-  /*******************************************/
-  const int type4=4;
-  rule_t c4_text = ch_p('4')[assign_a(o.type,type4)] // Text
-	>> r_sub_type >> r_pen_color >> r_depth
-	>> r_pen_style // (not used)
-	>> +blank_p >> int_p[assign_a(o.font)]
-	>> +blank_p >> real_p[assign_a(o.font_size)]
-	>> r_angle
-	>> +blank_p >> int_p[assign_a(o.font_flags)]
-	>> +blank_p >> real_p[assign_a(o.height)]
-	>> +blank_p >> real_p[assign_a(o.length)]
-        >> r_push_xy
-	>> blank_p  >> (*(~eps_p("\\001") >> anychar_p))[assign_a(o.text)] 
-        >> str_p("\\001") >> eol_p;
-  /*******************************************/
-
-  rule_t main_rule = header >>
-       *( eps_p[assign_a(o,o0)] >>
-          comm[assign_a(o.comment, comment)][assign_a(o.opts,tmp_opts)] >>
-        ( c0_color | (c1_ellipse | c2_polyline | c3_spline | c4_text | c5_arc |
-        c6_compound_start | c6_compound_end) [push_back_a(ret,o)]) );
-
-  if (!parse_file("fig::read", filename, main_rule)) return false;
-
-  // convert \??? chars
-  for (fig::fig_world::iterator i=ret.begin(); i!=ret.end(); i++){
-    string t;
-    for (int n=0;n<i->text.size();n++){
-      if ((i->text[n] == '\\')&&(n+3<i->text.size())){
-        t+=char((i->text[n+1]-'0')*64 + (i->text[n+2]-'0')*8 + (i->text[n+3]-'0'));
-        n+=3;
+      try{
+        o.text.resize(0);
+        ret = read_text(ss, o.text);
       }
-      else t+=i->text[n];
-    }
-    i->text=t;
+      catch (Err e){
+        throw Err() << "FigObj: can't read text: " << e.str()
+                    << ": [" << header << "]";
+      }
+      o.push_back(iPoint(x1,y1));
+      break;
+    case FIG_ARC:
+      ss >> o.sub_type >> o.line_style >> o.thickness >> o.pen_color >> o.fill_color >> o.depth
+         >> o.pen_style >> o.area_fill >> o.style_val >> o.cap_style
+         >> o.direction >> o.forward_arrow >> o.backward_arrow
+         >> o.center_x >> o.center_y >> x1 >> y1 >> x2 >> y2 >> x3 >> y3
+         >> std::ws;
+      if (ss.fail() || !ss.eof())
+         throw Err() << "FigObj: can't read arc object: [" << header << "]";
+      o.push_back(iPoint(x1,y1));
+      o.push_back(iPoint(x2,y2));
+      o.push_back(iPoint(x3,y3));
+      break;
+    case FIG_COMPOUND:
+      if (!ss.eof()) ss >> x1 >> y1 >> x2 >> y2 >> std::ws;
+      else x1=x2=y1=y2=0;
+      if (ss.fail() || !ss.eof())
+        throw Err() << "FigObj: can't read compound object: [" << header << "]";
+      o.push_back(iPoint(x1,y1));
+      o.push_back(iPoint(x2,y2));
+      break;
+    case FIG_END_COMPOUND:
+      if (ss.fail() || !ss.eof())
+        throw Err() << "FigObj: can't read compound end object: [" << header << "]";
+      break;
+    case FIG_COLOR_DEF:
+      throw Err() << "FigObj: color definitions must come before other objects: [" << header << "]";
+    default:
+      throw Err() << "FigObj: unknown object type: [" << header << "]";
   }
-
-  //convert comments, options and text to UTF-8
-  string enc = opts.get("fig_in_enc", default_enc);
-  IConv cnv(enc);
-
-  for (fig_world::iterator i=ret.begin(); i!=ret.end(); i++){
-    i->text = cnv.to_utf8(i->text);
-    for (vector<string>::iterator
-          c = i->comment.begin(); c != i->comment.end(); c++){
-      *c = cnv.to_utf8(*c);
-    }
-    tmp_opts.clear();
-    for (Options::iterator o=i->opts.begin();o!=i->opts.end();o++)
-      tmp_opts.put(cnv.to_utf8(o->first), cnv.to_utf8(o->second));
-    i->opts.swap(tmp_opts);
-  }
-  for (vector<string>::iterator
-      c = ret.comment.begin(); c != ret.comment.end(); c++){
-    *c = cnv.to_utf8(*c);
-  }
-  tmp_opts.clear();
-  for (Options::iterator o=ret.opts.begin();o!=ret.opts.end();o++)
-    tmp_opts.put(cnv.to_utf8(o->first), cnv.to_utf8(o->second));
-  ret.opts.swap(tmp_opts);
-
-  // convert colors to rgb
-  for (fig::fig_world::iterator i=ret.begin(); i!=ret.end(); i++){
-    i->pen_color  = color_fig2rgb(i->pen_color,  custom_colors);
-    i->fill_color = color_fig2rgb(i->fill_color, custom_colors);
-  }
-
-  // merge world and ret
-  fig::fig_world tmp=world;
-  world=ret;
-  world.insert(world.begin(), tmp.begin(), tmp.end());
-  for (Options::iterator o=tmp.opts.begin();o!=tmp.opts.end();o++)
-    world.opts.put(o->first, o->second);
-
-  return true;
+  return ret;
 }
 
-/***********************************************************/
-bool write(ostream & out, const fig_world & world, const Options & opts){
 
-  string enc = opts.get("fig_out_enc", default_enc);
-  IConv cnv(enc);
+/******************************************************************/
+void read_fig(std::istream & s, Fig & w, const Opt & ropts){
+  string enc = ropts.get("fig_enc", default_enc);
+  IConv cnv(enc.c_str(), "UTF-8");
 
-  int n;
-  // writing header
-  out << "#FIG 3.2\n" 
-      << world.orientation << "\n"
-      << world.justification << "\n"
-      << world.units << "\n"
-      << world.papersize << "\n"
-      << setprecision(2) << fixed 
-      << world.magnification << "\n"
-      << setprecision(3) 
-      << world.multiple_page << "\n"
-      << world.transparent_color << "\n";
+  if (ropts.get("fig_header", 1)) {
+    std::string l;
+    std::getline(s, l);
+    if (l.size()<8 || l.substr(0,8) != "#FIG 3.2")
+      throw Err() << "Fig: non-supported format";
 
-  // writing comments
-  for (0;n<world.comment.size();n++){
-    if (n>99) {cerr << "fig comment contains > 100 lines! Cutting...\n"; break;}
-    string s = cnv.from_utf8(world.comment[n]);
-    if (s.size()>1022){cerr << "fig comment line is > 1022 chars! Cutting...\n"; s.resize(1022);}
-    out << "# " << s << "\n";
+    std::getline(s, w.orientation);
+    if (w.orientation!="Landscape" && w.orientation != "Portrait"){
+      std::cerr << "Fig: unknown orientation setting: " << w.orientation << "\n";
+      w.orientation = "Landscape";
+    }
+    std::getline(s, w.justification);
+    if (w.justification!="Center" && w.justification != "Flush Left"){
+      std::cerr << "Fig: unknown justification setting: " << w.justification << "\n";
+      w.justification = "Center";
+    }
+    std::getline(s, w.units);
+    if (w.units!="Metric" && w.units != "Inches"){
+      std::cerr << "Fig: unknown units setting: " << w.units << "\n";
+      w.units = "Metric";
+    }
+    std::getline(s, w.papersize);
+    if (w.papersize!="Letter" && w.papersize != "Legal" && w.papersize != "Ledger" &&
+        w.papersize != "Tabloid" && w.papersize != "A" && w.papersize != "B" &&
+        w.papersize != "C" && w.papersize != "D" && w.papersize != "E" &&
+        w.papersize != "A4" && w.papersize != "A3" && w.papersize != "A2" &&
+        w.papersize != "A1" && w.papersize != "A0" && w.papersize != "B5"){
+      std::cerr << "Fig: unknown papersize setting: " << w.papersize << "\n";
+      w.papersize = "A4";
+    }
+    read_line(s, w.magnification);
+
+    std::getline(s, w.multiple_page);
+    if (w.multiple_page!="Single" && w.multiple_page != "Multiple"){
+      std::cerr << "Fig: unknown multiple_page setting: " << w.multiple_page << "\n";
+      w.multiple_page = "Single";
+    }
+    read_line(s, w.transparent_color);
+    if (w.transparent_color<-3){
+      std::cerr << "Fig: wrong transparent_color setting: " << w.transparent_color << "\n";
+      w.transparent_color = -2;
+    }
+
+    // Read comments and options. Same as for FigObj,
+    // using same method.
+    l = read_comments(s, w.comment, w.opts, cnv);
+
+    // read resolution line
+    std::istringstream s1(l);
+    s1 >> w.resolution >> w.coord_system >> ws;
+    if (s1.fail() || !s1.eof())
+      throw Err() << "Fig: can't read fig file header";
   }
-  // writing options (as comments)
-  for (Options::const_iterator o=world.opts.begin();o!=world.opts.end();o++){
-    if (n++>99) {cerr << "fig comment contains > 100 lines! Cutting...\n"; break;}
-      string s = cnv.from_utf8(o->first) + "=" + cnv.from_utf8(o->second);
-    if (s.size()>1022){cerr << "fig comment line is > 1022 chars! Cutting...\n"; s.resize(1022);}
-    out << "# \\" << s << "\n";
-  }
 
-  out << world.resolution << " " 
-      << world.coord_system << "\n";
-
-
-  // looking for custom colors
+  // Read custom colors
   map<int,int> custom_colors;
-  for (fig::fig_world::const_iterator i=world.begin(); i!=world.end(); i++){
+  while (s.peek()=='0'){
+    std::string l;
+    std::getline(s, l);
+    int type, ckey, cval;
+    char c;
+    std::istringstream s1(l);
+    s1 >> type >> ckey >> c >> hex >> cval >> ws;
+    if (s1.fail() || !s1.eof() || c != '#')
+      throw Err() << "Fig: bad color object: [" << l << "]";
+    if (Fig::colors.find(ckey) != Fig::colors.end())
+      throw Err() << "Fig: redifinition of a predefined color: [" << l << "]";
+    custom_colors.insert(make_pair(ckey, cval));
+  }
+
+  // Read objects
+  while (1){
+    if (s.eof()) break;
+    FigObj o;
+    std::string header = read_comments(s, o.comment, o.opts, cnv);
+    // parse object header
+    int hret = read_figobj_header(o, header);
+    // read extra text lines if needed
+    if (o.type == FIG_TXT && hret){
+      if (read_text(s, o.text))
+        throw Err() << "FigObj: unfinished text";
+    }
+
+    // read arrow parameters if needed
+    if (o.type == FIG_POLYLINE || o.type == FIG_SPLINE || o.type == FIG_ARC){
+      if (o.forward_arrow) {
+        std::string arr;
+        getline(s, arr);
+        std::istringstream s1(arr);
+        s1 >> o.farrow_type >> o.farrow_style >> o.farrow_thickness
+           >> o.farrow_width >> o.farrow_height >> std::ws;
+        if (s1.fail() || !s1.eof())
+          throw Err() << "FigObj: can't read arrow parameters: [" << arr << "]";
+      }
+      if (o.backward_arrow) {
+        std::string arr;
+        getline(s, arr);
+        std::istringstream s1(arr);
+        s1 >> o.barrow_type >> o.barrow_style >> o.barrow_thickness
+           >> o.barrow_width >> o.barrow_height >> std::ws;
+        if (s1.fail() || !s1.eof())
+          throw Err() << "FigObj: can't read arrow parameters: [" << arr << "]";
+      }
+    }
+
+    // read image
+    if (o.type == FIG_POLYLINE && o.sub_type == 5) {
+      s >> o.image_orient >> std::ws;
+      getline(s, o.image_file);
+      if (s.fail())
+        throw Err() << "FigObj: can't image parameters";
+      // xfig writes <empty> for empty filenames
+      if (o.image_file == "<empty>") o.image_file = "";
+    }
+
+    // read coordinates
+    if (o.type == FIG_POLYLINE || o.type == FIG_SPLINE) {
+      o.resize(hret);
+      for (int i=0; i<o.size(); i++){
+        s >> o[i].x >> o[i].y >> std::ws;
+        if (s.fail()) throw Err() << "FigObj: can't read line coordinates";
+      }
+    }
+    // read spline factors
+    if (o.type == FIG_SPLINE) {
+      o.f.resize(hret);
+      for (int i=0; i<o.f.size(); i++){
+        s >> o.f[i] >> std::ws;
+        if (s.fail()) throw Err() << "FigObj: can't read spline coordinates";
+      }
+    }
+
+    s >> ws; // empty lines after the object
+    if (s.fail()) throw Err() << "Fig: can't read fig file";
+
+    // convert text encoding
+    o.text = cnv(o.text);
+
+    // convert colors to rgb
+    o.pen_color  = color_fig2rgb(o.pen_color,  custom_colors);
+    o.fill_color = color_fig2rgb(o.fill_color, custom_colors);
+
+    w.push_back(o);
+  }
+
+  // convert colors
+  // convert encoding
+}
+
+
+/******************************************************************/
+// Writing
+/******************************************************************/
+
+
+/// write comments and options
+void
+write_comments(std::ostream & s, const vector<string> & comment, const Opt & opts, const IConv & cnv){
+  int n;
+  // comments:
+  for (n=0; n<comment.size(); n++){
+    if (n>99) {cerr << "fig comment contains > 100 lines! Cutting...\n"; break;}
+//    string str = cnv.from_utf8(comment[n]);
+    string str = comment[n];
+    if (str.size()>1022){
+      cerr << "fig comment line is > 1022 chars! Cutting...\n";
+      str.resize(1022);
+    }
+    s << "# " << cnv(str) << "\n";
+  }
+  // options:
+  for (Opt::const_iterator o=opts.begin(); o!=opts.end();o++){
+    if (n++>99) {cerr << "fig comment contains > 100 lines! Cutting...\n"; break;}
+//    string str = cnv.from_utf8(o->first) + "=" + cnv.from_utf8(o->second);
+    string str = o->first + "=" + o->second;
+    if (str.size()>1022){
+      cerr << "fig comment line is > 1022 chars! Cutting...\n";
+      str.resize(1022);
+    }
+    s << "# \\" << cnv(str) << "\n";
+  }
+}
+
+
+// write arrow information for an object (spline, polyline, arc)
+void
+write_arrows(std::ostream & s, const FigObj & o){
+  if (o.forward_arrow)
+    s << "\t" << setprecision(2)
+      << o.farrow_type << " "
+      << o.farrow_style << " "
+      << o.farrow_thickness << " "
+      << o.farrow_width << " "
+      << o.farrow_height << "\n";
+  if (o.backward_arrow)
+    s << "\t" << setprecision(2)
+      << o.barrow_type << " "
+      << o.barrow_style << " "
+      << o.barrow_thickness << " "
+      << o.barrow_width << " "
+      << o.barrow_height << "\n";
+}
+
+// Write object coordinates (spline, polyline).
+// Use addpt=1 to add first point at the end (only for closed polylines),
+// 0 in other cases.
+void
+write_coords(std::ostream & s, const FigObj & o, const int add_pt=0) {
+  int n = o.size();
+  for (int i=0; i<n+add_pt; i++)
+    s << ((i%6==0) ? "\t":" ")
+      << o[i%n].x << " " << o[i%n].y
+      << ((i%6==5 || i==n+add_pt-1) ? "\n":"");
+
+  // write spline factors
+  if (o.type == FIG_SPLINE){
+    int n = o.f.size();
+    s << setprecision(3);
+    for (int i=0; i<n; i++)
+      s << ((i%6==0) ? "\t":" ")
+        << o.f[i]
+        << ((i%6==5 || i==n-1) ? "\n":"");
+  }
+}
+
+/******************************************************************/
+void
+write_fig(ostream & s, const Fig & w, const Opt & wopts){
+  string enc = wopts.get("fig_enc", default_enc);
+  IConv cnv("UTF-8", enc.c_str());
+
+  // Writing header:
+  if (wopts.get("fig_header", 1)) {
+    s << "#FIG 3.2\n"
+        << w.orientation << "\n" << w.justification << "\n"
+        << w.units << "\n" << w.papersize << "\n"
+        << setprecision(2) << fixed << w.magnification << "\n"
+        << setprecision(3) << w.multiple_page << "\n"
+        << w.transparent_color << "\n";
+
+    // Write comments and options. Same as for FigObj,
+    // using same method.
+    write_comments(s, w.comment, w.opts, cnv);
+
+    s << w.resolution << " " << w.coord_system << "\n";
+  }
+
+
+  // Looking for custom colors in objects:
+  map<int,int> custom_colors;
+  for (Fig::const_iterator i=w.begin(); i!=w.end(); i++){
     color_rgbadd(i->pen_color,  custom_colors);
     color_rgbadd(i->fill_color, custom_colors);
   }
   // writing custom colors
-  for (map<int,int>::const_iterator i  = custom_colors.begin();
-       i != custom_colors.end(); i++){
-      out << "0 " << i->first << " #" 
-          << setbase(16) << setw(6) << setfill('0')
-          << i->second << setbase(10) << "\n";
+  for (map<int,int>::const_iterator i = custom_colors.begin();
+    i != custom_colors.end(); i++){
+    s << "0 " << i->first << " #"
+      << setbase(16) << setw(6) << setfill('0')
+      << i->second << setbase(10) << "\n";
   }
 
-  // writing objects
-  for (fig_world::const_iterator
-       i  = world.begin(); 
-       i != world.end(); i++){
+  // Writing objects
+  for (Fig::const_iterator i=w.begin(); i!=w.end(); i++){
+    write_comments(s, i->comment, i->opts, cnv);
 
-    // We don't support color objects!
-    // color object with comment or options breaks all!
-    if (i->type==0) continue;
-
-    for (n=0;n<i->comment.size();n++){
-      if (n>99) {cerr << "fig comment contains > 100 lines! Cutting...\n"; break;}
-      string s = cnv.from_utf8(i->comment[n]);
-      if (s.size()>1022){cerr << "fig comment line is > 1022 chars! Cutting...\n"; s.resize(1022);}
-      out << "# " << s << "\n";
-    }
-    for (Options::const_iterator o=i->opts.begin();o!=i->opts.end();o++){
-      if (n++>99) {cerr << "fig comment contains > 100 lines! Cutting...\n"; break;}
-      string s = cnv.from_utf8(o->first) + "=" + cnv.from_utf8(o->second);
-      if (s.size()>1022){cerr << "fig comment line is > 1022 chars! Cutting...\n"; s.resize(1022);}
-      out << "# \\" << s << "\n";
-    }
-
-    int nn = i->size();
-    int nn1=nn;
-    vector<float> f = i->f;
 
     int pen_color  = color_rgb2fig(i->pen_color,  custom_colors);
     int fill_color = color_rgb2fig(i->fill_color, custom_colors);
 
-    switch (i->type){
-    case 0: // Color
-      break;
-    case 1: // Ellipse
-      out << "1 "
-	<< i->sub_type   << " "
-        << i->line_style << " "
-        << i->thickness  << " "
-	<< pen_color     << " "
-        << fill_color    << " "
-        << i->depth      << " "
-	<< i->pen_style  << " " 
-        << i->area_fill  << " " 
-        << i->style_val  << " "
-	<< i->direction  << " "
-        << i->angle      << " "
-        << int(i->center_x) << " " 
-        << int(i->center_y) << " "  
-        << i->radius_x   << " " 
-        << i->radius_y   << " " 
-	<< i->start_x    << " "
-	<< i->start_y    << " "
-        << i->end_x      << " "
-        << i->end_y      << "\n";
+    s << i->type << " " << std::setprecision(3) << std::fixed;
+    int add_pt;
+    switch (i->type) {
+      case FIG_ELLIPSE:
+        if (i->size()!=1) throw Err() << "FigObj: ellipse should have 1 coordinate point";
+        s << i->sub_type <<" " << i->line_style << " " << i->thickness << " "
+          << pen_color << " " << fill_color << " " << i->depth << " "
+          << i->pen_style << " " << i->area_fill << " " << i->style_val << " "
+          << i->direction << " " << std::setprecision(4) << i->angle << " "
+          << (*i)[0].x << " " << (*i)[0].y << " "
+          << i->radius_x << " " << i->radius_y << " " << i->start_x << " "
+          << i->start_y << " " << i->end_x << " " << i->end_y << "\n";
+        if (s.fail()) throw Err() << "FigObj: can't write ellipse object";
         break;
-    case 2: // Polyline
+      case FIG_POLYLINE:
+        if (i->size()<1) throw Err() << "FigObj: line should have at least 1 coordinate point";
 
-      // в замкнутых многоугольниках последняя точка должна совпадать с первой
-      if ((i->sub_type > 1) && (nn>0) && ((*i)[nn-1]!=(*i)[0])){
-        nn1=nn+1;
-      }
+        // If line if closed the last point should be same as first one.
+        // Let's add the missing point if needed:
+        add_pt = (i->is_closed() && (*i)[i->size()-1] != (*i)[0]) ? 1:0;
 
-      out << "2 "
-        << i->sub_type   << " "
-        << i->line_style << " "
-        << i->thickness  << " "
-        << pen_color     << " " 
-        << fill_color    << " "
-        << i->depth      << " "
-        << i->pen_style  << " "
-        << i->area_fill  << " "
-        << i->style_val  << " "
-        << i->join_style << " "
-        << i->cap_style  << " "
-        << i->radius     << " "
-        << i->forward_arrow  << " "
-        << i->backward_arrow << " "
-        << nn1;
-      if (i->forward_arrow) out << "\n\t"
-        << i->farrow_type << " "
-        << i->farrow_style << " "
-        << i->farrow_thickness << " "
-        << i->farrow_width << " "
-        << i->farrow_height;
-      if (i->backward_arrow) out << "\n\t"
-        << i->barrow_type << " "
-        << i->barrow_style << " "
-        << i->barrow_thickness << " "
-        << i->barrow_width << " "
-        << i->barrow_height;
-      if (i->sub_type==5) out << "\n\t"
-        << i->image_orient << " "
-        << i->image_file;
-      for (n=0; n<nn; n++)
-        out << ((n%6==0) ? "\n\t":" ")
-            << (*i)[n].x << " " << (*i)[n].y;
-      if (nn1>nn)  out << " " << (*i)[0].x << " " << (*i)[0].y;
-      out << "\n";
-      break;
-    case 3: // Spline
-      if (nn!=f.size()){
-        f.resize(nn, 1);
-        cerr << "fig::write (spline): different amount of x,y and f values\n";
-      }
-      if ((i->sub_type%2==1) && (nn<3)){ 
-        cerr << "fig::write (spline): closed spline with <3 points\n";
+        s << i->sub_type << " " << i->line_style << " " << i->thickness << " "
+          << pen_color << " " << fill_color << " " << i->depth << " "
+          << i->pen_style << " " << i->area_fill << " " << i->style_val << " "
+          << i->join_style << " " << i->cap_style << " " << i->radius << " "
+          << i->forward_arrow << " " << i->backward_arrow << " " << i->size() + add_pt << "\n";
+        write_arrows(s, *i);
+        if (i->sub_type==5){ // image
+          s << "\t" << i->image_orient << " "
+            << (i->image_file == ""? "<empty>":i->image_file) << "\n";
+        }
+        write_coords(s, *i, add_pt);
+        if (s.fail()) throw Err() << "FigObj: can't write line object";
         break;
-      }
-      if ((i->sub_type%2==0) && (nn<2)){ 
-        cerr << "fig::write (spline): spline with <2 points\n";
+      case FIG_SPLINE:
+        if (i->is_closed()  && i->size()<3) throw Err() << "FigObj: closed spline with < 3 points";
+        if (!i->is_closed() && i->size()<2) throw Err() << "FigObj: spline with < 2 points";
+        if (i->size()!=i->f.size()) throw Err() << "FigObj: different amount of x,y and f values in a spline";
+        s << i->sub_type << " " << i->line_style << " " << i->thickness << " "
+          << pen_color << " " << fill_color << " " << i->depth << " "
+          << i->pen_style << " " << i->area_fill << " " << i->style_val << " "
+          << i->cap_style << " " << i->forward_arrow << " " << i->backward_arrow << " "
+          << i->size() << "\n";
+        write_arrows(s, *i);
+        write_coords(s, *i);
+        if (s.fail()) throw Err() << "FigObj: can't write spline object";
         break;
-      }
-      out << "3 "
-        << i->sub_type   << " "
-        << i->line_style << " "
-        << i->thickness  << " "
-        << pen_color     << " " 
-        << fill_color    << " "
-        << i->depth      << " "
-        << i->pen_style  << " "
-        << i->area_fill  << " "
-        << i->style_val  << " " 
-        << i->cap_style  << " "
-        << i->forward_arrow  << " "
-        << i->backward_arrow << " "
-        << nn;
-        if (i->forward_arrow) out << "\n\t"
-           << i->farrow_type << " "
-           << i->farrow_style << " "
-           << i->farrow_thickness << " "
-           << i->farrow_width << " "
-           << i->farrow_height;
-        if (i->backward_arrow) out << "\n\t"
-           << i->barrow_type << " "
-           << i->barrow_style << " "
-           << i->barrow_thickness << " "
-           << i->barrow_width << " "
-           << i->barrow_height;
-        for (n=0; n<nn; n++)
-          out << ((n%6==0) ? "\n\t":" ")
-              << (*i)[n].x << " " << (*i)[n].y;
-        for (n=0; n<nn; n++)
-          out << ((n%6==0) ? "\n\t":" ")
-              << f[n];
-        out << "\n";
+      case FIG_TXT:
+        // TODO: convert charset, convert chars > 127
+        // TODO: convert text dimensions?
+        if (i->size()!=1) throw Err() << "FigObj: text should have 1 coordinate point";
+        s << i->sub_type << " " << pen_color << " " << i->depth << " "
+          << i->pen_style << " " << i->font << " " << i->font_size << " "
+          << std::setprecision(4) << i->angle << " " << i->font_flags << " "
+          << i->height << " " << i->length << " " << (*i)[0].x << " " << (*i)[0].y << " ";
+        s << cnv(i->text) << "\\001\n";
+        if (s.fail()) throw Err() << "FigObj: can't write text object";
         break;
-    case 4: // Text
-      // сделать пересчет размеров (height length)!
-      if (nn<1){
-        cerr << "fig::write (text): can't get x and y values\n";
+      case FIG_ARC:
+        if (i->size()!=3) throw Err() << "FigObj: arc should have 3 coordinate point";
+        // TODO: calculate center!
+        s << i->sub_type << " " << i->line_style << " " << i->thickness << " "
+          << pen_color << " " << fill_color << " " << i->depth << " "
+          << i->pen_style << " " << i->area_fill << " " << i->style_val << " "
+          << i->cap_style << " " << i->direction << " "
+          << i->forward_arrow << " " << i->backward_arrow << " "
+          << i->center_x << " " << i->center_y << " "
+          << (*i)[0].x << " " << (*i)[0].y << " "
+          << (*i)[1].x << " " << (*i)[1].y << " "
+          << (*i)[2].x << " " << (*i)[2].y << "\n";
+        write_arrows(s, *i);
+        if (s.fail()) throw Err() << "FigObj: can't write arc object";
         break;
-      }
-      out << "4 "
-        << i->sub_type   << " "
-        << pen_color     << " " 
-        << i->depth      << " "
-        << i->pen_style  << " "
-        << i->font       << " "
-        << i->font_size  << " "
-        << i->angle      << " "
-        << i->font_flags << " "
-        << i->height     << " "
-        << i->length     << " "
-        << (*i)[0].x     << " "
-        << (*i)[0].y     << " "
-        << cnv.from_utf8(i->text) << "\\001\n";
+      case FIG_COMPOUND:
+        if (i->size()!=2) throw Err() << "FigObj: compound should have 2 coordinate point";
+        s << (*i)[0].x << " " << (*i)[0].y << " "
+          << (*i)[1].x << " " << (*i)[1].y << "\n";
+        if (s.fail()) throw Err() << "FigObj: can't write compound object";
         break;
-    case 5: // Arc
-      if (nn<3){
-        cerr << "fig::write (arc): can't get x and y values\n";
+      case FIG_END_COMPOUND:
+        if (s.fail()) throw Err() << "FigObj: can't write compound end object";
         break;
-      }
-      out << "5 "
-        << i->sub_type   << " "
-        << i->line_style << " "
-        << i->thickness  << " "
-        << pen_color     << " "
-        << fill_color    << " "
-        << i->depth      << " "
-        << i->pen_style  << " "
-        << i->area_fill  << " " 
-        << i->style_val  << " "
-        << i->cap_style  << " "
-        << i->direction  << " "
-        << i->forward_arrow  << " "
-        << i->backward_arrow << " "
-        << i->center_x   << " "
-        << i->center_y   << " "
-        << (*i)[0].x     << " "
-        << (*i)[0].y     << " "
-        << (*i)[1].x     << " "
-        << (*i)[1].y     << " "
-        << (*i)[2].x     << " "
-        << (*i)[2].y;
-        if (i->forward_arrow) out << "\n\t"
-           << i->farrow_type << " "
-           << i->farrow_style << " "
-           << i->farrow_thickness << " "
-           << i->farrow_width << " "
-           << i->farrow_height;
-        if (i->backward_arrow) out << "\n\t"
-           << i->barrow_type << " "
-           << i->barrow_style << " "
-           << i->barrow_thickness << " "
-           << i->barrow_width << " "
-           << i->barrow_height;
-        out << "\n";
-      break;
-    case 6: // Compound begin
-      // сделать пересчет размеров!
-      int x1,y1,x2,y2;
-      if (nn<2){
-        cerr << "fig::write (compound): can't get x and y values\n";
-        x1=y1=x2=y2=0;
-      } else {
-        x1 = (*i)[0].x;
-        y1 = (*i)[0].y;
-        x2 = (*i)[1].x;
-        y2 = (*i)[1].y;
-      }
-      out << "6 " 
-          << x1 << " " 
-          << y1 << " "
-          << x2 << " " 
-          << y2 << "\n";
-      break;
-    case -6: // Compound end
-      out << "-6\n"; 
-      break;
-    default:
-      cerr << "fig::write: bad object type!\n";
-      break;
+      default:
+        throw Err() << "FigObj: unknown object type: " << i->type;
     }
   }
-  return true;
 }
 
-bool write(const string & file, const fig_world & world, const Options & opts){
-  ofstream out(file.c_str());
-  if (!out) {
-    cerr << "Error: can't open fig file \"" << file << "\"\n";
-    return false;
-  }
-  if (!write(out, world, opts)) {
-    cerr << "Error: can't write to fig file \"" << file << "\"\n";
-    return false;
-  }
-  return true;
-}
-
-} //namespace
