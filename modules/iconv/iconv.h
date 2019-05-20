@@ -23,7 +23,7 @@ class IConv{
     ~IConv();
 
     /// convert
-    std::string cnv(const std::string & s);
+    std::string operator()(const std::string & s) const;
 };
 
 ///@}

@@ -20,7 +20,7 @@ class IConv::Impl {
 
   ~Impl() {}
 
-  std::string cnv(const std::string & s);
+  std::string cnv(const std::string & s) const;
 
 };
 
@@ -30,12 +30,16 @@ IConv::IConv(const char *from, const char *to):
 
 IConv::IConv() {}
 
-std::string IConv::cnv(const std::string & s) {return impl? impl->cnv(s) : s;}
+std::string IConv::operator()(const std::string & s) const {
+  return impl? impl->cnv(s) : s;
+}
+
 
 IConv::~IConv(){}
 
+
 std::string
-IConv::Impl::cnv(const std::string & s){
+IConv::Impl::cnv(const std::string & s) const{
 
   if ((iconv_t)(cdp.get()) == ERR) return s;
   std::string ret;
