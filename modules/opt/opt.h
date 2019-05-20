@@ -70,6 +70,9 @@ o.put("key1", 10);
 // put key2=10, explicitely specify the type
 o.put<int>("key2", 10);
 
+// Add options from another Opt object, old values are replaced:
+o.put(o1);
+
 // get key2, default value is 1.0
 double k2 = o.get<double>("key2", 1.0);
 
@@ -93,6 +96,13 @@ class Opt : public std::map<std::string,std::string>{
   void put (const std::string & key, const T & val) {
     (*this)[key] = type_to_str(val);
   }
+
+  /// Add options from another Opt object, old values are replaced.
+  void put (const Opt & opts) {
+    for (Opt::const_iterator i = opts.begin(); i!=opts.end(); i++)
+      (*this)[i->first] = i->second;
+  }
+
 
   /// Set option value for a given key (hex version).
   template<typename T>

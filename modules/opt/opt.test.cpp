@@ -138,6 +138,15 @@ try{
   assert(O1.get("h1", 0) == 255);
   assert(O1.get("h2", 0) == 254);
 
+  Opt O3;
+  O3.put("h1", 123);
+  O3.put("h3", 124);
+  O1.put(O3);
+  assert(O1.get<int>("h1") == 123);
+  assert(O1.get<int>("h2") == 254);
+  assert(O1.get<int>("h3") == 124);
+  assert(O1.get<int>("h4") == 0);
+
 //  assert(O1.get("h1", 0.0) == 255);
 //  assert(O1.get("h2", 0.0) == 254);
 
