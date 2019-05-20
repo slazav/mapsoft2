@@ -125,7 +125,6 @@ FigObj::FigObj(){
   farrow_width=60; barrow_width=60;
   farrow_height=30; barrow_height=30;
   height=0; length=0;
-  multiline=false;
 }
 
 /*************************************************/

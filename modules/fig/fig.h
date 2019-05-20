@@ -55,7 +55,6 @@ struct FigObj : iLine {
   float   farrow_thickness, barrow_thickness;
   float   farrow_width, barrow_width;
   float   farrow_height, barrow_height;
-  bool    multiline;  /// multiline flag (for text, used only while reading).
 
   std::string  image_file;
   int          image_orient;
