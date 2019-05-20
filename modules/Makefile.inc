@@ -90,13 +90,14 @@ $(SCRIPT_TEST_RES): TEST_DEP := %.test.script
 $(SIMPLE_TEST_RES): TEST_CMD = ./$< && > $<.passed
 $(SCRIPT_TEST_RES): TEST_CMD = ./$<.script && > $<.passed
 
-TEST_OBJECTS += $(patsubst %,%.o, $(SIMPLE_TESTS) $(SCRIPT_TESTS))
+TEST_OBJECTS := $(patsubst %,%.test.o, $(SIMPLE_TESTS) $(SCRIPT_TESTS))
 $(SIMPLE_TEST_PROGS) $(SCRIPT_TEST_PROGS):     CC:=$(CXX)
 $(SIMPLE_TEST_PROGS) $(SCRIPT_TEST_PROGS):     %: %.o $(MOD_OBJECTS) $(ADEPS)
 $(TEST_OBJECTS): %.o: %.cpp $(MOD_HEADERS) $(HDEPS)
 
 %.test.passed: %.test $(TEST_DEP)
 	@echo "## Running test: $<"
+	@echo "$(TEST_OBJECTS)"
 	@$(TEST_CMD)
 
 make_tests: $(SIMPLE_TEST_RES) $(SCRIPT_TEST_RES)
@@ -104,7 +105,7 @@ make_tests: $(SIMPLE_TEST_RES) $(SCRIPT_TEST_RES)
 
 ######################################################
 # building rules for programs and shared lib
-PROG_OBJECTS += $(patsubst %,%.o, $(PROGRAMS))
+PROG_OBJECTS := $(patsubst %,%.o, $(PROGRAMS))
 $(PROGRAMS):     CC:=$(CXX)
 $(PROGRAMS):     %: %.o $(MOD_OBJECTS) $(ADEPS)
 $(PROG_OBJECTS): %.o: %.cpp $(MOD_HEADERS) $(HDEPS)
