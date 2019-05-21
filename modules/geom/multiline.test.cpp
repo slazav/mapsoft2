@@ -42,8 +42,14 @@ main(){
   assert(!(ml1!=ml2));
   assert(ml1 >= ml2);
   assert(ml1 <= ml2);
-  assert(!(ml1>ml2));
-  assert(!(ml1<ml2));
+  assert(!(ml1 > ml2));
+  assert(!(ml1 < ml2));
+  assert(  ml1.operator==(ml2));
+  assert(!(ml1.operator!=(ml2)));
+  assert(ml1.operator>=(ml2));
+  assert(ml1.operator<=(ml2));
+  assert(!(ml1.operator>(ml2)));
+  assert(!(ml1.operator<(ml2)));
   *(ml1.rbegin()->rbegin()) = iPoint(10,10); // Last segment of ml1 shorter
   assert(ml1 !=  ml2);
   assert(ml1 >  ml2);

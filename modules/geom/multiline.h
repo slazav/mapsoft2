@@ -78,7 +78,7 @@ struct MultiLine : std::vector<Line<T> > {
   // operators <=>
   /// Less then operator.
   /// L1 is smaller then L2 if first different line in L1 is smaller or does not exist.
-  bool operator< (const Line<T> & p) const {
+  bool operator< (const MultiLine<T> & p) const {
     typename MultiLine<T>::const_iterator i1=this->begin(), i2=p.begin();
     do {
       if (i1==this->end()){
@@ -93,7 +93,7 @@ struct MultiLine : std::vector<Line<T> > {
   }
 
   /// Equal opertator.
-  bool operator== (const Line<T> & p) const {
+  bool operator== (const MultiLine<T> & p) const {
     if (this->size()!=p.size()) return false;
     typename MultiLine<T>::const_iterator i1=this->begin(), i2=p.begin();
     do {
@@ -104,10 +104,10 @@ struct MultiLine : std::vector<Line<T> > {
   }
 
   // derived operators:
-  bool operator!= (const Point<T> & other) const { return !(*this==other); } ///< operator!=
-  bool operator>= (const Point<T> & other) const { return !(*this<other);  } ///< operator>=
-  bool operator<= (const Point<T> & other) const { return *this<other || *this==other; } ///< ope
-  bool operator>  (const Point<T> & other) const { return !(*this<=other); } ///< operator>
+  bool operator!= (const MultiLine<T> & other) const { return !(*this==other); } ///< operator!=
+  bool operator>= (const MultiLine<T> & other) const { return !(*this<other);  } ///< operator>=
+  bool operator<= (const MultiLine<T> & other) const { return *this<other || *this==other; } ///< ope
+  bool operator>  (const MultiLine<T> & other) const { return !(*this<=other); } ///< operator>
 
   /******************************************************************/
 
