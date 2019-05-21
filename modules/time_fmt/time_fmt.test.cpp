@@ -14,6 +14,12 @@ main(){
      assert(write_utc_iso_time(1533473911123)  == "2018-08-05T12:58:31.123Z");
      assert(write_utc_iso_time(15334739110000) == "2455-12-09T09:45:10Z");
 
+     assert(write_utc_time_s(0)              == "1970-01-01 00:00:00");
+     assert(write_utc_time_s(1533473911000)  == "2018-08-05 12:58:31");
+     assert(write_utc_time_s(1533473911001)  == "2018-08-05 12:58:31");
+     assert(write_utc_time_s(1533473911123)  == "2018-08-05 12:58:31");
+     assert(write_utc_time_s(15334739110000) == "2455-12-09 09:45:10");
+
      assert(parse_utc_time("2018/08/05	12:58:31.1") == 1533473911100);
 
 

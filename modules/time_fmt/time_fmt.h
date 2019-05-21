@@ -23,6 +23,9 @@
 ///  1533473911001 -> "2018-08-05T12:58:31.001Z"
 std::string write_utc_iso_time(const time_t t);
 
+/// Convert mapsoft time to UTC time in "%Y-%m-%d %H:%M:%S" format
+std::string write_utc_time_s(const time_t t);
+
 /// Convert UTC time to unix milliseconds (used in mapsoft).
 /// Time can be represented in different forms including ISO 8601 (used in GPX)
 /// and "yyyy-mm-dd HH:MM:SS" format

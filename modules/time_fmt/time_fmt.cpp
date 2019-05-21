@@ -25,6 +25,23 @@ write_utc_iso_time(const time_t t){
   return str.str();
 }
 
+string
+write_utc_time_s(const time_t t){
+  time_t s  = t/1000;
+  time_t ms = t%1000;
+  struct tm ts;
+  gmtime_r(&s, &ts);
+  ostringstream str;
+  str << setfill('0')
+      << setw(4) << ts.tm_year+1900 << '-'
+      << setw(2) << ts.tm_mon+1 << '-'
+      << setw(2) << ts.tm_mday  << ' '
+      << setw(2) << ts.tm_hour  << ':'
+      << setw(2) << ts.tm_min   << ':'
+      << setw(2) << ts.tm_sec;
+  return str.str();
+}
+
 time_t
 parse_utc_time(const string & str){
   istringstream ss(str);
