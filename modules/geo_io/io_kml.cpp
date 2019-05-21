@@ -31,6 +31,26 @@ KML writing:
   * open/closed track support
 */
 
+void start_element(xmlTextWriterPtr & writer, const char *name){
+  if (xmlTextWriterStartElement(writer, BAD_CAST name)<0)
+    throw string("starting <") + name + "> element";
+}
+
+void end_element(xmlTextWriterPtr & writer, const char *name){
+  if (xmlTextWriterEndElement(writer) < 0)
+    throw string("cloing <") + name + "> element";
+}
+
+void write_cdata_element(xmlTextWriterPtr & writer, const char *name, const string & value){
+  if (name == "") return;
+  start_element(writer, name);
+  if (xmlTextWriterWriteFormatCDATA(writer, "%s", value.c_str())<0)
+    throw string("writing <") + name + "> element";
+  end_element(writer, name);
+}
+
+
+/*******************************/
 void
 write_kml (const char* filename, const GeoData & data, const Opt & opts){
 
@@ -67,88 +87,38 @@ write_kml (const char* filename, const GeoData & data, const Opt & opts){
           BAD_CAST "xmlns", BAD_CAST "http://earth.google.com/kml/2.1")<0)
       throw "starting <kml> element";
 
-    if (xmlTextWriterStartElement(writer, BAD_CAST "Document")<0)
-      throw "starting <Document> element";
+    start_element(writer, "Document");
 
     // Writing waypoints:
     for (int i = 0; i < data.wpts.size(); i++) {
-      if (xmlTextWriterStartElement(writer, BAD_CAST "Folder")<0)
-        throw "starting <Folder> element";
-
-      string name = data.wpts[i].opts.get<string>("name");
-      if (name != "") {
-        if (xmlTextWriterStartElement(writer, BAD_CAST "name")<0)
-          throw "starting <name> element";
-        if (xmlTextWriterWriteFormatCDATA(writer, "%s", name.c_str())<0)
-          throw "writing <name> element";
-        if (xmlTextWriterEndElement(writer) < 0)
-          throw "closing <name> element";
-      }
+      start_element(writer, "Folder");
+      write_cdata_element(writer, "name", data.wpts[i].opts.get<string>("name"));
 
       GeoWptList::const_iterator wp;
       for (wp = data.wpts[i].begin(); wp != data.wpts[i].end(); ++wp) {
-        if (xmlTextWriterStartElement(writer, BAD_CAST "Placemark")<0)
-          throw "starting <Placemark> element";
-
-        string name = wp->opts.get<string>("name");
-        if (name != "") {
-          if (xmlTextWriterStartElement(writer, BAD_CAST "name")<0)
-            throw "starting <name> element";
-          if (xmlTextWriterWriteFormatCDATA(writer, "%s", name.c_str())<0)
-            throw "writing <name> element";
-          if (xmlTextWriterEndElement(writer) < 0)
-            throw "closing <name> element";
-         }
-
-        string comm = wp->opts.get<string>("comm");
-        if (comm != "") {
-          if (xmlTextWriterStartElement(writer, BAD_CAST "description")<0)
-            throw "starting <description> element";
-          if (xmlTextWriterWriteFormatCDATA(writer, "%s", comm.c_str())<0)
-            throw "writing <description> element";
-          if (xmlTextWriterEndElement(writer) < 0)
-            throw "closing <description> element";
-        }
-
-        if (xmlTextWriterStartElement(writer, BAD_CAST "Point")<0)
-          throw "starting <Point> element";
+        start_element(writer, "Placemark");
+        write_cdata_element(writer, "name", wp->opts.get<string>("name"));
+        write_cdata_element(writer, "description", wp->opts.get<string>("comm"));
+        start_element(writer, "Point");
 
         if (xmlTextWriterWriteFormatElement(writer,
            BAD_CAST "coordinates", "%.7f,%.7f,%.2f",
                wp->x, wp->y, wp->z)<0)
           throw "writing <coordinates> element";
-
-        if (xmlTextWriterEndElement(writer) < 0)
-          throw "closing <Point> element";
-
-        if (xmlTextWriterEndElement(writer) < 0)
-          throw "closing <Placemark> element";
+        end_element(writer, "Point");
+        end_element(writer, "Placemark");
       }
-      if (xmlTextWriterEndElement(writer) < 0)
-        throw "closing <Folder> element";
+      end_element(writer, "Folder");
     }
 
     // Writing tracks:
     for (int i = 0; i < data.trks.size(); ++i) {
-      if (xmlTextWriterStartElement(writer, BAD_CAST "Placemark")<0)
-        throw "starting <Placemark> element";
-
-      string name = data.trks[i].opts.get<string>("name");
-      if (name != "") {
-        if (xmlTextWriterStartElement(writer, BAD_CAST "name")<0)
-          throw "starting <name> element";
-        if (xmlTextWriterWriteFormatCDATA(writer, "%s",
-               data.trks[i].opts.get<string>("name").c_str())<0)
-          throw "writing <name> element";
-        if (xmlTextWriterEndElement(writer) < 0)
-          throw "closing <name> element";
-      }
-
-      if (xmlTextWriterStartElement(writer, BAD_CAST "MultiGeometry")<0)
-        throw "starting <MultiGeometry> element";
+      start_element(writer, "Placemark");
+      write_cdata_element(writer, "name", data.trks[i].opts.get<string>("name"));
+      start_element(writer, "MultiGeometry");
 
       GeoTrk::const_iterator tp;
-      string linename;
+      const char *linename;
       for (tp = data.trks[i].begin(); tp != data.trks[i].end(); ++tp) {
         linename = data.trks[i].opts.get<std::string>("type")=="closed"? "Polygon":"LineString";
 
@@ -159,14 +129,11 @@ write_kml (const char* filename, const GeoData & data, const Opt & opts){
             if (xmlTextWriterEndElement(writer) < 0) throw "closing <coordinates> element";
             if (xmlTextWriterEndElement(writer) < 0) throw "closing line element";
           }
-          if (xmlTextWriterStartElement(writer, BAD_CAST linename.c_str())<0)
-            throw "starting line element";
+          start_element(writer, linename);
           if (xmlTextWriterWriteFormatElement(writer,
              BAD_CAST "tessellate", "%d", 1)<0)
             throw "writing <tessellate> element";
-
-          if (xmlTextWriterStartElement(writer, BAD_CAST "coordinates")<0)
-            throw "starting coordinates element";
+          start_element(writer, "coordinates");
         }
 
         if (xmlTextWriterWriteFormatString(writer,
@@ -175,13 +142,13 @@ write_kml (const char* filename, const GeoData & data, const Opt & opts){
       }
       if (xmlTextWriterWriteFormatString(writer, "\n")<0)
         throw "writing <coordinates> element";
-      if (xmlTextWriterEndElement(writer) < 0) throw "closing <coordinates> element";
-      if (xmlTextWriterEndElement(writer) < 0) throw "closing line element";
-      if (xmlTextWriterEndElement(writer) < 0) throw "closing <MultiGeometry> element";
-      if (xmlTextWriterEndElement(writer) < 0) throw "closing <Placemark> element";
+      end_element(writer, "coordinates");
+      end_element(writer, linename);
+      end_element(writer, "MultiGeometry");
+      end_element(writer, "Placemark");
     }
-    if (xmlTextWriterEndElement(writer) < 0) throw "closing <Document> element";
-    if (xmlTextWriterEndElement(writer) < 0) throw "closing <kml> element";
+    end_element(writer, "Document");
+    end_element(writer, "kml");
     if (xmlTextWriterEndDocument(writer) < 0) throw "closing xml document";
 
   }
