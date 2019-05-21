@@ -1,5 +1,3 @@
-#!/bin/bash -fu
-
 function assert(){
   cmd="$1"
   exp="$2"
