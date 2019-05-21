@@ -3,12 +3,13 @@
 #include <cassert>
 #include "fig.h"
 
-Fig test_objs(const std::string & in, std::string out = "<in>", int fig_header = 0){
+Fig test_objs(const std::string & in, std::string out = "<in>", int fig_header = 0, int txt7bit = 0){
   std::istringstream s1(in);
   std::ostringstream s2;
   Fig w;
   Opt opts;
   opts.put("fig_header", fig_header);
+  opts.put("fig_7bit", txt7bit);
   read_fig(s1, w, opts);
   write_fig(s2, w, opts);
   if (out=="<in>") out = in;
@@ -540,7 +541,20 @@ main(){
     assert(w.size() == 11);
     }
 
+    // text -> 7 bit
+    {
+      Fig w = test_objs(
+      "4 0 0 50 -1 0 12 0.0000 4 210 150 -1575 6840 text\\\\120\\120\\331\\001\n"
+      "4 0 0 50 -1 0 12 0.0000 4 210 150 -1575 6840 text\\\\120\\120\\331\\001\n"
+      ,
+      "4 0 0 50 -1 0 12 0.0000 4 210 150 -1575 6840 text\\\\120P\\331\\001\n"
+      "4 0 0 50 -1 0 12 0.0000 4 210 150 -1575 6840 text\\\\120P\\331\\001\n"
+      ,0,1);
+    }
+
     // Fig with header
+    // - no \nnn character conversion in comments,
+    // - \nnn character conversion in text
     {
     Fig w = test_objs(
     "#FIG 3.2 ...\n"
@@ -551,7 +565,7 @@ main(){
     "100.00\n"
     "Single\n"
     "-2\n"
-    "# comm1\n"
+    "# comm1\\\\120\\120\n"
     "# \\opt1=val1\n"
     "# \n"
     "# comm2\n"
@@ -559,11 +573,12 @@ main(){
     "# \\opt3=\n"
     "\n"
     "1200 2\n"
+    "4 0 0 50 -1 0 12 0.0000 4 210 150 -1575 6840 text\\\\120\\120\\331\\001\n"
     "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 1 1 4\n"
     "\t0 0 1.00 60.00 120.00\n"
     "\t0 0 1.00 60.00 120.00\n"
-    "\t315 1440 810 945 1800 1215 3330 675\n", 
-
+    "\t315 1440 810 945 1800 1215 3330 675\n"
+    ,
     "#FIG 3.2\n"
     "Landscape\n"
     "Center\n"
@@ -572,19 +587,23 @@ main(){
     "100.00\n"
     "Single\n"
     "-2\n"
-    "# comm1\n"
+    "# comm1\\\\120\\120\n"
     "# \\opt1=val1\n"
     "# \n"
     "# comm2\n"
     "# \\opt2\n"
     "# \\opt3=\n"
     "1200 2\n"
+    "4 0 0 50 -1 0 12 0.0000 4 210 150 -1575 6840 text\\\\120PÙ\\001\n"
     "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 1 1 4\n"
     "\t0 0 1.00 60.00 120.00\n"
     "\t0 0 1.00 60.00 120.00\n"
-    "\t315 1440 810 945 1800 1215 3330 675\n",
-    1);
-    assert(w.size() == 1);
+    "\t315 1440 810 945 1800 1215 3330 675\n"
+    , 1);
+    assert(w.comment.size() == 6);
+    assert(w.comment[0] == "comm1\\\\120\\120");
+    assert(w.size() == 2);
+    assert(w.begin()->text == "text\\120PÑ‹");
     }
 
     {

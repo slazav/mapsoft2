@@ -306,6 +306,7 @@ int read_figobj_header(FigObj &o, const std::string & header);
    Options:
      fig_enc      -- encoding (default "KOI8-R")
      fig_header   -- write header (default 1, used for tests)
+     fig_7bit     -- write characters > 127 in \nnn form (default 0).
 */
 void write_fig(std::ostream & s, const Fig & w, const Opt & wopts = Opt());
 

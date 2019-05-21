@@ -416,11 +416,28 @@ write_coords(std::ostream & s, const FigObj & o, const int add_pt=0) {
   }
 }
 
+// write text, char by char, protecting \ and converting
+// characters > 127 to \nnn.
+void
+write_text(std::ostream & s, const string & text, bool txt7bit){
+  for (string::const_iterator i = text.begin(); i!=text.end(); i++){
+    if (*i == '\\') s << *i;
+    if (txt7bit && (unsigned char)*i>127)
+      s << '\\' << oct << setfill('0') << setw(3)
+        << (int)(unsigned char)*i << dec;
+    else s << *i;
+  }
+  s << "\\001\n";
+}
+
 /******************************************************************/
 void
 write_fig(ostream & s, const Fig & w, const Opt & wopts){
+
   string enc = wopts.get("fig_enc", default_enc);
   IConv cnv("UTF-8", enc.c_str());
+
+  bool txt7bit = wopts.get("fig_7bit", false);
 
   // Writing header:
   if (wopts.get("fig_header", 1)) {
@@ -514,7 +531,7 @@ write_fig(ostream & s, const Fig & w, const Opt & wopts){
           << i->pen_style << " " << i->font << " " << i->font_size << " "
           << std::setprecision(4) << i->angle << " " << i->font_flags << " "
           << i->height << " " << i->length << " " << (*i)[0].x << " " << (*i)[0].y << " ";
-        s << cnv(i->text) << "\\001\n";
+        write_text(s, cnv(i->text), txt7bit);
         if (s.fail()) throw Err() << "FigObj: can't write text object";
         break;
       case FIG_ARC:
