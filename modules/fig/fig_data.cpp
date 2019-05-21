@@ -21,37 +21,37 @@ typedef pair<int,int> p_ii;
 const p_ii colors_a[] = {
   p_ii(-1, 0x000000), // default
   p_ii(0,  0x000000), // black
-  p_ii(1,  0xff0000), // blue
+  p_ii(1,  0x0000ff), // blue
   p_ii(2,  0x00ff00), // green
-  p_ii(3,  0xffff00), // cyan
-  p_ii(4,  0x0000ff), // red
+  p_ii(3,  0x00ffff), // cyan
+  p_ii(4,  0xff0000), // red
   p_ii(5,  0xff00ff), // magenta
-  p_ii(6,  0x00ffff), // yellow
+  p_ii(6,  0xffff00), // yellow
   p_ii(7,  0xffffff), // white
-  p_ii(8,  0x900000), // blue4
-  p_ii(9,  0xb00000), // blue3
-  p_ii(10, 0xd00000), // blue2
-  p_ii(11, 0xffce87), // ltblue
+  p_ii(8,  0x000090), // blue4
+  p_ii(9,  0x0000b0), // blue3
+  p_ii(10, 0x0000d0), // blue2
+  p_ii(11, 0x87ceff), // ltblue
   p_ii(12, 0x009000), // green4
   p_ii(13, 0x00b000), // green3
   p_ii(14, 0x00d000), // green2
-  p_ii(15, 0x909000), // cyan4
-  p_ii(16, 0xb0b000), // cyan3
-  p_ii(17, 0xd0d000), // cyan2
-  p_ii(18, 0x000090), // red4
-  p_ii(19, 0x0000b0), // red3
-  p_ii(20, 0x0000d0), // red2
+  p_ii(15, 0x009090), // cyan4
+  p_ii(16, 0x00b0b0), // cyan3
+  p_ii(17, 0x00d0d0), // cyan2
+  p_ii(18, 0x900000), // red4
+  p_ii(19, 0xb00000), // red3
+  p_ii(20, 0xd00000), // red2
   p_ii(21, 0x900090), // magenta4
   p_ii(22, 0xb000b0), // magenta3
   p_ii(23, 0xd000d0), // magenta2
-  p_ii(24, 0x003080), // brown4
-  p_ii(25, 0x0040a0), // brown3
-  p_ii(26, 0x0060c0), // brown2
-  p_ii(27, 0x8080ff), // pink4
-  p_ii(28, 0xa0a0ff), // pink3
-  p_ii(29, 0xc0c0ff), // pink2
-  p_ii(30, 0xe0e0ff), // pink
-  p_ii(31, 0x00d7ff)  // gold
+  p_ii(24, 0x803000), // brown4
+  p_ii(25, 0xa04000), // brown3
+  p_ii(26, 0xc06000), // brown2
+  p_ii(27, 0xff8080), // pink4
+  p_ii(28, 0xffa0a0), // pink3
+  p_ii(29, 0xffc0c0), // pink2
+  p_ii(30, 0xffe0e0), // pink
+  p_ii(31, 0xffd700)  // gold
 };
 const map<int,int> Fig::colors(&colors_a[0],
     &colors_a[sizeof(colors_a)/sizeof(p_ii)]);

@@ -31,9 +31,9 @@ main(){
     assert(Fig::colors.size() == 33);
     assert(Fig::colors.find(-1)->second == 0);
     assert(Fig::colors.find(0)->second == 0);
-    assert(Fig::colors.find(1)->second == 0xff0000);
-    assert(Fig::colors.find(10)->second == 0xd00000);
-    assert(Fig::colors.find(31)->second == 0x00d7ff);
+    assert(Fig::colors.find(1)->second == 0x0000ff);
+    assert(Fig::colors.find(10)->second == 0x0000d0);
+    assert(Fig::colors.find(31)->second == 0xffd700);
 
     assert(Fig::psfonts.size() == 36);
     assert(Fig::psfonts.find(-1)->second == "Default");
@@ -502,8 +502,8 @@ main(){
       FigObj o2 = *(w.rbegin());
       assert(o1.pen_color = 0x7a8d00);
       assert(o1.fill_color = 0x7a8d10);
-      assert(o2.pen_color = 0xff0000);
-      assert(o2.fill_color = 0xffce87);
+      assert(o2.pen_color = 0x0000ff);
+      assert(o2.fill_color = 0x87ceff);
     }
 
     {
