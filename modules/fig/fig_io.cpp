@@ -210,22 +210,22 @@ void read_fig(std::istream & s, Fig & w, const Opt & ropts){
     if (l.size()<8 || l.substr(0,8) != "#FIG 3.2")
       throw Err() << "Fig: non-supported format";
 
-    std::getline(s, w.orientation);
+    read_line(s, w.orientation);
     if (w.orientation!="Landscape" && w.orientation != "Portrait"){
       std::cerr << "Fig: unknown orientation setting: " << w.orientation << "\n";
       w.orientation = "Landscape";
     }
-    std::getline(s, w.justification);
+    read_line(s, w.justification);
     if (w.justification!="Center" && w.justification != "Flush Left"){
       std::cerr << "Fig: unknown justification setting: " << w.justification << "\n";
       w.justification = "Center";
     }
-    std::getline(s, w.units);
+    read_line(s, w.units);
     if (w.units!="Metric" && w.units != "Inches"){
       std::cerr << "Fig: unknown units setting: " << w.units << "\n";
       w.units = "Metric";
     }
-    std::getline(s, w.papersize);
+    read_line(s, w.papersize);
     if (w.papersize!="Letter" && w.papersize != "Legal" && w.papersize != "Ledger" &&
         w.papersize != "Tabloid" && w.papersize != "A" && w.papersize != "B" &&
         w.papersize != "C" && w.papersize != "D" && w.papersize != "E" &&
@@ -236,7 +236,7 @@ void read_fig(std::istream & s, Fig & w, const Opt & ropts){
     }
     read_line(s, w.magnification);
 
-    std::getline(s, w.multiple_page);
+    read_line(s, w.multiple_page);
     if (w.multiple_page!="Single" && w.multiple_page != "Multiple"){
       std::cerr << "Fig: unknown multiple_page setting: " << w.multiple_page << "\n";
       w.multiple_page = "Single";
