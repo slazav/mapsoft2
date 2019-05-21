@@ -40,23 +40,17 @@ main(){
       assert(p1.x == 0);
       assert(p1.y == 0);
       assert(p1.t == 0);
-      assert(p1.d == UNDEF_ALT);
       assert(p1.z == UNDEF_ALT);
       assert(p1.have_alt() == false);
-      assert(p1.have_depth() == false);
-      p1.z = 0; p1.d = 0;
+      p1.z = 0;
       assert(p1.have_alt() == true);
-      assert(p1.have_depth() == true);
       p1.clear_alt();
-      p1.clear_depth();
       assert(p1.have_alt() == false);
-      assert(p1.have_depth() == false);
 
       p1 = dPoint(10,10);
       assert(p1.x == 10);
       assert(p1.y == 10);
       assert(p1.z == 0);
-      assert(p1.d == UNDEF_ALT);
     }
 
     { // GeoWptList
@@ -84,12 +78,6 @@ main(){
       l1.clear_alt();
       assert(l1[0].z == UNDEF_ALT);
       assert(l1[1].z == UNDEF_ALT);
-
-      assert(l1[0].d == UNDEF_ALT);
-      assert(l1[1].d == 0);
-      l1.clear_depth();
-      assert(l1[0].d == UNDEF_ALT);
-      assert(l1[1].d == UNDEF_ALT);
     }
 
   }

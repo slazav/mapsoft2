@@ -27,7 +27,10 @@ double geo_dist_2d(const dPoint &p1, const dPoint &p2);
 /// All additional information lives in opt variable.
 /// Note: default z in GeoWpt is UNDEF_ALT, and in dPoint is 0;
 struct GeoWpt : dPoint {
-  Opt opts; ///< Waypoint options
+  std::string name; ///< name
+  std::string comm; ///< comment
+  Opt opts;         ///< Waypoint options
+  time_t t;         ///< unix time (ms)
 
   /// constructors
   GeoWpt() {z=UNDEF_ALT;}
@@ -45,6 +48,8 @@ struct GeoWpt : dPoint {
 /********************************************************************/
 /// Waypoint list. An std::vector of GeoWpt with additional options.
 struct GeoWptList : std::vector<GeoWpt>{
+  std::string name; ///< name
+  std::string comm; ///< comment
   Opt opts; ///< Waypoint list options
 
   /// constructor
@@ -60,33 +65,28 @@ struct GeoWptList : std::vector<GeoWpt>{
 /********************************************************************/
 /// single trackpoint
 struct GeoTpt : dPoint {
-  double d;   ///< depth
   bool start; ///< start flag
-  time_t t;   ///< unix time
+  time_t t;   ///< unix time (ms)
 
   /// constructor
-  GeoTpt(): d(UNDEF_ALT), start(false), t(0) {z=UNDEF_ALT;}
-  GeoTpt(const dPoint &p): dPoint(p), d(UNDEF_ALT), start(false) {}
+  GeoTpt(): start(false), t(0) {z=UNDEF_ALT;}
+  GeoTpt(const dPoint &p): dPoint(p), start(false) {}
   GeoTpt(const double x, const double y, const double z=UNDEF_ALT,
-         const double d=UNDEF_ALT, const bool start = false, const time_t t=0):
-    dPoint(x,y,z), d(d), start(start), t(t) {}
+         const bool start = false, const time_t t=0):
+    dPoint(x,y,z), start(start), t(t) {}
 
   /// check if altitude is defined
   bool have_alt() const {return z>UNDEF_ALT;}
 
   /// set the altitude to undefined state
   void clear_alt() {z=UNDEF_ALT;}
-
-  /// check if depth is defined
-  bool have_depth() const {return d>UNDEF_ALT;}
-
-  /// set the depth to undefined state
-  void clear_depth() {d=UNDEF_ALT;}
 };
 
 /********************************************************************/
 /// track
 struct GeoTrk : std::vector<GeoTpt>{
+  std::string name; ///< name
+  std::string comm; ///< comment
   Opt opts; ///< Track options
 
   /// Constructor
@@ -103,16 +103,14 @@ struct GeoTrk : std::vector<GeoTpt>{
 
   /// set the altitude of all points to undefined state
   void clear_alt();
-
-  /// set the depth of all points to undefined state
-  void clear_depth();
 };
 
 
 /********************************************************************/
 /// GeoMap. Shows how to draw some region on a 2D picture.
 struct GeoMap{
-  std::string name;            ///< map title
+  std::string name; ///< name
+  std::string comm; ///< comment
   std::map<dPoint,dPoint> ref; ///< reference points, mapping from geo to image coordinates
   dLine border;                ///< map border (in image coordinates), should be always set
   std::string proj;            ///< map projection (option string for libproj)
@@ -176,6 +174,8 @@ struct GeoMap{
 /********************************************************************/
 /// map list
 struct GeoMapList : public std::vector<GeoMap>{
+  std::string name; ///< name
+  std::string comm; ///< comment
   Opt opts; ///< Map list options
 
   /// constructor

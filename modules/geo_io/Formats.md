@@ -6,8 +6,9 @@ additional fields can be kept in `opts` variable.
 ### `GeoWpt` -- a waypoint/route point
  * x,y -- longitude and latitude (degrees, WGS84)
  * z -- altitude (meters)
-
- * `opt("time")` -- time (unix milliseconds)
+ * t -- time (unix milliseconds)
+ * name  -- name
+ * comm  -- comment
 
 ### `GeoTpt` -- a track point
  * x,y -- longitude and latitude (degrees, WGS84)
@@ -16,8 +17,12 @@ additional fields can be kept in `opts` variable.
  * start -- start segment flag (0|1)
 
 ### `GeoTrk` -- a track
+ * name -- name
+ * comm -- comment
 
 ### `GeoWptList` -- a waypoint list, a route
+ * name -- name
+ * comm -- comment
 
 ### `GeoMap` -- a map
 
@@ -29,19 +34,19 @@ additional fields can be kept in `opts` variable.
 * example with all fields: https://github.com/tkrajina/gpxgo/tree/master/test_files
 
 ### `GeoWpt` -- a waypoint/route point
- * `x,y` -- read/write support, `<lat>` and `<lon>` tags (degrees, WGS84)
- * `z`   -- read/write support, `<ele>` tag (meters)
- * `opt("time")` -- read/write support, `<time>` tag (ISO UTC time with millisecond precision)
-
-Additional fields (read/write support, put in options):
-
- * `magvar` -- Magnetic variation (in degrees) at the point.
- * `geoidheight` -- Height (in meters) of geoid (mean sea level) above WGS84
+ * `x,y`  -- read/write support, `<lat>` and `<lon>` tags (degrees, WGS84)
+ * `z`    -- read/write support, `<ele>` tag (meters)
+ * `t`    -- read/write support, `<time>` tag (ISO UTC time with millisecond precision)
  * `name` -- The GPS name of the waypoint. This field will be transferred to and from
    the GPS. GPX does not place restrictions on the length of this field or
    the characters contained in it. It is up to the receiving application to
    validate the field before sending it to the GPS.
  * `comm` -- <cmt> tag. GPS waypoint comment. Sent to GPS as comment.
+
+Additional fields (read/write support, put in options):
+
+ * `magvar` -- Magnetic variation (in degrees) at the point.
+ * `geoidheight` -- Height (in meters) of geoid (mean sea level) above WGS84
  * `desc`  -- A text description of the element. Holds additional information
    about the element intended for the user, not the GPS.
  * `src` -- Source of data. Included to give user some idea of reliability
@@ -86,7 +91,6 @@ Additional fields (read/write support, put in options):
 
 `<extension>` tag is skipped.
 
-
 ### `GeoMap` -- a map
 
 Not supported by GPX format.
@@ -96,23 +100,26 @@ Not supported by GPX format.
 
 ### `GeoWpt` -- a waypoint/route point
  * `x, y, z` -- read/write support, `<coordinates>` tag.
- * `opt("time")` -- not supported (by KML format?).
- * `opt("name")` -- read/write support, `<name>` tag.
- * `opt("comm")` -- read/write support, `<description>` tag.
+ * `t`       -- not supported (by KML format?).
+ * `name`    -- read/write support, `<name>` tag.
+ * `comm`    -- read/write support, `<description>` tag.
 
 ### `GeoTpt` -- a track point
  * `x, y, z` -- read/write support, `<coordinates>` tag.
- * `z`   -- read/write support, `<ele>` tag (meters).
- * `t`   -- not supported (by KML format?).
- * `start` -- read/write support (track segments).
+ * `t`       -- not supported (by KML format?).
+ * `start`   -- read/write support (track segments).
 
 ### `GeoTrk` -- track
- * `opt("name")` -- read/write support, `<name>` tag.
+KML `<Placemark> + <LineString>/<Polygon>` tags.
+
+ * `name`    -- read/write support, `<name>` tag.
+ * `comm`    -- read/write support, `<description>` tag.
  * `opt("type")` -- open/closed
 
 ### `GeoWptList` -- a waypoint list, a route
-
- * `opt("name")` -- read/write support, `<description>` tag
+KML `<Folder>` tag.
+ * `name`    -- read/write support, `<name>` tag.
+ * `comm`    -- read/write support, `<description>` tag.
 
 
 ### `GeoMap` -- a map

@@ -1,0 +1,26 @@
+#!/bin/bash -efu
+
+## GPX input/output
+
+P=${1:-./mapsoft_convert}
+. test_lib.sh
+
+# read and do nothing
+assert "$P test_data/kml1.kml"  "" 0
+
+# Convert a simple gpx with track, waypoints, route.
+# By default all routes are converted to waypoints.
+assert "$P test_data/kml1.kml -o tmp.kml"  "" 0
+assert_diff test_data/kml1a.kml tmp.kml
+
+# Use --xml_indent option
+assert "$P test_data/kml1.kml -o tmp.kml --xml_indent 0"  "" 0
+assert_diff test_data/kml1b.kml tmp.kml
+
+# read written files again
+assert "$P test_data/kml1a.kml -o tmp.kml"  "" 0
+assert_diff test_data/kml1a.kml tmp.kml
+
+assert "$P test_data/kml1b.kml -o tmp.kml"  "" 0
+assert_diff test_data/kml1a.kml tmp.kml
+

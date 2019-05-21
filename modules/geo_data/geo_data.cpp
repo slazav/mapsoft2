@@ -34,11 +34,6 @@ GeoTrk::clear_alt() {
   for (iterator i=begin(); i!=end(); i++) i->z = UNDEF_ALT;
 }
 
-void
-GeoTrk::clear_depth() {
-  for (iterator i=begin(); i!=end(); i++) i->d = UNDEF_ALT;
-}
-
 double
 GeoTrk::length() const {
   double ret=0;
