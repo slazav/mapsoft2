@@ -1,8 +1,9 @@
-==================================================
+## rainbow
+
 Convert double values into RGB color gradients.
 
-==================================================
-Changelog:
+--------------
+## Changelog:
 
 2019.05.02 V.Zavjalov 2.0:
 - New interface: a single class Rainbow with get() and

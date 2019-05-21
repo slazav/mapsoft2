@@ -1,8 +1,0 @@
-==================================================
-Human-readable text exceptions (with optional error codes)
-
-==================================================
-Changelog:
-
-2019.05.02 V.Zavjalov 1.0:
-- First version (used widely in many of my projects)

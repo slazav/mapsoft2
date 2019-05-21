@@ -1,12 +1,13 @@
-==================================================
+## iconv
+
 Wrapper for libiconv.
 
 Usage:
    IConv cnv("UTF8", "KOI8-R");
    std::string s = cnv(text);
 
-==================================================
-Changelog:
+-----------
+## Changelog:
 
 2019.05.20 V.Zavjalov 1.4:
 - Use operator() instead of cnv method.

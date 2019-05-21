@@ -1,5 +1,6 @@
-==================================================
-Filtering std::istream's through a program
+## iofilter
+
+Filtering std::stream's through a program
 
 IFilter:
 istream -> program -> istream
@@ -9,8 +10,8 @@ OFilter:
 ostream -> program -> ostream
 ostream -> program
 
-==================================================
-Changelog:
+------------
+## Changelog:
 
 2019.05.08 V.Zavjalov 1.1:
 - add OFilter class (attach ostream to program's output,
