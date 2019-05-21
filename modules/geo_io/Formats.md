@@ -1,0 +1,136 @@
+## Mapsoft geodata
+
+Data structure used in mapsoft2. In some formats
+additional fields can be kept in `opts` variable.
+
+### `GeoWpt` -- a waypoint/route point
+ * x,y -- longitude and latitude (degrees, WGS84)
+ * z -- altitude (meters)
+
+ * `opt("time")` -- time (unix milliseconds)
+
+### `GeoTpt` -- a track point
+ * x,y -- longitude and latitude (degrees, WGS84)
+ * z -- altitude (meters)
+ * t -- time (unix milliseconds)
+ * start -- start segment flag (0|1)
+
+### `GeoTrk` -- a track
+
+### `GeoWptList` -- a waypoint list, a route
+
+### `GeoMap` -- a map
+
+----------
+## GPX format
+
+* GPX 1.1 format: http://www.topografix.com/GPX/1/1/
+* GPX 1.0 format: http://www.topografix.com/gpx_manual.asp
+* example with all fields: https://github.com/tkrajina/gpxgo/tree/master/test_files
+
+### `GeoWpt` -- a waypoint/route point
+ * `x,y` -- read/write support, `<lat>` and `<lon>` tags (degrees, WGS84)
+ * `z`   -- read/write support, `<ele>` tag (meters)
+ * `opt("time")` -- read/write support, `<time>` tag (ISO UTC time with millisecond precision)
+
+Additional fields (read/write support, put in options):
+
+ * `magvar` -- Magnetic variation (in degrees) at the point.
+ * `geoidheight` -- Height (in meters) of geoid (mean sea level) above WGS84
+ * `name` -- The GPS name of the waypoint. This field will be transferred to and from
+   the GPS. GPX does not place restrictions on the length of this field or
+   the characters contained in it. It is up to the receiving application to
+   validate the field before sending it to the GPS.
+ * `comm` -- <cmt> tag. GPS waypoint comment. Sent to GPS as comment.
+ * `desc`  -- A text description of the element. Holds additional information
+   about the element intended for the user, not the GPS.
+ * `src` -- Source of data. Included to give user some idea of reliability
+   and accuracy of data. "Garmin eTrex", "USGS quad Boston North", e.g.
+ * `link` -- Link to additional information about the waypoint.
+ * `sym` -- Text of GPS symbol name. For interchange with other programs,
+   use the exact spelling of the symbol as displayed on the GPS. If the GPS
+   abbreviates words, spell them out.
+ * `type` -- Type (classification) of the waypoint.
+ * `fix` -- Type of GPX fix. (none, 2d, 3d, dgps, pps)
+ * `sat` -- Number of satellites used to calculate the GPX fix.
+ * `hdop` -- Horizontal dilution of precision.
+ * `vdop` -- Vertical dilution of precision.
+ * `pdop` -- Position dilution of precision.
+ * `ageofdgpsdata` -- Number of seconds since last DGPS update.
+ * `dgpsid` -- ID of DGPS station used in differential correction.
+
+`<extension>` tag is skipped.
+
+### `GeoTpt` -- a track point
+ * `x,y` -- read/write support, `<lat>` and `<lon>` tags (degrees, WGS84)
+ * `z`   -- read/write support, `<ele>` tag (meters)
+ * `t`   -- read/write support, `<time>` tag (ISO UTC time with millisecond precision)
+ * `start` -- read/write support (track segments)
+
+### `GeoTrk`, `GeoWptList` -- track, a waypoint list, route
+
+When writing to GPX file by default all waypoint lists are joined and
+written as waypoints. If `gpx_write_rte` option is used then waypoint
+lists are written as routes.
+
+Additional fields (read/write support, put in options):
+
+ * `name` -- GPS name of route.
+ * `comm` -- `<cmt>` tag. GPS comment for route.
+ * `desc` -- Text description of route for user. Not sent to GPS.
+ * `src` -- Source of data. Included to give user some idea of reliability
+            and accuracy of data.
+ * `link` -- Links to external information about the route.
+ * `number` -- GPS route number.
+ * `type` -- Type (classification) of route
+
+`<extension>` tag is skipped.
+
+
+### `GeoMap` -- a map
+
+Not supported by GPX format.
+
+----------
+## KML format
+
+### `GeoWpt` -- a waypoint/route point
+ * `x, y, z` -- read/write support, `<coordinates>` tag.
+ * `opt("time")` -- not supported (by KML format?).
+ * `opt("name")` -- read/write support, `<name>` tag.
+ * `opt("comm")` -- read/write support, `<description>` tag.
+
+### `GeoTpt` -- a track point
+ * `x, y, z` -- read/write support, `<coordinates>` tag.
+ * `z`   -- read/write support, `<ele>` tag (meters).
+ * `t`   -- not supported (by KML format?).
+ * `start` -- read/write support (track segments).
+
+### `GeoTrk` -- track
+ * `opt("name")` -- read/write support, `<name>` tag.
+ * `opt("type")` -- open/closed
+
+### `GeoWptList` -- a waypoint list, a route
+
+ * `opt("name")` -- read/write support, `<description>` tag
+
+
+### `GeoMap` -- a map
+
+Not supported.
+
+----------
+## OziExplorer format
+
+----------
+## Garmin Utils format
+
+----------
+## GeoJSON format
+
+----------
+## Mapsoft XML format
+
+
+
+
