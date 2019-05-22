@@ -128,10 +128,27 @@ Waypoint lists are written as KML `<Folder>` tag.
 Not supported.
 
 ----------
-## OziExplorer format
+## Garmin Utils format
+
+### `GeoWpt` -- a waypoint
+ * `x, y, z` -- read/write support
+ * `name` -- read/write support. Spaces will be replaced by '_'.
+ * `comm` -- read/write support
+
+### `GeoTpt` -- a track point
+ * `x, y, z, t, start` -- read/write support
+
+### `GeoTrk`, `GeoWptList`  -- track, a waypoint list
+ * `name`    -- not supported.
+ * `comm`    -- not supported.
+
+### `GeoMap` -- a map
+
+Not supported.
 
 ----------
-## Garmin Utils format
+## OziExplorer format
+
 
 ----------
 ## GeoJSON format

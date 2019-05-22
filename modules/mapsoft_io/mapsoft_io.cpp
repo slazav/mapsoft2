@@ -2,11 +2,16 @@
 #include "tmpdir/tmpdir.h"
 #include "geo_io/io_gpx.h"
 #include "geo_io/io_kml.h"
+#include "geo_io/io_gu.h"
 #include "file_ext/file_ext.h"
 
 void
 mapsoft_read(const char *fname, MapsoftData & data, const Opt & opt){
   std::string fmt = opt.get("fmt", std::string());
+
+  // Garmin Utils format
+  if (fmt == "gu" || (fmt == "" && file_ext_check(fname, ".gu")))
+    return read_gu(fname, (GeoData &) data, opt);
 
   // GPX format
   if (fmt == "gpx" || (fmt == "" && file_ext_check(fname, ".gpx")))
@@ -47,6 +52,10 @@ mapsoft_read(const char *fname, MapsoftData & data, const Opt & opt){
 void
 mapsoft_write(const char *fname, const MapsoftData & data, const Opt & opt){
   std::string fmt = opt.get("fmt", std::string());
+
+  // Garmin Utils format
+  if (fmt == "gu" || (fmt == "" && file_ext_check(fname, ".gu")))
+    return write_gu(fname, (GeoData &) data, opt);
 
   // GPX format
   if (fmt == "gpx" || (fmt == "" && file_ext_check(fname, ".gpx")))

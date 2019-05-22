@@ -26,6 +26,7 @@ static struct ext_option options[] = {
   {"verbose",               0,'v', OPT_GG, "be verbose\n"},
 
   {"fmt",                   1, 0,  OPT_CMN, "input/ouput format"},
+  {"gu_enc",                1, 0,  OPT_CMN, "Garmin Utils format charset (default KOI8-R)"},
 
   {"xml_compr",             1, 0,  OPT_OUT, "compress xml output (gpx, kml files)"},
   {"xml_indent",            1, 0,  OPT_OUT, "use xml indentation (gpx, kml files)"},
@@ -38,7 +39,7 @@ static struct ext_option options[] = {
 
 void usage(bool pod=false, ostream & S = cout){
   string head = pod? "\n=head1 ":"\n";
-  const char * prog = "getopt.test";
+  const char * prog = "mapsoft_convert";
   S << prog << " -- example of mapsoft-style getopt\n"
     << head << "Usage:\n"
     << prog << " [<general_options>|<global_input_options>]\\\n"
