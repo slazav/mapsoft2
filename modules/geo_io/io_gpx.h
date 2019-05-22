@@ -4,22 +4,30 @@
 #include "geo_data/geo_data.h"
 #include "opt/opt.h"
 
-/// Read GeoData from a gpx file
-/// Return 0 on success, -1 otherwise
-/// if opt.verbose>0 write warnings about file structure
+/* Read GeoData from a gpx file
+
+ - Options:
+   verbose -- write warnings about file structure
+
+*/
+
 void
 read_gpx (const char* filename, GeoData & data, const Opt & opt = Opt());
 
-/// Write data to a gpx file (waypoints, tracks).
-/// - Waypoint lists are mixed together or
-///    written as separate routes (controlled by gpx_write_rte option).
-/// - Throw Err() if file can not be written.
-/// - Options:
-///   xml_compr:   compress the output? 0|1, default 0;
-///   xml_indent:  use indentation? 0|1, default 1;
-///   xml_ind_str: indentation string, default "  ";
-///   xml_qchar:   quoting character for attributes, default \'
-///   gpx_write_rte: write waypoint lists as routes, 0|1, default 0
+/*  Write data to a gpx file (waypoints, tracks).
+
+ - Waypoint lists are mixed together or written as 
+   separate routes (controlled by gpx_write_rte option).
+
+ - Options:
+   xml_compr:   compress the output? 0|1, default 0;
+   xml_indent:  use indentation? 0|1, default 1;
+   xml_ind_str: indentation string, default "  ";
+   xml_qchar:   quoting character for attributes, default \'
+   gpx_write_rte: write waypoint lists as routes, 0|1, default 0
+
+*/
+
 void
 write_gpx (const char* filename, const GeoData & data, const Opt & opt = Opt());
 

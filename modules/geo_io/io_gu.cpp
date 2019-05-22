@@ -8,7 +8,6 @@
 #include "io_gu.h"
 
 using namespace std;
-
 string default_enc("KOI8-R");
 
 void read_gu (const char *fname, GeoData & data, const Opt & opts){
