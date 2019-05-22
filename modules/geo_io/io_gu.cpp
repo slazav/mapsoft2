@@ -8,10 +8,10 @@
 #include "io_gu.h"
 
 using namespace std;
-string default_enc("KOI8-R");
+string gu_default_enc("KOI8-R");
 
 void read_gu (const char *fname, GeoData & data, const Opt & opts){
-  IConv cnv(opts.get("gu_enc", default_enc).c_str(), "UTF-8");
+  IConv cnv(opts.get("gu_enc", gu_default_enc).c_str(), "UTF-8");
   if (opts.exists("verbose")) cerr <<
     "Reading GarminUtils file: " << fname << endl;
 
@@ -113,7 +113,7 @@ void write_gu_track(std::ostream & s, const GeoTrk & tr){
 
 
 void write_gu (const char *fname, const GeoData & data, const Opt & opts){
-  IConv cnv("UTF-8", opts.get("gu_enc", default_enc).c_str());
+  IConv cnv("UTF-8", opts.get("gu_enc", gu_default_enc).c_str());
   if (opts.exists("verbose")) cerr <<
     "Writing GarminUtils file: " << fname << endl;
 
