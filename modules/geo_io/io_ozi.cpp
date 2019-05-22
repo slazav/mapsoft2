@@ -79,6 +79,38 @@ void read_ozi (const char *fname, GeoData & data, const Opt & opts){
 }
 
 /***************************************************************************/
+/*******************************************************************/
+/// Read PLT.
+/**
+## Track File (.plt) -- from http://www.oziexplorer3.com/eng/help/fileformats.html
+
+Line 1 : File type and version information
+Line 2 : Geodetic Datum used for the Lat/Lon positions for each trackpoint
+Line 3 : "Altitude is in feet" - just a reminder that the altitude is always stored in feet
+Line 4 : Reserved for future use
+Line 5 : multiple fields as below
+    Field 1 : always zero (0)
+    Field 2 : width of track plot line on screen - 1 or 2 are usually the best
+    Field 3 : track color (RGB)
+    Field 4 : track description (no commas allowed)
+    Field 5 : track skip value - reduces number of track points plotted, usually set to 1
+    Field 6 : track type - 0 = normal , 10 = closed polygon , 20 = Alarm Zone
+    Field 7 : track fill style - 0 =bsSolid; 1 =bsClear; 2 =bsBdiagonal; 3 =bsFdiagonal; 4 =bsCross;
+    5 =bsDiagCross; 6 =bsHorizontal; 7 =bsVertical;
+    Field 8 : track fill color (RGB)
+Line 6 : Number of track points in the track, not used, the number of points is determined when reading the points file
+
+Trackpoint data:
+Field 1 : Latitude - decimal degrees.
+Field 2 : Longitude - decimal degrees.
+Field 3 : Code - 0 if normal, 1 if break in track line
+Field 4 : Altitude in feet (-777 if not valid)
+Field 5 : Date - see Date Format below, if blank a preset date will be used
+Field 6 : Date as a string (ignored)
+Field 7 : Time as a string (ignored)
+
+Note that OziExplorer reads the Date/Time from field 5, the date and time in fields 6 & 7 are ignored.
+*/
 void write_ozi_plt (const char *fname, const GeoTrk & trk, const Opt & opts){
   if (opts.exists("verbose")) cerr <<
     "Writing track to OziExplorer file " << fname << endl;
@@ -88,32 +120,54 @@ void write_ozi_plt (const char *fname, const GeoTrk & trk, const Opt & opts){
       << "Can't write data to OziExplorer file: " << fname;
 
   IConv cnv("UTF-8", opts.get("ozi_enc", ozi_default_enc).c_str() );
-/*
+
+
   int num = trk.size();
   f << "OziExplorer Track Point File Version 2.0\r\n"
     << "WGS 84\r\n"
     << "Altitude is in Feet\r\n"
-    << "Reserved 3\r\n"
-    << "0,"
-      << trk.width << ','
-      << (trk.color & 0xFFFFFF) << ','
-      << cnv.from_utf8(trk.comm)  << ','
-      << trk.skip  << ','
-      << trk.type.val  << ','
-      << trk.fill.val  << ','
-      << (trk.cfill & 0xFFFFFF) << "\r\n"
-      << num << "\r\n";
-    for (vector<g_trackpoint>::const_iterator p = trk.begin();.
-       p!= trk.end(); p++){
-      f << right << fixed << setprecision(6) << setfill(' ')
+    << "Reserved 3\r\n";
+/*
+  vector<string> v;
+  // Field 1 : always zero
+  v.push_back("0");
+
+  // Field 2 : width of track plot line on screen - 1 or 2 are usually the best
+  v.push_back(trk.opts.get("thickness", "1"));
+
+  // Field 3 : track color (RGB)
+  v.push_back(trk.opts.get("color", "255"));
+
+  // Field 4 : track description (no commas allowed)
+  v.push_back(trk.name);
+
+  // Field 5 : track skip value - reduces number of track points plotted, usually set to 1
+  v.push_back("1");
+
+  // Field 6 : track type - 0 = normal , 10 = closed polygon , 20 = Alarm Zone
+  v.push_back("0");
+
+  // Field 7 : track fill style - 0 =bsSolid; 1 =bsClear; 2 =bsBdiagonal;
+  //  3 =bsFdiagonal; 4 =bsCross; 5 =bsDiagCross; 6 =bsHorizontal; 7 =bsVertical;
+  v.push_back("0");
+
+  // Field 8 : track fill color (RGB)
+  v.push_back(trk.opts.get("bgcolor", "0"));
+
+  f << pack_ozi_csv(v) << "\r\n"
+    << num << "\r\n";
+
+  GeoTrk::const_iterator p;
+  for (p = trk.begin(); p!= trk.end(); p++){
+    f << right << fixed << setprecision(6) << setfill(' ')
         << setw(10)<< p->y << ','
         << setw(11)<< p->x << ','
         << ((p->start)? '1':'0') << ','
-        << setprecision(1) << setw(6).
+        << setprecision(1) << setw(6)
         << (p->have_alt() ? p->z/0.3048 : -777) << ','
         << setprecision(7) << setw(13)
-        << (p->t.value+2209161600.0)/3600.0/24.0 << ','
-        << setfill('0') << p->t << "\r\n";
+        << write_ozi_time(p->t) << ','
+        << write_fmt_time("%F, %T", p->t) << "\r\n";
     }
 */
 
@@ -140,11 +194,11 @@ void write_ozi_wpt (const char *fname, const GeoWptList & wpt, const Opt & opts)
     << "garmin\r\n"; // symbol set is not used in Ozi format
 
     for (GeoWptList::const_iterator p = wpt.begin(); p!= wpt.end(); p++){
-      vector<string> v;
       int alt = p->have_alt() ? p->z/0.3048 : -777;
       string comm = cnv(p->comm);
       if (comm.size()>40) comm.resize(40);
 
+      vector<string> v;
       v.push_back(type_to_str(++n));     // Field 1 : Number
       v.push_back(cnv(p->name));         // Field 2 : Name
       v.push_back(type_to_str(p->y));    // Field 3 : Latitude

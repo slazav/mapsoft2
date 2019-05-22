@@ -28,11 +28,14 @@ static struct ext_option options[] = {
   {"fmt",                   1, 0,  OPT_CMN, "input/ouput format"},
   {"gu_enc",                1, 0,  OPT_CMN, "Garmin Utils format charset (default KOI8-R)"},
 
-  {"xml_compr",             1, 0,  OPT_OUT, "compress xml output (gpx, kml files)"},
-  {"xml_indent",            1, 0,  OPT_OUT, "use xml indentation (gpx, kml files)"},
-  {"xml_ind_str",           1, 0,  OPT_OUT, "xml indentation string (gpx, kml files)"},
-  {"xml_qchar",             1, 0,  OPT_OUT, "xml quoting character (gpx, kml files)"},
-  {"gpx_write_rte",         1, 0,  OPT_OUT, "write waypoint lists as routes (gpx files)"},
+  {"xml_compr",             1, 0,  OPT_OUT, "compress xml output (GPX and KML formats), default 0"},
+  {"xml_indent",            1, 0,  OPT_OUT, "use xml indentation (GPX and KML formats), default 1"},
+  {"xml_ind_str",           1, 0,  OPT_OUT, "xml indentation string (GPX and KML formats), default '  '"},
+  {"xml_qchar",             1, 0,  OPT_OUT, "xml quoting character (GPX and KML formats), default '\''"},
+  {"gpx_write_rte",         1, 0,  OPT_OUT, "write waypoint lists as routes (GPX format), default 0"},
+  {"json_sort_keys",        1, 0,  OPT_OUT, "sort json objects by keys (GeoJSON format), default 1"},
+  {"json_compact",          1, 0,  OPT_OUT, "write compact json (GeoJSON format), default 0"},
+  {"json_indent",           1, 0,  OPT_OUT, "use json indentation (GeoJSON format), default 1"},
 
   {0,0,0,0}
 };

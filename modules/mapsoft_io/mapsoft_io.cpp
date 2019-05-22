@@ -3,11 +3,17 @@
 #include "geo_io/io_gpx.h"
 #include "geo_io/io_kml.h"
 #include "geo_io/io_gu.h"
+#include "geo_io/io_json.h"
+#include "geo_io/io_ozi.h"
 #include "file_ext/file_ext.h"
 
 void
 mapsoft_read(const char *fname, MapsoftData & data, const Opt & opt){
   std::string fmt = opt.get("fmt", std::string());
+
+  // JSON format
+  if (fmt == "json" || (fmt == "" && file_ext_check(fname, ".json")))
+    return read_json(fname, (GeoData &) data, opt);
 
   // Garmin Utils format
   if (fmt == "gu" || (fmt == "" && file_ext_check(fname, ".gu")))
@@ -52,6 +58,10 @@ mapsoft_read(const char *fname, MapsoftData & data, const Opt & opt){
 void
 mapsoft_write(const char *fname, const MapsoftData & data, const Opt & opt){
   std::string fmt = opt.get("fmt", std::string());
+
+  // JSON format
+  if (fmt == "json" || (fmt == "" && file_ext_check(fname, ".json")))
+    return write_json(fname, (GeoData &) data, opt);
 
   // Garmin Utils format
   if (fmt == "gu" || (fmt == "" && file_ext_check(fname, ".gu")))

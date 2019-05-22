@@ -134,6 +134,7 @@ Not supported.
 
 ### `GeoWpt` -- a waypoint
  * `x, y, z` -- read/write support
+ * `t`    -- not supported by Garmin Utils format
  * `name` -- read/write support. Spaces will be replaced by '_'.
  * `comm` -- read/write support
 
