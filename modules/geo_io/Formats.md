@@ -98,29 +98,30 @@ Not supported by GPX format.
 ----------
 ## KML format
 
-### `GeoWpt` -- a waypoint/route point
+### `GeoWpt` -- a waypoint
+Waypoint is written as KML Placemark.
  * `x, y, z` -- read/write support, `<coordinates>` tag.
- * `t`       -- not supported (by KML format?).
+ * `t`       -- read/write support, `<TimeStamp>` tag.
  * `name`    -- read/write support, `<name>` tag.
  * `comm`    -- read/write support, `<description>` tag.
 
 ### `GeoTpt` -- a track point
  * `x, y, z` -- read/write support, `<coordinates>` tag.
- * `t`       -- not supported (by KML format?).
+ * `t`       -- not supported by KML format.
  * `start`   -- read/write support (track segments).
 
 ### `GeoTrk` -- track
-KML `<Placemark> + <LineString>/<Polygon>` tags.
-
+Track is written as KML Placemark. Coordinate and altitude
+data are wrapped in `<MultiGeometry> + <LineString>/<Polygon>`
+tags.
  * `name`    -- read/write support, `<name>` tag.
  * `comm`    -- read/write support, `<description>` tag.
  * `opt("type")` -- open/closed
 
 ### `GeoWptList` -- a waypoint list, a route
-KML `<Folder>` tag.
+Waypoint lists are written as KML `<Folder>` tag.
  * `name`    -- read/write support, `<name>` tag.
  * `comm`    -- read/write support, `<description>` tag.
-
 
 ### `GeoMap` -- a map
 

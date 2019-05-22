@@ -12,6 +12,11 @@
           17.469997,79.024290,1186.4
           17.470125,79.024274,1186.9
           17.470630,79.024116,1185.4
+        </coordinates>
+      </LineString>
+      <LineString>
+        <tessellate>1</tessellate>
+        <coordinates>
           17.471312,79.024049,1189.3
           17.465856,79.024743,1169.6
           17.465218,79.024816,1171.0
@@ -28,6 +33,9 @@
     <Placemark>
       <name><![CDATA[177]]></name>
       <description><![CDATA[point description]]></description>
+      <TimeStamp>
+        <when>2018-04-28T07:55:47Z</when>
+      </TimeStamp>
       <Point>
         <coordinates>17.514688,79.012182,1508.8</coordinates>
       </Point>

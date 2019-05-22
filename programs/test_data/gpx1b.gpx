@@ -45,6 +45,8 @@
         <ele>1186.40</ele>
         <time>2018-04-28T07:13:25Z</time>
       </trkpt>
+    </trkseg>
+    <trkseg>
       <trkpt lat='79.0242742' lon='17.4701254'>
         <ele>1186.88</ele>
         <time>2018-04-28T07:13:28Z</time>

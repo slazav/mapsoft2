@@ -2,17 +2,18 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
-
 #include <vector>
 #include <string>
 #include <map>
+#include <math.h>
+
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-#include "io_kml.h"
-
-#include <math.h>
+#include "time_fmt/time_fmt.h"
 #include "err/err.h"
+
+#include "io_kml.h"
 
 using namespace std;
 
@@ -100,8 +101,16 @@ write_kml (const char* filename, const GeoData & data, const Opt & opts){
         start_element(writer, "Placemark");
         write_cdata_element(writer, "name", wp->name);
         write_cdata_element(writer, "description", wp->comm);
-        start_element(writer, "Point");
 
+        if (wp->t > 0){
+          start_element(writer, "TimeStamp");
+          if (xmlTextWriterWriteFormatElement(writer,
+             BAD_CAST "when", "%s", write_utc_iso_time(wp->t).c_str())<0)
+               throw "writing <when> element";
+          end_element(writer, "TimeStamp");
+        }
+
+        start_element(writer, "Point");
         if (xmlTextWriterWriteFormatElement(writer,
            BAD_CAST "coordinates", "%.7f,%.7f,%.2f",
                wp->x, wp->y, wp->z)<0)
@@ -126,8 +135,6 @@ write_kml (const char* filename, const GeoData & data, const Opt & opts){
 
         if (tp->start || tp == data.trks[i].begin()) {
           if (tp != data.trks[i].begin()) {
-            if (xmlTextWriterWriteFormatString(writer, "\n")<0)
-              throw "writing <coordinates> element";
             if (xmlTextWriterEndElement(writer) < 0) throw "closing <coordinates> element";
             if (xmlTextWriterEndElement(writer) < 0) throw "closing line element";
           }
@@ -142,8 +149,6 @@ write_kml (const char* filename, const GeoData & data, const Opt & opts){
            " %.7f,%.7f,%.2f", tp->x, tp->y, tp->z)<0)
           throw "writing <coordinates> element";
       }
-//      if (xmlTextWriterWriteFormatString(writer, "\n")<0)
-//        throw "writing <coordinates> element";
       end_element(writer, "coordinates");
       end_element(writer, linename);
       end_element(writer, "MultiGeometry");
@@ -190,6 +195,26 @@ read_text_node(xmlTextReaderPtr reader, const char * nn, string & str){
     else if (type == TYPE_TEXT || type == TYPE_CDATA) str += GETVAL;
     else if (NAMECMP(nn) && (type == TYPE_ELEM_END)) break;
     else cerr << "Warning: Unknown node \"" << name << "\" in text node (type: " << type << ")\n";
+  }
+  return ret;
+}
+
+int
+read_timestamp_node(xmlTextReaderPtr reader, const char * nn, string & str){
+  int ret=1;
+  str.clear();
+  while(1){
+    ret =xmlTextReaderRead(reader);
+    if (ret != 1) break;
+
+    const xmlChar *name = xmlTextReaderConstName(reader);
+    int type = xmlTextReaderNodeType(reader);
+
+    if (type == TYPE_SWS) continue;
+    else if (NAMECMP("when") && (type == TYPE_ELEM))
+      ret=read_text_node(reader, "when", str);
+    else if (NAMECMP(nn) && (type == TYPE_ELEM_END)) break;
+    else cerr << "Warning: Unknown node \"" << name << "\" in TimeStamp node (type: " << type << ")\n";
   }
   return ret;
 }
@@ -439,8 +464,12 @@ read_placemark_node(xmlTextReaderPtr reader,
        T.comm = str;
       mm.comm = str;
     }
-//    else if (NAMECMP("TimeStamp") && (type == TYPE_ELEM)){
-//    }
+    else if (NAMECMP("TimeStamp") && (type == TYPE_ELEM)){
+      string str;
+      ret=read_timestamp_node(reader, "TimeStamp", str);
+      if (ret != 1) break;
+      if (str!="") ww.t = parse_utc_time(str);
+    }
     else if (NAMECMP("Point") && (type == TYPE_ELEM)){
       ot=0;
       ret=read_point_node(reader, ww);
