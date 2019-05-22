@@ -1,6 +1,6 @@
 #!/bin/bash -efu
 
-## GPX input/output
+## KML input/output
 
 P=${1:-./mapsoft_convert}
 . test_lib.sh
@@ -24,3 +24,14 @@ assert_diff test_data/kml1a.kml tmp.kml
 assert "$P test_data/kml1b.kml -o tmp.kml"  "" 0
 assert_diff test_data/kml1a.kml tmp.kml
 
+# kmz
+rm -f tmp.kmz tmp.kml
+assert "$P test_data/kml1.kml -o tmp.kmz"  "" 0
+unzip tmp.kmz &> /dev/null
+assert_diff test_data/kml1a.kml tmp.kml
+rm -f tmp.kmz
+
+# specify format
+assert "$P test_data/kml1.kml -o tmp --fmt kml"  "" 0
+assert "$P tmp --fmt kml -o tmp --fmt kml"  "" 0
+assert_diff test_data/kml1a.kml tmp
