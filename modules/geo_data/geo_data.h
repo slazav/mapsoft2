@@ -33,10 +33,10 @@ struct GeoWpt : dPoint {
   time_t t;         ///< unix time (ms)
 
   /// constructors
-  GeoWpt() {z=UNDEF_ALT;}
+  GeoWpt() {z=UNDEF_ALT; t=0;}
   GeoWpt(const dPoint &p): dPoint(p){}
   GeoWpt(const double x, const double y, const double z=UNDEF_ALT):
-    dPoint(x,y,z){}
+    dPoint(x,y,z), t(0){}
 
   /// check if altitude is defined
   bool have_alt() const {return z>UNDEF_ALT;}
