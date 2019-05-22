@@ -65,6 +65,19 @@ main(){
      assert( abs(parse_ozi_time(write_ozi_time(15334739115959)) - 15334739115959) < 10);
 
 
+     // write_fmt_time
+     time_t t1 = parse_utc_time("2018/08/05 12:58:31.01");
+     time_t t2 = parse_utc_time("2018/08/05 12:58:31");
+     assert(write_fmt_time("%Y-%m-%d %H:%M:%S%f", t1) == "2018-08-05 12:58:31.010");
+     assert(write_fmt_time("%Y-%m-%d %H:%M:%S%f", t2) == "2018-08-05 12:58:31");
+     assert(write_fmt_time("%y", t1) == "18");
+     assert(write_fmt_time("%F", t1) == "2018-08-05");
+     assert(write_fmt_time("%T", t1) == "12:58:31");
+     assert(write_fmt_time("", t1) == "");
+     assert(write_fmt_time("a%", t1) == "a");
+     assert(write_fmt_time("%%%t%n", t1) == "%\t\n");
+     assert(atoi(write_fmt_time("%s", t1).c_str()) == t1/1000);
+
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";

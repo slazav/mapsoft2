@@ -8,39 +8,58 @@ using namespace std;
 
 string
 write_utc_iso_time(const time_t t){
-  time_t s  = t/1000;
-  time_t ms = t%1000;
-  struct tm ts;
-  gmtime_r(&s, &ts);
-  ostringstream str;
-  str << setfill('0')
-      << setw(4) << ts.tm_year+1900 << '-'
-      << setw(2) << ts.tm_mon+1 << '-'
-      << setw(2) << ts.tm_mday  << 'T'
-      << setw(2) << ts.tm_hour  << ':'
-      << setw(2) << ts.tm_min   << ':'
-      << setw(2) << ts.tm_sec;
-  if (ms) str << "." << setfill('0') << setw(3) << ms;
-  str << 'Z';
-  return str.str();
+  return write_fmt_time("%FT%T%fZ",t);
 }
 
 string
 write_utc_time_s(const time_t t){
+  return write_fmt_time("%F %T", t);
+}
+
+string
+write_fmt_time(const char *fmt, const time_t t){
   time_t s  = t/1000;
   time_t ms = t%1000;
   struct tm ts;
   gmtime_r(&s, &ts);
   ostringstream str;
-  str << setfill('0')
-      << setw(4) << ts.tm_year+1900 << '-'
-      << setw(2) << ts.tm_mon+1 << '-'
-      << setw(2) << ts.tm_mday  << ' '
-      << setw(2) << ts.tm_hour  << ':'
-      << setw(2) << ts.tm_min   << ':'
-      << setw(2) << ts.tm_sec;
+  str << setfill('0');
+
+  bool f = false;
+  for (const char *c = fmt; *c!=0; c++){
+    if (f) {
+      switch (*c){
+        case 'Y': str << setw(4) << ts.tm_year+1900; break;
+        case 'y': str << setw(2) << ts.tm_year%100; break;
+        case 'm': str << setw(2) << ts.tm_mon+1; break;
+        case 'd': str << setw(2) << ts.tm_mday; break;
+        case 'H': str << setw(2) << ts.tm_hour; break;
+        case 'M': str << setw(2) << ts.tm_min; break;
+        case 'S': str << setw(2) << ts.tm_sec; break;
+
+        case 'F': str << setw(4) << ts.tm_year+1900 << "-"
+                      << setw(2) << ts.tm_mon+1 << "-"
+                      << setw(2) << ts.tm_mday; break;
+        case 'T': str << setw(2) << ts.tm_hour << ":"
+                      << setw(2) << ts.tm_min << ":"
+                      << setw(2) << ts.tm_sec; break;
+
+        case '%': str << '%'; break;
+        case 'n': str << '\n'; break;
+        case 't': str << '\t'; break;
+        case 's': str << setw(2) << s; break;
+        case 'f': if (ms) str << "." << setw(3) << ms; break; // non-standard
+      }
+      f=false;
+    }
+    else {
+      if (*c == '%') f = true;
+      else str << *c;
+    }
+  }
   return str.str();
 }
+
 
 time_t
 parse_utc_time(const string & str){

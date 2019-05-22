@@ -21,3 +21,22 @@ Functions:
 * `time_t parse_ozi_time(const std::string & str)` --
    Convert Ozi time format to mapsoft time.
 
+* `std::string write_fmt_time(const char *fmt, const time_t t)` -- Format time
+
+Supported format sequences:
+- %%  a literal %
+- %n  a newline
+- %t  a tab
+- %Y  year
+- %y  last two digits of year (00..99)
+- %m  month (01..12)
+- %d  day of month (e.g., 01)
+- %H  hour (00..23)
+- %M  minute (00..59)
+- %S  second (00..60)
+- %F  same as %Y-%m-%d
+- %T  same as %H:%M:%S
+- %s  seconds since 1970-01-01 00:00:00 UTC
+- %f  fractional part of a second it it is non-zero (non-standard)
+
+
