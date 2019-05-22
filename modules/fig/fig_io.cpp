@@ -7,7 +7,7 @@
 #include "iconv/iconv.h"
 
 using namespace std;
-string default_enc("KOI8-R");
+string fig_default_enc("KOI8-R");
 
 /******************************************************************/
 // extract a value from a single line
@@ -201,7 +201,7 @@ int read_figobj_header(FigObj & o, const std::string & header){
 
 /******************************************************************/
 void read_fig(std::istream & s, Fig & w, const Opt & ropts){
-  string enc = ropts.get("fig_enc", default_enc);
+  string enc = ropts.get("fig_enc", fig_default_enc);
   IConv cnv(enc.c_str(), "UTF-8");
 
   if (ropts.get("fig_header", 1)) {
@@ -434,7 +434,7 @@ write_text(std::ostream & s, const string & text, bool txt7bit){
 void
 write_fig(ostream & s, const Fig & w, const Opt & wopts){
 
-  string enc = wopts.get("fig_enc", default_enc);
+  string enc = wopts.get("fig_enc", fig_default_enc);
   IConv cnv("UTF-8", enc.c_str());
 
   bool txt7bit = wopts.get("fig_7bit", false);
