@@ -12,20 +12,6 @@
 ///\defgroup TimeFmt different time formats
 ///@{
 
-/// Format mapsoft time (1000*unix_time) for gpx file.
-/// UTC, ISO 8601, fractional seconds allowed
-/// Example: 2011-09-27T18:50:03.123Z
-
-/// Convert mapsoft time to UTC time represented as ISO 8601 string
-/// Examples:
-///  0 -> "1970-01-01T00:00:00Z"
-///  1533473911000 -> "2018-08-05T12:58:31Z"
-///  1533473911001 -> "2018-08-05T12:58:31.001Z"
-std::string write_utc_iso_time(const time_t t);
-
-/// Convert mapsoft time to UTC time in "%Y-%m-%d %H:%M:%S" format
-std::string write_utc_time_s(const time_t t);
-
 /** Format time
 Supported format sequences:
  %%  a literal %

@@ -7,16 +7,6 @@
 using namespace std;
 
 string
-write_utc_iso_time(const time_t t){
-  return write_fmt_time("%FT%T%fZ",t);
-}
-
-string
-write_utc_time_s(const time_t t){
-  return write_fmt_time("%F %T", t);
-}
-
-string
 write_fmt_time(const char *fmt, const time_t t){
   time_t s  = t/1000;
   time_t ms = t%1000;

@@ -237,7 +237,7 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
         // time
         if (wp->t > 0 &&
             xmlTextWriterWriteFormatElement(writer,
-              BAD_CAST "time", "%s", write_utc_iso_time(wp->t).c_str())<0)
+              BAD_CAST "time", "%s", write_fmt_time("%FT%T%fZ", wp->t).c_str())<0)
           throw "writing <time> element";
 
         // name
@@ -321,7 +321,7 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
         // time
         if (tp->t && xmlTextWriterWriteFormatElement(writer,
               BAD_CAST "time", "%s",
-                 write_utc_iso_time(tp->t).c_str())<0)
+                 write_fmt_time("%FT%T%fZ", tp->t).c_str())<0)
           throw "writing <time> element";
 
 

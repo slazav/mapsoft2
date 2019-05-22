@@ -105,7 +105,7 @@ write_kml (const char* filename, const GeoData & data, const Opt & opts){
         if (wp->t > 0){
           start_element(writer, "TimeStamp");
           if (xmlTextWriterWriteFormatElement(writer,
-             BAD_CAST "when", "%s", write_utc_iso_time(wp->t).c_str())<0)
+             BAD_CAST "when", "%s", write_fmt_time("%FT%T%fZ", wp->t).c_str())<0)
                throw "writing <when> element";
           end_element(writer, "TimeStamp");
         }

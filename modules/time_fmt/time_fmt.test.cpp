@@ -8,20 +8,13 @@
 int
 main(){
   try{
-     assert(write_utc_iso_time(0)              == "1970-01-01T00:00:00Z");
-     assert(write_utc_iso_time(1533473911000)  == "2018-08-05T12:58:31Z");
-     assert(write_utc_iso_time(1533473911001)  == "2018-08-05T12:58:31.001Z");
-     assert(write_utc_iso_time(1533473911123)  == "2018-08-05T12:58:31.123Z");
-     assert(write_utc_iso_time(15334739110000) == "2455-12-09T09:45:10Z");
-
-     assert(write_utc_time_s(0)              == "1970-01-01 00:00:00");
-     assert(write_utc_time_s(1533473911000)  == "2018-08-05 12:58:31");
-     assert(write_utc_time_s(1533473911001)  == "2018-08-05 12:58:31");
-     assert(write_utc_time_s(1533473911123)  == "2018-08-05 12:58:31");
-     assert(write_utc_time_s(15334739110000) == "2455-12-09 09:45:10");
+     assert(write_fmt_time("%FT%T%fZ", 0)              == "1970-01-01T00:00:00Z");
+     assert(write_fmt_time("%FT%T%fZ", 1533473911000)  == "2018-08-05T12:58:31Z");
+     assert(write_fmt_time("%FT%T%fZ", 1533473911001)  == "2018-08-05T12:58:31.001Z");
+     assert(write_fmt_time("%FT%T%fZ", 1533473911123)  == "2018-08-05T12:58:31.123Z");
+     assert(write_fmt_time("%FT%T%fZ", 15334739110000) == "2455-12-09T09:45:10Z");
 
      assert(parse_utc_time("2018/08/05	12:58:31.1") == 1533473911100);
-
 
      try { parse_utc_time(""); }
      catch (Err e) {assert (e.str() == "Unsupported time format: \"\"");}
@@ -48,9 +41,9 @@ main(){
      assert(parse_utc_time("2018/08/05	12:58:31.001 ") == 1533473911001);
      assert(parse_utc_time("2018/08/05	12:58:31.1") == 1533473911100);
 
-     assert(parse_utc_time(write_utc_iso_time(0)) == 0);
-     assert(parse_utc_time(write_utc_iso_time(123456789)) == 123456789);
-     assert(parse_utc_time(write_utc_iso_time(123456789000)) == 123456789000);
+     assert(parse_utc_time(write_fmt_time("%FT%T%fZ", 0)) == 0);
+     assert(parse_utc_time(write_fmt_time("%FT%T%fZ", 123456789)) == 123456789);
+     assert(parse_utc_time(write_fmt_time("%FT%T%fZ", 123456789000)) == 123456789000);
 
      assert( write_ozi_time(-2209161600000) == "0.0000000");
      assert( write_ozi_time(0) == "25569.0000000");
