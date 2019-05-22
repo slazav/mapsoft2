@@ -596,9 +596,17 @@ read_document_node(xmlTextReaderPtr reader, GeoData & data){
       string str;
       ret=read_text_node(reader, "name", str);
       if (ret != 1) break;
-      W.opts.put("name", str);
-      T.opts.put("name", str);
-      M.opts.put("name", str);
+      W.name = str;
+      T.name = str;
+      M.name = str;
+    }
+    else if (NAMECMP("description") && (type == TYPE_ELEM)){
+      string str;
+      ret=read_text_node(reader, "description", str);
+      if (ret != 1) break;
+      W.comm = str;
+      T.comm = str;
+      M.comm = str;
     }
     else if (NAMECMP("Placemark") && (type == TYPE_ELEM)){
       ret=read_placemark_node(reader, W, T, M);
