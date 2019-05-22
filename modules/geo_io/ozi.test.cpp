@@ -4,7 +4,7 @@
 #include <cassert>
 #include <string>
 #include <vector>
-#include "ozi.h"
+#include "io_ozi.h"
 #include "err/err.h"
 
 using namespace std;

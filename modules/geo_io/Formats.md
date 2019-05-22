@@ -89,7 +89,9 @@ Additional fields (read/write support, put in options):
  * `number` -- GPS route number.
  * `type` -- Type (classification) of route
 
-`<extension>` tag is skipped.
+`<extension>` tag is skipped. It could be useful to read color from there:
+`<extensions><gpxx:TrackExtension><gpxx:DisplayColor>Cyan`
+`</gpxx:DisplayColor></gpxx:TrackExtension></extensions>`
 
 ### `GeoMap` -- a map
 
@@ -144,11 +146,16 @@ Not supported.
 
 ### `GeoMap` -- a map
 
-Not supported.
+Not supported by Garmin Utils format.
 
 ----------
 ## OziExplorer format
+### `GeoWpt` -- a waypoint
+ * `x, y, z` -- write support
+ * `name` -- write support.
+ * `comm` -- write support, cut to 40 symbols.
 
+Other fields:
 
 ----------
 ## GeoJSON format
