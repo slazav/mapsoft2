@@ -1,0 +1,23 @@
+#!/bin/bash -efu
+
+## Garmin Utils input/output
+
+P=${1:-./mapsoft_convert}
+. test_lib.sh
+
+# read and do nothing
+assert "$P test_data/gu1.gu"  "" 0
+
+# Convert a simple gpx with track, waypoints, route.
+# By default all routes are converted to waypoints.
+assert "$P test_data/gu1.gu -o tmp.gu --gu_enc UTF8"  "" 0
+assert_diff test_data/gu1a.gu tmp.gu
+
+# read written files again
+assert "$P test_data/gu1a.gu --gu_enc UTF8 -o tmp.gu --gu_enc UTF8"  "" 0
+assert_diff test_data/gu1a.gu tmp.gu
+
+# specify format
+assert "$P test_data/gu1.gu -o tmp --fmt gu"  "" 0
+assert "$P tmp --fmt gu -o tmp --fmt gu"  "" 0
+assert_diff test_data/gu1a.gu tmp
