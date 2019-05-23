@@ -41,7 +41,6 @@ Opt::check_unknown (std::list<std::string> known) const {
 
 // input/output operators for options
 std::ostream & operator<< (std::ostream & s, const Opt & o){
-  json_error_t e;
   json_t *J = json_object();
   for (auto i: o){
     json_object_set(J, i.first.c_str(), json_string(i.second.c_str()));
@@ -65,9 +64,9 @@ std::istream & operator>> (std::istream & s, Opt & o){
   json_t *J = json_loadb(str.data(), str.size(), 0, &e);
 
   o.clear(); // clear old contents
+  if (!J)
+    throw Err() << e.text;
   try {
-    if (!J)
-      throw Err() << e.text;
     if (!json_is_object(J))
       throw Err() << "Reading Opt: a JSON object with string fields expected";
 
