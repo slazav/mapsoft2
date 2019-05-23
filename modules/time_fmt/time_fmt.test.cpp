@@ -75,6 +75,13 @@ main(){
      assert(write_fmt_time("%a", t1) == "Thu");
      assert(write_fmt_time("%b", t1) == "May");
 
+     // incomplete date
+     assert(parse_utc_time("2019/05/23 12:10:00") == parse_utc_time("2019/05/23 12:10"));
+     assert(parse_utc_time("2019/05/23 12:00:00") == parse_utc_time("2019/05/23 12"));
+     assert(parse_utc_time("2019/05/23 00:00:00") == parse_utc_time("2019/05/23"));
+     assert(parse_utc_time("2019/05/01 00:00:00") == parse_utc_time("2019/05"));
+     assert(parse_utc_time("2019/01/01 00:00:00") == parse_utc_time("2019"));
+
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";
