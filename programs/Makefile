@@ -4,7 +4,8 @@ OTHER_TESTS :=\
   mapsoft.test2\
   mapsoft.test3\
   mapsoft.test4\
-  mapsoft.test5
+  mapsoft.test5\
+  mapsoft.test6\
 
 MODDIR      := ../modules
 

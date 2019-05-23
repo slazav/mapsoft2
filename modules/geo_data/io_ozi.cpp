@@ -15,6 +15,12 @@
 using namespace std;
 string ozi_default_enc("WINDOWS-1251");
 
+void
+crop_nl(string & s){
+  if (s.size() && *s.rbegin()=='\n') s.resize(s.size()-1);
+  if (s.size() && *s.rbegin()=='\r') s.resize(s.size()-1);
+}
+
 /***************************************************************************/
 /// Unpack Ozi-style CSV lines.
 /**
@@ -34,6 +40,7 @@ vector<string> unpack_ozi_csv(const string & str, unsigned int count){
   do {
     p2=str.find(',', p1);
     string field = str.substr(p1,p2-p1);
+    crop_nl(field);
     replace( field.begin(), field.end(), (char)209, ',');
     ret.push_back(field);
     if (count && ret.size()==count) break;
@@ -89,6 +96,96 @@ void read_ozi (const char *fname, GeoData & data, const Opt & opts){
 
   IConv cnv(opts.get("ozi_enc", ozi_default_enc).c_str(), "UTF-8");
 
+  string s1,s2,s3;
+  f >> s1 >> s2;
+  getline(f,s3);
+
+  if (s1!="OziExplorer") throw Err() << "Not an OziExplorer file: " << fname;
+
+  //// TRACK
+  if (s2 == "Track"){
+    GeoTrk trk;
+    getline(f,s1);
+    crop_nl(s1);
+    if (s1 != "WGS 84") throw Err() << "Unsupported datum: " << s1;
+    getline(f,s1); // Altitude is in Feet
+    getline(f,s1); // Reserved
+    getline(f,s1);
+    vector<string> v = unpack_ozi_csv(s1,8);
+    if (v[1] != "") trk.opts.put("thickness", v[1]);
+    if (v[2] != "") trk.opts.put("color", v[2]);
+    if (v[3] != "") trk.name = cnv(v[3]);
+    if (v[4] != "") trk.opts.put("ozi_skip", v[4]);
+    if (v[5] != "") trk.opts.put("ozi_type", v[5]);
+    if (v[6] != "") trk.opts.put("ozi_fill", v[6]);
+    if (v[7] != "") trk.opts.put("bgcolor",  v[7]);
+    getline(f,s1); // number of points -- ignored
+
+    while (!f.eof()){
+      GeoTpt pt;
+      getline(f,s1);
+      vector<string> v = unpack_ozi_csv(s1,7);
+      if (v[0] == "" && v[1] == "") continue; // skip empty lines
+      pt.y = str_to_type<double>(v[0]);
+      pt.x = str_to_type<double>(v[1]);
+      if (v[2] != "") pt.start = str_to_type<bool>(v[2]);
+      if (v[3] != "" && v[3]!="-777") pt.z = str_to_type<double>(v[3]) * 0.3048;
+      if (v[4] != "") pt.t = parse_ozi_time(v[4]);
+      // fields 6,7 are ignored.
+      trk.push_back(pt);
+    }
+    data.trks.push_back(trk);
+    return;
+  }
+
+  //// WAYPOINTS
+  if (s2 == "Waypoint"){
+    GeoWptList wptl;
+    getline(f,s1);
+    crop_nl(s1);
+    if (s1 != "WGS 84") throw Err() << "Unsupported datum: " << s1;
+    getline(f,s1); // Reserved
+    getline(f,s1); // symbol set (not used)
+
+    while (!f.eof()){
+      GeoWpt pt;
+      getline(f,s1);
+      vector<string> v = unpack_ozi_csv(s1,24);
+      if (v[2] == "" && v[3] == "") continue; // skip empty lines
+      pt.name = cnv(v[1]);
+      pt.y = str_to_type<double>(v[2]);
+      pt.x = str_to_type<double>(v[3]);
+      if (v[4] != "") pt.t = parse_ozi_time(v[4]);
+      if (v[5] != "") pt.opts.put("ozi_symb", v[5]);
+      if (v[7] != "") pt.opts.put("ozi_map_displ", v[7]);
+      if (v[8] != "") pt.opts.put("color",   v[8]);
+      if (v[9] != "") pt.opts.put("bgcolor", v[9]);
+      if (v[10] != "") pt.comm = cnv(v[10]);
+      if (v[11] != "") pt.opts.put("ozi_pt_dir", v[11]);
+      if (v[12] != "") pt.opts.put("ozi_displ", v[12]);
+      if (v[13] != "") pt.opts.put("ozi_prox_dist", v[13]);
+      if (v[14] != "" && v[14]!="-777") pt.z = str_to_type<double>(v[14]) * 0.3048;
+      if (v[15] != "") pt.opts.put("ozi_font_size", v[15]);
+      if (v[16] != "") pt.opts.put("ozi_font_style", v[16]);
+      if (v[17] != "") pt.opts.put("ozi_symb_size", v[17]);
+      if (v[17] != "") pt.opts.put("ozi_prox_pos",   v[18]);
+      if (v[19] != "") pt.opts.put("ozi_prox_time",  v[19]);
+      if (v[20] != "") pt.opts.put("ozi_prox_route", v[20]);
+      if (v[21] != "") pt.opts.put("ozi_file",       v[21]);
+      if (v[22] != "") pt.opts.put("ozi_prox_file",  v[22]);
+      if (v[23] != "") pt.opts.put("ozi_prox_symb",  v[23]);
+      wptl.push_back(pt);
+    }
+    data.wpts.push_back(wptl);
+    return;
+  }
+
+  //// MAP
+  if (s2 == "Map"){
+std::cerr << "map\n";
+    return;
+  }
+
   /**/
 }
 
@@ -140,14 +237,14 @@ void write_ozi_plt (const char *fname, const GeoTrk & trk, const Opt & opts){
     // Field 6 : Date as a string (ignored)
     // Field 7 : Time as a string (ignored)
     f << right << fixed << setprecision(6) << setfill(' ')
-        << setw(10)<< p.y << ','
-        << setw(11)<< p.x << ','
+        << setw(11) << p.y << ','
+        << setw(11) << p.x << ','
         << ((p.start)? '1':'0') << ','
-        << setprecision(1) << setw(6)
+        << setprecision(1) << setw(7)
         << (p.have_alt() ? p.z/0.3048 : -777) << ','
         << setprecision(7) << setw(13)
         << write_ozi_time(p.t) << ','
-        << write_fmt_time("%d-%b-%y, %T", p.t) << "\r\n";
+        << write_fmt_time(" %d-%b-%y, %T", p.t) << "\r\n";
     }
 
   if (!f.good()) throw Err()
@@ -201,22 +298,32 @@ void write_ozi_wpt (const char *fname, const GeoWptList & wpt, const Opt & opts)
       // Field 24 : Proximity Symbol Name
       f << ++n << ','
         << convert_ozi_text(cnv(p.name)) << ','
-        << fixed << setprecision(6) << p.y << ','
-        << fixed << setprecision(6) << p.x << ','
-        << write_ozi_time(p.t) << ','
-        << p.opts.get("ozi_symb", 0) << ','
-        << 1 << ','
-        << p.opts.get("ozi_map_displ", 0) << ','
-        << p.opts.get("color", 0xFF0000) << ','
-        << p.opts.get("bgcolor", 0xFFFFFF) << ','
-        << convert_ozi_text(cnv(p.comm)) << ','
-        << p.opts.get("ozi_pt_dir", 0) << ','
-        << p.opts.get("ozi_displ", 0) << ','
-        << p.opts.get("ozi_prox_dist", 0) << ','
-        << (p.have_alt() ? p.z/0.3048 : -777) << ','
-        << p.opts.get("ozi_font_size", 0) << ','
-        << p.opts.get("ozi_font_style", 0) << ','
-        << p.opts.get("ozi_symb_size", 0)<< "\r\n";
+        << right << fixed << setprecision(6) << setfill(' ')
+        << setw(11) << p.y << ','
+        << setw(11) << p.x << ',';
+      vector<string> v;
+      v.push_back(write_ozi_time(p.t));
+      v.push_back(p.opts.get("ozi_symb",       ""));
+      v.push_back(" 1");
+      v.push_back(p.opts.get("ozi_map_displ",  ""));
+      v.push_back(p.opts.get("color",          ""));
+      v.push_back(p.opts.get("bgcolor",        ""));
+      v.push_back(cnv(p.comm));
+      v.push_back(p.opts.get("ozi_pt_dir",     ""));
+      v.push_back(p.opts.get("ozi_displ",      ""));
+      v.push_back(p.opts.get("ozi_prox_dist",  ""));
+      v.push_back(p.have_alt() ? type_to_str(p.z/0.3048) : "-777");
+      v.push_back(p.opts.get("ozi_font_size",  ""));
+      v.push_back(p.opts.get("ozi_font_style", ""));
+      v.push_back(p.opts.get("ozi_symb_size",  ""));
+      v.push_back(p.opts.get("ozi_prox_pos",   ""));
+      v.push_back(p.opts.get("ozi_prox_time",  ""));
+      v.push_back(p.opts.get("ozi_prox_route", ""));
+      v.push_back(p.opts.get("ozi_file",       ""));
+      v.push_back(p.opts.get("ozi_prox_file",  ""));
+      v.push_back(p.opts.get("ozi_prox_symb",  ""));
+      f << pack_ozi_csv(v);
+      f << "\r\n";
         // skip fields 19..24
     }
     if (!f.good()) throw Err()

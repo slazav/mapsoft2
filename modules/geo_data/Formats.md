@@ -57,7 +57,7 @@ waypoints).
 
 For waypoints all mandatory
 fields (`x`, `y`, `z`, `t`, `name`, `comm`) are supported. Some additional
-fields are put in `opt` and can be saved to GPX again:
+fields are put in `opts` and can be saved to GPX again:
 
  * `magvar` -- Magnetic variation (in degrees) at the point.
  * `geoidheight` -- Height (in meters) of geoid (mean sea level) above WGS84
@@ -87,7 +87,7 @@ waypoint list, and all routes to other waypoint lists.
 
 For tracks and waypoint lists For waypoints mandatory
 fields (`name`, `comm`) are supported. Some additional fields
-are put in `opt` and can be saved to GPX again:
+are put in `opts` and can be saved to GPX again:
 
  * `desc` -- Text description of route for user. Not sent to GPS.
  * `src` -- Source of data. Included to give user some idea of reliability
@@ -205,13 +205,34 @@ Output pptions:
  - geo_skip_zt (default 0) -- skip altitude and time information
 
 ----------
+## OziExplorer format
+Mapsoft2 supports reading and writing OziExplorer files (tracks and
+waypoints). All data fields of Mapsoft structures are supported.
+
+Each waypoint list and each track is written to a separate file.
+Format is detected as usual, by file extension (`.wpt`, `.trk`, or `.map`)
+or `--fmt ozi` option, but wriiten files have extensions accorting to the data:
+`<name>[<number>].wpt` for waypoint lists, `<name>[<number>].trk` for tracks,
+`<name>[<number>][_<number>].map` for maps.
+
+All OziExplorer-specific fields are stored in `opts` and can be saved to
+a OziExplorer file again.
+
+TODO: map support!
+
+Input options:
+ - verbose (default: 0)
+ - ozi_enc (default: Windows-1251)
+
+Output pptions:
+ - verbose (default 0)
+ - ozi_enc (default: Windows-1251)
+----------
 ## Mapsoft XML format
 
 In original mapsoft there was a self-made xml-like format for data. There is
 no plan to support it.
 
-----------
-## OziExplorer format
 
 
 

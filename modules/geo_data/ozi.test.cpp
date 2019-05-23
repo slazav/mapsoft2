@@ -24,7 +24,7 @@ int
 main() {
   try{
 
-    assert( merge_strings(unpack_ozi_csv(",aa,b,c,ddd,,eee")) ==
+    assert( merge_strings(unpack_ozi_csv(",aa,b,c,ddd,,eee\r")) ==
             "[] [aa] [b] [c] [ddd] [] [eee] ");
     assert( merge_strings(unpack_ozi_csv("v,,,eee,,")) ==
             "[v] [] [] [eee] [] [] ");
