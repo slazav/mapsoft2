@@ -119,6 +119,9 @@ class Opt : public std::map<std::string,std::string>{
     return str_to_type<T>(it->second);
   }
 
+  // version for const char *
+  std::string get (const std::string & key, const char *def) const;
+
   /// Check if option exists.
   bool exists (const std::string & key) const {return find(key) != end();}
 

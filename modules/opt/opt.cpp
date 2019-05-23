@@ -24,6 +24,14 @@ int str_to_type<int>(const std::string & s){
 template<>
 std::string type_to_str<std::string>(const std::string & t){ return t; }
 
+// version for const char *
+std::string
+Opt::get (const std::string & key, const char *def) const {
+  std::map<std::string, std::string>::const_iterator it = find(key);
+  if (it == end()) return std::string(def);
+  return it->second;
+}
+
 void
 Opt::check_unknown (std::list<std::string> known) const {
   std::string unknown;

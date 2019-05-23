@@ -40,6 +40,9 @@ String representation is a JSON object with string fields.
 -----------------
 ## Changelog:
 
+2019.05.24 V.Zavjalov 1.4:
+- allow const char* default value in opt.get()
+
 2019.05.20 V.Zavjalov 1.3:
 - put(Opt) method for merging options
 
