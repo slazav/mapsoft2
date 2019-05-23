@@ -388,6 +388,12 @@ read_wpt_node(xmlTextReaderPtr reader, GeoWptList & data){
   wpt.y = atof(GETATTR("lat"));
   wpt.x = atof(GETATTR("lon"));
   std::string state="";
+
+  if (xmlTextReaderIsEmptyElement(reader)) {
+    data.push_back(wpt);
+    return 1;
+  }
+
   while(1){
     int ret =xmlTextReaderRead(reader);
     if (ret != 1) return ret;
@@ -450,6 +456,12 @@ read_trkpt_node(xmlTextReaderPtr reader, GeoTrk & trk, bool start){
   pt.y = atof(GETATTR("lat"));
   pt.x = atof(GETATTR("lon"));
 
+  if (xmlTextReaderIsEmptyElement(reader)) {
+    pt.start = start;
+    trk.push_back(pt);
+    return 1;
+  }
+
   while(1){
     int ret =xmlTextReaderRead(reader);
     if (ret != 1) return ret;
@@ -481,7 +493,7 @@ read_trkpt_node(xmlTextReaderPtr reader, GeoTrk & trk, bool start){
         pt.t = parse_utc_time(GETVAL);
     }
 
-    else if (NAMECMP("trkpt") && (type == TYPE_ELEM_END)){
+    else if (NAMECMP("trkpt") && type == TYPE_ELEM_END){
       break;
     }
     else {

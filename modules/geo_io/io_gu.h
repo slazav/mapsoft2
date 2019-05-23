@@ -15,7 +15,7 @@ Options:
 
 void read_gu (const char *fname, GeoData & data, const Opt & opt = Opt());
 
-/* Write data to a KML file (waypoints, tracks).
+/* Write data to GarminUtils file (waypoints, tracks).
 
 Options:
    verbose -- write file name

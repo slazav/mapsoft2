@@ -9,6 +9,12 @@
 
 using namespace std;
 
+// a few internal functions for tests:
+vector<string> unpack_ozi_csv(const string & str, unsigned int count = 0);
+string pack_ozi_csv(const vector<string> & vec);
+string convert_ozi_text(const string & str);
+
+
 string merge_strings(const vector<string> & v){
   string ret;
   for (size_t i=0; i!=v.size(); ++i) ret += "[" + v[i] + "] ";
@@ -45,13 +51,15 @@ main() {
     vector<string> v;
     v.push_back("a,b,c");
     v.push_back("d");
-    std::string s = pack_ozi_csv(v);
+    string s = pack_ozi_csv(v);
     assert( s == "a—b—c,d");
     assert( merge_strings(unpack_ozi_csv(s)) == "[a,b,c] [d] ");
 
+    assert( convert_ozi_text("abc,def\nghi") == "abc—def ghi");
+
   }
   catch (Err e) {
-    std::cerr << "Error: " << e.str() << "\n";
+    cerr << "Error: " << e.str() << "\n";
     return 1;
   }
   return 0;

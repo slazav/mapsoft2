@@ -27,18 +27,18 @@ string ozi_default_enc("WINDOWS-1251");
  If (count>0) vector of this size is returned. Extra fields will be silently ignored,
  Missing fields are returned as empty strings.
 */
-std::vector<std::string> unpack_ozi_csv(const std::string & str, unsigned int count){
+vector<string> unpack_ozi_csv(const string & str, unsigned int count){
   int p1=0, p2=0;
-  std::vector<std::string> ret;
+  vector<string> ret;
   do {
     p2=str.find(',', p1);
-    std::string field = str.substr(p1,p2-p1);
-    std::replace( field.begin(), field.end(), (char)209, ',');
+    string field = str.substr(p1,p2-p1);
+    replace( field.begin(), field.end(), (char)209, ',');
     ret.push_back(field);
     if (count && ret.size()==count) break;
     p1=p2+1;
   }
-  while (p2!=std::string::npos);
+  while (p2!=string::npos);
   if (count) ret.resize(count);
   return ret;
 }
@@ -47,19 +47,32 @@ std::vector<std::string> unpack_ozi_csv(const std::string & str, unsigned int co
 /// Commas will be substituted by character 209.
 /// Newline characters will be substituted by space.
 /// Empty fields in the end will be skipped.
-std::string pack_ozi_csv(const std::vector<std::string> & vec){
-  std::string ret;
+string pack_ozi_csv(const vector<string> & vec){
+  string ret;
 
   // find last non-empty field
   size_t end=vec.size();
   while (end>0 && vec[end-1]=="") end--;
 
   for (size_t i=0; i!=end; ++i){
-    std::string field = vec[i];
-    std::replace( field.begin(), field.end(), ',', (char)209);
-    std::replace( field.begin(), field.end(), '\n', ' ');
+    string field = vec[i];
+    replace( field.begin(), field.end(), ',', (char)209);
+    replace( field.begin(), field.end(), '\n', ' ');
     ret += (i==0?"":",") + field;
   }
+  return ret;
+}
+
+/*******************************************************************/
+/// Convert text to Ozi format:
+/// - replace commas by (char)209
+/// - replace newlines by space
+/// - resize to 40 symbols
+string convert_ozi_text(const string & str){
+  string ret(str);
+  if (ret.size()>40) ret.resize(40);
+  replace( ret.begin(), ret.end(), ',', (char)209);
+  replace( ret.begin(), ret.end(), '\n', ' ');
   return ret;
 }
 
@@ -79,38 +92,7 @@ void read_ozi (const char *fname, GeoData & data, const Opt & opts){
 }
 
 /***************************************************************************/
-/*******************************************************************/
-/// Read PLT.
-/**
-## Track File (.plt) -- from http://www.oziexplorer3.com/eng/help/fileformats.html
-
-Line 1 : File type and version information
-Line 2 : Geodetic Datum used for the Lat/Lon positions for each trackpoint
-Line 3 : "Altitude is in feet" - just a reminder that the altitude is always stored in feet
-Line 4 : Reserved for future use
-Line 5 : multiple fields as below
-    Field 1 : always zero (0)
-    Field 2 : width of track plot line on screen - 1 or 2 are usually the best
-    Field 3 : track color (RGB)
-    Field 4 : track description (no commas allowed)
-    Field 5 : track skip value - reduces number of track points plotted, usually set to 1
-    Field 6 : track type - 0 = normal , 10 = closed polygon , 20 = Alarm Zone
-    Field 7 : track fill style - 0 =bsSolid; 1 =bsClear; 2 =bsBdiagonal; 3 =bsFdiagonal; 4 =bsCross;
-    5 =bsDiagCross; 6 =bsHorizontal; 7 =bsVertical;
-    Field 8 : track fill color (RGB)
-Line 6 : Number of track points in the track, not used, the number of points is determined when reading the points file
-
-Trackpoint data:
-Field 1 : Latitude - decimal degrees.
-Field 2 : Longitude - decimal degrees.
-Field 3 : Code - 0 if normal, 1 if break in track line
-Field 4 : Altitude in feet (-777 if not valid)
-Field 5 : Date - see Date Format below, if blank a preset date will be used
-Field 6 : Date as a string (ignored)
-Field 7 : Time as a string (ignored)
-
-Note that OziExplorer reads the Date/Time from field 5, the date and time in fields 6 & 7 are ignored.
-*/
+/// Write PLT.
 void write_ozi_plt (const char *fname, const GeoTrk & trk, const Opt & opts){
   if (opts.exists("verbose")) cerr <<
     "Writing track to OziExplorer file " << fname << endl;
@@ -121,61 +103,58 @@ void write_ozi_plt (const char *fname, const GeoTrk & trk, const Opt & opts){
 
   IConv cnv("UTF-8", opts.get("ozi_enc", ozi_default_enc).c_str() );
 
-
   int num = trk.size();
   f << "OziExplorer Track Point File Version 2.0\r\n"
     << "WGS 84\r\n"
     << "Altitude is in Feet\r\n"
     << "Reserved 3\r\n";
-/*
-  vector<string> v;
+
   // Field 1 : always zero
-  v.push_back("0");
-
   // Field 2 : width of track plot line on screen - 1 or 2 are usually the best
-  v.push_back(trk.opts.get("thickness", "1"));
-
   // Field 3 : track color (RGB)
-  v.push_back(trk.opts.get("color", "255"));
-
   // Field 4 : track description (no commas allowed)
-  v.push_back(trk.name);
-
   // Field 5 : track skip value - reduces number of track points plotted, usually set to 1
-  v.push_back("1");
-
   // Field 6 : track type - 0 = normal , 10 = closed polygon , 20 = Alarm Zone
-  v.push_back("0");
-
   // Field 7 : track fill style - 0 =bsSolid; 1 =bsClear; 2 =bsBdiagonal;
   //  3 =bsFdiagonal; 4 =bsCross; 5 =bsDiagCross; 6 =bsHorizontal; 7 =bsVertical;
-  v.push_back("0");
-
   // Field 8 : track fill color (RGB)
-  v.push_back(trk.opts.get("bgcolor", "0"));
-
-  f << pack_ozi_csv(v) << "\r\n"
-    << num << "\r\n";
+  f << "0"
+    << "," << trk.opts.get("thickness", 1)
+    << "," << trk.opts.get("color", 0x0000FF)
+    << "," << convert_ozi_text(cnv(trk.name))
+    << "," << trk.opts.get("ozi_skip", 1)
+    << "," << trk.opts.get("ozi_type", 0)
+    << "," << trk.opts.get("ozi_fill", 0)
+    << "," << trk.opts.get("bgcolor", 0xFFFFFF)
+    << "\r\n";
+  f << num << "\r\n";
 
   GeoTrk::const_iterator p;
-  for (p = trk.begin(); p!= trk.end(); p++){
+  for (auto p:trk){
+    // Field 1 : Latitude - decimal degrees.
+    // Field 2 : Longitude - decimal degrees.
+    // Field 3 : Code - 0 if normal, 1 if break in track line
+    // Field 4 : Altitude in feet (-777 if not valid)
+    // Field 5 : Date - see Date Format below, if blank a preset date will be used
+    // Field 6 : Date as a string (ignored)
+    // Field 7 : Time as a string (ignored)
     f << right << fixed << setprecision(6) << setfill(' ')
-        << setw(10)<< p->y << ','
-        << setw(11)<< p->x << ','
-        << ((p->start)? '1':'0') << ','
+        << setw(10)<< p.y << ','
+        << setw(11)<< p.x << ','
+        << ((p.start)? '1':'0') << ','
         << setprecision(1) << setw(6)
-        << (p->have_alt() ? p->z/0.3048 : -777) << ','
+        << (p.have_alt() ? p.z/0.3048 : -777) << ','
         << setprecision(7) << setw(13)
-        << write_ozi_time(p->t) << ','
-        << write_fmt_time("%F, %T", p->t) << "\r\n";
+        << write_ozi_time(p.t) << ','
+        << write_fmt_time("%d-%b-%y, %T", p.t) << "\r\n";
     }
-*/
 
   if (!f.good()) throw Err()
       << "Can't write data to OziExplorer file: " << fname;
 }
 
 /***************************************************************************/
+/// Write WPT.
 void write_ozi_wpt (const char *fname, const GeoWptList & wpt, const Opt & opts){
   if (opts.exists("verbose")) cerr <<
     "Writing waypoints to OziExplorer file " << fname << endl;
@@ -193,37 +172,51 @@ void write_ozi_wpt (const char *fname, const GeoWptList & wpt, const Opt & opts)
     << "Reserved 2\r\n"
     << "garmin\r\n"; // symbol set is not used in Ozi format
 
-    for (GeoWptList::const_iterator p = wpt.begin(); p!= wpt.end(); p++){
-      int alt = p->have_alt() ? p->z/0.3048 : -777;
-      string comm = cnv(p->comm);
-      if (comm.size()>40) comm.resize(40);
+    for (auto p:wpt){
 
-      vector<string> v;
-      v.push_back(type_to_str(++n));     // Field 1 : Number
-      v.push_back(cnv(p->name));         // Field 2 : Name
-      v.push_back(type_to_str(p->y));    // Field 3 : Latitude
-      v.push_back(type_to_str(p->x));    // Field 4 : Longitude
-      v.push_back(write_ozi_time(p->t)); // Field 5 : Date
-      v.push_back("0");              // Field 6 : Symbol
-      v.push_back("1");              // Field 7 : Status - always set to 1
-      v.push_back("");               // Field 8 : Map Display Format
-      v.push_back("");               // Field 9 : Foreground Color (RGB value)
-      v.push_back("");               // Field 10 : Background Color (RGB value)
-      v.push_back(comm);             // Field 11 : Description (max 40), no commas
-      v.push_back("0");              // Field 12 : Pointer Direction
-      v.push_back("0");              // Field 13 : Garmin Display Format
-      v.push_back("0");              // Field 14 : Proximity Distance - 0 is off any other number is valid
-      v.push_back(type_to_str(alt)); // Field 15 : Altitude - in feet (-777 if not valid)
-      v.push_back("6");  // Field 16 : Font Size - in points
-      v.push_back("0");  // Field 17 : Font Style - 0 is normal, 1 is bold.
-      v.push_back("17"); // Field 18 : Symbol Size - 17 is normal size
-      v.push_back("");   // Field 19 : Proximity Symbol Position
-      v.push_back("");   // Field 20 : Proximity Time
-      v.push_back("");   // Field 21 : Proximity or Route or Both
-      v.push_back("");   // Field 22 : File Attachment Name
-      v.push_back("");   // Field 23 : Proximity File Attachment Name
-      v.push_back("");   // Field 24 : Proximity Symbol Name
-      f << pack_ozi_csv(v) << "\r\n";
+      // Field 1 : Number
+      // Field 2 : Name - the waypoint name, use the correct length name to suit the GPS type.
+      // Field 3 : Latitude - decimal degrees.
+      // Field 4 : Longitude - decimal degrees.
+      // Field 5 : Date - see Date Format below, if blank a preset date will be used
+      // Field 6 : Symbol - 0 to number of symbols in GPS
+      // Field 7 : Status - always set to 1
+      // Field 8 : Map Display Format
+      // Field 9 : Foreground Color (RGB value)
+      // Field 10 : Background Color (RGB value)
+      // Field 11 : Description (max 40), no commas
+      // Field 12 : Pointer Direction
+      // Field 13 : Garmin Display Format
+      // Field 14 : Proximity Distance - 0 is off any other number is valid
+      // Field 15 : Altitude - in feet (-777 if not valid)
+      // Field 16 : Font Size - in points
+      // Field 17 : Font Style - 0 is normal, 1 is bold.
+      // Field 18 : Symbol Size - 17 is normal size
+      // Field 19 : Proximity Symbol Position
+      // Field 20 : Proximity Time
+      // Field 21 : Proximity or Route or Both
+      // Field 22 : File Attachment Name
+      // Field 23 : Proximity File Attachment Name
+      // Field 24 : Proximity Symbol Name
+      f << ++n << ','
+        << convert_ozi_text(cnv(p.name)) << ','
+        << fixed << setprecision(6) << p.y << ','
+        << fixed << setprecision(6) << p.x << ','
+        << write_ozi_time(p.t) << ','
+        << p.opts.get("ozi_symb", 0) << ','
+        << 1 << ','
+        << p.opts.get("ozi_map_displ", 0) << ','
+        << p.opts.get("color", 0xFF0000) << ','
+        << p.opts.get("bgcolor", 0xFFFFFF) << ','
+        << convert_ozi_text(cnv(p.comm)) << ','
+        << p.opts.get("ozi_pt_dir", 0) << ','
+        << p.opts.get("ozi_displ", 0) << ','
+        << p.opts.get("ozi_prox_dist", 0) << ','
+        << (p.have_alt() ? p.z/0.3048 : -777) << ','
+        << p.opts.get("ozi_font_size", 0) << ','
+        << p.opts.get("ozi_font_style", 0) << ','
+        << p.opts.get("ozi_symb_size", 0)<< "\r\n";
+        // skip fields 19..24
     }
     if (!f.good()) throw Err()
         << "Can't write data to OziExplorer file: " << fname;
@@ -241,7 +234,7 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
 
   IConv cnv("UTF-8", opts.get("ozi_enc", ozi_default_enc).c_str() );
 
-  std::string map_proj; // TODO!
+  string map_proj; // TODO!
 
   // header
   f << "OziExplorer Map Data File Version 2.2\r\n"

@@ -40,4 +40,7 @@ assert "$P test_data/gpx1.gpx -o tmp --fmt gpx"  "" 0
 assert "$P tmp --fmt gpx -o tmp --fmt gpx"  "" 0
 assert_diff test_data/gpx1a.gpx tmp
 
+# gpx2 -- empty wpt/trk elements
+assert "$P test_data/gpx2.gpx -o tmp.gpx"  "" 0
+assert_diff test_data/gpx2.gpx tmp.gpx
 

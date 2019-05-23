@@ -161,6 +161,27 @@ Other fields:
 ----------
 ## GeoJSON format
 
+Mapsoft2 supports reading and writing of GeoJSON files. All data fields
+are read and written (should be no data loss except skipping empty
+waypoint lists).
+
+Waypoint lists are written in separate FeatureCollections. When reading
+a FeatureCollection (including the topmost one) is converted to a waypoint
+list only if there is at least one waypoint inside.
+
+Track is always written as a Feature with MultiLineString coordinates
+(even if it contains one segment), but can be read also from a LineString.
+
+Coordinates of each waypoint or track point are written in array `[lon,
+lat, alt, time]`. (GeoJSON format requires only `lat` and `lon` fields
+but allows mere values and recommends to have altitude in the fird
+field). The array contains three values if time is zero and two values if
+altitude is not defined. If time is defined but altitude is not then
+`null` is written for the altitude.
+
+Name and comment of track, waypoint, waypoint list are written in `name`
+and `cmt` properties. All options are also written to properties.
+
 ----------
 ## Mapsoft XML format
 

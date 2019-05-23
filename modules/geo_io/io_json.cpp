@@ -19,15 +19,13 @@ using namespace std;
  */
 
 void
-write_json (const char* filename, const GeoData & data, const Opt & opts){
-  ofstream f(filename);
+write_json (const char* fname, const GeoData & data, const Opt & opts){
 
   if (opts.exists("verbose")) cerr <<
-    "Writing data to JS file " << filename << endl;
-
-  if (!f.good()) throw Err() << "Can't open file " << filename << " for writing";
+    "Writing GeoJSON file: " << fname << endl;
 
   json_t *features = json_array();
+  bool skip_zt = opts.get("json_skip_zt", false);
 
   // tracks
   // Each track is a feature with MultiLineString objects.
@@ -44,9 +42,10 @@ write_json (const char* filename, const GeoData & data, const Opt & opts){
       json_t *j_pt = json_array();
       json_array_append_new(j_pt, json_real(tp.x));
       json_array_append_new(j_pt, json_real(tp.y));
-      json_array_append_new(j_pt, json_integer(tp.t));
-      if (tp.have_alt())
-        json_array_append_new(j_pt, json_real(tp.z));
+      if (!skip_zt && (tp.t!=0 || tp.have_alt())) {
+        json_array_append_new(j_pt, tp.have_alt()? json_real(tp.z) : json_null());
+        if (tp.t!=0) json_array_append_new(j_pt, json_integer(tp.t));
+      }
       json_array_append_new(j_seg, j_pt);
     }
     if (json_array_size(j_seg)) json_array_append_new(j_crd, j_seg);
@@ -60,6 +59,8 @@ write_json (const char* filename, const GeoData & data, const Opt & opts){
     json_t *j_prop = json_object();
     if (i.name != "") json_object_set_new(j_prop, "name", json_string(i.name.c_str()));
     if (i.comm != "") json_object_set_new(j_prop, "cmt",  json_string(i.comm.c_str()));
+    for (auto o:i.opts)
+      json_object_set_new(j_prop, o.first.c_str(), json_string(o.second.c_str()));
 
     // track
     json_t *j_trk = json_object();
@@ -79,9 +80,10 @@ write_json (const char* filename, const GeoData & data, const Opt & opts){
       json_t *j_pt = json_array();
       json_array_append_new(j_pt, json_real(wp.x));
       json_array_append_new(j_pt, json_real(wp.y));
-      json_array_append_new(j_pt, json_integer(wp.t));
-      if (wp.have_alt())
-        json_array_append_new(j_pt, json_real(wp.z));
+      if (!skip_zt && (wp.t!=0 || wp.have_alt())) {
+        json_array_append_new(j_pt, wp.have_alt()? json_real(wp.z) : json_null());
+        if (wp.t!=0) json_array_append_new(j_pt, json_integer(wp.t));
+      }
 
       // geometry
       json_t *j_geom = json_object();
@@ -92,8 +94,10 @@ write_json (const char* filename, const GeoData & data, const Opt & opts){
       json_t *j_prop = json_object();
       if (wp.name != "") json_object_set_new(j_prop, "name", json_string(wp.name.c_str()));
       if (wp.comm != "") json_object_set_new(j_prop, "cmt",  json_string(wp.comm.c_str()));
+      for (auto o:wp.opts)
+        json_object_set_new(j_prop, o.first.c_str(), json_string(o.second.c_str()));
 
-      // waypoint )_
+      // waypoint
       json_t *j_wpt = json_object();
       json_object_set_new(j_wpt, "type", json_string("Feature"));
       json_object_set_new(j_wpt, "geometry", j_geom);
@@ -106,6 +110,8 @@ write_json (const char* filename, const GeoData & data, const Opt & opts){
     json_t *j_prop = json_object();
     if (i.name != "") json_object_set_new(j_prop, "name", json_string(i.name.c_str()));
     if (i.comm != "") json_object_set_new(j_prop, "cmt",  json_string(i.comm.c_str()));
+    for (auto o:i.opts)
+      json_object_set_new(j_prop, o.first.c_str(), json_string(o.second.c_str()));
 
     json_t *j_wptl = json_object();
     json_object_set_new(j_wptl, "type", json_string("FeatureCollection"));
@@ -121,21 +127,208 @@ write_json (const char* filename, const GeoData & data, const Opt & opts){
 
   int flags = JSON_REAL_PRECISION(10);
   if (opts.get("json_sort_keys", 1)) flags |= JSON_SORT_KEYS;
-  if (opts.get("json_compact", 0)) flags |= JSON_COMPACT;
-  if (opts.get("json_indent", 1)) flags |= JSON_INDENT(2);
+  if (opts.get("json_compact", 1)) flags |= JSON_COMPACT;
+  if (opts.get("json_indent", 0)) flags |= JSON_INDENT(2);
 
   char *ret = json_dumps(J0, flags);
   json_decref(J0);
   if (!ret) throw Err() << "Can't write data";
+
+  ofstream f(fname);
+  if (!f.good()) throw Err() << "Can't open file " << fname << " for writing";
   f<<ret;
-  if (!f.good()) throw Err() << "Can't write to file " << filename;
+  if (!f.good()) throw Err() << "Can't write to file " << fname;
 }
 
 
+/**************************************************************************/
+// read a single point (x,y,t,z) from a JSON array
+template <typename T>
+void read_geojson_pt(json_t *coord, T & pt){
+  json_t *val;
+  if (json_array_size(coord)>0 &&
+     (val = json_array_get(coord, 0))){
+    if (json_is_number(val)) pt.x = json_real_value(val);
+    else if (!json_is_null(val))
+      throw Err() << "number expected in GeoJSON coordinates";
+  }
+  if (json_array_size(coord)>1 &&
+     (val = json_array_get(coord, 1))){
+    if (json_is_number(val)) pt.y = json_real_value(val);
+    else if (!json_is_null(val))
+      throw Err() << "number expected in GeoJSON coordinates";
+  }
+  if (json_array_size(coord)>2 &&
+     (val = json_array_get(coord, 2))){
+    if (json_is_number(val)) pt.z = json_real_value(val);
+    else if (!json_is_null(val))
+      throw Err() << "number expected in GeoJSON coordinates";
+  }
+  if (json_array_size(coord)>3 &&
+     (val = json_array_get(coord, 3))){
+    if (json_is_number(val)) pt.t = json_integer_value(val);
+    else if (!json_is_null(val))
+      throw Err() << "number expected in GeoJSON coordinates";
+  }
+}
+
+// construct a waypoint from GeoJSON coordinates and properties
+GeoWpt read_geojson_wpt(json_t *coord, json_t *prop){
+  GeoWpt ret;
+  // set properties
+  const char *key;
+  json_t *val;
+  json_object_foreach(prop, key, val) {
+    if (!json_is_string(val)) continue;
+    else if (strcasecmp(key, "name")==0) ret.name = json_string_value(val);
+    else if (strcasecmp(key, "cmt")==0) ret.comm = json_string_value(val);
+    else ret.opts.put(key, std::string(json_string_value(val)));
+  }
+  // set coordinates
+  read_geojson_pt(coord, ret);
+  return ret;
+}
+
+// construct a track from GeoJSON coordinates and properties
+GeoTrk read_geojson_trk(json_t *coord, json_t *prop, const bool multi){
+  GeoTrk ret;
+  // set properties
+  const char *key;
+  json_t *val;
+  json_object_foreach(prop, key, val) {
+    if (!json_is_string(val)) continue;
+    else if (strcasecmp(key, "name")==0) ret.name = json_string_value(val);
+    else if (strcasecmp(key, "cmt")==0) ret.comm = json_string_value(val);
+    else ret.opts.put(key, std::string(json_string_value(val)));
+  }
+  // set coordinates
+  size_t i;
+  json_t *c1;
+  json_array_foreach(coord, i, c1) {
+    if (multi){
+      size_t j;
+      json_t *c2;
+      json_array_foreach(c1, j, c2) {
+        GeoTpt pt;
+        if (j==0) pt.start=1;
+        read_geojson_pt(c2, pt);
+        ret.push_back(pt);
+      }
+    }
+    else {
+      GeoTpt pt;
+      if (i==0) pt.start=1;
+      read_geojson_pt(c1, pt);
+      ret.push_back(pt);
+    }
+  }
+  return ret;
+}
+
+// construct a waypoint list from GeoJSON properties
+GeoWptList read_geojson_wptl(json_t *prop){
+  GeoWptList ret;
+  // set properties
+  const char *key;
+  json_t *val;
+  json_object_foreach(prop, key, val) {
+    if (!json_is_string(val)) continue;
+    else if (strcasecmp(key, "name")==0) ret.name = json_string_value(val);
+    else if (strcasecmp(key, "cmt")==0) ret.comm = json_string_value(val);
+    else ret.opts.put(key, std::string(json_string_value(val)));
+  }
+  return ret;
+}
+
+
+// read GeoJSON Feature of FeatureCollection (recursively)
+void
+read_geojson_feature(json_t *feature, GeoData & data, GeoWptList & wptl){
+    if (!json_is_object(feature))
+      throw Err() << "JSON object expected";
+    json_t *j_type = json_object_get(feature, "type");
+    if (!json_is_string(j_type))
+      throw Err() << "Wrong/missing type in a GeoJSON object";
+    string type = json_string_value(j_type);
+
+    if (type == "FeatureCollection"){
+      json_t *sub_features = json_object_get(feature, "features");
+      if (!json_is_array(sub_features))
+        throw Err() << "features array expected in a FeatureCollection";
+
+      // always construct a new waypoint list for a FeatureCollection
+      json_t * j_prop = json_object_get(feature, "properties"); // maybe NULL
+      GeoWptList wptl1 = read_geojson_wptl(j_prop);
+
+      // read sub-features
+      size_t i;
+      json_t *sub_feature;
+      json_array_foreach(sub_features, i, sub_feature) {
+        read_geojson_feature(sub_feature, data, wptl1);
+      }
+
+      // add waypoint list if it is not empty
+      if (wptl1.size()) data.wpts.push_back(wptl1);
+      return;
+    }
+
+    else if (type == "Feature"){
+      // geometry
+      json_t * j_geom = json_object_get(feature, "geometry");
+      if (!json_is_object(j_geom))
+        throw Err() << "Wrong/missing geometry object in a GeoJSON Feature";
+
+      json_t * j_geom_type = json_object_get(j_geom, "type");
+      if (!json_is_string(j_geom_type))
+        throw Err() << "Wrong/missing type in a GeoJSON geometry";
+      string geom_type = json_string_value(j_geom_type);
+
+      json_t * j_geom_coord = json_object_get(j_geom, "coordinates");
+      if (!json_is_array(j_geom_coord))
+        throw Err() << "Wrong/missing coordinades in a GeoJSON geometry";
+
+      json_t * j_prop = json_object_get(feature, "properties"); // maybe NULL
+
+      // Waypoint
+      if (geom_type == "Point") {
+        wptl.push_back(read_geojson_wpt(j_geom_coord, j_prop));
+      }
+      // Track
+      else if (geom_type == "MultiLineString") {
+        data.trks.push_back(read_geojson_trk(j_geom_coord, j_prop, 1));
+      }
+      // Track
+      else if (geom_type == "LineString") {
+        data.trks.push_back(read_geojson_trk(j_geom_coord, j_prop, 0));
+      }
+      else
+        throw Err() << "Unknown type in a GeoJSON feature: " << type;
+    }
+    else throw Err() << "Unknown type in a GeoJSON feature: " << type;
+}
 
 void
-read_json(const char* filename, GeoData & data, const Opt & opts) {
+read_json(const char* fname, GeoData & data, const Opt & opts) {
 
-  throw Err() << "Reading is not supported";
+  if (opts.exists("verbose")) cerr <<
+    "Reading GeoJSON file: " << fname << endl;
+
+  ifstream f(fname);
+  std::istreambuf_iterator<char> begin(f), end;
+  std::string buf(begin, end);
+  if (!f.good()) throw Err() << "Can't read file " << fname << " for writing";
+
+  size_t flags = 0;
+  json_error_t e;
+  json_t *J = json_loads(buf.c_str(), flags, &e);
+  if (!J) throw Err() << "Can't parse JSON: " << e.text;
+
+  GeoWptList tmp;
+  try { read_geojson_feature(J, data, tmp); }
+  catch(Err e){
+    json_decref(J);
+    throw e;
+  }
+  json_decref(J);
 }
 
