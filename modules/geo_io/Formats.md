@@ -1,49 +1,63 @@
 ## Mapsoft geodata
 
-Data structure used in mapsoft2. In some formats
-additional fields can be kept in `opts` variable.
+`GeoData` structure in mapsoft contains lists of tracks (`GeoTrk`),
+waypoint lists (`GeoWptList`), and map lists (`GeoMapList`). Tracks
+contain trackpoints (`GeoTpt`), waypoint lists contain waypoints
+(`GeoWpt`), and map lists contain maps (`GeoMap`).
 
-### `GeoWpt` -- a waypoint/route point
- * x,y -- longitude and latitude (degrees, WGS84)
- * z -- altitude (meters)
- * t -- time (unix milliseconds)
- * name  -- name
- * comm  -- comment
+Each structure has some mandatory fields and (except for track point)
+optional fields inside `opts` variable.
 
-### `GeoTpt` -- a track point
- * x,y -- longitude and latitude (degrees, WGS84)
- * z -- altitude (meters)
- * t -- time (unix milliseconds)
- * start -- start segment flag (0|1)
+### Mandatory fields:
 
-### `GeoTrk` -- a track
- * name -- name
- * comm -- comment
+#### `GeoWptList` -- a waypoint list, a route
+ * `std::string name` -- name
+ * `std::string comm` -- comment
+ * `Opt opts` -- optional parameters
 
-### `GeoWptList` -- a waypoint list, a route
- * name -- name
- * comm -- comment
+#### `GeoWpt` -- a waypoint/route point
+ * `double x,y` -- longitude and latitude (degrees, WGS84)
+ * `double z`   -- altitude (meters)
+ * `time_t t`   -- time (unix milliseconds)
+ * `std::string name` -- name
+ * `std::string comm` -- comment
+ * `Opt opts`         -- optional parameters
 
-### `GeoMap` -- a map
+#### `GeoTpt` -- a track point
+ * `double x,y` -- longitude and latitude (degrees, WGS84)
+ * `double z`   -- altitude (meters)
+ * `time_t t`   -- time (unix milliseconds)
+ * `int start`  -- start segment flag (0|1)
+
+#### `GeoTrk` -- a track
+ * `std::string name` -- name
+ * `std::string comm` -- comment
+ * `Opt opts`         -- optional parameters
+
+#### `GeoMapList` -- a map list
+ * `std::string name` -- name
+ * `std::string comm` -- comment
+ * `Opt opts`         -- optional parameters
+
+#### `GeoMap` -- a map
+ * `std::map<dPoint,dPoint> ref` -- reference points, mapping from geo to image coordinates
+ * `dLine border`      -- map border (in image coordinates), should be always set
+ * `std::string proj`  -- map projection (option string for libproj)
+ * `std::string image` -- image file for the map (folder for tile maps)
+ * `dRect image_bbox`  -- image boundary box (in image coordinates)
+ * `dRect image_tsize` -- image tile size (for tiled maps)
+ * `std::string image_tfmt` -- image tile format (for tiled maps)
+ * `bool image_tswap`  -- are image tiles swapped in y (for tiled maps)
 
 ----------
 ## GPX format
 
-* GPX 1.1 format: http://www.topografix.com/GPX/1/1/
-* GPX 1.0 format: http://www.topografix.com/gpx_manual.asp
-* example with all fields: https://github.com/tkrajina/gpxgo/tree/master/test_files
+Mapsoft2 supports reading and writing KML files (tracks and
+waypoints).
 
-### `GeoWpt` -- a waypoint/route point
- * `x,y`  -- read/write support, `<lat>` and `<lon>` tags (degrees, WGS84)
- * `z`    -- read/write support, `<ele>` tag (meters)
- * `t`    -- read/write support, `<time>` tag (ISO UTC time with millisecond precision)
- * `name` -- The GPS name of the waypoint. This field will be transferred to and from
-   the GPS. GPX does not place restrictions on the length of this field or
-   the characters contained in it. It is up to the receiving application to
-   validate the field before sending it to the GPS.
- * `comm` -- <cmt> tag. GPS waypoint comment. Sent to GPS as comment.
-
-Additional fields (read/write support, put in options):
+For waypoints all mandatory
+fields (`x`, `y`, `z`, `t`, `name`, `comm`) are supported. Some additional
+fields are put in `opt` and can be saved to GPX again:
 
  * `magvar` -- Magnetic variation (in degrees) at the point.
  * `geoidheight` -- Height (in meters) of geoid (mean sea level) above WGS84
@@ -66,22 +80,15 @@ Additional fields (read/write support, put in options):
 
 `<extension>` tag is skipped.
 
-### `GeoTpt` -- a track point
- * `x,y` -- read/write support, `<lat>` and `<lon>` tags (degrees, WGS84)
- * `z`   -- read/write support, `<ele>` tag (meters)
- * `t`   -- read/write support, `<time>` tag (ISO UTC time with millisecond precision)
- * `start` -- read/write support (track segments)
-
-### `GeoTrk`, `GeoWptList` -- track, a waypoint list, route
-
-When writing to GPX file by default all waypoint lists are joined and
+By default when writing to GPX file all waypoint lists are joined and
 written as waypoints. If `gpx_write_rte` option is used then waypoint
-lists are written as routes.
+lists are written as routes. When reading all waypoints are put to one
+waypoint list, and all routes to other waypoint lists.
 
-Additional fields (read/write support, put in options):
+For tracks and waypoint lists For waypoints mandatory
+fields (`name`, `comm`) are supported. Some additional fields
+are put in `opt` and can be saved to GPX again:
 
- * `name` -- GPS name of route.
- * `comm` -- `<cmt>` tag. GPS comment for route.
  * `desc` -- Text description of route for user. Not sent to GPS.
  * `src` -- Source of data. Included to give user some idea of reliability
             and accuracy of data.
@@ -89,85 +96,90 @@ Additional fields (read/write support, put in options):
  * `number` -- GPS route number.
  * `type` -- Type (classification) of route
 
-`<extension>` tag is skipped. It could be useful to read color from there:
-`<extensions><gpxx:TrackExtension><gpxx:DisplayColor>Cyan`
+TODO: `<extension>` tag is skipped. It could be useful to read color from
+there: `<extensions><gpxx:TrackExtension><gpxx:DisplayColor>Cyan`
 `</gpxx:DisplayColor></gpxx:TrackExtension></extensions>`
 
-### `GeoMap` -- a map
+Input options:
+ - verbose -- write file name
 
-Not supported by GPX format.
+Output options:
+ - verbose       -- write file name
+ - xml_compr     -- compress the output? 0|1, default 0;
+ - xml_indent    -- use indentation? 0|1, default 1;
+ - xml_ind_str   -- indentation string, default "  ";
+ - xml_qchar     -- quoting character for attributes, default \'
+ - gpx_write_rte -- write waypoint lists as routes, 0|1, default 0
 
 ----------
 ## KML format
 
-### `GeoWpt` -- a waypoint
-Waypoint is written as KML Placemark.
- * `x, y, z` -- read/write support, `<coordinates>` tag.
- * `t`       -- read/write support, `<TimeStamp>` tag.
- * `name`    -- read/write support, `<name>` tag.
- * `comm`    -- read/write support, `<description>` tag.
+Mapsoft2 supports reading and writing KML files (tracks and
+waypoints).
 
-### `GeoTpt` -- a track point
- * `x, y, z` -- read/write support, `<coordinates>` tag.
- * `t`       -- not supported by KML format.
- * `start`   -- read/write support (track segments).
+Waypoints are written as a KML Placemark, all mandatory
+fields (`x`, `y`, `z`, `t`, `name`, `comm`) are supported.
 
-### `GeoTrk` -- track
-Track is written as KML Placemark. Coordinate and altitude
-data are wrapped in `<MultiGeometry> + <LineString>/<Polygon>`
-tags.
- * `name`    -- read/write support, `<name>` tag.
- * `comm`    -- read/write support, `<description>` tag.
- * `opt("type")` -- open/closed
+Tracks are read or written as a KML Placemark. Coordinates and altitude
+are wrapped in `<MultiGeometry> + <LineString>/<Polygon>` tags. To
+control this `opt(type)` is used (can be `open` or `closed`). All
+mandatory fields for tracks and trackpoints are supported except time in
+track points.
 
-### `GeoWptList` -- a waypoint list, a route
-Waypoint lists are written as KML `<Folder>` tag.
- * `name`    -- read/write support, `<name>` tag.
- * `comm`    -- read/write support, `<description>` tag.
+Waypoint lists are written as KML `<Folder>` tag with all mandatory
+fields supported (`name` and `comm`). When reading only Folders with at
+least one waypoint are kept as waypoint lists. Empty waypoint list can
+not be read from KML (same as in GeoJSON format).
 
-### `GeoMap` -- a map
+TODO: map support?
 
-Not supported.
+Input options:
+ - verbose -- write file name
+
+Output options:
+ - verbose       -- write file name
+ - xml_compr     -- compress the output? 0|1, default 0;
+ - xml_indent    -- use indentation? 0|1, default 1;
+ - xml_ind_str   -- indentation string, default "  ";
+ - xml_qchar     -- quoting character for attributes, default \'
 
 ----------
 ## Garmin Utils format
 
-### `GeoWpt` -- a waypoint
- * `x, y, z` -- read/write support
- * `t`    -- not supported by Garmin Utils format
- * `name` -- read/write support. Spaces will be replaced by '_'.
- * `comm` -- read/write support
+Mapsoft2 supports reading and writing Garmin Utils files (tracks and
+waypoints). It is a very old format, it is not recommended to use it. I
+just have many tracks from 199? in this form.
 
-### `GeoTpt` -- a track point
- * `x, y, z, t, start` -- read/write support
+Garmin Utils file can contain a few waypoint lists and a few tracks
+without names, comments or any additional information.
 
-### `GeoTrk`, `GeoWptList`  -- track, a waypoint list
- * `name`    -- not supported.
- * `comm`    -- not supported.
+Each waypoint is written in a single line. Only `x`, `y`, `name` and
+`comm` fields are supported (Remember that Garmin-12 gps was writing time
+in the comment field). Spaces in `name` are substituted by `_`.
 
-### `GeoMap` -- a map
+Each track point is written in a single line. All mandatory fields
+(`x, y, z, t, start`) are supported.
 
-Not supported by Garmin Utils format.
+Input options:
+- verbose -- write file name
+- gu_enc -- encoding (default KOI8-R)
 
-----------
-## OziExplorer format
-### `GeoWpt` -- a waypoint
- * `x, y, z` -- write support
- * `name` -- write support.
- * `comm` -- write support, cut to 40 symbols.
-
-Other fields:
+Output options:
+- verbose -- write file name
+- gu_enc -- encoding (default KOI8-R)
 
 ----------
 ## GeoJSON format
 
-Mapsoft2 supports reading and writing of GeoJSON files. All data fields
-are read and written (should be no data loss except skipping empty
-waypoint lists).
+Mapsoft2 supports reading and writing GeoJSON files (tracks and
+waypoints). All data fields of Mapsoft structures are supported (should
+be no data loss except skipping empty waypoint lists).
 
 Waypoint lists are written in separate FeatureCollections. When reading
 a FeatureCollection (including the topmost one) is converted to a waypoint
-list only if there is at least one waypoint inside.
+list only if there is at least one waypoint inside. In GeoJSON
+FeatureCollections can contain tracks or other FeatureCollections. Mapsoft
+converts this to a "flat" stucture with non-empty waypoint lists and tracks.
 
 Track is always written as a Feature with MultiLineString coordinates
 (even if it contains one segment), but can be read also from a LineString.
@@ -182,8 +194,25 @@ altitude is not defined. If time is defined but altitude is not then
 Name and comment of track, waypoint, waypoint list are written in `name`
 and `cmt` properties. All options are also written to properties.
 
+Input options:
+ - verbose (default 0)
+
+Output pptions:
+ - verbose (default 0)
+ - json_sort_keys (default 1) -- sort json objects by keys
+ - json_compact (default 1) -- write compact json
+ - json_indent (default 0)  -- use json indentation
+ - geo_skip_zt (default 0) -- skip altitude and time information
+
 ----------
 ## Mapsoft XML format
+
+In original mapsoft there was a self-made xml-like format for data. There is
+no plan to support it.
+
+----------
+## OziExplorer format
+
 
 
 
