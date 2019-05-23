@@ -2,11 +2,7 @@
 
 #include "mapsoft_io.h"
 #include "tmpdir/tmpdir.h"
-#include "geo_io/io_gpx.h"
-#include "geo_io/io_kml.h"
-#include "geo_io/io_gu.h"
-#include "geo_io/io_json.h"
-#include "geo_io/io_ozi.h"
+#include "geo_data/geo_io.h"
 #include "file_ext/file_ext.h"
 
 using namespace std;

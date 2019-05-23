@@ -1,0 +1,30 @@
+## Point File (.pnt) -- from http://www.oziexplorer3.com/eng/help/fileformats.html
+
+Line 1 : File type and version information
+Line 2 : Geodetic Datum used for the Lat/Lon positions for each point
+Line 3 : Reserved for future use
+Line 4 : Reserved for future use
+Line 5 : multiple fields as below
+
+    Field 1 : point set fore color (RGB)
+    Field 2 : point set back color (RGB)
+    Field 3 : point set size
+    Field 4 : point set font size
+    Field 5 : point set format
+    Field 6 : point set style
+    Field 7 : point set description (no commas)
+
+Point data
+
+    One line per point
+    each field separated by a comma
+    non essential fields need not be entered but comma separators must still be used (example ,,)
+    defaults will be used for empty fields
+
+Field 1 : Latitude - decimal degrees.
+Field 2 : Longitude - decimal degrees.
+Field 3 : rotation angle
+Field 4 : point name
+Field 5 : description 1 (no commas)
+Field 6 : description 2 (no commas)
+Field 7 : description 3 (no commas)

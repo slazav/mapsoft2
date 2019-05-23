@@ -1,0 +1,297 @@
+Garmin Icons from https://www.gpsbabel.org/htmldoc-development/GarminIcons.html
+
+ATV
+Airport
+Amusement Park
+Anchor
+Anchor Prohibited
+Animal Tracks
+Asian Food
+Bait and Tackle
+Ball Park
+Bank
+Bar
+Beach
+Beacon
+Bell
+Big Game
+Bike Trail
+Blind
+Block, Blue
+Block, Green
+Block, Red
+Blood Trail
+Boat Ramp
+Border Crossing (Port Of Entry)
+Bottom Conditions
+Bowling
+Bridge
+Building
+Buoy, White
+Campground
+Car
+Car Rental
+Car Repair
+Cemetery
+Church
+Circle, Blue
+Circle, Green
+Circle, Red
+Circle with X
+City (Capitol)
+City Hall
+City (Large)
+City (Medium)
+City (Small)
+Civil
+Coast Guard
+Contact, Afro
+Contact, Alien
+Contact, Ball Cap
+Contact, Big Ears
+Contact, Biker
+Contact, Blonde
+Contact, Bug
+Contact, Cat
+Contact, Clown
+Contact, Dog
+Contact, Dreadlocks
+Contact, Female1
+Contact, Female2
+Contact, Female3
+Contact, Glasses
+Contact, Goatee
+Contact, Kung-Fu
+Contact, Panda
+Contact, Pig
+Contact, Pirate
+Contact, Ranger
+Contact, Smiley
+Contact, Spike
+Contact, Sumo
+Controlled Area
+Convenience Store
+Cover
+Covey
+Crossing
+Dam
+Danger Area
+Deli
+Department Store
+Diamond, Blue
+Diamond, Green
+Diamond, Red
+Diver Down Flag 1
+Diver Down Flag 2
+Dock
+Dot, White
+Drinking Water
+Dropoff
+Elevation point
+Event Cache
+Exit
+Exit without services
+Fast Food
+First approach fix
+Fishing Area
+Fishing Hot Spot Facility
+Fitness Center
+Flag
+Flag, Blue
+Flag, Green
+Flag, Red
+Food Source
+Forest
+Furbearer
+Gambling/casino
+Gas Station
+Geocache
+Geocache Found
+Geographic place name, land
+Geographic place name, Man-made
+Geographic place name, water
+Ghost Town
+Glider Area
+Golf Course
+Ground Transportation
+Heliport
+Horn
+Hotel
+House
+Hunting Area
+Ice Skating
+Information
+Intersection
+Intl freeway hwy
+Intl national hwy
+Italian food
+Large exit without services
+Large Ramp intersection
+Letter A, Blue
+Letter A, Green
+Letter A, Red
+Letter B, Blue
+Letter B, Green
+Letterbox Cache
+Letter B, Red
+Letter C, Blue
+Letter C, Green
+Letter C, Red
+Letter D, Blue
+Letter D, Green
+Letter D, Red
+Levee
+Library
+Light
+Live Theater
+Localizer Outer Marker
+Locationless (Reverse) Cache
+Lodge
+Lodging
+Man Overboard
+Marina
+Medical Facility
+Micro-Cache
+Mile Marker
+Military
+Mine
+Missed approach point
+Movie Theater
+Multi-Cache
+Multi-Cache
+Museum
+Navaid, Amber
+Navaid, Black
+Navaid, Blue
+Navaid, Green
+Navaid, Green/Red
+Navaid, Green/White
+Navaid, Orange
+Navaid, Red
+Navaid, Red/Green
+Navaid, Red/White
+Navaid, Violet
+Navaid, White
+Navaid, White/Green
+Navaid, White/Red
+Non-directional beacon
+Null
+Number 0, Blue
+Number 0, Green
+Number 0, Red
+Number 1, Blue
+Number 1, Green
+Number 1, Red
+Number 2, Blue
+Number 2, Green
+Number 2, Red
+Number 3, Blue
+Number 3, Green
+Number 3, Red
+Number 4, Blue
+Number 4, Green
+Number 4, Red
+Number 5, Blue
+Number 5, Green
+Number 5, Red
+Number 6, Blue
+Number 6, Green
+Number 6, Red
+Number 7, Blue
+Number 7, Green
+Number 7, Red
+Number 8, Blue
+Number 8, Green
+Number 8, Red
+Number 9, Blue
+Number 9, Green
+Number 9, Red
+Oil Field
+Open 24 Hours
+Oval, Blue
+Oval, Green
+Oval, Red
+Parachute Area
+Park
+Parking Area
+Pharmacy
+Picnic Area
+Pin, Blue
+Pin, Green
+Pin, Red
+Pizza
+Police Station
+Post Office
+Post Office
+Private Field
+Puzzle Cache
+Radio Beacon
+Ramp intersection
+Rectangle, Blue
+Rectangle, Green
+Rectangle, Red
+Reef
+Residence
+Restaurant
+Restricted Area
+Restroom
+RV Park
+Scales
+Scenic Area
+School
+Seafood
+Seaplane Base
+Shipwreck
+Shopping Center
+Short Tower
+Shower
+Skiing Area
+Ski Resort
+Skull and Crossbones
+Small City
+Small Game
+Soft Field
+Square, Blue
+Square, Green
+Square, Red
+Stadium
+State Hwy
+Steak
+Street Intersection
+Stump
+Summit
+Swimming Area
+TACAN
+Tall Tower
+Telephone
+Tide/Current PRediction Station
+Toll Booth
+TracBack Point
+Trail Head
+Treed Quarry
+Tree Stand
+Triangle, Blue
+Triangle, Green
+Triangle, Red
+Truck
+Truck Stop
+Tunnel
+Ultralight Area
+U Marina
+Unknown Cache
+Upland Game
+US hwy
+U stump
+VHF Omni-range
+Virtual cache
+VOR-DME
+VOR/TACAN
+Waterfowl
+Water Hydrant
+Water Source
+Waypoint
+Webcam Cache
+Weed Bed
+Winery
+Wrecker
+Zoo

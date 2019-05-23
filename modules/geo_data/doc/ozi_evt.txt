@@ -1,0 +1,17 @@
+## Event File (.evt) -- from http://www.oziexplorer3.com/eng/help/fileformats.html
+
+Line 1 : File type and version information
+Line 2 : Geodetic Datum used for the Lat/Lon positions for each event
+Line 3 : Reserved for future use
+Line 4 : Reserved for future use
+
+Event data:
+Field 1 : Number - this is the location in the array (max 1000), must be
+  unique, usually start at 1 and increment.
+Field 2 : Latitude - decimal degrees.
+Field 3 : Longitude - decimal degrees.
+Field 4 : Symbol - 0 to number of symbols in GPS
+Field 5 : Map Display Format - not yet used, set to 0
+Field 6 : Foreground Color (RGB value)
+Field 7 : Background Color (RGB value)
+Field 8 : Symbol Size - 17 is normal size

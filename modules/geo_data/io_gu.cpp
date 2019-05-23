@@ -3,9 +3,13 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
-#include "iconv/iconv.h"
+
+#include "opt/opt.h"
+#include "err/err.h"
 #include "time_fmt/time_fmt.h"
-#include "io_gu.h"
+#include "iconv/iconv.h"
+
+#include "geo_data.h"
 
 using namespace std;
 string gu_default_enc("KOI8-R");

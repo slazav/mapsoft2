@@ -1,0 +1,36 @@
+## Waypoint File (.wpt) -- from http://www.oziexplorer3.com/eng/help/fileformats.html
+
+Line 1 : File type and version information
+Line 2 : Geodetic Datum used for the Lat/Lon positions for each waypoint
+Line 3 : Reserved for future use
+Line 4 : GPS Symbol set - not used yet
+
+Waypoint data:
+Field 1 : Number - for Lowrance/Eagles and Silva GPS receivers this is
+  the storage location (slot) of the waypoint in the gps, must be unique.
+  For other GPS receivers set this number to -1 (minus 1). For
+  Lowrance/Eagles and Silva if the slot number is not known (new waypoints)
+  set the number to -1.
+Field 2 : Name - the waypoint name, use the correct length name to suit the GPS type.
+Field 3 : Latitude - decimal degrees.
+Field 4 : Longitude - decimal degrees.
+Field 5 : Date - see Date Format below, if blank a preset date will be used
+Field 6 : Symbol - 0 to number of symbols in GPS
+Field 7 : Status - always set to 1
+Field 8 : Map Display Format
+Field 9 : Foreground Color (RGB value)
+Field 10 : Background Color (RGB value)
+Field 11 : Description (max 40), no commas
+Field 12 : Pointer Direction
+Field 13 : Garmin Display Format
+Field 14 : Proximity Distance - 0 is off any other number is valid
+Field 15 : Altitude - in feet (-777 if not valid)
+Field 16 : Font Size - in points
+Field 17 : Font Style - 0 is normal, 1 is bold.
+Field 18 : Symbol Size - 17 is normal size
+Field 19 : Proximity Symbol Position
+Field 20 : Proximity Time
+Field 21 : Proximity or Route or Both
+Field 22 : File Attachment Name
+Field 23 : Proximity File Attachment Name
+Field 24 : Proximity Symbol Name

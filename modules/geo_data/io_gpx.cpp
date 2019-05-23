@@ -3,10 +3,14 @@
 #include <sstream>
 #include <iomanip>
 #include <cstring>
-#include "io_gpx.h"
+
+#include "opt/opt.h"
+#include "err/err.h"
 #include "time_fmt/time_fmt.h"
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
+
+#include "geo_data.h"
 
 using namespace std;
 
