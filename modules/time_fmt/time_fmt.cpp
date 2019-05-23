@@ -15,6 +15,13 @@ write_fmt_time(const char *fmt, const time_t t){
   ostringstream str;
   str << setfill('0');
 
+  const char* months_short[12] = {
+     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
+  const char* wdays_short[7] = {
+     "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+
   bool f = false;
   for (const char *c = fmt; *c!=0; c++){
     if (f) {
@@ -33,6 +40,9 @@ write_fmt_time(const char *fmt, const time_t t){
         case 'T': str << setw(2) << ts.tm_hour << ":"
                       << setw(2) << ts.tm_min << ":"
                       << setw(2) << ts.tm_sec; break;
+
+        case 'a': str << wdays_short[ts.tm_wday % 7]; break;
+        case 'b': str << months_short[ts.tm_mon % 12]; break;
 
         case '%': str << '%'; break;
         case 'n': str << '\n'; break;

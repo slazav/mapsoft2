@@ -71,6 +71,10 @@ main(){
      assert(write_fmt_time("%%%t%n", t1) == "%\t\n");
      assert(atoi(write_fmt_time("%s", t1).c_str()) == t1/1000);
 
+     t1 = parse_utc_time("2019/05/23 12:00:00");
+     assert(write_fmt_time("%a", t1) == "Thu");
+     assert(write_fmt_time("%b", t1) == "May");
+
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";

@@ -28,6 +28,9 @@ Supported format sequences:
  %F  same as %Y-%m-%d
  %T  same as %H:%M:%S
 
+ %a  abbreviated weekday name (e.g., Sun)
+ %b  abbreviated month name (e.g., Jan)
+
  %s  seconds since 1970-01-01 00:00:00 UTC
  %f  fractional part of a second it it is non-zero (non-standard)
 */
