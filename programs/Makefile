@@ -1,10 +1,10 @@
-PROGRAMS    := mapsoft_convert
+PROGRAMS    := mapsoft
 OTHER_TESTS :=\
-  mapsoft_convert.test1\
-  mapsoft_convert.test2\
-  mapsoft_convert.test3\
-  mapsoft_convert.test4\
-  mapsoft_convert.test5
+  mapsoft.test1\
+  mapsoft.test2\
+  mapsoft.test3\
+  mapsoft.test4\
+  mapsoft.test5
 
 MODDIR      := ../modules
 

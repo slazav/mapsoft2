@@ -2,7 +2,7 @@
 
 ## Garmin Utils input/output
 
-P=${1:-./mapsoft_convert}
+P=${1:-./mapsoft}
 . test_lib.sh
 
 # read and do nothing
