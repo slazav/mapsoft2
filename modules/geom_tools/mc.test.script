@@ -1,0 +1,12 @@
+#!/bin/sh -eu
+
+mkdir -p results expected
+for i in test_data/a*.fig; do
+  base="${i##*/}"
+  ./mc.test "test_data/$base" "results/$base"
+  if [ -s "expected/$base" ]; then
+    diff -- "results/$base" "expected/$base"
+  else
+    cp -f -- "results/$base" "expected/$base"
+  fi
+done
