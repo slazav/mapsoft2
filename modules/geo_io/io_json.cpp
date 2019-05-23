@@ -25,7 +25,7 @@ write_json (const char* fname, const GeoData & data, const Opt & opts){
     "Writing GeoJSON file: " << fname << endl;
 
   json_t *features = json_array();
-  bool skip_zt = opts.get("json_skip_zt", false);
+  bool skip_zt = opts.get("geo_skip_zt", false);
 
   // tracks
   // Each track is a feature with MultiLineString objects.

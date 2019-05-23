@@ -18,7 +18,7 @@ Options:
  - json_sort_keys (default 1)
  - json_compact (default 1)
  - json_indent (default 0)
- - json_skip_zt (default 0)
+ - geo_skip_zt (default 0)
 */
 void write_json (const char* filename, const GeoData & data, const Opt & opt = Opt());
 

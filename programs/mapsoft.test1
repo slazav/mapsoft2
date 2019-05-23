@@ -3,7 +3,7 @@
 # General interface and option tests
 # See also getopt module tests
 
-P=${1:-./mapsoft_convert}
+P=${1:-./mapsoft}
 
 . test_lib.sh
 

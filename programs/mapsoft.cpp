@@ -36,6 +36,7 @@ static struct ext_option options[] = {
   {"json_sort_keys",        1, 0,  OPT_OUT, "sort json objects by keys (GeoJSON format), default 1"},
   {"json_compact",          1, 0,  OPT_OUT, "write compact json (GeoJSON format), default 0"},
   {"json_indent",           1, 0,  OPT_OUT, "use json indentation (GeoJSON format), default 1"},
+  {"geo_skip_zt",           1, 0,  OPT_OUT, "skip altitude and time information when writing GeoJSON, default 0"},
 
   {0,0,0,0}
 };
