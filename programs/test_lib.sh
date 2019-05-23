@@ -1,7 +1,7 @@
 function assert(){
   cmd="$1"
   exp="$2"
-  res="$($cmd 2>&1)"
+  res="$($cmd 2>&1 ||:)"
   ret="$?"
   rete="${3:-''}"
   if [ "$exp" != "$res" ]; then
