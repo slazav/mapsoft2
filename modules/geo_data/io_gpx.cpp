@@ -202,66 +202,65 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
     int use_rte = opts.get<int>("gpx_write_rte", 0);
 
     // Writing waypoints:
-    for (int i = 0; i < data.wpts.size(); i++) {
+    for (auto wpl: data.wpts) {
       if (use_rte){
         if (xmlTextWriterStartElement(writer, BAD_CAST "rte")<0)
           throw "starting <rte> element";
 
-        if (data.wpts[i].name!="" &&
+        if (wpl.name!="" &&
             xmlTextWriterWriteFormatElement(writer,
-            BAD_CAST "name", "%s", data.wpts[i].name.c_str())<0)
+            BAD_CAST "name", "%s", wpl.name.c_str())<0)
               throw "writing <name> element";
 
         // other option elements:
         for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
-          if (!data.wpts[i].opts.exists(*fn)) continue;
+          if (!wpl.opts.exists(*fn)) continue;
           if (xmlTextWriterWriteFormatElement(writer,
              BAD_CAST *fn, "%s",
-                 data.wpts[i].opts.get<string>(*fn).c_str())<0)
+                 wpl.opts.get<string>(*fn).c_str())<0)
             throw "writing element";
         }
       }
-      for (GeoWptList::const_iterator wp = data.wpts[i].begin();
-                                      wp != data.wpts[i].end(); ++wp) {
+      for (auto wp: wpl) {
 
         const xmlChar* pt = BAD_CAST (use_rte? "rtept" : "wpt");
         if (xmlTextWriterStartElement(writer, pt)<0 ||
             xmlTextWriterWriteFormatAttribute(writer,
-              BAD_CAST "lat", "%.7f", wp->y)<0 ||
+              BAD_CAST "lat", "%.7f", wp.y)<0 ||
             xmlTextWriterWriteFormatAttribute(writer,
-              BAD_CAST "lon", "%.7f", wp->x)<0)
+              BAD_CAST "lon", "%.7f", wp.x)<0)
           throw "starting <wpt> element";
 
         // altitude
-        if (wp->have_alt() &&
+        if (wp.have_alt() &&
             xmlTextWriterWriteFormatElement(writer,
-              BAD_CAST "ele", "%.2f", wp->z)<0)
+              BAD_CAST "ele", "%.2f", wp.z)<0)
           throw "writing <ele> element";
 
         // time
-        if (wp->t > 0 &&
+        if (wp.t > 0 &&
             xmlTextWriterWriteFormatElement(writer,
-              BAD_CAST "time", "%s", write_fmt_time("%FT%T%fZ", wp->t).c_str())<0)
+              BAD_CAST "time", "%s", write_fmt_time("%FT%T%fZ", wp.t).c_str())<0)
           throw "writing <time> element";
 
         // name
-        if (wp->name != "" &&
+        if (wp.name != "" &&
             xmlTextWriterWriteFormatElement(writer,
-              BAD_CAST "name", "%s", wp->name.c_str())<0)
+              BAD_CAST "name", "%s", wp.name.c_str())<0)
           throw "writing <name> element";
 
         // cmt
-        if (wp->comm != "" &&
+        if (wp.comm != "" &&
             xmlTextWriterWriteFormatElement(writer,
-              BAD_CAST "cmt", "%s", wp->comm.c_str())<0)
+              BAD_CAST "cmt", "%s", wp.comm.c_str())<0)
           throw "writing <cmt> element";
 
         // other option elements:
         for (const char **fn = gps_wpt_names; *fn!=NULL; fn++){
-          if (!wp->opts.exists(*fn)) continue;
+          if (!wp.opts.exists(*fn)) continue;
           if (xmlTextWriterWriteFormatElement(writer,
              BAD_CAST *fn, "%s",
-                 wp->opts.get<string>(*fn).c_str())<0)
+                 wp.opts.get<string>(*fn).c_str())<0)
             throw "writing element";
         }
 
@@ -276,56 +275,58 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
 
 
     // Write tracks:
-    for (int i = 0; i < data.trks.size(); ++i) {
+    for (auto trk: data.trks) {
 
       if (xmlTextWriterStartElement(writer, BAD_CAST "trk")<0)
           throw "starting <trk> element";
 
       // name
-      if (data.trks[i].name != "" &&
+      if (trk.name != "" &&
         xmlTextWriterWriteFormatElement(writer,
-           BAD_CAST "name", "%s", data.trks[i].name.c_str())<0)
+           BAD_CAST "name", "%s", trk.name.c_str())<0)
         throw "writing <name> element";
 
       // other option elements:
       for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
-        if (!data.trks[i].opts.exists(*fn)) continue;
+        if (!trk.opts.exists(*fn)) continue;
         if (xmlTextWriterWriteFormatElement(writer,
            BAD_CAST *fn, "%s",
-               data.trks[i].opts.get<string>(*fn).c_str())<0)
+               trk.opts.get<string>(*fn).c_str())<0)
           throw "writing element";
       }
 
-      for (GeoTrk::const_iterator tp = data.trks[i].begin(); tp != data.trks[i].end(); ++tp) {
+      int cnt=0;
+      for (auto tp: trk) {
+        cnt++;
 
         // close <trkseg> if needed
-        if (tp->start && tp != data.trks[i].begin() &&
+        if (tp.start && cnt>1 &&
            xmlTextWriterEndElement(writer) < 0)
              throw "closing <trkseg> element";
 
         // open <trkseg> if needed
-        if ((tp->start || tp == data.trks[i].begin()) &&
+        if ((tp.start || cnt==1) &&
            xmlTextWriterStartElement(writer, BAD_CAST "trkseg") < 0)
              throw "starting <trkseg> element";
 
         // open <trkpt>
         if (xmlTextWriterStartElement(writer, BAD_CAST "trkpt")<0 ||
             xmlTextWriterWriteFormatAttribute(writer,
-              BAD_CAST "lat", "%.7f", tp->y)<0 ||
+              BAD_CAST "lat", "%.7f", tp.y)<0 ||
             xmlTextWriterWriteFormatAttribute(writer,
-              BAD_CAST "lon", "%.7f", tp->x)<0)
+              BAD_CAST "lon", "%.7f", tp.x)<0)
           throw "starting <trkpt> element";
 
         // altitude
-        if (tp->have_alt() &&
+        if (tp.have_alt() &&
             xmlTextWriterWriteFormatElement(writer,
-              BAD_CAST "ele", "%.2f", tp->z)<0)
+              BAD_CAST "ele", "%.2f", tp.z)<0)
           throw "writing <ele> element";
 
         // time
-        if (tp->t && xmlTextWriterWriteFormatElement(writer,
+        if (tp.t && xmlTextWriterWriteFormatElement(writer,
               BAD_CAST "time", "%s",
-                 write_fmt_time("%FT%T%fZ", tp->t).c_str())<0)
+                 write_fmt_time("%FT%T%fZ", tp.t).c_str())<0)
           throw "writing <time> element";
 
 

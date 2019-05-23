@@ -92,21 +92,20 @@ write_kml (const char* filename, const GeoData & data, const Opt & opts){
     start_element(writer, "Document");
 
     // Writing waypoints:
-    for (int i = 0; i < data.wpts.size(); i++) {
+    for (auto wpl: data.wpts) {
       start_element(writer, "Folder");
-      write_cdata_element(writer, "name", data.wpts[i].name);
-      write_cdata_element(writer, "description", data.wpts[i].comm);
+      write_cdata_element(writer, "name", wpl.name);
+      write_cdata_element(writer, "description", wpl.comm);
 
-      GeoWptList::const_iterator wp;
-      for (wp = data.wpts[i].begin(); wp != data.wpts[i].end(); ++wp) {
+      for (auto wp : wpl) {
         start_element(writer, "Placemark");
-        write_cdata_element(writer, "name", wp->name);
-        write_cdata_element(writer, "description", wp->comm);
+        write_cdata_element(writer, "name", wp.name);
+        write_cdata_element(writer, "description", wp.comm);
 
-        if (wp->t > 0){
+        if (wp.t > 0){
           start_element(writer, "TimeStamp");
           if (xmlTextWriterWriteFormatElement(writer,
-             BAD_CAST "when", "%s", write_fmt_time("%FT%T%fZ", wp->t).c_str())<0)
+             BAD_CAST "when", "%s", write_fmt_time("%FT%T%fZ", wp.t).c_str())<0)
                throw "writing <when> element";
           end_element(writer, "TimeStamp");
         }
@@ -114,7 +113,7 @@ write_kml (const char* filename, const GeoData & data, const Opt & opts){
         start_element(writer, "Point");
         if (xmlTextWriterWriteFormatElement(writer,
            BAD_CAST "coordinates", "%.7f,%.7f,%.2f",
-               wp->x, wp->y, wp->z)<0)
+               wp.x, wp.y, wp.z)<0)
           throw "writing <coordinates> element";
         end_element(writer, "Point");
         end_element(writer, "Placemark");
@@ -123,19 +122,20 @@ write_kml (const char* filename, const GeoData & data, const Opt & opts){
     }
 
     // Writing tracks:
-    for (int i = 0; i < data.trks.size(); ++i) {
+    for (auto trk: data.trks) {
       start_element(writer, "Placemark");
-      write_cdata_element(writer, "name", data.trks[i].name);
-      write_cdata_element(writer, "description", data.trks[i].comm);
+      write_cdata_element(writer, "name", trk.name);
+      write_cdata_element(writer, "description", trk.comm);
       start_element(writer, "MultiGeometry");
 
-      GeoTrk::const_iterator tp;
       const char *linename;
-      for (tp = data.trks[i].begin(); tp != data.trks[i].end(); ++tp) {
-        linename = data.trks[i].opts.get<std::string>("type")=="closed"? "Polygon":"LineString";
+      int cnt=0;
+      for (auto tp : trk) {
+        cnt++;
+        linename = trk.opts.get<std::string>("type")=="closed"? "Polygon":"LineString";
 
-        if (tp->start || tp == data.trks[i].begin()) {
-          if (tp != data.trks[i].begin()) {
+        if (tp.start || cnt == 1) {
+          if (cnt >1) {
             if (xmlTextWriterEndElement(writer) < 0) throw "closing <coordinates> element";
             if (xmlTextWriterEndElement(writer) < 0) throw "closing line element";
           }
@@ -147,7 +147,7 @@ write_kml (const char* filename, const GeoData & data, const Opt & opts){
         }
 
         if (xmlTextWriterWriteFormatString(writer,
-           " %.7f,%.7f,%.2f", tp->x, tp->y, tp->z)<0)
+           " %.7f,%.7f,%.2f", tp.x, tp.y, tp.z)<0)
           throw "writing <coordinates> element";
       }
       end_element(writer, "coordinates");

@@ -80,18 +80,17 @@ void read_gu (const char *fname, GeoData & data, const Opt & opts){
 void write_gu_waypoints(std::ostream & s, const GeoWptList & wp, const IConv & cnv){
   int num = wp.size();
   s << "[waypoints, " << num << " records]\n";
-  vector<GeoWpt>::const_iterator p;
   int symb  = 0;
   int displ = 0;
-  for (p = wp.begin(); p!=wp.end(); p++){
-    string name = cnv(p->name);
-    string comm = cnv(p->comm);
+  for (auto p : wp){
+    string name = cnv(p.name);
+    string comm = cnv(p.comm);
     std::replace(name.begin(), name.end(), ' ', '_');
 
     s << left << setw(6) << setfill(' ') << name << " "
       << right << fixed << setprecision(6)
-      << setw(10) << p->y << " "
-      << setw(11) << p->x << " "
+      << setw(10) << p.y << " "
+      << setw(11) << p.x << " "
       << setw(5) << symb << "/" << displ << " "
       << comm  << "\n";
   }
@@ -103,13 +102,12 @@ void write_gu_waypoints(std::ostream & s, const GeoWptList & wp, const IConv & c
 void write_gu_track(std::ostream & s, const GeoTrk & tr){
   int num = tr.size();
   s << "[tracks, " << num << " records]\n";
-  GeoTrk::const_iterator p;
-  for (p = tr.begin(); p != tr.end(); p++){
+  for (auto p : tr){
     s << right << fixed << setprecision(6) << setfill(' ')
-      << setw(10)<< p->y << " "
-      << setw(11)<< p->x << " "
-      << setfill('0') << write_fmt_time("%F %T", p->t)
-      << ((p->start)? " start":"") << "\n";
+      << setw(10)<< p.y << " "
+      << setw(11)<< p.x << " "
+      << setfill('0') << write_fmt_time("%F %T", p.t)
+      << ((p.start)? " start":"") << "\n";
   }
   s << "[end transfer, " << num << "/" << num << " records]\n";
   if (s.fail()) throw Err() << "io_gu: Can't write track";
@@ -123,11 +121,9 @@ void write_gu (const char *fname, const GeoData & data, const Opt & opts){
 
   ofstream s(fname);
   s << "[product 00, version 000: MAPSOFT2]\n";
-  vector<GeoWptList>::const_iterator w;
-  for (w = data.wpts.begin(); w!=data.wpts.end(); w++)
-    write_gu_waypoints(s, *w, cnv);
+  for (auto wpl: data.wpts)
+    write_gu_waypoints(s, wpl, cnv);
 
-  vector<GeoTrk>::const_iterator t;
-  for (t = data.trks.begin(); t!=data.trks.end(); t++)
-    write_gu_track(s, *t);
+  for (auto trk : data.trks)
+    write_gu_track(s, trk);
 }

@@ -251,13 +251,12 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
 
   // reference points
   int n = 0;
-  map<dPoint,dPoint>::const_iterator i;
-  for (i=m.ref.begin(); i!=m.ref.end(); i++){
+  for (auto p:m.ref){
     n++;
-    int x = (int)i->second.x;
-    int y = (int)i->second.y;
-    double lat = i->first.y;
-    double lon = i->first.x;
+    int x = (int)p.second.x;
+    int y = (int)p.second.y;
+    double lat = p.first.y;
+    double lon = p.first.x;
     f << "Point" << setw(2) << setfill('0') << n << ",xy,"
       << setw(5) << setfill(' ') << x << ','
       << setw(5) << setfill(' ') << y << ','
@@ -315,10 +314,10 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
       << "MMPNUM," << m.border.size() << "\r\n";
     int n=0;
     dLine::const_iterator it;
-    for (it =m.border.begin(); it!=m.border.end(); it++){
+    for (auto it:m.border){
       n++;
       f << "MMPXY," << n << ","
-        << int(it->x) << "," << int(it->y) << "\r\n";.
+        << int(it.x) << "," << int(it.y) << "\r\n";.
     }
     n=0;
     convs::map2wgs cnv(m);

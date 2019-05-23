@@ -131,8 +131,7 @@ struct GeoMap{
   /// TODO: maybe it is better not to shift image_bbox.
   /// now there is no reason to add/subtract points.
   GeoMap & operator+= (const dPoint & p) {
-    std::map<dPoint,dPoint>::iterator i;
-    for (i=ref.begin(); i!=ref.end(); i++) i->second+=p;
+    for (auto i:ref) i.second+=p;
     border+=p;
     image_bbox+=p;
     return *this;
@@ -140,8 +139,7 @@ struct GeoMap{
 
   /// Multiply image coordinates by k (scale the map)
   GeoMap & operator*= (const double k) {
-    std::map<dPoint,dPoint>::iterator i;
-    for (i=ref.begin(); i!=ref.end(); i++) i->second*=k;
+    for (auto i:ref) i.second*=k;
     border*=k;
     image_bbox*=k;
     return *this;
@@ -200,9 +198,9 @@ GeoMap operator+ (const dPoint & p, const GeoMap & l);
 
 struct GeoData{
   Opt opts;
-  std::vector<GeoWptList> wpts;
-  std::vector<GeoTrk>     trks;
-  std::vector<GeoMapList> maps;
+  std::list<GeoWptList> wpts;
+  std::list<GeoTrk>     trks;
+  std::list<GeoMapList> maps;
 
   /// clear all data
   void clear() { wpts.clear(); trks.clear(); maps.clear();}
