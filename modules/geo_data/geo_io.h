@@ -4,6 +4,12 @@
 #include "opt/opt.h"
 #include "geo_data.h"
 
+// Detect file format (by file extension and --fmt option) and read/write data.
+// Return false if format is unknown.
+bool read_geo (const char* filename, GeoData & data, const Opt & opt = Opt());
+bool write_geo (const char* filename, const GeoData & data, const Opt & opt = Opt());
+
+
 // GPX format
 void read_gpx (const char* filename, GeoData & data, const Opt & opt = Opt());
 void write_gpx (const char* filename, const GeoData & data, const Opt & opt = Opt());
