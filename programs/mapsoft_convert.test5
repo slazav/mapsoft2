@@ -1,0 +1,29 @@
+#!/bin/bash -efu
+
+## GeoJSON input/output
+
+P=${1:-./mapsoft_convert}
+. test_lib.sh
+
+# read and do nothing
+assert "$P test_data/json1.json"  "" 0
+
+assert "$P test_data/gpx2.gpx -o tmp.json --json_compact 0 --json_indent 1"  "" 0
+assert_diff test_data/json1.json tmp.json
+
+# read written files again
+assert "$P test_data/json1.json -o tmp.json --json_compact 0 --json_indent 1" "" 0
+assert_diff test_data/json1.json tmp.json
+
+# compact version
+assert "$P test_data/json1.json -o tmp.json" "" 0
+assert_diff test_data/json1a.json tmp.json
+
+assert "$P test_data/json1a.json -o tmp.json --json_compact 0 --json_indent 1" "" 0
+assert_diff test_data/json1.json tmp.json
+
+
+# specify format
+assert "$P test_data/json1a.json -o tmp --fmt json"  "" 0
+assert "$P tmp --fmt json -o tmp --fmt json"  "" 0
+assert_diff test_data/json1a.json tmp
