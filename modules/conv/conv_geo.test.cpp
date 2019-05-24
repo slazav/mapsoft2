@@ -10,7 +10,7 @@ main(){
     std::string proj_krass = "+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=500000 +lon_0=27";
 
     ConvGeo cnv1(proj_wgs,proj_wgs);    // wgs -> wgs
-    ConvGeo cnv2(proj_krass);           // to krass -> wgs
+    ConvGeo cnv2(proj_krass);           // krass -> wgs
     ConvGeo cnv3(proj_wgs, proj_krass); // wgs -> krass
 
     dPoint p1(25.651054, 60.976941, 0);
@@ -69,6 +69,33 @@ main(){
     p2.z/=2;
     assert(dist(p1/2,p2) < 2e-7);
 
+    // no datum
+    {
+      std::string proj_ll = "+ellps=krass +proj=lonlat";
+      std::string proj_tmerc = "+ellps=krass +proj=tmerc +x_0=500000 +lon_0=27";
+
+      ConvGeo cnv1(proj_ll, proj_tmerc);
+      dPoint p1(25.651054, 60.976941, UNDEF_ALT), p2(p1);
+      iPoint p1a(426961, 6763794, UNDEF_ALT);
+      cnv1.frw(p2);
+      assert(iPoint(p2) == p1a);
+      cnv1.bck(p2);
+      assert(dist(p1,p2) < 1e-7);
+    }
+
+    // no datum, no ellipsoid
+    {
+      std::string proj_ll = "+proj=lonlat";
+      std::string proj_tmerc = "+proj=tmerc +x_0=500000 +lon_0=27";
+
+      ConvGeo cnv1(proj_ll, proj_tmerc);
+      dPoint p1(25.651054, 60.976941, UNDEF_ALT), p2(p1);
+      iPoint p1a(426962, 6763675, UNDEF_ALT);
+      cnv1.frw(p2);
+      assert(iPoint(p2) == p1a);
+      cnv1.bck(p2);
+      assert(dist(p1,p2) < 1e-7);
+    }
 
   }
   catch (Err e) {
