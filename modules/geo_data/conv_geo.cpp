@@ -1,6 +1,7 @@
-#include "conv_geo.h"
-#include "err/err.h"
 #include <proj_api.h>
+
+#include "err/err.h"
+#include "conv_geo.h"
 
 ConvGeo::ConvGeo(const std::string & src, const std::string & dst){
   sc_src = sc_dst = 1;
@@ -46,5 +47,22 @@ ConvGeo::bck_pt(dPoint & p) const{
   }
   if (sc_src!=1.0) {p.x/=sc_src; p.y/=sc_src;}
 }
+
+
+/**********************************************************/
+
+ConvMap::ConvMap(const GeoMap & m, const std::string & dst):
+      map2dst(m.proj, dst) {
+
+  // convert refpoints to map projection
+  ConvGeo map2wgs(m.proj);
+  std::map<dPoint,dPoint> refpts = m.ref;
+  for (auto & pp:refpts) map2wgs.bck(pp.second);
+  img2map.reset(refpts);
+
+  push_back(&img2map); // image -> map proj
+  push_back(&map2dst); // map proj -> dst
+}
+
 
 

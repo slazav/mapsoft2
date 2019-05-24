@@ -97,6 +97,30 @@ main(){
       assert(dist2d(p1,p2) < 1e-7);
     }
 
+    // CnvMap
+    {
+       GeoMap m;
+       // ref: image points -> wgs84
+       m.ref.insert(std::make_pair(dPoint(159.0,386.0),   dPoint(35.998051,55.999946)));
+       m.ref.insert(std::make_pair(dPoint(2370.0,386.0),  dPoint(36.248054,55.999950)));
+       m.ref.insert(std::make_pair(dPoint(2371.0,3007.0), dPoint(36.248063,55.833280)));
+       m.ref.insert(std::make_pair(dPoint(151.0,3010.0),  dPoint(35.998059,55.833276)));
+       m.border = dLine("[[159.1,386.8],[1264.1,386.4],[2369.9,385.3],"
+                        "[2371.2,3007.6],[1260.7,3008.9],[150.9,3009.3],[159.1,386.8]]");
+       m.proj = "+datum=WGS84 +proj=tmerc +lon_0=39 +x_0=500000";
+       ConvMap cnv1(m, "+ellps=krass +towgs84=28,-130,-95 +x_0=500000 +proj=tmerc +lon_0=39");
+       dPoint p1(1333, 867);
+       dPoint p2(321000, 6209000);
+       cnv1.frw(p1);
+       assert(dist2d(p1,p2) < 15); // 15m accuracy (~2px)
+
+       ConvMap cnv2(m, "+ellps=krass +towgs84=28,-130,-95 +proj=latlong");
+       dPoint p3(159,386);
+       dPoint p4(36.00,56.00);
+       cnv2.bck(p4);
+       assert(dist2d(p3,p4) < 1); // 1px accuracy
+    }
+
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";

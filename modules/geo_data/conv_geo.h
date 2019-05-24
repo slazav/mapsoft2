@@ -3,7 +3,9 @@
 
 #include <memory>
 #include <string>
-#include "conv_base.h"
+#include "conv/conv_aff.h"
+#include "conv/conv_multi.h"
+#include "geo_data.h"
 
 ///\addtogroup libmapsoft
 ///@{
@@ -25,6 +27,22 @@ public:
 private:
   std::shared_ptr<void> pj_src, pj_dst;
 };
+
+
+/// Geo transformation from GeoMap
+class ConvMap: public ConvMulti {
+public:
+
+  /// Create a transformation. `src` is a GeoMap and `dst` is
+  /// libproj parameter string.
+  ConvMap(const GeoMap & m, const std::string & dst =
+    "+datum=WGS84 +proj=lonlat");
+
+private:
+  ConvAff img2map;
+  ConvGeo map2dst;
+};
+
 
 ///@}
 #endif
