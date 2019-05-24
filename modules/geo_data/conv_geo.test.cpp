@@ -101,10 +101,10 @@ main(){
     {
        GeoMap m;
        // ref: image points -> wgs84
-       m.ref.insert(std::make_pair(dPoint(159.0,386.0),   dPoint(35.998051,55.999946)));
-       m.ref.insert(std::make_pair(dPoint(2370.0,386.0),  dPoint(36.248054,55.999950)));
-       m.ref.insert(std::make_pair(dPoint(2371.0,3007.0), dPoint(36.248063,55.833280)));
-       m.ref.insert(std::make_pair(dPoint(151.0,3010.0),  dPoint(35.998059,55.833276)));
+       m.add_ref(159.0,386.0,   35.998051,55.999946);
+       m.add_ref(2370.0,386.0,  36.248054,55.999950);
+       m.add_ref(2371.0,3007.0, 36.248063,55.833280);
+       m.add_ref(151.0,3010.0,  35.998059,55.833276);
        m.border = dLine("[[159.1,386.8],[1264.1,386.4],[2369.9,385.3],"
                         "[2371.2,3007.6],[1260.7,3008.9],[150.9,3009.3],[159.1,386.8]]");
        m.proj = "+datum=WGS84 +proj=tmerc +lon_0=39 +x_0=500000";
@@ -119,6 +119,13 @@ main(){
        dPoint p4(36.00,56.00);
        cnv2.bck(p4);
        assert(dist2d(p3,p4) < 1); // 1px accuracy
+
+       assert(m.bbox2d_ref_img() == dRect("[151,386,2220,2624]"));
+
+       dRect r = m.bbox2d_ref_wgs();
+       assert(dist2d(r.tlc(), dPoint(35.998051,55.833276)) < 1e-6);
+       assert(abs(r.w - 1/4.0) < 1e-4);
+       assert(abs(r.h - 1/6.0) < 1e-4);
     }
 
   }

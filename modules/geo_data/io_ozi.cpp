@@ -106,7 +106,7 @@ string convert_ozi2proj(const string & s){
 }
 
 string convert_ozi2datum(const string & s){
-  if (s=="WGS 84") return "+datum=wgs84";
+  if (s=="WGS 84") return "+datum=WGS84";
   if (s=="Pulkovo 1942" ||
       s=="Pulkovo 1942 (1)" ||
       s=="Pulkovo 1942 (2)")  return "+ellps=krass +towgs84=28,-130,-95";
@@ -138,7 +138,7 @@ string convert_datum2ozi(const string & s){
   string el = get_proj_par(s, "ellps");
   string to = get_proj_par(s, "towgs84");
 
-  if (dt == "wgs84") return "WGS 84";
+  if (dt == "WGS84") return "WGS 84";
   if (el == "krass" && to == "28,-130,-95") return "Pulkovo 1942 (2)";
 
   throw Err() << "io_ozi: unsupported datum: " << s;
@@ -306,7 +306,7 @@ void read_ozi (const char *fname, GeoData & data, const Opt & opts){
       if (type == 0) throw Err() << "io_ozi: no coordinates in " << v[0]
                                  << ": [" << s1 << "]";
 
-      m.ref.insert(pair<dPoint,dPoint>(p1,p2));
+      m.add_ref(p1,p2);
       geo.insert(pair<dPoint,bool>(p1,type==1));
     }
 
@@ -567,8 +567,8 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
     else {
       gcnv2.bck(pp);
       f << "    ,        ,N,    ,        ,E, grid,   ,"
-        << setw(11) << rint(pp.x) << ","
-        << setw(11) << rint(pp.y) << ",N\r\n";
+        << setw(11) << int(rint(pp.x)) << ","
+        << setw(11) << int(rint(pp.y)) << ",N\r\n";
     }
     if (n==30) break;
   }
@@ -608,23 +608,31 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
     for (auto p:m.border){
       n++;
       f << "MMPXY," << n << ","
-        << rint(p.x) << "," << rint(p.y) << "\r\n";
-    }
-/*
-    n=0;
-    ConvGeo gcnv(m.proj);
-    f.precision(8);
-    for (auto p: m.border{
-      n++;
-      dPoint p1(p); cnv.frw(p1);
-      f << "MMPLL," << n << ",".
-        << right << fixed << setprecision(6) << setfill(' ')
-        << setw(10) << p1.x << ','
-        << setw(11) << p1.y << "\r\n";.
+        << int(rint(p.x)) << "," << int(rint(p.y)) << "\r\n";
     }
 
-    f << "MM1B," << convs::map_mpp(m, m.map_proj) << "\r\n";
-*/
+    n=0;
+    ConvMap gcnv3(m, proj0); // image points -> latlong in map datum
+    f.precision(8);
+    for (auto p: m.border ){
+      n++;
+      dPoint p1(p); gcnv3.frw(p1);
+      f << "MMPLL," << n << ","
+        << right << fixed << setprecision(6) << setfill(' ')
+        << setw(10) << p1.x << ','
+        << setw(11) << p1.y << "\r\n";
+    }
+
+    // calculate m/pix
+    dPoint p1 = m.bbox2d_ref_img().cnt();
+    dPoint p2 = p1 + dPoint(0,1);
+    dPoint p3 = p1 + dPoint(1,0);
+    gcnv3.frw(p1);
+    gcnv3.frw(p2);
+    gcnv3.frw(p3);
+    double mpp = (geo_dist_2d(p1,p2) + geo_dist_2d(p1,p3))/2;
+    f << "MM1B," << mpp << "\r\n";
+
   }
   else{
     f << "MM0,No\r\n";

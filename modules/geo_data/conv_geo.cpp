@@ -65,4 +65,3 @@ ConvMap::ConvMap(const GeoMap & m, const std::string & dst):
 }
 
 
-

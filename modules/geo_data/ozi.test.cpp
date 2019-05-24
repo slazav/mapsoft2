@@ -79,7 +79,7 @@ main() {
     }
 
     // ozi2datum
-    assert(convert_ozi2datum("WGS 84") == "+datum=wgs84");
+    assert(convert_ozi2datum("WGS 84") == "+datum=WGS84");
     assert(convert_ozi2datum("Pulkovo 1942") == "+ellps=krass +towgs84=28,-130,-95");
     assert(convert_ozi2datum("Pulkovo 1942 (1)") == "+ellps=krass +towgs84=28,-130,-95");
     assert(convert_ozi2datum("Pulkovo 1942 (2)") == "+ellps=krass +towgs84=28,-130,-95");
@@ -102,7 +102,7 @@ main() {
       assert(e.str() == "io_ozi: unsupported projection: tmerc1");
     }
     try {
-      convert_proj2ozi("+datum=wgs84 +proj=tmerc1 a");
+      convert_proj2ozi("+datum=WGS84 +proj=tmerc1 a");
       assert(false);
     }
     catch(Err e) {
@@ -110,7 +110,7 @@ main() {
     }
 
     // datum2ozi
-    assert(convert_datum2ozi("+datum=wgs84 +proj=tmerc") == "WGS 84");
+    assert(convert_datum2ozi("+datum=WGS84 +proj=tmerc") == "WGS 84");
     assert(convert_datum2ozi("+ellps=krass +proj=tmerc +towgs84=28,-130,-95 +lon0=0") == "Pulkovo 1942 (2)");
 
 

@@ -8,7 +8,7 @@ contain trackpoints (`GeoTpt`), waypoint lists contain waypoints
 Each structure has some mandatory fields and (except for track point)
 optional fields inside `opts` variable.
 
-### Mandatory fields:
+### Fields:
 
 #### `GeoWptList` -- a waypoint list, a route
  * `std::string name` -- name
@@ -220,14 +220,17 @@ For waypoints and tracks all OziExplorer-specific fields are stored in
 
 Map-file support:
 - Only a few datums and projections (more can be added).
+- Character encoding conversion is applied only to map name,
+  not to filename.
 - No support for user-defined datums (ellipsoid+shift).
 - Full support for reference points, coordinates can be
   in degree or grid format. On output this can be controlled by
   `ozi_map_grid` option.
 - Order of reference points is not preserved.
-- Moving Map Parameters support (At the moment MMPLL field is
-  not writen, but I plan to fix it soon).
+- Moving Map Parameters support.
 - No support for Map features, Map comments, Attached files, Grids.
+
+TODO: limit number of border points to 100 (Ozi Explorer limit).
 
 Input options:
  - verbose (default: 0)
@@ -242,9 +245,3 @@ Output pptions:
 
 In original mapsoft there was a self-made xml-like format for data. There is
 no plan to support it.
-
-
-
-
-
-

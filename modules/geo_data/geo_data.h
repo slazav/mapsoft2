@@ -161,6 +161,26 @@ struct GeoMap{
   /// Divide image coordinates by k (scale the map)
   GeoMap operator/ (const double k) const { GeoMap ret(*this); return ret*=1.0/k; }
 
+  void add_ref(const double x1, const double y1, const double x2, const double y2){
+    ref.insert(std::make_pair(dPoint(x1,y1), dPoint(x2,y2))); }
+
+  void add_ref(const dPoint & p1, const dPoint & p2){
+    ref.insert(std::make_pair(p1,p2)); }
+
+  // bbox of reference points in image coordinates
+  dRect bbox2d_ref_img() const{
+    dRect r;
+    for (auto pp:ref) r = r.expand(pp.first);
+    return r;
+  }
+
+  // bbox of reference points in wgs84 latlong
+  dRect bbox2d_ref_wgs() const{
+    dRect r;
+    for (auto pp:ref) r = r.expand(pp.second);
+    return r;
+  }
+
   /******************************************************************/
 
 //  /// Get x-y range in lon-lat coords (using border, ref, proj).
