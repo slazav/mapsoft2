@@ -68,15 +68,29 @@ main(){
 
   {
     // mlen/len/norm
-    iPoint p1(3,4);
-    iPoint p2(10,0);
-    assert(p1.mlen() == 7);
-    assert(mlen(p1) == 7);
-    assert(p1.len() == 5);
-    assert(len(p1) == 5);
+    iPoint p1(2,3,6);
+    iPoint p2(0,0,10);
+    assert(p1.mlen() == 11);
+    assert(mlen(p1) == 11);
+    assert(p1.len() == 7);
+    assert(len(p1) == 7);
 
-    assert(p2.norm() == dPoint(1,0));
-    assert(norm(p2) == dPoint(1,0));
+    assert(p2.norm() == dPoint(0,0,1));
+    assert(norm(p2) == dPoint(0,0,1));
+  }
+  {
+    // mlen2d/len2d/norm2d
+    iPoint p1(3,4, 100);
+    iPoint p2(10,0, 200);
+    assert(p1.mlen2d() == 7);
+    assert(mlen2d(p1) == 7);
+    assert(p1.len2d() == 5);
+    assert(len2d(p1) == 5);
+
+    assert(p2.norm2d() == dPoint(1,0,200));
+    assert(norm2d(iPoint(10,0, 200)) == dPoint(1,0,200));
+    assert(norm2d(iPoint(0,8, 200)) == dPoint(0,1,200));
+
   }
 
   try {
@@ -119,12 +133,22 @@ main(){
 
   // pscal, dist
   {
-    iPoint p1(3,4);
-    iPoint p2(10,0);
-    assert(pscal(p1,p2) == 30);
-    assert(pscal(p1,p1) == 25);
+    iPoint p1(1,2,2);
+    iPoint p2(3,5,6);
+    assert(pscal(p1,p2) == 25);
+    assert(pscal(p1,p1) == 9);
     assert(dist(p1,p1) == 0);
-    assert(dist(p1,iPoint(0,0)) == 5);
+    assert(dist(p1,iPoint(0,0)) == 3);
+  }
+
+  // pscal2d, dist2d
+  {
+    iPoint p1(3,4,100);
+    iPoint p2(10,0,200);
+    assert(pscal2d(p1,p2) == 30);
+    assert(pscal2d(p1,p1) == 25);
+    assert(dist2d(p1,p1) == 0);
+    assert(dist2d(p1,iPoint(0,0)) == 5);
   }
 
   // input/output (also check that dPoint is printed with setprecision(9))

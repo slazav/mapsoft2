@@ -22,13 +22,16 @@
 - Other operations:
   - `p1.swap(p2)` -- swap two points,
   - `dPoint(p)`, `iPoint(p)` -- cast to double- or integer-coordinate point,
-  - `p.mlen()`, `mlen(p)` -- manhattan length: abs(x) + abs(y),
-  - `p.len()`, `len(p)` -- calculate length: sqrt(x^2 + y^2),
+  - `p.mlen()`, `mlen(p)` -- manhattan length: abs(x) + abs(y) + abs(z),
+  - `p.len()`, `len(p)` -- length: sqrt(x^2 + y^2 + z^2),
   - `p.norm()`, `norm(p)` -- normalize: p/len(p),
   - `p.rint()`, `rint(p)` -- set coordinates to nearest integer values,
   - `p.floor()`, `floor(p)` -- set coordinates to nearest smaller integers,
   - `p.ceil()`, `ceil(p)` -- set coordinates to nearest larger integers,
   - `p.abs()`,  `abs(p)` -- set coordinates to their absolute values,
+  - `p.mlen2d()`, `mlen2d(p)` -- 2D manhattan length: abs(x) + abs(y),
+  - `p.len2d()`, `len2d(p)` --  2D length: sqrt(x^2 + y^2),
+  - `p.norm2d()`, `norm2d(p)` -- 2D normalize: (x/len2d(p), y/len2d(p), z),
   - `p.rotate2d(pc,a)`,  `rotate2d(p,pc,a)` -- rotate around central point pc by angle a (rad, clockwise) in x-y plane,
   - `p.flatten()`,  `flatten(p)` -- project the point to x-y plane.
   - `pscal(p1,p2)` -- scalar product: p1.x*p2.x + p1.y*p2.y + p1.z*p2.z,

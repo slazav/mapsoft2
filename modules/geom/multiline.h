@@ -138,6 +138,14 @@ struct MultiLine : std::vector<Line<T> > {
     return ret;
   }
 
+  /// MultiLine 2D length (sum of segment lengths, z is ignored).
+  double length2d() const {
+    double ret=0;
+    typename MultiLine<T>::const_iterator i;
+    for(i=this->begin(); i!=this->end(); i++) ret+=i->length2d();
+    return ret;
+  }
+
   /// MultiLine bounding box.
   Rect<T> bbox2d() const{
     if (this->size()<1) return Rect<T>();
@@ -195,6 +203,11 @@ MultiLine<T> operator+ (const Point<T> & p, const MultiLine<T> & l) { return l+p
 /// \relates MultiLine
 template <typename T>
 double length(const MultiLine<T> & l){ return l.length(); }
+
+/// Calculate 2D MultiLine length.
+/// \relates MultiLine
+template <typename T>
+double length2d(const MultiLine<T> & l){ return l.length2d(); }
 
 /// MultiLine bounding box
 /// \relates MultiLine

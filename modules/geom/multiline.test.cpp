@@ -9,8 +9,8 @@ main(){
   try{
 
   iMultiLine ml1;
-  iLine l1 = str_to_type<iLine>("[[0,1],[2,3]]");
-  iLine l2 = str_to_type<iLine>("[[4,5],[6,7]]");
+  iLine l1("[[0,1],[2,3]]");
+  iLine l2("[[4,5],[6,7]]");
   iMultiLine ml2;
   ml2.push_back(l1);
   ml2.push_back(l2);
@@ -82,8 +82,15 @@ main(){
   assert(ml2.bbox2d() == expand(l1.bbox2d(),l2.bbox2d()));
   assert(bbox2d(ml2) == ml2.bbox2d());
 
-  assert(rint(dMultiLine("[[[1.1,1.8],[3.9,1.1]],[]]")) == dMultiLine("[[[1,2],[4,1]],[]]"));
+  {
+     dMultiLine ml1("[ [[0,0,0], [1,2,2]], [[0,0,0], [1,2,-2], [2,0,0]] ]");
+     assert(ml1.length() == 9);
 
+     dMultiLine ml2("[ [[0,0,0], [3,4,2]], [[0,0,0], [3,4,-2], [6,0,0]] ]");
+     assert(ml2.length2d() == 15);
+  }
+
+  assert(rint(dMultiLine("[[[1.1,1.8],[3.9,1.1]],[]]")) == dMultiLine("[[[1,2],[4,1]],[]]"));
   assert(flatten(iMultiLine("[[[1,8,9],[1,2,3]],[]]")) == iMultiLine("[[[1,8],[1,2]],[]]"));
 
   // rotate

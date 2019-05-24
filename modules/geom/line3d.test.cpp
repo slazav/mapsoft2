@@ -75,10 +75,16 @@ main(){
   assert(l3.is_shifted(l3+iPoint(2,2), sh) == is_shifted(l3, l3+iPoint(2,2), sh));
 
   // length
-  l3 = str_to_type<iLine>("[[0,0],[2,0],[2,2]]");
+  l3 = str_to_type<iLine>("[[0,0,0],[1,2,2],[3,5,8]]");
   assert (l3.size() == 3);
-  assert (l3.length() == 4);
+  assert (l3.length() == 10);
   assert (l3.length() == length(l3));
+
+  // length2d
+  l3 = str_to_type<iLine>("[[0,0,100],[3,4,1],[6,0,-23]]");
+  assert (l3.size() == 3);
+  assert (l3.length2d() == 10);
+  assert (l3.length2d() == length2d(l3));
 
   // bbox2d
   assert(iLine().bbox2d() == iRect());

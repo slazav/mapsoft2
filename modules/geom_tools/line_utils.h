@@ -28,17 +28,17 @@ double nearest_pt(const Line<T> & line, dPoint & vec, Point<T> & pt, double maxd
     Point<T> p1(line[j-1]);
     Point<T> p2(line[j]);
 
-    double  ll = dist(p1,p2);
+    double  ll = dist2d(p1,p2);
     if (ll==0) continue;
     dPoint v = dPoint(p2-p1)/ll;
 
-    double ls = dist(pt,p1);
-    double le = dist(pt,p2);
+    double ls = dist2d(pt,p1);
+    double le = dist2d(pt,p2);
 
     if (ls<maxdist){ maxdist=ls; pm=p1; vec=v; }
     if (le<maxdist){ maxdist=le; pm=p2; vec=v; }
 
-    double prl = pscal(dPoint(pt-p1), v);
+    double prl = pscal2d(dPoint(pt-p1), v);
 
     if ((prl>=0)&&(prl<=ll)) { // point is inside a segment
       Point<T> pc = p1 + Point<T>(v * prl);
@@ -92,8 +92,8 @@ Line<T> convex_border(const Line<T> & points){
     double cmax=-1;
     for (p=points.begin(); p!=points.end(); p++){
       if (*p == *p0) continue;
-      dPoint v = norm(*p - *p0);
-      double c = pscal(v0, v);
+      dPoint v = norm2d(*p - *p0);
+      double c = pscal2d(v0, v);
       if (cmax < c) { cmax=c; p1=p;}
     }
     v0=norm(*p1 - *p0);
@@ -122,7 +122,7 @@ test_pairs(const Line<T> & l1, const Line<T> & l2,
     for (k=l2.begin(); k!=l2.end(); k++){
       dPoint v1(*j-*i);
       dPoint v2(*k-*i);
-      double K = pscal(v1,v2)/pscal(v1,v1);
+      double K = pscal2d(v1,v2)/pscal2d(v1,v1);
       double d = len(K*v1-v2);
       if ((v1.x*v2.y-v2.x*v1.y)<0) d*=-1;
       if (d<mindist) mindist=d;

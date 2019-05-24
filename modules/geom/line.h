@@ -152,6 +152,14 @@ struct Line : std::vector<Point<T> > {
     return ret;
   }
 
+  /// Calculate line length.
+  double length2d() const {
+    double ret=0;
+    for (int i=1; i<this->size(); i++)
+      ret+=dist2d((*this)[i-1], (*this)[i]);
+    return ret;
+  }
+
   /// Invert line.
   Line<T> invert(void) const{
     Line<T> ret;
@@ -236,6 +244,11 @@ Line<T> operator+ (const Point<T> & p, const Line<T> & l) { return l+p; }
 /// \relates Line
 template <typename T>
 double length(const Line<T> & l){ return l.length(); }
+
+/// Calculate 2D line length.
+/// \relates Line
+template <typename T>
+double length2d(const Line<T> & l){ return l.length2d(); }
 
 /// Invert line.
 /// \relates Line
