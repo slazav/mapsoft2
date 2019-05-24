@@ -64,15 +64,3 @@ Methods (map is a std::map(dPoint,dPoint)):
  - `rescale_src(kx,ky)` -- rescale `x` and `y` before thetransformation,
  - `rescale_dst(kx,ky)` -- rescale `x` and `y` after thetransformation,
 
------------------
-## ConvGeo class
-
-Geo transformation, libproj wrapper, child of ConvBase.
-
-Functions `rescale_src()` and `rescale_dst()` affects
-only `x` and `y` coordinates.
-If point coordinate `z` is `NaN` then 2D transformation is done.
-
-Constructor:
- - `ConvGeo(const std::string & src, const std::string & dst = "+datum=WGS84 +proj=lonlat");`
-
