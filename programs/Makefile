@@ -9,7 +9,7 @@ OTHER_TESTS :=\
 
 MODDIR      := ../modules
 
-PKG_CONFIG  := libzip libxml-2.0 jansson
+PKG_CONFIG  := libzip libxml-2.0 jansson proj
 
 include $(MODDIR)/Makefile.inc
 
