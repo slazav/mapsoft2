@@ -14,7 +14,7 @@ main(){
     ConvGeo cnv3(proj_wgs, proj_krass); // wgs -> krass
 
     dPoint p1(25.651054, 60.976941, 0);
-    iPoint p1a(427091, 6763808, -11);
+    dPoint p1a(427091, 6763808, -11);
 
     // trivial
     dPoint p2(p1);
@@ -40,34 +40,34 @@ main(){
     cnv3.frw(l1);
     assert(iLine(l1) == l1a);
 
-    // z<=-1e7 -- no altitude conversions
-    p1 = dPoint(25.651054, 60.976941, -1e8);
-    p1a = iPoint (427091, 6763808, -1e8);
+    // z==nan -- no altitude conversions
+    p1 = dPoint(25.651054, 60.976941, nan(""));
+    p1a = dPoint (427091.023, 6763808.07, nan(""));
     p2=p1;
     cnv2.bck(p2);
-    assert(iPoint(p2) == p1a);
+    assert(dist2d(p2,p1a) < 1e-2);
     cnv2.frw(p2);
-    assert(dist(p1,p2) < 2e-7);
+    assert(dist2d(p1,p2) < 2e-7);
 
     // rescale_dst (only x,y is affected!)
     cnv3.rescale_dst(2);
     p2=p1;
     cnv3.frw(p2);
     p2.z*=2;
-    assert(iPoint(p2) == p1a*2);
+    assert(dist2d(p2,p1a*2) < 1e-2);
     p2.z/=2;
     cnv3.bck(p2);
-    assert(dist(p1,p2) < 2e-7);
+    assert(dist2d(p1,p2) < 2e-7);
 
     // rescale_src
     cnv3.rescale_src(2);
     cnv3.rescale_dst(0.5);
     p2=p1/2; p2.z *= 2;
     cnv3.frw(p2);
-    assert(iPoint(p2) == p1a);
+    assert(dist2d(p2,p1a) < 1e-2);
     cnv3.bck(p2);
     p2.z/=2;
-    assert(dist(p1/2,p2) < 2e-7);
+    assert(dist2d(p1/2,p2) < 2e-7);
 
     // no datum
     {
@@ -75,12 +75,12 @@ main(){
       std::string proj_tmerc = "+ellps=krass +proj=tmerc +x_0=500000 +lon_0=27";
 
       ConvGeo cnv1(proj_ll, proj_tmerc);
-      dPoint p1(25.651054, 60.976941, UNDEF_ALT), p2(p1);
-      iPoint p1a(426961, 6763794, UNDEF_ALT);
+      dPoint p1(25.651054, 60.976941, nan("")), p2(p1);
+      dPoint p1a(426961.39, 6763794.09, nan(""));
       cnv1.frw(p2);
-      assert(iPoint(p2) == p1a);
+      assert(dist2d(p1a,p2) <1e-2);
       cnv1.bck(p2);
-      assert(dist(p1,p2) < 1e-7);
+      assert(dist2d(p1,p2) < 1e-7);
     }
 
     // no datum, no ellipsoid
@@ -89,12 +89,12 @@ main(){
       std::string proj_tmerc = "+proj=tmerc +x_0=500000 +lon_0=27";
 
       ConvGeo cnv1(proj_ll, proj_tmerc);
-      dPoint p1(25.651054, 60.976941, UNDEF_ALT), p2(p1);
-      iPoint p1a(426962, 6763675, UNDEF_ALT);
+      dPoint p1(25.651054, 60.976941, nan("")), p2(p1);
+      dPoint p1a(426962.60, 6763675.97, nan(""));
       cnv1.frw(p2);
-      assert(iPoint(p2) == p1a);
+      assert(dist2d(p1a,p2) <1e-2);
       cnv1.bck(p2);
-      assert(dist(p1,p2) < 1e-7);
+      assert(dist2d(p1,p2) < 1e-7);
     }
 
   }

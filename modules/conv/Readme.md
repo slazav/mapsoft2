@@ -69,8 +69,9 @@ Methods (map is a std::map(dPoint,dPoint)):
 
 Geo transformation, libproj wrapper, child of ConvBase.
 
-If point coordinate `z <= -1e7` then 2D transformation is done.
-`rescale_src()` and `rescale_dst()` affects only `x` and `y` coordinates.
+Functions `rescale_src()` and `rescale_dst()` affects
+only `x` and `y` coordinates.
+If point coordinate `z` is `NaN` then 2D transformation is done.
 
 Constructor:
  - `ConvGeo(const std::string & src, const std::string & dst = "+datum=WGS84 +proj=lonlat");`

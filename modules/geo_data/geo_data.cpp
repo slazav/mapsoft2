@@ -19,19 +19,19 @@ GeoWptList::bbox2d() const {
 
 void
 GeoWptList::clear_alt() {
-  for (iterator i=begin(); i!=end(); i++) i->z = UNDEF_ALT;
+  for (auto i:*this) i.z = nan("");
 }
 
 dRect
 GeoTrk::bbox2d() const {
   dRect ret;
-  for (const_iterator i=begin(); i!=end(); i++) ret = expand(ret, *i);
+  for (auto i:*this) ret = expand(ret,i);
   return ret;
 }
 
 void
 GeoTrk::clear_alt() {
-  for (iterator i=begin(); i!=end(); i++) i->z = UNDEF_ALT;
+  for (auto i:*this) i.z = nan("");
 }
 
 double
@@ -44,7 +44,7 @@ GeoTrk::length() const {
 
 GeoTrk::operator dLine() const {
   dLine ret;
-  for (const_iterator i=begin(); i!=end(); i++) ret.push_back(dPoint(*i));
+  for (auto i:*this) ret.push_back(dPoint(i));
   return ret;
 }
 

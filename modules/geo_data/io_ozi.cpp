@@ -182,6 +182,34 @@ void read_ozi (const char *fname, GeoData & data, const Opt & opts){
 
   //// MAP
   if (s2 == "Map"){
+    GeoMap m;
+    getline(f,s1); crop_nl(s1);
+    m.name = cnv(s1);
+
+    getline(f,s1); crop_nl(s1);
+    m.image = s1; // no charset conversion for file name!
+
+    getline(f,s1); // 1 TIFF scale factor -- ignored
+
+    getline(f,s1); // Datum -- TODO
+    // "WGS 84,,   0.0000,   0.0000,WGS 84\r\n"
+
+    getline(f,s1); // Reserved
+    getline(f,s1); // Reserved
+
+    getline(f,s1); // Magnetic Variation -- TODO
+    // "Magnetic Variation,,,E\r\n"
+
+    getline(f,s1); // Map Projection -- TODO
+    // "Map Projection," << map_proj
+    // ",PolyCal,No,AutoCalOnly,No,BSBUseWPX,No\r\n";
+
+    // POINTS
+
+    // Map Feature
+
+    // Track File
+
 std::cerr << "map\n";
     return;
   }
@@ -347,7 +375,7 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
   // header
   f << "OziExplorer Map Data File Version 2.2\r\n"
     << cnv(m.name) << "\r\n"
-    << m.image << "\r\n"
+    << m.image << "\r\n" // no charset conversion for file name!
       << "1 ,Map Code,\r\n"
       << "WGS 84,,   0.0000,   0.0000,WGS 84\r\n"
       << "Reserved 1\r\n"

@@ -15,8 +15,6 @@
 ///\defgroup GeoData Mapsoft geodata classes and functions.
 ///@{
 
-#define UNDEF_ALT -1e7
-
 /********************************************************************/
 /// Distance in m between two points (haversine formula, altitude is ignored).
 double geo_dist_2d(const dPoint &p1, const dPoint &p2);
@@ -25,7 +23,7 @@ double geo_dist_2d(const dPoint &p1, const dPoint &p2);
 /// Single waypoint, a child of dPoint. Can have "undefined" altitude,
 /// in this case it is not used in transformations (See ConvGeo class).
 /// All additional information lives in opt variable.
-/// Note: default z in GeoWpt is UNDEF_ALT, and in dPoint is 0;
+/// Note: default z in GeoWpt is NaN, and in dPoint is 0;
 struct GeoWpt : dPoint {
   std::string name; ///< name
   std::string comm; ///< comment
@@ -33,16 +31,16 @@ struct GeoWpt : dPoint {
   time_t t;         ///< unix time (ms)
 
   /// constructors
-  GeoWpt() {z=UNDEF_ALT; t=0;}
+  GeoWpt() {z=nan(""); t=0;}
   GeoWpt(const dPoint &p): dPoint(p){}
-  GeoWpt(const double x, const double y, const double z=UNDEF_ALT):
+  GeoWpt(const double x, const double y, const double z=nan("")):
     dPoint(x,y,z), t(0){}
 
   /// check if altitude is defined
-  bool have_alt() const {return z>UNDEF_ALT;}
+  bool have_alt() const {return !std::isnan(z);}
 
   /// set the altitude to undefined state
-  void clear_alt() {z=UNDEF_ALT;}
+  void clear_alt() {z=nan("");}
 };
 
 /********************************************************************/
@@ -69,17 +67,17 @@ struct GeoTpt : dPoint {
   time_t t;   ///< unix time (ms)
 
   /// constructor
-  GeoTpt(): start(false), t(0) {z=UNDEF_ALT;}
+  GeoTpt(): start(false), t(0) {z=nan("");}
   GeoTpt(const dPoint &p): dPoint(p), start(false) {}
-  GeoTpt(const double x, const double y, const double z=UNDEF_ALT,
+  GeoTpt(const double x, const double y, const double z=nan(""),
          const bool start = false, const time_t t=0):
     dPoint(x,y,z), start(start), t(t) {}
 
   /// check if altitude is defined
-  bool have_alt() const {return z>UNDEF_ALT;}
+  bool have_alt() const {return !std::isnan(z);}
 
   /// set the altitude to undefined state
-  void clear_alt() {z=UNDEF_ALT;}
+  void clear_alt() {z=nan("");}
 };
 
 /********************************************************************/

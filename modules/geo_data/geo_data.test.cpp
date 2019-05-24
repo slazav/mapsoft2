@@ -13,7 +13,7 @@ main(){
       GeoWpt p1;
       assert(p1.x == 0);
       assert(p1.y == 0);
-      assert(p1.z == UNDEF_ALT);
+      assert(std::isnan(p1.z));
       assert(p1.have_alt() == false);
       p1.z = 0;
       assert(p1.have_alt() == true);
@@ -30,7 +30,7 @@ main(){
       p1 = GeoWpt(11,11);
       assert(p1.x == 11);
       assert(p1.y == 11);
-      assert(p1.z == UNDEF_ALT);
+      assert(std::isnan(p1.z));
     }
 
     { // GeoTpt
@@ -40,7 +40,7 @@ main(){
       assert(p1.x == 0);
       assert(p1.y == 0);
       assert(p1.t == 0);
-      assert(p1.z == UNDEF_ALT);
+      assert(std::isnan(p1.z));
       assert(p1.have_alt() == false);
       p1.z = 0;
       assert(p1.have_alt() == true);
@@ -62,8 +62,8 @@ main(){
       assert(l1[0].z == 210);
       assert(l1[1].z == 20);
       l1.clear_alt();
-      assert(l1[0].z == UNDEF_ALT);
-      assert(l1[1].z == UNDEF_ALT);
+      assert(std::isnan(l1[0].z));
+      assert(std::isnan(l1[1].z));
     }
 
     { // GeoTrk
@@ -76,8 +76,8 @@ main(){
       assert(l1[0].z == 210);
       assert(l1[1].z == 20);
       l1.clear_alt();
-      assert(l1[0].z == UNDEF_ALT);
-      assert(l1[1].z == UNDEF_ALT);
+      assert(std::isnan(l1[0].z));
+      assert(std::isnan(l1[1].z));
     }
 
   }
