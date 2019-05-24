@@ -9,9 +9,15 @@
 using namespace std;
 
 // a few internal functions for tests:
-vector<string> unpack_ozi_csv(const string & str, unsigned int count = 0);
+vector<string> unpack_ozi_csv(const string & str, unsigned int count = 0, bool trim=false);
 string pack_ozi_csv(const vector<string> & vec);
 string convert_ozi_text(const string & str);
+
+
+string convert_ozi2proj(const string & s);
+string convert_proj2ozi(const string & s);
+string convert_ozi2datum(const string & s);
+string convert_datum2ozi(const string & s);
 
 
 string merge_strings(const vector<string> & v){
@@ -24,8 +30,11 @@ int
 main() {
   try{
 
-    assert( merge_strings(unpack_ozi_csv(",aa,b,c,ddd,,eee\r")) ==
-            "[] [aa] [b] [c] [ddd] [] [eee] ");
+    assert( merge_strings(unpack_ozi_csv(",aa	,b ,  c,ddd,,   ,eee\r", 0, 0)) ==
+            "[] [aa	] [b ] [  c] [ddd] [] [   ] [eee] ");
+    assert( merge_strings(unpack_ozi_csv(",aa	,b ,  c,ddd,,   ,eee\r", 0, 1)) ==
+            "[] [aa] [b] [c] [ddd] [] [] [eee] ");
+
     assert( merge_strings(unpack_ozi_csv("v,,,eee,,")) ==
             "[v] [] [] [eee] [] [] ");
     assert( merge_strings(unpack_ozi_csv("a,b", 5)) ==
@@ -55,6 +64,56 @@ main() {
     assert( merge_strings(unpack_ozi_csv(s)) == "[a,b,c] [d] ");
 
     assert( convert_ozi_text("abc,def\nghi") == "abc—def ghi");
+
+    // ozi2proj
+    assert(convert_ozi2proj("Latitude/Longitude") == "+proj=latlong");
+    assert(convert_ozi2proj("Transverse Mercator") == "+proj=tmerc");
+    assert(convert_ozi2proj("Mercator") == "+proj=merc");
+    assert(convert_ozi2proj("Lambert Conformal Conic") == "+proj=lcc");
+    try {
+      convert_ozi2proj("Mercator 1");
+      assert(false);
+    }
+    catch(Err e) {
+      assert(e.str() == "io_ozi: unsupported Ozi projection: Mercator 1");
+    }
+
+    // ozi2datum
+    assert(convert_ozi2datum("WGS 84") == "+datum=wgs84");
+    assert(convert_ozi2datum("Pulkovo 1942") == "+ellps=krass +towgs84=28,-130,-95");
+    assert(convert_ozi2datum("Pulkovo 1942 (1)") == "+ellps=krass +towgs84=28,-130,-95");
+    assert(convert_ozi2datum("Pulkovo 1942 (2)") == "+ellps=krass +towgs84=28,-130,-95");
+    try {
+      convert_ozi2datum("");
+      assert(false);
+    }
+    catch(Err e) {
+      assert(e.str() == "io_ozi: unsupported Ozi datum: ");
+    }
+
+    // proj2ozi
+    assert(convert_proj2ozi("+datum=wgs84 +proj=tmerc") == "Transverse Mercator");
+    assert(convert_proj2ozi("+datum=wgs84 +proj=tmerc +lon0=0") == "Transverse Mercator");
+    try {
+      convert_proj2ozi("+datum=wgs84 +proj=tmerc1");
+      assert(false);
+    }
+    catch(Err e) {
+      assert(e.str() == "io_ozi: unsupported projection: tmerc1");
+    }
+    try {
+      convert_proj2ozi("+datum=wgs84 +proj=tmerc1 a");
+      assert(false);
+    }
+    catch(Err e) {
+      assert(e.str() == "io_ozi: unsupported projection: tmerc1");
+    }
+
+    // datum2ozi
+    assert(convert_datum2ozi("+datum=wgs84 +proj=tmerc") == "WGS 84");
+    assert(convert_datum2ozi("+ellps=krass +proj=tmerc +towgs84=28,-130,-95 +lon0=0") == "Pulkovo 1942 (2)");
+
+
 
   }
   catch (Err e) {

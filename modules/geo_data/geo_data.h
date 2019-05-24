@@ -109,18 +109,19 @@ struct GeoTrk : std::vector<GeoTpt>{
 struct GeoMap{
   std::string name; ///< name
   std::string comm; ///< comment
-  std::map<dPoint,dPoint> ref; ///< reference points, mapping from geo to image coordinates
-  dLine border;                ///< map border (in image coordinates), should be always set
+  std::map<dPoint,dPoint> ref; ///< reference points, mapping from image to geo coordinates
+  dLine border;                ///< map border (in image coordinates)
   std::string proj;            ///< map projection (option string for libproj)
 
   std::string image;           ///< image file for the map (folder for tile maps)
-  dRect image_bbox;            ///< image boundary box (in image coordinates)
-  dRect image_tsize;           ///< image tile size (for tiled maps)
-  std::string image_tfmt;      ///< image tile format (for tiled maps)
-  bool image_tswap;            ///< are image tiles swapped in y (for tiled maps)
+  iPoint image_size;           ///< image dimensions (in image coordinates)
+
+  iPoint tile_size;            ///< image tile dimensions (for tiled maps)
+  std::string tile_fmt;        ///< image tile format (for tiled maps)
+  bool tile_yswap;             ///< are image tiles swapped in y (for tiled maps)
 
   /// Constructor: create empty map
-  GeoMap(): image_tswap(false) {}
+  GeoMap(): tile_yswap(false) {}
 
   /******************************************************************/
   // operators +,-,/,*
@@ -131,7 +132,6 @@ struct GeoMap{
   GeoMap & operator+= (const dPoint & p) {
     for (auto i:ref) i.second+=p;
     border+=p;
-    image_bbox+=p;
     return *this;
   }
 
@@ -139,7 +139,7 @@ struct GeoMap{
   GeoMap & operator*= (const double k) {
     for (auto i:ref) i.second*=k;
     border*=k;
-    image_bbox*=k;
+    image_size*=k;
     return *this;
   }
 

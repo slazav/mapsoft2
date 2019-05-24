@@ -206,19 +206,28 @@ Output pptions:
 
 ----------
 ## OziExplorer format
-Mapsoft2 supports reading and writing OziExplorer files (tracks and
+Mapsoft2 supports reading and writing OziExplorer files (maps, tracks and
 waypoints). All data fields of Mapsoft structures are supported.
 
-Each waypoint list and each track is written to a separate file.
+Each waypoint list, track, and map is written to a separate file.
 Format is detected as usual, by file extension (`.wpt`, `.trk`, or `.map`)
 or `--fmt ozi` option, but wriiten files have extensions accorting to the data:
 `<name>[<number>].wpt` for waypoint lists, `<name>[<number>].trk` for tracks,
-`<name>[<number>][_<number>].map` for maps.
+`<name>[<number>][_<number>].map` for maps. Multiple files can be created.
 
-All OziExplorer-specific fields are stored in `opts` and can be saved to
-a OziExplorer file again.
+For waypoints and tracks all OziExplorer-specific fields are stored in
+`opts` and can be saved to a OziExplorer file again.
 
-TODO: map support!
+Map-file support:
+- Only a few datums and projections (more can be added).
+- No support for user-defined datums (ellipsoid+shift).
+- Full support for reference points, coordinates can be
+  in degree or grid format. On output this can be controlled by
+  `ozi_map_grid` option.
+- Order of reference points is not preserved.
+- Moving Map Parameters support (At the moment MMPLL field is
+  not writen, but I plan to fix it soon).
+- No support for Map features, Map comments, Attached files, Grids.
 
 Input options:
  - verbose (default: 0)
@@ -227,6 +236,7 @@ Input options:
 Output pptions:
  - verbose (default 0)
  - ozi_enc (default: Windows-1251)
+ - ozi_map_grid -- write grid coordinates in reference points (default 0)
 ----------
 ## Mapsoft XML format
 

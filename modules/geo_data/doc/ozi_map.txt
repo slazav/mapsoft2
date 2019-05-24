@@ -1,0 +1,301 @@
+## Map File Format
+from https://www.oziexplorer4.com/eng/help/oziexplorer_help.pdf
+
+The lines are in the order they are in the map file.
+
+Header and Version of File
+
+```
+OziExplorer Map Data File Version 2.1
+```
+
+Title of Map - any text string
+
+```
+Brisbane Region
+```
+Link to map image file
+
+```
+D:\OziMaps\regional\south.ozf2
+```
+
+Can be 1 of 2 things
+  
+```
+1 TIFF scale factor - redundant, no longer used and has been replaced by line below
+```
+
+or
+
+```
+1 ,Map Code,
+```
+
+only used for special types of maps - Note - cannot be modified by the user but
+must be there.
+
+Datum settings
+
+```
+WGS 84,, 0.0000, 0.0000,WGS 84
+```
+
+Note - for normal maps only the datum in the first field is used the rest
+of the parameters are for datum shifts and there is normally no need for
+these to be modified by the user.
+
+Reserved fields, the lines must be there
+
+```
+Reserved 1
+Reserved 2
+```
+
+Magnetic Variation entry - degrees,minutes
+
+```
+Magnetic Variation,,,E
+```
+
+Map Projection
+
+```
+Map Projection,Lambert Conformal Conic,PolyCal,No,AutoCalOnly,No,BSBUseWPX,Yes
+```
+
+Parameters:
+  1.   Map Projection - must match the projection name used in OziExplorer
+  2.   PolyCal - the next parameter is Yes if Polynomial calibration is used and No if not
+  3.   AutoCalOnly - Yes if calibration cannot be adjusted by the user No if it can
+  4.   BSBUseWPX - For BSB images only, Yes if the calibration equations contained in the BSB
+       file are used.
+
+
+Calibration points, there are always 30 Only 9 points can be modified
+from within OziExplorer but OziExplorer will use the full 30 if they
+exist in the .map file.
+
+```
+Point01,xy, 494, 235,in, deg, 24, 0,S, 148, 0,E, grid, , , ,S
+Point02,xy, 4076, 238,in, deg, 24, 0,S, 154, 0,E, grid, , , ,S
+Point03,xy, 4011, 2854,in, deg, 28, 0,S, 154, 0,E, grid, , , ,S
+Point04,xy, 550, 2851,in, deg, 28, 0,S, 148, 0,E, grid, , , ,S
+Point05,xy, , ,in, deg, , ,S, , ,E, grid, , , ,S
+Point06,xy, , ,in, deg, , ,S, , ,E, grid, , , ,S
+...
+Point30,xy, , ,in, deg, , ,N, , ,W, grid, , , ,N
+```
+
+Projection setup parmeters, all on one line.
+
+```
+Projection Setup, 0.000000000, 152.000000000, 1.000000000, 2500000.00, 100000.00, 24.666667000, -27.333333000,,,
+```
+
+Parameters:
+  1.   Latitude Origin
+  2.   Longitude Origin
+  3.   K Factor
+  4.   False Easting
+  5.   False Northing
+  6.   Latitude 1
+  7.   Latitude 2
+  8.   Height - used in the Vertical Near-Sided Perspective Projection
+  9.   Sat - not used
+ 10.   Path - not used
+
+A marker line, it contains no information but is used as a file marker, must be there
+
+```
+Map Feature = MF ; Map Comment = MC These follow if they exist
+```
+
+---------------
+## Map Features, there are 3 lines per feature (optional)
+
+Line 1 Parameters
+
+  1.   Number
+  2.   Name
+  3.   Latitude
+  4.   Longitude
+  5.   Show Format - not used
+  6.   Fore Color
+  7.   Back Color
+  8.   Symbol Name
+  9.   Create Waypoint
+ 10.   Waypoint Name
+ 11.   Format Type - internal use
+
+Line 2 - the link to the picture, if there is no picture a blank line must be there
+Line 3 - the description of the feature, if no description the blank line must be there
+
+```
+MF, 1,MF 1 , -26.557302, 152.679007, 0, 16777215, 16711680, ,1,MF1
+c:\pictures\photo5.jpg
+This is a good camping spot
+MF, 2,MF 7 , -26.713354, 153.249176, 0, 16777215, 16711680,Asterisk.bmp ,1,MF7
+```
+
+---------------
+## Map Comments, there are 2 lines per comment (optional)
+
+Line 1 Parameters
+
+  1.   Number
+  2.   Latitude
+  3.   Longitude
+  4.   Show Format - not used
+  5.   Fore Color
+  6.   Back Color
+  7.   Width
+  8.   Height
+  9.   Font Size
+ 10.   Font Style
+
+Line 2 - The text for the comment
+
+```
+MC, 1, -26.572626, 152.512726, 0, 0, 65280, 68,20,6,0
+Map Comment 1
+MC, 2, -26.661532, 152.633450, 0, 0, 13158342, 182,82,13,1
+Map Comment 2 This is a large map comment
+MC, 3, -26.659946, 152.634492, 0, 0, 13158342, 182,82,13,1
+Map Comment 3
+```
+
+---------------
+##  Attached file marker (optional)
+
+.plt, .wpt, .evt, .pnt files can be included
+
+```
+Track File = TF These follow if they exist
+```
+
+The attached files - not limited to just track files
+
+```
+TF,e:\GpsMap\Data\000_2.plt
+TF,e:\GpsMap\Data\aa_demo1.plt
+TF,e:\GpsMap\Data\000_test.plt
+TF,e:\GpsMap\Data\001_test.plt
+TF,e:\GpsMap\Data\aaa.pnt
+TF,e:\GpsMap\Data\names.pnt
+```
+
+---------------
+## The Moving Map section marker (mandatory)
+
+```
+Moving Map Parameters = MM? These follow if they exist
+```
+
+Use in Moving Map, if this parameter is set to No then the map will be
+excluded when looking for a new map to change to when using moving map
+mode. It does not affect other map find functions.
+
+```
+MM0,Yes
+```
+
+Number of Map border points (corner markers) Only 4 points can be set
+graphically in OziExplorer but up to 100 points can be used when derived
+from other sources, such as importing BSB charts.
+
+```
+MMPNUM,4
+```
+
+The x, y pixel location of each border point, there must be an entry for
+each border point. These are used by OziExplorer as the map loads to
+determine the map border points.
+
+```
+MMPXY,1,494,234
+MMPXY,2,4076,238
+MMPXY,3,4012,2855
+MMPXY,4,549,2852
+```
+
+The lat, lon position of each border point, there must be an entry for
+each border point. These values are used in the map find and moving map
+functions when looking for maps. If these values are not there then the
+map will never be found. If these values do not agree with theMMPXY
+points (after map calibration is applied) then map finding in moving map
+will not function correctly. These values will be overwritten by the
+calculated value from the above x, y points every time the map is saved.
+
+```
+MMPLL,1, 147.999332, -23.998496
+MMPLL,2, 154.000701, -23.999946
+MMPLL,3, 154.001025, -28.001546
+MMPLL,4, 147.998983, -28.001469
+```
+
+The scale of the image meters/pixel, its calculated in the left / right
+image direction.It is calculated each time OziExplorer is run, the value
+in the file is used when searching for maps of "more detailed" scale.
+
+```
+MM1B,170.352987
+```
+
+---------------
+## The lat/lon grid setup (optional)
+
+LL Grid Setup
+LLGRID,No,10 Min,Yes,8421504,255,16711935,10 Min,16777215,8421504,9,1,Yes,x
+
+Parameters
+1.  LLGRID - identifier
+2.  Grid On - Yes = display grid
+3.  Grid spacing - number and unit
+4.  Autoscale - Yes = autoscale on
+5.  Degree line color
+6.  Minute line color
+7.  second line color
+8.  label spacing - number and unit
+9.  label fore color
+10. label back color
+11. label size
+12. label - show on all screens
+13. x - ignore
+
+---------------
+## The Other grid setup (optional)
+
+```
+Other Grid Setup
+GRGRID,No,10 Km,Yes,255,16711680,10 Km,16711680,16777215,9,1,Yes,Yes,No,x
+```
+
+1.  GRGRID - identifier
+2.  Grid On - Yes = display grid
+3.  Grid spacing - number and unit
+4.  Autoscale - Yes = autoscale on
+5.  Km line color 6.Meter line color
+7.  label spacing - number and unit
+8.  label fore color
+9.  label back color
+10. label size
+11. label - show on all screens
+12. Clip to neat line
+13. No meters shown in label ??
+14. Show last 3 digits in label ??
+15. x - ignore
+
+---------------
+## The position the map will display when it is opened (optional)
+
+```
+MOP,Map Open Position,3008,2324
+```
+
+---------------
+## The map image width and height - not used, just for information (optional)
+
+```
+IWH,Map Image Width/Height,4440,3590
+```

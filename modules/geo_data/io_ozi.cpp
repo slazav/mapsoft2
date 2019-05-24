@@ -9,6 +9,7 @@
 #include "err/err.h"
 #include "time_fmt/time_fmt.h"
 #include "iconv/iconv.h"
+#include "conv/conv_geo.h"
 
 #include "geo_data.h"
 
@@ -19,6 +20,16 @@ void
 crop_nl(string & s){
   if (s.size() && *s.rbegin()=='\n') s.resize(s.size()-1);
   if (s.size() && *s.rbegin()=='\r') s.resize(s.size()-1);
+}
+
+void
+str_trim(string & s){
+  size_t epos = s.find_last_not_of(" \t\r\n");
+  if(epos != string::npos) s = s.substr( 0, epos+1);
+  else {s=""; return;}
+
+  size_t spos = s.find_first_not_of(" \t\r\n");
+  if (spos != string::npos && spos!=0) s = s.substr(spos);
 }
 
 /***************************************************************************/
@@ -34,13 +45,14 @@ crop_nl(string & s){
  If (count>0) vector of this size is returned. Extra fields will be silently ignored,
  Missing fields are returned as empty strings.
 */
-vector<string> unpack_ozi_csv(const string & str, unsigned int count){
+vector<string> unpack_ozi_csv(const string & str, unsigned int count, bool trim = false){
   int p1=0, p2=0;
   vector<string> ret;
   do {
     p2=str.find(',', p1);
     string field = str.substr(p1,p2-p1);
     crop_nl(field);
+    if (trim) str_trim(field);
     replace( field.begin(), field.end(), (char)209, ',');
     ret.push_back(field);
     if (count && ret.size()==count) break;
@@ -82,6 +94,54 @@ string convert_ozi_text(const string & str){
   replace( ret.begin(), ret.end(), ',', (char)209);
   replace( ret.begin(), ret.end(), '\n', ' ');
   return ret;
+}
+
+/***************************************************************************/
+string convert_ozi2proj(const string & s){
+  if (s=="Latitude/Longitude")      return "+proj=latlong";
+  if (s=="Transverse Mercator")     return "+proj=tmerc";
+  if (s=="Mercator")                return "+proj=merc";
+  if (s=="Lambert Conformal Conic") return "+proj=lcc";
+  throw Err() << "io_ozi: unsupported Ozi projection: " << s;
+}
+
+string convert_ozi2datum(const string & s){
+  if (s=="WGS 84") return "+datum=wgs84";
+  if (s=="Pulkovo 1942" ||
+      s=="Pulkovo 1942 (1)" ||
+      s=="Pulkovo 1942 (2)")  return "+ellps=krass +towgs84=28,-130,-95";
+  throw Err() << "io_ozi: unsupported Ozi datum: " << s;
+}
+
+string get_proj_par(const string & proj, const string & key){
+  string kv = string("+") + key + "=";
+  size_t kl = kv.size();
+
+  size_t n1 = proj.find(kv);
+  size_t n2 = proj.find(" ", n1);
+  return n1!=string::npos ? proj.substr(n1+kl,n2-n1-kl) : "";
+}
+
+string convert_proj2ozi(const string & s){
+  string pr = get_proj_par(s, "proj");
+  if (pr == "") throw Err() << "io_ozi: can't fing proj setting: " <<s;
+
+  if (pr=="latlong") return "Latitude/Longitude";
+  if (pr=="tmerc")   return "Transverse Mercator";
+  if (pr=="merc")    return "Mercator";
+  if (pr=="lcc")     return "Lambert Conformal Conic";
+  throw Err() << "io_ozi: unsupported projection: " << pr;
+}
+
+string convert_datum2ozi(const string & s){
+  string dt = get_proj_par(s, "datum");
+  string el = get_proj_par(s, "ellps");
+  string to = get_proj_par(s, "towgs84");
+
+  if (dt == "wgs84") return "WGS 84";
+  if (el == "krass" && to == "28,-130,-95") return "Pulkovo 1942 (2)";
+
+  throw Err() << "io_ozi: unsupported datum: " << s;
 }
 
 /***************************************************************************/
@@ -182,39 +242,130 @@ void read_ozi (const char *fname, GeoData & data, const Opt & opts){
 
   //// MAP
   if (s2 == "Map"){
+    GeoMapList ml;
     GeoMap m;
+    string proj0; // for converting datum only!
+
+    // map name
     getline(f,s1); crop_nl(s1);
     m.name = cnv(s1);
 
+    // file name: no charset conversion!
     getline(f,s1); crop_nl(s1);
-    m.image = s1; // no charset conversion for file name!
+    m.image = s1;
 
-    getline(f,s1); // 1 TIFF scale factor -- ignored
+    // 1 TIFF scale factor or Map Code  -- ignore
+    getline(f,s1);
 
-    getline(f,s1); // Datum -- TODO
-    // "WGS 84,,   0.0000,   0.0000,WGS 84\r\n"
+    // Datum -- use only first field, skip datum shift information
+    getline(f,s1);
+    vector<string> v = unpack_ozi_csv(s1, 1, 1);
+    proj0 = m.proj = convert_ozi2datum(v[0]);
 
-    getline(f,s1); // Reserved
-    getline(f,s1); // Reserved
+    // Two reserved lines:
+    getline(f,s1);
+    getline(f,s1);
 
-    getline(f,s1); // Magnetic Variation -- TODO
-    // "Magnetic Variation,,,E\r\n"
+    // Magnetic Variation -- ignore
+    getline(f,s1);
 
-    getline(f,s1); // Map Projection -- TODO
-    // "Map Projection," << map_proj
-    // ",PolyCal,No,AutoCalOnly,No,BSBUseWPX,No\r\n";
+    // Map Projection -- use only first field
+    getline(f,s1);
+    v = unpack_ozi_csv(s1, 2, 1);
+    m.proj += " " + convert_ozi2proj(v[1]);
+
+    if (f.fail()) throw Err() << "io_ozi: can't read map header";
 
     // POINTS
+    map<dPoint, bool> geo; // geo or grid coordinates
+    while(1) {
+      getline(f,s1);
+      v = unpack_ozi_csv(s1, 17, 1);
+      if (v[0].compare(0,5, "Point")!=0) break;
+      dPoint p1, p2;
+      int type=0;
 
-    // Map Feature
+      if (v[2]=="" || v[3]=="") continue;
+      p1.x = str_to_type<double>(v[2]);
+      p1.y = str_to_type<double>(v[3]);
 
-    // Track File
+      if (v[6]!="" && v[7]!="" && v[8]!="" &&
+          v[9]!="" && v[10]!="" && v[11]!="" ){
+        p2.y = (str_to_type<double>(v[6]) +
+                str_to_type<double>(v[7])/60.0) * (v[8]=="S"?-1:+1);
+        p2.x = (str_to_type<double>(v[9]) +
+                str_to_type<double>(v[10])/60.0) * (v[11]=="W"?-1:+1);
+        type=1;
+      }
 
-std::cerr << "map\n";
+      if (v[14]!="" && v[15]!="") {
+        p2.x = str_to_type<double>(v[14]);
+        p2.y = str_to_type<double>(v[15]);
+        type=2;
+      }
+      if (type == 0) throw Err() << "io_ozi: no coordinates in " << v[0]
+                                 << ": [" << s1 << "]";
+
+      m.ref.insert(pair<dPoint,dPoint>(p1,p2));
+      geo.insert(pair<dPoint,bool>(p1,type==1));
+    }
+
+    if (f.fail()) throw Err() << "io_ozi: can't read map reference points";
+
+    // Projection setup parmeters (use only 8 fields)
+    v = unpack_ozi_csv(s1, 8, 1);
+    if (v[0]!="Projection Setup")
+      throw Err() << "io_ozi: Projection Setup expected";
+
+    if (v[1]!="" && atof(v[1].c_str())!=0) m.proj += " +lat_0=" + v[1];
+    if (v[2]!="" && atof(v[2].c_str())!=0) m.proj += " +lon_0=" + v[2];
+    if (v[3]!="" && atof(v[3].c_str())!=1) m.proj += " +k="     + v[3];
+    if (v[4]!="" && atof(v[4].c_str())!=1) m.proj += " +x_0="   + v[4];
+    if (v[5]!="" && atof(v[5].c_str())!=1) m.proj += " +y_0="   + v[5];
+    if (v[6]!="" && atof(v[6].c_str())!=0) m.proj += " +lat_1=" + v[6];
+    if (v[7]!="" && atof(v[7].c_str())!=0) m.proj += " +lat_2=" + v[7];
+
+    // now we know projection and can convert reference points
+    proj0 += " +proj=latlong";
+    ConvGeo gcnv1(proj0);  // map geo ->wgs
+    ConvGeo gcnv2(m.proj); // map grid ->wgs
+    for (auto & p: m.ref){
+      if (geo[p.first]) gcnv1.frw(p.second);
+      else gcnv2.frw(p.second);
+    }
+
+    // We read rest of the file in a relaxed way, without checking the correct
+    // structure and selecting only MMPXY fields for border points
+    // and IWH field for image size.
+    // We care also about MC and MF fields because they
+    // contain arbitrary trailing lines which should be skipped.
+
+    while(!f.eof()) {
+      getline(f,s1);
+      v = unpack_ozi_csv(s1, 4, 1);
+      if (v[0]=="MC"){ // map comment - skip one more line
+        getline(f,s1);
+      }
+      if (v[0]=="MF"){ // map feature - skip two more lines
+        getline(f,s1);
+        getline(f,s1);
+      }
+      if (v[0]=="MMPXY"){
+         dPoint p;
+         p.x = atof(v[2].c_str());
+         p.y = atof(v[3].c_str());
+         m.border.push_back(p);
+      }
+      if (v[0]=="IWH"){ // map width/height
+        m.image_size.x = atoi(v[2].c_str());
+        m.image_size.y = atoi(v[3].c_str());
+      }
+    }
+    ml.push_back(m);
+    ml.name = m.name;
+    data.maps.push_back(ml);
     return;
   }
-
-  /**/
 }
 
 /***************************************************************************/
@@ -350,8 +501,7 @@ void write_ozi_wpt (const char *fname, const GeoWptList & wpt, const Opt & opts)
       v.push_back(p.opts.get("ozi_file",       ""));
       v.push_back(p.opts.get("ozi_prox_file",  ""));
       v.push_back(p.opts.get("ozi_prox_symb",  ""));
-      f << pack_ozi_csv(v);
-      f << "\r\n";
+      f << pack_ozi_csv(v) << "\r\n";
         // skip fields 19..24
     }
     if (!f.good()) throw Err()
@@ -370,39 +520,56 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
 
   IConv cnv("UTF-8", opts.get("ozi_enc", ozi_default_enc).c_str() );
 
-  string map_proj; // TODO!
+  string ozi_datum = convert_datum2ozi(m.proj);
 
   // header
   f << "OziExplorer Map Data File Version 2.2\r\n"
     << cnv(m.name) << "\r\n"
     << m.image << "\r\n" // no charset conversion for file name!
       << "1 ,Map Code,\r\n"
-      << "WGS 84,,   0.0000,   0.0000,WGS 84\r\n"
+      << ozi_datum << ",,   0.0000,   0.0000,WGS 84\r\n"
       << "Reserved 1\r\n"
       << "Reserved 2\r\n"
       << "Magnetic Variation,,,E\r\n"
-      << "Map Projection," << map_proj
-      << ",PolyCal,No,AutoCalOnly,No,BSBUseWPX,No\r\n";
+      << "Map Projection," << convert_proj2ozi(m.proj)
+      <<   ",PolyCal,No,AutoCalOnly,No,BSBUseWPX,No\r\n";
 
   // reference points
+  // TODO: write grid points
   int n = 0;
+
+  int grid = opts.get("ozi_map_grid", 0);
+
+  string proj0 = convert_ozi2datum(ozi_datum);
+  proj0 += " +proj=latlong";
+  ConvGeo gcnv1(proj0); // geo -> wgs
+  ConvGeo gcnv2(m.proj); // grid -> wgs
+
   for (auto p:m.ref){
     n++;
-    int x = (int)p.second.x;
-    int y = (int)p.second.y;
-    double lat = p.first.y;
-    double lon = p.first.x;
+    int x = (int)p.first.x;
+    int y = (int)p.first.y;
     f << "Point" << setw(2) << setfill('0') << n << ",xy,"
       << setw(5) << setfill(' ') << x << ','
       << setw(5) << setfill(' ') << y << ','
-      << "in, deg,"
-      << fixed << setw(4) << abs(int(lat)) << ','
-      << fixed << setw(8) << fabs(lat*60) - abs(int(lat))*60 << ','
-      << (lat<0? 'S':'N') << ','
-      << fixed << setw(4) << abs(int(lon))
-      << ',' << fixed << setw(8) << fabs(lon*60) - abs(int(lon))*60 << ','
-      << (lon<0? 'W':'E') << ','
-      << " grid,   ,           ,           ,N\r\n";
+      << "in, deg,";
+    dPoint pp(p.second);
+    if (!grid) {
+      gcnv1.bck(pp);
+      f << fixed << setw(4) << abs(int(pp.y)) << ','
+        << fixed << setw(8) << fabs(pp.y*60) - abs(int(pp.y))*60 << ','
+        << (pp.y<0? 'S':'N') << ','
+        << fixed << setw(4) << abs(int(pp.x))
+        << ',' << fixed << setw(8) << fabs(pp.x*60) - abs(int(pp.x))*60 << ','
+        << (pp.x<0? 'W':'E') << ','
+        << " grid,   ,           ,           ,N\r\n";
+    }
+    else {
+      gcnv2.bck(pp);
+      f << "    ,        ,N,    ,        ,E, grid,   ,"
+        << setw(11) << rint(pp.x) << ","
+        << setw(11) << rint(pp.y) << ",N\r\n";
+    }
     if (n==30) break;
   }
 
@@ -414,29 +581,17 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
     continue;
   }
 
-/*
   // projection setup
-  if (map_proj == Proj("lonlat")){
-    f << "Projection Setup,,,,,,,,,,\r\n";
-  }
-  else {
-    double lon0 = m.proj_opts.get("lon0", 1e90);
-    if (lon0==1e90){
-      lon0=0;
-      for (int i=0; i<m.size(); i++) lon0+=m[i].x;
-      if (m.size()>1) lon0/=m.size();
-      lon0 = floor( lon0/6.0 ) * 6 + 3;
-    }
-    f << "Projection Setup, "
-      << m.proj_opts.get("lat0", 0.0) << ","
-      << lon0 << ","
-      << m.proj_opts.get("k", 1.0) << ","
-      << m.proj_opts.get("E0", 500000.0) << ","
-      << m.proj_opts.get("N0", 0.0) << ","
-      << m.proj_opts.get("lat1", 0.0) << ","
-      << m.proj_opts.get("lat2", 0.0) << ","
-      << m.proj_opts.get("hgt", 0.0) << ",,\r\n";
-  }
+  vector<string> v;
+  v.push_back("Projection Setup");
+  v.push_back(get_proj_par(m.proj, "lat_0"));
+  v.push_back(get_proj_par(m.proj, "lon_0"));
+  v.push_back(get_proj_par(m.proj, "k"));
+  v.push_back(get_proj_par(m.proj, "x_0"));
+  v.push_back(get_proj_par(m.proj, "y_0"));
+  v.push_back(get_proj_par(m.proj, "lat_1"));
+  v.push_back(get_proj_par(m.proj, "lat_2"));
+  f << pack_ozi_csv(v) << "\r\n";
 
   // map features
   f << "Map Feature = MF ; Map Comment = MC     These follow if they exist\r\n"
@@ -444,22 +599,24 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
     << "Moving Map Parameters = MM?    These follow if they exist\r\n";
 
   // map border
+  // TODO: reduce number of points to 100
+  // TODO: write MMPLL and MM1B
   if (m.border.size()>0){
     f << "MM0,Yes\r\n"
       << "MMPNUM," << m.border.size() << "\r\n";
     int n=0;
-    dLine::const_iterator it;
-    for (auto it:m.border){
+    for (auto p:m.border){
       n++;
       f << "MMPXY," << n << ","
-        << int(it.x) << "," << int(it.y) << "\r\n";.
+        << rint(p.x) << "," << rint(p.y) << "\r\n";
     }
+/*
     n=0;
-    convs::map2wgs cnv(m);
+    ConvGeo gcnv(m.proj);
     f.precision(8);
-    for (it =m.border.begin(); it!=m.border.end(); it++){
+    for (auto p: m.border{
       n++;
-      dPoint p1=*it; cnv.frw(p1);
+      dPoint p1(p); cnv.frw(p1);
       f << "MMPLL," << n << ",".
         << right << fixed << setprecision(6) << setfill(' ')
         << setw(10) << p1.x << ','
@@ -467,11 +624,14 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
     }
 
     f << "MM1B," << convs::map_mpp(m, m.map_proj) << "\r\n";
+*/
   }
   else{
     f << "MM0,No\r\n";
   }
-*/
+  f << "MOP,Map Open Position,0,0\r\n";
+  f << "IWH,Map Image Width/Height,"
+     << m.image_size.x << "," << m.image_size.y << "\r\n";
 
   if (!f.good()) throw Err()
       << "Can't write data to OziExplorer file: " << fname;

@@ -27,6 +27,7 @@ static struct ext_option options[] = {
 
   {"fmt",                   1, 0,  OPT_CMN, "input/ouput format"},
   {"gu_enc",                1, 0,  OPT_CMN, "Garmin Utils format charset (default KOI8-R)"},
+  {"ozi_enc",               1, 0,  OPT_CMN, "OziExplorer format charset (default Windows-1251)"},
 
   {"xml_compr",             1, 0,  OPT_OUT, "compress xml output (GPX and KML formats), default 0"},
   {"xml_indent",            1, 0,  OPT_OUT, "use xml indentation (GPX and KML formats), default 1"},
@@ -37,6 +38,7 @@ static struct ext_option options[] = {
   {"json_compact",          1, 0,  OPT_OUT, "write compact json (GeoJSON format), default 0"},
   {"json_indent",           1, 0,  OPT_OUT, "use json indentation (GeoJSON format), default 1"},
   {"geo_skip_zt",           1, 0,  OPT_OUT, "skip altitude and time information when writing GeoJSON, default 0"},
+  {"ozi_map_grid",          1, 0,  OPT_OUT, "write grid coordinates in map reference points (OziExplorer format), default 0"},
 
   {0,0,0,0}
 };
