@@ -13,13 +13,13 @@ double geo_dist_2d(const dPoint &p1, const dPoint &p2){
 dRect
 GeoWptList::bbox2d() const {
   dRect ret;
-  for (const_iterator i=begin(); i!=end(); i++) ret = expand(ret, *i);
+  for (auto i:*this) ret = expand(ret, i);
   return ret;
 }
 
 void
 GeoWptList::clear_alt() {
-  for (auto i:*this) i.z = nan("");
+  for (auto & i:*this){ i.z = nan(""); }
 }
 
 dRect
@@ -31,7 +31,7 @@ GeoTrk::bbox2d() const {
 
 void
 GeoTrk::clear_alt() {
-  for (auto i:*this) i.z = nan("");
+  for (auto & i:*this) i.z = nan("");
 }
 
 double
