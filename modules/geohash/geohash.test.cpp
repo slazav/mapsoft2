@@ -6,31 +6,26 @@
 #include "geohash.h"
 
 void verify_hash(double lat, double lon, int len, const char* expected) {
-    char *hash;
-    hash = GEOHASH_encode(lat, lon, len);
-    assert(strcmp(hash, expected)==0);
-    free(hash);
+    assert(GEOHASH_encode(lat, lon, len) == expected);
 }
 
 void test_geohash_encode(void) {
-    verify_hash(       45.37,       -121.7,  6, "c216ne"        );
-    verify_hash(  47.6062095, -122.3320708, 13, "c23nb62w20sth" );
-    verify_hash(  35.6894875,  139.6917064, 13, "xn774c06kdtve" );
-    verify_hash( -33.8671390,  151.2071140, 13, "r3gx2f9tt5sne" );
-    verify_hash(  51.5001524,   -0.1262362, 13, "gcpuvpk44kprq" );
+    assert(GEOHASH_encode(       45.37,       -121.7,  6) == "c216ne"       );
+    assert(GEOHASH_encode(  47.6062095, -122.3320708, 13) == "c23nb62w20sth");
+    assert(GEOHASH_encode(  35.6894875,  139.6917064, 13) == "xn774c06kdtve");
+    assert(GEOHASH_encode( -33.8671390,  151.2071140, 13) == "r3gx2f9tt5sne");
+    assert(GEOHASH_encode(  51.5001524,   -0.1262362, 13) == "gcpuvpk44kprq");
 }
 
 void verify_area(
         const char *hash,
         double lat_min, double lon_min,
         double lat_max, double lon_max) {
-    GEOHASH_area *area;
-    area = GEOHASH_decode(hash);
-    assert(abs(area->latitude.max  - lat_max) < 0.001);
-    assert(abs(area->latitude.min  - lat_min) < 0.001);
-    assert(abs(area->longitude.max - lon_max) < 0.001);
-    assert(abs(area->longitude.min - lon_min) < 0.001);
-    GEOHASH_free_area(area);
+    GEOHASH_area area = GEOHASH_decode(hash);
+    assert(abs(area.latitude.max  - lat_max) < 0.001);
+    assert(abs(area.latitude.min  - lat_min) < 0.001);
+    assert(abs(area.longitude.max - lon_max) < 0.001);
+    assert(abs(area.longitude.min - lon_min) < 0.001);
 }
 
 void test_geohash_decode(void) {
@@ -40,18 +35,11 @@ void test_geohash_decode(void) {
     verify_area("DQCW4", 39.0234375, -76.552734375, 39.0673828125, -76.5087890625);
 }
 
-void verify_adjacent(const char *origin, GEOHASH_direction dir, const char *expected){
-    char *hash;
-    hash = GEOHASH_get_adjacent(origin, dir);
-    assert(strcmp(hash, expected)==0);
-    free(hash);
-}
-
 void test_geohash_adjacent(void) {
-    verify_adjacent("dqcjq", GEOHASH_NORTH, "dqcjw");
-    verify_adjacent("dqcjq", GEOHASH_SOUTH, "dqcjn");
-    verify_adjacent("dqcjq", GEOHASH_WEST,  "dqcjm");
-    verify_adjacent("dqcjq", GEOHASH_EAST,  "dqcjr");
+    assert(GEOHASH_get_adjacent("dqcjq", GEOHASH_NORTH) == "dqcjw");
+    assert(GEOHASH_get_adjacent("dqcjq", GEOHASH_SOUTH) == "dqcjn");
+    assert(GEOHASH_get_adjacent("dqcjq", GEOHASH_WEST) ==  "dqcjm");
+    assert(GEOHASH_get_adjacent("dqcjq", GEOHASH_EAST) ==  "dqcjr");
 }
 
 void verify_neighbors(
@@ -65,18 +53,15 @@ void verify_neighbors(
         const char *hash7,
         const char *hash8
         ) {
-    GEOHASH_neighbors *neighbors;
-    neighbors = GEOHASH_get_neighbors(origin);
-    assert(strcmp(neighbors->north,      hash1)==0);
-    assert(strcmp(neighbors->south,      hash2)==0);
-    assert(strcmp(neighbors->west,       hash3)==0);
-    assert(strcmp(neighbors->east,       hash4)==0);
-    assert(strcmp(neighbors->north_west, hash5)==0);
-    assert(strcmp(neighbors->north_east, hash6)==0);
-    assert(strcmp(neighbors->south_west, hash7)==0);
-    assert(strcmp(neighbors->south_east, hash8)==0);
-
-    GEOHASH_free_neighbors(neighbors);
+    GEOHASH_neighbors neighbors = GEOHASH_get_neighbors(origin);
+    assert(neighbors.north ==      hash1);
+    assert(neighbors.south ==      hash2);
+    assert(neighbors.west ==       hash3);
+    assert(neighbors.east ==       hash4);
+    assert(neighbors.north_west == hash5);
+    assert(neighbors.north_east == hash6);
+    assert(neighbors.south_west == hash7);
+    assert(neighbors.south_east == hash8);
 }
 
 void test_geohash_neighbors(void) {
