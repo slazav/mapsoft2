@@ -132,6 +132,74 @@ GEOHASH_encode(const dPoint & p, unsigned int len) {
 }
 
 std::string
+GEOHASH_encode(const dRect & r, unsigned int maxlen) {
+    // encode 4 corners
+    std::string h1 = GEOHASH_encode(r.tlc(), maxlen);
+    std::string h2 = GEOHASH_encode(r.trc(), maxlen);
+    std::string h3 = GEOHASH_encode(r.brc(), maxlen);
+    std::string h4 = GEOHASH_encode(r.blc(), maxlen);
+
+    assert(h1.size() == h2.size());
+    assert(h1.size() == h3.size());
+    assert(h1.size() == h4.size());
+    assert(h1.size() == maxlen);
+
+    int i;
+    for (i=0; i<maxlen; i++){
+     if (h1[i] != h2[i] || h1[i] != h3[i] || h1[i] != h4[i]) break;
+    }
+    return h1.substr(0,i);
+}
+
+std::vector<std::string>
+GEOHASH_encode4(const dRect & r, unsigned int maxlen) {
+    // encode 4 corners
+    std::string h1 = GEOHASH_encode(r.tlc(), maxlen);
+    std::string h2 = GEOHASH_encode(r.trc(), maxlen);
+    std::string h3 = GEOHASH_encode(r.blc(), maxlen);
+    std::string h4 = GEOHASH_encode(r.brc(), maxlen);
+    std::string h1s, h2s, h3s, h4s;
+
+    assert(h1.size() == h2.size());
+    assert(h1.size() == h3.size());
+    assert(h1.size() == h4.size());
+    assert(h1.size() == maxlen);
+
+    int i;
+    for (i=0; i<maxlen; i++){
+     // all 4 hashes are same
+     if (h1[i] == h2[i] || h1[i] == h3[i] || h1[i] == h4[i]) continue;
+     // check if 4 hashes are adjacent (or same)
+     h1s = h1.substr(0,i);
+     h2s = h2.substr(0,i);
+     h3s = h3.substr(0,i);
+     h4s = h4.substr(0,i);
+     // 3 4
+     // 1 2
+     if ((h1s == h2s || GEOHASH_adjacent(h1s,2)==h2s) &&
+         (h3s == h4s || GEOHASH_adjacent(h3s,2)==h4s) &&
+         (h1s == h3s || GEOHASH_adjacent(h1s,0)==h3s) &&
+         (h2s == h4s || GEOHASH_adjacent(h2s,0)==h4s)) continue;
+     break;
+    }
+    h1s = h1.substr(0,i);
+    h2s = h2.substr(0,i);
+    h3s = h3.substr(0,i);
+    h4s = h4.substr(0,i);
+    // find unique hashes:
+    std::vector<std::string> ret;
+    ret.push_back(h1s);
+    if (h2s!=h1s)
+      ret.push_back(h2s);
+    if (h3s!=h1s && h3s!=h2s)
+      ret.push_back(h3s);
+    if (h4s!=h1s && h4s!=h2s && h4s!=h3s)
+      ret.push_back(h4s);
+    return ret;
+}
+
+
+std::string
 GEOHASH_adjacent(const std::string & hash, int dir) {
 
     dir = dir%8;
@@ -144,6 +212,8 @@ GEOHASH_adjacent(const std::string & hash, int dir) {
 
     // odd dirs
     int len  = hash.size();
+    if (len==0) return "";
+
     char last = tolower(hash[len-1]);
 
     int idx  = dir + (len % 2);
@@ -168,4 +238,3 @@ GEOHASH_adjacent(const std::string & hash, int dir) {
 
     return base;
 }
-

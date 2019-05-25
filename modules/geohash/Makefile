@@ -3,5 +3,5 @@
 MOD_HEADERS  := geohash.h
 MOD_SOURCES  := geohash.cpp
 SIMPLE_TESTS := geohash
-PROGRAMS := main
+PROGRAMS := print_hash
 include ../Makefile.inc
