@@ -5,27 +5,22 @@
 
 #include "geohash.h"
 
-void verify_hash(double lat, double lon, int len, const char* expected) {
-    assert(GEOHASH_encode(lat, lon, len) == expected);
-}
 
 void test_geohash_encode(void) {
-    assert(GEOHASH_encode(       45.37,       -121.7,  6) == "c216ne"       );
-    assert(GEOHASH_encode(  47.6062095, -122.3320708, 13) == "c23nb62w20sth");
-    assert(GEOHASH_encode(  35.6894875,  139.6917064, 13) == "xn774c06kdtve");
-    assert(GEOHASH_encode( -33.8671390,  151.2071140, 13) == "r3gx2f9tt5sne");
-    assert(GEOHASH_encode(  51.5001524,   -0.1262362, 13) == "gcpuvpk44kprq");
+    assert(GEOHASH_encode(dPoint(      -121.7,       45.37),  6) == "c216ne"       );
+    assert(GEOHASH_encode(dPoint(-122.3320708,  47.6062095), 13) == "c23nb62w20sth");
+    assert(GEOHASH_encode(dPoint( 139.6917064,  35.6894875), 13) == "xn774c06kdtve");
+    assert(GEOHASH_encode(dPoint( 151.2071140, -33.8671390), 13) == "r3gx2f9tt5sne");
+    assert(GEOHASH_encode(dPoint(  -0.1262362,  51.5001524), 13) == "gcpuvpk44kprq");
 }
 
 void verify_area(
         const char *hash,
         double lat_min, double lon_min,
         double lat_max, double lon_max) {
-    GEOHASH_area area = GEOHASH_decode(hash);
-    assert(abs(area.latitude.max  - lat_max) < 0.001);
-    assert(abs(area.latitude.min  - lat_min) < 0.001);
-    assert(abs(area.longitude.max - lon_max) < 0.001);
-    assert(abs(area.longitude.min - lon_min) < 0.001);
+    dRect r = GEOHASH_decode(hash);
+    assert(dist(r.tlc(), dPoint(lon_min, lat_min)) < 0.001);
+    assert(dist(r.brc(), dPoint(lon_max, lat_max)) < 0.001);
 }
 
 void test_geohash_decode(void) {
@@ -36,32 +31,31 @@ void test_geohash_decode(void) {
 }
 
 void test_geohash_adjacent(void) {
-    assert(GEOHASH_get_adjacent("dqcjq", GEOHASH_NORTH) == "dqcjw");
-    assert(GEOHASH_get_adjacent("dqcjq", GEOHASH_SOUTH) == "dqcjn");
-    assert(GEOHASH_get_adjacent("dqcjq", GEOHASH_WEST) ==  "dqcjm");
-    assert(GEOHASH_get_adjacent("dqcjq", GEOHASH_EAST) ==  "dqcjr");
+    assert(GEOHASH_adjacent("dqcjq", 0) == "dqcjw");
+    assert(GEOHASH_adjacent("dqcjq", 4) == "dqcjn");
+    assert(GEOHASH_adjacent("dqcjq", 6) ==  "dqcjm");
+    assert(GEOHASH_adjacent("dqcjq", 2) ==  "dqcjr");
 }
 
 void verify_neighbors(
-        const char *origin,
-        const char *hash1,
-        const char *hash2,
-        const char *hash3,
-        const char *hash4,
-        const char *hash5,
-        const char *hash6,
-        const char *hash7,
-        const char *hash8
+        const std::string & origin,
+        const std::string & N,
+        const std::string & S,
+        const std::string & W,
+        const std::string & E,
+        const std::string & NW,
+        const std::string & NE,
+        const std::string & SW,
+        const std::string & SE
         ) {
-    GEOHASH_neighbors neighbors = GEOHASH_get_neighbors(origin);
-    assert(neighbors.north ==      hash1);
-    assert(neighbors.south ==      hash2);
-    assert(neighbors.west ==       hash3);
-    assert(neighbors.east ==       hash4);
-    assert(neighbors.north_west == hash5);
-    assert(neighbors.north_east == hash6);
-    assert(neighbors.south_west == hash7);
-    assert(neighbors.south_east == hash8);
+    assert(GEOHASH_adjacent(origin, 0) == N);
+    assert(GEOHASH_adjacent(origin, 4) == S);
+    assert(GEOHASH_adjacent(origin, 6) == W);
+    assert(GEOHASH_adjacent(origin, 2) == E);
+    assert(GEOHASH_adjacent(origin, 7) == NW);
+    assert(GEOHASH_adjacent(origin, 1) == NE);
+    assert(GEOHASH_adjacent(origin, 5) == SW);
+    assert(GEOHASH_adjacent(origin, 3) == SE);
 }
 
 void test_geohash_neighbors(void) {
@@ -72,10 +66,10 @@ void test_geohash_neighbors(void) {
 }
 
 void test_geohash_verification(void) {
-  assert(GEOHASH_verify_hash("dqcw5") == 1);
-  assert(GEOHASH_verify_hash("dqcw7") == 1);
-  assert(GEOHASH_verify_hash("abcwd") == 0);
-  assert(GEOHASH_verify_hash("dqcw5@") == 0);
+  assert(GEOHASH_verify("dqcw5") == 1);
+  assert(GEOHASH_verify("dqcw7") == 1);
+  assert(GEOHASH_verify("abcwd") == 0);
+  assert(GEOHASH_verify("dqcw5@") == 0);
 }
 
 int main( /* int argc, char **argv */ ) {

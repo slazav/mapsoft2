@@ -2,59 +2,46 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <iostream>
+
 #include "geohash.h"
 
 void show_usage() {
-    fprintf(stderr, "usage: \n");
-    fprintf(stderr, "    geohash 'hash'\n\n");
-    fprintf(stderr, "example: \n");
-    fprintf(stderr, "    geohash c216ne\n");
-    fprintf(stderr, "    geohash c23nb62w20sth\n");
-    fprintf(stderr, "    geohash xn774c06kdtve\n");
-}
-
-void show_area(const char *hash) {
-    GEOHASH_area area = GEOHASH_decode(hash);
-    printf("=========================================\n");
-    printf("AREA\n");
-    printf("-----------------------------------------\n");
-    printf("MAX LATITUDE:   %f\n", area.latitude.max);
-    printf("MIN LATITUDE:   %f\n", area.latitude.min);
-    printf("MAX longitude: %f\n", area.longitude.max);
-    printf("MIN longitude: %f\n", area.longitude.min);
-}
-
-void show_neighbors(const char *hash) {
-
-    GEOHASH_neighbors neighbors = GEOHASH_get_neighbors(hash);
-    printf("=========================================\n");
-    printf("NEIGHBORS\n");
-    printf("-----------------------------------------\n");
-    printf("NORTH:        %s\n", neighbors.north.c_str());
-    printf("SOUTH:        %s\n", neighbors.south.c_str());
-    printf("WEST:         %s\n", neighbors.west.c_str());
-    printf("EAST:         %s\n", neighbors.east.c_str());
-    printf("NORTH_WEST:   %s\n", neighbors.north_west.c_str());
-    printf("NORTH_EAST:   %s\n", neighbors.north_east.c_str());
-    printf("SOUTH_WEST:   %s\n", neighbors.south_west.c_str());
-    printf("SOUTH_EAST:   %s\n", neighbors.south_east.c_str());
+  std::cerr <<
+     "usage: \n"
+     "    geohash 'hash'\n\n"
+     "example: \n"
+     "    geohash c216ne\n"
+     "    geohash c23nb62w20sth\n"
+     "    geohash xn774c06kdtve\n";
 }
 
 int main(int argc, char** argv) {
     if (argc < 2) {
-        fprintf(stderr, "no argument\n\n");
         show_usage();
         return EXIT_FAILURE;
     }
 
-    if (!GEOHASH_verify_hash(argv[1])) {
-        fprintf(stderr, "invalid hash: %s\n\n", argv[1]);
-        show_usage();
+    std::string hash(argv[1]);
+
+    if (!GEOHASH_verify(hash)) {
+        std::cerr << "invalid hash: " << hash << "\n\n";
         return EXIT_FAILURE;
     }
 
-    show_area(argv[1]);
-    show_neighbors(argv[1]);
+    std::cout
+      << "Area: " << GEOHASH_decode(hash) << "\n";
+
+    std::cout
+       << "Neighbours:\n"
+       << " N: " << GEOHASH_adjacent(hash, 0) << "\n"
+       << "NE: " << GEOHASH_adjacent(hash, 1) << "\n"
+       << " E: " << GEOHASH_adjacent(hash, 2) << "\n"
+       << "SE: " << GEOHASH_adjacent(hash, 3) << "\n"
+       << " S: " << GEOHASH_adjacent(hash, 4) << "\n"
+       << "SW: " << GEOHASH_adjacent(hash, 5) << "\n"
+       << " W: " << GEOHASH_adjacent(hash, 6) << "\n"
+       << "NW: " << GEOHASH_adjacent(hash, 7) << "\n";
 
     return EXIT_SUCCESS;
 }

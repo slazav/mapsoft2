@@ -1,28 +1,7 @@
 /*
-The MIT License
-
-Copyright (c) 2011 lyo.kato@gmail.com
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+ Source: from https://github.com/lyokato/libgeohash
+ Modified for mapsoft2: slazav@altlinux.org, 2019-05-25
 */
-
-// modified by slazav@altlinux.org for Mapsoft project
 
 #include <ctype.h>
 #include <cstring>
@@ -49,10 +28,10 @@ static const char NEIGHBORS_TABLE[8][33] = {
     "bc01fg45238967deuvhjyznpkmstqrwx", /* NORTH ODD  */
     "bc01fg45238967deuvhjyznpkmstqrwx", /* EAST EVEN  */
     "p0r21436x8zb9dcf5h7kjnmqesgutwvy", /* EAST ODD   */
-    "238967debc01fg45kmstqrwxuvhjyznp", /* WEST EVEN  */
-    "14365h7k9dcfesgujnmqp0r2twvyx8zb", /* WEST ODD   */
     "14365h7k9dcfesgujnmqp0r2twvyx8zb", /* SOUTH EVEN */
-    "238967debc01fg45kmstqrwxuvhjyznp"  /* SOUTH ODD  */
+    "238967debc01fg45kmstqrwxuvhjyznp", /* SOUTH ODD  */
+    "238967debc01fg45kmstqrwxuvhjyznp", /* WEST EVEN  */
+    "14365h7k9dcfesgujnmqp0r2twvyx8zb"  /* WEST ODD   */
 };
 
 static const char BORDERS_TABLE[8][9] = {
@@ -60,14 +39,14 @@ static const char BORDERS_TABLE[8][9] = {
     "bcfguvyz", /* NORTH ODD */
     "bcfguvyz", /* EAST  EVEN */
     "prxz",     /* EAST  ODD */
-    "0145hjnp", /* WEST  EVEN */
-    "028b",     /* WEST  ODD */
     "028b",     /* SOUTH EVEN */
-    "0145hjnp"  /* SOUTH ODD */
+    "0145hjnp", /* SOUTH ODD */
+    "0145hjnp", /* WEST  EVEN */
+    "028b"      /* WEST  ODD */
 };
 
 bool
-GEOHASH_verify_hash(const std::string & hash) {
+GEOHASH_verify(const std::string & hash) {
     for (auto c0: hash) {
         unsigned char c = toupper(c0);
         if (c < 0x30) return false;
@@ -77,127 +56,111 @@ GEOHASH_verify_hash(const std::string & hash) {
     return true;
 }
 
-#define REFINE_RANGE(range, bits, offset) \
+#define REFINE_RANGE(mid, min, max, bits, offset) \
+    mid = ((max) + (min)) / 2.0; \
     if (((bits) & (offset)) == (offset)) \
-        (range)->min = ((range)->max + (range)->min) / 2.0; \
+        (min) = mid; \
     else \
-        (range)->max = ((range)->max + (range)->min) / 2.0;
+        (max) = mid;
 
-GEOHASH_area
+dRect
 GEOHASH_decode(const std::string & hash) {
 
-    GEOHASH_range lat_range = {  90,  -90 };
-    GEOHASH_range lon_range = { 180, -180 };
+    if (!GEOHASH_verify(hash)) return dRect();
 
-    GEOHASH_area area;
-    area.latitude = lat_range;
-    area.longitude = lon_range;
-    if (!GEOHASH_verify_hash(hash)) return area;
-
-    GEOHASH_range *range1 = &lon_range;
-    GEOHASH_range *range2 = &lat_range;
+    double min1 = -180, max1 = 180;
+    double min2 =  -90, max2 =  90;
 
     for (auto c: hash) {
         // hash already verified.
+        double mid;
         char bits = BASE32_DECODE_TABLE[toupper(c)-0x30];
-        REFINE_RANGE(range1, bits, 0x10);
-        REFINE_RANGE(range2, bits, 0x08);
-        REFINE_RANGE(range1, bits, 0x04);
-        REFINE_RANGE(range2, bits, 0x02);
-        REFINE_RANGE(range1, bits, 0x01);
-        std::swap(range1,range2);
+        REFINE_RANGE(mid, min1, max1, bits, 0x10);
+        REFINE_RANGE(mid, min2, max2, bits, 0x08);
+        REFINE_RANGE(mid, min1, max1, bits, 0x04);
+        REFINE_RANGE(mid, min2, max2, bits, 0x02);
+        REFINE_RANGE(mid, min1, max1, bits, 0x01);
+        std::swap(min1, min2);
+        std::swap(max1, max2);
     }
-
-    area.latitude = lat_range;
-    area.longitude = lon_range;
-    return area;
+    if (hash.size()%2){
+      std::swap(min1, min2);
+      std::swap(max1, max2);
+    }
+    return dRect(dPoint(min1,min2), dPoint(max1,max2));
 }
 
-#define SET_BIT(bits, mid, range, value, offset) \
-    mid = ((range)->max + (range)->min) / 2.0; \
+#define SET_BIT(bits, mid, min, max, value, offset) \
+    mid = ((max) + (min)) / 2.0; \
     if ((value) >= mid) { \
-        (range)->min = mid; \
+        (min) = mid; \
         (bits) |= (0x1 << (offset)); \
     } else { \
-        (range)->max = mid; \
+        (max) = mid; \
         (bits) |= (0x0 << (offset)); \
     }
 
 std::string
-GEOHASH_encode(double lat, double lon, unsigned int len) {
-    GEOHASH_range lat_range = {  90,  -90 };
-    GEOHASH_range lon_range = { 180, -180 };
-
-    double val1, val2;
-    GEOHASH_range *range1, *range2;
-
-    assert(lat >= -90.0);
-    assert(lat <= 90.0);
-    assert(lon >= -180.0);
-    assert(lon <= 180.0);
+GEOHASH_encode(const dPoint & p, unsigned int len) {
+    assert(p.y >= -90.0);
+    assert(p.y <= 90.0);
+    assert(p.x >= -180.0);
+    assert(p.x <= 180.0);
     assert(len <= MAX_HASH_LENGTH);
 
     std::string hash(len, ' ');
 
-    val1 = lon; range1 = &lon_range;
-    val2 = lat; range2 = &lat_range;
+    double min1 = -180, max1 = 180, val1 = p.x;
+    double min2 =  -90, max2 =  90, val2 = p.y;
 
     for (int i=0; i < len; i++) {
         double mid;
         unsigned char bits = 0;
-        SET_BIT(bits, mid, range1, val1, 4);
-        SET_BIT(bits, mid, range2, val2, 3);
-        SET_BIT(bits, mid, range1, val1, 2);
-        SET_BIT(bits, mid, range2, val2, 1);
-        SET_BIT(bits, mid, range1, val1, 0);
+        SET_BIT(bits, mid, min1, max1, val1, 4);
+        SET_BIT(bits, mid, min2, max2, val2, 3);
+        SET_BIT(bits, mid, min1, max1, val1, 2);
+        SET_BIT(bits, mid, min2, max2, val2, 1);
+        SET_BIT(bits, mid, min1, max1, val1, 0);
 
         hash[i] = BASE32_ENCODE_TABLE[bits];
 
         std::swap(val1, val2);
-        std::swap(range1, range2);
+        std::swap(min1, min2);
+        std::swap(max1, max2);
     }
     return hash;
 }
 
-GEOHASH_neighbors
-GEOHASH_get_neighbors(const std::string & hash) {
-    GEOHASH_neighbors neighbors;
-    neighbors.north = GEOHASH_get_adjacent(hash, GEOHASH_NORTH);
-    neighbors.east  = GEOHASH_get_adjacent(hash, GEOHASH_EAST);
-    neighbors.west  = GEOHASH_get_adjacent(hash, GEOHASH_WEST);
-    neighbors.south = GEOHASH_get_adjacent(hash, GEOHASH_SOUTH);
-
-    neighbors.north_east = GEOHASH_get_adjacent(neighbors.north, GEOHASH_EAST);
-    neighbors.north_west = GEOHASH_get_adjacent(neighbors.north, GEOHASH_WEST);
-    neighbors.south_east = GEOHASH_get_adjacent(neighbors.south, GEOHASH_EAST);
-    neighbors.south_west = GEOHASH_get_adjacent(neighbors.south, GEOHASH_WEST);
-    return neighbors;
-}
-
 std::string
-GEOHASH_get_adjacent(const std::string & hash, GEOHASH_direction dir) {
-    int len, idx;
-    const char *border_table, *neighbor_table;
-    char *ptr, last;
+GEOHASH_adjacent(const std::string & hash, int dir) {
 
-    len  = hash.size();
-    last = tolower(hash[len-1]);
+    dir = dir%8;
 
-    idx  = dir * 2 + (len % 2);
-    border_table = BORDERS_TABLE[idx];
+    // even dirs
+    if (dir==1) return GEOHASH_adjacent(GEOHASH_adjacent(hash,0),2);
+    if (dir==3) return GEOHASH_adjacent(GEOHASH_adjacent(hash,4),2);
+    if (dir==5) return GEOHASH_adjacent(GEOHASH_adjacent(hash,4),6);
+    if (dir==7) return GEOHASH_adjacent(GEOHASH_adjacent(hash,0),6);
+
+    // odd dirs
+    int len  = hash.size();
+    char last = tolower(hash[len-1]);
+
+    int idx  = dir + (len % 2);
+    const char *border_table = BORDERS_TABLE[idx];
 
     std::string base(hash);
     base.resize(len-1);
 
     if (strchr(border_table, last) != NULL) {
-        std::string refined_base = GEOHASH_get_adjacent(base, dir);
+        std::string refined_base = GEOHASH_adjacent(base, dir);
         if (refined_base == "") return "";
         base = refined_base;
     }
 
-    neighbor_table = NEIGHBORS_TABLE[idx];
+    const char *neighbor_table = NEIGHBORS_TABLE[idx];
 
-    ptr = strchr((char*)neighbor_table, last);
+    char *ptr = strchr((char*)neighbor_table, last);
     if (ptr == NULL) return "";
 
     idx = (int)(ptr - neighbor_table);
