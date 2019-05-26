@@ -144,5 +144,13 @@ int main( /* int argc, char **argv */ ) {
     verify_area(v[0], dRect(0,0,0.0109863281,0.00549316406));
   }
 
+  { // "big" rectange
+    dRect r(-100,-50, 220,100);
+    std::vector<std::string> v = GEOHASH_encode4(r, 6);
+    //for (auto i:v) std::cerr << i << " " << GEOHASH_decode(i) << "\n";
+    assert(v.size() == 1);
+    verify_area(v[0], dRect(-180,-90,360,180));
+  }
+
   return 0;
 }

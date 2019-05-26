@@ -168,12 +168,12 @@ GEOHASH_encode4(const dRect & r, unsigned int maxlen) {
     int i;
     for (i=0; i<maxlen; i++){
      // all 4 hashes are same
-     if (h1[i] == h2[i] || h1[i] == h3[i] || h1[i] == h4[i]) continue;
+     if (h1[i] == h2[i] && h1[i] == h3[i] && h1[i] == h4[i]) continue;
      // check if 4 hashes are adjacent (or same)
-     h1s = h1.substr(0,i);
-     h2s = h2.substr(0,i);
-     h3s = h3.substr(0,i);
-     h4s = h4.substr(0,i);
+     h1s = h1.substr(0,i+1);
+     h2s = h2.substr(0,i+1);
+     h3s = h3.substr(0,i+1);
+     h4s = h4.substr(0,i+1);
      // 3 4
      // 1 2
      if ((h1s == h2s || GEOHASH_adjacent(h1s,2)==h2s) &&
