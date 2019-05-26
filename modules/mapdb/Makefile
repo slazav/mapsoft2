@@ -1,8 +1,8 @@
-MOD_SOURCES := shape.cpp
-MOD_HEADERS := shape.h
+MOD_HEADERS := shp.h dbf.h
+MOD_SOURCES := shp.cpp dbf.cpp
 
 
-SIMPLE_TESTS := shape
+SIMPLE_TESTS := shp dbf
 PKG_CONFIG := shapelib jansson
 
 include ../Makefile.inc
