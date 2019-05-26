@@ -5,6 +5,7 @@
 #include "err/err.h"
 #include "geohash/geohash.h"
 #include "db_geohash.h"
+#include "db_tools.h"
 
 // Max hash length. 12 gives 0.1m accuracy
 #define HASHLEN 12
@@ -41,11 +42,6 @@ DBGeoHash::~DBGeoHash(){}
 /**********************************************************/
 // Implementation class methods
 
-void
-db_close(DB *dbp){
-  if (dbp) dbp->close(dbp,0);
-}
-
 DBGeoHash::Impl::Impl(const char *fname, bool create){
   // set flags
   int open_flags = create? DB_CREATE:0;
@@ -54,7 +50,7 @@ DBGeoHash::Impl::Impl(const char *fname, bool create){
   DB *dbp;
   int ret = db_create(&dbp, NULL, 0);
   if (ret != 0) throw Err() << "db_geohash: " << db_strerror(ret);
-  db = std::shared_ptr<void>(dbp, db_close);
+  db = std::shared_ptr<void>(dbp, bdb_close);
 
   // allow duplicates
   ret = dbp->set_flags(dbp, DB_DUP);
@@ -71,28 +67,6 @@ DBGeoHash::Impl::Impl(const char *fname, bool create){
   if (ret != 0)
     throw Err() << "db_geohash: " << db_strerror(ret);
 
-}
-
-// empty DBT
-DBT mk_dbt(){
-  DBT ret;
-  memset(&ret, 0, sizeof(DBT));
-  return ret;
-}
-// make DBT from string
-DBT mk_dbt(const std::string & str){
-  DBT ret = mk_dbt();
-  ret.data = (void *) str.data();
-  ret.size = str.length();
-  return ret;
-}
-// make DBT from other types
-template <typename T>
-static DBT mk_dbt(const T * v){
-  DBT ret = mk_dbt();
-  ret.data = (void *)v;
-  ret.size = sizeof(T);
-  return ret;
 }
 
 void
