@@ -1,5 +1,6 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
+#include <unistd.h>
 #include <cassert>
 #include <iostream>
 #include "err/err.h"
@@ -38,7 +39,8 @@ main(){
       assert(l1==l1a);
       assert(l2==l2a);
     }
-
+    unlink("a.shp");
+    unlink("a.shx");
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";

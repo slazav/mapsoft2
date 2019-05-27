@@ -1,6 +1,7 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
 #include <cassert>
+#include <unistd.h>
 #include <iostream>
 #include "err/err.h"
 #include "db_geohash.h"
@@ -50,8 +51,8 @@ main(){
       assert(v1.count(5)==1);
       assert(v1.count(6)==1);
       assert(v1.count(9)==1);
-
     }
+    unlink("a.dbh");
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";

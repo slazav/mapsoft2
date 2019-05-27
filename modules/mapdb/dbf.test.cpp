@@ -1,5 +1,6 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
+#include <unistd.h>
 #include <cassert>
 #include <iostream>
 #include "err/err.h"
@@ -55,6 +56,7 @@ main(){
       assert(db.get_str(2,1) == "");
       assert(db.get_str(3,1) == "a");
     }
+    unlink("a.dbf");
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";

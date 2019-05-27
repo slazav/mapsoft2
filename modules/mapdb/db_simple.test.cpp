@@ -1,5 +1,6 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
+#include <unistd.h>
 #include <cassert>
 #include <iostream>
 #include "err/err.h"
@@ -27,7 +28,6 @@ main(){
       catch(Err e) {
         assert(e.str() == "db_simple: DB_NOTFOUND: No matching key/data pair found");
       }
-
     }
     {
       // open existing file
@@ -35,6 +35,7 @@ main(){
       assert(db.get(3) == "def");
       assert(db.get(2) == "fgh");
     }
+    unlink("a.dbp");
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";
