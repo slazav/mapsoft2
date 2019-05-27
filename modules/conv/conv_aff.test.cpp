@@ -12,9 +12,9 @@ main(){
     dPoint pc(0.11, 0.12);
 
     double a=30*M_PI/180;
-    dPoint pd1 = ps1.rotate2d(pc, a);
-    dPoint pd2 = ps2.rotate2d(pc, a);
-    dPoint pd3 = ps3.rotate2d(pc, a);
+    dPoint pd1 = rotate2d(ps1, pc, a);
+    dPoint pd2 = rotate2d(ps2, pc, a);
+    dPoint pd3 = rotate2d(ps3, pc, a);
 
     std::map<dPoint,dPoint> ref;
     ref[ps1]=pd1;
