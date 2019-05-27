@@ -202,20 +202,20 @@ struct Rect {
     return Rect<T>(tlc().floor(), brc().ceil());
   }
 
-  /// Pump rectangle to each side by val value.
+  /// Expand rectangle to each side by val value.
   /// If the rectangle is empty throw an error.
   /// If val is negative rectangle can shrink to an empty one.
-  Rect<T> pump (T val) const {
-    if (e) throw Err() << "Empty rectangle in pump()";
+  Rect<T> expand (T val) const {
+    if (e) throw Err() << "Empty rectangle in expand()";
     if (w+2*val<0 || h+2*val<0) return Rect<T>();
     return Rect<T> (x-val, y-val, w+2*val, h+2*val);
   }
 
-  /// Pump rectangle by vx and vy values.
+  /// Expand rectangle by vx and vy values.
   /// If the rectangle is empty throw an error.
   /// If val is negative rectangle can shrink to an empty one.
-  Rect<T> pump (T vx, T vy) const {
-    if (e) throw Err() << "Empty rectangle in pump()";
+  Rect<T> expand (T vx, T vy) const {
+    if (e) throw Err() << "Empty rectangle in expand()";
     if (w+2*vx<0 || h+2*vy<0) return Rect<T>();
     return Rect<T> (x-vx, y-vy, w+2*vx, h+2*vy);
   }
@@ -308,17 +308,17 @@ Rect<T> operator+ (const Point<T> & p, const Rect<T> & r) { return r+p; }
 /******************************************************************/
 // same functions as in the class
 
-/// Pump rectangle to each side by val value.
+/// Expand rectangle to each side by val value.
 /// \relates Rect
 template <typename T>
-Rect<T> pump(const Rect<T> & r, T val) { return r.pump(val); }
+Rect<T> expand(const Rect<T> & r, T val) { return r.expand(val); }
 
-/// Pump rectangle by vx and vy values.
+/// Expand rectangle by vx and vy values.
 /// If the rectangle is empty throw an error.
 /// If val is negative rectangle can shrink to an empty one.
 /// \relates Rect
 template <typename T>
-Rect<T> pump(const Rect<T> & r, T vx, T vy) { return r.pump(vx,vy); }
+Rect<T> expand(const Rect<T> & r, T vx, T vy) { return r.expand(vx,vy); }
 
 /// Expand rectangle to cover point p. Can be used with empty rectangle.
 /// \relates Rect

@@ -132,19 +132,19 @@ main(){
   assert(dr2.floor() == iRect(-iPoint(6,7), -iPoint(7,8)));
   assert(dr2.ceil()  == iRect(-iPoint(5,6), -iPoint(8,9)));
 
-  //pump, expand, intersect, contains
+  //expand, intersect, contains
   {
-    assert (iRect(1,1,2,2).pump(1)    == iRect(0,0,4,4));
-    assert (iRect(1,1,2,2).pump(-1)   == iRect(2,2,0,0));
-    assert (iRect(1,1,2,2).pump(-2)   == iRect());
-    assert (iRect(1,1,2,2).pump(1,0)  == iRect(0,1,4,2));
-    assert (iRect(1,1,2,2).pump(-1,0) == iRect(2,1,0,2));
-    assert (iRect(1,1,2,2).pump(-2,0) == iRect());
-    assert (iRect(1,1,2,2).pump(0,1)  == iRect(1,0,2,4));
-    assert (iRect(1,1,2,2).pump(0,-1) == iRect(1,2,2,0));
-    assert (iRect(1,1,2,2).pump(0,-2) == iRect());
-    try { iRect().pump(1); } catch (Err e) { assert(e.str() == "Empty rectangle in pump()"); }
-    try { iRect().pump(1,2); } catch (Err e) { assert(e.str() == "Empty rectangle in pump()"); }
+    assert (iRect(1,1,2,2).expand(1)    == iRect(0,0,4,4));
+    assert (iRect(1,1,2,2).expand(-1)   == iRect(2,2,0,0));
+    assert (iRect(1,1,2,2).expand(-2)   == iRect());
+    assert (iRect(1,1,2,2).expand(1,0)  == iRect(0,1,4,2));
+    assert (iRect(1,1,2,2).expand(-1,0) == iRect(2,1,0,2));
+    assert (iRect(1,1,2,2).expand(-2,0) == iRect());
+    assert (iRect(1,1,2,2).expand(0,1)  == iRect(1,0,2,4));
+    assert (iRect(1,1,2,2).expand(0,-1) == iRect(1,2,2,0));
+    assert (iRect(1,1,2,2).expand(0,-2) == iRect());
+    try { iRect().expand(1); } catch (Err e) { assert(e.str() == "Empty rectangle in expand()"); }
+    try { iRect().expand(1,2); } catch (Err e) { assert(e.str() == "Empty rectangle in expand()"); }
 
     iPoint p0(0,0), p1(1,2), p2(2,3);
     assert(iRect().expand(p1) == iRect(p1,p1));
@@ -180,17 +180,17 @@ main(){
 
   //same with separate functions
   {
-    assert (pump(iRect(1,1,2,2),1)    == iRect(0,0,4,4));
-    assert (pump(iRect(1,1,2,2),-1)   == iRect(2,2,0,0));
-    assert (pump(iRect(1,1,2,2),-2)   == iRect());
-    assert (pump(iRect(1,1,2,2),1,0)  == iRect(0,1,4,2));
-    assert (pump(iRect(1,1,2,2),-1,0) == iRect(2,1,0,2));
-    assert (pump(iRect(1,1,2,2),-2,0) == iRect());
-    assert (pump(iRect(1,1,2,2),0,1)  == iRect(1,0,2,4));
-    assert (pump(iRect(1,1,2,2),0,-1) == iRect(1,2,2,0));
-    assert (pump(iRect(1,1,2,2),0,-2) == iRect());
-    try { pump(iRect(),1); } catch (Err e) { assert(e.str() == "Empty rectangle in pump()"); }
-    try { pump(iRect(),1,2); } catch (Err e) { assert(e.str() == "Empty rectangle in pump()"); }
+    assert (expand(iRect(1,1,2,2),1)    == iRect(0,0,4,4));
+    assert (expand(iRect(1,1,2,2),-1)   == iRect(2,2,0,0));
+    assert (expand(iRect(1,1,2,2),-2)   == iRect());
+    assert (expand(iRect(1,1,2,2),1,0)  == iRect(0,1,4,2));
+    assert (expand(iRect(1,1,2,2),-1,0) == iRect(2,1,0,2));
+    assert (expand(iRect(1,1,2,2),-2,0) == iRect());
+    assert (expand(iRect(1,1,2,2),0,1)  == iRect(1,0,2,4));
+    assert (expand(iRect(1,1,2,2),0,-1) == iRect(1,2,2,0));
+    assert (expand(iRect(1,1,2,2),0,-2) == iRect());
+    try { expand(iRect(),1); } catch (Err e) { assert(e.str() == "Empty rectangle in expand()"); }
+    try { expand(iRect(),1,2); } catch (Err e) { assert(e.str() == "Empty rectangle in expand()"); }
 
     iPoint p0(0,0), p1(1,2), p2(2,3);
     assert(expand(iRect(),p1) == iRect(p1,p1));
