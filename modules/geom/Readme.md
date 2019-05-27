@@ -36,6 +36,8 @@
   - `p.flatten()`,  `flatten(p)` -- project the point to x-y plane.
   - `pscal(p1,p2)` -- scalar product: p1.x*p2.x + p1.y*p2.y + p1.z*p2.z,
   - `dist(p1,p2)` -- distance between points: (p1-p2).len().
+  - `pscal2d(p1,p2)` -- 2D scalar product: p1.x*p2.x + p1.y*p2.y,
+  - `dist2d(p1,p2)` -- 2D distance between points: (p1-p2).len2d().
 
 - Point can be converted to a string and back
   (and thus used inside Opt class). String representation is a
