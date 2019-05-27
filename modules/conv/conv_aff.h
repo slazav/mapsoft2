@@ -8,7 +8,7 @@
 ///@{
 
 /// 2D affine transformation
-class ConvAff : public ConvBase {
+class ConvAff2D : public ConvBase {
 
   std::vector<double> k_frw; ///< transformation parameters (6 numbers)
   std::vector<double> k_bck; ///< parameters of inverse transformation
@@ -16,10 +16,10 @@ class ConvAff : public ConvBase {
 
 public:
   /// constructor - trivial transformation
-  ConvAff() {reset();}
+  ConvAff2D() {reset();}
 
   /// constructor - from a point-to-point reference
-  ConvAff(const std::map<dPoint, dPoint> & ref) {reset(ref);}
+  ConvAff2D(const std::map<dPoint, dPoint> & ref) {reset(ref);}
 
   /// reset to trivial
   void reset();

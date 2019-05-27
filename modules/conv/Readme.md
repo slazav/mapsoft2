@@ -48,14 +48,14 @@ a boolean flag for direction of the transformation `true` means forward):
 - `push_back(&cnv, frw)`  -- add a transformation to the end of the list.
 
 -----------------
-## ConvAff class
+## ConvAff2D class
 
 2D affine transformation, child of ConvBase.
 Works only with `x` and `y` coordinates.
 
 Methods (map is a std::map(dPoint,dPoint)):
- - `ConvAff()` -- constructor, trivial transformation,
- - `ConvAff(map)` -- build a transformation using the map,
+ - `ConvAff2D()` -- constructor, trivial transformation,
+ - `ConvAff2D(map)` -- build a transformation using the map (`map<dPoint,dPoint>`),
  - `reset()` -- reset to the trivial transformation,
  - `reset(map)` -- reset using the map,
  - `det()` -- forward conversion determinant,

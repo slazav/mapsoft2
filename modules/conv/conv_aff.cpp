@@ -28,9 +28,9 @@ int mdiag(int N, double *a){
 }
 
 
-void ConvAff::bck_recalc(){
+void ConvAff2D::bck_recalc(){
   double D = det();
-  if (D==0) throw Err() << "ConvAff: can't calculate matrix for backward conversion.";
+  if (D==0) throw Err() << "ConvAff2D: can't calculate matrix for backward conversion.";
 
   k_bck[0] =   k_frw[4] / D;
   k_bck[1] = - k_frw[1] / D;
@@ -42,7 +42,7 @@ void ConvAff::bck_recalc(){
 }
 
 void
-ConvAff::reset(){
+ConvAff2D::reset(){
   k_frw.resize(6);
   k_bck.resize(6);
   for (int i=0; i<6; i++) k_frw[i]=k_bck[i]=0;
@@ -51,7 +51,7 @@ ConvAff::reset(){
 }
 
 void
-ConvAff::reset(const std::map<dPoint, dPoint> & ref){
+ConvAff2D::reset(const std::map<dPoint, dPoint> & ref){
 /*
 Transformation is:
   a x + b y + c = X
@@ -99,7 +99,7 @@ To find least square fit we should solve these equations:
     A7(6,0)+=xc*x; A7(6,1)+=xc*y; A7(6,2)+=xc;
     A7(6,3)+=yc*x; A7(6,4)+=yc*y; A7(6,5)+=yc;
   }
-  if (mdiag (6, a) != 0) throw Err() << "ConvAff: can't calculate conversion matrix.";
+  if (mdiag (6, a) != 0) throw Err() << "ConvAff2D: can't calculate conversion matrix.";
 
   k_frw.resize(6);
   k_bck.resize(6);
@@ -108,28 +108,28 @@ To find least square fit we should solve these equations:
 }
 
 void
-ConvAff::shift_src(const dPoint & p){
+ConvAff2D::shift_src(const dPoint & p){
   k_frw[2] += p.x*k_frw[0] + p.y*k_frw[1];
   k_frw[5] += p.x*k_frw[3] + p.y*k_frw[4];
   bck_recalc();
 }
 
 void
-ConvAff::shift_dst(const dPoint & p){
+ConvAff2D::shift_dst(const dPoint & p){
   k_frw[2] += p.x;
   k_frw[5] += p.y;
   bck_recalc();
 }
 
 void
-ConvAff::rescale_src(const double kx, const double ky){
+ConvAff2D::rescale_src(const double kx, const double ky){
   k_frw[0]*=kx; k_frw[3]*=kx;
   k_frw[1]*=ky; k_frw[4]*=ky;
   bck_recalc();
 }
 
 void
-ConvAff::rescale_dst(const double kx, const double ky){
+ConvAff2D::rescale_dst(const double kx, const double ky){
   for (int i=0; i<3; i++) k_frw[i]*=kx;
   for (int i=3; i<6; i++) k_frw[i]*=ky;
   bck_recalc();

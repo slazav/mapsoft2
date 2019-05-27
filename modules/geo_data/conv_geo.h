@@ -39,7 +39,7 @@ public:
     "+datum=WGS84 +proj=lonlat");
 
 private:
-  ConvAff img2map;
+  ConvAff2D img2map;
   ConvGeo map2dst;
 };
 
