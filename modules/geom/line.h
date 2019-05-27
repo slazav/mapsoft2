@@ -2,6 +2,7 @@
 #define LINE_H
 
 #include <iostream>
+#include <algorithm>
 #include <ios>
 #include <cmath>
 #include <list>
@@ -128,16 +129,14 @@ struct Line : std::vector<Point<T> > {
   /// Cast to Line<double>
   operator Line<double>() const{
     Line<double> ret;
-    for (typename Line<T>::const_iterator i=this->begin(); i!=this->end(); i++)
-      ret.push_back(dPoint(*i));
+    for (auto const & p:*this) ret.push_back(dPoint(p));
     return ret;
   }
 
   /// Cast to Line<int>
   operator Line<int>() const{
     Line<int> ret;
-    for (typename Line<T>::const_iterator i=this->begin(); i!=this->end(); i++)
-      ret.push_back(iPoint(*i));
+    for (auto const & p:*this) ret.push_back(iPoint(p));
     return ret;
   }
 
@@ -160,12 +159,18 @@ struct Line : std::vector<Point<T> > {
     return ret;
   }
 
-  /// Invert line.
-  Line<T> invert(void) const{
-    Line<T> ret;
-    for (typename Line<T>::const_reverse_iterator i=this->rbegin();
-                              i!=this->rend(); i++) ret.push_back(*i);
-    return ret;
+  /// Line bounding box in x-y plane
+  Rect<T> bbox2d() const{
+    if (this->size()<1) return Rect<T>();
+    Point<T> min((*this)[0]), max((*this)[0]);
+
+    for (auto const & p:*this){
+      if (p.x > max.x) max.x = p.x;
+      if (p.y > max.y) max.y = p.y;
+      if (p.x < min.x) min.x = p.x;
+      if (p.y < min.y) min.y = p.y;
+    }
+    return Rect<T>(min,max);
   }
 
   /// Is line l just shifted version of this. Shift is returned
@@ -182,45 +187,34 @@ struct Line : std::vector<Point<T> > {
     } while(1);
   }
 
-  /// Line bounding box in x-y plane
-  Rect<T> bbox2d() const{
-    if (this->size()<1) return Rect<T>();
-    Point<T> min((*this)[0]), max((*this)[0]);
 
-    for (typename Line<T>::const_iterator i = this->begin(); i!=this->end(); i++){
-      if (i->x > max.x) max.x = i->x;
-      if (i->y > max.y) max.y = i->y;
-      if (i->x < min.x) min.x = i->x;
-      if (i->y < min.y) min.y = i->y;
-    }
-    return Rect<T>(min,max);
-  }
+  /// Invert line.
+  void invert(void) { std::reverse(this->begin(), this->end()); }
 
   /// rint function: change corner coordinates to nearest integers
-  Line<T> rint() const{
-    Line<T> ret;
-    for (typename Line<T>::const_iterator i=this->begin(); i!=this->end(); i++)
-      ret.push_back(i->rint());
-    return ret;
-  }
+  void to_rint() { for (auto & p:*this) p.to_rint(); }
+
+  /// floor function: change coordinates to nearest smaller integers
+  void to_floor() { for (auto & p:*this) p.to_floor(); }
+
+  /// ceil function: change coordinates to nearest larger integers
+  void to_ceil() { for (auto & p:*this) p.to_ceil(); }
+
+  /// abs function: change coordinates to their absolute values
+  void to_abs() { for (auto & p:*this) p.to_abs(); }
 
   /// Rotate the line around c at the angle a (rad, clockwise) in x-y plane.
   /// Here we do not use Point::rotate2d to calculate sin/cos only ones
   /// and make things faster.
-  Line rotate2d(const Point<T> & c, const double a) const {
+  void rotate2d(const Point<T> & c, const double a) {
     double C=cos(a), S=sin(a);
-    Line ret(*this);
-    for (typename Line<T>::iterator i=ret.begin(); i!=ret.end(); i++)
-      *i=Point<T>(C*(i->x-c.x)+S*(i->y-c.y), C*(i->y-c.y)-S*(i->x-c.x))+c;
-    return ret;
+    for (auto & p:*this)
+      p=Point<T>(C*(double)(p.x-c.x)+S*(double)(p.y-c.y)+c.x,
+                 C*(double)(p.y-c.y)-S*(double)(p.x-c.x)+c.y, p.z);
   }
 
   /// Project the line into x-y plane
-  Line flatten() const {
-    Line ret(*this);
-    for (typename Line<T>::iterator i=ret.begin(); i!=ret.end(); i++) i->z=0;
-    return ret;
-  }
+  void flatten() { for (auto & p:*this) p.z=0; }
 
 };
 
@@ -250,10 +244,10 @@ double length(const Line<T> & l){ return l.length(); }
 template <typename T>
 double length2d(const Line<T> & l){ return l.length2d(); }
 
-/// Invert line.
+/// Line bounding box
 /// \relates Line
 template <typename T>
-Line<T> invert(const Line<T> & l) { return l.invert(); }
+Rect<T> bbox2d(const Line<T> & l) { return l.bbox2d(); }
 
 /// Is line l just shifted version of this. Shift is returned
 /// \relates Line
@@ -262,23 +256,66 @@ bool is_shifted(const Line<T> & l1, const Line<T> & l2, Point<T> & shift){
   return l1.is_shifted(l2, shift);
 }
 
-/// Line bounding box
+
+/// Invert line.
 /// \relates Line
 template <typename T>
-Rect<T> bbox2d(const Line<T> & l) { return l.bbox2d(); }
+Line<T> invert(const Line<T> & l) {
+  Line<T> ret(l);
+  std::reverse(ret.begin(), ret.end());
+  return ret;
+}
 
 /// rint function: change corner coordenates to nearest integers
 /// \relates Line
 template <typename T>
-Line<T> rint(const Line<T> & l) { return l.rint(); }
+Line<T> rint(const Line<T> & l) {
+  Line<T> ret(l);
+  for (auto & p:ret) p.to_rint();
+  return ret;
+}
+
+/// floor function: change coordinates to nearest smaller integers
+/// \relates Line
+template <typename T>
+Line<T> floor(const Line<T> & l) {
+  Line<T> ret(l);
+  for (auto & p:ret) p.to_floor();
+  return ret;
+}
+
+/// ceil function: change coordinates to nearest larger integers
+/// \relates Line
+template <typename T>
+Line<T> ceil(const Line<T> & l) {
+  Line<T> ret(l);
+  for (auto & p:ret) p.to_ceil();
+  return ret;
+}
+
+/// abs function: change coordinates to their absolute values
+template <typename T>
+Line<T> abs(const Line<T> & l) {
+  Line<T> ret(l);
+  for (auto & p:ret) p.to_abs();
+  return ret;
+}
 
 /// rotate a line around c at the angle a (rad)
 template <typename T>
-Line<T> rotate2d(const Line<T> & l, const Point<T> & c, const double a) { return l.rotate2d(c,a); }
+Line<T> rotate2d(const Line<T> & l, const Point<T> & c, const double a) {
+  Line<T> ret(l);
+  ret.rotate2d(c,a);
+  return ret;
+}
 
 /// Project the line to x-y plane.
 template <typename T>
-Line<T> flatten(const Line<T> & l) { return l.flatten(); }
+Line<T> flatten(const Line<T> & l) {
+  Line<T> ret(l);
+  for (auto & p:ret) p.z=0;
+  return ret;
+}
 
 /******************************************************************/
 // additional functions

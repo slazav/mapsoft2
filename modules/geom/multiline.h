@@ -32,25 +32,25 @@ struct MultiLine : std::vector<Line<T> > {
 
   /// Add p to every point (shift the line)
   MultiLine<T> & operator+= (const Point<T> & p) {
-    for (typename MultiLine<T>::iterator i=this->begin(); i!=this->end(); i++) (*i)+=p;
+    for (auto & l:*this) l+=p;
     return *this;
   }
 
   /// Subtract p from every point of line
   MultiLine<T> & operator-= (const Point<T> & p) {
-    for (typename MultiLine<T>::iterator i=this->begin(); i!=this->end(); i++) (*i)-=p;
+    for (auto & l:*this) l-=p;
     return *this;
   }
 
   /// Divide coordinates by k
   MultiLine<T> & operator/= (const T k) {
-    for (typename MultiLine<T>::iterator i=this->begin(); i!=this->end(); i++) (*i)/=k;
+    for (auto & l:*this) l/=k;
     return *this;
   }
 
   /// Multiply coordinates by k
   MultiLine<T> & operator*= (const T k) {
-    for (typename MultiLine<T>::iterator i=this->begin(); i!=this->end(); i++) (*i)*=k;
+    for (auto & l:*this) l*=k;
     return *this;
   }
 
@@ -69,8 +69,7 @@ struct MultiLine : std::vector<Line<T> > {
   /// Invert coordinates
   MultiLine<T> operator- () const {
     MultiLine<T> ret;
-    for (typename MultiLine<T>::const_iterator i=this->begin(); i!=this->end(); i++)
-      ret.push_back(-(*i));
+    for (auto const & i:*this) ret.push_back(-i);
     return ret;
   }
 
@@ -114,16 +113,14 @@ struct MultiLine : std::vector<Line<T> > {
   /// Cast to MultiLine<double>.
   operator MultiLine<double>() const{
     MultiLine<double> ret;
-    for (typename MultiLine<T>::const_iterator i=this->begin(); i!=this->end(); i++)
-      ret.push_back(dLine(*i));
+    for (auto const & l:*this) ret.push_back(dLine(l));
     return ret;
   }
 
   /// Cast to MultiLine<int>.
   operator MultiLine<int>() const{
     MultiLine<int> ret;
-    for (typename MultiLine<T>::const_iterator i=this->begin(); i!=this->end(); i++)
-      ret.push_back(iLine(*i));
+    for (auto const & l:*this) ret.push_back(iLine(l));
     return ret;
   }
 
@@ -133,53 +130,50 @@ struct MultiLine : std::vector<Line<T> > {
   /// MultiLine length (sum of segment lengths).
   double length () const {
     double ret=0;
-    typename MultiLine<T>::const_iterator i;
-    for(i=this->begin(); i!=this->end(); i++) ret+=i->length();
+    for(auto const & l:*this) ret+=l.length();
     return ret;
   }
 
   /// MultiLine 2D length (sum of segment lengths, z is ignored).
   double length2d() const {
     double ret=0;
-    typename MultiLine<T>::const_iterator i;
-    for(i=this->begin(); i!=this->end(); i++) ret+=i->length2d();
+    for(auto const & l:*this) ret+=l.length2d();
     return ret;
   }
 
   /// MultiLine bounding box.
   Rect<T> bbox2d() const{
-    if (this->size()<1) return Rect<T>();
-    typename MultiLine<T>::const_iterator i=this->begin();
-    Rect<T> ret=i->bbox2d();
-    while ((++i) != this->end())  ret = expand(ret, i->bbox2d());
+    Rect<T> ret;
+    for(auto const & l:*this) ret.expand(l.bbox2d());
     return ret;
   }
 
-  /// rint function: change corner coordenates to nearest integers
-  MultiLine<T> rint() const{
-    MultiLine<T> ret;
-    for (typename MultiLine<T>::const_iterator i=this->begin(); i!=this->end(); i++)
-      ret.push_back(i->rint());
-    return ret;
-  }
+  /// rint function: change corner coordinates to nearest integers
+  void to_rint() { for (auto & l:*this) l.to_rint(); }
 
-  /// rotate the MultiLine around c at the angle a (rad, clockwise)
-  MultiLine rotate2d(const Point<T> & c, const double a) const {
+  /// floor function: change coordinates to nearest smaller integers
+  void to_floor() { for (auto & l:*this) l.to_floor(); }
+
+  /// ceil function: change coordinates to nearest larger integers
+  void to_ceil() { for (auto & l:*this) l.to_ceil(); }
+
+  /// abs function: change coordinates to their absolute values
+  void to_abs() { for (auto & l:*this) l.to_abs(); }
+
+
+  /// rotate the MultiLine around c at the angle a (rad, clockwise).
+  /// Here we do not use Point::rotate2d to calculate sin/cos only ones
+  /// and make things faster.
+  void rotate2d(const Point<T> & c, const double a) {
     double C=cos(a), S=sin(a);
-    MultiLine ret(*this);
-    for (typename MultiLine::iterator i=ret.begin(); i!=ret.end(); i++)
-      for (typename Line<T>::iterator j=i->begin(); j!=i->end(); j++)
-        *j = Point<T>(C*(j->x-c.x)+S*(j->y-c.y), C*(j->y-c.y)-S*(j->x-c.x)) + c;
-    return ret;
+    for (auto & l:*this)
+      for (auto & p:l)
+        p=Point<T>(C*(double)(p.x-c.x)+S*(double)(p.y-c.y)+c.x,
+                   C*(double)(p.y-c.y)-S*(double)(p.x-c.x)+c.y, p.z);
   }
 
   /// Project the multiline into x-y plane
-  MultiLine flatten() const {
-    MultiLine ret;
-    for (typename MultiLine<T>::const_iterator i=this->begin(); i!=this->end(); i++)
-      ret.push_back(i->flatten());
-    return ret;
-  }
+  void flatten() { for (auto & l:*this) l.flatten(); }
 
 };
 
@@ -214,18 +208,60 @@ double length2d(const MultiLine<T> & l){ return l.length2d(); }
 template <typename T>
 Rect<T> bbox2d(const MultiLine<T> & l) { return l.bbox2d(); }
 
+
+
 /// rint function: change corner coordenates to nearest integers
 /// \relates Line
 template <typename T>
-MultiLine<T> rint(const MultiLine<T> & l) { return l.rint(); }
+MultiLine<T> rint(const MultiLine<T> & ml) {
+  MultiLine<T> ret(ml);
+  for (auto & l:ret) l.to_rint();
+  return ret;
+}
 
-/// rotate a MultiLine around c at the angle a (rad)
+/// floor function: change coordinates to nearest smaller integers
+/// \relates Line
 template <typename T>
-MultiLine<T> rotate2d(const MultiLine<T> & l, const Point<T> & c, const double a) { return l.rotate2d(c,a); }
+MultiLine<T> floor(const MultiLine<T> & ml) {
+  MultiLine<T> ret(ml);
+  for (auto & l:ret) l.to_floor();
+  return ret;
+}
 
-/// Project the multiline to x-y plane.
+/// ceil function: change coordinates to nearest larger integers
+/// \relates Line
 template <typename T>
-MultiLine<T> flatten(const MultiLine<T> & l) { return l.flatten(); }
+MultiLine<T> ceil(const MultiLine<T> & ml) {
+  MultiLine<T> ret(ml);
+  for (auto & l:ret) l.to_ceil();
+  return ret;
+}
+
+/// abs function: change coordinates to their absolute values
+template <typename T>
+MultiLine<T> abs(const MultiLine<T> & ml) {
+  MultiLine<T> ret(ml);
+  for (auto & l:ret) l.to_abs();
+  return ret;
+}
+
+/// rotate a line around c at the angle a (rad)
+template <typename T>
+MultiLine<T> rotate2d(const MultiLine<T> & ml, const Point<T> & c, const double a) {
+  MultiLine<T> ret(ml);
+  ret.rotate2d(c,a);
+  return ret;
+}
+
+/// Project the line to x-y plane.
+template <typename T>
+MultiLine<T> flatten(const MultiLine<T> & ml) {
+  MultiLine<T> ret;
+  for (auto & l:ml) ret.push_back(flatten(l));
+  return ret;
+}
+
+
 
 /******************************************************************/
 // input/output

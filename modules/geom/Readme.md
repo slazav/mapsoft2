@@ -24,20 +24,24 @@
   - `dPoint(p)`, `iPoint(p)` -- cast to double- or integer-coordinate point,
   - `p.mlen()`, `mlen(p)` -- manhattan length: abs(x) + abs(y) + abs(z),
   - `p.len()`, `len(p)` -- length: sqrt(x^2 + y^2 + z^2),
-  - `p.norm()`, `norm(p)` -- normalize: p/len(p),
-  - `p.rint()`, `rint(p)` -- set coordinates to nearest integer values,
-  - `p.floor()`, `floor(p)` -- set coordinates to nearest smaller integers,
-  - `p.ceil()`, `ceil(p)` -- set coordinates to nearest larger integers,
-  - `p.abs()`,  `abs(p)` -- set coordinates to their absolute values,
   - `p.mlen2d()`, `mlen2d(p)` -- 2D manhattan length: abs(x) + abs(y),
   - `p.len2d()`, `len2d(p)` --  2D length: sqrt(x^2 + y^2),
-  - `p.norm2d()`, `norm2d(p)` -- 2D normalize: (x/len2d(p), y/len2d(p), z),
-  - `p.rotate2d(pc,a)`,  `rotate2d(p,pc,a)` -- rotate around central point pc by angle a (rad, clockwise) in x-y plane,
-  - `p.flatten()`,  `flatten(p)` -- project the point to x-y plane.
+
+  - `p.to_rint()` -- set coordinates to nearest integer values,
+  - `p.to_floor()` -- set coordinates to nearest smaller integers,
+  - `p.to_ceil()`  -- set coordinates to nearest larger integers,
+  - `p.to_abs()` -- set coordinates to their absolute values,
+  - `p.rotate2d(pc,a)` -- rotate around central point pc by angle a (rad, clockwise) in x-y plane,
+  - `p.flatten()` -- project the point to x-y plane.
+  - `rint(p)`, `floor(p)`, `ceil(p)`, `abs(p)`, `rotate2d(p,pc,a)`, `flatten(p)` --
+    do same operations, returned modified point, keep original point unchanged
+
   - `pscal(p1,p2)` -- scalar product: p1.x*p2.x + p1.y*p2.y + p1.z*p2.z,
   - `dist(p1,p2)` -- distance between points: (p1-p2).len().
   - `pscal2d(p1,p2)` -- 2D scalar product: p1.x*p2.x + p1.y*p2.y,
   - `dist2d(p1,p2)` -- 2D distance between points: (p1-p2).len2d().
+  - `norm(p)` -- normalize: p/len(p), throw error if len(p)==0
+  - `norm2d(p)` -- 2D normalize, z is set to 0, throw error if len2d(p)==0
 
 - Point can be converted to a string and back
   (and thus used inside Opt class). String representation is a
@@ -59,7 +63,7 @@ height `h` and empty flag `e`.
   (bounding box of a one-point line). Many functions throw
   error if rectangle is empty.
 
-- If 3D points are used in operations with 2D rectangles, only `x` and `y`
+- If 3D points are used in operations with rectangles, only `x` and `y`
 coordinates are involved.
 
 - Constructors:
@@ -85,20 +89,27 @@ coordinates are involved.
   - `r.empty()` -- check if rectangle is empty
   - `r.zsize()` -- check if rectangle has zero size (w==0 or h==0, but not empty)
   - `r.tcl(), r.trc(), r.brc(), r.blc(), r.cnt()` -- top-left, top-right, bottom-left, bottom-left corners and central point,
-  - `dRect(r)`, `iRect(r)` -- cast to double- or integer-coordinate rectangle
-  - `r.rint()`, `rint(r)` -- set coordinates to nearest integer values,
-  - `r.floor()`, `floor(r)` -- shrink the rectangle to nearest integers,
-  - `r.ceil()`, `ceil(r)` -- expand the rectangle to nearest integers,
-  - `r.expand(k)`, `expand(r,k)` -- expand rectangle to each side by k value,
-  - `r.expand(kx,ky)`, `expand(r,kx,ky)` -- expand by kx and ky in x and y directions,
-  - `r.expand(p)`, `expand(r,p)` -- expand rectangle to cover point p,
-  - `r1.expand(r2)`, `expand(r1,r2)` -- expand rectangle to cover rectangle r2,
-  - `r1.intersect(r2)`, `intersect(r1,r2)` -- intersect with rectangle r2,
+  - `dRect(r)` -- cast to double- or integer-coordinate rectangle
+  - `r.to_rint()` -- set coordinates to nearest integer values,
+  - `r.to_floor()` -- shrink the rectangle to nearest integers (may become empty!),
+  - `r.to_ceil()` -- expand the rectangle to nearest integers,
+  - `r.expand(k)` -- expand rectangle to each side by k value,
+  - `r.expand(kx,ky) -- expand by kx and ky in x and y directions,
+  - `r.expand(p)` -- expand rectangle to cover point p,
+  - `r1.expand(r2)` -- expand rectangle to cover rectangle r2,
+  - `r1.intersect(r2)` -- intersect with rectangle r2,
+
+  - `rint(r)`, `floor(r)`, `ceil(r)`, `expand(r,k)`, `expand(r,kx,ky)`, 
+    `expand(r,p)`, `expand(r1,r2)`, `intersect(r1,r2)` --
+    do same operations, returned modified point, keep original point unchanged,
+
   - `r.contains_l(p)`, `contains_l(r,p)` -- check if rectangle contains a point, only lower bound is included,
   - `r.contains_u(p)`, `contains_u(r,p)` -- check if rectangle contains a point, only upper bound is included,
   - `r.contains_n(p)`, `contains_n(r,p)` -- check if rectangle contains a point, bounds are not included,
   - `r.contains(p)`, `contains(r,p)` -- check if rectangle contains a point, all bounds are included,
   - `r1.contains(r2)`, `contains(r1,r2)` -- check if rectangle contains another rectangle,
+
+
 
 - Rect can be converted to a string and back
   (and thus used inside Opt class). String representation is a
@@ -126,12 +137,21 @@ Line is a std::vector of Point.
 - Other operations:
   - `dLine(l)`, `iLine(l)` -- cast to double- or integer-coordinate line
   - `l.length()`, `length(l)` -- line length
-  - `l.invert()`, `invert(l)` -- invert the line
-  - `l1.is_shifted(l2, sh)`, `is_shifted(l1, l2, sh)` -- check if line l2 is a shifted version of l1, return the shift
-  - `l.rint()`, `rint(l)` -- set coordinates to nearest integer values,
+  - `l.length2d()`, `length2d(l)` -- 2D line length
   - `l.bbox2d()`, `bbox2d(l)` -- return a bounding box (Rect object) in x-y plane,
-  - `l.rotate2d(pc,a)`,  `rotate2d(l,pc,a)` -- rotate around central point pc by angle a (rad, clockwise) in x-y plane,
-  - `l.flatten()`,  `flatten(l)` -- project the line to x-y plane.
+  - `l1.is_shifted(l2, sh)`, `is_shifted(l1, l2, sh)` -- check if line l2 is a shifted version of l1, return the shift
+
+  - `l.invert()` -- invert the line
+  - `p.to_rint()` -- set coordinates to nearest integer values,
+  - `p.to_floor()` -- set coordinates to nearest smaller integers,
+  - `p.to_ceil()`  -- set coordinates to nearest larger integers,
+  - `p.to_abs()` -- set coordinates to their absolute values,
+  - `l.rotate2d(pc,a)` -- rotate around central point pc by angle a (rad, clockwise) in x-y plane,
+  - `l.flatten()` -- project the line to x-y plane (set z to 0).
+
+  - `invert(l)`, `rint(l)`, `to_floor(l)`, `ceil(l)`, `abs(l)`, `rotate2d(l,pc,a)`, `flatten(l)` --
+    do same operations, returned modified point, keep original point unchanged,
+
   - `rect_to_line(r)` -- convert a rectangle to line.
 
 - Line can be converted to a string and back
@@ -161,9 +181,16 @@ Line with multiple segments (std::vector of Line).
   - `dMultiLine(l)`, `iMultiLine(l)` -- cast to double- or integer-coordinate MultiLine,
   - `l.length()`, `length(l)` -- line length (sum of segments' lengths),
   - `l.bbox2d()`, `bbox2d(l)` -- return a bounding box in x-y plane (Rect object),
-  - `l.rint()`, `rint(l)` -- set coordinates to nearest integer values,
-  - `l.rotate2d(pc,a)`,  `rotate2d(l,pc,a)` -- rotate around central point pc by angle a (rad, clockwise) in x-y plane.
-  - `l.flatten()`,  `flatten(l)` -- project the multiline to x-y plane.
+
+  - `p.to_rint()` -- set coordinates to nearest integer values,
+  - `p.to_floor()` -- set coordinates to nearest smaller integers,
+  - `p.to_ceil()`  -- set coordinates to nearest larger integers,
+  - `p.to_abs()` -- set coordinates to their absolute values,
+  - `l.rotate2d(pc,a)` -- rotate around central point pc by angle a (rad, clockwise) in x-y plane,
+  - `l.flatten()` -- project the line to x-y plane (set z to 0).
+
+  - `rint(l)`, `to_floor(l)`, `ceil(l)`, `abs(l)`, `rotate2d(l,pc,a)`, `flatten(l)` --
+    do same operations, returned modified point, keep original point unchanged,
 
 - MultiLine can be converted to a string and back
   (and thus used inside Opt class). String representation is a

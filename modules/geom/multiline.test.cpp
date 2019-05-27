@@ -93,16 +93,64 @@ main(){
   assert(rint(dMultiLine("[[[1.1,1.8],[3.9,1.1]],[]]")) == dMultiLine("[[[1,2],[4,1]],[]]"));
   assert(flatten(iMultiLine("[[[1,8,9],[1,2,3]],[]]")) == iMultiLine("[[[1,8],[1,2]],[]]"));
 
-  // rotate
-  {
-    iMultiLine l("[[],[[0,0],[1000,0]]]");
+  // rotate2d
+  { 
+    iMultiLine l, l0("[[[0,0,10],[1000,0,5]], [], [[0,0]]]");
+    iPoint c1(0,0), c2(500,500);
+    iMultiLine lr1("[[[0,0,10],[866,-499,5]], [], [[0,0]]]");
+    iMultiLine lr2("[[[-183,316,10],[683,-183,5]], [], [[-183,316]]]");
+
     double a=30*M_PI/180.0;
-    assert(l.rotate2d(iPoint(0,0),a) == iMultiLine("[[],[[0,0],[866,-499]]]"));
-    assert(l.rotate2d(iPoint(500,500), a) == iMultiLine("[[],[[-183,317],[683,-183]]]"));
-    assert(rotate2d(l,iPoint(500,500), a) == iMultiLine("[[],[[-183,317],[683,-183]]]"));
-    assert(iMultiLine(l.rotate2d(dPoint(500,500), a)) == iMultiLine("[[],[[-183,317],[683,-183]]]"));
-    assert(rotate2d(iMultiLine(), iPoint(500,500), a) == iMultiLine());
-    assert(rotate2d(iMultiLine("[[],[]]"), iPoint(500,500), a) == iMultiLine("[[],[]]"));
+    l=l0;
+    assert(rotate2d(l,c1,a) == lr1);
+    assert(rotate2d(l,c2,a) == lr2);
+    assert(l==l0);
+    l.rotate2d(c1,a);
+    assert(l==lr1);
+    l=l0;
+    l.rotate2d(c2,a);
+    assert(l==lr2);
+  }
+
+  // flatten, rint, floor, ceil, abs
+  {
+    dMultiLine l, l0("[[[0.1,2.8,3.1],[-0.1,-3.9,-4.6]], [], [[0,0]]]");
+    dMultiLine li("[[[0,3,3],[0,-4,-5]], [], [[0,0]]]");
+    dMultiLine lc("[[[1,3,4],[0,-3,-4]], [], [[0,0]]]");
+    dMultiLine lf("[[[0,2,3],[-1,-4,-5]], [], [[0,0]]]");
+    dMultiLine lz("[[[0.1,2.8],[-0.1,-3.9]], [], [[0,0]]]");
+    dMultiLine la("[[[0.1,2.8,3.1],[0.1,3.9,4.6]], [], [[0,0]]]");
+
+    l=l0;
+    assert(flatten(l) == lz);
+    assert(l==l0);
+    l.flatten();
+    assert(l==lz);
+
+    l=l0;
+    assert(rint(l) == li);
+    assert(l==l0);
+    l.to_rint();
+    assert(l==li);
+
+    l=l0;
+    assert(floor(l) == lf);
+    assert(l==l0);
+    l.to_floor();
+    assert(l==lf);
+
+    l=l0;
+    assert(ceil(l) == lc);
+    assert(l==l0);
+    l.to_ceil();
+    assert(l==lc);
+
+    l=l0;
+    assert(abs(l) == la);
+    assert(l==l0);
+    l.to_abs();
+    assert(l==la);
+
   }
 
   // iLine <-> dLine casting

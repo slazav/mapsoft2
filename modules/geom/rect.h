@@ -185,73 +185,86 @@ struct Rect {
   // Some functions. Below same functions are defined outside the class
 
   /// rint function: change corner coordenates to nearest integers
-  Rect<T> rint() const {
-    if (e) return Rect<T>();
-   return Rect<T>(tlc().rint(), brc().rint());
+  void to_rint() {
+    if (e) return;
+    *this = Rect<T>(rint(tlc()), rint(brc()));
   }
 
   /// floor function: shrink the rectangle to nearest integer coordinate
-  Rect<T> floor() const {
-    if (e) return Rect<T>();
-    return Rect<T>(tlc().ceil(), brc().floor());
+  /// Rectangle can be shriked to empty one.
+  void to_floor() {
+    if (e) return;
+    Point<T> p1 = ceil(tlc());
+    Point<T> p2 = floor(brc());
+    if (p1.x > p2.x || p1.y > p2.y) {*this = Rect(); return;}
+    *this = Rect<T>(p1,p2);
   }
 
   /// ceil function: expand the rectangle to nearest integer coordinates
-  Rect<T> ceil() const {
-    if (e) return Rect<T>();
-    return Rect<T>(tlc().floor(), brc().ceil());
+  void to_ceil() {
+    if (e) return;
+    *this = Rect<T>(floor(tlc()), ceil(brc()));
   }
 
   /// Expand rectangle to each side by val value.
   /// If the rectangle is empty throw an error.
   /// If val is negative rectangle can shrink to an empty one.
-  Rect<T> expand (T val) {
+  void expand (T val) {
     if (e) throw Err() << "Empty rectangle in expand()";
-    if (w+2*val<0 || h+2*val<0) return *this = Rect<T>();
-    return *this = Rect<T>(x-val,y-val,w+2*val,h+2*val);
+    if (w+2*val<0 || h+2*val<0){
+      *this=Rect<T>();
+      return;
+    }
+    *this = Rect<T>(x-val,y-val,w+2*val,h+2*val);
   }
 
   /// Expand rectangle by vx and vy values.
   /// If the rectangle is empty throw an error.
   /// If val is negative rectangle can shrink to an empty one.
-  Rect<T> expand (T vx, T vy) {
+  void expand (T vx, T vy) {
     if (e) throw Err() << "Empty rectangle in expand()";
-    if (w+2*vx<0 || h+2*vy<0) return *this = Rect<T>();
-    return *this = Rect<T>(x-vx,y-vy,w+2*vx,h+2*vy);
+    if (w+2*vx<0 || h+2*vy<0){
+      *this = Rect<T>();
+      return;
+    }
+    *this = Rect<T>(x-vx,y-vy,w+2*vx,h+2*vy);
   }
 
   /// Expand rectangle to cover point p. Can be used with empty rectangle.
-  Rect<T> expand (const Point<T> & p) {
-    if (e) return *this = Rect<T>(p,p);
+  void expand (const Point<T> & p) {
+    if (e) {
+      *this = Rect<T>(p,p);
+      return;
+    }
     T x1 =  std::min (x, p.x);
     T y1 =  std::min (y, p.y);
     T x2 =  std::max (x+w, p.x);
     T y2 =  std::max (y+h, p.y);
-    return *this = Rect<T>(x1,y1,x2-x1,y2-y1);
+    *this = Rect<T>(x1,y1,x2-x1,y2-y1);
   }
 
   /// Expand rectangle to cover rectangle r. Can be used with empty rectangle.
-  Rect<T> expand (const Rect<T> & r) {
-    if (e)   return *this = r;
-    if (r.e) return *this;
+  void expand (const Rect<T> & r) {
+    if (e){ *this = r; return; }
+    if (r.e) return;
     T x1 =  std::min (x, r.x);
     T y1 =  std::min (y, r.y);
     T x2 =  std::max (x+w, r.x+r.w);
     T y2 =  std::max (y+h, r.y+r.h);
-    return *this = Rect<T>(x1,y1,x2-x1,y2-y1);
+    *this = Rect<T>(x1,y1,x2-x1,y2-y1);
   }
 
   /// Calculate intersection with rectangle r. Can be used with empty rectangle.
-  Rect<T> intersect (const Rect<T> & r) {
-    if (e || r.e) return *this = Rect<T>();
+  void intersect (const Rect<T> & r) {
+    if (e || r.e) { *this = Rect<T>(); return; }
     T x1 =  std::max (x, r.x);
     T y1 =  std::max (y, r.y);
     T x2 =  std::min (x+w, r.x+r.w);
     T y2 =  std::min (y+h, r.y+r.h);
     T w = x2-x1;
     T h = y2-y1;
-    if (w<0 || h<0) return *this = Rect<T>();
-    return *this = Rect<T>(x1,y1,w,h);
+    if (w<0 || h<0) { *this = Rect<T>(); return; }
+    *this = Rect<T>(x1,y1,w,h);
   }
 
   /// If rectangle contains a point (only lower bounds are included).
@@ -309,52 +322,57 @@ Rect<T> operator+ (const Point<T> & p, const Rect<T> & r) { return r+p; }
 // same functions as in the class
 
 /// rint function: change corner coordenates to nearest integers
+/// we can not use rr.to_rint() because of rounding problems (?)
 template <typename T>
-Rect<int> rint(const Rect<T> & r){
+Rect<int> rint(const Rect<T> & r) {
   if (r.e) return Rect<int>();
-  return Rect<int>(r.tlc().rint(), r.brc().rint());
+  return Rect<int>(rint(r.tlc()), rint(r.brc()));
 }
 
 /// floor function: shrink the rectangle to nearest integer coordinate
+/// Rectangle can be shriked to empty one.
 template <typename T>
 Rect<int> floor(const Rect<T> & r) {
   if (r.e) return Rect<int>();
-  return Rect<int>(r.tlc().ceil(), r.brc().floor());
+  Point<int> p1 = ceil(r.tlc());
+  Point<int> p2 = floor(r.brc());
+  if (p1.x > p2.x || p1.y > p2.y) {return Rect<int>();}
+  return Rect<int>(p1,p2);
 }
 
 /// ceil function: expand the rectangle to nearest integer coordinates
 template <typename T>
 Rect<int> ceil(const Rect<T> & r) {
   if (r.e) return Rect<int>();
-  return Rect<int>(r.tlc().floor(), r.brc().ceil());
+  return Rect<int>(floor(r.tlc()), ceil(r.brc()));
 }
 
 /// Expand rectangle to each side by val value.
 /// \relates Rect
 template <typename T>
-Rect<T> expand(const Rect<T> & r, T val) { Rect<T> rr(r); return rr.expand(val); }
+Rect<T> expand(const Rect<T> & r, T val) { Rect<T> rr(r); rr.expand(val); return rr;}
 
 /// Expand rectangle by vx and vy values.
 /// If the rectangle is empty throw an error.
 /// If val is negative rectangle can shrink to an empty one.
 /// \relates Rect
 template <typename T>
-Rect<T> expand(const Rect<T> & r, T vx, T vy) { Rect<T> rr(r);  return rr.expand(vx,vy); }
+Rect<T> expand(const Rect<T> & r, T vx, T vy) { Rect<T> rr(r);  rr.expand(vx,vy); return rr;}
 
 /// Expand rectangle to cover point p. Can be used with empty rectangle.
 /// \relates Rect
 template <typename T>
-Rect<T> expand (const Rect<T> & r, const Point<T> & p) { Rect<T> rr(r); return rr.expand(p); }
+Rect<T> expand (const Rect<T> & r, const Point<T> & p) { Rect<T> rr(r); rr.expand(p); return rr;}
 
 /// Expand rectangle to cover rectangle r. Can be used with empty rectangle.
 /// \relates Rect
 template <typename T>
-Rect<T> expand (const Rect<T> & r1, const Rect<T> & r2) { Rect<T> rr(r1); return rr.expand(r2); }
+Rect<T> expand (const Rect<T> & r1, const Rect<T> & r2) { Rect<T> rr(r1); rr.expand(r2); return rr;}
 
 /// Calculate intersection with rectangle r. Can be used with empty rectangle.
 /// \relates Rect
 template <typename T>
-Rect<T> intersect (const Rect<T> & r1, const Rect<T> & r2) {Rect<T> rr(r1); return rr.intersect(r2); }
+Rect<T> intersect (const Rect<T> & r1, const Rect<T> & r2) {Rect<T> rr(r1); rr.intersect(r2); return rr;}
 
 /// Is rectangle contains a point (only lower bounds are included).
 /// \relates Rect

@@ -106,16 +106,44 @@ struct Point {
   // Some functions. Below same functions are defined outside the class
 
   /// rint function: change coordinates to the nearest integers
-  Point rint() const { return Point((T)::rint(x),(T)::rint(y),(T)::rint(z)); }
+  void to_rint() {
+    x=(T)::rint(x);
+    y=(T)::rint(y);
+    z=(T)::rint(z);
+  }
 
   /// floor function: change coordinates to nearest smaller integers
-  Point floor() const { return Point((T)::floor(x),(T)::floor(y),(T)::floor(z)); }
+  void to_floor() {
+    x=(T)::floor(x);
+    y=(T)::floor(y);
+    z=(T)::floor(z);
+  }
 
   /// ceil function: change coordinates to nearest larger integers
-  Point ceil() const { return Point((T)::ceil(x),(T)::ceil(y),(T)::ceil(z)); }
+  void to_ceil() {
+    x=(T)::ceil(x);
+    y=(T)::ceil(y);
+    z=(T)::ceil(z);
+  }
 
   /// abs function: change coordinates to their absolute values
-  Point abs() const { return Point(x>0?x:-x, y>0?y:-y, z>0?z:-z); }
+  void to_abs() {
+    x=x>0?x:-x;
+    y=y>0?y:-y;
+    z=z>0?z:-z;
+  }
+
+  /// rotate the point around point c by the angle a (rad, clockwise) in x-y plane
+  void rotate2d(const Point & c, const double a) {
+    double C=cos(a), S=sin(a);
+    *this = Point(C*(double)(x-c.x) + S*(double)(y-c.y) + c.x,
+                  C*(double)(y-c.y) - S*(double)(x-c.x) + c.y, z);
+  }
+
+  /// project the point to x-y plane
+  void flatten() { z=0; }
+
+  /******************************************************************/
 
   /// Calculate manhattan length: abs(x) + abs(y) + abs(z)
   T mlen() const { return std::abs(x) + std::abs(y) + std::abs(z); }
@@ -123,39 +151,12 @@ struct Point {
   /// Calculate length: sqrt(x^2 + y^2 + z^2).
   double len() const { return sqrt((double)(x*x+y*y+z*z));}
 
-  /// Normalize: *this/len(*this). Error if point is 0
-  /// Throw error i
-  Point<double> norm() const {
-     if (x==0 && y==0 && z==0) throw Err() << "Point norm: zero length";
-     return Point<double>(*this)/this->len();
-  }
-
-  /******************************************************************/
-  // 2d versions: ignore z coordinate.
-
-  /// Calculate manhattan length: abs(x) + abs(y)
+  /// Calculate 2D manhattan length: abs(x) + abs(y)
   T mlen2d() const { return std::abs(x) + std::abs(y); }
 
-  /// Calculate length: sqrt(x^2 + y^2).
+  /// Calculate 2D length: sqrt(x^2 + y^2).
   double len2d() const { return sqrt((double)(x*x+y*y));}
 
-  /// Normalize: *this/len(*this). Error if point is 0
-  /// Throw error i
-  Point<double> norm2d() const {
-     if (x==0 && y==0) throw Err() << "Point norm2d: zero length";
-     double v = this->len2d();
-     return Point<double>(x/v, y/v, z);
-  }
-
-
-  /// rotate the point around point c by the angle a (rad, clockwise) in x-y plane
-  Point rotate2d(const Point & c, const double a) const {
-    double C=cos(a), S=sin(a);
-    return Point(C*(x-c.x)+S*(y-c.y), C*(y-c.y)-S*(x-c.x)) + c;
-  }
-
-  /// project the point to x-y plane
-  Point flatten() const { return Point(x,y); }
 
 };
 
@@ -173,22 +174,41 @@ Point<T> operator* (const T k, const Point<T> & p) { return p*k; }
 /// rint function
 /// \relates Point
 template <typename T>
-Point<T> rint(const Point<T> & p){ return p.rint(); }
+Point<int> rint(const Point<T> & p){
+  return Point<int>((T)::rint(p.x),(T)::rint(p.y),(T)::rint(p.z)); }
 
 /// floor function
 /// \relates Point
 template <typename T>
-Point<T> floor(const Point<T> & p){ return p.floor(); }
+Point<int> floor(const Point<T> & p){
+  return Point<int>((T)::floor(p.x),(T)::floor(p.y),(T)::floor(p.z)); }
 
 /// ceil function
 /// \relates Point
 template <typename T>
-Point<T> ceil(const Point<T> & p){ return p.ceil(); }
+Point<int> ceil(const Point<T> & p){
+  return Point<int>((T)::ceil(p.x),(T)::ceil(p.y),(T)::ceil(p.z)); }
 
 /// abs function
 /// \relates Point
 template <typename T>
-Point<T> abs(const Point<T> & p){ return p.abs(); }
+Point<T> abs(const Point<T> & p){
+  return Point<T>(p.x>0?p.x:-p.x, p.y>0?p.y:-p.y, p.z>0?p.z:-p.z); }
+
+/// rotate the point around point c by the angle a (rad, clockwise) in x-y plane
+template <typename T>
+Point<T> rotate2d(const Point<T> & p, const Point<T> & c, const double a){
+  Point<T> p1(p);
+  p1.rotate2d(c,a);
+  return p1;
+}
+
+/// project the point to x-y plane
+template <typename T>
+Point<T> flatten(const Point<T> & p) { return Point<T>(p.x,p.y); }
+
+
+/******************************************************************/
 
 /// Calculate manhattan length: abs(x) + abs(y) + abs(z)
 /// \relates Point
@@ -200,14 +220,6 @@ T mlen (const Point<T> & p) { return p.mlen(); }
 template <typename T>
 double len(const Point<T> & p) { return p.len();}
 
-/// Normalize: *this/len(*this). Throw error if point is 0
-/// \relates Point
-template <typename T>
-Point<double> norm(const Point<T> & p) { return p.norm(); }
-
-/******************************************************************/
-// functions, similar to ones in the class - 2d version
-
 /// Calculate manhattan length: abs(x) + abs(y)
 /// \relates Point
 template <typename T>
@@ -217,20 +229,6 @@ T mlen2d (const Point<T> & p) { return p.mlen2d(); }
 /// \relates Point
 template <typename T>
 double len2d(const Point<T> & p) { return p.len2d();}
-
-/// Normalize: *this/len2d(*this). Throw error if point is 0
-/// \relates Point
-template <typename T>
-Point<double> norm2d(const Point<T> & p) { return p.norm2d(); }
-
-/// rotate the point around point c by the angle a (rad, clockwise) in x-y plane
-template <typename T>
-Point<T> rotate2d(const Point<T> & p, const Point<T> & c, const double a){
-  return p.rotate2d(c,a); }
-
-/// project the point to x-y plane
-template <typename T>
-Point<T> flatten(const Point<T> & p) { return p.flatten(); }
 
 /******************************************************************/
 // extra functions
@@ -249,6 +247,14 @@ double dist(const Point<T> & p1, const Point<T> & p2){
   return (p1-p2).len();
 }
 
+/// Normalize: p/len(p). Throw error if point is 0
+/// \relates Point
+template <typename T>
+Point<double> norm(const Point<T> & p) {
+  if (p.x==0 && p.y==0 && p.z==0) throw Err() << "Point norm: zero length";
+  return Point<double>(p)/p.len();
+}
+
 /// 2D scalar multiplication: p1.x*p2.x + p1.y*p2.y
 /// \relates Point
 template <typename T>
@@ -261,6 +267,15 @@ double pscal2d(const Point<T> & p1, const Point<T> & p2){
 template <typename T>
 double dist2d(const Point<T> & p1, const Point<T> & p2){
   return (p1-p2).len2d();
+}
+
+/// 2D normalize: flatten(p/len2d), z is set to 0. Throw error len2 is 0
+/// \relates Point
+template <typename T>
+Point<double> norm2d(const Point<T> & p) {
+  if (p.x==0 && p.y==0) throw Err() << "Point norm: zero length";
+  double l = len2d(p);
+  return Point<double>(p.x,p.y, 0)/l;
 }
 
 /******************************************************************/
