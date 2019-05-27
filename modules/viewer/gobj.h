@@ -19,7 +19,6 @@ should not be done during drawing).
 */
 class GObj{
 public:
-  const static int TILE_SIZE = 256; //< size of tiles
   const static int FILL_NONE = 0; // object draws nothing
   const static int FILL_PART = 1; // object draws some points
   const static int FILL_ALL  = 2; // object fills in the whole image with opaque colors

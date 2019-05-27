@@ -1,7 +1,6 @@
 #include "gobj.h"
 #include <limits.h> // for INT_MIN, INT_MAX
 
-const int GObj::TILE_SIZE;
 const int GObj::FILL_NONE;
 const int GObj::FILL_PART;
 const int GObj::FILL_ALL;

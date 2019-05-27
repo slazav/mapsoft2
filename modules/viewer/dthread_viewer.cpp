@@ -1,5 +1,7 @@
 #include "dthread_viewer.h"
 
+#define TILE_SIZE 256
+
 DThreadViewer::DThreadViewer(GObj * pl) :
     SimpleViewer(pl),
     updater_needed(true) {
@@ -48,7 +50,7 @@ DThreadViewer::rescale(const double k, const iPoint & cnt){
 
 iRect
 DThreadViewer::tile_to_rect(const iPoint & key) const{
-  return iRect(key, key + iPoint(1,1))*GObj::TILE_SIZE;
+  return iRect(key, key + iPoint(1,1))*TILE_SIZE;
 }
 
 void
@@ -64,7 +66,7 @@ DThreadViewer::updater(){
       stop_drawing=false;
       updater_mutex->unlock();
 
-      Image tile(GObj::TILE_SIZE, GObj::TILE_SIZE, 32, 0xFF000000 | get_bgcolor());
+      Image tile(TILE_SIZE, TILE_SIZE, 32, 0xFF000000 | get_bgcolor());
       GObj * o = get_obj();
       draw_mutex->lock();
       if (o) o->draw(tile, tile_to_rect(key).tlc());
@@ -83,7 +85,7 @@ DThreadViewer::updater(){
 
     // cleanup queue
     iRect scr = iRect(get_origin().x, get_origin().y,  get_width(), get_height());
-    iRect tiles_to_keep = ceil(dRect(scr)/GObj::TILE_SIZE);
+    iRect tiles_to_keep = ceil(dRect(scr)/TILE_SIZE);
 
     updater_mutex->lock();
     std::set<iPoint>::iterator qit=tiles_todo.begin(), qit1;
@@ -127,8 +129,8 @@ void DThreadViewer::on_done_signal(){
 
     if (tiles_cache.count(key))
       draw_image(tiles_cache.find(key)->second,
-        iRect(0,0,1,1)*GObj::TILE_SIZE,
-        key*GObj::TILE_SIZE-get_origin());
+        iRect(0,0,1,1)*TILE_SIZE,
+        key*TILE_SIZE-get_origin());
 
     updater_mutex->lock();
     tiles_done.pop();
@@ -141,7 +143,7 @@ void DThreadViewer::on_done_signal(){
 void DThreadViewer::draw(const iRect & r){
   if (is_waiting()) return;
   if (r.empty()) {redraw(); return;}
-  iRect tiles = ceil(dRect(r + get_origin())/GObj::TILE_SIZE);
+  iRect tiles = ceil(dRect(r + get_origin())/TILE_SIZE);
   iPoint key;
 
   updater_mutex->lock();
@@ -154,7 +156,7 @@ void DThreadViewer::draw(const iRect & r){
       iRect rect=tile_to_rect(key);
 
       if (tiles_cache.count(key)==0){ // if there is no tile in cache
-        Image img(GObj::TILE_SIZE, GObj::TILE_SIZE, 32, get_bgcolor());
+        Image img(TILE_SIZE, TILE_SIZE, 32, get_bgcolor());
         draw_image(img, rect.tlc()-get_origin());
         if (tiles_todo.count(key)==0){
           updater_mutex->lock();
@@ -165,7 +167,7 @@ void DThreadViewer::draw(const iRect & r){
       }
       else {
         draw_image(tiles_cache.find(key)->second,
-          rect - key*GObj::TILE_SIZE, rect.tlc()-get_origin());
+          rect - key*TILE_SIZE, rect.tlc()-get_origin());
       }
     }
   }
