@@ -308,6 +308,27 @@ Rect<T> operator+ (const Point<T> & p, const Rect<T> & r) { return r+p; }
 /******************************************************************/
 // same functions as in the class
 
+/// rint function: change corner coordenates to nearest integers
+template <typename T>
+Rect<int> rint(const Rect<T> & r){
+  if (r.e) return Rect<int>();
+  return Rect<int>(r.tlc().rint(), r.brc().rint());
+}
+
+/// floor function: shrink the rectangle to nearest integer coordinate
+template <typename T>
+Rect<int> floor(const Rect<T> & r) {
+  if (r.e) return Rect<int>();
+  return Rect<int>(r.tlc().ceil(), r.brc().floor());
+}
+
+/// ceil function: expand the rectangle to nearest integer coordinates
+template <typename T>
+Rect<int> ceil(const Rect<T> & r) {
+  if (r.e) return Rect<int>();
+  return Rect<int>(r.tlc().floor(), r.brc().ceil());
+}
+
 /// Expand rectangle to each side by val value.
 /// \relates Rect
 template <typename T>

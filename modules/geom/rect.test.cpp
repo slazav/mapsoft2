@@ -124,10 +124,17 @@ main(){
   // rint, floor, ceil
   dRect dr1 = dRect(dPoint(5.8,6.8),dPoint(7.2,8.8));
   dRect dr2 = dRect(-dPoint(5.8,6.8),-dPoint(7.2,8.8));
+
+  assert(rint(dr1)  == iRect(iPoint(6,7), iPoint(7,9)));
+  assert(floor(dr1) == iRect(iPoint(6,7), iPoint(7,8)));
+  assert(ceil(dr1)  == iRect(iPoint(5,6), iPoint(8,9)));
+  assert(rint(dr2)  == iRect(-iPoint(6,7), -iPoint(7,9)));
+  assert(floor(dr2) == iRect(-iPoint(6,7), -iPoint(7,8)));
+  assert(ceil(dr2)  == iRect(-iPoint(5,6), -iPoint(8,9)));
+
   assert(dr1.rint()  == iRect(iPoint(6,7), iPoint(7,9)));
   assert(dr1.floor() == iRect(iPoint(6,7), iPoint(7,8)));
   assert(dr1.ceil()  == iRect(iPoint(5,6), iPoint(8,9)));
-
   assert(dr2.rint()  == iRect(-iPoint(6,7), -iPoint(7,9)));
   assert(dr2.floor() == iRect(-iPoint(6,7), -iPoint(7,8)));
   assert(dr2.ceil()  == iRect(-iPoint(5,6), -iPoint(8,9)));
