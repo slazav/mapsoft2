@@ -25,8 +25,7 @@ sub read_make ($) {
     my $key = $1;
     $line = $2;
     # join lines with \ at the end, remove extra spaces
-    $line .= <F> while $line =~ /\\$/;
-    $line =~ s/\\\n//g;
+    $line .= <F> while $line =~ s/\\$//;
     $line =~ s/\s+/ /g;
     $info{$key} = $line;
   }
