@@ -114,25 +114,24 @@ Rubber::draw_segment(const RubberSegment &s){
 /// functions for drawing and erasing rubber
 void
 Rubber::draw(const bool all){
-  std::list<RubberSegment>::iterator i;
-  for (i = rubber.begin(); i != rubber.end(); i++){
-    if ((!all && !(i->flags & RUBBFL_MOUSE)) ||
-        (i->flags & RUBBFL_DRAWN)) continue; // already drawn
+  for (auto & s:rubber){
+    if ((!all && !(s.flags & RUBBFL_MOUSE)) ||
+        (s.flags & RUBBFL_DRAWN)) continue; // already drawn
 
-    i->fix(mouse_pos, viewer->get_origin());
-    i->flags |= RUBBFL_DRAWN;
-    draw_segment(*i);
+    s.fix(mouse_pos, viewer->get_origin());
+    s.flags |= RUBBFL_DRAWN;
+    draw_segment(s);
   }
 }
 
 void
 Rubber::erase(const bool all){
   std::list<RubberSegment>::iterator i;
-  for (i = rubber.begin(); i != rubber.end(); i++){
-    if ((!all && !(i->flags & RUBBFL_MOUSE)) ||
-        !(i->flags & RUBBFL_DRAWN)) continue; // wasn't drawn
-    draw_segment(*i);
-    i->flags &= ~RUBBFL_DRAWN;
+  for (auto & s:rubber){
+    if ((!all && !(s.flags & RUBBFL_MOUSE)) ||
+        !(s.flags & RUBBFL_DRAWN)) continue; // wasn't drawn
+    draw_segment(s);
+    s.flags &= ~RUBBFL_DRAWN;
   }
 }
 
@@ -176,12 +175,12 @@ Rubber::get(void){
 /// fix mouse points at point p
 void
 Rubber::fix(const iPoint & p){
-  for (std::list<RubberSegment>::iterator i = rubber.begin(); i != rubber.end(); ++i){
-    if (i->flags & RUBBFL_MOUSE_P1X) i->p1.x*=p.x;
-    if (i->flags & RUBBFL_MOUSE_P1Y) i->p1.y*=p.y;
-    if (i->flags & RUBBFL_MOUSE_P2X) i->p2.x*=p.x;
-    if (i->flags & RUBBFL_MOUSE_P2Y) i->p2.y*=p.y;
-    i->flags &= ~RUBBFL_MOUSE;
+  for (auto & s:rubber){
+    if (s.flags & RUBBFL_MOUSE_P1X) s.p1.x*=p.x;
+    if (s.flags & RUBBFL_MOUSE_P1Y) s.p1.y*=p.y;
+    if (s.flags & RUBBFL_MOUSE_P2X) s.p2.x*=p.x;
+    if (s.flags & RUBBFL_MOUSE_P2Y) s.p2.y*=p.y;
+    s.flags &= ~RUBBFL_MOUSE;
   }
 }
 
@@ -199,23 +198,23 @@ Rubber::size(){
 
 void Rubber::rescale(double k){
   erase();
-  for (std::list<RubberSegment>::iterator i = rubber.begin(); i != rubber.end(); ++i){
-    if (!(i->flags & RUBBFL_MOUSE_P1X)) i->p1.x*=k;
-    if (!(i->flags & RUBBFL_MOUSE_P1Y)) i->p1.y*=k;
-    if (!(i->flags & RUBBFL_MOUSE_P2X)) i->p2.x*=k;
-    if (!(i->flags & RUBBFL_MOUSE_P2Y)) i->p2.y*=k;
+  for (auto & s:rubber){
+    if (!(s.flags & RUBBFL_MOUSE_P1X)) s.p1.x*=k;
+    if (!(s.flags & RUBBFL_MOUSE_P1Y)) s.p1.y*=k;
+    if (!(s.flags & RUBBFL_MOUSE_P2X)) s.p2.x*=k;
+    if (!(s.flags & RUBBFL_MOUSE_P2Y)) s.p2.y*=k;
   }
 }
 
 void Rubber::dump(void) const{
   std::cerr << "Rubber:\n";
-  for (std::list<RubberSegment>::const_iterator i = rubber.begin(); i != rubber.end(); ++i){
-    std::cerr << i->p1 << " " << i->p2 
-              << " " << (i->flags & RUBBFL_MOUSE_P1X)
-              << " " << (i->flags & RUBBFL_MOUSE_P2X)
-              << " " << (i->flags & RUBBFL_MOUSE_P1Y)
-              << " " << (i->flags & RUBBFL_MOUSE_P2Y)
-              << " " << (i->flags >>4) 
+  for (auto & s:rubber){
+    std::cerr << s.p1 << " " << s.p2 
+              << " " << (s.flags & RUBBFL_MOUSE_P1X)
+              << " " << (s.flags & RUBBFL_MOUSE_P2X)
+              << " " << (s.flags & RUBBFL_MOUSE_P1Y)
+              << " " << (s.flags & RUBBFL_MOUSE_P2Y)
+              << " " << (s.flags >>4) 
               << "\n";
   }
   std::cerr << "-------\n";
