@@ -93,7 +93,7 @@ coordinates are involved.
   - `r.expand(kx,ky)`, `expand(r,kx,ky)` -- expand by kx and ky in x and y directions,
   - `r.expand(p)`, `expand(r,p)` -- expand rectangle to cover point p,
   - `r1.expand(r2)`, `expand(r1,r2)` -- expand rectangle to cover rectangle r2,
-  - `r1.intersect(r2)`, `intersect(r1,r2)` -- intersection with rectangle r2,
+  - `r1.intersect(r2)`, `intersect(r1,r2)` -- intersect with rectangle r2,
   - `r.contains_l(p)`, `contains_l(r,p)` -- check if rectangle contains a point, only lower bound is included,
   - `r.contains_u(p)`, `contains_u(r,p)` -- check if rectangle contains a point, only upper bound is included,
   - `r.contains_n(p)`, `contains_n(r,p)` -- check if rectangle contains a point, bounds are not included,

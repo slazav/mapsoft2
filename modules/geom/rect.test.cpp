@@ -134,36 +134,69 @@ main(){
 
   //expand, intersect, contains
   {
-    assert (iRect(1,1,2,2).expand(1)    == iRect(0,0,4,4));
-    assert (iRect(1,1,2,2).expand(-1)   == iRect(2,2,0,0));
-    assert (iRect(1,1,2,2).expand(-2)   == iRect());
-    assert (iRect(1,1,2,2).expand(1,0)  == iRect(0,1,4,2));
-    assert (iRect(1,1,2,2).expand(-1,0) == iRect(2,1,0,2));
-    assert (iRect(1,1,2,2).expand(-2,0) == iRect());
-    assert (iRect(1,1,2,2).expand(0,1)  == iRect(1,0,2,4));
-    assert (iRect(1,1,2,2).expand(0,-1) == iRect(1,2,2,0));
-    assert (iRect(1,1,2,2).expand(0,-2) == iRect());
-    try { iRect().expand(1); } catch (Err e) { assert(e.str() == "Empty rectangle in expand()"); }
-    try { iRect().expand(1,2); } catch (Err e) { assert(e.str() == "Empty rectangle in expand()"); }
+    iRect r1(1,1,2,2);
+    assert (r1.expand(1)    == iRect(0,0,4,4));
+    assert (r1.expand(-1)   == iRect(1,1,2,2));
+    assert (r1.expand(-1)   == iRect(2,2,0,0));
+    assert (r1.expand(-2)   == iRect());
+    try { r1.expand(1); } catch (Err e) { assert(e.str() == "Empty rectangle in expand()"); }
 
+    r1 = iRect(1,1,2,2);
+    assert (r1.expand(1,0)  == iRect(0,1,4,2));
+    assert (r1.expand(-1,0) == iRect(1,1,2,2));
+    assert (r1.expand(-2,0) == iRect());
+    r1 = iRect(1,1,2,2);
+    assert (r1.expand(0,1)  == iRect(1,0,2,4));
+    assert (r1.expand(0,-1) == iRect(1,1,2,2));
+    assert (r1.expand(0,-2) == iRect());
+    try { r1.expand(1,1); } catch (Err e) { assert(e.str() == "Empty rectangle in expand()"); }
+
+    r1 = iRect();
     iPoint p0(0,0), p1(1,2), p2(2,3);
-    assert(iRect().expand(p1) == iRect(p1,p1));
-    assert(iRect(p0,p0).expand(p1) == iRect(p0,p1));
-    assert(iRect(p1,p2).expand(p0) == iRect(p0,p2));
+    assert(r1.expand(p1) == iRect(p1,p1));
 
-    assert(iRect().expand(iRect(p0,p0)) == iRect(p0,p0));
-    assert(iRect(p0,p0).expand(iRect()) == iRect(p0,p0));
-    assert(iRect(p0,p1).expand(iRect(p0,p0)) == iRect(p0,p1));
-    assert(iRect(p0,p1).expand(iRect(p1,p2)) == iRect(p0,p2));
-    assert(iRect(p1,p2).expand(iRect(p0,p1)) == iRect(p0,p2));
-    assert(iRect(p1,p2).expand(iRect(p0,p2)) == iRect(p0,p2));
+    r1 = iRect(p0,p0);
+    assert(r1.expand(p1) == iRect(p0,p1));
+    r1 = iRect(p1,p2);
+    assert(r1.expand(p0) == iRect(p0,p2));
 
+    r1 = iRect();
+    assert(r1.expand(iRect(p0,p0)) == iRect(p0,p0));
+    r1 = iRect(p0,p0);
+    assert(r1.expand(iRect()) == iRect(p0,p0));
+    r1 = iRect(p0,p1);
+    assert(r1.expand(iRect(p0,p0)) == iRect(p0,p1));
+    assert(r1.expand(iRect(p1,p2)) == iRect(p0,p2));
+    r1 = iRect(p1,p2);
+    assert(r1.expand(iRect(p0,p1)) == iRect(p0,p2));
+    r1 = iRect(p1,p2);
+    assert(r1.expand(iRect(p0,p2)) == iRect(p0,p2));
+
+
+    r1 = iRect();
     assert(iRect().intersect(iRect(p0,p0)) == iRect());
-    assert(iRect(p1,p2).intersect(iRect()) == iRect());
-    assert(iRect(p1,p2).intersect(iRect(p0,p0)) == iRect());
-    assert(iRect(p1,p2).intersect(iRect(p0,p1)) == iRect(p1,p1));
-    assert(iRect(p0,p1).intersect(iRect(p1,p2)) == iRect(p1,p1));
-    assert(iRect(p0,p2).intersect(iRect(p1,p2)) == iRect(p1,p2));
+    assert(r1 == iRect());
+    assert(r1.empty());
+
+    r1 = iRect(p1,p2);
+    assert(r1.intersect(iRect()) == iRect());
+    assert(r1.empty());
+
+    r1 = iRect(p1,p2);
+    assert(r1.intersect(iRect(p0,p0)) == iRect());
+    assert(r1 == iRect());
+
+    r1 = iRect(p1,p2);
+    assert(r1.intersect(iRect(p0,p1)) == iRect(p1,p1));
+    assert(r1 == iRect(p1,p1));
+
+    r1 = iRect(p1,p0);
+    assert(r1.intersect(iRect(p1,p2)) == iRect(p1,p1));
+    assert(r1 == iRect(p1,p1));
+
+    r1 = iRect(p0,p2);
+    assert(r1.intersect(iRect(p1,p2)) == iRect(p1,p2));
+    assert(r1 == iRect(p1,p2));
 
     assert(!iRect().contains(p0));
     assert(iRect(p0,p2).contains(p0));

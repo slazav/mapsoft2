@@ -276,8 +276,7 @@ struct Fig:std::list<FigObj>{
     if (size()<1) return iRect();
     const_iterator i=begin();
     iRect ret = i->bbox2d();
-    while ((++i) != this->end())
-      ret = ret.expand(i->bbox2d());
+    while ((++i) != this->end()) ret.expand(i->bbox2d());
     return ret;
   }
 

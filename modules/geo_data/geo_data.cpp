@@ -25,7 +25,7 @@ GeoWptList::clear_alt() {
 dRect
 GeoTrk::bbox2d() const {
   dRect ret;
-  for (auto i:*this) ret = expand(ret,i);
+  for (auto i:*this) ret.expand(i);
   return ret;
 }
 

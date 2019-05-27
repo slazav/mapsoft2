@@ -170,14 +170,14 @@ struct GeoMap{
   // bbox of reference points in image coordinates
   dRect bbox2d_ref_img() const{
     dRect r;
-    for (auto pp:ref) r = r.expand(pp.first);
+    for (auto pp:ref) r.expand(pp.first);
     return r;
   }
 
   // bbox of reference points in wgs84 latlong
   dRect bbox2d_ref_wgs() const{
     dRect r;
-    for (auto pp:ref) r = r.expand(pp.second);
+    for (auto pp:ref) r.expand(pp.second);
     return r;
   }
 

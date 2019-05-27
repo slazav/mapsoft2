@@ -103,8 +103,7 @@ struct MP : std::list<MPObj>{
     dRect bbox2d() const{
       dRect r;
       for (auto o:*this)
-        for (auto l:o.Data)
-          r = r.expand(l.bbox2d());
+        for (auto l:o.Data) r.expand(l.bbox2d());
       return r;
     }
 };

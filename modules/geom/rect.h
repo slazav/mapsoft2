@@ -205,53 +205,53 @@ struct Rect {
   /// Expand rectangle to each side by val value.
   /// If the rectangle is empty throw an error.
   /// If val is negative rectangle can shrink to an empty one.
-  Rect<T> expand (T val) const {
+  Rect<T> expand (T val) {
     if (e) throw Err() << "Empty rectangle in expand()";
-    if (w+2*val<0 || h+2*val<0) return Rect<T>();
-    return Rect<T> (x-val, y-val, w+2*val, h+2*val);
+    if (w+2*val<0 || h+2*val<0) return *this = Rect<T>();
+    return *this = Rect<T>(x-val,y-val,w+2*val,h+2*val);
   }
 
   /// Expand rectangle by vx and vy values.
   /// If the rectangle is empty throw an error.
   /// If val is negative rectangle can shrink to an empty one.
-  Rect<T> expand (T vx, T vy) const {
+  Rect<T> expand (T vx, T vy) {
     if (e) throw Err() << "Empty rectangle in expand()";
-    if (w+2*vx<0 || h+2*vy<0) return Rect<T>();
-    return Rect<T> (x-vx, y-vy, w+2*vx, h+2*vy);
+    if (w+2*vx<0 || h+2*vy<0) return *this = Rect<T>();
+    return *this = Rect<T>(x-vx,y-vy,w+2*vx,h+2*vy);
   }
 
   /// Expand rectangle to cover point p. Can be used with empty rectangle.
-  Rect<T> expand (const Point<T> & p) const {
-    if (e) return Rect<T>(p,p);
+  Rect<T> expand (const Point<T> & p) {
+    if (e) return *this = Rect<T>(p,p);
     T x1 =  std::min (x, p.x);
     T y1 =  std::min (y, p.y);
     T x2 =  std::max (x+w, p.x);
     T y2 =  std::max (y+h, p.y);
-    return Rect<T>(x1,y1,x2-x1,y2-y1);
+    return *this = Rect<T>(x1,y1,x2-x1,y2-y1);
   }
 
   /// Expand rectangle to cover rectangle r. Can be used with empty rectangle.
-  Rect<T> expand (const Rect<T> & r) const {
-    if (e)   return r;
+  Rect<T> expand (const Rect<T> & r) {
+    if (e)   return *this = r;
     if (r.e) return *this;
     T x1 =  std::min (x, r.x);
     T y1 =  std::min (y, r.y);
     T x2 =  std::max (x+w, r.x+r.w);
     T y2 =  std::max (y+h, r.y+r.h);
-    return Rect<T>(x1,y1,x2-x1,y2-y1);
+    return *this = Rect<T>(x1,y1,x2-x1,y2-y1);
   }
 
   /// Calculate intersection with rectangle r. Can be used with empty rectangle.
-  Rect<T> intersect (const Rect<T> & r) const {
-    if (e || r.e)   return Rect<T>();
+  Rect<T> intersect (const Rect<T> & r) {
+    if (e || r.e) return *this = Rect<T>();
     T x1 =  std::max (x, r.x);
     T y1 =  std::max (y, r.y);
     T x2 =  std::min (x+w, r.x+r.w);
     T y2 =  std::min (y+h, r.y+r.h);
     T w = x2-x1;
     T h = y2-y1;
-    if (w<0 || h<0) return Rect<T>();
-    return Rect<T>(x1,y1,w,h);
+    if (w<0 || h<0) return *this = Rect<T>();
+    return *this = Rect<T>(x1,y1,w,h);
   }
 
   /// If rectangle contains a point (only lower bounds are included).
@@ -311,29 +311,29 @@ Rect<T> operator+ (const Point<T> & p, const Rect<T> & r) { return r+p; }
 /// Expand rectangle to each side by val value.
 /// \relates Rect
 template <typename T>
-Rect<T> expand(const Rect<T> & r, T val) { return r.expand(val); }
+Rect<T> expand(const Rect<T> & r, T val) { Rect<T> rr(r); return rr.expand(val); }
 
 /// Expand rectangle by vx and vy values.
 /// If the rectangle is empty throw an error.
 /// If val is negative rectangle can shrink to an empty one.
 /// \relates Rect
 template <typename T>
-Rect<T> expand(const Rect<T> & r, T vx, T vy) { return r.expand(vx,vy); }
+Rect<T> expand(const Rect<T> & r, T vx, T vy) { Rect<T> rr(r);  return rr.expand(vx,vy); }
 
 /// Expand rectangle to cover point p. Can be used with empty rectangle.
 /// \relates Rect
 template <typename T>
-Rect<T> expand (const Rect<T> & r, const Point<T> & p) { return r.expand(p); }
+Rect<T> expand (const Rect<T> & r, const Point<T> & p) { Rect<T> rr(r); return rr.expand(p); }
 
 /// Expand rectangle to cover rectangle r. Can be used with empty rectangle.
 /// \relates Rect
 template <typename T>
-Rect<T> expand (const Rect<T> & r1, const Rect<T> & r2) { return r1.expand(r2); }
+Rect<T> expand (const Rect<T> & r1, const Rect<T> & r2) { Rect<T> rr(r1); return rr.expand(r2); }
 
 /// Calculate intersection with rectangle r. Can be used with empty rectangle.
 /// \relates Rect
 template <typename T>
-Rect<T> intersect (const Rect<T> & r1, const Rect<T> & r2) { return r1.intersect(r2); }
+Rect<T> intersect (const Rect<T> & r1, const Rect<T> & r2) {Rect<T> rr(r1); return rr.intersect(r2); }
 
 /// Is rectangle contains a point (only lower bounds are included).
 /// \relates Rect
