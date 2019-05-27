@@ -47,6 +47,8 @@ std::string write_fmt_time(const char *fmt, const time_t t);
 /// "2018-08-05 12:58:31.1"
 /// "2018-08-05 12:58:31.002"
 /// "2018-08-05 12:58:31.002Z"
+/// "2018-08-05 12:58:31.002+2:00"
+/// "2018-08-05 12:58:31.002-0:30"
 time_t parse_utc_time(const std::string & str);
 
 /// Convert mapsoft time to Ozi format (fractional number of days since 12/30/1899 12:00AM GMT).

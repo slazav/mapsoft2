@@ -41,6 +41,13 @@ main(){
      assert(parse_utc_time("2018/08/05	12:58:31.001 ") == 1533473911001);
      assert(parse_utc_time("2018/08/05	12:58:31.1") == 1533473911100);
 
+     assert(parse_utc_time("2019-05-20T02:00:00+02:00") == 1558310400000);
+     assert(parse_utc_time("2019-05-20T02:00:00+02") == 1558310400000);
+     assert(parse_utc_time("2019-05-20T02:00:00+2") == 1558310400000);
+     assert(parse_utc_time("2019-05-20T02:00:00+2:30") == 1558308600000);
+     assert(parse_utc_time("2019-05-20T02:00:00-2:30") == 1558326600000);
+
+
      assert(parse_utc_time(write_fmt_time("%FT%T%fZ", 0)) == 0);
      assert(parse_utc_time(write_fmt_time("%FT%T%fZ", 123456789)) == 123456789);
      assert(parse_utc_time(write_fmt_time("%FT%T%fZ", 123456789000)) == 123456789000);

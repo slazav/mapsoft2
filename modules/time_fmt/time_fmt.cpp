@@ -73,6 +73,9 @@ parse_utc_time(const string & str){
   ts.tm_hour = 0;
   ts.tm_min  = 0;
   ts.tm_sec  = 0;
+  int sh_h = 0; // time shift, h
+  int sh_m = 0; // time shift, min
+  int sh_s = 1; // shift sign, +1/-1
   try {
     ss >> noskipws >> ws;
     ss >> ts.tm_year;
@@ -95,7 +98,7 @@ parse_utc_time(const string & str){
     if (ss.eof()) goto end;
 
     ss >> sep >> ts.tm_sec;
-    if (sep!=':') throw 4;
+    if (sep!=':') throw 5;
     if (ss.eof()) goto end;
 
     // read milliseconds, Z or spaces:
@@ -111,23 +114,33 @@ parse_utc_time(const string & str){
       }
       if (ss.eof()) goto end;
     }
-    if (sep!='Z' && sep!=' ') throw 6;
-    if (ss.eof()) goto end;
+    if (sep=='+' || sep=='-') {
+      sh_s = (sep=='+'? +1:-1);
+      ss >> sh_h;
+      if (ss.eof()) goto end;
+      ss >> sep >> sh_m;
+      if (sep!=':' || sh_h<0 || sh_h>24 || sh_m<0 || sh_m>59)
+          throw 6;
+      if (ss.eof()) goto end;
+    }
+    else if (sep == 'Z' || sep==' ') {
+    }
+    else throw 7;
 
     ss >> ws;
     // here should be the end:
-    if (!ss.eof()) throw 7;
+    if (!ss.eof()) throw 8;
 
     end:
 
     ts.tm_year-=1900;
     ts.tm_mon-=1;
-    if (ms<0  || ms>999)  throw 8;
-    // mktime() converts local time to unix seconds!
+    if (ms<0  || ms>999)  throw 9;
+    // mktime() converts _local_ time to unix seconds!
     ts.tm_isdst = 1;
     time_t t0 = timegm(&ts);
-    if (t0 == -1) throw 9;
-    return t0*1000 + ms;
+    if (t0 == -1) throw 10;
+    return t0*1000 - sh_s*(sh_h*3600 + sh_m*60)*1000 + ms;
   }
   catch (int i){
     throw Err() << "Unsupported time format: \"" << str << "\"";
