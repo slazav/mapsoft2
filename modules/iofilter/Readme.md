@@ -3,13 +3,16 @@
 Filtering std::stream's through a program
 
 IFilter:
+```
 istream -> program -> istream
            program -> istream
+```
 
 OFilter:
+```
 ostream -> program -> ostream
 ostream -> program
-
+```
 ------------
 ## Changelog:
 
