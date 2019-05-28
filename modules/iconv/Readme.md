@@ -3,9 +3,10 @@
 Wrapper for libiconv.
 
 Usage:
-   IConv cnv("UTF8", "KOI8-R");
-   std::string s = cnv(text);
-
+```c++
+IConv cnv("UTF8", "KOI8-R");
+std::string s = cnv(text);
+```
 -----------
 ## Changelog:
 

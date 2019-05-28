@@ -23,7 +23,7 @@ str = type_to_str_hex(int_v);
 Opt o;
 o.put<type>("key", v);
 o.put_hex("key", int_v);
-v = o.get<type>("key", default);
+v = o.get<type>("key", def);
 ```
 Here `"key"` is a string key which is used to access data.
 If no value is set for this key, the `def` object is returned.

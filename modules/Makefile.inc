@@ -15,7 +15,8 @@
 # SCRIPT_TESTS -- Programs with testing scripts.
 #                 For each <name> should be a source <name>.test.cpp and
 #                 a script <name>.test.script
-# OTHER_TESTS  -- Any programs or scripts which shoukld be run after building
+# OTHER_TESTS  -- Any programs or scripts which should be run after building
+# PKG_CONFIG   -- external libraries used in this module
 ######################################################
 
 MODDIR ?= ..
