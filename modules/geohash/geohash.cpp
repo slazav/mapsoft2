@@ -1,5 +1,5 @@
 /*
- Source: from https://github.com/lyokato/libgeohash
+ Based on https://github.com/lyokato/libgeohash
  Modified for mapsoft2: slazav@altlinux.org, 2019-05-25
 */
 

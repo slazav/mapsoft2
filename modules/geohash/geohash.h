@@ -1,5 +1,5 @@
 /*
- Source: from https://github.com/lyokato/libgeohash
+ Based on https://github.com/lyokato/libgeohash
  Modified for mapsoft2: slazav@altlinux.org, 2019-05-25
  */
 
@@ -22,8 +22,8 @@ std::string GEOHASH_encode(const dPoint & p, unsigned int hash_length);
 std::string GEOHASH_encode(const dRect & r, unsigned int maxlen);
 
 // Encode a rectangle, return up to 4 longest adjacent hashes (not
-// longer then maxlen) which covers the rectangle. Should be efficient
-// (give longer hashas) for rectangles which cross hash bundaries.
+// longer then maxlen and non-empty) which covers the rectangle. Should be
+// efficient (give longer hashas) for rectangles which cross hash bundaries.
 std::vector<std::string> GEOHASH_encode4(const dRect & r, unsigned int maxlen);
 
 // Decode a hash, return coordinate range. Range is empty if hash is not valid.
