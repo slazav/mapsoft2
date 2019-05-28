@@ -258,6 +258,17 @@ main(){
     assert(!iRect(p0,p1).contains(iRect()));
   }
 
+  {  // dist
+     dRect r1(1.2,3.2, 5.6,7.8);
+     dRect r2(1.3,3.4, 10.1,10.2);
+     double d = hypot(dist(r1.tlc(),r2.tlc()), dist(r1.brc(),r2.brc()));
+     assert(abs(d-dist(r1,r2)) < 1e-6);
+     assert(std::isinf(dist(r1,dRect())));
+     assert(dist(dRect(),dRect()) == 0);
+     assert(dist(r1,r1) == 0);
+
+  }
+
 
 /*
   // tile_cover, tile_in

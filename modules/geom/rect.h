@@ -400,6 +400,15 @@ bool contains (const Rect<T> & r, const Point<T> & p) { return r.contains(p); }
 template <typename T>
 bool contains (const Rect<T> & r1, const Rect<T> & r2) { return r1.contains(r2); }
 
+/// Distance between two rectangles: sqrt(dist(tlc1,tlc1)^2, dist(brc1,brc1)^2).
+/// returns 0 for two empty rectangles and +inf for empty and non-empty one.
+
+template <typename T>
+double dist(const Rect<T> & r1, const Rect<T> & r2) {
+  if (r1.e && r2.e) return 0;
+  if (r1.e || r2.e) return INFINITY;
+  return hypot(dist(r1.tlc(),r2.tlc()), dist(r1.brc(),r2.brc()));}
+
 /******************************************************************/
 // input/output
 

@@ -108,8 +108,8 @@ coordinates are involved.
   - `r.contains_n(p)`, `contains_n(r,p)` -- check if rectangle contains a point, bounds are not included,
   - `r.contains(p)`, `contains(r,p)` -- check if rectangle contains a point, all bounds are included,
   - `r1.contains(r2)`, `contains(r1,r2)` -- check if rectangle contains another rectangle,
-
-
+  - `dist(r1,r2)` -- "distance" between rectangles, hypot(dist(tlc1,tlc2),dist(brc1,brc2)).
+                     returns 0 for two empty rectangles and +inf for empty and non-empty one.
 
 - Rect can be converted to a string and back
   (and thus used inside Opt class). String representation is a
