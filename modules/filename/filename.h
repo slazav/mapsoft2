@@ -1,5 +1,5 @@
-#ifndef FILE_EXT_H
-#define FILE_EXT_H
+#ifndef FILENAME_H
+#define FILENAME_H
 
 #include <string>
 #include <vector>

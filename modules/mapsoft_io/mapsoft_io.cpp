@@ -3,7 +3,7 @@
 #include "mapsoft_io.h"
 #include "tmpdir/tmpdir.h"
 #include "geo_data/geo_io.h"
-#include "file_ext/file_ext.h"
+#include "filename/filename.h"
 
 using namespace std;
 
