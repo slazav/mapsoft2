@@ -1,4 +1,4 @@
-## Geohash
+## geohash.h
 
 Based on https://github.com/lyokato/libgeohash
 
@@ -35,3 +35,11 @@ dRect GEOHASH_decode(const std::string & hash);
 ```c++
 std::string GEOHASH_adjacent(const std::string & hash, int dir);
 ```
+
+## storage.h
+
+* GeoHashStorage -- spatial indexing storage. Now it supports two operations:
+- Add object with an ID and a coordinate range.
+- Get list of IDs of objects which may touch some coordinate range.
+TODO:
+- deleting objects (slow, by only ID or fast, by using also a coordinate range).

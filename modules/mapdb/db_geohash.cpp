@@ -6,106 +6,26 @@
 
 #include "err/err.h"
 #include "geohash/geohash.h"
+#include "geohash/storage.h"
 #include "db_geohash.h"
 #include "db_tools.h"
 
 // Max hash length. 12 gives 0.1m accuracy
 #define HASHLEN 12
 
-/**********************************************************/
-/**********************************************************/
-// GeoHashM
 
 /**********************************************************/
 // Implementation class
-class GeoHashM::Impl {
-  std::multimap<std::string, int> db;
+class GeoHashDB::Impl : public GeoHashStorage {
+ public:
+   std::shared_ptr<void> db;
 
-  public:
+   Impl(const char *fbase, bool create);
+   ~Impl() {}
+
+   // no need to redifine get!
    void put(const int id, const dRect & range);
-
-   std::set<int> get(const dRect & range);
-   std::set<int> get(const std::string & hash0, bool exact);
-
-};
-
-/**********************************************************/
-// Main class methods
-GeoHashM::GeoHashM():
-   impl(std::unique_ptr<Impl>(new Impl())) {}
-GeoHashM::~GeoHashM(){}
-
-void
-GeoHashM::put(const int id, const dRect & range){ impl->put(id, range);}
-
-std::set<int>
-GeoHashM::get(const dRect & range){ return impl->get(range);}
-
-
-/**********************************************************/
-// Implementation class methods
-
-void
-GeoHashM::Impl::put(const int id, const dRect & range){
-  std::set<std::string> hashes = GEOHASH_encode4(range, HASHLEN);
-  for (auto const & h:hashes) db.insert(std::make_pair(h, id));
-}
-
-std::set<int>
-GeoHashM::Impl::get(const dRect & range){
-  std::set<std::string> hashes = GEOHASH_encode4(range, HASHLEN);
-  std::set<int> ret;
-  std::set<std::string> done;
-  for (auto const & h:hashes) {
-    for (int i=0; i<=h.size(); i++) {
-      std::string hh = h.substr(0,i);
-      if (done.count(hh)) continue; // do not repeat queries with same hash
-      bool exact = i < h.size();  // for full hashes look also for smaller regions.
-      done.insert(hh);
-      // std::cerr << "GET [" << hh << "] " << (i<h.size()) << "\n";
-      std::set<int> r = get(hh, i<h.size());
-      ret.insert(r.begin(), r.end());
-    }
-  }
-  return ret;
-}
-
-std::set<int>
-GeoHashM::Impl::get(const std::string & hash0, bool exact){
-
-  std::set<int> ret;
-  std::multimap<std::string, int>::const_iterator i;
-  for (i = db.lower_bound(hash0); i != db.end(); i++) {
-    std::string hash = i->first;
-    if (exact && hash!=hash0) break;
-
-    if (hash.size()>=hash0.size() &&
-        hash.compare(0,hash0.size(), hash0)==0){
-      ret.insert(i->second);
-      continue;
-    }
-    break;
-  }
-  return ret;
-}
-
-/**********************************************************/
-/**********************************************************/
-// GeoHashDB
-
-/**********************************************************/
-// Implementation class
-class GeoHashDB::Impl {
-  public:
-    std::shared_ptr<void> db;
-
-    Impl(const char *fbase, bool create);
-    ~Impl() {}
-
-   void put(const int id, const dRect & range);
-
-   std::set<int> get(const dRect & range);
-   std::set<int> get(const std::string & hash0, bool exact);
+   std::set<int> get_hash(const std::string & hash0, bool exact);
 
 };
 
@@ -164,27 +84,9 @@ GeoHashDB::Impl::put(const int id, const dRect & range){
   }
 }
 
-std::set<int>
-GeoHashDB::Impl::get(const dRect & range){
-  std::set<std::string> hashes = GEOHASH_encode4(range, HASHLEN);
-  std::set<int> ret;
-  std::set<std::string> done;
-  for (auto const & h:hashes) {
-    for (int i=0; i<=h.size(); i++) {
-      std::string hh = h.substr(0,i);
-      if (done.count(hh)) continue; // do not repeat queries with same hash
-      bool exact = i < h.size();  // for full hashes look also for smaller regions.
-      done.insert(hh);
-      // std::cerr << "GET [" << hh << "] " << (i<h.size()) << "\n";
-      std::set<int> r = get(hh, i<h.size());
-      ret.insert(r.begin(), r.end());
-    }
-  }
-  return ret;
-}
 
 std::set<int>
-GeoHashDB::Impl::get(const std::string & hash0, bool exact){
+GeoHashDB::Impl::get_hash(const std::string & hash0, bool exact){
   DBT k = mk_dbt(hash0);
   DBT v = mk_dbt();
 
@@ -224,9 +126,6 @@ GeoHashDB::Impl::get(const std::string & hash0, bool exact){
   }
   return ret;
 }
-
-/**********************************************************/
-/**********************************************************/
 
 
 
