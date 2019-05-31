@@ -63,7 +63,7 @@ sub add_mod_dep {
   my %info = read_make "$mod_dir/$mod/Makefile";
   my @files = split /\s+/, ($info{MOD_SOURCES}||'')." ".($info{MOD_HEADERS}||'');
   my %mdeps = get_hdeps("$mod_dir/$mod", \@files);
-  $mods->{$mod} = [keys %mdeps] unless $skip;
+  $mods->{$mod} = [keys %mdeps] unless $skip || exists($mods->{$mod});
   add_mod_dep($mods, $_) foreach (keys %mdeps);
 }
 
