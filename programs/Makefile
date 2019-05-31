@@ -8,9 +8,6 @@ OTHER_TESTS :=\
   mapsoft.test6\
 
 MODDIR      := ../modules
-
-PKG_CONFIG  := libzip libxml-2.0 jansson proj
-
 include $(MODDIR)/Makefile.inc
 
 
