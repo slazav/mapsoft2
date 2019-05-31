@@ -1,8 +1,7 @@
-MOD_HEADERS := shp.h dbf.h db_tools.h db_geohash.h db_simple.h
-MOD_SOURCES := shp.cpp dbf.cpp db_tools.cpp db_geohash.cpp db_simple.cpp
+MOD_HEADERS := db_tools.h db_geohash.h db_simple.h
+MOD_SOURCES := db_tools.cpp db_geohash.cpp db_simple.cpp
 
-SIMPLE_TESTS := shp dbf db_geohash db_simple
-PKG_CONFIG := shapelib
+SIMPLE_TESTS := db_geohash db_simple
 LDLIBS += -ldb
 
 include ../Makefile.inc

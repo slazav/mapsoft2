@@ -1,4 +1,4 @@
-## MapDB -- a simple local storage for vector maps with fast access and spatial indexing.
+## Shape -- shapelib wrapper.
 
 At the first step four basic classes are implemented:
 
@@ -16,13 +16,6 @@ attributes (fixed-length strings or numbers). One can read/write
 attribute number N for object number M. This database is good for keeping
 short attributes, but not variable-size data (like information about multiple
 labels for an object).
-
-* DBSimple -- a simple Berkleydb-based database with integer key and
-std::string value. I plan to use it for vector map attributes  instead of
-Dbf (and maybe also for coordinates instead of Shp).
-
-* GeoHashDB -- BerkleyDB-based spatial indexing database (analog of
-GeoHashStorage from module/geohash).
 
 
 
