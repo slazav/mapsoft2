@@ -96,60 +96,60 @@ int main( /* int argc, char **argv */ ) {
 
   {
     dRect r(1,-0.0001,0.0002,0.0002);
-    std::vector<std::string> v = GEOHASH_encode4(r, 10);
+    std::set<std::string> v = GEOHASH_encode4(r, 10);
     // for (auto i:v) std::cerr << i << " " << GEOHASH_decode(i) << "\n";
     assert(v.size() == 4);
-    verify_area(v[0], dRect(0.999755859,-0.000171661377,0.000343322754,0.000171661377));
-    verify_area(v[1], dRect(1.00009918,-0.000171661377,0.000343322754,0.000171661377));
-    verify_area(v[2], dRect(1.00009918,0,0.000343322754,0.000171661377));
-    verify_area(v[3], dRect(0.999755859,0,0.000343322754,0.000171661377));
+    assert(v.count("kpbxyzbp") == 1); // [0.999755859,-0.000171661377,0.000343322754,0.000171661377]
+    assert(v.count("kpbxyzbr") == 1); // [1.00009918,-0.000171661377,0.000343322754,0.000171661377]
+    assert(v.count("s008nb00") == 1); // [0.999755859,0,0.000343322754,0.000171661377]
+    assert(v.count("s008nb02") == 1); // [1.00009918,0,0.000343322754,0.000171661377]
   }
 
   {
     dRect r(-0.0001,1,0.0002,0.0002);
-    std::vector<std::string> v = GEOHASH_encode4(r, 10);
+    std::set<std::string> v = GEOHASH_encode4(r, 10);
     // for (auto i:v) std::cerr << i << " " << GEOHASH_decode(i) << "\n";
     assert(v.size() == 4);
-    verify_area(v[0], dRect(-0.000128746033,0.999970436,4.29153442e-05,4.29153442e-05));
-    verify_area(v[1], dRect(8.58306885e-05,0.999970436,4.29153442e-05,4.29153442e-05));
-    verify_area(v[2], dRect(-0.000128746033,1.00018501,4.29153442e-05,4.29153442e-05));
-    verify_area(v[3], dRect(8.58306885e-05,1.00018501,4.29153442e-05,4.29153442e-05));
+    assert(v.count("ebpvxypc") == 1); // [-0.000343322754,0.999927521,0.000343322754,0.000171661377]
+    assert(v.count("ebpvxypf") == 1); // [-0.000343322754,1.00009918,0.000343322754,0.000171661377]
+    assert(v.count("s00j8n01") == 1); // [0,0.999927521,0.000343322754,0.000171661377]
+    assert(v.count("s00j8n04") == 1); // [0,1.00009918,0.000343322754,0.000171661377]
   }
 
   {
     dRect r(-0.0001,-0.0001,0.0002,0.0002);
-    std::vector<std::string> v = GEOHASH_encode4(r, 10);
+    std::set<std::string> v = GEOHASH_encode4(r, 10);
     // for (auto i:v) std::cerr << i << " " << GEOHASH_decode(i) << "\n";
     assert(v.size() == 4);
-    verify_area(v[0], dRect(-0.000128746033,-0.000128746033,4.29153442e-05,4.29153442e-05));
-    verify_area(v[1], dRect(8.58306885e-05,-0.000128746033,4.29153442e-05,4.29153442e-05));
-    verify_area(v[2], dRect(-0.000128746033,8.58306885e-05,4.29153442e-05,4.29153442e-05));
-    verify_area(v[3], dRect(8.58306885e-05,8.58306885e-05,4.29153442e-05,4.29153442e-05));
+    assert(v.count("7zzzzzzz") == 1); // [-0.000343322754,-0.000171661377,0.000343322754,0.000171661377]
+    assert(v.count("ebpbpbpb") == 1); // [-0.000343322754,0,0.000343322754,0.000171661377]
+    assert(v.count("kpbpbpbp") == 1); // [0,-0.000171661377,0.000343322754,0.000171661377]
+    assert(v.count("s0000000") == 1); // [0,0,0.000343322754,0.000171661377]
   }
 
   { // "good" rectange
     dRect r(0.0001,0.0001,0.000002,0.000002);
-    std::vector<std::string> v = GEOHASH_encode4(r, 10);
+    std::set<std::string> v = GEOHASH_encode4(r, 10);
     // for (auto i:v) std::cerr << i << " " << GEOHASH_decode(i) << "\n";
     assert(v.size() == 2);
-    verify_area(v[0], dRect(9.65595245e-05,9.65595245e-05,1.07288361e-05,5.36441803e-06));
-    verify_area(v[1], dRect(9.65595245e-05,0.000101923943,1.07288361e-05,5.36441803e-06));
+    assert(v.count("s0000000d6") == 1); // [9.65595245e-05,9.65595245e-05,1.07288361e-05,5.36441803e-06]
+    assert(v.count("s0000000d7") == 1); // [9.65595245e-05,0.000101923943,1.07288361e-05,5.36441803e-06]
   }
 
   { // "good" rectange
     dRect r(0.0001,0.0001,0.000002,0.000002);
-    std::vector<std::string> v = GEOHASH_encode4(r, 6);
+    std::set<std::string> v = GEOHASH_encode4(r, 6);
     // for (auto i:v) std::cerr << i << " " << GEOHASH_decode(i) << "\n";
     assert(v.size() == 1);
-    verify_area(v[0], dRect(0,0,0.0109863281,0.00549316406));
+    assert(v.count("s00000") == 1); // [0,0,0.0109863281,0.00549316406]
   }
 
   { // "big" rectange
     dRect r(-100,-50, 220,100);
-    std::vector<std::string> v = GEOHASH_encode4(r, 6);
-    //for (auto i:v) std::cerr << i << " " << GEOHASH_decode(i) << "\n";
+    std::set<std::string> v = GEOHASH_encode4(r, 6);
+    // for (auto i:v) std::cerr << i << " " << GEOHASH_decode(i) << "\n";
     assert(v.size() == 1);
-    verify_area(v[0], dRect(-180,-90,360,180));
+    assert(v.count("") == 1); // [-180,-90,360,180]
   }
 
   return 0;

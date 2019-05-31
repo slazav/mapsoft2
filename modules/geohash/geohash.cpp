@@ -151,7 +151,7 @@ GEOHASH_encode(const dRect & r, unsigned int maxlen) {
     return h1.substr(0,i);
 }
 
-std::vector<std::string>
+std::set<std::string>
 GEOHASH_encode4(const dRect & r, unsigned int maxlen) {
     // encode 4 corners
     std::string h1 = GEOHASH_encode(r.tlc(), maxlen);
@@ -187,14 +187,14 @@ GEOHASH_encode4(const dRect & r, unsigned int maxlen) {
     h3s = h3.substr(0,i);
     h4s = h4.substr(0,i);
     // find unique hashes:
-    std::vector<std::string> ret;
-    ret.push_back(h1s);
+    std::set<std::string> ret;
+    ret.insert(h1s);
     if (h2s!=h1s)
-      ret.push_back(h2s);
+      ret.insert(h2s);
     if (h3s!=h1s && h3s!=h2s)
-      ret.push_back(h3s);
+      ret.insert(h3s);
     if (h4s!=h1s && h4s!=h2s && h4s!=h3s)
-      ret.push_back(h4s);
+      ret.insert(h4s);
     return ret;
 }
 

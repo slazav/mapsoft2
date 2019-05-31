@@ -7,7 +7,7 @@
 #define GEOHASH_H
 
 #include <string>
-#include <vector>
+#include <set>
 #include "geom/point.h"
 #include "geom/rect.h"
 
@@ -24,7 +24,7 @@ std::string GEOHASH_encode(const dRect & r, unsigned int maxlen);
 // Encode a rectangle, return up to 4 longest adjacent hashes (not
 // longer then maxlen and non-empty) which covers the rectangle. Should be
 // efficient (give longer hashas) for rectangles which cross hash bundaries.
-std::vector<std::string> GEOHASH_encode4(const dRect & r, unsigned int maxlen);
+std::set<std::string> GEOHASH_encode4(const dRect & r, unsigned int maxlen);
 
 // Decode a hash, return coordinate range. Range is empty if hash is not valid.
 dRect GEOHASH_decode(const std::string & hash);
