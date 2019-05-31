@@ -6,20 +6,38 @@ use strict;
 # a given module or a program.
 #
 # Usage:
-#   get_deps <lib directory> <modules or source files> ...
+#   get_deps [-H|-L] <lib directory> <modules or source files> ...
 #
+# Options:
+#   -M -- find module dependencies
+#   -L -- find library dependencies
+#
+#
+
+# read options
+my $mode = 'M';
+while ($#ARGV>=0 && $ARGV[0] =~ "^-(.)(.*)") {
+  shift @ARGV;
+  $2 eq '' || warn "Unknown option: $ARGV[0]";
+  next if $1 eq '-';
+
+  if ($1 eq 'M') { $mode = 'M'; next; }
+  if ($1 eq 'L') { $mode = 'L'; next; }
+
+  warn "Unknown option: $ARGV[0]";
+}
 
 my $mod_dir = shift @ARGV || '.';
 my @targets = @ARGV;
 
-$#targets>=0 or die "Usage: get_deps <lib directory> <target> ...\n";
+$#targets>=0 or die "Usage: get_deps [-H|-L] <lib directory> <target> ...\n";
 
 ######################################################################
 # read Makefile, extract list of sources (cpp, h)
 sub read_make ($) {
   my $fname = shift;
   my %info;
-  open F, $fname or die "can't read $fname file: $!";
+  open F, $fname or die "can't read $fname file: $fname: $!";
   while (my $line = <F>){
     next unless $line =~ /^\s*([A-Za-z0-9_]+)\s*:?=\s*(.*)/;
     my $key = $1;
@@ -55,7 +73,7 @@ sub get_hdeps ($$) {
   return %mdeps;
 }
 
-# recurcively go through all modules, collect their dependencies
+# recurcively go through all modules, collect their module dependencies
 sub add_mod_dep {
   my $mods = shift;
   my $mod = shift;
@@ -91,6 +109,22 @@ sub optimize_deps {
   return @ret;
 }
 
+# read library deps for a given Makefile.
+sub get_lib_dep {
+  my $libs = shift;
+  my $mfile = shift;
+  my %info = read_make $mfile;
+  my @libs = split /\s+/, ($info{PKG_CONFIG}||'');
+  $libs->{$_} = 1 foreach @libs;
+}
+
+############
+############
+## Main
+
+
+
+# find modue dependecy structure: mod1->[mod2,mod3...]
 my %mods;
 foreach my $target (@targets) {
   if (-d "$mod_dir/$target") {
@@ -105,6 +139,21 @@ foreach my $target (@targets) {
   }
 }
 
+# optimize dependencies, get list of modules in the correct order.
 my @list = optimize_deps(\%mods);
-print "$_\n" foreach (@list);
+
+# -M mode: printing modules
+if ($mode eq 'M') {
+  print "$_\n" foreach (@list);
+  exit 0;
+}
+
+# -L mode: print list of libraries for all these modules.
+if ($mode eq 'L') {
+  my %libs;
+  get_lib_dep(\%libs, "$mod_dir/$_/Makefile") foreach (@list);
+  print "$_\n" foreach (keys %libs);
+  exit 0;
+}
+
 
