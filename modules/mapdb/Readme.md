@@ -17,16 +17,21 @@ attribute number N for object number M. This database is good for keeping
 short attributes, but not variable-size data (like information about multiple
 labels for an object).
 
-* DBGeoHash -- spatial indexing database implemented by me using BerkleyDB
-and geohashes. Now it supports two operations:
+* DBSimple -- a simple Berkleydb-based database with integer key and
+std::string value. I plan to use it for vector map attributes  instead of
+Dbf (and maybe also for coordinates instead of Shp).
+
+
+* GeoHashBase -- an abstract class for spatial indexing storage. Now it supports two operations:
 - To add object with an ID and a coordinate range.
 - Get list of IDs of objects which may touch some coordinate range.
 TODO:
 - deleting objects (slow, by only ID or fast, by using also a coordinate range).
 
-* DBSimple -- a simple Berkleydb-based database with integer key and
-std::string value. I plan to use it for vector map attributes  instead of
-Dbf (and maybe also for coordinates instead of Shp).
+* GeoHashM -- In-memory spatial indexing database.
+
+* GeoHashDB -- BerkleyDB-based spatial indexing database.
+
 
 
 
