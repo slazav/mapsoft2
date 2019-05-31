@@ -33,7 +33,7 @@ main(int argc, char **argv){
   // test that dLine и iLine give same results
   dPoint p0d, td;
   double md=margin_classifier(dLine(l1),dLine(l2),p0d,td);
-  if ((md!=m) || (td!=t) || (p0d.rint()!=p0.rint())){
+  if ((md!=m) || (td!=t) || (rint(p0d)!=rint(p0))){
     std::cerr << "different results for int and double lines!\n";
     std::cerr << md << " " << m << " " << td << " " << t << " " << p0d << " " <<p0 << "\n";
     return 1;
