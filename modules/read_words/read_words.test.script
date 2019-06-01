@@ -16,21 +16,44 @@ function assert(){
 
 assert "$(cat read_words.test_data1 | "$prog")" \
 "$(cat <<EOF
- [a] [#] [b] [c] [ a' s ]
- [d] [e] [f] [ a' s]
- [\]
- [abc
+1: [a] [#] [ABc] [aBC] [ a' s ]
+2: [d] [e] [f] [ a' s]
+3: [\]
+6: [abc
 def]
- [aa] [bb] [cc""dd''ee]
+8: [aa] [bb] [cc""dd''ee]
 EOF
 )"
+
+# same with lowercase option
+assert "$(cat read_words.test_data1 | "$prog" -l)" \
+"$(cat <<EOF
+1: [a] [#] [abc] [abc] [ a' s ]
+2: [d] [e] [f] [ a' s]
+3: [\]
+6: [abc
+def]
+8: [aa] [bb] [cc""dd''ee]
+EOF
+)"
+
 
 
 assert "$(cat read_words.test_data2 | "$prog")" \
 "$(cat <<EOF
- [a] [b "C" d] [e e]
- [a] [b 'C' d] [e	e]
+1: [a] [b "C" d] [e e]
+2: [a] [b 'C' d] [e	e]
+3: [a
+b
+c
+]
+7: [a
+b
+c]
 EOF
 )"
+
+assert "$(echo -e "#a\n\n\"b\n\nc" | "$prog" 2>&1)" \
+"Error: Unclosed quote in line 3"
 
 

@@ -5,15 +5,19 @@
 #include "err/err.h"
 
 int
-main(){
-try{
+main(int argc, const char* argv[]){
+  try {
+
+    bool lc = (argc==2 && std::string(argv[1])=="-l");
+    int N[2] = {0,0};
     while (1){
-      std::vector<std::string> vs = read_words(std::cin);
-      if (std::cin.eof() && vs.size()<1) break;
-      std::vector<std::string>::const_iterator i;
-      for (i=vs.begin(); i!=vs.end(); i++)
-        std::cout << " [" << *i << "]";
+      std::vector<std::string> vs = read_words(std::cin, N, lc);
+      if (vs.size()<1) break;
+
+      std::cout << N[0] << ":";
+      for (auto const & i:vs) std::cout << " [" << i << "]";
       std::cout << "\n";
+
     }
     return 0;
   }
