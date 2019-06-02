@@ -1,22 +1,35 @@
-Mapsoft2 can read and write MP files.
+## Mapsoft2 can read and write MP files.
 
 
-Reading:
-- Header (`[IMG ID]` section) is required
+#### Reading:
+
+- Section names and keywords are case insensitive.
+
+- Header (`[IMG ID]` section) is required.
+
+- In the header following fields are supported: `ID`, `Name`,
+  `LblCoding`, `Codepage`, `Elevation`, `TreSize`, `RgnLimit`,
+  `PreProcess`, `Levels`, `Level`.
+
+- Comments before the header are converted to UTF-8 according to the
+  `Codepage` field  and attached to the MP object.
+
 - Only `[POI]`, `[POLYLINE]`, `[POLYGON]`,
   `[RGN10]`, `[RGN20]`, `[RGN30]`, and `[RGN40]`
   sections are suppored, other sections are skipped.
-- Comments before header are attached to MP comments,
-  comments before other sections are attached to corresponding objects.
-- In the header only `ID`, `Name`, `Codepage` fields are supported.
-- Section names and keywords are case insensitive.
-- Text fields are converted according to the `Codepage`.
+
 - For objects only `Type`, `Data#` (or `Origin#`), `Label`,
   `Direction`, and `EndLevel` fields are supported.
+
+- Comments before object sections are converted to UTF-8 according to the
+  `Codepage` field and attached to corresponding objects. Object label is
+  also converted fo UTF-8.
+
 - When reading a few files the header will be overwritten and
   objects will be added.
 
-Writing:
+#### Writing:
+
 - Only sections `[IMG ID]`, `[POI]`, `[POLYLINE]` and `[POLYGON]` are written.
 
 
