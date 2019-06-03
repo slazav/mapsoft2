@@ -1,0 +1,1 @@
+## Mapsoft1 VMAP format, reading/writing

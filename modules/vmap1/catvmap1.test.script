@@ -1,0 +1,24 @@
+#!/bin/sh -efu
+
+prog=${1:-./catvmap1.test}
+
+function do_test(){
+  args=$1
+  exp=$2
+  res="$($prog $args 2>&1)" ||:
+  if [ "$res" != "$exp" ]; then
+    echo "ERROR at $prog $args: "
+    echo "  args: \"$args\""
+    echo "  exp:  \"$exp\""
+    echo "  res:  \"$res\""
+    return 1
+  fi
+  return 0
+}
+
+$prog test_data/f1.vmap > tmp.vmap
+diff tmp.vmap test_data/f1a.vmap
+rm tmp.vmap
+
+exit 0
+
