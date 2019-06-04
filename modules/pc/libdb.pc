@@ -1,0 +1,5 @@
+Name: libdb
+Description: libdb
+Requires:
+Version: 1
+Libs: -ldb

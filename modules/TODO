@@ -1,3 +1,0 @@
-make:
-  - auto PKG_CONFIG dependencies for modules
-  - look for non-standard pkg-config files in pc dir

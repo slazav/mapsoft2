@@ -63,9 +63,9 @@ ADEPS := $(shell for i in $(MDEPS); do echo $(MODDIR)/$$i/$${i\#*/}.a; done | ta
 ALL_PKG_CONFIG :=  $(PKG_CONFIG) $(shell $(MODDIR)/get_deps -L $(MODDIR) $(ALL_SOURCES))
 
 override CXXFLAGS += $(shell [ "$(ALL_PKG_CONFIG)" == " " ] ||\
-                       pkg-config --cflags '$(ALL_PKG_CONFIG)')
+                      PKG_CONFIG_PATH=$(MODDIR)/pc pkg-config --cflags '$(ALL_PKG_CONFIG)')
 override LDLIBS   += $(shell [ "$(ALL_PKG_CONFIG)" == " " ] ||\
-                       pkg-config --libs '$(ALL_PKG_CONFIG)')
+                      PKG_CONFIG_PATH=$(MODDIR)/pc pkg-config --libs '$(ALL_PKG_CONFIG)')
 override CXXFLAGS += -std=gnu++11 -Werror=return-type -O2 -fPIC
 override CXXFLAGS += -I$(MODDIR)
 
