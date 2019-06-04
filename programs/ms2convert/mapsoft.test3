@@ -1,9 +1,9 @@
-#!/bin/bash -efu
+#!/bin/bash -fu
 
 ## KML input/output
 
 P=${1:-./mapsoft}
-. test_lib.sh
+. ../test_lib.sh
 
 # read and do nothing
 assert "$P test_data/kml1.kml"  "" 0

@@ -1,9 +1,9 @@
-#!/bin/bash -efu
+#!/bin/bash -fu
 
 ## GPX input/output
 
 P=${1:-./mapsoft}
-. test_lib.sh
+. ../test_lib.sh
 
 # read and do nothing
 assert "$P test_data/gpx1.gpx"  "" 0
