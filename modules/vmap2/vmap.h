@@ -91,7 +91,7 @@ private:
 
 public:
   VMap(const std::string &name, bool create):
-    storage(name + ".db", create), geo_ind(name + "dbg", create) {};
+    storage(name + ".db", create), geo_ind(name + ".dbg", create) {};
 
   /// Get border.
   dMultiLine get_brd() const {return brd;}
