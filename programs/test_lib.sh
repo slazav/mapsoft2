@@ -1,7 +1,7 @@
 function assert(){
   cmd="$1"
   exp="$2"
-  res="$($cmd 2>&1 ||:)"
+  res="$($cmd 2>&1)"
   ret="$?"
   rete="${3:-''}"
   if [ "$exp" != "$res" ]; then
@@ -23,7 +23,7 @@ function assert_diff(){
   f_res="$2"
     if ! diff -q -- "$f_exp" "$f_res"; then
     echo "different files: $f_exp $f_res"
-    false
+    exit 1
   else
     rm -f "$f_res"
   fi

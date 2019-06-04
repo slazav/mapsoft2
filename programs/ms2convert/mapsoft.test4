@@ -1,9 +1,9 @@
-#!/bin/bash -efu
+#!/bin/bash -fu
 
 ## Garmin Utils input/output
 
 P=${1:-./mapsoft}
-. test_lib.sh
+. ../test_lib.sh
 
 # read and do nothing
 assert "$P test_data/gu1.gu"  "" 0

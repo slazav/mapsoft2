@@ -1,13 +1,13 @@
-#!/bin/bash -efu
+#!/bin/bash -fu
 
 # General interface and option tests
 # See also getopt module tests
 
 P=${1:-./mapsoft}
 
-. test_lib.sh
+. ../test_lib.sh
 
-help_msg="$($P -h)"
+help_msg="$($P -h ||:)"
 assert "$P" "$help_msg" 1
 assert "$P --help" "$help_msg" 1
 assert "$P -o " "Error: output file expected" 1
