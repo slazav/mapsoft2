@@ -40,6 +40,32 @@ struct VMapObj: public dMultiLine {
 
   // unpack object from a string (for DB storage)
   void unpack(const std::string & s);
+
+  /******************************************************************/
+  // operators <=>
+  /// Less then operator.
+  bool operator< (const VMapObj & o) const {
+    if (cl!=o.cl)     return cl<o.cl;
+    if (type!=o.type) return type<o.type;
+    if (dir!=o.dir)   return dir<o.dir;
+    if (name!=o.name) return name<o.name;
+    if (comm!=o.comm) return comm<o.comm;
+    if (src!=o.src)   return src<o.src;
+    return dMultiLine::operator<(o);
+  }
+
+  /// Equal opertator.
+  bool operator== (const VMapObj & o) const {
+    return cl==o.cl && type==o.type && dir==o.dir &&
+        name==o.name && comm==o.comm && src==o.src &&
+        dMultiLine::operator==(o);
+  }
+  // derived operators:
+  bool operator!= (const VMapObj & other) const { return !(*this==other); } ///< operator!=
+  bool operator>= (const VMapObj & other) const { return !(*this<other);  } ///< operator>=
+  bool operator<= (const VMapObj & other) const { return *this<other || *this==other; } ///< operator<=
+  bool operator>  (const VMapObj & other) const { return !(*this<=other); } ///< operator>
+
 };
 
 // TODO: use DB storage instead of map!
