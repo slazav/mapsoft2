@@ -12,6 +12,7 @@ main(){
     {
       // create new file
       DBSimple db("a.dbp", 1);
+      assert(db.get_end() == 0);
 
       db.put(1, "abc");
       db.put(2, "cde");
@@ -21,6 +22,7 @@ main(){
       assert(db.get(3) == "def");
       assert(db.get(2) == "fgh");
       assert(db.get(1) == "abc");
+      assert(db.get_end() == 4);
       try {
         db.get(4);
         assert(false);

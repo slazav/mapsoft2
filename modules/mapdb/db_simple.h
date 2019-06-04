@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <stdint.h>
 #include "geom/rect.h"
 
 // Simple Berkleydb-based database with integer key and
@@ -19,9 +20,15 @@ class DBSimple{
    DBSimple(const std::string & fname, bool create);
    ~DBSimple();
 
-   void put(const int key, const std::string & val);
+   // Put data with a given key (overwrite old value if it exists).
+   void put(const uint32_t key, const std::string & val);
 
-   std::string get(const int key);
+   // Get data for a given key.
+   std::string get(const uint32_t key);
+
+   // Get last key + 1, or 0 if database is empty.
+   uint32_t get_end() const;
+
 };
 
 #endif
