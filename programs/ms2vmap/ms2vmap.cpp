@@ -52,7 +52,6 @@ main(int argc, char *argv[]){
 
     VMap map;
 
-std::cerr << ">> " << action << "\n";
     if (action == "import_mp"){
       action_import_mp(argc, argv, map);
       return 0;
