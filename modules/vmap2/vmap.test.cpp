@@ -6,6 +6,8 @@
 #include "err/err.h"
 #include "vmap.h"
 
+using namespace std;
+
 int
 main(){
   try{

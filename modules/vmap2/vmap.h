@@ -34,6 +34,12 @@ struct VMapObj: public dMultiLine {
   std::string     comm;    // comments
   std::string     src;     // object source
   VMapObj() {cl=POINT; type=0; dir=FRW;};
+
+  // pack object to a string (for DB storage)
+  std::string pack() const;
+
+  // unpack object from a string (for DB storage)
+  void unpack(const std::string & s);
 };
 
 // TODO: use DB storage instead of map!

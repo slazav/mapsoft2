@@ -1,13 +1,148 @@
 #include <fstream>
+#include <sstream>
+#include <stdint.h>
+#include <cstring>
 
 #include "vmap.h"
 #include "read_words/read_words.h"
 #include "mp/mp.h"
 
 using namespace std;
+
 /**********************************************************/
+// To keep objects in a database we pack everything in std::strings.
+// Usually it is something silmilar to RIFF format:
+// 4-byte tag, 4-byte size, data.
+
+// pack a string
+void
+vmap_pack_str(ostream & s, const char *tag, const std::string & str){
+  if (strlen(tag)!=4) throw Err() << "vmap_pack_str: 4-byte tag expected";
+  s.write(tag, 4);
+  uint32_t size = str.size();
+  s.write((char *)&size, sizeof(uint32_t));
+  s.write(str.data(), str.size());
+  if (s.fail()) throw Err() << "vmap_pack_str: write error";
+}
+
+// Pack a multiline with LonLat coordinates (as a multiple "crds" tags).
+// Double values are multiplied by 1e7 and rounded to integer values.
+void
+vmap_pack_crds(ostream & s, const dMultiLine & ml){
+  for (auto const &l:ml) {
+    s.write("crds", 4);
+    uint32_t size = l.size()*2*sizeof(int32_t); // 2 ints per point
+      s.write((char *)&size, sizeof(uint32_t));
+    for (auto p:l) {
+      while (p.x >  180) p.x-=360;
+      while (p.x < -180) p.x+=360;
+      while (p.y >   90) p.y-=180;
+      while (p.y <  -90) p.y+=180;
+      int32_t crd[2] = {(int32_t)rint(p.x * 1e7), (int32_t)rint(p.y * 1e7)};
+      s.write((char *)crd, 2*sizeof(int32_t));
+    }
+  }
+  if (s.fail()) throw Err() << "vmap_pack_crds: write error";
+}
+
+// read 4-byte tag
+std::string
+vmap_unpack_tag(istream & s){
+  std::string tag(4,'\0');
+  s.read((char*)tag.data(), 4);
+  if (s.eof()) return std::string();
+  if (s.fail()) throw Err() << "vmap_unpack_tag: read error";
+  return tag;
+}
+
+// unpack string (tag is already read)
+std::string
+vmap_unpack_str(istream & s){
+  uint32_t size;
+  s.read((char*)&size, sizeof(uint32_t));
+  std::string str(size, '\0');
+  s.read((char*)str.data(), size);
+  if (s.fail()) throw Err() << "vmap_unpack_str: read error";
+  return str;
+}
+
+// unpack coordinate line (tag is already read)
+dLine
+vmap_unpack_crds(istream & s){
+  uint32_t size;
+  s.read((char*)&size, sizeof(uint32_t));
+  dLine ret;
+  for (int i=0;i<size/2/sizeof(int32_t);i++) {
+    int32_t crd[2];
+    s.read((char*)crd, 2*sizeof(int32_t));
+    dPoint p(crd[0]/1e7, crd[1]/1e7);
+    ret.push_back(p);
+  }
+  if (s.fail()) throw Err() << "vmap_unpack_crds: read error";
+  return ret;
+}
 
 
+
+/**********************************************************/
+// pack object to a string (for DB storage)
+string
+VMapObj::pack() const {
+  ostringstream s;
+
+  // 1. three integer numbers: class, type, direction:
+  int32_t v;
+  v = (int32_t)cl;   s.write((char *)&v, sizeof(int32_t));
+  v = (int32_t)type; s.write((char *)&v, sizeof(int32_t));
+  v = (int32_t)dir;  s.write((char *)&v, sizeof(int32_t));
+
+  // 2. text fields (4-byte tag, 4-byte length, data);
+  vmap_pack_str(s, "name", name);
+  vmap_pack_str(s, "comm", comm);
+  vmap_pack_str(s, "src ", src);
+
+  // 3. coordinates (4-byte tag, 4-byte length, data);
+  vmap_pack_crds(s, *this);
+  return s.str();
+}
+
+// unpack object from a string (for DB storage)
+void
+VMapObj::unpack(const std::string & str) {
+
+  // re-initialize
+  *this = VMapObj();
+
+  istringstream s(str);
+
+  // 1. three integer numbers: class, type, direction:
+  int32_t v;
+  s.read((char*)&v, sizeof(int32_t));
+  if (v<0 || v>2) throw Err() << "VMapObj::unpack: bad class value: " << v;
+  cl = (VMapObjClass)v;
+
+  s.read((char*)&v, sizeof(int32_t));
+  type = v;
+
+  s.read((char*)&v, sizeof(int32_t));
+  if (v<0 || v>2) throw Err() << "VMapObj::unpack: bad direction value: " << v;
+  dir = (VMapObjDir)v;
+
+  // string and coordinate fields
+  while (1){
+    string tag = vmap_unpack_tag(s);
+    if (tag == "") break;
+    else if (tag == "name") name = vmap_unpack_str(s);
+    else if (tag == "comm") comm = vmap_unpack_str(s);
+    else if (tag == "src ") src = vmap_unpack_str(s);
+    else if (tag == "crds") push_back(vmap_unpack_crds(s));
+    else throw Err() << "Unknown tag: " << tag;
+  }
+
+}
+
+
+/**********************************************************/
 void
 VMap::add(const VMapObj & o){
   // get last id + 1
