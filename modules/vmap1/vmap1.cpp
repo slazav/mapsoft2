@@ -38,9 +38,9 @@ VMap1Lfull::operator< (const VMap1Lfull & o) const{
 
 object_class
 VMap1Obj::get_class() const{
-  if (type & 0x200000) return POLYGON;
-  if (type & 0x100000) return POLYLINE;
-  return POI;
+  if (type & 0x200000) return VMAP1_POLYGON;
+  if (type & 0x100000) return VMAP1_POLYLINE;
+  return VMAP1_POI;
 }
 
 bool

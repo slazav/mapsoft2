@@ -1,5 +1,5 @@
-#ifndef VMAP_H
-#define VMAP_H
+#ifndef VMAP1_H
+#define VMAP1_H
 
 #include <iostream>
 #include <vector>
@@ -38,9 +38,9 @@ struct VMap1Lfull : public VMap1Lab { // for internal use
 };
 
 typedef enum{
-  POI = 0,
-  POLYLINE = 1,
-  POLYGON = 2
+  VMAP1_POI = 0,
+  VMAP1_POLYLINE = 1,
+  VMAP1_POLYGON = 2
 } object_class;
 
 struct VMap1Obj: public dMultiLine {
