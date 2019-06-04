@@ -9,6 +9,9 @@
 #include "mapdb/db_geohash.h"
 #include "geom/multiline.h"
 #include "geohash/storage.h"
+#include "mp/mp.h"
+#include "vmap1/vmap1.h"
+
 //#include "fig/fig.h"
 
 // Class for vector map (without label information!)
@@ -113,6 +116,16 @@ public:
   /// Export objects to MP file.
   void export_mp(
     const std::string & mp_file,
+    const Opt & opts);
+
+  /// Import objects from VMAP1 file.
+  void import_vmap1(
+    const std::string & vmap_file,
+    const Opt & opts);
+
+  /// Export objects to VMAP1 file.
+  void export_vmap1(
+    const std::string & vmap_file,
     const Opt & opts);
 
 };
