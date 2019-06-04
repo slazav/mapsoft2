@@ -7,7 +7,7 @@ OTHER_TESTS :=\
   mapsoft.test5\
   mapsoft.test6\
 
-MODDIR      := ../modules
+MODDIR := ../../modules
 include $(MODDIR)/Makefile.inc
 
 
