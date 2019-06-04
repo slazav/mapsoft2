@@ -1,3 +1,26 @@
+## VMapObj -- a single map object
+
+A dMultiLine structure with additional fields:
+
+`VMapObjClass cl` -- object class: POINT, LINE, POLYGON, default: POINT
+`int type` -- object type (like MP type), default: 0
+`VMapObjDir dir` -- object direction: NO, FRW, BCK, default: NO
+`std::string name` -- object name (to be printed on map labels)
+`std::string comm` -- object comment
+`std::string src` -- object source
+
+Methods for packing and anpacking the object to a string (compact representation
+for keepint in the DB storage):
+
+```c++
+std::string pack() const;
+void unpack(const std::string & s);
+```
+
+Comparison operators: ==, !=, <, >, <=, >=
+
+## VMap -- a storage for VMapObj
+
 ## Importing MP files
 
 Configuration file format:

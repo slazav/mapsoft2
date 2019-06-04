@@ -12,6 +12,9 @@
 // Class for vector map (without label information!)
 // All coordinates are lat,lon in WGS84 datum.
 
+/*********************************************************************/
+// enums
+
 typedef enum{
   POINT    = 0,
   LINE     = 1,
@@ -24,15 +27,18 @@ typedef enum{
   BCK   = 2
 } VMapObjDir;
 
-// A single map object
+/*********************************************************************/
+// VMapObj -- a single map object
 
 struct VMapObj: public dMultiLine {
-  VMapObjClass    cl;      // POINT, LINE, POLYGON
+  VMapObjClass    cl;      // object class: POINT, LINE, POLYGON
   int             type;    // = MP type
-  VMapObjDir      dir;     // direction from mp, arrows from fig
-  std::string     name;    // label text
-  std::string     comm;    // comments
+  VMapObjDir      dir;     // object direction: NO, FRW, BCK
+  std::string     name;    // object name (to be printed on map labels)
+  std::string     comm;    // object comment
   std::string     src;     // object source
+
+  // defaults
   VMapObj() {cl=POINT; type=0; dir=FRW;};
 
   // pack object to a string (for DB storage)
@@ -41,7 +47,7 @@ struct VMapObj: public dMultiLine {
   // unpack object from a string (for DB storage)
   void unpack(const std::string & s);
 
-  /******************************************************************/
+  /***********************************************/
   // operators <=>
   /// Less then operator.
   bool operator< (const VMapObj & o) const {
@@ -68,36 +74,40 @@ struct VMapObj: public dMultiLine {
 
 };
 
-// TODO: use DB storage instead of map!
 
+/*********************************************************************/
+// VMap -- a storage for map objects
+
+// TODO: use DB storage instead of map!
 class VMap {
 private:
     std::map<int, VMapObj> storage;
     GeoHashStorage         geo_ind;
+
     dMultiLine  brd; // border (will be kept in the DB)
     dRect  bbox;     // bounding box (will be kept in the DB)
 
 public:
   VMap() {};
 
-  // get/set border
+  /// Get border.
   dMultiLine get_brd() const {return brd;}
+
+  /// Set border.
   void set_brd(const dMultiLine & b) { brd = b;}
 
-  // get bbox
+  /// Get bbox.
   dRect get_bbox() const {return bbox;}
 
-
-
-  // add object to the map
+  /// Add object to the map.
   void add(const VMapObj & o);
 
-  // import objects from MP file
+  /// Import objects from MP file.
   void import_mp(
     const std::string & mp_file,
     const std::string & conf_file);
 
-  // export objects to MP file
+  /// Export objects to MP file.
   void export_mp(
     const std::string & mp_file,
     const std::string & conf_file);
