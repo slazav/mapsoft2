@@ -147,12 +147,14 @@ VMapObj::unpack(const std::string & str) {
 void
 VMap::add(const VMapObj & o){
   // get last id + 1
-  int id = storage.size()? storage.rbegin()->first + 1 : -1;
-  if (id < 100) id=100; // values below 100 are reserved.
+  uint32_t id;
+  storage.get_last(id);
+  if (id == 0xFFFFFFFF) id = 0;
+  else id++;
+  if (id<100) id=100; // values below 100 are reserved.
 
   // insert object
-  storage.insert(make_pair(id, o));
-
+  storage.put(id, o.pack());
   // update bbox
   dRect r = o.bbox2d();
   bbox.expand(r);
@@ -314,9 +316,15 @@ VMap::export_mp(const string & mp_file, const Opt & opts){
   if (opts.exists("cnv_polygon")) cnvs[0] = opts.get<dLine>("cnv_polygon");
 
   MP mp_data;
-  for (auto const & i: storage){
-    if (i.first<100) continue;
-    const VMapObj & o = i.second;
+  uint32_t key = 100;
+
+  std::string str = storage.get_first(key);
+
+  while (key!=0xFFFFFFFF){
+    VMapObj o;
+    o.unpack(str);
+    str = storage.get_next(key);
+
     MPObj o1;
     o1.Class = o.cl;
 

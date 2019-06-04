@@ -50,7 +50,7 @@ main(int argc, char *argv[]){
     std::string action(argv[1]);
     argc-=2; argv+=2;
 
-    VMap map;
+    VMap map(mapname, 1);
 
     if (action == "import_mp"){
       action_import_mp(argc, argv, map);

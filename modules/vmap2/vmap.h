@@ -5,6 +5,8 @@
 #include <list>
 #include <map>
 
+#include "mapdb/db_simple.h"
+#include "mapdb/db_geohash.h"
 #include "geom/multiline.h"
 #include "geohash/storage.h"
 //#include "fig/fig.h"
@@ -81,14 +83,15 @@ struct VMapObj: public dMultiLine {
 // TODO: use DB storage instead of map!
 class VMap {
 private:
-    std::map<int, VMapObj> storage;
-    GeoHashStorage         geo_ind;
+    DBSimple   storage;
+    GeoHashDB  geo_ind;
 
     dMultiLine  brd; // border (will be kept in the DB)
     dRect  bbox;     // bounding box (will be kept in the DB)
 
 public:
-  VMap() {};
+  VMap(const std::string &name, bool create):
+    storage(name + ".db", create), geo_ind(name + "dbg", create) {};
 
   /// Get border.
   dMultiLine get_brd() const {return brd;}
