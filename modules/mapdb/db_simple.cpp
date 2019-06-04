@@ -9,6 +9,10 @@
 /**********************************************************/
 // Implementation class
 class DBSimple::Impl {
+  private:
+    std::string pack_uint32(const uint32_t v);
+    uint32_t unpack_uint32(DBT *k);
+
   public:
     std::shared_ptr<void> db;   // database
     std::shared_ptr<void> cur;  // cursor
@@ -82,10 +86,31 @@ DBSimple::Impl::Impl(const std::string &fname, bool create){
   cur = std::shared_ptr<void>(curp, bdb_cur_close);
 }
 
+std::string
+DBSimple::Impl::pack_uint32(const uint32_t v){
+  std::string ret(4,0);
+  ret[0] = (char)((v>>24)&0xff);
+  ret[1] = (char)((v>>16)&0xff);
+  ret[2] = (char)((v>>8)&0xff);
+  ret[3] = (char)(v&0xff);
+  return ret;
+}
+
+uint32_t
+DBSimple::Impl::unpack_uint32(DBT *k){
+  if (k->size != sizeof(uint32_t))
+    throw Err() << "db_simple: broken database, wrong key size: " << k->size;
+  unsigned char *d = (unsigned char *)k->data;
+  uint32_t ret = ((uint32_t)d[0]<<24) + ((uint32_t)d[1]<<16)
+               + ((uint32_t)d[2]<<8) + (uint32_t)d[3];
+  return ret;
+}
+
 void
 DBSimple::Impl::put(const uint32_t key, const std::string & val){
   DB  *dbp = (DB*)db.get();
-  DBT k = mk_dbt(&key);
+  std::string key_s = pack_uint32(key);
+  DBT k = mk_dbt(key_s);
   DBT v = mk_dbt(val);
   int ret = dbp->put(dbp, NULL, &k, &v, 0);
     if (ret != 0) throw Err() << "db_simple: " << db_strerror(ret);
@@ -97,7 +122,8 @@ std::string
 DBSimple::Impl::get(uint32_t & key, int flags){
   DB  *dbp = (DB*)db.get();
   DBC *dbc = (DBC*)cur.get();
-  DBT k = mk_dbt(&key);
+  std::string key_s = pack_uint32(key);
+  DBT k = mk_dbt(key_s);
   DBT v = mk_dbt();
   int ret = dbc->c_get(dbc, &k, &v, flags);
 
@@ -105,9 +131,7 @@ DBSimple::Impl::get(uint32_t & key, int flags){
   if (ret != 0) throw Err() << "db_simple: " << db_strerror(ret);
   if (k.size != sizeof(uint32_t))
     throw Err() << "db_simple: broken database, wrong key size: " << k.size;
-  key = *(uint32_t*)k.data;
-  if (key==0xFFFFFFFF)
-    throw Err() << "db_simple: database overfull (max key reached)";
+  key = unpack_uint32(&k);
   return std::string((char*)v.data, (char*)v.data+v.size);
 }
 

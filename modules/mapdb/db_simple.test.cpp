@@ -32,11 +32,17 @@ main(){
       db.put(2, "cde");
       db.put(3, "def");
       db.put(2, "fgh"); // overwrite
+      db.put(128, "aaa");
+      db.put(257, "bbb");
 
 
-      key=25;
+      key=525;
       assert(db.get_first(key) == "");
       assert(key == 0xFFFFFFFF);
+
+      key=525;
+      assert(db.get_last(key) == "bbb");
+      assert(key == 257);
 
       key=0xFFFFFFFF;
       assert(db.get_first(key) == "");
@@ -53,6 +59,14 @@ main(){
       assert(key == 2);
 
       assert(db.get_next(key) == "def");
+      assert(key == 3);
+      assert(db.get_next(key) == "aaa");
+      assert(key == 128);
+      assert(db.get_next(key) == "bbb");
+      assert(key == 257);
+      assert(db.get_prev(key) == "aaa");
+      assert(key == 128);
+      assert(db.get_prev(key) == "def");
       assert(key == 3);
       assert(db.get_prev(key) == "fgh");
       assert(key == 2);

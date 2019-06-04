@@ -59,6 +59,7 @@ class DBSimple{
    // Get last entry.
    // If record is not found key is set to 0xFFFFFFFF and
    // empty string is returned.
+   // On input key is ignored, cursor position is used.
    std::string get_last(uint32_t & key);
 
 };
