@@ -7,7 +7,8 @@ action_import_mp(int argc, char *argv[], VMap & map){
   if (argc<1) throw Err() << name << ": file name expected";
 
   // TODO: options, help
-  map.import_mp(argv[0], "");
+  Opt opts;
+  map.import_mp(argv[0], opts);
 
 }
 
@@ -17,7 +18,8 @@ action_export_mp(int argc, char *argv[], VMap & map){
   if (argc<1) throw Err() << name << ": file name expected";
 
   // TODO: options, help
-  map.export_mp(argv[0], "");
+  Opt opts;
+  map.export_mp(argv[0], opts);
 
 }
 
@@ -27,8 +29,8 @@ action_cat_mp(int argc, char *argv[], VMap & map){
   if (argc<2) throw Err() << name << ": file names expected";
 
   // TODO: options, help
-std::cerr << "> " << argv[0] << " " << argv[1] << "\n";
-  map.import_mp(argv[0], "");
-  map.export_mp(argv[1], "");
+  Opt opts;
+  map.import_mp(argv[0], opts);
+  map.export_mp(argv[1], opts);
 
 }

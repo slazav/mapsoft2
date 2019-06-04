@@ -105,12 +105,12 @@ public:
   /// Import objects from MP file.
   void import_mp(
     const std::string & mp_file,
-    const std::string & conf_file);
+    const Opt & opts);
 
   /// Export objects to MP file.
   void export_mp(
     const std::string & mp_file,
-    const std::string & conf_file);
+    const Opt & opts);
 
 };
 

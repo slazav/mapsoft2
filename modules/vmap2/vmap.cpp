@@ -2,6 +2,7 @@
 #include <sstream>
 #include <stdint.h>
 #include <cstring>
+#include <string>
 
 #include "vmap.h"
 #include "read_words/read_words.h"
@@ -162,26 +163,27 @@ VMap::add(const VMapObj & o){
 
 /**********************************************************/
 void
-VMap::import_mp(
-      const string & mp_file,
-      const string & conf_file){
+VMap::import_mp(const string & mp_file, const Opt & opts){
 
   // type conversion tables (point, line, polygon)
-  vector<list<pair<int,int> > > cnvs;
+  vector<iLine> cnvs;
   cnvs.resize(3);
+  // default configuration 0->0
+  for (int i=0; i<3; i++)
+    cnvs[i].push_back(iPoint(0,0));
 
   // data level
   int level = 0;
 
-  // Read conf_file.
-  if (conf_file == ""){
-    // default configuration 0->0
-    for (int i=0; i<3; i++)
-      cnvs[i].push_back(make_pair(0,0));
-  }
-  else {
+
+  // Read configuration file.
+  if (opts.exists("config")){
     int line_num[2] = {0,0};
-    ifstream ff(conf_file);
+
+    // reset default configuration:
+    for (int i=0; i<3; i++) cnvs[i] = iLine();
+
+    ifstream ff(opts.get<string>("config"));
     while (1){
       vector<string> vs = read_words(ff, line_num, true);
       if (vs.size()<1) continue;
@@ -192,7 +194,7 @@ VMap::import_mp(
       if (vs[0]=="polygon") cl=2;
 
       if (cl>=0 &&  vs.size()>1 && vs.size()<3){
-        cnvs[cl].push_back(make_pair(
+        cnvs[cl].push_back(iPoint(
           str_to_type<int>(vs[1]),
           vs.size()<3? 0:str_to_type<int>(vs[2])));
         continue;
@@ -207,6 +209,11 @@ VMap::import_mp(
                   << line_num[0];
     }
   }
+
+  if (opts.exists("cnv_point"))   cnvs[0] = opts.get<dLine>("cnv_point");
+  if (opts.exists("cnv_line"))    cnvs[0] = opts.get<dLine>("cnv_line");
+  if (opts.exists("cnv_polygon")) cnvs[0] = opts.get<dLine>("cnv_polygon");
+  if (opts.exists("data_level"))  level   = opts.get<int>("level");
 
   // read MP file
   MP mp_data;
@@ -223,8 +230,8 @@ VMap::import_mp(
 
     // convert type
     for (auto const & cnv: cnvs[v.cl]){
-      if (cnv.first == 0 || cnv.first == o.Type) {
-        v.type = cnv.second? cnv.second : o.Type;
+      if (cnv.x == 0 || cnv.x == o.Type) {
+        v.type = cnv.y? cnv.y : o.Type;
         break;
       }
     }
@@ -264,23 +271,23 @@ VMap::import_mp(
 /**********************************************************/
 
 void
-VMap::export_mp(
-      const string & mp_file,
-      const string & conf_file){
+VMap::export_mp(const string & mp_file, const Opt & opts){
 
   // type conversion tables (point, line, polygon)
-  vector<list<pair<int,int> > > cnvs;
+  vector<iLine> cnvs;
+  // default configuration 0->0
   cnvs.resize(3);
+  for (int i=0; i<3; i++)
+    cnvs[i].push_back(iPoint(0,0));
 
-  // Read conf_file.
-  if (conf_file == ""){
-    // default configuration 0->0
-    for (int i=0; i<3; i++)
-      cnvs[i].push_back(make_pair(0,0));
-  }
-  else {
+  // Read configuration file.
+  if (opts.exists("config")){
+
+    // reset default configuration:
+    for (int i=0; i<3; i++) cnvs[i] = iLine();
+
     int line_num[2] = {0,0};
-    ifstream ff(conf_file);
+    ifstream ff(opts.get<string>("config"));
     while (1){
       vector<string> vs = read_words(ff, line_num, true);
       if (vs.size()<1) continue;
@@ -291,7 +298,7 @@ VMap::export_mp(
       if (vs[0]=="polygon") cl=2;
 
       if (cl>=0 &&  vs.size()>1 && vs.size()<3){
-        cnvs[cl].push_back(make_pair(
+        cnvs[cl].push_back(iPoint(
           str_to_type<int>(vs[1]),
           vs.size()<3? 0:str_to_type<int>(vs[2])));
         continue;
@@ -302,6 +309,10 @@ VMap::export_mp(
     }
   }
 
+  if (opts.exists("cnv_point"))   cnvs[0] = opts.get<dLine>("cnv_point");
+  if (opts.exists("cnv_line"))    cnvs[0] = opts.get<dLine>("cnv_line");
+  if (opts.exists("cnv_polygon")) cnvs[0] = opts.get<dLine>("cnv_polygon");
+
   MP mp_data;
   for (auto const & i: storage){
     if (i.first<100) continue;
@@ -311,8 +322,8 @@ VMap::export_mp(
 
     // convert type
     for (auto const & cnv: cnvs[o.cl]){
-      if (cnv.first == 0 || cnv.first == o.type) {
-        o1.Type = cnv.second? cnv.second : o.type;
+      if (cnv.x == 0 || cnv.x == o.type) {
+        o1.Type = cnv.y? cnv.y : o.type;
         break;
       }
     }
