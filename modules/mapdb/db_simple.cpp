@@ -10,16 +10,15 @@
 // Implementation class
 class DBSimple::Impl {
   public:
-    std::shared_ptr<void> db;
+    std::shared_ptr<void> db;   // database
+    std::shared_ptr<void> cur;  // cursor
 
     Impl(const std::string & fname, bool create);
     ~Impl() {}
 
    void put(const uint32_t key, const std::string & val);
 
-   std::string get(const uint32_t key);
-
-   uint32_t get_end() const;
+   std::string get(uint32_t & key, int flags);
 
 };
 
@@ -34,10 +33,19 @@ DBSimple::put(const uint32_t key, const std::string & val){
 
 
 std::string
-DBSimple::get(const uint32_t key){ return impl->get(key);}
+DBSimple::get(uint32_t & key){ return impl->get(key, DB_SET);}
 
-uint32_t
-DBSimple::get_end() const {return impl->get_end();}
+std::string
+DBSimple::get_first(uint32_t & key){ return impl->get(key, DB_SET_RANGE);}
+
+std::string
+DBSimple::get_next(uint32_t & key){ return impl->get(key, DB_NEXT);}
+
+std::string
+DBSimple::get_prev(uint32_t & key){ return impl->get(key, DB_PREV);}
+
+std::string
+DBSimple::get_last(uint32_t & key){ return impl->get(key, DB_LAST);}
 
 
 DBSimple::~DBSimple(){}
@@ -66,6 +74,12 @@ DBSimple::Impl::Impl(const std::string &fname, bool create){
   if (ret != 0)
     throw Err() << "db_simple: " << db_strerror(ret);
 
+  /* open cursor */
+  DBC *curp=NULL;
+  dbp->cursor(dbp, NULL, &curp, 0);
+  if (curp==NULL)
+    throw Err() << "db_simple: can't get a cursor";
+  cur = std::shared_ptr<void>(curp, bdb_cur_close);
 }
 
 void
@@ -77,44 +91,23 @@ DBSimple::Impl::put(const uint32_t key, const std::string & val){
     if (ret != 0) throw Err() << "db_simple: " << db_strerror(ret);
 }
 
+// Main get function. Uses cursor, supports all flags.
+// Set key to 0xFFFFFFFF if nothing is found.
 std::string
-DBSimple::Impl::get(const uint32_t key){
+DBSimple::Impl::get(uint32_t & key, int flags){
   DB  *dbp = (DB*)db.get();
+  DBC *dbc = (DBC*)cur.get();
   DBT k = mk_dbt(&key);
   DBT v = mk_dbt();
-  int ret = dbp->get(dbp, NULL, &k, &v, 0);
+  int ret = dbc->c_get(dbc, &k, &v, flags);
+
+  if (ret == DB_NOTFOUND) {key = 0xFFFFFFFF; return std::string();}
   if (ret != 0) throw Err() << "db_simple: " << db_strerror(ret);
+  if (k.size != sizeof(uint32_t))
+    throw Err() << "db_simple: broken database, wrong key size: " << k.size;
+  key = *(uint32_t*)k.data;
+  if (key==0xFFFFFFFF)
+    throw Err() << "db_simple: database overfull (max key reached)";
   return std::string((char*)v.data, (char*)v.data+v.size);
 }
 
-uint32_t
-DBSimple::Impl::get_end() const{
-  uint32_t key = 0xFFFFFFFF;
-  DBT k = mk_dbt(&key);
-  DBT v = mk_dbt();
-
-  DB  *dbp = (DB*)db.get();
-  DBC *curs=NULL;
-  dbp->cursor(dbp, NULL, &curs, 0);
-  if (curs==NULL)
-    throw Err() << "db_simple: can't get a cursor";
-
-  // get last key
-  int ret = curs->c_get(curs, &k, &v, DB_LAST);
-  curs->close(curs);
-
-  if (ret == DB_NOTFOUND) return 0;
-
-  if (ret != 0)
-    throw Err() << "db_simple: " << db_strerror(ret);
-
-  if (k.size != sizeof(uint32_t))
-    throw Err() << "db_simple: broken database, wrong key size: " << k.size;
-
-  key = *(uint32_t*)k.data;
-
-  if (key==0xFFFFFFFF)
-    throw Err() << "db_simple: database overfull (max key reached)";
-
-  return key+1;
-}

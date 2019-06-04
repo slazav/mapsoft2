@@ -11,31 +11,59 @@ main(){
   try{
     {
       // create new file
+      unlink("a.dbp");
+
       DBSimple db("a.dbp", 1);
-      assert(db.get_end() == 0);
+      uint32_t key=1;
+      assert(db.get(key) == "");
+      assert(key == 0xFFFFFFFF);
+      key=1;
+      assert(db.get_first(key) == "");
+      assert(key == 0xFFFFFFFF);
+      key=1;
+      assert(db.get_next(key) == "");
+      assert(key == 0xFFFFFFFF);
+      key=1;
+      assert(db.get_last(key) == "");
+      assert(key == 0xFFFFFFFF);
+      key=1;
 
       db.put(1, "abc");
       db.put(2, "cde");
       db.put(3, "def");
       db.put(2, "fgh"); // overwrite
 
-      assert(db.get(3) == "def");
-      assert(db.get(2) == "fgh");
-      assert(db.get(1) == "abc");
-      assert(db.get_end() == 4);
-      try {
-        db.get(4);
-        assert(false);
-      }
-      catch(Err e) {
-        assert(e.str() == "db_simple: DB_NOTFOUND: No matching key/data pair found");
-      }
+
+      key=25;
+      assert(db.get_first(key) == "");
+      assert(key == 0xFFFFFFFF);
+
+      key=0xFFFFFFFF;
+      assert(db.get_first(key) == "");
+      assert(key == 0xFFFFFFFF);
+
+      key=0;
+      assert(db.get_first(key) == "abc");
+      assert(key == 1);
+      assert(db.get_first(key) == "abc");
+      assert(key == 1);
+
+      key=2;
+      assert(db.get(key) == "fgh");
+      assert(key == 2);
+
+      assert(db.get_next(key) == "def");
+      assert(key == 3);
+      assert(db.get_prev(key) == "fgh");
+      assert(key == 2);
+
     }
     {
       // open existing file
       DBSimple db("a.dbp", 0);
-      assert(db.get(3) == "def");
-      assert(db.get(2) == "fgh");
+      uint32_t key = 2;
+      assert(db.get(key) == "fgh");
+      assert(db.get_next(key) == "def");
     }
     unlink("a.dbp");
   }

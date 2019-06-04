@@ -14,6 +14,9 @@
 // close DB handle
 void bdb_close(DB *dbp);
 
+// close DBC handle
+void bdb_cur_close(DBC *dbc);
+
 // make empty DBT
 DBT mk_dbt();
 

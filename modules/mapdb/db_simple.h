@@ -17,18 +17,51 @@ class DBSimple{
 
   public:
 
+   // TODO: write iterator?
+
    DBSimple(const std::string & fname, bool create);
    ~DBSimple();
 
    // Put data with a given key (overwrite old value if it exists).
    void put(const uint32_t key, const std::string & val);
 
-   // Get data for a given key.
-   std::string get(const uint32_t key);
+   // Put data aftrer the last record, return the new key
+   uint32_t put(const std::string & val) {
+     uint32_t key;
+     get_last(key);
+     key = 0xFFFFFFFF ? 0 : key+1;
+     put(key, val);
+     return key;
+   }
 
-   // Get last key + 1, or 0 if database is empty.
-   uint32_t get_end() const;
+   // Get data for a given key.
+   // If record is not found then key is set to 0xFFFFFFFF and
+   // empty string is returned.
+   std::string get(uint32_t & key);
+
+   // Get data with key larger or equals then the given key.
+   // If record is not found then key is set to 0xFFFFFFFF and
+   // empty string is returned.
+   std::string get_first(uint32_t & key);
+
+   // Get next entry.
+   // If record is not found then key is set to 0xFFFFFFFF and
+   // empty string is returned.
+   // On input key is ignored, cursor position is used.
+   std::string get_next(uint32_t & key);
+
+   // Get previous entry.
+   // If record is not found then key is set to 0xFFFFFFFF and
+   // empty string is returned.
+   // On input key is ignored, cursor position is used.
+   std::string get_prev(uint32_t & key);
+
+   // Get last entry.
+   // If record is not found key is set to 0xFFFFFFFF and
+   // empty string is returned.
+   std::string get_last(uint32_t & key);
 
 };
+
 
 #endif

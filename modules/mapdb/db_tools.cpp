@@ -7,6 +7,11 @@ bdb_close(DB *dbp){
   if (dbp) dbp->close(dbp,0);
 }
 
+void
+bdb_cur_close(DBC *curp){
+  if (curp) curp->close(curp);
+}
+
 // empty DBT
 DBT mk_dbt(){
   DBT ret;
