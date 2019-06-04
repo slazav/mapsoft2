@@ -20,7 +20,7 @@ class GeoHashDB::Impl : public GeoHashStorage {
  public:
    std::shared_ptr<void> db;
 
-   Impl(const char *fbase, bool create);
+   Impl(const std::string & fname, bool create);
    ~Impl() {}
 
    // no need to redifine get!
@@ -31,8 +31,8 @@ class GeoHashDB::Impl : public GeoHashStorage {
 
 /**********************************************************/
 // Main class methods
-GeoHashDB::GeoHashDB(const char *fbase, bool create):
-  impl(std::unique_ptr<Impl>(new Impl(fbase, create))) { }
+GeoHashDB::GeoHashDB(const std::string & fname, bool create):
+  impl(std::unique_ptr<Impl>(new Impl(fname, create))) { }
 
 void
 GeoHashDB::put(const int id, const dRect & range){ impl->put(id, range);}
@@ -45,7 +45,7 @@ GeoHashDB::~GeoHashDB(){}
 /**********************************************************/
 // Implementation class methods
 
-GeoHashDB::Impl::Impl(const char *fname, bool create){
+GeoHashDB::Impl::Impl(const std::string &fname, bool create){
   // set flags
   int open_flags = create? DB_CREATE:0;
 
@@ -62,7 +62,7 @@ GeoHashDB::Impl::Impl(const char *fname, bool create){
   /* Open the database */
   ret = dbp->open(dbp,    /* Pointer to the database */
                   NULL,          /* Txn pointer */
-                  fname,         /* file */
+                  fname.c_str(), /* file */
                   NULL,          /* database */
                   DB_BTREE,      /* Database type (using btree) */
                   open_flags,    /* Open flags */

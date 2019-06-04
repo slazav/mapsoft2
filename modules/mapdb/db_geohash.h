@@ -13,7 +13,7 @@ class GeoHashDB {
 
   public:
 
-   GeoHashDB(const char *fbase, bool create);
+   GeoHashDB(const std::string & fname, bool create);
    ~GeoHashDB();
 
    // add object with id and range.

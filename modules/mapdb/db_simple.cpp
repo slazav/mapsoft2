@@ -12,7 +12,7 @@ class DBSimple::Impl {
   public:
     std::shared_ptr<void> db;
 
-    Impl(const char *fbase, bool create);
+    Impl(const std::string & fname, bool create);
     ~Impl() {}
 
    void put(const int key, const std::string & val);
@@ -22,8 +22,8 @@ class DBSimple::Impl {
 
 /**********************************************************/
 // Main class methods
-DBSimple::DBSimple(const char *fbase, bool create):
-  impl(std::unique_ptr<Impl>(new Impl(fbase, create))) { }
+DBSimple::DBSimple(const std::string & fname, bool create):
+  impl(std::unique_ptr<Impl>(new Impl(fname, create))) { }
 
 void
 DBSimple::put(const int key, const std::string & val){ impl->put(key, val);}
@@ -37,7 +37,7 @@ DBSimple::~DBSimple(){}
 /**********************************************************/
 // Implementation class methods
 
-DBSimple::Impl::Impl(const char *fname, bool create){
+DBSimple::Impl::Impl(const std::string &fname, bool create){
   // set flags
   int open_flags = create? DB_CREATE:0;
 
@@ -50,7 +50,7 @@ DBSimple::Impl::Impl(const char *fname, bool create){
   /* Open the database */
   ret = dbp->open(dbp,    /* Pointer to the database */
                   NULL,          /* Txn pointer */
-                  fname,         /* file */
+                  fname.c_str(), /* file */
                   NULL,          /* database */
                   DB_BTREE,      /* Database type (using btree) */
                   open_flags,    /* Open flags */

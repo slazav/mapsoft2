@@ -16,7 +16,7 @@ class DBSimple{
 
   public:
 
-   DBSimple(const char *fbase, bool create);
+   DBSimple(const std::string & fname, bool create);
    ~DBSimple();
 
    void put(const int key, const std::string & val);
