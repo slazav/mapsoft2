@@ -164,6 +164,22 @@ main(){
   assert(rect_to_line(iRect(1,1,2,2), true)  == iLine("[[1,1],[3,1],[3,3],[1,3],[1,1]]"));
   assert(rect_to_line(iRect(1,1,2,2), false) == iLine("[[1,1],[3,1],[3,3],[1,3]]"));
 
+  // dist
+  assert(dist(
+    dLine("[[0,0],[1,1],[2,2]]"),
+    dLine("[[0,0],[1,1],[2,2]]")) == 0);
+  assert(dist(
+    dLine("[]"),
+    dLine("[]")) == 0);
+  assert(dist(
+    dLine("[[0,0],[1,1],[2,2]]"),
+    dLine("[[0,0],[1,1]]")) == INFINITY);
+  assert(dist(
+    dLine("[[0,0],[1,1]]"),
+    dLine("[[0,0],[1,1],[2,2]]")) == INFINITY);
+  assert(dist(
+    dLine("[[0,0],[1,2],[2,2]]"),
+    dLine("[[0,0],[1,1],[2,2]]")) == 1);
 
   // iLine <-> dLine casting
   assert(dLine(str_to_type<iLine>("[[0,0,1],[2,0],[2,2]]")) ==

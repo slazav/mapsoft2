@@ -94,7 +94,7 @@ coordinates are involved.
   - `r.to_floor()` -- shrink the rectangle to nearest integers (may become empty!),
   - `r.to_ceil()` -- expand the rectangle to nearest integers,
   - `r.expand(k)` -- expand rectangle to each side by k value,
-  - `r.expand(kx,ky) -- expand by kx and ky in x and y directions,
+  - `r.expand(kx,ky)` -- expand by kx and ky in x and y directions,
   - `r.expand(p)` -- expand rectangle to cover point p,
   - `r1.expand(r2)` -- expand rectangle to cover rectangle r2,
   - `r1.intersect(r2)` -- intersect with rectangle r2,
@@ -153,6 +153,8 @@ Line is a std::vector of Point.
     do same operations, returned modified point, keep original point unchanged,
 
   - `rect_to_line(r)` -- convert a rectangle to line.
+  - `dist(l1,l2)` -- "distance" between lines, `sqrt(sum(dist(l1[i],l2[i])^2))`,
+                     returns +inf for lines fith different number of points,
 
 - Line can be converted to a string and back
   (and thus used inside Opt class). String representation is a
@@ -191,6 +193,9 @@ Line with multiple segments (std::vector of Line).
 
   - `rint(l)`, `to_floor(l)`, `ceil(l)`, `abs(l)`, `rotate2d(l,pc,a)`, `flatten(l)` --
     do same operations, returned modified point, keep original point unchanged,
+
+  - `dist(l1,l2)` -- "distance" between multilines, `sqrt(sum(dist(l1[i],l2[i])^2))`,
+                     returns +inf for multylines fith different number of segments,
 
 - MultiLine can be converted to a string and back
   (and thus used inside Opt class). String representation is a

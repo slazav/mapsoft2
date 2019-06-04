@@ -261,6 +261,18 @@ MultiLine<T> flatten(const MultiLine<T> & ml) {
   return ret;
 }
 
+/******************************************************************/
+// additional functions
+
+/// Distance between two lines A and B: sqrt(sum(dist(A[i],B[i])^2)).
+/// Returns +inf for lines fith different number of points.
+template <typename T>
+double dist(const MultiLine<T> & A, const MultiLine<T> & B){
+  double ret = 0;
+  if (A.size() != B.size()) return INFINITY;
+  for (int i=0; i<A.size(); i++) ret+=pow(dist(A[i],B[i]),2);
+  return sqrt(ret);
+}
 
 
 /******************************************************************/
