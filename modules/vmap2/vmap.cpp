@@ -246,6 +246,7 @@ VMap::import_mp(const string & mp_file, const Opt & opts){
 
     // comments
     for (auto const & c:o.Comment) v.comm += c + '\n';
+    if (v.comm.size()) v.comm.resize(v.comm.size()-1); // cut trailing '\n'
 
     // direction
     if (o.Direction<0 || o.Direction>2)
@@ -343,12 +344,14 @@ VMap::export_mp(const string & mp_file, const Opt & opts){
     o1.Label = o.name;
 
     // comments
-    int pos1=0, pos2=0;
-    do { 
-      pos2 = o.comm.find('\n', pos1);
-      o1.Comment.push_back(o.comm.substr(pos1,pos2));
-      pos1 = pos2+1;
-    } while (pos2!=string::npos);
+    if (o.comm.size()){
+      int pos1=0, pos2=0;
+      do {
+        pos2 = o.comm.find('\n', pos1);
+        o1.Comment.push_back(o.comm.substr(pos1,pos2));
+        pos1 = pos2+1;
+      } while (pos2!=string::npos);
+    }
 
     // direction
     o1.Direction = o.dir;
