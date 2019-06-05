@@ -1,4 +1,4 @@
-#!/bin/bash -fu
+#!/bin/bash -efu
 
 ## Garmin Utils input/output
 

@@ -1,4 +1,4 @@
-#!/bin/bash -fu
+#!/bin/bash -efu
 
 # General interface and option tests
 # See also getopt module tests
