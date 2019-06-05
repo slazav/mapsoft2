@@ -140,6 +140,7 @@ Line is a std::vector of Point.
   - `l.length2d()`, `length2d(l)` -- 2D line length
   - `l.bbox2d()`, `bbox2d(l)` -- return a bounding box (Rect object) in x-y plane,
   - `l1.is_shifted(l2, sh)`, `is_shifted(l1, l2, sh)` -- check if line l2 is a shifted version of l1, return the shift
+  - `l.is_empty()` -- check if line is empty (has no points), same as l.size()==0,
 
   - `l.invert()` -- invert the line
   - `p.to_rint()` -- set coordinates to nearest integer values,
@@ -183,6 +184,7 @@ Line with multiple segments (std::vector of Line).
   - `dMultiLine(l)`, `iMultiLine(l)` -- cast to double- or integer-coordinate MultiLine,
   - `l.length()`, `length(l)` -- line length (sum of segments' lengths),
   - `l.bbox2d()`, `bbox2d(l)` -- return a bounding box in x-y plane (Rect object),
+  - `l.is_empty()` -- check if MultiLine is empty (has no segents or only empty segments),
 
   - `p.to_rint()` -- set coordinates to nearest integer values,
   - `p.to_floor()` -- set coordinates to nearest smaller integers,

@@ -187,6 +187,8 @@ struct Line : std::vector<Point<T> > {
     } while(1);
   }
 
+  /// Is line empty
+  bool is_empty() const {return this->size() == 0;}
 
   /// Invert line.
   void invert(void) { std::reverse(this->begin(), this->end()); }

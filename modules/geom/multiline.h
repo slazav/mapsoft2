@@ -148,6 +148,12 @@ struct MultiLine : std::vector<Line<T> > {
     return ret;
   }
 
+  /// Is MultiLine empty (no segents or all segments are empty)
+  bool is_empty() const{
+    for (auto const & l:*this) if (l.size()) return false;
+    return true;
+  }
+
   /// rint function: change corner coordinates to nearest integers
   void to_rint() { for (auto & l:*this) l.to_rint(); }
 

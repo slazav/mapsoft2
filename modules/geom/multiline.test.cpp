@@ -82,6 +82,11 @@ main(){
   assert(ml2.bbox2d() == expand(l1.bbox2d(),l2.bbox2d()));
   assert(bbox2d(ml2) == ml2.bbox2d());
 
+  assert(dMultiLine("[]").is_empty() == true);
+  assert(dMultiLine("[[],[]]").is_empty() == true);
+  assert(dMultiLine("[[],[[1,2]]]").is_empty() == false);
+  assert(dMultiLine("[[[1,2]]]").is_empty() == false);
+
   {
      dMultiLine ml1("[ [[0,0,0], [1,2,2]], [[0,0,0], [1,2,-2], [2,0,0]] ]");
      assert(ml1.length() == 9);

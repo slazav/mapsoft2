@@ -82,6 +82,12 @@ main(){
     assert(iLine().bbox2d() == iRect());
     assert(l2.bbox2d() == iRect(0,0,1,2));
     assert(l2.bbox2d() == bbox2d(l2));
+
+    // empty
+    assert(iLine().is_empty() == true);
+    assert(iLine("[[1,2]]").is_empty() == false);
+    assert(iLine("[[1,2],[1,2]]").is_empty() == false);
+
   }
 
   // invert
