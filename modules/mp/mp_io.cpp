@@ -40,6 +40,8 @@ void read_mp(istream & f, MP & data, const Opt & opts){
   MPObj o;
   dLine pts;
 
+  if (!f) throw Err() << "can't read MP file";
+
   // overwrite header
   MP tmp;
   data.Opts = tmp.Opts;
