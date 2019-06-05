@@ -20,5 +20,7 @@ $prog test_data/f1.vmap > tmp.vmap
 diff tmp.vmap test_data/f1a.vmap
 rm tmp.vmap
 
+do_test "test_data/missing.vmap" "Error: can't read VMAP file"
+
 exit 0
 

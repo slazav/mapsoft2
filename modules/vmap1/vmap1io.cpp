@@ -176,6 +176,7 @@ read_vmap1(istream & IN){
   VMap1 ret;
   string s, key, val;
   bool read_ahead=false;
+  if (!IN) throw Err() << "can't read VMAP file";
 
   double ver;
   IN >> s >> ver;
@@ -192,7 +193,8 @@ read_vmap1(istream & IN){
          << fixed << setprecision(1) << ver << " < " << CUR_VER << "\n";
   }
 
-  while (!IN.eof() || read_ahead){
+  while (IN || read_ahead){
+
     if (!read_ahead) getline(IN, s);
     else read_ahead=false;
     if (vmap1_get_kv(s, key, val)!=0) continue;
