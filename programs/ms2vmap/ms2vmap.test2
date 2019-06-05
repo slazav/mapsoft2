@@ -1,0 +1,19 @@
+#!/bin/bash -fu
+
+# General interface and option tests
+# See also getopt module tests
+
+P=${1:-./ms2vmap}
+
+. ../test_lib.sh
+
+assert "$P tmp import_mp" "Error: import_mp: file name expected" 1
+
+rm -f tmp.db tmp.dbg
+
+assert "$P tmp import_mp test_data/n37-075.mp" "" 0
+assert "$P tmp export_mp tmp.mp" "" 0
+assert_diff test_data/n37-075a.mp tmp.mp
+
+#assert "$P tmp export_mp tmp.mp --cnv_pt '[0x900,0x815]' --cnv_line '[]'" "" 0
+#assert_diff test_data/n37-075b.mp tmp.mp

@@ -31,7 +31,8 @@ void usage(bool pod=false, std::ostream & S = std::cout){
   S << head << "Actions:\n"
     << " * import_mp <name> --\n"
     << " * export_mp <name> --\n"
-    << " * cat_mp <name1> <name2> --\n"
+    << " * import_vmap1 <name> --\n"
+    << " * export_vmap1 <name> --\n"
   ;
 
   throw Err();
@@ -52,25 +53,16 @@ main(int argc, char *argv[]){
 
     VMap map(mapname, 1);
 
-    if (action == "import_mp"){
-      action_import_mp(argc, argv, map);
-      return 0;
-    }
+    if (action == "import_mp"){ action_import_mp(argc, argv, map); return 0; }
+    if (action == "export_mp"){ action_export_mp(argc, argv, map); return 0; }
+    if (action == "import_vmap1"){ action_import_vmap1(argc, argv, map); return 0; }
+    if (action == "export_vmap1"){ action_export_vmap1(argc, argv, map); return 0; }
 
-    if (action == "export_mp"){
-      action_export_mp(argc, argv, map);
-      return 0;
-    }
-
-    if (action == "cat_mp"){
-      action_cat_mp(argc, argv, map);
-      return 0;
-    }
     throw Err() << "ms2vmap: unknown action: " << action;
 
   }
   catch (Err e) {
-    std::cerr << "Error: " << e.str() << "\n";
+    if (e.str()!="") std::cerr << "Error: " << e.str() << "\n";
     return 1;
   }
   return 0;

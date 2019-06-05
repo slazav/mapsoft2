@@ -146,6 +146,9 @@ VMapObj::unpack(const std::string & str) {
 /**********************************************************/
 void
 VMap::add(const VMapObj & o){
+  // do not work with empty objects
+  if (o.is_empty()) throw Err() << "VMap::add: empty object";
+
   // get last id + 1
   uint32_t id;
   storage.get_last(id);
@@ -421,8 +424,10 @@ VMap::import_vmap1(const std::string & vmap_file, const Opt & opts){
   // read VMAP file
   ifstream in(vmap_file);
   VMap1 vmap1_data = read_vmap1(in);
-
   for (auto const & o:vmap1_data){
+
+    // skip empty objects
+    if (o.is_empty()) continue;
 
     VMapObj o1;
     if (o.type & 0x100000) o1.cl = LINE;
