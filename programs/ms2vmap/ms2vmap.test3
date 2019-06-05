@@ -1,13 +1,13 @@
 #!/bin/bash -efu
 
-# General interface and option tests
-# See also getopt module tests
+# VMAP1 import/export
 
 P=${1:-./ms2vmap}
 
 . ../test_lib.sh
 
-assert "$P tmp import_mp" "Error: import_mp: file name expected" 1
+assert "$P tmp import_vmap1" "Error: import_vmap1: file name expected" 1
+assert "$P tmp import_vmap1 missing.vmap" "Error: can't read VMAP file" 1
 
 rm -f tmp.db tmp.dbg
 
