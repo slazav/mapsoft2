@@ -487,6 +487,9 @@ VMap::import_vmap1(const std::string & vmap_file, const Opt & opts){
     // source
     if (o.opts.exists("Source")) o1.src=o.opts.get<string>("Source");
 
+    // angle (deg -> deg)
+    if (o.opts.exists("Angle")) o1.angle=o.opts.get<float>("Angle");
+
     // data
     o1.dMultiLine::operator=(o); // set data
 
@@ -583,6 +586,9 @@ VMap::export_vmap1(const std::string & vmap_file, const Opt & opts){
 
     // source
     if (o.src!="") o1.opts.put("Source", o.src);
+
+    // angle (deg->deg)
+    if (o.angle!=0) o1.opts.put("Angle", o.angle);
 
     // points
     o1.dMultiLine::operator=(o);
