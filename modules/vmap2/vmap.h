@@ -39,12 +39,13 @@ struct VMapObj: public dMultiLine {
   VMapObjClass    cl;      // object class: POINT, LINE, POLYGON
   int             type;    // = MP type
   VMapObjDir      dir;     // object direction: NO, FRW, BCK
+  float           angle;   // object angle, deg
   std::string     name;    // object name (to be printed on map labels)
   std::string     comm;    // object comment
   std::string     src;     // object source
 
   // defaults
-  VMapObj() {cl=POINT; type=0; dir=FRW;};
+  VMapObj() {cl=POINT; type=0; dir=FRW; angle=0;}
 
   // pack object to a string (for DB storage)
   std::string pack() const;
@@ -56,18 +57,19 @@ struct VMapObj: public dMultiLine {
   // operators <=>
   /// Less then operator.
   bool operator< (const VMapObj & o) const {
-    if (cl!=o.cl)     return cl<o.cl;
-    if (type!=o.type) return type<o.type;
-    if (dir!=o.dir)   return dir<o.dir;
-    if (name!=o.name) return name<o.name;
-    if (comm!=o.comm) return comm<o.comm;
-    if (src!=o.src)   return src<o.src;
+    if (cl!=o.cl)       return cl<o.cl;
+    if (type!=o.type)   return type<o.type;
+    if (dir!=o.dir)     return dir<o.dir;
+    if (angle!=o.angle) return angle<o.angle;
+    if (name!=o.name)   return name<o.name;
+    if (comm!=o.comm)   return comm<o.comm;
+    if (src!=o.src)     return src<o.src;
     return dMultiLine::operator<(o);
   }
 
   /// Equal opertator.
   bool operator== (const VMapObj & o) const {
-    return cl==o.cl && type==o.type && dir==o.dir &&
+    return cl==o.cl && type==o.type && dir==o.dir && angle==o.angle &&
         name==o.name && comm==o.comm && src==o.src &&
         dMultiLine::operator==(o);
   }

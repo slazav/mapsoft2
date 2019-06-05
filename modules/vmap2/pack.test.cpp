@@ -51,6 +51,7 @@ main(){
       o1.cl = LINE;
       o1.type = 0x2342;
       o1.dir  = BCK;
+      o1.angle  = 60;
       o1.name = "object name\nsecond line";
       o1.comm = "object comment\nsecond line";
       o1.src = "object source\nsecond line";

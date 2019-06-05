@@ -26,6 +26,18 @@ vmap_pack_str(ostream & s, const char *tag, const std::string & str){
   if (s.fail()) throw Err() << "vmap_pack_str: write error";
 }
 
+// pack any type
+template <typename T>
+void
+vmap_pack(ostream & s, const char *tag, const T & v){
+  if (strlen(tag)!=4) throw Err() << "vmap_pack_str: 4-byte tag expected";
+  s.write(tag, 4);
+  uint32_t size = sizeof(T);
+  s.write((char *)&size, sizeof(uint32_t));
+  s.write((char *)&v, size);
+  if (s.fail()) throw Err() << "vmap_pack_str: write error";
+}
+
 // Pack a multiline with LonLat coordinates (as a multiple "crds" tags).
 // Double values are multiplied by 1e7 and rounded to integer values.
 void
@@ -67,6 +79,18 @@ vmap_unpack_str(istream & s){
   return str;
 }
 
+// unpack any type (tag is already read)
+template <typename T>
+T vmap_unpack(istream & s){
+  uint32_t size;
+  s.read((char*)&size, sizeof(uint32_t));
+  if (size != sizeof(T)) throw Err() << "vmap_unpack: bad data size";
+  T ret;
+  s.read((char*)&ret, size);
+  if (s.fail()) throw Err() << "vmap_unpack_str: read error";
+  return ret;
+}
+
 // unpack coordinate line (tag is already read)
 dLine
 vmap_unpack_crds(istream & s){
@@ -91,18 +115,23 @@ string
 VMapObj::pack() const {
   ostringstream s;
 
-  // 1. three integer numbers: class, type, direction:
+  // two integer numbers: class, type:
   int32_t v;
   v = (int32_t)cl;   s.write((char *)&v, sizeof(int32_t));
   v = (int32_t)type; s.write((char *)&v, sizeof(int32_t));
-  v = (int32_t)dir;  s.write((char *)&v, sizeof(int32_t));
 
-  // 2. text fields (4-byte tag, 4-byte length, data);
-  vmap_pack_str(s, "name", name);
-  vmap_pack_str(s, "comm", comm);
-  vmap_pack_str(s, "src ", src);
+  // optional direction (int value)
+  if (dir!=NO) vmap_pack<uint32_t>(s, "dir ", (uint32_t)dir);
 
-  // 3. coordinates (4-byte tag, 4-byte length, data);
+  // optional angle (integer value, 1/1000 degrees)
+  if (angle!=0) vmap_pack<int32_t>(s, "angl", (int32_t)(angle*1000));
+
+  // optional text fields (4-byte tag, 4-byte length, data);
+  if (name!="") vmap_pack_str(s, "name", name);
+  if (comm!="") vmap_pack_str(s, "comm", comm);
+  if (src!="") vmap_pack_str(s, "src ", src);
+
+  // coordinates (4-byte tag, 4-byte length, data);
   vmap_pack_crds(s, *this);
   return s.str();
 }
@@ -116,23 +145,22 @@ VMapObj::unpack(const std::string & str) {
 
   istringstream s(str);
 
-  // 1. three integer numbers: class, type, direction:
+  // class
   int32_t v;
   s.read((char*)&v, sizeof(int32_t));
   if (v<0 || v>2) throw Err() << "VMapObj::unpack: bad class value: " << v;
   cl = (VMapObjClass)v;
 
+  // type
   s.read((char*)&v, sizeof(int32_t));
   type = v;
 
-  s.read((char*)&v, sizeof(int32_t));
-  if (v<0 || v>2) throw Err() << "VMapObj::unpack: bad direction value: " << v;
-  dir = (VMapObjDir)v;
-
-  // string and coordinate fields
+  // other fields
   while (1){
     string tag = vmap_unpack_tag(s);
     if (tag == "") break;
+    else if (tag == "dir ") dir = (VMapObjDir)vmap_unpack<uint32_t>(s);
+    else if (tag == "angl") angle = vmap_unpack<int32_t>(s)/1000.0;
     else if (tag == "name") name = vmap_unpack_str(s);
     else if (tag == "comm") comm = vmap_unpack_str(s);
     else if (tag == "src ") src = vmap_unpack_str(s);

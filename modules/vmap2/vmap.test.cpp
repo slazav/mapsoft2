@@ -16,6 +16,7 @@ main(){
     assert(o1.cl == POINT);
     assert(o1.type == 0);
     assert(o1.dir == FRW);
+    assert(o1.angle == 0);
     assert(o1.name == "");
     assert(o1.comm == "");
     assert(o1.src == "");
@@ -40,6 +41,13 @@ main(){
     assert(o2 >= o1);
 
     o2=o1; o2.dir = BCK;
+    assert(o1 != o2);
+    assert(o1 < o2);
+    assert(o1 <= o2);
+    assert(o2 > o1);
+    assert(o2 >= o1);
+
+    o2=o1; o2.angle = 10;
     assert(o1 != o2);
     assert(o1 < o2);
     assert(o1 <= o2);

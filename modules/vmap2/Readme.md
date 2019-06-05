@@ -5,6 +5,7 @@ A dMultiLine structure with additional fields:
 `VMapObjClass cl` -- object class: POINT, LINE, POLYGON, default: POINT
 `int type` -- object type (like MP type), default: 0
 `VMapObjDir dir` -- object direction: NO, FRW, BCK, default: NO
+`float angle`  -- object angle, degrees, default 0
 `std::string name` -- object name (to be printed on map labels)
 `std::string comm` -- object comment
 `std::string src` -- object source
