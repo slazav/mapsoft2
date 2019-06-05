@@ -21,31 +21,31 @@
 // enums
 
 typedef enum{
-  POINT    = 0,
-  LINE     = 1,
-  POLYGON  = 2
+  VMAP_POINT    = 0,
+  VMAP_LINE     = 1,
+  VMAP_POLYGON  = 2
 } VMapObjClass;
 
 typedef enum{
-  NO    = 0,
-  FRW   = 1,
-  BCK   = 2
+  VMAP_DIR_NO    = 0,
+  VMAP_DIR_FRW   = 1,
+  VMAP_DIR_BCK   = 2
 } VMapObjDir;
 
 /*********************************************************************/
 // VMapObj -- a single map object
 
 struct VMapObj: public dMultiLine {
-  VMapObjClass    cl;      // object class: POINT, LINE, POLYGON
+  VMapObjClass    cl;      // object class: VMAP_POINT, VMAP_LINE, VMAP_POLYGON
   int             type;    // = MP type
-  VMapObjDir      dir;     // object direction: NO, FRW, BCK
+  VMapObjDir      dir;     // object direction: VMAP_DIR_NO, VMAP_DIR_FRW, VMAP_DIR_BCK
   float           angle;   // object angle, deg
   std::string     name;    // object name (to be printed on map labels)
   std::string     comm;    // object comment
   std::string     src;     // object source
 
   // defaults
-  VMapObj() {cl=POINT; type=0; dir=FRW; angle=0;}
+  VMapObj() {cl=VMAP_POINT; type=0; dir=VMAP_DIR_NO; angle=0;}
 
   // pack object to a string (for DB storage)
   std::string pack() const;

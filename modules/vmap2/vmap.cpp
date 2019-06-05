@@ -121,7 +121,7 @@ VMapObj::pack() const {
   v = (int32_t)type; s.write((char *)&v, sizeof(int32_t));
 
   // optional direction (int value)
-  if (dir!=NO) vmap_pack<uint32_t>(s, "dir ", (uint32_t)dir);
+  if (dir!=VMAP_DIR_NO) vmap_pack<uint32_t>(s, "dir ", (uint32_t)dir);
 
   // optional angle (integer value, 1/1000 degrees)
   if (angle!=0) vmap_pack<int32_t>(s, "angl", (int32_t)(angle*1000));
@@ -129,7 +129,7 @@ VMapObj::pack() const {
   // optional text fields (4-byte tag, 4-byte length, data);
   if (name!="") vmap_pack_str(s, "name", name);
   if (comm!="") vmap_pack_str(s, "comm", comm);
-  if (src!="") vmap_pack_str(s, "src ", src);
+  if (src!="")  vmap_pack_str(s, "src ", src);
 
   // coordinates (4-byte tag, 4-byte length, data);
   vmap_pack_crds(s, *this);
@@ -404,7 +404,7 @@ VMap::export_mp(const string & mp_file, const Opt & opts){
 /// Import objects from VMAP1 file.
 void
 VMap::import_vmap1(const std::string & vmap_file, const Opt & opts){
-
+	
   // type conversion tables (point, line, polygon)
   vector<iLine> cnvs;
   cnvs.resize(3);
@@ -458,8 +458,8 @@ VMap::import_vmap1(const std::string & vmap_file, const Opt & opts){
     if (o.is_empty()) continue;
 
     VMapObj o1;
-    if (o.type & 0x100000) o1.cl = LINE;
-    if (o.type & 0x200000) o1.cl = POLYGON;
+    if (o.type & 0x100000) o1.cl = VMAP_LINE;
+    if (o.type & 0x200000) o1.cl = VMAP_POLYGON;
 
     // convert type
     for (auto const & cnv: cnvs[o1.cl]){
@@ -562,8 +562,8 @@ VMap::export_vmap1(const std::string & vmap_file, const Opt & opts){
     // skip unknown types
     if (!o1.type) continue;
 
-    if (o.cl == LINE)    o1.type |= 0x100000;
-    if (o.cl == POLYGON) o1.type |= 0x200000;
+    if (o.cl == VMAP_LINE)    o1.type |= 0x100000;
+    if (o.cl == VMAP_POLYGON) o1.type |= 0x200000;
 
     // name
     o1.text = o.name;

@@ -48,9 +48,9 @@ main(){
     // packing and unpacking of VMapObj
     {
       VMapObj o1,o2;
-      o1.cl = LINE;
+      o1.cl = VMAP_LINE;
       o1.type = 0x2342;
-      o1.dir  = BCK;
+      o1.dir  = VMAP_DIR_NO;
       o1.angle  = 60;
       o1.name = "object name\nsecond line";
       o1.comm = "object comment\nsecond line";
@@ -58,6 +58,19 @@ main(){
       o1.push_back(dLine("[[0,0],[1,2],[3,4]]"));
       o1.push_back(dLine("[[5,4],[4,3],[3,2]]"));
       std::string pack = o1.pack();
+      o2.unpack(pack);
+      assert(o1==o2);
+
+      o1.cl = VMAP_POINT;
+      o1.type = 0x12;
+      o1.dir  = VMAP_DIR_FRW;
+      o1.angle  = 0;
+      o1.name = "";
+      o1.comm = "";
+      o1.src = "";
+      o1.push_back(dLine("[[0,0],[1,2],[3,4]]"));
+      o1.push_back(dLine("[[5,4],[4,3],[3,2]]"));
+      pack = o1.pack();
       o2.unpack(pack);
       assert(o1==o2);
     }

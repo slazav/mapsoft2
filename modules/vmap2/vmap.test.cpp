@@ -13,9 +13,9 @@ main(){
   try{
     VMapObj o1,o2;
     // defaults
-    assert(o1.cl == POINT);
+    assert(o1.cl == VMAP_POINT);
     assert(o1.type == 0);
-    assert(o1.dir == FRW);
+    assert(o1.dir == VMAP_DIR_NO);
     assert(o1.angle == 0);
     assert(o1.name == "");
     assert(o1.comm == "");
@@ -26,7 +26,7 @@ main(){
     assert(o1 == o2);
     assert(o1 >= o2);
     assert(o1 <= o2);
-    o2.cl = LINE;
+    o2.cl = VMAP_LINE;
     assert(o1 != o2);
     assert(o1 < o2);
     assert(o1 <= o2);
@@ -40,7 +40,7 @@ main(){
     assert(o2 > o1);
     assert(o2 >= o1);
 
-    o2=o1; o2.dir = BCK;
+    o2=o1; o2.dir = VMAP_DIR_BCK;
     assert(o1 != o2);
     assert(o1 < o2);
     assert(o1 <= o2);
