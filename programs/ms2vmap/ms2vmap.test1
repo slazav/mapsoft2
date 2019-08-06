@@ -7,10 +7,14 @@ P=${1:-./ms2vmap}
 
 . ../test_lib.sh
 
+rm -f tmp.db
+
 help_msg="$($P -h ||:)"
 assert "$P" "$help_msg" 1
 assert "$P --help" "$help_msg" 1
 assert "$P --xxx " "Error: unknown option: --xxx" 1
 
-assert "$P a" "$help_msg" 1
-assert "$P a b" "Error: ms2vmap: unknown action: b" 1
+assert "$P tmp" "$help_msg" 1
+assert "$P tmp b" "Error: ms2vmap: unknown action: b" 1
+
+rm -f tmp.db
