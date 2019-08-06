@@ -17,7 +17,7 @@ class DBSimple::Impl {
     std::shared_ptr<void> db;   // database
     std::shared_ptr<void> cur;  // cursor
 
-    Impl(const std::string & fname, bool create);
+    Impl(const char *fname, const char *dbname, bool create);
     ~Impl() {}
 
    void put(const uint32_t key, const std::string & val);
@@ -28,8 +28,8 @@ class DBSimple::Impl {
 
 /**********************************************************/
 // Main class methods
-DBSimple::DBSimple(const std::string & fname, bool create):
-  impl(std::unique_ptr<Impl>(new Impl(fname, create))) { }
+DBSimple::DBSimple(const char *fname, const char *dbname, bool create):
+  impl(std::unique_ptr<Impl>(new Impl(fname, dbname, create))) { }
 
 void
 DBSimple::put(const uint32_t key, const std::string & val){
@@ -57,7 +57,7 @@ DBSimple::~DBSimple(){}
 /**********************************************************/
 // Implementation class methods
 
-DBSimple::Impl::Impl(const std::string &fname, bool create){
+DBSimple::Impl::Impl(const char *fname, const char *dbname, bool create){
   // set flags
   int open_flags = create? DB_CREATE:0;
 
@@ -70,13 +70,13 @@ DBSimple::Impl::Impl(const std::string &fname, bool create){
   /* Open the database */
   ret = dbp->open(dbp,    /* Pointer to the database */
                   NULL,          /* Txn pointer */
-                  fname.c_str(), /* file */
-                  NULL,          /* database */
+                  fname,         /* file */
+                  dbname,        /* database (can be NULL) */
                   DB_BTREE,      /* Database type (using btree) */
                   open_flags,    /* Open flags */
                   0644);         /* File mode*/
   if (ret != 0)
-    throw Err() << "db_simple: " << db_strerror(ret);
+    throw Err() << "db_simple: " << fname << ": " << db_strerror(ret);
 
   /* open cursor */
   DBC *curp=NULL;

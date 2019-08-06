@@ -11,7 +11,7 @@ main(){
   try{
     {
       // create new file
-      GeoHashDB db("a.dbh", 1);
+      GeoHashDB db("a.dbh", NULL, 1);
 
       db.put(1, dRect(-0.01,-0.01, 0.02,0.02));
       db.put(2, dRect(1,-0.01,     0.02,0.02));
@@ -45,7 +45,7 @@ main(){
     }
     {
       // open existing file
-      GeoHashDB db("a.dbh", 0);
+      GeoHashDB db("a.dbh", NULL, 0);
       std::set<int> v1 = db.get(dRect(36,57, 0.001,0.001));
       //for (auto i:v1) std::cerr << "> " << i << "\n";
       assert(v1.size()==3);

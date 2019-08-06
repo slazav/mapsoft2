@@ -13,7 +13,7 @@ main(){
       // create new file
       unlink("a.dbp");
 
-      DBSimple db("a.dbp", 1);
+      DBSimple db("a.dbp", NULL, 1);
       uint32_t key=1;
       assert(db.get(key) == "");
       assert(key == 0xFFFFFFFF);
@@ -74,12 +74,34 @@ main(){
     }
     {
       // open existing file
-      DBSimple db("a.dbp", 0);
+      DBSimple db("a.dbp", NULL, 0);
       uint32_t key = 2;
       assert(db.get(key) == "fgh");
       assert(db.get_next(key) == "def");
     }
     unlink("a.dbp");
+
+    {
+      // open two databases in one file
+      DBSimple db1("a.dbp", "db1", 1);
+      db1.put(1, "abc");
+      db1.put(2, "cde");
+
+      DBSimple db2("a.dbp", "db2", 1);
+      db2.put(1, "abc2");
+      db2.put(2, "cde2");
+
+      uint32_t key;
+      key = 1;
+      assert(db1.get(key) == "abc");
+      assert(db1.get_next(key) == "cde");
+
+      key = 1;
+      assert(db2.get(key) == "abc2");
+      assert(db2.get_next(key) == "cde2");
+    }
+    unlink("a.dbp");
+
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";

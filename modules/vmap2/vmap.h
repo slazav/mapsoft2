@@ -96,7 +96,8 @@ private:
 
 public:
   VMap(const std::string &name, bool create):
-    storage(name + ".db", create), geo_ind(name + ".dbg", create) {};
+    storage((name + ".db").c_str(), "objects", create),
+    geo_ind((name + ".db").c_str(), "geohash", create) {};
 
   /// Get border.
   dMultiLine get_brd() const {return brd;}
@@ -109,6 +110,8 @@ public:
 
   /// Add object to the map.
   void add(const VMapObj & o);
+
+  /* Import/export */
 
   /// Import objects from MP file.
   void import_mp(

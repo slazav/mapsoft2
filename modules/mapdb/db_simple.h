@@ -19,7 +19,10 @@ class DBSimple{
 
    // TODO: write iterator?
 
-   DBSimple(const std::string & fname, bool create);
+   // open database:
+   // fname - file name, dbname - database name (can be NULL),
+   // create - create flag.
+   DBSimple(const char *fname, const char *dbname, bool create);
    ~DBSimple();
 
    // Put data with a given key (overwrite old value if it exists).

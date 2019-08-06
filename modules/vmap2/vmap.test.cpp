@@ -8,6 +8,8 @@
 
 using namespace std;
 
+/* tests for VMAP objects */
+
 int
 main(){
   try{
