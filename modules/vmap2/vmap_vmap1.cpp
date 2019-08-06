@@ -16,7 +16,7 @@ using namespace std;
 /// Import objects from VMAP1 file.
 void
 VMap::import_vmap1(const std::string & vmap_file, const Opt & opts){
-	
+
   // type conversion tables (point, line, polygon)
   vector<iLine> cnvs;
   cnvs.resize(3);
@@ -86,7 +86,6 @@ VMap::import_vmap1(const std::string & vmap_file, const Opt & opts){
 
     // name
     o1.name = o.text;
-
     // comments
     for (auto const & c:o.comm) o1.comm += c + '\n';
     if (o1.comm.size()) o1.comm.resize(o1.comm.size()-1); // cut trailing '\n'
@@ -107,6 +106,14 @@ VMap::import_vmap1(const std::string & vmap_file, const Opt & opts){
 
     add(o1);
   }
+
+  // border
+  dMultiLine brd;
+  brd.push_back(vmap1_data.brd);
+  set_brd(brd);
+
+  // map name
+  set_name(vmap1_data.name);
 
 }
 
@@ -156,13 +163,12 @@ VMap::export_vmap1(const std::string & vmap_file, const Opt & opts){
   if (opts.exists("cnv_polygon")) cnvs[0] = opts.get<dLine>("cnv_polygon");
 
   VMap1 vmap1_data;
-  uint32_t key = 100;
-  std::string str = storage.get_first(key);
+  uint32_t key = 0;
+  std::string str = objects.get_first(key);
 
   while (key!=0xFFFFFFFF){
     VMapObj o;
     o.unpack(str);
-    str = storage.get_next(key);
 
     VMap1Obj o1;
 
@@ -206,7 +212,17 @@ VMap::export_vmap1(const std::string & vmap_file, const Opt & opts){
     o1.dMultiLine::operator=(o);
 
     vmap1_data.push_back(o1);
+    str = objects.get_next(key);
   }
+
+  // map border
+  dMultiLine brd = get_brd();
+  if (brd.size()>0) vmap1_data.brd = *brd.begin();
+
+  // map name
+  vmap1_data.name = get_name();
+
+  // write vmap file
   ofstream out(vmap_file);
   write_vmap1(out, vmap1_data);
 }

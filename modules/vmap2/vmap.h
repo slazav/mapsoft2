@@ -88,28 +88,44 @@ struct VMapObj: public dMultiLine {
 // TODO: use DB storage instead of map!
 class VMap {
 private:
-    DBSimple   storage;
+    DBSimple   objects, mapinfo;
     GeoHashDB  geo_ind;
 
-    dMultiLine  brd; // border (will be kept in the DB)
-    dRect  bbox;     // bounding box (will be kept in the DB)
-
 public:
-  VMap(const std::string &name, bool create):
-    storage((name + ".db").c_str(), "objects", create),
-    geo_ind((name + ".db").c_str(), "geohash", create) {};
+  VMap(const char *name, bool create):
+    mapinfo(name, "mapinfo", create),
+    objects(name, "objects", create),
+    geo_ind(name, "geohash", create) {};
 
-  /// Get border.
-  dMultiLine get_brd() const {return brd;}
+#define MAPINFO_NAME 1
+#define MAPINFO_BRD  2
+#define MAPINFO_BBOX 3
 
-  /// Set border.
-  void set_brd(const dMultiLine & b) { brd = b;}
+  ///////////////
 
-  /// Get bbox.
-  dRect get_bbox() const {return bbox;}
+  /// Get map name. If the field is not set return empty string without an error.
+  std::string get_name();
+
+  /// Set map name
+  void set_name(const std::string & name);
+
+  /// Get map border. If the field is not set return empty dMultiLine without an error
+  dMultiLine get_brd();
+
+  /// Set map border
+  void set_brd(const dMultiLine & b);
+
+  /// Get map bounding box. If the field is not set return empty dRect
+  dRect get_bbox();
+
+  /// Set map bounding box (internal use only!)
+  private: void set_bbox(const dRect & b);
+
+  public:
+
 
   /// Add object to the map.
-  void add(const VMapObj & o);
+  uint32_t add(const VMapObj & o);
 
   /* Import/export */
 

@@ -170,27 +170,104 @@ VMapObj::unpack(const std::string & str) {
 
 }
 
+/**********************************************************/
+
+std::string
+VMap::get_name() {
+  dMultiLine ret;
+  uint32_t key = MAPINFO_NAME;
+  return mapinfo.get(key);
+}
+
+/// Set map name
+void
+VMap::set_name(const std::string & name) {
+  mapinfo.put(MAPINFO_NAME, name);
+}
+
+dMultiLine
+VMap::get_brd() {
+  dMultiLine ret;
+  uint32_t key = MAPINFO_BRD;
+  istringstream s(mapinfo.get(key));
+  if (key == 0xFFFFFFFF) return ret;
+
+  // crds fields in the string
+  while (1){
+    string tag = vmap_unpack_tag(s);
+    if (tag == "") break;
+    else if (tag == "crds") ret.push_back(vmap_unpack_crds(s));
+    else throw Err() << "VMap::get_brd: unknown tag: " << tag;
+  }
+  return ret;
+}
+
+void
+VMap::set_brd(const dMultiLine & b) {
+  ostringstream s;
+  vmap_pack_crds(s, b);
+  mapinfo.put(MAPINFO_BRD, s.str());
+}
+
+dRect
+VMap::get_bbox() {
+  dRect ret;
+  uint32_t key = MAPINFO_BBOX;
+  istringstream s(mapinfo.get(key));
+  if (key == 0xFFFFFFFF) return ret;
+
+  int32_t x1,y1,x2,y2;
+  s.read((char*)&x1, sizeof(int32_t));
+  s.read((char*)&y1, sizeof(int32_t));
+  s.read((char*)&x2, sizeof(int32_t));
+  s.read((char*)&y2, sizeof(int32_t));
+  if (s.fail())
+    throw Err() << "VMap::get_bbox: broken field";
+  return dRect(dPoint(x1/1e7, y1/1e7), dPoint(x2/1e7, y2/1e7));
+}
+
+void
+VMap::set_bbox(const dRect & b) {
+  int32_t x1 = rint(b.tlc().x*1e7);
+  int32_t y1 = rint(b.tlc().y*1e7);
+  int32_t x2 = rint(b.brc().x*1e7);
+  int32_t y2 = rint(b.brc().y*1e7);
+  ostringstream s;
+  s.write((char *)&x1, sizeof(int32_t));
+  s.write((char *)&y1, sizeof(int32_t));
+  s.write((char *)&x2, sizeof(int32_t));
+  s.write((char *)&y2, sizeof(int32_t));
+  mapinfo.put(MAPINFO_BBOX, s.str());
+}
+
 
 /**********************************************************/
-void
+uint32_t
 VMap::add(const VMapObj & o){
   // do not work with empty objects
   if (o.is_empty()) throw Err() << "VMap::add: empty object";
 
   // get last id + 1
   uint32_t id;
-  storage.get_last(id);
-  if (id == 0xFFFFFFFF) id = 0;
+  objects.get_last(id);
+  if (id == 0xFFFFFFFF) id=0;
   else id++;
-  if (id<100) id=100; // values below 100 are reserved.
+
+  if (id == 0xFFFFFFFF)
+    throw Err() << "VMap::add: object ID overfull";
+
 
   // insert object
-  storage.put(id, o.pack());
+  objects.put(id, o.pack());
+
   // update bbox
-  dRect r = o.bbox2d();
-  bbox.expand(r);
+  dRect bbox0 = get_bbox();
+  dRect bbox1 = o.bbox2d();
+  bbox0.expand(bbox1);
+  set_bbox(bbox0);
 
   // update statial index
-  geo_ind.put(id, r);
+  geo_ind.put(id, bbox1);
+  return id;
 }
 

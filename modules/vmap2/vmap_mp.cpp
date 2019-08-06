@@ -166,14 +166,14 @@ VMap::export_mp(const string & mp_file, const Opt & opts){
   if (opts.exists("cnv_polygon")) cnvs[0] = opts.get<dLine>("cnv_polygon");
 
   MP mp_data;
-  uint32_t key = 100;
+  uint32_t key = 0;
 
-  std::string str = storage.get_first(key);
+  std::string str = objects.get_first(key);
 
   while (key!=0xFFFFFFFF){
     VMapObj o;
     o.unpack(str);
-    str = storage.get_next(key);
+    str = objects.get_next(key);
 
     MPObj o1;
     o1.Class = o.cl;
