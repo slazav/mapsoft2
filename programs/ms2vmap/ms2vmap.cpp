@@ -50,7 +50,7 @@ main(int argc, char *argv[]){
     if (GO.exists("pod"))  usage(true);
 
     if (argc<2) usage();
-    std::string mapname(argv[0]);
+    const char *mapname = argv[0];
     std::string action(argv[1]);
     argc-=1; argv+=1; // now argv points to the action name!
 
