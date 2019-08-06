@@ -6,18 +6,12 @@
 #include <sstream>
 #include "err/err.h"
 #include "vmap.h"
+#include "pack.h"
 
 // Packing and unpacking of VMapObj
 
 using namespace std;
 
-// low-level functions for packing and unpacking strings and coordinates
-void vmap_pack_str(ostream & s, const char *tag, const std::string & str);
-void vmap_pack_crds(ostream & s, const dMultiLine & ml);
-
-std::string vmap_unpack_tag(istream & s);
-std::string vmap_unpack_str(istream & s);
-dLine vmap_unpack_crds(istream & s);
 
 int
 main(){
@@ -32,6 +26,9 @@ main(){
       dMultiLine crds1("[[[-180,-90],[0,0],[180,90]],[],[[37.11,56.20],[37.22,56.11]]]");
       vmap_pack_crds(s1, crds1);
 
+      dRect bbox("[100,200,10,10]");
+      vmap_pack_bbox(s1, bbox);
+
       dMultiLine crds2;
       std::istringstream s2(s1.str());
       while (1){
@@ -40,6 +37,7 @@ main(){
         else if (tag == "str1") assert(vmap_unpack_str(s2) == "text1");
         else if (tag == "str2") assert(vmap_unpack_str(s2) == "text2");
         else if (tag == "crds") crds2.push_back(vmap_unpack_crds(s2));
+        else if (tag == "bbox") assert(vmap_unpack_bbox(s2) == bbox);
         else throw Err() << "Unknown tag: " << tag;
       }
       assert(dist(crds1,crds2)<1e-7);

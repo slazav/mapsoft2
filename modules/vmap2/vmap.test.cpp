@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include "err/err.h"
+#include "pack.h"
 #include "vmap.h"
 
 using namespace std;
