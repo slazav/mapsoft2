@@ -43,6 +43,7 @@ class DBSimple{
    std::string get(uint32_t & key);
 
    // Get data with key larger or equals then the given key.
+   // Value of key is set according to the returned record.
    // If record is not found then key is set to 0xFFFFFFFF and
    // empty string is returned.
    std::string get_first(uint32_t & key);
@@ -61,8 +62,7 @@ class DBSimple{
 
    // Get last entry.
    // If record is not found key is set to 0xFFFFFFFF and
-   // empty string is returned.
-   // On input key is ignored, cursor position is used.
+   // empty string is returned. On input key is ignored.
    std::string get_last(uint32_t & key);
 
 };

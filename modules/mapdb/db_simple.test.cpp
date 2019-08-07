@@ -40,7 +40,15 @@ main(){
       assert(db.get_first(key) == "");
       assert(key == 0xFFFFFFFF);
 
+      key=2;
+      assert(db.get_first(key) == "fgh");
+      assert(key == 2);
+
       key=525;
+      assert(db.get_last(key) == "bbb");
+      assert(key == 257);
+
+      key=2;
       assert(db.get_last(key) == "bbb");
       assert(key == 257);
 
