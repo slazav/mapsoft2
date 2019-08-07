@@ -18,6 +18,9 @@ main(){
       assert(db.get(key) == "");
       assert(key == 0xFFFFFFFF);
       key=1;
+      assert(db.get_range(key) == "");
+      assert(key == 0xFFFFFFFF);
+      key=1;
       assert(db.get_first(key) == "");
       assert(key == 0xFFFFFFFF);
       key=1;
@@ -37,11 +40,11 @@ main(){
 
 
       key=525;
-      assert(db.get_first(key) == "");
+      assert(db.get_range(key) == "");
       assert(key == 0xFFFFFFFF);
 
       key=2;
-      assert(db.get_first(key) == "fgh");
+      assert(db.get_range(key) == "fgh");
       assert(key == 2);
 
       key=525;
@@ -52,14 +55,22 @@ main(){
       assert(db.get_last(key) == "bbb");
       assert(key == 257);
 
-      key=0xFFFFFFFF;
-      assert(db.get_first(key) == "");
-      assert(key == 0xFFFFFFFF);
+      key=525;
+      assert(db.get_first(key) == "abc");
+      assert(key == 1);
 
       key=0;
       assert(db.get_first(key) == "abc");
       assert(key == 1);
-      assert(db.get_first(key) == "abc");
+
+      key=0xFFFFFFFF;
+      assert(db.get_range(key) == "");
+      assert(key == 0xFFFFFFFF);
+
+      key=0;
+      assert(db.get_range(key) == "abc");
+      assert(key == 1);
+      assert(db.get_range(key) == "abc");
       assert(key == 1);
 
       key=2;
@@ -78,6 +89,12 @@ main(){
       assert(key == 3);
       assert(db.get_prev(key) == "fgh");
       assert(key == 2);
+
+      assert(db.del(128) == 1);
+      assert(db.del(257) == 1);
+      assert(db.del(257) == 0);
+      key=257;
+      assert(db.get(key) == "");
 
     }
     {
@@ -104,8 +121,13 @@ main(){
       assert(db1.get_next(key) == "cde1"); assert(key==2);
       assert(db1.get_next(key) == "cde2"); assert(key==2);
 
-      assert(db1.get_first(key) == "cde1");
+      assert(db1.get_range(key) == "cde1");
       assert(db1.get_next(key) == "cde2"); assert(key==2);
+
+      assert(db1.del(2) == 2);
+      assert(db1.del(2) == 0);
+      assert(db1.get(key) == "");
+
     }
     unlink("a.dbp");
 

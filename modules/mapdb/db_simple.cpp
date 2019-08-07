@@ -24,6 +24,7 @@ class DBSimple::Impl {
 
    std::string get(uint32_t & key, int flags);
 
+   uint32_t del(const uint32_t key);
 };
 
 /**********************************************************/
@@ -40,7 +41,7 @@ std::string
 DBSimple::get(uint32_t & key){ return impl->get(key, DB_SET);}
 
 std::string
-DBSimple::get_first(uint32_t & key){ return impl->get(key, DB_SET_RANGE);}
+DBSimple::get_range(uint32_t & key){ return impl->get(key, DB_SET_RANGE);}
 
 std::string
 DBSimple::get_next(uint32_t & key){ return impl->get(key, DB_NEXT);}
@@ -50,6 +51,12 @@ DBSimple::get_prev(uint32_t & key){ return impl->get(key, DB_PREV);}
 
 std::string
 DBSimple::get_last(uint32_t & key){ return impl->get(key, DB_LAST);}
+
+std::string
+DBSimple::get_first(uint32_t & key){ return impl->get(key, DB_FIRST);}
+
+uint32_t
+DBSimple::del(const uint32_t key) {return impl->del(key);}
 
 
 DBSimple::~DBSimple(){}
@@ -139,5 +146,29 @@ DBSimple::Impl::get(uint32_t & key, int flags){
     throw Err() << "db_simple: broken database, wrong key size: " << k.size;
   key = unpack_uint32(&k);
   return std::string((char*)v.data, (char*)v.data+v.size);
+}
+
+// Delete function.
+uint32_t
+DBSimple::Impl::del(const uint32_t key){
+  DB  *dbp = (DB*)db.get();
+  DBC *dbc = (DBC*)cur.get();
+  std::string key_s = pack_uint32(key);
+  DBT k = mk_dbt(key_s);
+  DBT v = mk_dbt();
+  uint32_t num = 0;
+  int flags = DB_SET_RANGE;
+  while (1) {
+    int ret = dbc->c_get(dbc, &k, &v, flags);
+    if (ret == DB_NOTFOUND) {return num;}
+    if (ret != 0) throw Err() << "db_simple: " << db_strerror(ret);
+    if (k.size != sizeof(uint32_t))
+      throw Err() << "db_simple: broken database, wrong key size: " << k.size;
+    if (key != unpack_uint32(&k)) break;
+    flags = DB_NEXT;
+    dbc->c_del(dbc, 0);
+    num++;
+  }
+  return num;
 }
 
