@@ -21,7 +21,7 @@ std::string
 string_unpack_tag(istream & s){
   std::string tag(4,'\0');
   s.read((char*)tag.data(), 4);
-  if (s.eof()) return std::string();
+  if (s.gcount()==0) return string();
   if (s.fail()) throw Err() << "string_unpack_tag: read error";
   return tag;
 }

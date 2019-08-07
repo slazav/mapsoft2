@@ -17,7 +17,8 @@
 void string_pack_str(std::ostream & s, const char *tag, const std::string & str);
 
 
-// read 4-byte tag
+// read 4-byte tag, return empty string at the end of file,
+// throw error if there is not enough data for the tag.
 std::string string_unpack_tag(std::istream & s);
 
 // unpack string (tag is already read)
