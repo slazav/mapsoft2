@@ -25,6 +25,7 @@ class GeoHashDB::Impl : public GeoHashStorage {
 
    // no need to redifine get!
    void put(const int id, const dRect & range);
+   void del(const int id, const dRect & range);
    std::set<int> get_hash(const std::string & hash0, bool exact);
 
 };
@@ -36,6 +37,9 @@ GeoHashDB::GeoHashDB(const char *fname, const char *dbname, bool create):
 
 void
 GeoHashDB::put(const int id, const dRect & range){ impl->put(id, range);}
+
+void
+GeoHashDB::del(const int id, const dRect & range){ impl->del(id, range);}
 
 std::set<int>
 GeoHashDB::get(const dRect & range){ return impl->get(range);}
@@ -56,7 +60,7 @@ GeoHashDB::Impl::Impl(const char *fname, const char *dbname, bool create){
   db = std::shared_ptr<void>(dbp, bdb_close);
 
   // allow duplicates
-  ret = dbp->set_flags(dbp, DB_DUP);
+  ret = dbp->set_flags(dbp, DB_DUPSORT);
   if (ret != 0) throw Err() << "db_geohash: " << db_strerror(ret);
 
   /* Open the database */
@@ -79,10 +83,40 @@ GeoHashDB::Impl::put(const int id, const dRect & range){
     DBT k = mk_dbt(h);
     DBT v = mk_dbt(&id);
     // std::cerr << "PUT [" << h << "] " << id << "\n";
-    int ret = ((DB*)db.get())->put((DB*)db.get(), NULL, &k, &v, 0);
-    if (ret != 0) throw Err() << "db_geohash: " << db_strerror(ret);
+    // do nothing if key/value pair already exists
+    int ret = ((DB*)db.get())->put((DB*)db.get(), NULL, &k, &v, DB_NODUPDATA);
+    if (ret!=0 && ret!=DB_KEYEXIST) throw Err() << "db_geohash::put: " << db_strerror(ret);
   }
 }
+
+void
+GeoHashDB::Impl::del(const int id, const dRect & range){
+  std::set<std::string> hashes = GEOHASH_encode4(range, HASHLEN);
+
+  DBC *curs = NULL;
+  try {
+    // get cursor
+    ((DB*)db.get())->cursor((DB*)db.get(), NULL, &curs, 0);
+    if (curs==NULL) throw Err() << "db_geohash: can't get a cursor";
+
+    for (auto const & h:hashes) {
+      DBT k = mk_dbt(h);
+      DBT v = mk_dbt(&id);
+      int ret = curs->get(curs, &k, &v, DB_GET_BOTH);
+      if (ret == DB_NOTFOUND) continue;
+      if (ret != 0)
+        throw Err() << "db_geohash::del " << db_strerror(ret);
+      ret = curs->del(curs,0);
+      if (ret != 0) throw Err() << "db_geohash::del " << db_strerror(ret);
+      // std::cerr << "DEL [" << h << "] " << id << "\n";
+    }
+  }
+  catch (Err e){
+    if (curs) curs->close(curs);
+    throw e;
+  }
+}
+
 
 
 std::set<int>
@@ -101,7 +135,7 @@ GeoHashDB::Impl::get_hash(const std::string & hash0, bool exact){
 
     while (1){
       // get new record (hash>=hash0)
-      int res = curs->c_get(curs, &k, &v, fl);
+      int res = curs->get(curs, &k, &v, fl);
       if (res == DB_NOTFOUND) break;
       if (res!=0) throw Err() << "db_geohash: " << db_strerror(res);
 

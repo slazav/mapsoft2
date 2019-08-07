@@ -52,6 +52,26 @@ main(){
       assert(v1.count(5)==1);
       assert(v1.count(6)==1);
       assert(v1.count(9)==1);
+
+      db.del(9, dRect(-100,-50, 220,100));
+      //for (auto i:v1) std::cerr << "> " << i << "\n";
+      v1 = db.get(dRect(36,57, 0.001,0.001));
+      assert(v1.size()==2);
+      assert(v1.count(5)==1);
+      assert(v1.count(6)==1);
+
+      db.del(5, dRect(36,57,0.01,0.01));
+      v1 = db.get(dRect(36,57, 0.001,0.001));
+      assert(v1.size()==1);
+      assert(v1.count(6)==1);
+
+      // non-existing id-range pair!
+      db.del(6, dRect(36,57,0.01,0.01));
+      v1 = db.get(dRect(36,57, 0.001,0.001));
+      assert(v1.size()==1);
+      assert(v1.count(6)==1);
+
+
     }
     unlink("a.dbh");
 
