@@ -4,16 +4,21 @@
 #include <cstring>
 #include <string>
 
-#include "vmap.h"
+#include "mapdb.h"
 #include "mp/mp.h"
-#include "pack.h"
+#include "string_pack.h"
+
+// key names in the INF database
+#define INF_KEY_NAME 1
+#define INF_KEY_BRD  2
+#define INF_KEY_BBOX 3
 
 using namespace std;
 
 /**********************************************************/
 // pack object to a string (for DB storage)
 string
-VMapObj::pack() const {
+MapDBObj::pack() const {
   ostringstream s;
 
   // two integer numbers: class, type:
@@ -22,35 +27,35 @@ VMapObj::pack() const {
   v = (int32_t)type; s.write((char *)&v, sizeof(int32_t));
 
   // optional direction (int value)
-  if (dir!=VMAP_DIR_NO) vmap_pack<uint32_t>(s, "dir ", (uint32_t)dir);
+  if (dir!=MAPDB_DIR_NO) string_pack<uint32_t>(s, "dir ", (uint32_t)dir);
 
   // optional angle (integer value, 1/1000 degrees)
-  if (angle!=0) vmap_pack<int32_t>(s, "angl", (int32_t)(angle*1000));
+  if (angle!=0) string_pack<int32_t>(s, "angl", (int32_t)(angle*1000));
 
   // optional text fields (4-byte tag, 4-byte length, data);
-  if (name!="") vmap_pack_str(s, "name", name);
-  if (comm!="") vmap_pack_str(s, "comm", comm);
-  if (src!="")  vmap_pack_str(s, "src ", src);
+  if (name!="") string_pack_str(s, "name", name);
+  if (comm!="") string_pack_str(s, "comm", comm);
+  if (src!="")  string_pack_str(s, "src ", src);
 
   // coordinates (4-byte tag, 4-byte length, data);
-  vmap_pack_crds(s, *this);
+  string_pack_crds(s, *this);
   return s.str();
 }
 
 // unpack object from a string (for DB storage)
 void
-VMapObj::unpack(const std::string & str) {
+MapDBObj::unpack(const std::string & str) {
 
   // re-initialize
-  *this = VMapObj();
+  *this = MapDBObj();
 
   istringstream s(str);
 
   // class
   int32_t v;
   s.read((char*)&v, sizeof(int32_t));
-  if (v<0 || v>2) throw Err() << "VMapObj::unpack: bad class value: " << v;
-  cl = (VMapObjClass)v;
+  if (v<0 || v>2) throw Err() << "MapDBObj::unpack: bad class value: " << v;
+  cl = (MapDBObjClass)v;
 
   // type
   s.read((char*)&v, sizeof(int32_t));
@@ -58,14 +63,14 @@ VMapObj::unpack(const std::string & str) {
 
   // other fields
   while (1){
-    string tag = vmap_unpack_tag(s);
+    string tag = string_unpack_tag(s);
     if (tag == "") break;
-    else if (tag == "dir ") dir = (VMapObjDir)vmap_unpack<uint32_t>(s);
-    else if (tag == "angl") angle = vmap_unpack<int32_t>(s)/1000.0;
-    else if (tag == "name") name = vmap_unpack_str(s);
-    else if (tag == "comm") comm = vmap_unpack_str(s);
-    else if (tag == "src ") src = vmap_unpack_str(s);
-    else if (tag == "crds") push_back(vmap_unpack_crds(s));
+    else if (tag == "dir ") dir = (MapDBObjDir)string_unpack<uint32_t>(s);
+    else if (tag == "angl") angle = string_unpack<int32_t>(s)/1000.0;
+    else if (tag == "name") name = string_unpack_str(s);
+    else if (tag == "comm") comm = string_unpack_str(s);
+    else if (tag == "src ") src = string_unpack_str(s);
+    else if (tag == "crds") push_back(string_unpack_crds(s));
     else throw Err() << "Unknown tag: " << tag;
   }
 
@@ -73,73 +78,74 @@ VMapObj::unpack(const std::string & str) {
 
 /**********************************************************/
 
+
 std::string
-VMap::get_name() {
+MapDB::get_name() {
   dMultiLine ret;
-  uint32_t key = MAPINFO_NAME;
+  uint32_t key = INF_KEY_NAME;
   return mapinfo.get(key);
 }
 
 /// Set map name
 void
-VMap::set_name(const std::string & name) {
-  mapinfo.put(MAPINFO_NAME, name);
+MapDB::set_name(const std::string & name) {
+  mapinfo.put(INF_KEY_NAME, name);
 }
 
 dMultiLine
-VMap::get_brd() {
+MapDB::get_brd() {
   dMultiLine ret;
-  uint32_t key = MAPINFO_BRD;
+  uint32_t key = INF_KEY_BRD;
   istringstream s(mapinfo.get(key));
   if (key == 0xFFFFFFFF) return ret;
 
   // searching for crds tags
   while (1){
-    string tag = vmap_unpack_tag(s);
+    string tag = string_unpack_tag(s);
     if (tag == "") break;
-    else if (tag == "crds") ret.push_back(vmap_unpack_crds(s));
-    else throw Err() << "VMap::get_brd: unknown tag: " << tag;
+    else if (tag == "crds") ret.push_back(string_unpack_crds(s));
+    else throw Err() << "MapDB::get_brd: unknown tag: " << tag;
   }
   return ret;
 }
 
 void
-VMap::set_brd(const dMultiLine & b) {
+MapDB::set_brd(const dMultiLine & b) {
   ostringstream s;
-  vmap_pack_crds(s, b);
-  mapinfo.put(MAPINFO_BRD, s.str());
+  string_pack_crds(s, b);
+  mapinfo.put(INF_KEY_BRD, s.str());
 }
 
 dRect
-VMap::get_bbox() {
+MapDB::get_bbox() {
   dRect ret;
-  uint32_t key = MAPINFO_BBOX;
+  uint32_t key = INF_KEY_BBOX;
   istringstream s(mapinfo.get(key));
   if (key == 0xFFFFFFFF) return ret;
 
   // searching for first bbox tag
   while (1){
-    string tag = vmap_unpack_tag(s);
+    string tag = string_unpack_tag(s);
     if (tag == "") break;
-    else if (tag == "bbox") ret = vmap_unpack_bbox(s);
-    else throw Err() << "VMap::get_brd: unknown tag: " << tag;
+    else if (tag == "bbox") ret = string_unpack_bbox(s);
+    else throw Err() << "MapDB::get_brd: unknown tag: " << tag;
   }
   return ret;
 }
 
 void
-VMap::set_bbox(const dRect & b) {
+MapDB::set_bbox(const dRect & b) {
   ostringstream s;
-  vmap_pack_bbox(s, b);
-  mapinfo.put(MAPINFO_BBOX, s.str());
+  string_pack_bbox(s, b);
+  mapinfo.put(INF_KEY_BBOX, s.str());
 }
 
 
 /**********************************************************/
 uint32_t
-VMap::add(const VMapObj & o){
+MapDB::add(const MapDBObj & o){
   // do not work with empty objects
-  if (o.is_empty()) throw Err() << "VMap::add: empty object";
+  if (o.is_empty()) throw Err() << "MapDB::add: empty object";
 
   // get last id + 1
   uint32_t id;
@@ -148,7 +154,7 @@ VMap::add(const VMapObj & o){
   else id++;
 
   if (id == 0xFFFFFFFF)
-    throw Err() << "VMap::add: object ID overfull";
+    throw Err() << "MapDB::add: object ID overfull";
 
 
   // insert object

@@ -8,36 +8,36 @@
 using namespace std;
 
 void
-vmap_pack_str(ostream & s, const char *tag, const std::string & str){
-  if (strlen(tag)!=4) throw Err() << "vmap_pack_str: 4-byte tag expected";
+string_pack_str(ostream & s, const char *tag, const std::string & str){
+  if (strlen(tag)!=4) throw Err() << "string_pack_str: 4-byte tag expected";
   s.write(tag, 4);
   uint32_t size = str.size();
   s.write((char *)&size, sizeof(uint32_t));
   s.write(str.data(), str.size());
-  if (s.fail()) throw Err() << "vmap_pack_str: write error";
+  if (s.fail()) throw Err() << "string_pack_str: write error";
 }
 
 std::string
-vmap_unpack_tag(istream & s){
+string_unpack_tag(istream & s){
   std::string tag(4,'\0');
   s.read((char*)tag.data(), 4);
   if (s.eof()) return std::string();
-  if (s.fail()) throw Err() << "vmap_unpack_tag: read error";
+  if (s.fail()) throw Err() << "string_unpack_tag: read error";
   return tag;
 }
 
 std::string
-vmap_unpack_str(istream & s){
+string_unpack_str(istream & s){
   uint32_t size;
   s.read((char*)&size, sizeof(uint32_t));
   std::string str(size, '\0');
   s.read((char*)str.data(), size);
-  if (s.fail()) throw Err() << "vmap_unpack_str: read error";
+  if (s.fail()) throw Err() << "string_unpack_str: read error";
   return str;
 }
 
 void
-vmap_pack_crds(ostream & s, const dMultiLine & ml){
+string_pack_crds(ostream & s, const dMultiLine & ml){
   for (auto const &l:ml) {
     s.write("crds", 4);
     uint32_t size = l.size()*2*sizeof(int32_t); // 2 ints per point
@@ -51,11 +51,11 @@ vmap_pack_crds(ostream & s, const dMultiLine & ml){
       s.write((char *)crd, 2*sizeof(int32_t));
     }
   }
-  if (s.fail()) throw Err() << "vmap_pack_crds: write error";
+  if (s.fail()) throw Err() << "string_pack_crds: write error";
 }
 
 dLine
-vmap_unpack_crds(istream & s){
+string_unpack_crds(istream & s){
   uint32_t size;
   s.read((char*)&size, sizeof(uint32_t));
   dLine ret;
@@ -65,12 +65,12 @@ vmap_unpack_crds(istream & s){
     dPoint p(crd[0]/1e7, crd[1]/1e7);
     ret.push_back(p);
   }
-  if (s.fail()) throw Err() << "vmap_unpack_crds: read error";
+  if (s.fail()) throw Err() << "string_unpack_crds: read error";
   return ret;
 }
 
 void
-vmap_pack_bbox(ostream & s, const dRect & box) {
+string_pack_bbox(ostream & s, const dRect & box) {
   s.write("bbox", 4);
   uint32_t size = 4*sizeof(int32_t);
   s.write((char*)&size, sizeof(uint32_t));
@@ -82,18 +82,18 @@ vmap_pack_bbox(ostream & s, const dRect & box) {
   s.write((char *)&y1, sizeof(int32_t));
   s.write((char *)&x2, sizeof(int32_t));
   s.write((char *)&y2, sizeof(int32_t));
-  if (s.fail()) throw Err() << "vmap_pack_bbox: write error";
+  if (s.fail()) throw Err() << "string_pack_bbox: write error";
 }
 
 
 dRect
-vmap_unpack_bbox(istream & s) {
+string_unpack_bbox(istream & s) {
   uint32_t size;
   s.read((char*)&size, sizeof(uint32_t));
   if (size!=4*sizeof(int32_t))
-    throw Err() << "vmap_unpack_bbox: wrong data size: " << size;
+    throw Err() << "string_unpack_bbox: wrong data size: " << size;
   int32_t crd[4];
   s.read((char*)&crd, 4*sizeof(int32_t));
-  if (s.fail()) throw Err() << "vmap_unpack_bbox: read error";
+  if (s.fail()) throw Err() << "string_unpack_bbox: read error";
   return dRect(dPoint(crd[0]/1e7, crd[1]/1e7), dPoint(crd[2]/1e7, crd[3]/1e7));
 }

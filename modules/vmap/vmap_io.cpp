@@ -6,17 +6,17 @@
 #include <iomanip>
 #include <cstdlib> // for atoi
 
-#include "vmap1.h"
+#include "vmap.h"
 
 #define CUR_VER 3.2
 
-const int vmap1_point_scale = 1000000;
+const int vmap_point_scale = 1000000;
 using namespace std;
 
 /***************************************/
 
 // read key-value pair separated by tab char
-int vmap1_get_kv(const string &s, string &key, string &val){
+int vmap_get_kv(const string &s, string &key, string &val){
   if (s=="") return 1;
   int tab=s.find('\t', 0);
   if (tab==-1){
@@ -30,8 +30,8 @@ int vmap1_get_kv(const string &s, string &key, string &val){
   return 0;
 }
 
-// read a single point (x,y), divide result by vmap1_point_scale
-dPoint vmap1_read_pt(istream & IN){
+// read a single point (x,y), divide result by vmap_point_scale
+dPoint vmap_read_pt(istream & IN){
   dPoint p;
   char sep;
   IN >> p.x >> sep >> p.y >> std::ws;
@@ -39,7 +39,7 @@ dPoint vmap1_read_pt(istream & IN){
     cerr << "bad point: " << IN.rdbuf() << "\n";
     return dPoint();
   }
-  p/=vmap1_point_scale;
+  p/=vmap_point_scale;
   return p;
 }
 
@@ -48,7 +48,7 @@ dPoint vmap1_read_pt(istream & IN){
 // v>=3.1: L|C|R H|<ang>
 // v>=3.2: L|C|R H|<ang> S<fsize>
 
-void vmap1_read_lab_pars(istream & IN, VMap1Lab & l, double ver){
+void vmap_read_lab_pars(istream & IN, VMapLab & l, double ver){
   if (ver<3.1){
     IN >> l.dir >> l.hor >> l.ang;
   }
@@ -76,37 +76,37 @@ void vmap1_read_lab_pars(istream & IN, VMap1Lab & l, double ver){
   }
 }
 
-VMap1Lab vmap1_read_lab_pos(const string & s, double ver){
-  VMap1Lab ret;
+VMapLab vmap_read_lab_pos(const string & s, double ver){
+  VMapLab ret;
   istringstream IN1(s);
-  ret.pos = vmap1_read_pt(IN1);
-  vmap1_read_lab_pars(IN1, ret, ver);
+  ret.pos = vmap_read_pt(IN1);
+  vmap_read_lab_pars(IN1, ret, ver);
   return ret;
 }
 
-VMap1Lfull vmap1_read_lbuf(const string & s, double ver){
-  VMap1Lfull ret;
+VMapLfull vmap_read_lbuf(const string & s, double ver){
+  VMapLfull ret;
   istringstream IN1(s);
-  ret.pos = vmap1_read_pt(IN1);
-  vmap1_read_lab_pars(IN1, ret, ver);
-  ret.ref = vmap1_read_pt(IN1);
+  ret.pos = vmap_read_pt(IN1);
+  vmap_read_lab_pars(IN1, ret, ver);
+  ret.ref = vmap_read_pt(IN1);
   getline(IN1, ret.text);
   return ret;
 }
 
 dLine
-read_vmap1_points(istream & IN, string & s){
+read_vmap_points(istream & IN, string & s){
   dLine ret;
   string key,val;
-  if (vmap1_get_kv(s, key, val)!=0){
-    cerr << "wrong call of read_vmap1_points()!\n";
+  if (vmap_get_kv(s, key, val)!=0){
+    cerr << "wrong call of read_vmap_points()!\n";
     return ret;
   }
   s=val;
   do {
     istringstream IN1(s);
     while (IN1.good()){
-      ret.push_back(vmap1_read_pt(IN1));
+      ret.push_back(vmap_read_pt(IN1));
     }
     getline(IN, s);
   } while (s[0]=='\t');
@@ -115,14 +115,14 @@ read_vmap1_points(istream & IN, string & s){
 }
 
 
-VMap1Obj
-read_vmap1_object(istream & IN, string & s, double ver){
-  VMap1Obj ret;
+VMapObj
+read_vmap_object(istream & IN, string & s, double ver){
+  VMapObj ret;
   string key,val;
   bool read_ahead=false;
 
-  if ((vmap1_get_kv(s, key, val)!=0) || (key!="OBJECT")){
-    cerr << "wrong call of read_vmap1_object()!\n";
+  if ((vmap_get_kv(s, key, val)!=0) || (key!="OBJECT")){
+    cerr << "wrong call of read_vmap_object()!\n";
     return ret;
   }
 
@@ -133,7 +133,7 @@ read_vmap1_object(istream & IN, string & s, double ver){
   while (!IN.eof() || read_ahead){
     if (!read_ahead) getline(IN, s);
     else read_ahead=false;
-    if (vmap1_get_kv(s, key, val)!=0) continue;
+    if (vmap_get_kv(s, key, val)!=0) continue;
 
     if (ver<3.1 && key=="TEXT"){  // backward comp
       ret.text=val;
@@ -145,7 +145,7 @@ read_vmap1_object(istream & IN, string & s, double ver){
     }
     if (key=="OPT"){
       string k,v;
-      if (vmap1_get_kv(val, k, v)!=0){
+      if (vmap_get_kv(val, k, v)!=0){
         cerr << "bad options in: " << s << "\n";
         continue;
       }
@@ -157,11 +157,11 @@ read_vmap1_object(istream & IN, string & s, double ver){
       continue;
     }
     if (key=="LABEL"){
-      ret.labels.push_back(vmap1_read_lab_pos(val, ver));
+      ret.labels.push_back(vmap_read_lab_pos(val, ver));
       continue;
     }
     if (key=="DATA"){
-      ret.push_back(read_vmap1_points(IN, s));
+      ret.push_back(read_vmap_points(IN, s));
       read_ahead=true;
       continue;
     }
@@ -171,9 +171,9 @@ read_vmap1_object(istream & IN, string & s, double ver){
 }
 
 // read vmap native format
-VMap1
-read_vmap1(istream & IN){
-  VMap1 ret;
+VMap
+read_vmap(istream & IN){
+  VMap ret;
   string s, key, val;
   bool read_ahead=false;
   if (!IN) throw Err() << "can't read VMAP file";
@@ -197,7 +197,7 @@ read_vmap1(istream & IN){
 
     if (!read_ahead) getline(IN, s);
     else read_ahead=false;
-    if (vmap1_get_kv(s, key, val)!=0) continue;
+    if (vmap_get_kv(s, key, val)!=0) continue;
 
     if (key=="NAME"){
       ret.name=val;
@@ -216,16 +216,16 @@ read_vmap1(istream & IN){
       continue;
     }
     if (key=="BRD"){
-      ret.brd = read_vmap1_points(IN, s);
+      ret.brd = read_vmap_points(IN, s);
       read_ahead=true;
       continue;
     }
     if (key=="LBUF"){
-      ret.lbuf.push_back(vmap1_read_lbuf(val, ver));
+      ret.lbuf.push_back(vmap_read_lbuf(val, ver));
       continue;
     }
     if (key=="OBJECT"){
-      ret.push_back(read_vmap1_object(IN, s, ver));
+      ret.push_back(read_vmap_object(IN, s, ver));
       read_ahead=true;
       continue;
     }
@@ -237,7 +237,7 @@ read_vmap1(istream & IN){
 /***************************************/
 
 
-void write_vmap1_line(ostream & OUT, const dLine & L){
+void write_vmap_line(ostream & OUT, const dLine & L){
   int n=0;
   for (auto &i:L){
     if ((n>0)&&(n%4==0)) OUT << "\n\t";
@@ -247,7 +247,7 @@ void write_vmap1_line(ostream & OUT, const dLine & L){
   }
 }
 // write label position
-void write_vmap1_lpos(ostream & OUT, const VMap1Lab & L){
+void write_vmap_lpos(ostream & OUT, const VMapLab & L){
   // coordinates
   OUT << int(L.pos.x) << "," << int(L.pos.y) << " ";
   // alignment (left,right,center)
@@ -268,29 +268,29 @@ void write_vmap1_lpos(ostream & OUT, const VMap1Lab & L){
 // write vmap to ostream
 // put vmap to mp
 int
-write_vmap1(ostream & OUT, const VMap1 & W){
+write_vmap(ostream & OUT, const VMap & W){
 
-  VMap1 WS (W);
+  VMap WS (W);
 
   // Sort problem: we write rounded values, so order can change!
   // Rounding values before sort:
 
   for (auto &l:WS.lbuf){
-    l.pos=rint(l.pos*vmap1_point_scale);
-    l.ref=rint(l.ref*vmap1_point_scale);
+    l.pos=rint(l.pos*vmap_point_scale);
+    l.ref=rint(l.ref*vmap_point_scale);
   }
   for (auto &o:WS){
     for (auto &l:o){
       for (auto &p:l){
-        p=rint(p*vmap1_point_scale);
+        p=rint(p*vmap_point_scale);
       }
     }
     for (auto &l:o.labels){
-      l.pos=rint(l.pos*vmap1_point_scale);
+      l.pos=rint(l.pos*vmap_point_scale);
     }
   }
   for (auto &p:WS.brd){
-    p=rint(p*vmap1_point_scale);
+    p=rint(p*vmap_point_scale);
   }
 
   WS.sort();
@@ -302,12 +302,12 @@ write_vmap1(ostream & OUT, const VMap1 & W){
   OUT << "STYLE\t" << WS.style << "\n";
   OUT << "MP_ID\t" << WS.mp_id << "\n";
   if (WS.brd.size()>0){
-    OUT << "BRD\t";  write_vmap1_line(OUT, WS.brd); OUT << "\n";
+    OUT << "BRD\t";  write_vmap_line(OUT, WS.brd); OUT << "\n";
   }
 
   // lbuf
   for (auto const &l:WS.lbuf){
-    OUT << "LBUF\t"; write_vmap1_lpos(OUT, l);
+    OUT << "LBUF\t"; write_vmap_lpos(OUT, l);
     OUT << " " << int(l.ref.x) << "," << int(l.ref.y);
     if (l.text.size()) OUT << " " << l.text;
     OUT << "\n";
@@ -328,10 +328,10 @@ write_vmap1(ostream & OUT, const VMap1 & W){
     }
     o.labels.sort();
     for (auto const &i:o.labels){
-      OUT << "  LABEL\t";  write_vmap1_lpos(OUT, i); OUT << "\n";
+      OUT << "  LABEL\t";  write_vmap_lpos(OUT, i); OUT << "\n";
     }
     for (auto const &i:o){
-      OUT << "  DATA\t"; write_vmap1_line(OUT, i); OUT << "\n";
+      OUT << "  DATA\t"; write_vmap_line(OUT, i); OUT << "\n";
     }
   }
 

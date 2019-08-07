@@ -7,8 +7,7 @@
 #include "geom/rect.h"
 
 // Simple Berkleydb-based database with integer key and
-// std::string value. I plan to use it for vector map attributes
-// instead of shapelib/dbf.
+// std::string value.
 
 class DBSimple{
   private:

@@ -1,6 +1,6 @@
 #!/bin/sh -efu
 
-prog=${1:-./catvmap1.test}
+prog=${1:-./catvmap.test}
 
 function do_test(){
   args=$1

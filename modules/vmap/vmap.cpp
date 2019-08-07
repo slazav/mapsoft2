@@ -10,14 +10,14 @@
 //#include "geo/geo_convs.h"
 //#include "geo/geo_nom.h"
 //#include "vmap/zn.h"
-#include "vmap1.h"
+#include "vmap.h"
 
 using namespace std;
 
 /***************************************/
 
 bool
-VMap1Lab::operator< (const VMap1Lab & o) const{
+VMapLab::operator< (const VMapLab & o) const{
   if (pos != o.pos) return (pos < o.pos);
   if (dir != o.dir) return (dir < o.dir);
   if (hor != o.hor) return (hor < o.hor);
@@ -25,45 +25,45 @@ VMap1Lab::operator< (const VMap1Lab & o) const{
   return false;
 }
 
-VMap1Lab::VMap1Lab(){
+VMapLab::VMapLab(){
   dir=0; ang=0.0; fsize=0; hor=true;
 }
 
 bool
-VMap1Lfull::operator< (const VMap1Lfull & o) const{
+VMapLfull::operator< (const VMapLfull & o) const{
   if (text != o.text) return (text < o.text);
   if (ref != o.ref) return (ref < o.ref);
-  return VMap1Lab::operator<(o);
+  return VMapLab::operator<(o);
 }
 
 object_class
-VMap1Obj::get_class() const{
+VMapObj::get_class() const{
   if (type & 0x200000) return VMAP1_POLYGON;
   if (type & 0x100000) return VMAP1_POLYLINE;
   return VMAP1_POI;
 }
 
 bool
-VMap1Obj::operator< (const VMap1Obj & o) const{
+VMapObj::operator< (const VMapObj & o) const{
   if (type != o.type) return (type < o.type);
   if (text != o.text) return (text < o.text);
   if (dir  != o.dir)  return (dir < o.dir);
   return dMultiLine::operator<(o);
 }
 
-VMap1Obj::VMap1Obj(){
+VMapObj::VMapObj(){
   type=0; dir=0;
 }
 
 dRect
-VMap1::range() const{
+VMap::range() const{
   dRect ret;
   for (auto const & o:*this) ret.expand(o.bbox2d());
   return ret;
 }
 
 void
-VMap1::add(const VMap1 & W){
+VMap::add(const VMap & W){
   mp_id  = W.mp_id;
   name   = W.name;
   style  = W.style;
@@ -73,7 +73,7 @@ VMap1::add(const VMap1 & W){
   lbuf.insert(lbuf.end(), W.lbuf.begin(), W.lbuf.end());
 }
 
-VMap1::VMap1(){
+VMap::VMap(){
   mp_id=0;
   rscale=0;
   style="";

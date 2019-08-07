@@ -8,7 +8,7 @@
 
 #include "err/err.h"
 #include "getopt/getopt.h"
-#include "vmap2/vmap.h"
+#include "mapdb/mapdb.h"
 #include "actions.h"
 
 #define OPT_G   1  // general options (-v, -h)
@@ -33,8 +33,8 @@ void usage(bool pod=false, std::ostream & S = std::cout){
   S << head << "Actions:\n"
     << " * import_mp <name> <options> -- import MP file to the map\n"
     << " * export_mp <name> <options> -- export the map to MP file\n"
-    << " * import_vmap1 <name> <options> -- import VMAP1 file to the map\n"
-    << " * export_vmap1 <name> <options> -- export the map to VMAP1 file\n"
+    << " * import_vmap <name> <options> -- import VMAP1 file to the map\n"
+    << " * export_vmap <name> <options> -- export the map to VMAP1 file\n"
   ;
 
   throw Err();
@@ -58,12 +58,12 @@ main(int argc, char *argv[]){
     std::vector<std::string> AA;
     Opt AO = parse_options_all(&argc, &argv, options, OPT_A, AA);
 
-    VMap map(mapname, 1);
+    MapDB map(mapname, 1);
 
     if (action == "import_mp"){ action_import_mp(map, AA, AO); return 0; }
     if (action == "export_mp"){ action_export_mp(map, AA, AO); return 0; }
-    if (action == "import_vmap1"){ action_import_vmap1(map, AA, AO); return 0; }
-    if (action == "export_vmap1"){ action_export_vmap1(map, AA, AO); return 0; }
+    if (action == "import_vmap"){ action_import_vmap(map, AA, AO); return 0; }
+    if (action == "export_vmap"){ action_export_vmap(map, AA, AO); return 0; }
 
     throw Err() << "ms2vmap: unknown action: " << action;
 

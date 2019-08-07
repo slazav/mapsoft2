@@ -1,5 +1,5 @@
-#ifndef VMAP1_H
-#define VMAP1_H
+#ifndef VMAP_H
+#define VMAP_H
 
 #include <iostream>
 #include <vector>
@@ -15,7 +15,7 @@
 /*****************************************************************/
 
 // Label position
-struct VMap1Lab {
+struct VMapLab {
   int    dir;   // 0: left, 1: center, 2: right
   double ang;   // angle, degrees
   int  fsize;   // Font size. Before connection to an object it is
@@ -23,18 +23,18 @@ struct VMap1Lab {
                 // After connection it is a correction, 0, -1, +2 etc.
   dPoint pos;
   bool   hor; // horizontal text (angle is not modified when the map rotates)
-  bool operator< (const VMap1Lab & o) const;
-  VMap1Lab();
+  bool operator< (const VMapLab & o) const;
+  VMapLab();
 };
 
 // Separate label.
 // Used when label is detached from an object
 // Additional fields: Reference point (nearest object point)
 // and label text.
-struct VMap1Lfull : public VMap1Lab { // for internal use
+struct VMapLfull : public VMapLab { // for internal use
   dPoint ref;
   std::string text;
-  bool operator< (const VMap1Lfull & o) const;
+  bool operator< (const VMapLfull & o) const;
 };
 
 typedef enum{
@@ -43,37 +43,37 @@ typedef enum{
   VMAP1_POLYGON = 2
 } object_class;
 
-struct VMap1Obj: public dMultiLine {
+struct VMapObj: public dMultiLine {
   int             type;  // MP type
   int             dir;   // direction from mp, arrows from fig
   std::string     text;  // label text
-  std::list<VMap1Lab> labels;
+  std::list<VMapLab> labels;
   Opt                      opts; // some Key=Value fields
   std::vector<std::string> comm; // comments
 
   object_class get_class() const;
-  bool operator< (const VMap1Obj & o) const;
-  VMap1Obj();
+  bool operator< (const VMapObj & o) const;
+  VMapObj();
 };
 
-struct VMap1 : std::list<VMap1Obj> {
+struct VMap : std::list<VMapObj> {
   int         mp_id;
   std::string name;
   std::string style;
   double      rscale;
   dLine       brd;
-  std::list<VMap1Lfull> lbuf; // buffer for ownerless labels
+  std::list<VMapLfull> lbuf; // buffer for ownerless labels
 
-  VMap1();
+  VMap();
 
   dRect range() const;
 
   // Add objects and lbuf from vmap W, set style etc from W
-  void add(const VMap1 & W);
+  void add(const VMap & W);
 };
 
 // Reading and writitng native format
-VMap1 read_vmap1(std::istream & IN);
-int write_vmap1(std::ostream & OUT, const VMap1 & W);
+VMap read_vmap(std::istream & IN);
+int write_vmap(std::ostream & OUT, const VMap & W);
 
 #endif

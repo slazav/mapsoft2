@@ -4,17 +4,17 @@
 #include <cstring>
 #include <string>
 
-#include "vmap.h"
+#include "mapdb.h"
+#include "mp/mp.h"
 #include "read_words/read_words.h"
 
 using namespace std;
 
-/* Import/export of old mapsoft VMAP format */
+/* Import/export of MP format */
 
 /**********************************************************/
-/// Import objects from VMAP1 file.
 void
-VMap::import_vmap1(const std::string & vmap_file, const Opt & opts){
+MapDB::import_mp(const string & mp_file, const Opt & opts){
 
   // type conversion tables (point, line, polygon)
   vector<iLine> cnvs;
@@ -51,6 +51,11 @@ VMap::import_vmap1(const std::string & vmap_file, const Opt & opts){
         continue;
       }
 
+      if ((vs[0]=="level") && vs.size()==2){
+        level = str_to_type<int>(vs[1]);
+        continue;
+      }
+
       throw Err() << "bad configuration file at line "
                   << line_num[0];
     }
@@ -59,23 +64,25 @@ VMap::import_vmap1(const std::string & vmap_file, const Opt & opts){
   if (opts.exists("cnv_point"))   cnvs[0] = opts.get<dLine>("cnv_point");
   if (opts.exists("cnv_line"))    cnvs[0] = opts.get<dLine>("cnv_line");
   if (opts.exists("cnv_polygon")) cnvs[0] = opts.get<dLine>("cnv_polygon");
+  if (opts.exists("data_level"))  level   = opts.get<int>("level");
 
-  // read VMAP file
-  ifstream in(vmap_file);
-  VMap1 vmap1_data = read_vmap1(in);
-  for (auto const & o:vmap1_data){
+  // read MP file
+  MP mp_data;
+  ifstream in(mp_file);
+  read_mp(in, mp_data);
 
-    // skip empty objects
-    if (o.is_empty()) continue;
+  for (auto const & o:mp_data){
 
-    VMapObj o1;
-    if (o.type & 0x100000) o1.cl = VMAP_LINE;
-    if (o.type & 0x200000) o1.cl = VMAP_POLYGON;
+    MapDBObj o1;
+
+    if (o.Class<0 || o.Class>2)
+      throw Err() << "wrong MP class: "<< o.Class;
+    o1.cl = (MapDBObjClass)o.Class;
 
     // convert type
     for (auto const & cnv: cnvs[o1.cl]){
-      if (cnv.x == 0 || cnv.x == o.type & 0xFFFFF) {
-        o1.type = cnv.y? cnv.y : o.type & 0xFFFFF;
+      if (cnv.x == 0 || cnv.x == o.Type) {
+        o1.type = cnv.y? cnv.y : o.Type;
         break;
       }
     }
@@ -84,42 +91,39 @@ VMap::import_vmap1(const std::string & vmap_file, const Opt & opts){
     if (!o1.type) continue;
 
     // name
-    o1.name = o.text;
+    o1.name = o.Label;
+
     // comments
-    for (auto const & c:o.comm) o1.comm += c + '\n';
+    for (auto const & c:o.Comment) o1.comm += c + '\n';
     if (o1.comm.size()) o1.comm.resize(o1.comm.size()-1); // cut trailing '\n'
 
     // direction
-    if (o.dir<0 || o.dir>2)
-      throw Err() << "wrong MP direction: "<< o.dir;
-    o1.dir = (VMapObjDir)o.dir;
+    if (o.Direction<0 || o.Direction>2)
+      throw Err() << "wrong MP direction: "<< o.Direction;
+    o1.dir = (MapDBObjDir)o.Direction;
 
     // source
-    if (o.opts.exists("Source")) o1.src=o.opts.get<string>("Source");
+    if (o.Opts.exists("Source")) o1.src=o.Opts.get<string>("Source");
 
-    // angle (deg -> deg)
-    if (o.opts.exists("Angle")) o1.angle=o.opts.get<float>("Angle");
-
-    // data
-    o1.dMultiLine::operator=(o); // set data
+    // choose data level (move to MP?)
+    int l = -1;
+    if (level < o.Data.size() && o.Data[level].size()>0) l = level;
+    if (level <= o.EndLevel){
+      for (int i = level; i>0; i--){
+        if (i<o.Data.size() && o.Data[i].size()>0) {l=i; break;}
+      }
+    }
+    if (l==-1) continue; // no data for the requested level
+    o1.dMultiLine::operator=(o.Data[l]); // set data
 
     add(o1);
   }
 
-  // border
-  dMultiLine brd;
-  brd.push_back(vmap1_data.brd);
-  set_brd(brd);
-
-  // map name
-  set_name(vmap1_data.name);
-
 }
-
 /**********************************************************/
-/// Export objects to VMAP1 file.
+
 void
-VMap::export_vmap1(const std::string & vmap_file, const Opt & opts){
+MapDB::export_mp(const string & mp_file, const Opt & opts){
 
   // type conversion tables (point, line, polygon)
   vector<iLine> cnvs;
@@ -161,68 +165,55 @@ VMap::export_vmap1(const std::string & vmap_file, const Opt & opts){
   if (opts.exists("cnv_line"))    cnvs[0] = opts.get<dLine>("cnv_line");
   if (opts.exists("cnv_polygon")) cnvs[0] = opts.get<dLine>("cnv_polygon");
 
-  VMap1 vmap1_data;
+  MP mp_data;
   uint32_t key = 0;
+
   std::string str = objects.get_first(key);
 
   while (key!=0xFFFFFFFF){
-    VMapObj o;
+    MapDBObj o;
     o.unpack(str);
+    str = objects.get_next(key);
 
-    VMap1Obj o1;
+    MPObj o1;
+    o1.Class = o.cl;
 
     // convert type
     for (auto const & cnv: cnvs[o.cl]){
       if (cnv.x == 0 || cnv.x == o.type) {
-        o1.type = cnv.y? cnv.y : o.type;
+        o1.Type = cnv.y? cnv.y : o.type;
         break;
       }
     }
 
     // skip unknown types
-    if (!o1.type) continue;
-
-    if (o.cl == VMAP_LINE)    o1.type |= 0x100000;
-    if (o.cl == VMAP_POLYGON) o1.type |= 0x200000;
+    if (!o1.Type) continue;
 
     // name
-    o1.text = o.name;
+    o1.Label = o.name;
 
     // comments
     if (o.comm.size()){
       int pos1=0, pos2=0;
       do {
         pos2 = o.comm.find('\n', pos1);
-        o1.comm.push_back(o.comm.substr(pos1,pos2));
+        o1.Comment.push_back(o.comm.substr(pos1,pos2));
         pos1 = pos2+1;
       } while (pos2!=string::npos);
     }
 
     // direction
-    o1.dir = o.dir;
+    o1.Direction = o.dir;
 
     // source
-    if (o.src!="") o1.opts.put("Source", o.src);
-
-    // angle (deg->deg)
-    if (o.angle!=0) o1.opts.put("Angle", o.angle);
+    if (o.src!="") o1.Opts.put("Source", o.src);
 
     // points
-    o1.dMultiLine::operator=(o);
+    o1.Data.push_back((dMultiLine)o);
 
-    vmap1_data.push_back(o1);
-    str = objects.get_next(key);
+    if (o1.Data.size()) mp_data.push_back(o1);
   }
-
-  // map border
-  dMultiLine brd = get_brd();
-  if (brd.size()>0) vmap1_data.brd = *brd.begin();
-
-  // map name
-  vmap1_data.name = get_name();
-
-  // write vmap file
-  ofstream out(vmap_file);
-  write_vmap1(out, vmap1_data);
+  ofstream out(mp_file);
+  write_mp(out, mp_data);
 }
 
