@@ -17,7 +17,7 @@ class DBSimple::Impl {
     std::shared_ptr<void> db;   // database
     std::shared_ptr<void> cur;  // cursor
 
-    Impl(const char *fname, const char *dbname, bool create);
+    Impl(const char *fname, const char *dbname, bool create, bool dup);
     ~Impl() {}
 
    void put(const uint32_t key, const std::string & val);
@@ -28,8 +28,8 @@ class DBSimple::Impl {
 
 /**********************************************************/
 // Main class methods
-DBSimple::DBSimple(const char *fname, const char *dbname, bool create):
-  impl(std::unique_ptr<Impl>(new Impl(fname, dbname, create))) { }
+DBSimple::DBSimple(const char *fname, const char *dbname, bool create, bool dup):
+  impl(std::unique_ptr<Impl>(new Impl(fname, dbname, create, dup))) { }
 
 void
 DBSimple::put(const uint32_t key, const std::string & val){
@@ -57,7 +57,7 @@ DBSimple::~DBSimple(){}
 /**********************************************************/
 // Implementation class methods
 
-DBSimple::Impl::Impl(const char *fname, const char *dbname, bool create){
+DBSimple::Impl::Impl(const char *fname, const char *dbname, bool create, bool dup){
   // set flags
   int open_flags = create? DB_CREATE:0;
 
@@ -66,6 +66,12 @@ DBSimple::Impl::Impl(const char *fname, const char *dbname, bool create){
   int ret = db_create(&dbp, NULL, 0);
   if (ret != 0) throw Err() << "db_simple: " << db_strerror(ret);
   db = std::shared_ptr<void>(dbp, bdb_close);
+
+  // allow duplicates if needed
+  if (dup){
+    ret = dbp->set_flags(dbp, DB_DUP);
+    if (ret != 0) throw Err() << "db_simple: " << db_strerror(ret);
+  }
 
   /* Open the database */
   ret = dbp->open(dbp,    /* Pointer to the database */

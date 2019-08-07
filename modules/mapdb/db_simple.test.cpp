@@ -82,6 +82,27 @@ main(){
     unlink("a.dbp");
 
     {
+      // duplicate keys
+      DBSimple db1("a.dbp", NULL, 1, 1);
+      db1.put(1, "abc1");
+      db1.put(1, "abc2");
+      db1.put(2, "cde1");
+      db1.put(2, "cde2");
+
+      uint32_t key;
+      key = 1;
+      assert(db1.get(key) == "abc1");      assert(key==1);
+      assert(db1.get_next(key) == "abc2"); assert(key==1);
+      assert(db1.get_next(key) == "cde1"); assert(key==2);
+      assert(db1.get_next(key) == "cde2"); assert(key==2);
+
+      assert(db1.get_first(key) == "cde1");
+      assert(db1.get_next(key) == "cde2"); assert(key==2);
+    }
+    unlink("a.dbp");
+
+
+    {
       // open two databases in one file
       DBSimple db1("a.dbp", "db1", 1);
       db1.put(1, "abc");
@@ -101,6 +122,7 @@ main(){
       assert(db2.get_next(key) == "cde2");
     }
     unlink("a.dbp");
+
 
   }
   catch (Err e) {

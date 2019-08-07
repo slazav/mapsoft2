@@ -21,13 +21,14 @@ class DBSimple{
    // open database:
    // fname - file name, dbname - database name (can be NULL),
    // create - create flag.
-   DBSimple(const char *fname, const char *dbname, bool create);
+   // dup    - alow duplicates flag (default false).
+   DBSimple(const char *fname, const char *dbname, bool create, bool dup = false);
    ~DBSimple();
 
    // Put data with a given key (overwrite old value if it exists).
    void put(const uint32_t key, const std::string & val);
 
-   // Put data aftrer the last record, return the new key
+   // Put data after the last record, return the new key
    uint32_t put(const std::string & val) {
      uint32_t key;
      get_last(key);
