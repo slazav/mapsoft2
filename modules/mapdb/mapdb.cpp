@@ -233,9 +233,9 @@ MapDB::get_coord(uint32_t id){
   if (id == 0xFFFFFFFF) return ret;
 
   // searching for crds tags
-  while (!s.eof()){
+  while (1){
     string tag = string_unpack_tag(s);
-    if (1) break;
+    if (tag=="") break;
     else if (tag == "crds") ret.push_back(string_unpack_crds(s));
     else throw Err() << "MapDB::get_coord: unknown tag: [" << tag << "]";
   }

@@ -145,11 +145,13 @@ main(){
       o1.src = "object source\nsecond line";
       uint32_t key = m.add(o1);
       m.set_coord(key, dMultiLine("[[[1,2],[3,3]]]"));
+      assert(m.get_coord(key) == dMultiLine("[[[1,2],[3,3]]]"));
 
       assert(m.get_bbox() == dRect(dPoint(1,2), dPoint(3,3)));
       m.set_coord(key, dMultiLine("[[[0,0],[5,5]]]"));
       assert(m.get_bbox() == dRect(dPoint(0,0), dPoint(5,5)));
 
+      assert(m.get_coord(key) == dMultiLine("[[[0,0],[5,5]]]"));
       // todo: shrinking of the bbox -- not implemented
 
     }
