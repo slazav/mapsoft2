@@ -177,7 +177,6 @@ MapDB::export_mp(const string & mp_file, const Opt & opts){
   while (key!=0xFFFFFFFF){
     MapDBObj o;
     o.unpack(str);
-    str = objects.get_next(key);
 
     MPObj o1;
     o1.Class = o.cl;
@@ -216,6 +215,8 @@ MapDB::export_mp(const string & mp_file, const Opt & opts){
     o1.Data.push_back(get_coord(key));
 
     if (o1.Data.size()) mp_data.push_back(o1);
+
+    str = objects.get_next(key);
   }
   ofstream out(mp_file);
   write_mp(out, mp_data);
