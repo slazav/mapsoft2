@@ -133,7 +133,7 @@ main(){
       m.set_brd(brd);
       assert(m.get_brd() == brd);
 
-      // get/set bbox
+      // get/set object coordinates and bboxes
       assert(m.get_bbox() == dRect());
       MapDBObj o1;
       o1.cl = MAPDB_LINE;
@@ -143,15 +143,29 @@ main(){
       o1.name = "object name\nsecond line";
       o1.comm = "object comment\nsecond line";
       o1.src = "object source\nsecond line";
-      uint32_t key = m.add(o1);
-      m.set_coord(key, dMultiLine("[[[1,2],[3,3]]]"));
-      assert(m.get_coord(key) == dMultiLine("[[[1,2],[3,3]]]"));
+      uint32_t id = m.add(o1);
+      m.set_coord(id, dMultiLine("[[[1,2],[3,3]]]"));
+      assert(m.get_coord(id) == dMultiLine("[[[1,2],[3,3]]]"));
 
-      assert(m.get_bbox() == dRect(dPoint(1,2), dPoint(3,3)));
-      m.set_coord(key, dMultiLine("[[[0,0],[5,5]]]"));
+      MapDBObj o2 = m.get(id);
+      o1.bbox = m.get_coord(id).bbox2d();
+      assert(o1 == o2);
+
+      assert(m.get_bbox() == dRect(dPoint(1,2), dPoint(3,3))); // map bbox
+
+      m.set_coord(id, dMultiLine("[[[0,0],[5,5]]]"));
+      o2 = m.get(id);
+      o1.bbox = m.get_coord(id).bbox2d();
+      assert(o1 == o2);
       assert(m.get_bbox() == dRect(dPoint(0,0), dPoint(5,5)));
 
-      assert(m.get_coord(key) == dMultiLine("[[[0,0],[5,5]]]"));
+      m.set_coord(id, dMultiLine());
+      o2 = m.get(id);
+      o1.bbox = dRect();
+      assert(o1 == o2);
+      assert(m.get_bbox() == dRect(dPoint(0,0), dPoint(5,5)));
+
+      assert(m.get_coord(id) == dMultiLine());
       // todo: shrinking of the bbox -- not implemented
 
     }

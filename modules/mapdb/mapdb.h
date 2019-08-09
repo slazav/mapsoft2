@@ -61,13 +61,14 @@ struct MapDBObj {
     if (name!=o.name)   return name<o.name;
     if (comm!=o.comm)   return comm<o.comm;
     if (src!=o.src)     return src<o.src;
+    if (bbox!=o.bbox)   return bbox<o.bbox;
     return false;
   }
 
   /// Equal opertator.
   bool operator== (const MapDBObj & o) const {
     return cl==o.cl && type==o.type && dir==o.dir && angle==o.angle &&
-        name==o.name && comm==o.comm && src==o.src;
+        name==o.name && comm==o.comm && src==o.src && bbox==o.bbox;
   }
   // derived operators:
   bool operator!= (const MapDBObj & other) const { return !(*this==other); } ///< operator!=
@@ -137,6 +138,9 @@ public:
 
   /// Add object to the map, return object ID
   uint32_t add(const MapDBObj & o);
+
+  /// Read an object
+  MapDBObj get(const uint32_t id);
 
   /// Delete an object.
   /// If the object does not exist throw an error.

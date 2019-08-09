@@ -29,6 +29,9 @@ MapDBObj::pack() const {
   v = (int32_t)cl;   s.write((char *)&v, sizeof(int32_t));
   v = (int32_t)type; s.write((char *)&v, sizeof(int32_t));
 
+  // bbox field
+  if (!bbox.empty()) string_pack_bbox(s, bbox);
+
   // optional direction (int value)
   if (dir!=MAPDB_DIR_NO) string_pack<uint32_t>(s, "dir ", (uint32_t)dir);
 
@@ -66,11 +69,12 @@ MapDBObj::unpack(const std::string & str) {
   while (1){
     string tag = string_unpack_tag(s);
     if (tag == "") break;
-    else if (tag == "dir ") dir = (MapDBObjDir)string_unpack<uint32_t>(s);
+    else if (tag == "dir ") dir   = (MapDBObjDir)string_unpack<uint32_t>(s);
     else if (tag == "angl") angle = string_unpack<int32_t>(s)/1000.0;
-    else if (tag == "name") name = string_unpack_str(s);
-    else if (tag == "comm") comm = string_unpack_str(s);
-    else if (tag == "src ") src = string_unpack_str(s);
+    else if (tag == "name") name  = string_unpack_str(s);
+    else if (tag == "comm") comm  = string_unpack_str(s);
+    else if (tag == "src ") src   = string_unpack_str(s);
+    else if (tag == "bbox") bbox  = string_unpack_bbox(s);
     else throw Err() << "Unknown tag: " << tag;
   }
 
@@ -172,6 +176,18 @@ MapDB::add(const MapDBObj & o){
   return id;
 }
 
+MapDBObj
+MapDB::get(const uint32_t id){
+  uint32_t id1 = id;
+  std::string str = objects.get(id1);
+  if (id == 0xFFFFFFFF)
+    throw Err() << "MapDB::get: no such object: " << id;
+  MapDBObj ret;
+  ret.unpack(str);
+  return ret;
+}
+
+
 void
 MapDB::del(const uint32_t id){
 
@@ -196,6 +212,7 @@ MapDB::set_coord(uint32_t id, const dMultiLine & crd){
 
   // old bounding box exists
   if (!obj.bbox.empty()){
+    // remove old coordinates
     coords.del(id);
 
     // remove old geohash
@@ -208,8 +225,18 @@ MapDB::set_coord(uint32_t id, const dMultiLine & crd){
   // update object bbox
   obj.bbox = crd.bbox2d();
 
+  // update object
+  objects.put(id, obj.pack());
+
   // new bounding box non-empty
   if (!obj.bbox.empty()){
+
+    // set coordinates (overwrite if needed)
+    ostringstream s;
+    string_pack_crds(s, crd);
+    coords.put(id, s.str());
+
+    // update geohash
     geohash.put(id, obj.bbox);
 
     // update map bbox
@@ -217,10 +244,6 @@ MapDB::set_coord(uint32_t id, const dMultiLine & crd){
     bbox0.expand(obj.bbox);
     set_bbox(bbox0);
 
-    // set coordinates (overwrite if needed)
-    ostringstream s;
-    string_pack_crds(s, crd);
-    coords.put(id, s.str());
   }
 }
 
