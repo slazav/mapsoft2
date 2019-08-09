@@ -101,10 +101,11 @@ MapDB::import_vmap(const std::string & vmap_file, const Opt & opts){
     // angle (deg -> deg)
     if (o.opts.exists("Angle")) o1.angle=o.opts.get<float>("Angle");
 
-    // data
-    o1.dMultiLine::operator=(o); // set data
+    // add object
+    uint32_t id = add(o1);
 
-    add(o1);
+    // set coordinates
+    set_coord(id, (dMultiLine)o);
   }
 
   // border
@@ -209,13 +210,13 @@ MapDB::export_vmap(const std::string & vmap_file, const Opt & opts){
     if (o.angle!=0) o1.opts.put("Angle", o.angle);
 
     // points
-    o1.dMultiLine::operator=(o);
+    o1.dMultiLine::operator=(get_coord(key));
 
     vmap_data.push_back(o1);
     str = objects.get_next(key);
   }
 
-  // map border
+  // map border (only first segment)
   dMultiLine brd = get_brd();
   if (brd.size()>0) vmap_data.brd = *brd.begin();
 

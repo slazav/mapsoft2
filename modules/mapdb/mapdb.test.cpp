@@ -23,7 +23,6 @@ main(){
       assert(o1.name == "");
       assert(o1.comm == "");
       assert(o1.src == "");
-      assert(o1.size() == 0);
 
       // <=> operators
       assert(o1 == o2);
@@ -84,23 +83,6 @@ main(){
       assert(o2 > o1);
       assert(o2 >= o1);
 
-      o2=o1;
-      o1.push_back(dLine("[[1,2],[3,3]]"));
-      o2.push_back(dLine("[[1,2],[3,4]]"));
-      assert(o1 != o2);
-      assert(o1 < o2);
-      assert(o1 <= o2);
-      assert(o2 > o1);
-      assert(o2 >= o1);
-
-      o2=o1;
-      o1.push_back(dLine("[[1,2]]"));
-      o2.push_back(dLine("[[1,2],[3,4]]"));
-      assert(o1 != o2);
-      assert(o1 < o2);
-      assert(o1 <= o2);
-      assert(o2 > o1);
-      assert(o2 >= o1);
     }
 
     // packing and unpacking of MapDBObj
@@ -114,8 +96,6 @@ main(){
       o1.name = "object name\nsecond line";
       o1.comm = "object comment\nsecond line";
       o1.src = "object source\nsecond line";
-      o1.push_back(dLine("[[0,0],[1,2],[3,4]]"));
-      o1.push_back(dLine("[[5,4],[4,3],[3,2]]"));
       std::string pack = o1.pack();
       o2.unpack(pack);
       assert(o1==o2);
@@ -127,8 +107,6 @@ main(){
       o1.name = "";
       o1.comm = "";
       o1.src = "";
-      o1.push_back(dLine("[[0,0],[1,2],[3,4]]"));
-      o1.push_back(dLine("[[5,4],[4,3],[3,2]]"));
       pack = o1.pack();
       o2.unpack(pack);
       assert(o1==o2);
@@ -156,14 +134,14 @@ main(){
       // get/set bbox
       assert(m.get_bbox() == dRect());
       MapDBObj o1;
-      o1.push_back(dLine("[[1,2],[3,3]]"));
-      m.add(o1);
-      assert(m.get_bbox() == dRect(dPoint(1,2), dPoint(3,3)));
-      o1.clear();
-      o1.push_back(dLine("[[0,0]]"));
-      m.add(o1);
-      assert(m.get_bbox() == dRect(dPoint(0,0), dPoint(3,3)));
+      uint32_t key = m.add(o1);
+      m.set_coord(key, dMultiLine("[[[1,2],[3,3]]]"));
 
+      assert(m.get_bbox() == dRect(dPoint(1,2), dPoint(3,3)));
+      m.set_coord(key, dMultiLine("[[[0,0],[5,5]]]"));
+      assert(m.get_bbox() == dRect(dPoint(0,0), dPoint(5,5)));
+
+      // todo: shrinking of the bbox -- not implemented
     }
     unlink("tmp.db");
 

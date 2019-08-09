@@ -32,7 +32,7 @@ typedef enum{
 /*********************************************************************/
 // MapDBObj -- a single map object
 
-struct MapDBObj: public dMultiLine {
+struct MapDBObj {
   MapDBObjClass    cl;      // object class: MAPDB_POINT, MAPDB_LINE, MAPDB_POLYGON
   int             type;    // = MP type
   MapDBObjDir      dir;     // object direction: MAPDB_DIR_NO, MAPDB_DIR_FRW, MAPDB_DIR_BCK
@@ -40,7 +40,7 @@ struct MapDBObj: public dMultiLine {
   std::string     name;    // object name (to be printed on map labels)
   std::string     comm;    // object comment
   std::string     src;     // object source
-
+  dRect           bbox;    // bounding box
   // defaults
   MapDBObj() {cl=MAPDB_POINT; type=0; dir=MAPDB_DIR_NO; angle=0;}
 
@@ -61,14 +61,13 @@ struct MapDBObj: public dMultiLine {
     if (name!=o.name)   return name<o.name;
     if (comm!=o.comm)   return comm<o.comm;
     if (src!=o.src)     return src<o.src;
-    return dMultiLine::operator<(o);
+    return false;
   }
 
   /// Equal opertator.
   bool operator== (const MapDBObj & o) const {
     return cl==o.cl && type==o.type && dir==o.dir && angle==o.angle &&
-        name==o.name && comm==o.comm && src==o.src &&
-        dMultiLine::operator==(o);
+        name==o.name && comm==o.comm && src==o.src;
   }
   // derived operators:
   bool operator!= (const MapDBObj & other) const { return !(*this==other); } ///< operator!=
@@ -92,13 +91,15 @@ private:
 
 public:
   MapDB(const char *name, bool create):
-    mapinfo(name, "INF", create),
-    objects(name, "OBJ", create),
-    coords(name, "CRD", create),
-    labels(name, "LBL", create),
+    mapinfo(name, "INF", create, false),
+    objects(name, "OBJ", create, false),
+    coords(name, "CRD",  create, false),
+    labels(name, "LBL",  create, true),
     geo_ind(name, "GEO", create) {};
 
   ///////////////
+  /* Function for working with map information (INF database) */
+  public:
 
   /// Get map name. If the field is not set return empty string without an error.
   std::string get_name();
@@ -115,15 +116,32 @@ public:
   /// Get map bounding box. If the field is not set return empty dRect
   dRect get_bbox();
 
-  /// Set map bounding box (internal use only!)
-  private: void set_bbox(const dRect & b);
+  private:
+  /// Set map bounding box (internal use only, should
+  /// be syncronyzed with objects!)
+  void set_bbox(const dRect & b);
 
+
+  ///////////////
+  /* Functions for working with map objects */
   public:
 
-
-  /// Add object to the map.
+  /// Add object to the map, return object ID
   uint32_t add(const MapDBObj & o);
 
+  /// Delete an object.
+  /// If the object does not exist throw an error.
+  void del(const uint32_t id);
+
+  /// Set coordinates of an object.
+  /// If the object does not exist throw an error.
+  void set_coord(uint32_t ID, const dMultiLine & crd);
+
+  /// get coordinates of an object
+  dMultiLine get_coord(uint32_t ID);
+
+
+  ///////////////
   /* Import/export */
 
   /// Import objects from MP file.

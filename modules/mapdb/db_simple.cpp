@@ -126,7 +126,7 @@ DBSimple::Impl::put(const uint32_t key, const std::string & val){
   DBT k = mk_dbt(key_s);
   DBT v = mk_dbt(val);
   int ret = dbp->put(dbp, NULL, &k, &v, 0);
-    if (ret != 0) throw Err() << "db_simple: " << db_strerror(ret);
+  if (ret != 0) throw Err() << "db_simple: " << db_strerror(ret);
 }
 
 // Main get function. Uses cursor, supports all flags.

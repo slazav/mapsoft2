@@ -37,8 +37,6 @@ MapDBObj::pack() const {
   if (comm!="") string_pack_str(s, "comm", comm);
   if (src!="")  string_pack_str(s, "src ", src);
 
-  // coordinates (4-byte tag, 4-byte length, data);
-  string_pack_crds(s, *this);
   return s.str();
 }
 
@@ -70,7 +68,6 @@ MapDBObj::unpack(const std::string & str) {
     else if (tag == "name") name = string_unpack_str(s);
     else if (tag == "comm") comm = string_unpack_str(s);
     else if (tag == "src ") src = string_unpack_str(s);
-    else if (tag == "crds") push_back(string_unpack_crds(s));
     else throw Err() << "Unknown tag: " << tag;
   }
 
@@ -104,7 +101,7 @@ MapDB::get_brd() {
     string tag = string_unpack_tag(s);
     if (tag == "") break;
     else if (tag == "crds") ret.push_back(string_unpack_crds(s));
-    else throw Err() << "MapDB::get_brd: unknown tag: " << tag;
+    else throw Err() << "MapDB::get_brd: unknown tag: [" << tag << "]";
   }
   return ret;
 }
@@ -128,7 +125,7 @@ MapDB::get_bbox() {
     string tag = string_unpack_tag(s);
     if (tag == "") break;
     else if (tag == "bbox") ret = string_unpack_bbox(s);
-    else throw Err() << "MapDB::get_brd: unknown tag: " << tag;
+    else throw Err() << "MapDB::get_bbox: unknown tag: [" << tag << "]";
   }
   return ret;
 }
@@ -144,9 +141,6 @@ MapDB::set_bbox(const dRect & b) {
 /**********************************************************/
 uint32_t
 MapDB::add(const MapDBObj & o){
-  // do not work with empty objects
-  if (o.is_empty()) throw Err() << "MapDB::add: empty object";
-
   // get last id + 1
   uint32_t id;
   objects.get_last(id);
@@ -156,18 +150,78 @@ MapDB::add(const MapDBObj & o){
   if (id == 0xFFFFFFFF)
     throw Err() << "MapDB::add: object ID overfull";
 
-
   // insert object
   objects.put(id, o.pack());
-
-  // update bbox
-  dRect bbox0 = get_bbox();
-  dRect bbox1 = o.bbox2d();
-  bbox0.expand(bbox1);
-  set_bbox(bbox0);
-
-  // update statial index
-  geo_ind.put(id, bbox1);
   return id;
+}
+
+void
+MapDB::del(const uint32_t id){
+
+  // Delete coordinates, update geohashes
+  // Throw error if the object does not exist.
+  set_coord(id, dMultiLine());
+
+  // Delete the object
+  objects.del(id);
+}
+
+
+/// set coordinates of an object
+void
+MapDB::set_coord(uint32_t id, const dMultiLine & crd){
+
+  // get old object
+  MapDBObj obj;
+  obj.unpack(objects.get(id));
+  if (id == 0xFFFFFFFF)
+    throw Err() << "MapDB::set_coord: object does not exist";
+
+  // old bounding box exists
+  if (!obj.bbox.empty()){
+    coords.del(id);
+
+    // remove old geohash
+    geo_ind.del(id, obj.bbox);
+
+    // TODO: what to do with the map bbox?
+    // can it be shrinked efficiently using geohashes?
+  }
+
+  // update object bbox
+  obj.bbox = crd.bbox2d();
+
+  // new bounding box non-empty
+  if (!obj.bbox.empty()){
+    geo_ind.put(id, obj.bbox);
+
+    // update map bbox
+    dRect bbox0 = get_bbox();
+    bbox0.expand(obj.bbox);
+    set_bbox(bbox0);
+
+    // set coordinates (overwrite if needed)
+    ostringstream s;
+    string_pack_crds(s, crd);
+    coords.put(id, s.str());
+  }
+}
+
+/// get coordinates of an object
+/// similar to get_border method
+dMultiLine
+MapDB::get_coord(uint32_t id){
+  dMultiLine ret;
+  istringstream s(coords.get(id));
+  if (id == 0xFFFFFFFF) return ret;
+
+  // searching for crds tags
+  while (!s.eof()){
+    string tag = string_unpack_tag(s);
+    if (1) break;
+    else if (tag == "crds") ret.push_back(string_unpack_crds(s));
+    else throw Err() << "MapDB::get_coord: unknown tag: [" << tag << "]";
+  }
+  return ret;
 }
 
