@@ -6,7 +6,7 @@ P=${1:-./ms2vmap}
 
 . ../test_lib.sh
 
-rm -f tmp.db
+rm -rf tmp.db
 
 assert "$P tmp.db import_vmap" "Error: import_vmap: file name expected" 1
 assert "$P tmp.db import_vmap missing.vmap" "Error: can't read VMAP file" 1
@@ -18,4 +18,4 @@ assert_diff test_data/n37-016a.vmap tmp.vmap
 #assert "$P tmp export_mp tmp.mp --cnv_pt '[0x900,0x815]' --cnv_line '[]'" "" 0
 #assert_diff test_data/n37-075b.mp tmp.mp
 
-rm -f tmp.db
+rm -rf tmp.db

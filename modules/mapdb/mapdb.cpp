@@ -8,6 +8,9 @@
 #include "mp/mp.h"
 #include "string_pack.h"
 
+#include <sys/types.h> // FolderMaker
+#include <sys/stat.h>
+
 // key names in the INF database
 #define INF_KEY_NAME 1
 #define INF_KEY_BRD  2
@@ -75,6 +78,20 @@ MapDBObj::unpack(const std::string & str) {
 
 /**********************************************************/
 
+MapDB::FolderMaker::FolderMaker(std::string name, bool create){
+  struct stat info;
+  if (stat(name.c_str(), &info ) != 0 ){
+    if (create){
+      if (mkdir(name.c_str(),0755) != 0)
+        throw Err() << "Can't create MapDB folder: " << name;
+    }
+    else throw Err() << "Can't find MapDB folder: " << name;
+  }
+  else if( !(info.st_mode & S_IFDIR))
+    throw Err() << "Not a MapDB folder: " << name;
+}
+
+/**********************************************************/
 
 std::string
 MapDB::get_name() {
@@ -182,7 +199,7 @@ MapDB::set_coord(uint32_t id, const dMultiLine & crd){
     coords.del(id);
 
     // remove old geohash
-    geo_ind.del(id, obj.bbox);
+    geohash.del(id, obj.bbox);
 
     // TODO: what to do with the map bbox?
     // can it be shrinked efficiently using geohashes?
@@ -193,7 +210,7 @@ MapDB::set_coord(uint32_t id, const dMultiLine & crd){
 
   // new bounding box non-empty
   if (!obj.bbox.empty()){
-    geo_ind.put(id, obj.bbox);
+    geohash.put(id, obj.bbox);
 
     // update map bbox
     dRect bbox0 = get_bbox();

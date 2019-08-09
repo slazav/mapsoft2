@@ -19,10 +19,13 @@ class DBSimple{
    // TODO: write iterator?
 
    // open database:
-   // fname - file name, dbname - database name (can be NULL),
+   // fname - file name
+   // dbname - database name (can be NULL),
    // create - create flag.
    // dup    - alow duplicates flag (default false).
-   DBSimple(const char *fname, const char *dbname, bool create, bool dup = false);
+   // Note: if you use non-null dbname and put a few databases in a single file,
+   // you will need to create environment to open both databases.
+   DBSimple(std::string fname, const char *dbname, bool create, bool dup = false);
    ~DBSimple();
 
    // Put data with a given key (overwrite old value if it exists).

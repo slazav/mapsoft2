@@ -83,19 +83,28 @@ struct MapDBObj {
 
 class MapDB {
 private:
-    DBSimple   mapinfo; // map information
-    DBSimple   objects; // object data
-    DBSimple   coords;  // object coordinates
-    DBSimple   labels;  // label data
-    GeoHashDB  geo_ind;
+
+  // class for checking/making database folder
+  class FolderMaker{ public: FolderMaker(std::string name, bool create); };
+
+  FolderMaker folder; // Making folder for the databases.
+                      // This line should appear before all database members.
+
+  DBSimple   mapinfo; // map information
+  DBSimple   objects; // object data
+  DBSimple   coords;  // object coordinates
+  DBSimple   labels;  // label data
+  GeoHashDB  geohash;
 
 public:
-  MapDB(const char *name, bool create):
-    mapinfo(name, "INF", create, false),
-    objects(name, "OBJ", create, false),
-    coords(name, "CRD",  create, false),
-    labels(name, "LBL",  create, true),
-    geo_ind(name, "GEO", create) {};
+  MapDB(std::string name, bool create):
+    folder(name, create),
+    mapinfo(name + "/mapinfo.db", NULL, create, false),
+    objects(name + "/objects.db", NULL, create, false),
+    coords(name  + "/coords.db",  NULL, create, false),
+    labels(name  + "/labels.db",  NULL, create, true),
+    geohash(name + "/geohash.db", NULL, create)
+   {};
 
   ///////////////
   /* Function for working with map information (INF database) */

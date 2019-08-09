@@ -115,8 +115,10 @@ main(){
 
     // INF database test
     {
-      unlink("tmp.db");
+      if (system("rm -rf tmp.db")!=0) throw Err() << "Can't delete tmp.db";
       MapDB m("tmp.db", 1);
+
+      // mapinfo.db test
 
       // get/set name
       assert(m.get_name() == "");
@@ -134,6 +136,13 @@ main(){
       // get/set bbox
       assert(m.get_bbox() == dRect());
       MapDBObj o1;
+      o1.cl = MAPDB_LINE;
+      o1.type = 0x2342;
+      o1.dir  = MAPDB_DIR_NO;
+      o1.angle  = 60;
+      o1.name = "object name\nsecond line";
+      o1.comm = "object comment\nsecond line";
+      o1.src = "object source\nsecond line";
       uint32_t key = m.add(o1);
       m.set_coord(key, dMultiLine("[[[1,2],[3,3]]]"));
 
@@ -142,8 +151,9 @@ main(){
       assert(m.get_bbox() == dRect(dPoint(0,0), dPoint(5,5)));
 
       // todo: shrinking of the bbox -- not implemented
+
     }
-    unlink("tmp.db");
+    if (system("rm -rf tmp.db")!=0) throw Err() << "Can't delete tmp.db";
 
   }
   catch (Err e) {
