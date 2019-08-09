@@ -23,10 +23,10 @@ main(){
       string_pack_str(s1, "str2", "text2");
 
       dMultiLine crds1("[[[-180,-90],[0,0],[180,90]],[],[[37.11,56.20],[37.22,56.11]]]");
-      string_pack_crds(s1, crds1);
+      string_pack_crds(s1, "crds", crds1);
 
       dRect bbox("[100,200,10,10]");
-      string_pack_bbox(s1, bbox);
+      string_pack_bbox(s1, "bbox", bbox);
 
       dMultiLine crds2;
       std::istringstream s2(s1.str());

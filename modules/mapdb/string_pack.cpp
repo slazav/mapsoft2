@@ -17,6 +17,42 @@ string_pack_str(ostream & s, const char *tag, const std::string & str){
   if (s.fail()) throw Err() << "string_pack_str: write error";
 }
 
+void
+string_pack_crds(ostream & s, const char *tag, const dMultiLine & ml){
+  for (auto const &l:ml) {
+    s.write(tag, 4);
+    uint32_t size = l.size()*2*sizeof(int32_t); // 2 ints per point
+      s.write((char *)&size, sizeof(uint32_t));
+    for (auto p:l) {
+      while (p.x >  180) p.x-=360;
+      while (p.x < -180) p.x+=360;
+      while (p.y >   90) p.y-=180;
+      while (p.y <  -90) p.y+=180;
+      int32_t crd[2] = {(int32_t)rint(p.x * 1e7), (int32_t)rint(p.y * 1e7)};
+      s.write((char *)crd, 2*sizeof(int32_t));
+    }
+  }
+  if (s.fail()) throw Err() << "string_pack_crds: write error";
+}
+
+void
+string_pack_bbox(ostream & s, const char *tag, const dRect & box) {
+  s.write(tag, 4);
+  uint32_t size = 4*sizeof(int32_t);
+  s.write((char*)&size, sizeof(uint32_t));
+  int32_t x1 = rint(box.tlc().x*1e7);
+  int32_t y1 = rint(box.tlc().y*1e7);
+  int32_t x2 = rint(box.brc().x*1e7);
+  int32_t y2 = rint(box.brc().y*1e7);
+  s.write((char *)&x1, sizeof(int32_t));
+  s.write((char *)&y1, sizeof(int32_t));
+  s.write((char *)&x2, sizeof(int32_t));
+  s.write((char *)&y2, sizeof(int32_t));
+  if (s.fail()) throw Err() << "string_pack_bbox: write error";
+}
+
+
+
 std::string
 string_unpack_tag(istream & s){
   std::string tag(4,'\0');
@@ -36,24 +72,6 @@ string_unpack_str(istream & s){
   return str;
 }
 
-void
-string_pack_crds(ostream & s, const dMultiLine & ml){
-  for (auto const &l:ml) {
-    s.write("crds", 4);
-    uint32_t size = l.size()*2*sizeof(int32_t); // 2 ints per point
-      s.write((char *)&size, sizeof(uint32_t));
-    for (auto p:l) {
-      while (p.x >  180) p.x-=360;
-      while (p.x < -180) p.x+=360;
-      while (p.y >   90) p.y-=180;
-      while (p.y <  -90) p.y+=180;
-      int32_t crd[2] = {(int32_t)rint(p.x * 1e7), (int32_t)rint(p.y * 1e7)};
-      s.write((char *)crd, 2*sizeof(int32_t));
-    }
-  }
-  if (s.fail()) throw Err() << "string_pack_crds: write error";
-}
-
 dLine
 string_unpack_crds(istream & s){
   uint32_t size;
@@ -68,23 +86,6 @@ string_unpack_crds(istream & s){
   if (s.fail()) throw Err() << "string_unpack_crds: read error";
   return ret;
 }
-
-void
-string_pack_bbox(ostream & s, const dRect & box) {
-  s.write("bbox", 4);
-  uint32_t size = 4*sizeof(int32_t);
-  s.write((char*)&size, sizeof(uint32_t));
-  int32_t x1 = rint(box.tlc().x*1e7);
-  int32_t y1 = rint(box.tlc().y*1e7);
-  int32_t x2 = rint(box.brc().x*1e7);
-  int32_t y2 = rint(box.brc().y*1e7);
-  s.write((char *)&x1, sizeof(int32_t));
-  s.write((char *)&y1, sizeof(int32_t));
-  s.write((char *)&x2, sizeof(int32_t));
-  s.write((char *)&y2, sizeof(int32_t));
-  if (s.fail()) throw Err() << "string_pack_bbox: write error";
-}
-
 
 dRect
 string_unpack_bbox(istream & s) {

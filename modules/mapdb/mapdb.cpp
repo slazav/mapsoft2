@@ -30,7 +30,7 @@ MapDBObj::pack() const {
   v = (int32_t)type; s.write((char *)&v, sizeof(int32_t));
 
   // bbox field
-  if (!bbox.empty()) string_pack_bbox(s, bbox);
+  if (!bbox.empty()) string_pack_bbox(s, "bbox", bbox);
 
   // optional direction (int value)
   if (dir!=MAPDB_DIR_NO) string_pack<uint32_t>(s, "dir ", (uint32_t)dir);
@@ -130,7 +130,7 @@ MapDB::get_brd() {
 void
 MapDB::set_brd(const dMultiLine & b) {
   ostringstream s;
-  string_pack_crds(s, b);
+  string_pack_crds(s, "crds", b);
   mapinfo.put(INF_KEY_BRD, s.str());
 }
 
@@ -154,7 +154,7 @@ MapDB::get_bbox() {
 void
 MapDB::set_bbox(const dRect & b) {
   ostringstream s;
-  string_pack_bbox(s, b);
+  string_pack_bbox(s, "bbox", b);
   mapinfo.put(INF_KEY_BBOX, s.str());
 }
 
@@ -233,7 +233,7 @@ MapDB::set_coord(uint32_t id, const dMultiLine & crd){
 
     // set coordinates (overwrite if needed)
     ostringstream s;
-    string_pack_crds(s, crd);
+    string_pack_crds(s, "crds", crd);
     coords.put(id, s.str());
 
     // update geohash
