@@ -45,7 +45,8 @@ ALL_SOURCES += $(patsubst %,%.cpp, $(PROGRAMS))
 
 # Extract #include statements from MOD_SOURCES and MOD_HEADERS:
 HDEPS := $(shell cat $(ALL_SOURCES) |\
-          sed -rne 's|^\#include +"([^/]*/[^/]*)".*|$(MODDIR)/\1|p'\
+          sed -rne 's|^\#include +"([^/]*/[^/]*)".*|$(MODDIR)/\1|p;\
+                    s|^\#include +"([^/]*)".*|\1|p'\
           | sort -u)
 
 # List of modules which should be rebuilt (in correct order).
