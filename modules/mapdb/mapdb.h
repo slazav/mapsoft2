@@ -45,7 +45,7 @@ struct MapDBObj {
   MapDBObj() {cl=MAPDB_POINT; type=0; dir=MAPDB_DIR_NO; angle=0;}
 
   // pack object to a string (for DB storage)
-  std::string pack() const;
+  std::string pack(bool write_bbox = true) const;
 
   // unpack object from a string (for DB storage)
   void unpack(const std::string & s);
@@ -108,7 +108,7 @@ public:
    {};
 
   ///////////////
-  /* Function for working with map information (INF database) */
+  /* Function for working with map information (mapinfo.db) */
   public:
 
   /// Get map name. If the field is not set return empty string without an error.
@@ -136,10 +136,11 @@ public:
   /* Functions for working with map objects */
   public:
 
-  /// Add object to the map, return object ID
+  /// Add object to the map, return object ID.
+  /// Bounding box will be reset to empty.
   uint32_t add(const MapDBObj & o);
 
-  /// Read an object
+  /// Read an object.
   MapDBObj get(const uint32_t id);
 
   /// Delete an object.

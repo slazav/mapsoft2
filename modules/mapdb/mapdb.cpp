@@ -21,7 +21,7 @@ using namespace std;
 /**********************************************************/
 // pack object to a string (for DB storage)
 string
-MapDBObj::pack() const {
+MapDBObj::pack(bool write_bbox) const {
   ostringstream s;
 
   // two integer numbers: class, type:
@@ -30,7 +30,7 @@ MapDBObj::pack() const {
   v = (int32_t)type; s.write((char *)&v, sizeof(int32_t));
 
   // bbox field
-  if (!bbox.empty()) string_pack_bbox(s, "bbox", bbox);
+  if (write_bbox && !bbox.empty()) string_pack_bbox(s, "bbox", bbox);
 
   // optional direction (int value)
   if (dir!=MAPDB_DIR_NO) string_pack<uint32_t>(s, "dir ", (uint32_t)dir);
@@ -171,8 +171,8 @@ MapDB::add(const MapDBObj & o){
   if (id == 0xFFFFFFFF)
     throw Err() << "MapDB::add: object ID overfull";
 
-  // insert object
-  objects.put(id, o.pack());
+  // insert object without bbox
+  objects.put(id, o.pack(false));
   return id;
 }
 

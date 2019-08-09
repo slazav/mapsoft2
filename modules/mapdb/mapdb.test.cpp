@@ -143,11 +143,16 @@ main(){
       o1.name = "object name\nsecond line";
       o1.comm = "object comment\nsecond line";
       o1.src = "object source\nsecond line";
+      o1.bbox = dRect(1,1,2,2);
       uint32_t id = m.add(o1);
+      MapDBObj o2 = m.get(id);
+      assert(o2.bbox == dRect());
+      assert(m.get_coord(id) == dMultiLine());
+
       m.set_coord(id, dMultiLine("[[[1,2],[3,3]]]"));
       assert(m.get_coord(id) == dMultiLine("[[[1,2],[3,3]]]"));
 
-      MapDBObj o2 = m.get(id);
+      o2 = m.get(id);
       o1.bbox = m.get_coord(id).bbox2d();
       assert(o1 == o2);
 
