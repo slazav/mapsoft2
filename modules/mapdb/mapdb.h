@@ -4,6 +4,7 @@
 #include <string>
 #include <list>
 #include <map>
+#include <set>
 
 #include "db_simple.h"
 #include "db_geohash.h"
@@ -42,7 +43,8 @@ struct MapDBObj {
   float           angle;   // object angle, deg
   std::string     name;    // object name (to be printed on map labels)
   std::string     comm;    // object comment
-  std::string     src;     // object source
+  std::set<std::string> tags;    // object tags
+
   // defaults
   MapDBObj() {cl=MAPDB_POINT; type=0; dir=MAPDB_DIR_NO; angle=0;}
 
@@ -62,14 +64,14 @@ struct MapDBObj {
     if (angle!=o.angle) return angle<o.angle;
     if (name!=o.name)   return name<o.name;
     if (comm!=o.comm)   return comm<o.comm;
-    if (src!=o.src)     return src<o.src;
+    if (tags!=o.tags)   return tags<o.tags;
     return false;
   }
 
   /// Equal opertator.
   bool operator== (const MapDBObj & o) const {
     return cl==o.cl && type==o.type && dir==o.dir && angle==o.angle &&
-        name==o.name && comm==o.comm && src==o.src;
+        name==o.name && comm==o.comm && tags==o.tags;
   }
   // derived operators:
   bool operator!= (const MapDBObj & other) const { return !(*this==other); } ///< operator!=
@@ -94,8 +96,8 @@ private:
 
   DBSimple   mapinfo; // map information
   DBSimple   objects; // object data
-  DBSimple   bboxes;  // object coordinates
   DBSimple   coords;  // object coordinates
+  DBSimple   bboxes;  // object coordinates
   DBSimple   labels;  // label data
   GeoHashDB  geohash; // geohashes for spatial indexing
 

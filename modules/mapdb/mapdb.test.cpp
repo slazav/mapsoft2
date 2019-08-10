@@ -22,7 +22,7 @@ main(){
       assert(o1.angle == 0);
       assert(o1.name == "");
       assert(o1.comm == "");
-      assert(o1.src == "");
+      assert(o1.tags.size() == 0);
 
       // <=> operators
       assert(o1 == o2);
@@ -75,12 +75,18 @@ main(){
       assert(o2 >= o1);
 
       o2=o1;
-      o1.src = "a";
-      o2.src = "b";
+      o1.tags.insert("a");
+      o2.tags.insert("b");
       assert(o1 != o2);
       assert(o1 < o2);
       assert(o1 <= o2);
       assert(o2 > o1);
+      assert(o2 >= o1);
+
+      o2.tags.insert("a");
+      o1.tags.insert("b");
+      assert(o1 == o2);
+      assert(o1 <= o2);
       assert(o2 >= o1);
 
     }
@@ -95,7 +101,7 @@ main(){
       o1.angle  = 60;
       o1.name = "object name\nsecond line";
       o1.comm = "object comment\nsecond line";
-      o1.src = "object source\nsecond line";
+      o1.tags.insert("object source\nsecond line");
       std::string pack = o1.pack();
       o2.unpack(pack);
       assert(o1==o2);
@@ -106,7 +112,7 @@ main(){
       o1.angle  = 0;
       o1.name = "";
       o1.comm = "";
-      o1.src = "";
+      o1.tags.clear();
       pack = o1.pack();
       o2.unpack(pack);
       assert(o1==o2);
@@ -145,7 +151,7 @@ main(){
       o1.angle  = 60;
       o1.name = "object name\nsecond line";
       o1.comm = "object comment\nsecond line";
-      o1.src = "object source\nsecond line";
+      o1.tags.insert("object source\nsecond line");
 
       // put object, check bbox and coords
       uint32_t id = m.add(o1);

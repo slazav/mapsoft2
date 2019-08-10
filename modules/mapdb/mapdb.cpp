@@ -41,7 +41,10 @@ MapDBObj::pack() const {
   // optional text fields (4-byte tag, 4-byte length, data);
   if (name!="") string_pack_str(s, "name", name);
   if (comm!="") string_pack_str(s, "comm", comm);
-  if (src!="")  string_pack_str(s, "src ", src);
+
+  // tags
+  for (auto const & t: tags)
+    string_pack_str(s, "tags", t);
 
   return s.str();
 }
@@ -72,7 +75,7 @@ MapDBObj::unpack(const std::string & str) {
     else if (tag == "angl") angle = string_unpack<int32_t>(s)/1000.0;
     else if (tag == "name") name  = string_unpack_str(s);
     else if (tag == "comm") comm  = string_unpack_str(s);
-    else if (tag == "src ") src   = string_unpack_str(s);
+    else if (tag == "tags") tags.insert(string_unpack_str(s));
     else throw Err() << "Unknown tag: " << tag;
   }
 

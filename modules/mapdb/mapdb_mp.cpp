@@ -103,7 +103,7 @@ MapDB::import_mp(const string & mp_file, const Opt & opts){
     o1.dir = (MapDBObjDir)o.Direction;
 
     // source
-    if (o.Opts.exists("Source")) o1.src=o.Opts.get<string>("Source");
+    if (o.Opts.exists("Source")) o1.tags.insert(o.Opts.get<string>("Source"));
 
     // choose data level (move to MP?)
     int l = -1;
@@ -209,7 +209,7 @@ MapDB::export_mp(const string & mp_file, const Opt & opts){
     o1.Direction = o.dir;
 
     // source
-    if (o.src!="") o1.Opts.put("Source", o.src);
+    if (o.tags.size()>0) o1.Opts.put("Source", *o.tags.begin());
 
     // points
     o1.Data.push_back(get_coord(key));

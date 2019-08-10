@@ -96,7 +96,7 @@ MapDB::import_vmap(const std::string & vmap_file, const Opt & opts){
     o1.dir = (MapDBObjDir)o.dir;
 
     // source
-    if (o.opts.exists("Source")) o1.src=o.opts.get<string>("Source");
+    if (o.opts.exists("Source")) o1.tags.insert(o.opts.get<string>("Source"));
 
     // angle (deg -> deg)
     if (o.opts.exists("Angle")) o1.angle=o.opts.get<float>("Angle");
@@ -204,7 +204,7 @@ MapDB::export_vmap(const std::string & vmap_file, const Opt & opts){
     o1.dir = o.dir;
 
     // source
-    if (o.src!="") o1.opts.put("Source", o.src);
+    if (o.tags.size()>0) o1.opts.put("Source", *o.tags.begin());
 
     // angle (deg->deg)
     if (o.angle!=0) o1.opts.put("Angle", o.angle);
