@@ -46,11 +46,15 @@ CairoExtra::mkpath_smline(const dLine & o, bool close, double curve_l){
 }
 
 void
-CairoExtra::set_fig_font(int font, double fs, double dpi){
+CairoExtra::render_text_fig(const char *text, dPoint pos, double ang,
+       int color, int fig_font, double font_size, double dpi, int hdir, int vdir){
+  Cairo::Context::save();
+  set_color(color);
+
   std::string       face;
   Cairo::FontSlant  slant;
   Cairo::FontWeight weight;
-  switch(font){
+  switch(fig_font){
     case 0:
       face="times";
       slant=Cairo::FONT_SLANT_NORMAL;
@@ -92,23 +96,16 @@ CairoExtra::set_fig_font(int font, double fs, double dpi){
       weight=Cairo::FONT_WEIGHT_BOLD;
       break;
     default:
-      std::cerr << "warning: unsupported fig font: " << font << "\n";
+      std::cerr << "warning: unsupported fig font: " << fig_font << "\n";
       face="sans";
       slant=Cairo::FONT_SLANT_NORMAL;
       weight=Cairo::FONT_WEIGHT_NORMAL;
   }
-  if (face=="times") fs/=0.85;
-  Cairo::Context::set_font_size(fs*dpi/89.0);
+
+  if (face=="times") font_size/=0.85;
+  Cairo::Context::set_font_size(font_size*dpi/89.0);
   Cairo::Context::set_font_face(
     Cairo::ToyFontFace::create(face, slant, weight));
-}
-
-void
-CairoExtra::render_text(const char *text, dPoint pos, double ang,
-       int color, int fig_font, double font_size, double dpi, int hdir, int vdir){
-  Cairo::Context::save();
-  set_color(color);
-  set_fig_font(fig_font, font_size, dpi);
 
   dRect ext = get_text_extents(text);
   move_to(pos);
@@ -117,12 +114,40 @@ CairoExtra::render_text(const char *text, dPoint pos, double ang,
   if (hdir == 2) Cairo::Context::rel_move_to(-ext.w, 0.0);
   if (vdir == 1) Cairo::Context::rel_move_to(0.0, ext.h/2);
   if (vdir == 2) Cairo::Context::rel_move_to(0.0, ext.h);
-
   Cairo::Context::reset_clip();
-
   Cairo::Context::show_text(text);
   Cairo::Context::restore();
 }
+
+void
+CairoExtra::render_text_fc(const char *text, dPoint pos, double ang,
+       int color, const char *fc_patt, double font_size, int hdir, int vdir){
+  Cairo::Context::save();
+  set_color(color);
+  Cairo::Context::set_font_size(font_size);
+
+  // For work with patterns see:
+  // https://www.freedesktop.org/software/fontconfig/fontconfig-devel/x103.html#AEN242
+  // For font properties see:
+  // https://www.freedesktop.org/software/fontconfig/fontconfig-devel/x19.html
+  // https://www.freedesktop.org/software/fontconfig/fontconfig-user.html
+  // https://wiki.archlinux.org/index.php/Font_configuration
+  FcPattern *patt = FcNameParse((const FcChar8 *)fc_patt);
+  set_font_face( Cairo::FtFontFace::create(patt));
+  FcPatternDestroy(patt);
+
+  dRect ext = get_text_extents(text);
+  move_to(pos);
+  Cairo::Context::rotate(ang);
+  if (hdir == 1) Cairo::Context::rel_move_to(-ext.w/2, 0.0);
+  if (hdir == 2) Cairo::Context::rel_move_to(-ext.w, 0.0);
+  if (vdir == 1) Cairo::Context::rel_move_to(0.0, ext.h/2);
+  if (vdir == 2) Cairo::Context::rel_move_to(0.0, ext.h);
+  Cairo::Context::reset_clip();
+  Cairo::Context::show_text(text);
+  Cairo::Context::restore();
+}
+
 
 void
 CairoExtra::render_border(const iRect & range, const dLine & brd, const int bgcolor){
