@@ -24,13 +24,16 @@ string
 MapDBObj::pack() const {
   ostringstream s;
 
-  // two integer numbers: class, type:
+  // two integer numbers: flags, type:
+  // flags XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
+  //                                  ^^^^^^^^ -- object class
+  //                               ^^ - direction
   int32_t v;
-  v = (int32_t)cl;   s.write((char *)&v, sizeof(int32_t));
-  v = (int32_t)type; s.write((char *)&v, sizeof(int32_t));
+  v = ((int32_t)cl & 0xFF) + (((int32_t)dir & 0x3) << 8);
+  s.write((char *)&v, sizeof(int32_t));
 
-  // optional direction (int value)
-  if (dir!=MAPDB_DIR_NO) string_pack<uint32_t>(s, "dir ", (uint32_t)dir);
+  v = (int32_t)type;
+  s.write((char *)&v, sizeof(int32_t));
 
   // optional angle (integer value, 1/1000 degrees)
   if (angle!=0) string_pack<int32_t>(s, "angl", (int32_t)(angle*1000));
@@ -52,11 +55,11 @@ MapDBObj::unpack(const std::string & str) {
 
   istringstream s(str);
 
-  // class
+  // flags
   int32_t v;
   s.read((char*)&v, sizeof(int32_t));
-  if (v<0 || v>2) throw Err() << "MapDBObj::unpack: bad class value: " << v;
-  cl = (MapDBObjClass)v;
+  cl  = (MapDBObjClass)(v & 0xFF);
+  dir = (MapDBObjDir)((v>>8) & 0x3);
 
   // type
   s.read((char*)&v, sizeof(int32_t));
@@ -66,7 +69,6 @@ MapDBObj::unpack(const std::string & str) {
   while (1){
     string tag = string_unpack_tag(s);
     if (tag == "") break;
-    else if (tag == "dir ") dir   = (MapDBObjDir)string_unpack<uint32_t>(s);
     else if (tag == "angl") angle = string_unpack<int32_t>(s)/1000.0;
     else if (tag == "name") name  = string_unpack_str(s);
     else if (tag == "comm") comm  = string_unpack_str(s);

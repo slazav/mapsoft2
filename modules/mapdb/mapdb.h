@@ -36,9 +36,9 @@ typedef enum{
 // MapDBObj -- a single map object
 
 struct MapDBObj {
-  MapDBObjClass    cl;      // object class: MAPDB_POINT, MAPDB_LINE, MAPDB_POLYGON
+  MapDBObjClass   cl;      // object class: MAPDB_POINT, MAPDB_LINE, MAPDB_POLYGON
+  MapDBObjDir     dir;     // object direction: MAPDB_DIR_NO, MAPDB_DIR_FRW, MAPDB_DIR_BCK
   int             type;    // = MP type
-  MapDBObjDir      dir;     // object direction: MAPDB_DIR_NO, MAPDB_DIR_FRW, MAPDB_DIR_BCK
   float           angle;   // object angle, deg
   std::string     name;    // object name (to be printed on map labels)
   std::string     comm;    // object comment
