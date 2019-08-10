@@ -121,20 +121,20 @@ main(){
       // mapinfo.db test
 
       // get/set name
-      assert(m.get_name() == "");
-      m.set_name("");
-      assert(m.get_name() == "");
-      m.set_name("Test");
-      assert(m.get_name() == "Test");
+      assert(m.get_map_name() == "");
+      m.set_map_name("");
+      assert(m.get_map_name() == "");
+      m.set_map_name("Test");
+      assert(m.get_map_name() == "Test");
 
       // get/set border
       dMultiLine brd("[[[1,1],[2,2],[3,3]],[[4,4],[5,5]]]");
-      assert(m.get_brd() == dMultiLine());
-      m.set_brd(brd);
-      assert(m.get_brd() == brd);
+      assert(m.get_map_brd() == dMultiLine());
+      m.set_map_brd(brd);
+      assert(m.get_map_brd() == brd);
 
       // get/set object coordinates and bboxes
-      assert(m.get_bbox() == dRect());
+      assert(m.get_map_bbox() == dRect());
       MapDBObj o1;
       o1.cl = MAPDB_LINE;
       o1.type = 0x2342;
@@ -156,19 +156,19 @@ main(){
       o1.bbox = m.get_coord(id).bbox2d();
       assert(o1 == o2);
 
-      assert(m.get_bbox() == dRect(dPoint(1,2), dPoint(3,3))); // map bbox
+      assert(m.get_map_bbox() == dRect(dPoint(1,2), dPoint(3,3))); // map bbox
 
       m.set_coord(id, dMultiLine("[[[0,0],[5,5]]]"));
       o2 = m.get(id);
       o1.bbox = m.get_coord(id).bbox2d();
       assert(o1 == o2);
-      assert(m.get_bbox() == dRect(dPoint(0,0), dPoint(5,5)));
+      assert(m.get_map_bbox() == dRect(dPoint(0,0), dPoint(5,5)));
 
       m.set_coord(id, dMultiLine());
       o2 = m.get(id);
       o1.bbox = dRect();
       assert(o1 == o2);
-      assert(m.get_bbox() == dRect(dPoint(0,0), dPoint(5,5)));
+      assert(m.get_map_bbox() == dRect(dPoint(0,0), dPoint(5,5)));
 
       assert(m.get_coord(id) == dMultiLine());
       // todo: shrinking of the bbox -- not implemented

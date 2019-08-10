@@ -98,7 +98,7 @@ MapDB::FolderMaker::FolderMaker(std::string name, bool create){
 /**********************************************************/
 
 std::string
-MapDB::get_name() {
+MapDB::get_map_name() {
   dMultiLine ret;
   uint32_t key = INF_KEY_NAME;
   return mapinfo.get(key);
@@ -106,12 +106,12 @@ MapDB::get_name() {
 
 /// Set map name
 void
-MapDB::set_name(const std::string & name) {
+MapDB::set_map_name(const std::string & name) {
   mapinfo.put(INF_KEY_NAME, name);
 }
 
 dMultiLine
-MapDB::get_brd() {
+MapDB::get_map_brd() {
   dMultiLine ret;
   uint32_t key = INF_KEY_BRD;
   istringstream s(mapinfo.get(key));
@@ -128,14 +128,14 @@ MapDB::get_brd() {
 }
 
 void
-MapDB::set_brd(const dMultiLine & b) {
+MapDB::set_map_brd(const dMultiLine & b) {
   ostringstream s;
   string_pack_crds(s, "crds", b);
   mapinfo.put(INF_KEY_BRD, s.str());
 }
 
 dRect
-MapDB::get_bbox() {
+MapDB::get_map_bbox() {
   dRect ret;
   uint32_t key = INF_KEY_BBOX;
   istringstream s(mapinfo.get(key));
@@ -152,7 +152,7 @@ MapDB::get_bbox() {
 }
 
 void
-MapDB::set_bbox(const dRect & b) {
+MapDB::set_map_bbox(const dRect & b) {
   ostringstream s;
   string_pack_bbox(s, "bbox", b);
   mapinfo.put(INF_KEY_BBOX, s.str());
@@ -240,9 +240,9 @@ MapDB::set_coord(uint32_t id, const dMultiLine & crd){
     geohash.put(id, obj.bbox);
 
     // update map bbox
-    dRect bbox0 = get_bbox();
+    dRect bbox0 = get_map_bbox();
     bbox0.expand(obj.bbox);
-    set_bbox(bbox0);
+    set_map_bbox(bbox0);
 
   }
 }

@@ -112,24 +112,24 @@ public:
   public:
 
   /// Get map name. If the field is not set return empty string without an error.
-  std::string get_name();
+  std::string get_map_name();
 
   /// Set map name
-  void set_name(const std::string & name);
+  void set_map_name(const std::string & name);
 
   /// Get map border. If the field is not set return empty dMultiLine without an error
-  dMultiLine get_brd();
+  dMultiLine get_map_brd();
 
   /// Set map border
-  void set_brd(const dMultiLine & b);
+  void set_map_brd(const dMultiLine & b);
 
   /// Get map bounding box. If the field is not set return empty dRect
-  dRect get_bbox();
+  dRect get_map_bbox();
 
   private:
   /// Set map bounding box (internal use only, should
   /// be syncronyzed with objects!)
-  void set_bbox(const dRect & b);
+  void set_map_bbox(const dRect & b);
 
 
   ///////////////

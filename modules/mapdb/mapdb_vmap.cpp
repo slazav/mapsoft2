@@ -111,10 +111,10 @@ MapDB::import_vmap(const std::string & vmap_file, const Opt & opts){
   // border
   dMultiLine brd;
   brd.push_back(vmap_data.brd);
-  set_brd(brd);
+  set_map_brd(brd);
 
   // map name
-  set_name(vmap_data.name);
+  set_map_name(vmap_data.name);
 
 }
 
@@ -217,11 +217,11 @@ MapDB::export_vmap(const std::string & vmap_file, const Opt & opts){
   }
 
   // map border (only first segment)
-  dMultiLine brd = get_brd();
+  dMultiLine brd = get_map_brd();
   if (brd.size()>0) vmap_data.brd = *brd.begin();
 
   // map name
-  vmap_data.name = get_name();
+  vmap_data.name = get_map_name();
 
   // write vmap file
   ofstream out(vmap_file);
