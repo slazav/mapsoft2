@@ -79,6 +79,32 @@ MapDBObj::unpack(const std::string & str) {
   }
 
 }
+/**********************************************************/
+MapDB::MapDB(std::string name, bool create):
+    folder(name, create),
+    mapinfo(name + "/mapinfo.db", NULL, create, false),
+    objects(name + "/objects.db", NULL, create, false),
+    coords(name  + "/coords.db",  NULL, create, false),
+    labels(name  + "/labels.db",  NULL, create, true),
+    geohash(name + "/geohash.db", NULL, create
+){
+  // get map version
+  uint32_t key = 0;
+  std::string vstr = mapinfo.get(key);
+
+  // set version if it is not set
+  if (key == 0xFFFFFFFF){
+    vstr = type_to_str<int>(MAPDB_VERSION);
+    mapinfo.put(0, vstr);
+  }
+  // parse version and write to map_version variable
+  map_version = str_to_type<int>(vstr);
+
+  // some tests
+  if (map_version > MAPDB_VERSION)
+    throw Err() << "MapDB version is too new, update mapsoft:" << map_version;
+};
+
 
 /**********************************************************/
 

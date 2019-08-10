@@ -113,7 +113,7 @@ main(){
     }
 
 
-    // INF database test
+    // MapDB test
     {
       if (system("rm -rf tmp.db")!=0) throw Err() << "Can't delete tmp.db";
       MapDB m("tmp.db", 1);
@@ -132,6 +132,9 @@ main(){
       assert(m.get_map_brd() == dMultiLine());
       m.set_map_brd(brd);
       assert(m.get_map_brd() == brd);
+
+      // get version
+      assert(m.map_get_version() == 0);
 
       // get/set object coordinates and bboxes
       assert(m.get_map_bbox() == dRect());

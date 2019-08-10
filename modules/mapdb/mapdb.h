@@ -11,6 +11,9 @@
 
 //#include "fig/fig.h"
 
+// current MapDB version (integer)
+#define MAPDB_VERSION 0
+
 // Class for vector map (without label information!)
 // All coordinates are lat,lon in WGS84 datum.
 
@@ -95,21 +98,20 @@ private:
   DBSimple   objects; // object data
   DBSimple   coords;  // object coordinates
   DBSimple   labels;  // label data
-  GeoHashDB  geohash;
+  GeoHashDB  geohash; // geohashes for spatial indexing
+
+  int map_version; // set in the constructor
 
 public:
-  MapDB(std::string name, bool create):
-    folder(name, create),
-    mapinfo(name + "/mapinfo.db", NULL, create, false),
-    objects(name + "/objects.db", NULL, create, false),
-    coords(name  + "/coords.db",  NULL, create, false),
-    labels(name  + "/labels.db",  NULL, create, true),
-    geohash(name + "/geohash.db", NULL, create)
-   {};
+
+  // Constructor. Open all databases, check map version.
+  MapDB(std::string name, bool create);
 
   ///////////////
   /* Function for working with map information (mapinfo.db) */
-  public:
+
+  /// Get map version.
+  uint32_t get_map_version() const {return map_version;}
 
   /// Get map name. If the field is not set return empty string without an error.
   std::string get_map_name();
