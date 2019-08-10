@@ -21,16 +21,13 @@ using namespace std;
 /**********************************************************/
 // pack object to a string (for DB storage)
 string
-MapDBObj::pack(bool write_bbox) const {
+MapDBObj::pack() const {
   ostringstream s;
 
   // two integer numbers: class, type:
   int32_t v;
   v = (int32_t)cl;   s.write((char *)&v, sizeof(int32_t));
   v = (int32_t)type; s.write((char *)&v, sizeof(int32_t));
-
-  // bbox field
-  if (write_bbox && !bbox.empty()) string_pack_bbox(s, "bbox", bbox);
 
   // optional direction (int value)
   if (dir!=MAPDB_DIR_NO) string_pack<uint32_t>(s, "dir ", (uint32_t)dir);
@@ -74,7 +71,6 @@ MapDBObj::unpack(const std::string & str) {
     else if (tag == "name") name  = string_unpack_str(s);
     else if (tag == "comm") comm  = string_unpack_str(s);
     else if (tag == "src ") src   = string_unpack_str(s);
-    else if (tag == "bbox") bbox  = string_unpack_bbox(s);
     else throw Err() << "Unknown tag: " << tag;
   }
 
@@ -85,6 +81,7 @@ MapDB::MapDB(std::string name, bool create):
     mapinfo(name + "/mapinfo.db", NULL, create, false),
     objects(name + "/objects.db", NULL, create, false),
     coords(name  + "/coords.db",  NULL, create, false),
+    bboxes(name  + "/bboxes.db",  NULL, create, false),
     labels(name  + "/labels.db",  NULL, create, true),
     geohash(name + "/geohash.db", NULL, create
 ){
@@ -148,7 +145,7 @@ MapDB::get_map_brd() {
     string tag = string_unpack_tag(s);
     if (tag == "") break;
     else if (tag == "crds") ret.push_back(string_unpack_crds(s));
-    else throw Err() << "MapDB::get_brd: unknown tag: [" << tag << "]";
+    else throw Err() << "MapDB::get_map_brd: unknown tag: [" << tag << "]";
   }
   return ret;
 }
@@ -172,7 +169,7 @@ MapDB::get_map_bbox() {
     string tag = string_unpack_tag(s);
     if (tag == "") break;
     else if (tag == "bbox") ret = string_unpack_bbox(s);
-    else throw Err() << "MapDB::get_bbox: unknown tag: [" << tag << "]";
+    else throw Err() << "MapDB::get_map_bbox: unknown tag: [" << tag << "]";
   }
   return ret;
 }
@@ -197,8 +194,7 @@ MapDB::add(const MapDBObj & o){
   if (id == 0xFFFFFFFF)
     throw Err() << "MapDB::add: object ID overfull";
 
-  // insert object without bbox
-  objects.put(id, o.pack(false));
+  objects.put(id, o.pack());
   return id;
 }
 
@@ -217,7 +213,7 @@ MapDB::get(const uint32_t id){
 void
 MapDB::del(const uint32_t id){
 
-  // Delete coordinates, update geohashes
+  // Delete coordinates, update bboxs, geohashes
   // Throw error if the object does not exist.
   set_coord(id, dMultiLine());
 
@@ -225,37 +221,57 @@ MapDB::del(const uint32_t id){
   objects.del(id);
 }
 
+dRect
+MapDB::get_bbox(uint32_t id) {
+  dRect ret;
+  istringstream s(bboxes.get(id));
+  if (id == 0xFFFFFFFF) return ret;
 
-/// set coordinates of an object
+  // searching for first bbox tag
+  while (1){
+    string tag = string_unpack_tag(s);
+    if (tag == "") break;
+    else if (tag == "bbox") ret = string_unpack_bbox(s);
+    else throw Err() << "MapDB::get_bbox: unknown tag: [" << tag << "]";
+  }
+  return ret;
+}
+
+void
+MapDB::set_bbox(uint32_t id, const dRect & b) {
+  ostringstream s;
+  string_pack_bbox(s, "bbox", b);
+  bboxes.put(id, s.str());
+}
+
+
+/// set coordinates of an object, update bboxs, geohashes
 void
 MapDB::set_coord(uint32_t id, const dMultiLine & crd){
 
-  // get old object
-  MapDBObj obj;
-  obj.unpack(objects.get(id));
-  if (id == 0xFFFFFFFF)
-    throw Err() << "MapDB::set_coord: object does not exist";
+  // get old bbox
+  dRect bbox = get_bbox(id);
 
   // old bounding box exists
-  if (!obj.bbox.empty()){
+  if (!bbox.empty()){
     // remove old coordinates
     coords.del(id);
 
+    // remove old object bbox
+    bboxes.del(id);
+
     // remove old geohash
-    geohash.del(id, obj.bbox);
+    geohash.del(id, bbox);
 
     // TODO: what to do with the map bbox?
     // can it be shrinked efficiently using geohashes?
   }
 
   // update object bbox
-  obj.bbox = crd.bbox2d();
+  bbox = crd.bbox2d();
 
-  // update object
-  objects.put(id, obj.pack());
-
-  // new bounding box non-empty
-  if (!obj.bbox.empty()){
+  // new bounding box exists
+  if (!bbox.empty()){
 
     // set coordinates (overwrite if needed)
     ostringstream s;
@@ -263,11 +279,14 @@ MapDB::set_coord(uint32_t id, const dMultiLine & crd){
     coords.put(id, s.str());
 
     // update geohash
-    geohash.put(id, obj.bbox);
+    geohash.put(id, bbox);
+
+    // update bbox
+    set_bbox(id, bbox);
 
     // update map bbox
     dRect bbox0 = get_map_bbox();
-    bbox0.expand(obj.bbox);
+    bbox0.expand(bbox);
     set_map_bbox(bbox0);
 
   }

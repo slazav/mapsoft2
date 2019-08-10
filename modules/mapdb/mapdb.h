@@ -43,12 +43,11 @@ struct MapDBObj {
   std::string     name;    // object name (to be printed on map labels)
   std::string     comm;    // object comment
   std::string     src;     // object source
-  dRect           bbox;    // bounding box
   // defaults
   MapDBObj() {cl=MAPDB_POINT; type=0; dir=MAPDB_DIR_NO; angle=0;}
 
   // pack object to a string (for DB storage)
-  std::string pack(bool write_bbox = true) const;
+  std::string pack() const;
 
   // unpack object from a string (for DB storage)
   void unpack(const std::string & s);
@@ -64,14 +63,13 @@ struct MapDBObj {
     if (name!=o.name)   return name<o.name;
     if (comm!=o.comm)   return comm<o.comm;
     if (src!=o.src)     return src<o.src;
-    if (bbox!=o.bbox)   return bbox<o.bbox;
     return false;
   }
 
   /// Equal opertator.
   bool operator== (const MapDBObj & o) const {
     return cl==o.cl && type==o.type && dir==o.dir && angle==o.angle &&
-        name==o.name && comm==o.comm && src==o.src && bbox==o.bbox;
+        name==o.name && comm==o.comm && src==o.src;
   }
   // derived operators:
   bool operator!= (const MapDBObj & other) const { return !(*this==other); } ///< operator!=
@@ -96,6 +94,7 @@ private:
 
   DBSimple   mapinfo; // map information
   DBSimple   objects; // object data
+  DBSimple   bboxes;  // object coordinates
   DBSimple   coords;  // object coordinates
   DBSimple   labels;  // label data
   GeoHashDB  geohash; // geohashes for spatial indexing
@@ -149,16 +148,24 @@ public:
   /// If the object does not exist throw an error.
   void del(const uint32_t id);
 
+  /// Set object bounding box.
+  dRect get_bbox(uint32_t id);
+
   /// Set coordinates of an object.
   /// If the object does not exist throw an error.
-  void set_coord(uint32_t ID, const dMultiLine & crd);
+  void set_coord(uint32_t id, const dMultiLine & crd);
 
   /// get coordinates of an object
-  dMultiLine get_coord(uint32_t ID);
+  dMultiLine get_coord(uint32_t id);
 
+  private:
+  /// Set object bounding box (internal use only, should
+  /// be syncronyzed with object coordinates!)
+  void set_bbox(uint32_t id, const dRect & b);
 
   ///////////////
   /* Import/export */
+  public:
 
   /// Import objects from MP file.
   void import_mp(

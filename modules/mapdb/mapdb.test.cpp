@@ -134,7 +134,7 @@ main(){
       assert(m.get_map_brd() == brd);
 
       // get version
-      assert(m.map_get_version() == 0);
+      assert(m.get_map_version() == 0);
 
       // get/set object coordinates and bboxes
       assert(m.get_map_bbox() == dRect());
@@ -146,35 +146,29 @@ main(){
       o1.name = "object name\nsecond line";
       o1.comm = "object comment\nsecond line";
       o1.src = "object source\nsecond line";
-      o1.bbox = dRect(1,1,2,2);
+
+      // put object, check bbox and coords
       uint32_t id = m.add(o1);
-      MapDBObj o2 = m.get(id);
-      assert(o2.bbox == dRect());
+      assert(m.get_bbox(id) == dRect());
       assert(m.get_coord(id) == dMultiLine());
+      assert(o1 == m.get(id));
 
       m.set_coord(id, dMultiLine("[[[1,2],[3,3]]]"));
+      assert(m.get_bbox(id) == dRect(dPoint(1,2), dPoint(3,3)));
       assert(m.get_coord(id) == dMultiLine("[[[1,2],[3,3]]]"));
-
-      o2 = m.get(id);
-      o1.bbox = m.get_coord(id).bbox2d();
-      assert(o1 == o2);
+      assert(o1 == m.get(id)); // no change in the object
 
       assert(m.get_map_bbox() == dRect(dPoint(1,2), dPoint(3,3))); // map bbox
 
       m.set_coord(id, dMultiLine("[[[0,0],[5,5]]]"));
-      o2 = m.get(id);
-      o1.bbox = m.get_coord(id).bbox2d();
-      assert(o1 == o2);
       assert(m.get_map_bbox() == dRect(dPoint(0,0), dPoint(5,5)));
 
       m.set_coord(id, dMultiLine());
-      o2 = m.get(id);
-      o1.bbox = dRect();
-      assert(o1 == o2);
-      assert(m.get_map_bbox() == dRect(dPoint(0,0), dPoint(5,5)));
-
+      assert(m.get_bbox(id) == dRect());
       assert(m.get_coord(id) == dMultiLine());
-      // todo: shrinking of the bbox -- not implemented
+      assert(o1 == m.get(id));
+
+      // todo: shrinking of the map bbox -- not implemented
 
     }
     if (system("rm -rf tmp.db")!=0) throw Err() << "Can't delete tmp.db";
