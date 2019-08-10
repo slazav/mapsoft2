@@ -6,7 +6,7 @@
 #include "opt/opt.h"
 
 typedef void(action_t)(
-  MapDB & map,
+  const char * mapname,
   const std::vector<std::string> & action_args,
   const Opt & action_opts
 );

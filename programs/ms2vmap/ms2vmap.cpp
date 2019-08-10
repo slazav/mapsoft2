@@ -8,7 +8,6 @@
 
 #include "err/err.h"
 #include "getopt/getopt.h"
-#include "mapdb/mapdb.h"
 #include "actions.h"
 
 #define OPT_G   1  // general options (-v, -h)
@@ -58,12 +57,10 @@ main(int argc, char *argv[]){
     std::vector<std::string> AA;
     Opt AO = parse_options_all(&argc, &argv, options, OPT_A, AA);
 
-    MapDB map(mapname, 1);
-
-    if (action == "import_mp"){ action_import_mp(map, AA, AO); return 0; }
-    if (action == "export_mp"){ action_export_mp(map, AA, AO); return 0; }
-    if (action == "import_vmap"){ action_import_vmap(map, AA, AO); return 0; }
-    if (action == "export_vmap"){ action_export_vmap(map, AA, AO); return 0; }
+    if (action == "import_mp"){ action_import_mp(mapname, AA, AO); return 0; }
+    if (action == "export_mp"){ action_export_mp(mapname, AA, AO); return 0; }
+    if (action == "import_vmap"){ action_import_vmap(mapname, AA, AO); return 0; }
+    if (action == "export_vmap"){ action_export_vmap(mapname, AA, AO); return 0; }
 
     throw Err() << "ms2vmap: unknown action: " << action;
 
