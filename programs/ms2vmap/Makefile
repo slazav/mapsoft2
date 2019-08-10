@@ -1,5 +1,5 @@
 MOD_HEADERS := actions.h
-MOD_SOURCES := action_mp.cpp
+MOD_SOURCES := actions.cpp
 
 PROGRAMS := ms2vmap
 
