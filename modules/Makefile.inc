@@ -101,7 +101,6 @@ $(TEST_OBJECTS): %.o: %.cpp $(MOD_HEADERS) $(HDEPS)
 
 %.test.passed: %.test $(TEST_DEP)
 	@echo "## Running test: $<"
-	@echo "$(TEST_OBJECTS)"
 	@$(TEST_CMD)
 
 make_tests: $(SIMPLE_TEST_RES) $(SCRIPT_TEST_RES)
