@@ -487,7 +487,7 @@ void write_ozi_wpt (const char *fname, const GeoWptList & wpt, const Opt & opts)
       v.push_back(p.opts.get("ozi_map_displ",  ""));
       v.push_back(p.opts.get("color",          ""));
       v.push_back(p.opts.get("bgcolor",        ""));
-      v.push_back(cnv(p.comm));
+      v.push_back(convert_ozi_text(cnv(p.comm)));
       v.push_back(p.opts.get("ozi_pt_dir",     ""));
       v.push_back(p.opts.get("ozi_displ",      ""));
       v.push_back(p.opts.get("ozi_prox_dist",  ""));
