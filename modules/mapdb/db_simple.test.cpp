@@ -38,6 +38,10 @@ main(){
       db.put(128, "aaa");
       db.put(257, "bbb");
 
+      assert(db.exists(1) == true);
+      assert(db.exists(4) == false);
+      assert(db.exists(257) == true);
+      assert(db.exists(258) == false);
 
       key=525;
       assert(db.get_range(key) == "");

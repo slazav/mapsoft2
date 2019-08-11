@@ -20,6 +20,8 @@ class DBSimple::Impl {
     Impl(std::string fname, const char *dbname, bool create, bool dup);
     ~Impl() {}
 
+   bool exists(const uint32_t key);
+
    void put(const uint32_t key, const std::string & val);
 
    std::string get(uint32_t & key, int flags);
@@ -31,6 +33,9 @@ class DBSimple::Impl {
 // Main class methods
 DBSimple::DBSimple(std::string fname, const char *dbname, bool create, bool dup):
   impl(std::unique_ptr<Impl>(new Impl(fname, dbname, create, dup))) { }
+
+bool
+DBSimple::exists(const uint32_t key){ return impl->exists(key);}
 
 void
 DBSimple::put(const uint32_t key, const std::string & val){
@@ -117,6 +122,21 @@ DBSimple::Impl::unpack_uint32(DBT *k){
   uint32_t ret = ((uint32_t)d[0]<<24) + ((uint32_t)d[1]<<16)
                + ((uint32_t)d[2]<<8) + (uint32_t)d[3];
   return ret;
+}
+
+
+bool
+DBSimple::Impl::exists(const uint32_t key){
+  DB  *dbp = (DB*)db.get();
+  DBC *dbc = (DBC*)cur.get();
+  std::string key_s = pack_uint32(key);
+  DBT k = mk_dbt(key_s);
+  DBT v = mk_dbt();
+  int ret = dbc->c_get(dbc, &k, &v, DB_SET);
+
+  if (ret == DB_NOTFOUND) return false;
+  if (ret != 0) throw Err() << "db_simple: " << db_strerror(ret);
+  return true;
 }
 
 void

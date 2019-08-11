@@ -42,6 +42,9 @@ class DBSimple{
      return key;
    }
 
+   // Check if the key exists in the database.
+   bool exists(const uint32_t key);
+
    // Get data for a given key.
    // If record is not found then key is set to 0xFFFFFFFF and
    // empty string is returned.
