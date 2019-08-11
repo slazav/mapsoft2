@@ -266,7 +266,7 @@ MapDB::set_coord(uint32_t id, const dMultiLine & crd){
     bboxes.del(id);
 
     // remove old geohash
-    geohash.del(id, bbox);
+    geohash.del(id, 0, bbox);
 
     // TODO: what to do with the map bbox?
     // can it be shrinked efficiently using geohashes?
@@ -284,7 +284,7 @@ MapDB::set_coord(uint32_t id, const dMultiLine & crd){
     coords.put(id, s.str());
 
     // update geohash
-    geohash.put(id, bbox);
+    geohash.put(id, 0, bbox);
 
     // update bbox
     set_bbox(id, bbox);
