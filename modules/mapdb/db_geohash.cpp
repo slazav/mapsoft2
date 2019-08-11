@@ -6,7 +6,6 @@
 
 #include "err/err.h"
 #include "geohash/geohash.h"
-#include "geohash/storage.h"
 #include "db_geohash.h"
 #include "db_tools.h"
 
@@ -16,18 +15,24 @@
 
 /**********************************************************/
 // Implementation class
-class GeoHashDB::Impl : public GeoHashStorage {
- public:
-   std::shared_ptr<void> db;
+class GeoHashDB::Impl {
+  public:
+    std::shared_ptr<void> db;
 
-   Impl(std::string fname, const char *dbname, bool create);
-   ~Impl() {}
+    Impl(std::string fname, const char *dbname, bool create);
+    ~Impl() {}
 
-   // no need to redifine get!
-   void put(const int id, const dRect & range);
-   void del(const int id, const dRect & range);
-   std::set<int> get_hash(const std::string & hash0, bool exact);
+    // get id of objects which may be found in the range
+    std::set<int> get(const dRect & range);
 
+    // add an object
+    void put(const int id, const dRect & range);
+
+    // delete an object
+    void del(const int id, const dRect & range);
+
+  private:
+    std::set<int> get_hash(const std::string & hash0, bool exact);
 };
 
 /**********************************************************/
@@ -35,14 +40,14 @@ class GeoHashDB::Impl : public GeoHashStorage {
 GeoHashDB::GeoHashDB(std::string fname, const char *dbname, bool create):
   impl(std::unique_ptr<Impl>(new Impl(fname, dbname, create))) { }
 
+std::set<int>
+GeoHashDB::get(const dRect & range){ return impl->get(range);}
+
 void
 GeoHashDB::put(const int id, const dRect & range){ impl->put(id, range);}
 
 void
 GeoHashDB::del(const int id, const dRect & range){ impl->del(id, range);}
-
-std::set<int>
-GeoHashDB::get(const dRect & range){ return impl->get(range);}
 
 GeoHashDB::~GeoHashDB(){}
 
@@ -74,6 +79,26 @@ GeoHashDB::Impl::Impl(std::string fname, const char *dbname, bool create){
   if (ret != 0)
     throw Err() << "db_geohash: " << fname << ": " << db_strerror(ret);
 
+}
+
+// same as in geohash/storage.cpp
+std::set<int>
+GeoHashDB::Impl::get(const dRect & range){
+  std::set<std::string> hashes = GEOHASH_encode4(range, HASHLEN);
+  std::set<int> ret;
+  std::set<std::string> done;
+  for (auto const & h:hashes) {
+    for (int i=0; i<=h.size(); i++) {
+      std::string hh = h.substr(0,i);
+      if (done.count(hh)) continue; // do not repeat queries with same hash
+      bool exact = i < h.size();  // for full hashes look also for smaller regions.
+      done.insert(hh);
+      // std::cerr << "GET [" << hh << "] " << (i<h.size()) << "\n";
+      std::set<int> r = get_hash(hh, i<h.size());
+      ret.insert(r.begin(), r.end());
+    }
+  }
+  return ret;
 }
 
 void
