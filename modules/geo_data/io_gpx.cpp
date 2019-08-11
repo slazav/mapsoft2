@@ -214,10 +214,10 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
 
         // other option elements:
         for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
-          if (!wpl.opts.exists(*fn)) continue;
+          std::string pfn = std::string("gpx_") + (*fn);
+          if (!wpl.opts.exists(pfn)) continue;
           if (xmlTextWriterWriteFormatElement(writer,
-             BAD_CAST *fn, "%s",
-                 wpl.opts.get<string>(*fn).c_str())<0)
+             BAD_CAST *fn, "%s", wpl.opts.get<string>(pfn).c_str())<0)
             throw "writing element";
         }
       }
@@ -257,10 +257,10 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
 
         // other option elements:
         for (const char **fn = gps_wpt_names; *fn!=NULL; fn++){
-          if (!wp.opts.exists(*fn)) continue;
+          std::string pfn = std::string("gpx_") + (*fn);
+          if (!wp.opts.exists(pfn)) continue;
           if (xmlTextWriterWriteFormatElement(writer,
-             BAD_CAST *fn, "%s",
-                 wp.opts.get<string>(*fn).c_str())<0)
+             BAD_CAST *fn, "%s", wp.opts.get<string>(pfn).c_str())<0)
             throw "writing element";
         }
 
@@ -288,10 +288,10 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
 
       // other option elements:
       for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
-        if (!trk.opts.exists(*fn)) continue;
+        std::string pfn = std::string("gpx_") + (*fn);
+        if (!trk.opts.exists(pfn)) continue;
         if (xmlTextWriterWriteFormatElement(writer,
-           BAD_CAST *fn, "%s",
-               trk.opts.get<string>(*fn).c_str())<0)
+           BAD_CAST *fn, "%s", trk.opts.get<string>(pfn).c_str())<0)
           throw "writing element";
       }
 
@@ -442,7 +442,8 @@ read_wpt_node(xmlTextReaderPtr reader, GeoWptList & data){
       if (state == "name") wpt.name = GETVAL;
       if (state == "comm") wpt.comm = GETVAL;
       for (const char **fn = gps_wpt_names; *fn!=NULL; fn++){
-        if (state == *fn) wpt.opts.put<std::string>(*fn, GETVAL);
+        std::string pfn = std::string("gpx_") + (*fn);
+        if (state == *fn) wpt.opts.put<std::string>(pfn, GETVAL);
       }
     }
     else {

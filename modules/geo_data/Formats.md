@@ -59,24 +59,24 @@ For waypoints all mandatory
 fields (`x`, `y`, `z`, `t`, `name`, `comm`) are supported. Some additional
 fields are put in `opts` and can be saved to GPX back:
 
- * `magvar` -- Magnetic variation (in degrees) at the point.
- * `geoidheight` -- Height (in meters) of geoid (mean sea level) above WGS84
- * `desc`  -- A text description of the element. Holds additional information
+ * `gpx_magvar` -- Magnetic variation (in degrees) at the point.
+ * `gpx_geoidheight` -- Height (in meters) of geoid (mean sea level) above WGS84
+ * `gpx_desc`  -- A text description of the element. Holds additional information
    about the element intended for the user, not the GPS.
- * `src` -- Source of data. Included to give user some idea of reliability
+ * `gpx_src` -- Source of data. Included to give user some idea of reliability
    and accuracy of data. "Garmin eTrex", "USGS quad Boston North", e.g.
- * `link` -- Link to additional information about the waypoint.
- * `sym` -- Text of GPS symbol name. For interchange with other programs,
+ * `gpx_link` -- Link to additional information about the waypoint.
+ * `gpx_sym` -- Text of GPS symbol name. For interchange with other programs,
    use the exact spelling of the symbol as displayed on the GPS. If the GPS
    abbreviates words, spell them out.
- * `type` -- Type (classification) of the waypoint.
- * `fix` -- Type of GPX fix. (none, 2d, 3d, dgps, pps)
- * `sat` -- Number of satellites used to calculate the GPX fix.
- * `hdop` -- Horizontal dilution of precision.
- * `vdop` -- Vertical dilution of precision.
- * `pdop` -- Position dilution of precision.
- * `ageofdgpsdata` -- Number of seconds since last DGPS update.
- * `dgpsid` -- ID of DGPS station used in differential correction.
+ * `gpx_type` -- Type (classification) of the waypoint.
+ * `gpx_fix` -- Type of GPX fix. (none, 2d, 3d, dgps, pps)
+ * `gpx_sat` -- Number of satellites used to calculate the GPX fix.
+ * `gpx_hdop` -- Horizontal dilution of precision.
+ * `gpx_vdop` -- Vertical dilution of precision.
+ * `gpx_pdop` -- Position dilution of precision.
+ * `gpx_ageofdgpsdata` -- Number of seconds since last DGPS update.
+ * `gpx_dgpsid` -- ID of DGPS station used in differential correction.
 
 `<extension>` tag is skipped.
 
@@ -89,12 +89,12 @@ For tracks and waypoint lists mandatory
 fields (`name`, `comm`) are supported. Some additional fields
 are put in `opts` and can be saved to GPX again:
 
- * `desc` -- Text description of route for user. Not sent to GPS.
- * `src` -- Source of data. Included to give user some idea of reliability
-            and accuracy of data.
- * `link` -- Links to external information about the route.
- * `number` -- GPS route number.
- * `type` -- Type (classification) of route
+ * `gpx_desc` -- Text description of route for user. Not sent to GPS.
+ * `gpx_src` -- Source of data. Included to give user some idea of reliability
+                and accuracy of data.
+ * `gpx_link` -- Links to external information about the route.
+ * `gpx_number` -- GPS route number.
+ * `gpx_type` -- Type (classification) of route
 
 TODO: `<extension>` tag is skipped. It could be useful to read color from
 there: `<extensions><gpxx:TrackExtension><gpxx:DisplayColor>Cyan`
