@@ -22,8 +22,12 @@ main(){
       db.put(7, 0, dRect(35,57,       0.11,0.11));
       db.put(8, 0, dRect(35,57,       0.10,0.10));
       db.put(9, 0, dRect(-100,-50,    220,100));
+      db.put(10, 0, dRect()); // empty range - do nothing
 
-      std::set<int> v1 = db.get(0, dRect(-0.01,-0.01, 1.12,1.12));
+      std::set<int> v1 = db.get(0, dRect());
+      assert(v1.size()==0);
+
+      v1 = db.get(0, dRect(-0.01,-0.01, 1.12,1.12));
       //for (auto i:v1) std::cerr << "> " << i << "\n";
       assert(v1.size()==5);
       assert(v1.count(1)==1);

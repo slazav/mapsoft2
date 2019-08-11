@@ -18,9 +18,11 @@ class GeoHashDB {
    ~GeoHashDB();
 
    // Get id of objects of certain type which may be found in the range.
+   // If bbox is empty return zero set.
    std::set<int> get(const uint32_t type, const dRect & range);
 
    // Add an object with id, type and range.
+   // If bbox is empty do nothing.
    void put(const uint32_t id, const uint32_t type, const dRect & range);
 
    // Delete an object with id, type and range.

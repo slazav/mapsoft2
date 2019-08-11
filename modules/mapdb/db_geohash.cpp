@@ -95,8 +95,9 @@ GeoHashDB::Impl::Impl(std::string fname, const char *dbname, bool create){
 // same as in geohash/storage.cpp
 std::set<int>
 GeoHashDB::Impl::get(const uint32_t type, const dRect & range){
-  std::set<std::string> hashes = GEOHASH_encode4(range, HASHLEN);
   std::set<int> ret;
+  if (range.empty()) return ret;
+  std::set<std::string> hashes = GEOHASH_encode4(range, HASHLEN);
   std::set<std::string> done;
   for (auto const & h:hashes) {
     for (int i=0; i<=h.size(); i++) {
@@ -114,6 +115,7 @@ GeoHashDB::Impl::get(const uint32_t type, const dRect & range){
 
 void
 GeoHashDB::Impl::put(const uint32_t id, const uint32_t type, const dRect & range){
+  if (range.empty()) return;
   std::set<std::string> hashes = GEOHASH_encode4(range, HASHLEN);
   for (auto const & h:hashes) {
     DBT k = mk_dbt(join_type(type,h));
@@ -127,8 +129,8 @@ GeoHashDB::Impl::put(const uint32_t id, const uint32_t type, const dRect & range
 
 void
 GeoHashDB::Impl::del(const uint32_t id, const uint32_t type, const dRect & range){
+  if (range.empty()) return;
   std::set<std::string> hashes = GEOHASH_encode4(range, HASHLEN);
-
   DBC *curs = NULL;
   try {
     // get cursor
