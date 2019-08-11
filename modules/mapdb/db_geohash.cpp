@@ -31,6 +31,9 @@ class GeoHashDB::Impl {
     // delete an object
     void del(const uint32_t id, const uint32_t type, const dRect & range);
 
+    // get all types
+    std::set<int> get_types();
+
   private:
     std::set<int> get_hash(const std::string & hash0, bool exact);
 
@@ -59,6 +62,9 @@ GeoHashDB::put(const uint32_t id, const uint32_t type, const dRect & range){
 void
 GeoHashDB::del(const uint32_t id, const uint32_t type, const dRect & range){
   impl->del(id, type, range);}
+
+std::set<int>
+GeoHashDB::get_types() {return impl->get_types();}
 
 GeoHashDB::~GeoHashDB(){}
 
@@ -155,7 +161,43 @@ GeoHashDB::Impl::del(const uint32_t id, const uint32_t type, const dRect & range
   }
 }
 
+std::set<int>
+GeoHashDB::Impl::get_types(){
+  DBT k = mk_dbt();
+  DBT v = mk_dbt();
 
+  std::set<int> ret;
+
+  int fl = DB_FIRST; // get first
+  DBC *curs = NULL;
+  try {
+    // get cursor
+    ((DB*)db.get())->cursor((DB*)db.get(), NULL, &curs, 0);
+    if (curs==NULL) throw Err() << "db_geohash: can't get a cursor";
+
+    while (1){
+      // get next record
+      int res = curs->get(curs, &k, &v, fl);
+      if (res == DB_NOTFOUND) break;
+      if (res!=0) throw Err() << "db_geohash: " << db_strerror(res);
+
+      // extract type
+      if (k.size < sizeof(uint32_t))
+        throw Err() << "db_geohash: bad value";
+      uint32_t type = *(uint32_t*)k.data;
+      ret.insert(type);
+
+      // set key to type+1 and repeat search
+      *(uint32_t*)k.data = type+1;
+      fl=DB_NEXT; // switch to DB_NEXT
+    }
+  }
+  catch (Err e){
+    if (curs) curs->close(curs);
+    throw e;
+  }
+  return ret;
+}
 
 std::set<int>
 GeoHashDB::Impl::get_hash(const std::string & hash0, bool exact){

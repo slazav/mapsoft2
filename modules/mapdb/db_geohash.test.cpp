@@ -27,6 +27,10 @@ main(){
       std::set<int> v1 = db.get(0, dRect());
       assert(v1.size()==0);
 
+      v1 = db.get_types();
+      assert(v1.size() == 1);
+      assert(v1.count(0)==1);
+
       v1 = db.get(0, dRect(-0.01,-0.01, 1.12,1.12));
       //for (auto i:v1) std::cerr << "> " << i << "\n";
       assert(v1.size()==5);
@@ -85,7 +89,10 @@ main(){
       assert(v1.size()==1);
       assert(v1.count(6)==1);
 
-
+      v1 = db.get_types();
+      assert(v1.size() == 2);
+      assert(v1.count(0)==1);
+      assert(v1.count(1)==1);
     }
     unlink("a.dbh");
 

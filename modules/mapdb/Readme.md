@@ -6,9 +6,5 @@ std::string value.
 * GeoHashDB -- BerkleyDB-based spatial indexing database (analog of
 GeoHashStorage from module/geohash).
 
-TODO:
-- put both databases to a single file
-- make GeoHashDB to be a secondary database
-
 
 
