@@ -57,7 +57,7 @@ waypoints).
 
 For waypoints all mandatory
 fields (`x`, `y`, `z`, `t`, `name`, `comm`) are supported. Some additional
-fields are put in `opts` and can be saved to GPX again:
+fields are put in `opts` and can be saved to GPX back:
 
  * `magvar` -- Magnetic variation (in degrees) at the point.
  * `geoidheight` -- Height (in meters) of geoid (mean sea level) above WGS84
@@ -85,7 +85,7 @@ written as waypoints. If `gpx_write_rte` option is used then waypoint
 lists are written as routes. When reading all waypoints are put to one
 waypoint list, and all routes to other waypoint lists.
 
-For tracks and waypoint lists For waypoints mandatory
+For tracks and waypoint lists mandatory
 fields (`name`, `comm`) are supported. Some additional fields
 are put in `opts` and can be saved to GPX again:
 
@@ -120,9 +120,8 @@ waypoints).
 Waypoints are written as a KML Placemark, all mandatory
 fields (`x`, `y`, `z`, `t`, `name`, `comm`) are supported.
 
-Tracks are read or written as a KML Placemark. Coordinates and altitude
-are wrapped in `<MultiGeometry> + <LineString>/<Polygon>` tags. To
-control this `opt(type)` is used (can be `open` or `closed`). All
+Tracks are read or written as a KML Placemark. Open/closed tracks are
+supported (`type` field with `open` or `closed` value). All
 mandatory fields for tracks and trackpoints are supported except time in
 track points.
 
@@ -211,14 +210,67 @@ waypoints). All data fields of Mapsoft structures are supported.
 
 Each waypoint list, track, and map is written to a separate file.
 Format is detected as usual, by file extension (`.wpt`, `.trk`, or `.map`)
-or `--fmt ozi` option, but wriiten files have extensions accorting to the data:
+or `--fmt ozi` option, but written files have extensions accorting to the data:
 `<name>[<number>].wpt` for waypoint lists, `<name>[<number>].trk` for tracks,
 `<name>[<number>][_<number>].map` for maps. Multiple files can be created.
 
 For waypoints and tracks all OziExplorer-specific fields are stored in
 `opts` and can be saved to a OziExplorer file again.
 
-Map-file support:
+#### Waypoint list
+No fields supported by the format, just a container for waipoints.
+
+#### Waypoint
+Mandatory fields:
+* `x`,`y`,`z`,`t`, `name`, `comm` -- suppored.
+Some conversions are applied to text fields: comma is substituted by
+character 209 (cyrillic S), newlines are replaced by spaces,
+text length is cropped to 40 symbols.
+
+Optional values (maybe used somewhere else):
+* `color` -- integer, 0xRRGGBB
+* `bgcolor` -- integer, 0xRRGGBB
+
+Format-specific optional values:
+* `ozi_symb` -- integer, 0 to number of symbols in GPS
+* `ozi_map_displ` -- Map Display Format
+* `ozi_pt_dir` -- Pointer Direction
+* `ozi_displ` -- Garmin Display Format
+* `ozi_prox_dist` -- Proximity Distance - 0 is off any other number is valid
+* `ozi_font_size` -- Font Size - in points
+* `ozi_font_style` -- Font Style - 0 is normal, 1 is bold.
+* `ozi_symb_size` -- Symbol Size - 17 is normal size
+* `ozi_prox_pos` -- Proximity Symbol Position
+* `ozi_prox_time` -- Proximity Time
+* `ozi_prox_route` -- Proximity or Route or Both
+* `ozi_file` -- File Attachment Name
+* `ozi_prox_file` -- Proximity File Attachment Name
+* `ozi_prox_symb` -- Proximity Symbol Name
+
+#### Track
+Mandatory fields:
+* `name` -- track name
+* `comm` -- NOT SUPPORTED
+
+Optional values:
+* `thickness` -- track thickness, integer
+* `color` -- integer, 0xRRGGBB
+* `bgcolor` -- integer, 0xRRGGBB
+
+Format-specific optional values:
+* `ozi_skip` -- track skip value - reduces number of track points plotted, usually set to 1
+* `ozi_type` -- track type: 0 - normal, 10 - closed polygon, 20 - Alarm Zone
+* `ozi_fill` -- track fill style: 0 - bsSolid; 1 - bsClear; 2 - bsBdiagonal;
+3 - bsFdiagonal; 4 - bsCross; 5 - bsDiagCross; 6 - bsHorizontal; 7 - bsVertical
+
+#### Track point
+* `x`,`y`,`z`,`t`,`start` -- suppored
+
+#### Map list
+Not supported by the format. On reading each map goes to a separate map list
+with name same as name of the map. On writing map lists are ignored.
+
+#### Map
 - Only a few datums and projections (more can be added).
 - Character encoding conversion is applied only to map name,
   not to filename.

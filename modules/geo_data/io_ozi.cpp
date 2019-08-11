@@ -535,7 +535,6 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
       <<   ",PolyCal,No,AutoCalOnly,No,BSBUseWPX,No\r\n";
 
   // reference points
-  // TODO: write grid points
   int n = 0;
 
   int grid = opts.get("ozi_map_grid", 0);
