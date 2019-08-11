@@ -115,11 +115,11 @@ MapDB::import_mp(const string & mp_file, const Opt & opts){
     }
     if (l==-1) continue; // no data for the requested level
 
+    // set coordinates
+    o1.dMultiLine::operator=(o.Data[l]);
+
     // add object
     uint32_t id = add(o1);
-
-    // set coordinates
-    set_coord(id, o.Data[l]);
 
   }
 
@@ -212,7 +212,7 @@ MapDB::export_mp(const string & mp_file, const Opt & opts){
     if (o.tags.size()>0) o1.Opts.put("Source", *o.tags.begin());
 
     // points
-    o1.Data.push_back(get_coord(key));
+    o1.Data.push_back(o);
 
     if (o1.Data.size()) mp_data.push_back(o1);
 

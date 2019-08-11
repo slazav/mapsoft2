@@ -14,7 +14,6 @@
 // key names in the INF database
 #define INF_KEY_NAME 1
 #define INF_KEY_BRD  2
-#define INF_KEY_BBOX 3
 
 using namespace std;
 
@@ -25,18 +24,15 @@ MapDBObj::pack() const {
   ostringstream s;
 
   // two integer numbers: flags, type:
-  // flags XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
-  //                                  ^^^^^^^^ -- object class
-  //                               ^^ - direction
   int32_t v;
-  v = ((int32_t)cl & 0xFF) + (((int32_t)dir & 0x3) << 8);
-  s.write((char *)&v, sizeof(int32_t));
-
-  v = (int32_t)type;
-  s.write((char *)&v, sizeof(int32_t));
+  v = (int32_t)cl;   s.write((char *)&v, sizeof(int32_t));
+  v = (int32_t)type; s.write((char *)&v, sizeof(int32_t));
 
   // optional angle (integer value, 1/1000 degrees)
   if (angle!=0) string_pack<int32_t>(s, "angl", (int32_t)(angle*1000));
+
+  // optional direction (int value)
+  if (dir!=MAPDB_DIR_NO) string_pack<uint32_t>(s, "dir ", (uint32_t)dir);
 
   // optional text fields (4-byte tag, 4-byte length, data);
   if (name!="") string_pack_str(s, "name", name);
@@ -45,6 +41,9 @@ MapDBObj::pack() const {
   // tags
   for (auto const & t: tags)
     string_pack_str(s, "tags", t);
+
+  // coordinates
+  string_pack_crds(s, "crds,", *this);
 
   return s.str();
 }
@@ -58,11 +57,11 @@ MapDBObj::unpack(const std::string & str) {
 
   istringstream s(str);
 
-  // flags
+  // class
   int32_t v;
   s.read((char*)&v, sizeof(int32_t));
-  cl  = (MapDBObjClass)(v & 0xFF);
-  dir = (MapDBObjDir)((v>>8) & 0x3);
+  if (v<0 || v>2) throw Err() << "MapDBObj::unpack: bad class value: " << v;
+  cl = (MapDBObjClass)v;
 
   // type
   s.read((char*)&v, sizeof(int32_t));
@@ -72,10 +71,12 @@ MapDBObj::unpack(const std::string & str) {
   while (1){
     string tag = string_unpack_tag(s);
     if (tag == "") break;
+    else if (tag == "dir ") dir = (MapDBObjDir)string_unpack<uint32_t>(s);
     else if (tag == "angl") angle = string_unpack<int32_t>(s)/1000.0;
     else if (tag == "name") name  = string_unpack_str(s);
     else if (tag == "comm") comm  = string_unpack_str(s);
     else if (tag == "tags") tags.insert(string_unpack_str(s));
+    else if (tag == "crds") push_back(string_unpack_crds(s));
     else throw Err() << "Unknown tag: " << tag;
   }
 
@@ -85,8 +86,6 @@ MapDB::MapDB(std::string name, bool create):
     folder(name, create),
     mapinfo(name + "/mapinfo.db", NULL, create, false),
     objects(name + "/objects.db", NULL, create, false),
-    coords(name  + "/coords.db",  NULL, create, false),
-    bboxes(name  + "/bboxes.db",  NULL, create, false),
     labels(name  + "/labels.db",  NULL, create, true),
     geohash(name + "/geohash.db", NULL, create
 ){
@@ -162,31 +161,6 @@ MapDB::set_map_brd(const dMultiLine & b) {
   mapinfo.put(INF_KEY_BRD, s.str());
 }
 
-dRect
-MapDB::get_map_bbox() {
-  dRect ret;
-  uint32_t key = INF_KEY_BBOX;
-  istringstream s(mapinfo.get(key));
-  if (key == 0xFFFFFFFF) return ret;
-
-  // searching for first bbox tag
-  while (1){
-    string tag = string_unpack_tag(s);
-    if (tag == "") break;
-    else if (tag == "bbox") ret = string_unpack_bbox(s);
-    else throw Err() << "MapDB::get_map_bbox: unknown tag: [" << tag << "]";
-  }
-  return ret;
-}
-
-void
-MapDB::set_map_bbox(const dRect & b) {
-  ostringstream s;
-  string_pack_bbox(s, "bbox", b);
-  mapinfo.put(INF_KEY_BBOX, s.str());
-}
-
-
 /**********************************************************/
 uint32_t
 MapDB::add(const MapDBObj & o){
@@ -199,15 +173,41 @@ MapDB::add(const MapDBObj & o){
   if (id == 0xFFFFFFFF)
     throw Err() << "MapDB::add: object ID overfull";
 
+  // write object
   objects.put(id, o.pack());
+
+  // write geohash
+  geohash.put(id, o.type, o.bbox2d());
+
   return id;
 }
 
+void
+MapDB::put(uint32_t id, const MapDBObj & o){
+
+  // get old object
+  std::string str = objects.get(id);
+  if (id == 0xFFFFFFFF) return;
+
+  MapDBObj o1;
+  o1.unpack(str);
+
+  // Delete heohashes
+  geohash.del(id, o1.type, o1.bbox2d());
+
+  // write new object
+  objects.put(id, o.pack());
+
+  // write geohash
+  geohash.put(id, o.type, o.bbox2d());
+
+}
+
 MapDBObj
-MapDB::get(const uint32_t id){
+MapDB::get(uint32_t id){
   uint32_t id1 = id;
   std::string str = objects.get(id1);
-  if (id == 0xFFFFFFFF)
+  if (id1 == 0xFFFFFFFF)
     throw Err() << "MapDB::get: no such object: " << id;
   MapDBObj ret;
   ret.unpack(str);
@@ -216,102 +216,19 @@ MapDB::get(const uint32_t id){
 
 
 void
-MapDB::del(const uint32_t id){
+MapDB::del(uint32_t id){
 
-  // Delete coordinates, update bboxs, geohashes
-  // Throw error if the object does not exist.
-  set_coord(id, dMultiLine());
+  // get old object
+  std::string str = objects.get(id);
+  if (id == 0xFFFFFFFF) return;
+
+  MapDBObj o;
+  o.unpack(str);
+
+  // Delete heohashes
+  geohash.del(id, o.type, o.bbox2d());
 
   // Delete the object
   objects.del(id);
-}
-
-dRect
-MapDB::get_bbox(uint32_t id) {
-  dRect ret;
-  istringstream s(bboxes.get(id));
-  if (id == 0xFFFFFFFF) return ret;
-
-  // searching for first bbox tag
-  while (1){
-    string tag = string_unpack_tag(s);
-    if (tag == "") break;
-    else if (tag == "bbox") ret = string_unpack_bbox(s);
-    else throw Err() << "MapDB::get_bbox: unknown tag: [" << tag << "]";
-  }
-  return ret;
-}
-
-void
-MapDB::set_bbox(uint32_t id, const dRect & b) {
-  ostringstream s;
-  string_pack_bbox(s, "bbox", b);
-  bboxes.put(id, s.str());
-}
-
-
-/// set coordinates of an object, update bboxs, geohashes
-void
-MapDB::set_coord(uint32_t id, const dMultiLine & crd){
-
-  // get old bbox
-  dRect bbox = get_bbox(id);
-
-  // old bounding box exists
-  if (!bbox.empty()){
-    // remove old coordinates
-    coords.del(id);
-
-    // remove old object bbox
-    bboxes.del(id);
-
-    // remove old geohash
-    geohash.del(id, 0, bbox);
-
-    // TODO: what to do with the map bbox?
-    // can it be shrinked efficiently using geohashes?
-  }
-
-  // update object bbox
-  bbox = crd.bbox2d();
-
-  // new bounding box exists
-  if (!bbox.empty()){
-
-    // set coordinates (overwrite if needed)
-    ostringstream s;
-    string_pack_crds(s, "crds", crd);
-    coords.put(id, s.str());
-
-    // update geohash
-    geohash.put(id, 0, bbox);
-
-    // update bbox
-    set_bbox(id, bbox);
-
-    // update map bbox
-    dRect bbox0 = get_map_bbox();
-    bbox0.expand(bbox);
-    set_map_bbox(bbox0);
-
-  }
-}
-
-/// get coordinates of an object
-/// similar to get_border method
-dMultiLine
-MapDB::get_coord(uint32_t id){
-  dMultiLine ret;
-  istringstream s(coords.get(id));
-  if (id == 0xFFFFFFFF) return ret;
-
-  // searching for crds tags
-  while (1){
-    string tag = string_unpack_tag(s);
-    if (tag=="") break;
-    else if (tag == "crds") ret.push_back(string_unpack_crds(s));
-    else throw Err() << "MapDB::get_coord: unknown tag: [" << tag << "]";
-  }
-  return ret;
 }
 

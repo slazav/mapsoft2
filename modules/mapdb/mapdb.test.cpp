@@ -23,6 +23,7 @@ main(){
       assert(o1.name == "");
       assert(o1.comm == "");
       assert(o1.tags.size() == 0);
+      assert(o1.size() == 0);
 
       // <=> operators
       assert(o1 == o2);
@@ -102,6 +103,7 @@ main(){
       o1.name = "object name\nsecond line";
       o1.comm = "object comment\nsecond line";
       o1.tags.insert("object source\nsecond line");
+      o1.dMultiLine::operator=(dMultiLine("[[[0,0],[1,1]],[[1,1],[2,2]]]"));
       std::string pack = o1.pack();
       o2.unpack(pack);
       assert(o1==o2);
@@ -142,8 +144,7 @@ main(){
       // get version
       assert(m.get_map_version() == 0);
 
-      // get/set object coordinates and bboxes
-      assert(m.get_map_bbox() == dRect());
+      // get/set object
       MapDBObj o1;
       o1.cl = MAPDB_LINE;
       o1.type = 0x2342;
@@ -153,28 +154,22 @@ main(){
       o1.comm = "object comment\nsecond line";
       o1.tags.insert("object source\nsecond line");
 
-      // put object, check bbox and coords
+      // put object
       uint32_t id = m.add(o1);
-      assert(m.get_bbox(id) == dRect());
-      assert(m.get_coord(id) == dMultiLine());
+      assert(id == 0);
       assert(o1 == m.get(id));
 
-      m.set_coord(id, dMultiLine("[[[1,2],[3,3]]]"));
-      assert(m.get_bbox(id) == dRect(dPoint(1,2), dPoint(3,3)));
-      assert(m.get_coord(id) == dMultiLine("[[[1,2],[3,3]]]"));
-      assert(o1 == m.get(id)); // no change in the object
-
-      assert(m.get_map_bbox() == dRect(dPoint(1,2), dPoint(3,3))); // map bbox
-
-      m.set_coord(id, dMultiLine("[[[0,0],[5,5]]]"));
-      assert(m.get_map_bbox() == dRect(dPoint(0,0), dPoint(5,5)));
-
-      m.set_coord(id, dMultiLine());
-      assert(m.get_bbox(id) == dRect());
-      assert(m.get_coord(id) == dMultiLine());
+      // update object
+      o1.type = 0x2342;
+      o1.dMultiLine::operator=(dMultiLine("[[[0,0],[1,1]],[[1,1],[2,2]]]"));
+      m.put(id,o1);
       assert(o1 == m.get(id));
 
-      // todo: shrinking of the map bbox -- not implemented
+      // delete object
+      m.del(id);
+      try {m.get(id); assert(false);} catch (Err e) {
+        assert(e.str() == "MapDB::get: no such object: 0");
+      }
 
     }
     if (system("rm -rf tmp.db")!=0) throw Err() << "Can't delete tmp.db";

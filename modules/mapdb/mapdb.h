@@ -36,10 +36,10 @@ typedef enum{
 /*********************************************************************/
 // MapDBObj -- a single map object
 
-struct MapDBObj {
+struct MapDBObj: public dMultiLine {
   MapDBObjClass   cl;      // object class: MAPDB_POINT, MAPDB_LINE, MAPDB_POLYGON
-  MapDBObjDir     dir;     // object direction: MAPDB_DIR_NO, MAPDB_DIR_FRW, MAPDB_DIR_BCK
   int             type;    // = MP type
+  MapDBObjDir     dir;     // object direction: MAPDB_DIR_NO, MAPDB_DIR_FRW, MAPDB_DIR_BCK
   float           angle;   // object angle, deg
   std::string     name;    // object name (to be printed on map labels)
   std::string     comm;    // object comment
@@ -65,13 +65,14 @@ struct MapDBObj {
     if (name!=o.name)   return name<o.name;
     if (comm!=o.comm)   return comm<o.comm;
     if (tags!=o.tags)   return tags<o.tags;
-    return false;
+    return dMultiLine::operator<(o);
   }
 
   /// Equal opertator.
   bool operator== (const MapDBObj & o) const {
     return cl==o.cl && type==o.type && dir==o.dir && angle==o.angle &&
-        name==o.name && comm==o.comm && tags==o.tags;
+        name==o.name && comm==o.comm && tags==o.tags &&
+        dMultiLine::operator==(o);
   }
   // derived operators:
   bool operator!= (const MapDBObj & other) const { return !(*this==other); } ///< operator!=
@@ -96,8 +97,6 @@ private:
 
   DBSimple   mapinfo; // map information
   DBSimple   objects; // object data
-  DBSimple   coords;  // object coordinates
-  DBSimple   bboxes;  // object coordinates
   DBSimple   labels;  // label data
   GeoHashDB  geohash; // geohashes for spatial indexing
 
@@ -126,44 +125,24 @@ public:
   /// Set map border
   void set_map_brd(const dMultiLine & b);
 
-  /// Get map bounding box. If the field is not set return empty dRect
-  dRect get_map_bbox();
-
-  private:
-  /// Set map bounding box (internal use only, should
-  /// be syncronyzed with objects!)
-  void set_map_bbox(const dRect & b);
-
 
   ///////////////
   /* Functions for working with map objects */
-  public:
 
   /// Add object to the map, return object ID.
-  /// Bounding box will be reset to empty.
   uint32_t add(const MapDBObj & o);
 
+  /// Rewrite existing object, update geohashes.
+  /// If object does not exist it will be added anyway.
+  void put(uint32_t id, const MapDBObj & o);
+
   /// Read an object.
-  MapDBObj get(const uint32_t id);
+  MapDBObj get(uint32_t id);
 
   /// Delete an object.
   /// If the object does not exist throw an error.
-  void del(const uint32_t id);
+  void del(uint32_t id);
 
-  /// Set object bounding box.
-  dRect get_bbox(uint32_t id);
-
-  /// Set coordinates of an object.
-  /// If the object does not exist throw an error.
-  void set_coord(uint32_t id, const dMultiLine & crd);
-
-  /// get coordinates of an object
-  dMultiLine get_coord(uint32_t id);
-
-  private:
-  /// Set object bounding box (internal use only, should
-  /// be syncronyzed with object coordinates!)
-  void set_bbox(uint32_t id, const dRect & b);
 
   ///////////////
   /* Import/export */
