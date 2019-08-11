@@ -55,8 +55,8 @@
             "type": "Point"
           },
           "properties": {
-            "name": "177",
-            "sym": "Flag, Blue"
+            "gpx_sym": "Flag, Blue",
+            "name": "177"
           },
           "type": "Feature"
         },
@@ -70,8 +70,8 @@
             "type": "Point"
           },
           "properties": {
-            "name": "178",
-            "sym": "Flag, Blue"
+            "gpx_sym": "Flag, Blue",
+            "name": "178"
           },
           "type": "Feature"
         },
@@ -86,8 +86,8 @@
             "type": "Point"
           },
           "properties": {
-            "name": "179",
-            "sym": "Flag, Blue"
+            "gpx_sym": "Flag, Blue",
+            "name": "179"
           },
           "type": "Feature"
         },
