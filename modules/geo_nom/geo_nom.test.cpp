@@ -68,6 +68,53 @@ main(){
   try {
   nom_scale_t sc;
 
+  assert(str_to_type<nom_scale_t>("1:1000000")   == SC_1M);
+  assert(str_to_type<nom_scale_t>("1:1'000'000") == SC_1M);
+  assert(str_to_type<nom_scale_t>("1000000") == SC_1M);
+  assert(str_to_type<nom_scale_t>("1M")      == SC_1M);
+  assert(str_to_type<nom_scale_t>("10km/cm") == SC_1M);
+  assert(str_to_type<nom_scale_t>("10km")    == SC_1M);
+
+  assert(str_to_type<nom_scale_t>("1:500000")   == SC_500k);
+  assert(str_to_type<nom_scale_t>("1:500'000") == SC_500k);
+  assert(str_to_type<nom_scale_t>("500000") == SC_500k);
+  assert(str_to_type<nom_scale_t>("500k")   == SC_500k);
+  assert(str_to_type<nom_scale_t>("5km/cm") == SC_500k);
+  assert(str_to_type<nom_scale_t>("5km")    == SC_500k);
+
+  assert(str_to_type<nom_scale_t>("1:200000")   == SC_200k);
+  assert(str_to_type<nom_scale_t>("1:200'000") == SC_200k);
+  assert(str_to_type<nom_scale_t>("200000") == SC_200k);
+  assert(str_to_type<nom_scale_t>("200k")   == SC_200k);
+  assert(str_to_type<nom_scale_t>("2km/cm") == SC_200k);
+  assert(str_to_type<nom_scale_t>("2km")    == SC_200k);
+
+  assert(str_to_type<nom_scale_t>("1:100000")   == SC_100k);
+  assert(str_to_type<nom_scale_t>("1:100'000") == SC_100k);
+  assert(str_to_type<nom_scale_t>("100000") == SC_100k);
+  assert(str_to_type<nom_scale_t>("100k")   == SC_100k);
+  assert(str_to_type<nom_scale_t>("1km/cm") == SC_100k);
+  assert(str_to_type<nom_scale_t>("1km")    == SC_100k);
+
+  assert(str_to_type<nom_scale_t>("1:50000")   == SC_50k);
+  assert(str_to_type<nom_scale_t>("1:50'000") == SC_50k);
+  assert(str_to_type<nom_scale_t>("50000") == SC_50k);
+  assert(str_to_type<nom_scale_t>("50k")   == SC_50k);
+  assert(str_to_type<nom_scale_t>("500m/cm") == SC_50k);
+  assert(str_to_type<nom_scale_t>("500m")    == SC_50k);
+
+  try { str_to_type<nom_scale_t>("a"); assert(false); }
+  catch (Err e){ assert(e.str()=="can't parse nomenclature map scale: a"); }
+
+  try { str_to_type<nom_scale_t>("500m "); assert(false); }
+  catch (Err e){ assert(e.str()=="can't parse value: 500m "); }
+
+  assert(type_to_str<nom_scale_t>(SC_1M) == "1:1000000");
+  assert(type_to_str<nom_scale_t>(SC_500k) == "1:500000");
+  assert(type_to_str<nom_scale_t>(SC_200k) == "1:200000");
+  assert(type_to_str<nom_scale_t>(SC_100k) == "1:100000");
+  assert(type_to_str<nom_scale_t>(SC_50k) == "1:50000");
+
 
   // 1:1'000'000
   assert_nom("",        dRect(), SC_1M, false, "nom_to_range: can't parse name: ");
