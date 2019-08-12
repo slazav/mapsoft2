@@ -9,12 +9,16 @@ void usage(){
        << "\n"
        << "usage: ms2tiles [-G] -p <point> <z> -- tiles at the point\n"
        << "       ms2tiles [-G] -r <range> <z> -- tiles covering the range\n"
-       << "       ms2tiles [-G] -n <x> <y> <z> -- tile range\n"
-       << "       ms2tiles [-G] -c <x> <y> <z> -- tile center\n"
-       << "       ms2tiles [-G] -t <x> <y> <z> <range>  -- check if the tile touches the range\n"
+       << "       ms2tiles [-G] -n <tile-point> -- tile range\n"
+       << "       ms2tiles [-G] -c <tile-point> -- tile center\n"
+       << "       ms2tiles [-G] -t <tile-point> <range>  -- check if the tile touches the range\n"
        << "\n"
        << "By default the program works with TMS tiles. Use -G option\n"
        << "for google tiles.\n"
+       << "\n"
+       << "Parameters <point> and <range> are JSON arrays of WGS84\n"
+       << "coordinates: [<lon>,<lat>], and [<lon>,<lat>,<width>,<height>].\n"
+       << "Parameter <tile-point> is JSON array of three integers: [<x>,<y>,<z>]\n."
        << "\n"
   ;
 }
@@ -48,32 +52,26 @@ main(int argc, char **argv){
       return 0;
     }
 
-    if ((argc == 5) && (strcmp(argv[1], "-n") == 0)){
-      int x = str_to_type<int>(argv[2]);
-      int y = str_to_type<int>(argv[3]);
-      int z = str_to_type<int>(argv[4]);
-      if (G) cout << T.gtile_to_range(x,y,z) << "\n";
-      else   cout << T.tile_to_range(x,y,z) << "\n";
+    if ((argc == 3) && (strcmp(argv[1], "-n") == 0)){
+      iPoint tile(argv[2]);
+      if (G) cout << T.gtile_to_range(tile.x,tile.y,tile.z) << "\n";
+      else   cout << T.tile_to_range(tile.x,tile.y,tile.z) << "\n";
       return 0;
     }
 
-    if ((argc == 5) && (strcmp(argv[1], "-c") == 0)){
-      int x = str_to_type<int>(argv[2]);
-      int y = str_to_type<int>(argv[3]);
-      int z = str_to_type<int>(argv[4]);
-      if (G) cout << T.gtile_to_range(x,y,z).cnt() << "\n";
-      else   cout << T.tile_to_range(x,y,z).cnt() << "\n";
+    if ((argc == 3) && (strcmp(argv[1], "-c") == 0)){
+      iPoint tile(argv[2]);
+      if (G) cout << T.gtile_to_range(tile.x,tile.y,tile.z).cnt() << "\n";
+      else   cout << T.tile_to_range(tile.x,tile.y,tile.z).cnt() << "\n";
       return 0;
     }
 
-    if ((argc == 6) && (strcmp(argv[1], "-t") == 0)){
-      int x = str_to_type<int>(argv[2]);
-      int y = str_to_type<int>(argv[3]);
-      int z = str_to_type<int>(argv[4]);
-      dRect r1(argv[5]);
+    if ((argc == 4) && (strcmp(argv[1], "-t") == 0)){
+      iPoint tile(argv[2]);
+      dRect r1(argv[3]);
       dRect r2;
-      if (G) r2=T.gtile_to_range(x,y,z);
-      else   r2=T.tile_to_range(x,y,z);
+      if (G) r2=T.gtile_to_range(tile.x,tile.y,tile.z);
+      else   r2=T.tile_to_range(tile.x,tile.y,tile.z);
       return intersect(r1,r2).empty();
     }
     usage();
