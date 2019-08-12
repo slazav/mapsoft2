@@ -452,6 +452,7 @@ range_to_nomlist(const dRect & range, const nom_scale_t rscale, const bool singl
       r = nom_to_range(name2, sc1, single);
       if (r.tlc().x > range.brc().x - delta.x ||
           r.tlc().y > range.brc().y - delta.y) break;
+      if (intersect(range, nom_to_range(name2,sc1,single)).empty()) continue;
       ret.insert(name2);
     }
     if (r.brc().y > range.brc().y) break;

@@ -387,20 +387,20 @@ main(){
 
   // same but opposit sign
   names = range_to_nomlist(dRect(-74,-78, 10,20), SC_1M);
-  for (auto const & i:names) std::cerr << i << "\n";
-//  assert(names.size() == 12);
-//  assert(names.count("xo41")==1);
-//  assert(names.count("xo42")==1);
-//  assert(names.count("xo43")==1);
-//  assert(names.count("xp41,42")==1);
-//  assert(names.count("xp43,44")==1);
-//  assert(names.count("xq41,42")==1);
-//  assert(names.count("xq43,44")==1);
-//  assert(names.count("xr41,42")==1);
-//  assert(names.count("xr43,44")==1);
-//  assert(names.count("xs41,42")==1);
-//  assert(names.count("xs43,44")==1);
-//  assert(names.count("xt41,42,43,44")==1);
+//  for (auto const & i:names) std::cerr << i << "\n";
+  assert(names.size() == 12);
+  assert(names.count("xo18")==1);
+  assert(names.count("xo19")==1);
+  assert(names.count("xo20")==1);
+  assert(names.count("xp17,18")==1);
+  assert(names.count("xp19,20")==1);
+  assert(names.count("xq17,18")==1);
+  assert(names.count("xq19,20")==1);
+  assert(names.count("xr17,18")==1);
+  assert(names.count("xr19,20")==1);
+  assert(names.count("xs17,18")==1);
+  assert(names.count("xs19,20")==1);
+  assert(names.count("xt17,18,19,20")==1);
 
 
 
