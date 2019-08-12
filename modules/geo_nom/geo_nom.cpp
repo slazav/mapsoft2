@@ -269,10 +269,13 @@ nom_to_range(const string & key, nom_scale_t & scale, bool ex){
       int k1, k2;
       read_num(f, k1, d1);
       if (f.get()!='x')
-        throw Err() << "nom_to_range: can't parse name: " << key;
+        throw Err() << "nom_to_range: can't parse name: " << key
+                    << ": wrong <M>x<N> range";
       read_num(f, k2, d2);
       if (k1==0 || k2==0)
-        throw Err() << "nom_to_range: can't parse name: " << key;
+        throw Err() << "nom_to_range: can't parse name: " << key
+                    << ": empty <M>x<N> range";
+
       r.w *= k1;
       r.h *= k2;
     }
@@ -280,15 +283,19 @@ nom_to_range(const string & key, nom_scale_t & scale, bool ex){
   else {
     // check if doubling is correct
     if (M1.A >= 'a' && M1.A <= 'o' && k!=1)
-      throw Err() << "nom_to_range: can't parse name: " << key;
+      throw Err() << "nom_to_range: can't parse name: " << key
+                  << ": maps A .. O should be single";
     if (M1.A >= 'p' && M1.A <= 's' && k!=2)
-      throw Err() << "nom_to_range: can't parse name: " << key;
+      throw Err() << "nom_to_range: can't parse name: " << key
+                  << ": maps P .. S should be in pairs";
     if (M1.A >= 't' && M1.A <= 'u' && k!=4)
-      throw Err() << "nom_to_range: can't parse name: " << key;
+      throw Err() << "nom_to_range: can't parse name: " << key
+                  << ": maps T .. U should be in quadruples";
   }
 
   if (!f.eof() || f.peek() != -1)
-    throw Err() << "nom_to_range: can't parse name: " << key;
+    throw Err() << "nom_to_range: can't parse name: " << key
+                  << ": extra symbols after the name";
   return r;
 }
 

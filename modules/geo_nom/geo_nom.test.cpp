@@ -80,26 +80,26 @@ main(){
   assert_nom("a-0",     dRect(), SC_1M, false, "nom_to_range: can't parse name: a-0");
   assert_nom("a0",      dRect(), SC_1M, false, "nom_to_range: can't parse name: a0");
   assert_nom("a5",      dRect(), SC_1M, false, "nom_to_range: can't parse name: a5");
-  assert_nom("a-019",   dRect(), SC_1M, false, "nom_to_range: can't parse name: a-019");
-  assert_nom("a019",    dRect(), SC_1M, false, "nom_to_range: can't parse name: a019");
+  assert_nom("a-019",   dRect(), SC_1M, false, "nom_to_range: can't parse name: a-019: extra symbols after the name");
+  assert_nom("a019",    dRect(), SC_1M, false, "nom_to_range: can't parse name: a019: extra symbols after the name");
   assert_nom("R33,36",  dRect(), SC_1M, false, "nom_to_range: can't parse name: R33,36");
   assert_nom("R33,33",  dRect(), SC_1M, false, "nom_to_range: can't parse name: R33,33");
   assert_nom("R33,034", dRect(), SC_1M, false, "nom_to_range: can't parse name: R33,034");
   assert_nom("R33,34,", dRect(), SC_1M, false, "nom_to_range: can't parse name: R33,34,");
-  assert_nom("R33,34,35,36", dRect(), SC_1M, false, "nom_to_range: can't parse name: R33,34,35,36");
+  assert_nom("R33,34,35,36", dRect(), SC_1M, false, "nom_to_range: can't parse name: R33,34,35,36: maps P .. S should be in pairs");
 
-  assert_nom("A01,02",          dRect(), SC_1M, false, "nom_to_range: can't parse name: A01,02");
+  assert_nom("A01,02",          dRect(), SC_1M, false, "nom_to_range: can't parse name: A01,02: maps A .. O should be single");
   assert_nom("A01,02,03",       dRect(), SC_1M, false, "nom_to_range: can't parse name: A01,02,03");
-  assert_nom("A01,02,03,04",    dRect(), SC_1M, false, "nom_to_range: can't parse name: A01,02,03,04");
+  assert_nom("A01,02,03,04",    dRect(), SC_1M, false, "nom_to_range: can't parse name: A01,02,03,04: maps A .. O should be single");
   assert_nom("A01,02,03,04,05", dRect(), SC_1M, false, "nom_to_range: can't parse name: A01,02,03,04,05");
 
-  assert_nom("R01",             dRect(), SC_1M, false, "nom_to_range: can't parse name: R01");
+  assert_nom("R01",             dRect(), SC_1M, false, "nom_to_range: can't parse name: R01: maps P .. S should be in pairs");
   assert_nom("R01,02,03",       dRect(), SC_1M, false, "nom_to_range: can't parse name: R01,02,03");
-  assert_nom("R01,02,03,04",    dRect(), SC_1M, false, "nom_to_range: can't parse name: R01,02,03,04");
+  assert_nom("R01,02,03,04",    dRect(), SC_1M, false, "nom_to_range: can't parse name: R01,02,03,04: maps P .. S should be in pairs");
   assert_nom("R01,02,03,04,05", dRect(), SC_1M, false, "nom_to_range: can't parse name: R01,02,03,04,05");
 
-  assert_nom("T01",             dRect(), SC_1M, false, "nom_to_range: can't parse name: T01");
-  assert_nom("T01,02",          dRect(), SC_1M, false, "nom_to_range: can't parse name: T01,02");
+  assert_nom("T01",             dRect(), SC_1M, false, "nom_to_range: can't parse name: T01: maps T .. U should be in quadruples");
+  assert_nom("T01,02",          dRect(), SC_1M, false, "nom_to_range: can't parse name: T01,02: maps T .. U should be in quadruples");
   assert_nom("T01,02,03",       dRect(), SC_1M, false, "nom_to_range: can't parse name: T01,02,03");
   assert_nom("T01,02,03,04,05", dRect(), SC_1M, false, "nom_to_range: can't parse name: T01,02,03,04,05");
 
@@ -127,16 +127,16 @@ main(){
   // 1:500'000
   assert_nom("A01-5",   dRect(), SC_500k, false, "nom_to_range: can't parse name: A01-5");
   assert_nom("A01-0",   dRect(), SC_500k, false, "nom_to_range: can't parse name: A01-0");
-  assert_nom("R01-1",   dRect(), SC_500k, false, "nom_to_range: can't parse name: R01-1");
+  assert_nom("R01-1",   dRect(), SC_500k, false, "nom_to_range: can't parse name: R01-1: maps P .. S should be in pairs");
   assert_nom("R01-2,3", dRect(), SC_500k, false, "nom_to_range: can't parse name: R01-2,3");
-  assert_nom("T01-1",   dRect(), SC_500k, false, "nom_to_range: can't parse name: T01-1");
-  assert_nom("T01-1,2", dRect(), SC_500k, false, "nom_to_range: can't parse name: T01-1,2");
-  assert_nom("R01-1,2,",dRect(), SC_500k, false, "nom_to_range: can't parse name: R01-1,2,");
+  assert_nom("T01-1",   dRect(), SC_500k, false, "nom_to_range: can't parse name: T01-1: maps T .. U should be in quadruples");
+  assert_nom("T01-1,2", dRect(), SC_500k, false, "nom_to_range: can't parse name: T01-1,2: maps T .. U should be in quadruples");
+  assert_nom("R01-1,2,",dRect(), SC_500k, false, "nom_to_range: can't parse name: R01-1,2,: extra symbols after the name");
   assert_nom("R01-1,3", dRect(), SC_500k, false, "nom_to_range: can't parse name: R01-1,3");
   assert_nom("A01-4,1", dRect(), SC_500k, false, "nom_to_range: can't parse name: A01-4,1");
-  assert_nom("A01-4 ",  dRect(), SC_500k, false, "nom_to_range: can't parse name: A01-4 ");
-  assert_nom("A01-4-1", dRect(), SC_500k, false, "nom_to_range: can't parse name: A01-4-1");
-  assert_nom("P37-1,2,P38-1,2", dRect(), SC_500k, false, "nom_to_range: can't parse name: P37-1,2,P38-1,2");
+  assert_nom("A01-4 ",  dRect(), SC_500k, false, "nom_to_range: can't parse name: A01-4 : extra symbols after the name");
+  assert_nom("A01-4-1", dRect(), SC_500k, false, "nom_to_range: can't parse name: A01-4-1: extra symbols after the name");
+  assert_nom("P37-1,2,P38-1,2", dRect(), SC_500k, false, "nom_to_range: can't parse name: P37-1,2,P38-1,2: extra symbols after the name");
   assert_nom("T37-1,2,T38-3,4", dRect(), SC_500k, false, "nom_to_range: can't parse name: T37-1,2,T38-3,4");
   assert_nom("T37-1,2,T37-1,2", dRect(), SC_500k, false, "nom_to_range: can't parse name: T37-1,2,T37-1,2");
   assert_nom("T37-1,2,T39-1,2", dRect(), SC_500k, false, "nom_to_range: can't parse name: T37-1,2,T39-1,2");
@@ -153,20 +153,20 @@ main(){
   // 1:200'000
   assert_nom("A01-00",    dRect(), SC_200k, false, "nom_to_range: can't parse name: A01-00");
   assert_nom("A01-37",    dRect(), SC_200k, false, "nom_to_range: can't parse name: A01-37");
-  assert_nom("A01-01-02", dRect(), SC_200k, false, "nom_to_range: can't parse name: A01-01-02");
-  assert_nom("A01-01,02", dRect(), SC_200k, false, "nom_to_range: can't parse name: A01-01,02");
-  assert_nom("A01-01,02,03,04", dRect(), SC_200k, false, "nom_to_range: can't parse name: A01-01,02,03,04");
-  assert_nom("P01-01",    dRect(), SC_200k, false, "nom_to_range: can't parse name: P01-01");
+  assert_nom("A01-01-02", dRect(), SC_200k, false, "nom_to_range: can't parse name: A01-01-02: extra symbols after the name");
+  assert_nom("A01-01,02", dRect(), SC_200k, false, "nom_to_range: can't parse name: A01-01,02: maps A .. O should be single");
+  assert_nom("A01-01,02,03,04", dRect(), SC_200k, false, "nom_to_range: can't parse name: A01-01,02,03,04: maps A .. O should be single");
+  assert_nom("P01-01",    dRect(), SC_200k, false, "nom_to_range: can't parse name: P01-01: maps P .. S should be in pairs");
   assert_nom("P01-01,03", dRect(), SC_200k, false, "nom_to_range: can't parse name: P01-01,03");
   assert_nom("P01-02,03", dRect(), SC_200k, false, "nom_to_range: can't parse name: P01-02,03");
-  assert_nom("P01-01,02,03,04", dRect(), SC_200k, false, "nom_to_range: can't parse name: P01-01,02,03,04");
+  assert_nom("P01-01,02,03,04", dRect(), SC_200k, false, "nom_to_range: can't parse name: P01-01,02,03,04: maps P .. S should be in pairs");
 
-  assert_nom("T01-01",    dRect(), SC_200k, false, "nom_to_range: can't parse name: T01-01");
-  assert_nom("T01-01,02", dRect(), SC_200k, false, "nom_to_range: can't parse name: T01-01,02");
+  assert_nom("T01-01",    dRect(), SC_200k, false, "nom_to_range: can't parse name: T01-01: maps T .. U should be in quadruples");
+  assert_nom("T01-01,02", dRect(), SC_200k, false, "nom_to_range: can't parse name: T01-01,02: maps T .. U should be in quadruples");
   assert_nom("T01-02,03", dRect(), SC_200k, false, "nom_to_range: can't parse name: T01-02,03");
   assert_nom("T01-03,04,05,06",  dRect(), SC_200k, false, "nom_to_range: can't parse name: T01-03,04,05,06");
   assert_nom("T01-01,02,03,004", dRect(), SC_200k, false, "nom_to_range: can't parse name: T01-01,02,03,004");
-  assert_nom("T01-01,02,03,04,", dRect(), SC_200k, false, "nom_to_range: can't parse name: T01-01,02,03,04,");
+  assert_nom("T01-01,02,03,04,", dRect(), SC_200k, false, "nom_to_range: can't parse name: T01-01,02,03,04,: extra symbols after the name");
 
   // good
   assert_nom("A01-01",        dRect(-180,  3+1/3., 1, 2/3.), SC_200k);
@@ -176,21 +176,21 @@ main(){
 
   // 1:100'000
   assert_nom("A01-000",             dRect(), SC_100k, false, "nom_to_range: can't parse name: A01-000");
-  assert_nom("A01-0145",            dRect(), SC_100k, false, "nom_to_range: can't parse name: A01-0145");
+  assert_nom("A01-0145",            dRect(), SC_100k, false, "nom_to_range: can't parse name: A01-0145: extra symbols after the name");
   assert_nom("A01-001-002",         dRect(), SC_100k, false, "nom_to_range: can't parse name: A01-001-002");
-  assert_nom("A01-001,002",         dRect(), SC_100k, false, "nom_to_range: can't parse name: A01-001,002");
-  assert_nom("A01-001,002,003,004", dRect(), SC_100k, false, "nom_to_range: can't parse name: A01-001,002,003,004");
-  assert_nom("P01-001",             dRect(), SC_100k, false, "nom_to_range: can't parse name: P01-001");
+  assert_nom("A01-001,002",         dRect(), SC_100k, false, "nom_to_range: can't parse name: A01-001,002: maps A .. O should be single");
+  assert_nom("A01-001,002,003,004", dRect(), SC_100k, false, "nom_to_range: can't parse name: A01-001,002,003,004: maps A .. O should be single");
+  assert_nom("P01-001",             dRect(), SC_100k, false, "nom_to_range: can't parse name: P01-001: maps P .. S should be in pairs");
   assert_nom("P01-001,003",         dRect(), SC_100k, false, "nom_to_range: can't parse name: P01-001,003");
   assert_nom("P01-002,003",         dRect(), SC_100k, false, "nom_to_range: can't parse name: P01-002,003");
-  assert_nom("P01-001,002,003,004", dRect(), SC_100k, false, "nom_to_range: can't parse name: P01-001,002,003,004");
+  assert_nom("P01-001,002,003,004", dRect(), SC_100k, false, "nom_to_range: can't parse name: P01-001,002,003,004: maps P .. S should be in pairs");
 
-  assert_nom("T01-001",             dRect(), SC_100k, false, "nom_to_range: can't parse name: T01-001");
-  assert_nom("T01-001,002",         dRect(), SC_100k, false, "nom_to_range: can't parse name: T01-001,002");
+  assert_nom("T01-001",             dRect(), SC_100k, false, "nom_to_range: can't parse name: T01-001: maps T .. U should be in quadruples");
+  assert_nom("T01-001,002",         dRect(), SC_100k, false, "nom_to_range: can't parse name: T01-001,002: maps T .. U should be in quadruples");
   assert_nom("T01-002,003",         dRect(), SC_100k, false, "nom_to_range: can't parse name: T01-002,003");
   assert_nom("T01-003,004,005,006", dRect(), SC_100k, false, "nom_to_range: can't parse name: T01-003,004,005,006");
   assert_nom("T01-001,002,03,004",  dRect(), SC_100k, false, "nom_to_range: can't parse name: T01-001,002,03,004");
-  assert_nom("T01-001,002,003,004,",dRect(), SC_100k, false, "nom_to_range: can't parse name: T01-001,002,003,004,");
+  assert_nom("T01-001,002,003,004,",dRect(), SC_100k, false, "nom_to_range: can't parse name: T01-001,002,003,004,: extra symbols after the name");
 
   // good
   assert_nom("A01-025",             dRect(-180,3,0.5,1.0/3.0), SC_100k);
@@ -203,16 +203,16 @@ main(){
   assert_nom("A01-001-5",  dRect(), SC_50k, false, "nom_to_range: can't parse name: A01-001-5");
   assert_nom("A01-001-01", dRect(), SC_50k, false, "nom_to_range: can't parse name: A01-001-01");
   assert_nom("A01-001-",   dRect(), SC_50k, false, "nom_to_range: can't parse name: A01-001-");
-  assert_nom("A01-001-1,2",dRect(), SC_50k, false, "nom_to_range: can't parse name: A01-001-1,2");
-  assert_nom("A01-001-1,2,A01-002-1,2", dRect(), SC_50k, false, "nom_to_range: can't parse name: A01-001-1,2,A01-002-1,2");
+  assert_nom("A01-001-1,2",dRect(), SC_50k, false, "nom_to_range: can't parse name: A01-001-1,2: maps A .. O should be single");
+  assert_nom("A01-001-1,2,A01-002-1,2", dRect(), SC_50k, false, "nom_to_range: can't parse name: A01-001-1,2,A01-002-1,2: maps A .. O should be single");
 
-  assert_nom("P01-001-1",   dRect(), SC_50k, false, "nom_to_range: can't parse name: P01-001-1");
+  assert_nom("P01-001-1",   dRect(), SC_50k, false, "nom_to_range: can't parse name: P01-001-1: maps P .. S should be in pairs");
   assert_nom("P01-001-2,3", dRect(), SC_50k, false, "nom_to_range: can't parse name: P01-001-2,3");
   assert_nom("P01-001-0,1", dRect(), SC_50k, false, "nom_to_range: can't parse name: P01-001-0,1");
-  assert_nom("P01-001-1,2,P01-002-1,2", dRect(), SC_50k, false, "nom_to_range: can't parse name: P01-001-1,2,P01-002-1,2");
+  assert_nom("P01-001-1,2,P01-002-1,2", dRect(), SC_50k, false, "nom_to_range: can't parse name: P01-001-1,2,P01-002-1,2: extra symbols after the name");
 
-  assert_nom("T01-001-1",   dRect(), SC_50k, false, "nom_to_range: can't parse name: T01-001-1");
-  assert_nom("T01-001-1,2", dRect(), SC_50k, false, "nom_to_range: can't parse name: T01-001-1,2");
+  assert_nom("T01-001-1",   dRect(), SC_50k, false, "nom_to_range: can't parse name: T01-001-1: maps T .. U should be in quadruples");
+  assert_nom("T01-001-1,2", dRect(), SC_50k, false, "nom_to_range: can't parse name: T01-001-1,2: maps T .. U should be in quadruples");
   assert_nom("T01-001-1,2,T01-002-1,2,",dRect(), SC_50k, false, "nom_to_range: can't parse name: T01-001-1,2,T01-002-1,2,");
   assert_nom("T01-001-1,2,T01-001-1,2", dRect(), SC_50k, false, "nom_to_range: can't parse name: T01-001-1,2,T01-001-1,2");
   assert_nom("T01-001-1,2,T01-002-3,4", dRect(), SC_50k, false, "nom_to_range: can't parse name: T01-001-1,2,T01-002-3,4");
@@ -241,13 +241,12 @@ main(){
   assert_nom("T-33.2x3",  dRect(12,76,12,12), SC_1M, 1);
   assert_nom("R-33.2x3",  dRect(12,68,12,12), SC_1M, 1);
 
-  assert_nom("T-33 ",     dRect(), SC_1M, 1, "nom_to_range: can't parse name: T-33 ");
-  assert_nom("R-33.2x2 ", dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.2x2 ");
-  assert_nom("R-33.2x",   dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.2x");
-  assert_nom("R-33.x2",   dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.x2");
-  assert_nom("R-33.x2",   dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.x2");
-  assert_nom("R-33.2x0",  dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.2x0");
-  assert_nom("R-33.0x2",  dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.0x2");
+  assert_nom("T-33 ",     dRect(), SC_1M, 1, "nom_to_range: can't parse name: T-33 : extra symbols after the name");
+  assert_nom("R-33.2x2 ", dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.2x2 : extra symbols after the name");
+  assert_nom("R-33.2x",   dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.2x: empty <M>x<N> range");
+  assert_nom("R-33.x2",   dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.x2: empty <M>x<N> range");
+  assert_nom("R-33.2x0",  dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.2x0: empty <M>x<N> range");
+  assert_nom("R-33.0x2",  dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.0x2: empty <M>x<N> range");
 
   assert_nom("P37-1", dRect(36,62,3,2), SC_500k, 1);
   assert_nom("P37-1.1x1", dRect(36,62,3,2), SC_500k, 1);
@@ -258,8 +257,8 @@ main(){
   assert_nom("T37-01",          dRect(36, 79+1/3., 1, 2/3.), SC_200k, 1);
   assert_nom("T37-01.1x1",      dRect(36, 79+1/3., 1, 2/3.), SC_200k, 1);
 
-  assert_nom("T37-01,02", dRect(), SC_200k, 1, "nom_to_range: can't parse name: T37-01,02");
-  assert_nom("A37-01,02", dRect(), SC_200k, 1, "nom_to_range: can't parse name: A37-01,02");
+  assert_nom("T37-01,02", dRect(), SC_200k, 1, "nom_to_range: can't parse name: T37-01,02: maps T .. U should be in quadruples");
+  assert_nom("A37-01,02", dRect(), SC_200k, 1, "nom_to_range: can't parse name: A37-01,02: maps A .. O should be single");
 
   assert_nom("P37-025,026",     dRect(36,63,1,1.0/3.0), SC_100k, 1);
   assert_nom("P37-025",         dRect(36,63,0.5,1.0/3.0), SC_100k, 1);
