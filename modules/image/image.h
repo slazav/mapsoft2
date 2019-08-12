@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <err/err.h>
+#include <geom/rect.h>
 
 /*
 An image: 2d array of arbitrary data
@@ -25,6 +26,7 @@ class Image {
     size_t width() const  {return w;}
     size_t height() const {return h;}
     size_t bpp() const    {return b;}
+    iRect bbox() const    {return iRect(0,0,w,h);}
     void *data() const    {return data_.get();}
 
     // constructor -- create an empty image
