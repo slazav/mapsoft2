@@ -253,8 +253,8 @@ nom_to_range(const string & key, nom_scale_t & scale, bool ex){
   istringstream f(key);
 
   nom_struct_t M1, M2;
-  if (!nom_parse(f, M1, M2)) return dRect();
-
+  if (!nom_parse(f, M1, M2))
+    throw Err() << "nom_to_range: can't parse name: " << key;
   scale = M1.sc;
   dRect r1 = nom_to_range(M1);
   dRect r2 = nom_to_range(M2);
@@ -268,36 +268,34 @@ nom_to_range(const string & key, nom_scale_t & scale, bool ex){
       int d1=3, d2=3;
       int k1, k2;
       read_num(f, k1, d1);
-      if (f.get()!='x') return dRect();
+      if (f.get()!='x')
+        throw Err() << "nom_to_range: can't parse name: " << key;
       read_num(f, k2, d2);
-      if (k1==0 || k2==0) return dRect();
+      if (k1==0 || k2==0)
+        throw Err() << "nom_to_range: can't parse name: " << key;
       r.w *= k1;
       r.h *= k2;
     }
   }
   else {
     // check if doubling is correct
-    if (M1.A >= 'a' && M1.A <= 'o' && k!=1) return dRect();
-    if (M1.A >= 'p' && M1.A <= 's' && k!=2) return dRect();
-    if (M1.A >= 't' && M1.A <= 'u' && k!=4) return dRect();
+    if (M1.A >= 'a' && M1.A <= 'o' && k!=1)
+      throw Err() << "nom_to_range: can't parse name: " << key;
+    if (M1.A >= 'p' && M1.A <= 's' && k!=2)
+      throw Err() << "nom_to_range: can't parse name: " << key;
+    if (M1.A >= 't' && M1.A <= 'u' && k!=4)
+      throw Err() << "nom_to_range: can't parse name: " << key;
   }
 
-  if (!f.eof() || f.peek() != -1) return dRect();
+  if (!f.eof() || f.peek() != -1)
+    throw Err() << "nom_to_range: can't parse name: " << key;
   return r;
 }
-
-/*
-dRect
-nom_to_range(const string & key){
-  int rscale;
-  return nom_to_range(key, rscale);
-}
-*/
 
 string
 pt_to_nom(dPoint p, const nom_scale_t sc, const bool single){
     if ((p.x <-180) || (p.x>180) || (p.y<-90) || (p.y>90))
-      return string(); // bad coordinates
+      throw Err() << "pt_to_nom: bad coordinates: " << p;
 
     char A = 'a' + (int)floor(abs(p.y)/4);
     int  B = 31 +  (int)floor(p.x/6);
@@ -316,7 +314,7 @@ pt_to_nom(dPoint p, const nom_scale_t sc, const bool single){
       case SC_200k:  n=6; break;
       case SC_100k: n=12; break;
       case SC_50k:  n=12; break;
-      default: return string(); // unknown scale
+      default: throw Err() << "pt_to_nom: bad scale: " << sc;
     }
 
     int row=n-1-(int)floor((p.y/4.0-floor(p.y/4))*n);
@@ -447,7 +445,7 @@ pt_to_nom(dPoint p, const nom_scale_t sc, const bool single){
           break;
         }
 
-      default: return string(); // unknown scale
+      default: throw Err() << "pt_to_nom: unknown scale: " << sc;
     }
 
 

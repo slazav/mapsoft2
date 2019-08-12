@@ -8,9 +8,22 @@
     if (e.str()!=ret) std::cerr<<e.str()<<"\n";\
     assert(e.str()==(ret));}
 
-void assert_nom(const std::string & name, const dRect & res, nom_scale_t sc0, bool ex=false){
+void assert_nom(const std::string & name, const dRect & res, nom_scale_t sc0,
+                bool ex=false, std::string error=""){
   nom_scale_t sc;
-  dRect r = nom_to_range(name, sc, ex);
+  dRect r;
+
+  try {
+    r = nom_to_range(name, sc, ex);
+  } catch (Err e) {
+    if (e.str() != error){
+      std::cerr << "Error: " <<  name << ":\n";
+      std::cerr << " error expected: " <<  error << "\n";
+      std::cerr << " error recieved: " <<  e.str() << "\n";
+      assert(false);
+    }
+  }
+
   if (res.empty()){
     if (r.empty()) return;
     std::cerr << "Error: " <<  name << " -> " << r << " != empty\n";
@@ -28,9 +41,19 @@ void assert_nom(const std::string & name, const dRect & res, nom_scale_t sc0, bo
   }
 }
 
-void assert_nom1(const std::string & name, const bool single = false){
+void assert_nom1(const std::string & name, const bool single = false, std::string error=""){
   nom_scale_t sc;
-  dRect r = nom_to_range(name, sc, single);
+  dRect r;
+  try {
+    r = nom_to_range(name, sc, single);
+  } catch (Err e) {
+    if (e.str() != error){
+      std::cerr << "Error: " <<  name << ":\n";
+      std::cerr << " error expected: " <<  error << "\n";
+      std::cerr << " error recieved: " <<  e.str() << "\n";
+      assert(false);
+    }
+  }
 
   std::string name1 = pt_to_nom(r.cnt(), sc, single);
   if (name1!=name) {
@@ -47,46 +70,46 @@ main(){
 
 
   // 1:1'000'000
-  assert_nom("", dRect(), SC_1M);
-  assert_nom("x10-001", dRect(), SC_1M);
-  assert_nom("aa-001", dRect(), SC_1M);
-  assert_nom("a -001", dRect(), SC_1M);
-  assert_nom("v-01", dRect(), SC_1M);
-  assert_nom("xx-01", dRect(), SC_1M);
-  assert_nom("a-61", dRect(), SC_1M);
-  assert_nom("a-0", dRect(), SC_1M);
-  assert_nom("a0", dRect(), SC_1M);
-  assert_nom("a5", dRect(), SC_1M);
-  assert_nom("a-019", dRect(), SC_1M);
-  assert_nom("a019", dRect(), SC_1M);
-  assert_nom("R33,36", dRect(), SC_1M);
-  assert_nom("R33,33", dRect(), SC_1M);
-  assert_nom("R33,034", dRect(), SC_1M);
-  assert_nom("R33,34,", dRect(), SC_1M);
-  assert_nom("R33,34,35,36", dRect(), SC_1M);
+  assert_nom("",        dRect(), SC_1M, false, "nom_to_range: can't parse name: ");
+  assert_nom("x10-001", dRect(), SC_1M, false, "nom_to_range: can't parse name: x10-001");
+  assert_nom("aa-001",  dRect(), SC_1M, false, "nom_to_range: can't parse name: aa-001");
+  assert_nom("a -001",  dRect(), SC_1M, false, "nom_to_range: can't parse name: a -001");
+  assert_nom("v-01",    dRect(), SC_1M, false, "nom_to_range: can't parse name: v-01");
+  assert_nom("xx-01",   dRect(), SC_1M, false, "nom_to_range: can't parse name: xx-01");
+  assert_nom("a-61",    dRect(), SC_1M, false, "nom_to_range: can't parse name: a-61");
+  assert_nom("a-0",     dRect(), SC_1M, false, "nom_to_range: can't parse name: a-0");
+  assert_nom("a0",      dRect(), SC_1M, false, "nom_to_range: can't parse name: a0");
+  assert_nom("a5",      dRect(), SC_1M, false, "nom_to_range: can't parse name: a5");
+  assert_nom("a-019",   dRect(), SC_1M, false, "nom_to_range: can't parse name: a-019");
+  assert_nom("a019",    dRect(), SC_1M, false, "nom_to_range: can't parse name: a019");
+  assert_nom("R33,36",  dRect(), SC_1M, false, "nom_to_range: can't parse name: R33,36");
+  assert_nom("R33,33",  dRect(), SC_1M, false, "nom_to_range: can't parse name: R33,33");
+  assert_nom("R33,034", dRect(), SC_1M, false, "nom_to_range: can't parse name: R33,034");
+  assert_nom("R33,34,", dRect(), SC_1M, false, "nom_to_range: can't parse name: R33,34,");
+  assert_nom("R33,34,35,36", dRect(), SC_1M, false, "nom_to_range: can't parse name: R33,34,35,36");
 
-  assert_nom("A01,02", dRect(), SC_1M);
-  assert_nom("A01,02,03", dRect(), SC_1M);
-  assert_nom("A01,02,03,04", dRect(), SC_1M);
-  assert_nom("A01,02,03,04,05", dRect(), SC_1M);
+  assert_nom("A01,02",          dRect(), SC_1M, false, "nom_to_range: can't parse name: A01,02");
+  assert_nom("A01,02,03",       dRect(), SC_1M, false, "nom_to_range: can't parse name: A01,02,03");
+  assert_nom("A01,02,03,04",    dRect(), SC_1M, false, "nom_to_range: can't parse name: A01,02,03,04");
+  assert_nom("A01,02,03,04,05", dRect(), SC_1M, false, "nom_to_range: can't parse name: A01,02,03,04,05");
 
-  assert_nom("R01", dRect(), SC_1M);
-  assert_nom("R01,02,03", dRect(), SC_1M);
-  assert_nom("R01,02,03,04", dRect(), SC_1M);
-  assert_nom("R01,02,03,04,05", dRect(), SC_1M);
+  assert_nom("R01",             dRect(), SC_1M, false, "nom_to_range: can't parse name: R01");
+  assert_nom("R01,02,03",       dRect(), SC_1M, false, "nom_to_range: can't parse name: R01,02,03");
+  assert_nom("R01,02,03,04",    dRect(), SC_1M, false, "nom_to_range: can't parse name: R01,02,03,04");
+  assert_nom("R01,02,03,04,05", dRect(), SC_1M, false, "nom_to_range: can't parse name: R01,02,03,04,05");
 
-  assert_nom("T01", dRect(), SC_1M);
-  assert_nom("T01,02", dRect(), SC_1M);
-  assert_nom("T01,02,03", dRect(), SC_1M);
-  assert_nom("T01,02,03,04,05", dRect(), SC_1M);
+  assert_nom("T01",             dRect(), SC_1M, false, "nom_to_range: can't parse name: T01");
+  assert_nom("T01,02",          dRect(), SC_1M, false, "nom_to_range: can't parse name: T01,02");
+  assert_nom("T01,02,03",       dRect(), SC_1M, false, "nom_to_range: can't parse name: T01,02,03");
+  assert_nom("T01,02,03,04,05", dRect(), SC_1M, false, "nom_to_range: can't parse name: T01,02,03,04,05");
 
-  assert_nom("R02,03", dRect(), SC_1M); // n%2!=1
-  assert_nom("T03,04,05,06", dRect(), SC_1M);  // n%4!=1
+  assert_nom("R02,03",          dRect(), SC_1M, false, "nom_to_range: can't parse name: R02,03"); // n%2!=1
+  assert_nom("T03,04,05,06",    dRect(), SC_1M, false, "nom_to_range: can't parse name: T03,04,05,06");  // n%4!=1
 
-  assert_nom("A001", dRect(), SC_1M);
-  assert_nom("A1", dRect(), SC_1M);
-  assert_nom("R01,002", dRect(), SC_1M);
-  assert_nom("R001,02", dRect(), SC_1M);
+  assert_nom("A001",    dRect(), SC_1M, false, "nom_to_range: can't parse name: A001");
+  assert_nom("A1",      dRect(), SC_1M, false, "nom_to_range: can't parse name: A1");
+  assert_nom("R01,002", dRect(), SC_1M, false, "nom_to_range: can't parse name: R01,002");
+  assert_nom("R001,02", dRect(), SC_1M, false, "nom_to_range: can't parse name: R001,02");
 
   // good
   assert_nom("a-01",         dRect(-180,  0,  6,4), SC_1M);
@@ -102,22 +125,22 @@ main(){
 
 
   // 1:500'000
-  assert_nom("A01-5", dRect(), SC_500k);
-  assert_nom("A01-0", dRect(), SC_500k);
-  assert_nom("R01-1", dRect(), SC_500k);
-  assert_nom("R01-2,3", dRect(), SC_500k);
-  assert_nom("T01-1", dRect(), SC_500k);
-  assert_nom("T01-1,2", dRect(), SC_500k);
-  assert_nom("R01-1,2,", dRect(), SC_500k);
-  assert_nom("R01-1,3", dRect(), SC_500k);
-  assert_nom("A01-4,1", dRect(), SC_500k);
-  assert_nom("A01-4 ", dRect(), SC_500k);
-  assert_nom("A01-4-1", dRect(), SC_500k);
-  assert_nom("P37-1,2,P38-1,2", dRect(), SC_500k);
-  assert_nom("T37-1,2,T38-3,4", dRect(), SC_500k);
-  assert_nom("T37-1,2,T37-1,2", dRect(), SC_500k);
-  assert_nom("T37-1,2,T39-1,2", dRect(), SC_500k);
-  assert_nom("T37-1,2,T39-1,2-1", dRect(), SC_500k);
+  assert_nom("A01-5",   dRect(), SC_500k, false, "nom_to_range: can't parse name: A01-5");
+  assert_nom("A01-0",   dRect(), SC_500k, false, "nom_to_range: can't parse name: A01-0");
+  assert_nom("R01-1",   dRect(), SC_500k, false, "nom_to_range: can't parse name: R01-1");
+  assert_nom("R01-2,3", dRect(), SC_500k, false, "nom_to_range: can't parse name: R01-2,3");
+  assert_nom("T01-1",   dRect(), SC_500k, false, "nom_to_range: can't parse name: T01-1");
+  assert_nom("T01-1,2", dRect(), SC_500k, false, "nom_to_range: can't parse name: T01-1,2");
+  assert_nom("R01-1,2,",dRect(), SC_500k, false, "nom_to_range: can't parse name: R01-1,2,");
+  assert_nom("R01-1,3", dRect(), SC_500k, false, "nom_to_range: can't parse name: R01-1,3");
+  assert_nom("A01-4,1", dRect(), SC_500k, false, "nom_to_range: can't parse name: A01-4,1");
+  assert_nom("A01-4 ",  dRect(), SC_500k, false, "nom_to_range: can't parse name: A01-4 ");
+  assert_nom("A01-4-1", dRect(), SC_500k, false, "nom_to_range: can't parse name: A01-4-1");
+  assert_nom("P37-1,2,P38-1,2", dRect(), SC_500k, false, "nom_to_range: can't parse name: P37-1,2,P38-1,2");
+  assert_nom("T37-1,2,T38-3,4", dRect(), SC_500k, false, "nom_to_range: can't parse name: T37-1,2,T38-3,4");
+  assert_nom("T37-1,2,T37-1,2", dRect(), SC_500k, false, "nom_to_range: can't parse name: T37-1,2,T37-1,2");
+  assert_nom("T37-1,2,T39-1,2", dRect(), SC_500k, false, "nom_to_range: can't parse name: T37-1,2,T39-1,2");
+  assert_nom("T37-1,2,T39-1,2-1", dRect(), SC_500k, false, "nom_to_range: can't parse name: T37-1,2,T39-1,2-1");
 
   // good
   assert_nom("A01-1", dRect(-180,2,3,2),  SC_500k);
@@ -128,22 +151,22 @@ main(){
   assert_nom("T37-1,2,T38-1,2", dRect(36,78,12,2), SC_500k);
 
   // 1:200'000
-  assert_nom("A01-00", dRect(), SC_200k);
-  assert_nom("A01-37", dRect(), SC_200k);
-  assert_nom("A01-01-02", dRect(), SC_200k);
-  assert_nom("A01-01,02", dRect(), SC_200k);
-  assert_nom("A01-01,02,03,04", dRect(), SC_200k);
-  assert_nom("P01-01", dRect(), SC_200k);
-  assert_nom("P01-01,03", dRect(), SC_200k);
-  assert_nom("P01-02,03", dRect(), SC_200k);
-  assert_nom("P01-01,02,03,04", dRect(), SC_200k);
+  assert_nom("A01-00",    dRect(), SC_200k, false, "nom_to_range: can't parse name: A01-00");
+  assert_nom("A01-37",    dRect(), SC_200k, false, "nom_to_range: can't parse name: A01-37");
+  assert_nom("A01-01-02", dRect(), SC_200k, false, "nom_to_range: can't parse name: A01-01-02");
+  assert_nom("A01-01,02", dRect(), SC_200k, false, "nom_to_range: can't parse name: A01-01,02");
+  assert_nom("A01-01,02,03,04", dRect(), SC_200k, false, "nom_to_range: can't parse name: A01-01,02,03,04");
+  assert_nom("P01-01",    dRect(), SC_200k, false, "nom_to_range: can't parse name: P01-01");
+  assert_nom("P01-01,03", dRect(), SC_200k, false, "nom_to_range: can't parse name: P01-01,03");
+  assert_nom("P01-02,03", dRect(), SC_200k, false, "nom_to_range: can't parse name: P01-02,03");
+  assert_nom("P01-01,02,03,04", dRect(), SC_200k, false, "nom_to_range: can't parse name: P01-01,02,03,04");
 
-  assert_nom("T01-01", dRect(), SC_200k);
-  assert_nom("T01-01,02", dRect(), SC_200k);
-  assert_nom("T01-02,03", dRect(), SC_200k);
-  assert_nom("T01-03,04,05,06", dRect(), SC_200k);
-  assert_nom("T01-01,02,03,004", dRect(), SC_200k);
-  assert_nom("T01-01,02,03,04,", dRect(), SC_200k);
+  assert_nom("T01-01",    dRect(), SC_200k, false, "nom_to_range: can't parse name: T01-01");
+  assert_nom("T01-01,02", dRect(), SC_200k, false, "nom_to_range: can't parse name: T01-01,02");
+  assert_nom("T01-02,03", dRect(), SC_200k, false, "nom_to_range: can't parse name: T01-02,03");
+  assert_nom("T01-03,04,05,06",  dRect(), SC_200k, false, "nom_to_range: can't parse name: T01-03,04,05,06");
+  assert_nom("T01-01,02,03,004", dRect(), SC_200k, false, "nom_to_range: can't parse name: T01-01,02,03,004");
+  assert_nom("T01-01,02,03,04,", dRect(), SC_200k, false, "nom_to_range: can't parse name: T01-01,02,03,04,");
 
   // good
   assert_nom("A01-01",        dRect(-180,  3+1/3., 1, 2/3.), SC_200k);
@@ -152,22 +175,22 @@ main(){
   assert_nom("T37-01,02,03,04", dRect(36, 79+1/3., 4, 2/3.), SC_200k);
 
   // 1:100'000
-  assert_nom("A01-000", dRect(), SC_100k);
-  assert_nom("A01-0145", dRect(), SC_100k);
-  assert_nom("A01-001-002", dRect(), SC_100k);
-  assert_nom("A01-001,002", dRect(), SC_100k);
-  assert_nom("A01-001,002,003,004", dRect(), SC_100k);
-  assert_nom("P01-001", dRect(), SC_100k);
-  assert_nom("P01-001,003", dRect(), SC_100k);
-  assert_nom("P01-002,003", dRect(), SC_100k);
-  assert_nom("P01-001,002,003,004", dRect(), SC_100k);
+  assert_nom("A01-000",             dRect(), SC_100k, false, "nom_to_range: can't parse name: A01-000");
+  assert_nom("A01-0145",            dRect(), SC_100k, false, "nom_to_range: can't parse name: A01-0145");
+  assert_nom("A01-001-002",         dRect(), SC_100k, false, "nom_to_range: can't parse name: A01-001-002");
+  assert_nom("A01-001,002",         dRect(), SC_100k, false, "nom_to_range: can't parse name: A01-001,002");
+  assert_nom("A01-001,002,003,004", dRect(), SC_100k, false, "nom_to_range: can't parse name: A01-001,002,003,004");
+  assert_nom("P01-001",             dRect(), SC_100k, false, "nom_to_range: can't parse name: P01-001");
+  assert_nom("P01-001,003",         dRect(), SC_100k, false, "nom_to_range: can't parse name: P01-001,003");
+  assert_nom("P01-002,003",         dRect(), SC_100k, false, "nom_to_range: can't parse name: P01-002,003");
+  assert_nom("P01-001,002,003,004", dRect(), SC_100k, false, "nom_to_range: can't parse name: P01-001,002,003,004");
 
-  assert_nom("T01-001", dRect(), SC_100k);
-  assert_nom("T01-001,002", dRect(), SC_100k);
-  assert_nom("T01-002,003", dRect(), SC_100k);
-  assert_nom("T01-003,004,005,006", dRect(), SC_100k);
-  assert_nom("T01-001,002,03,004", dRect(), SC_100k);
-  assert_nom("T01-001,002,003,004,", dRect(), SC_100k);
+  assert_nom("T01-001",             dRect(), SC_100k, false, "nom_to_range: can't parse name: T01-001");
+  assert_nom("T01-001,002",         dRect(), SC_100k, false, "nom_to_range: can't parse name: T01-001,002");
+  assert_nom("T01-002,003",         dRect(), SC_100k, false, "nom_to_range: can't parse name: T01-002,003");
+  assert_nom("T01-003,004,005,006", dRect(), SC_100k, false, "nom_to_range: can't parse name: T01-003,004,005,006");
+  assert_nom("T01-001,002,03,004",  dRect(), SC_100k, false, "nom_to_range: can't parse name: T01-001,002,03,004");
+  assert_nom("T01-001,002,003,004,",dRect(), SC_100k, false, "nom_to_range: can't parse name: T01-001,002,003,004,");
 
   // good
   assert_nom("A01-025",             dRect(-180,3,0.5,1.0/3.0), SC_100k);
@@ -176,26 +199,26 @@ main(){
   assert_nom("T37-025,026,027,028", dRect(36,79,2,1.0/3.0), SC_100k);
 
   // 1:50'000
-  assert_nom("A01-001-0", dRect(), SC_50k);
-  assert_nom("A01-001-5", dRect(), SC_50k);
-  assert_nom("A01-001-01", dRect(), SC_50k);
-  assert_nom("A01-001-", dRect(), SC_50k);
-  assert_nom("A01-001-1,2", dRect(), SC_50k);
-  assert_nom("A01-001-1,2,A01-002-1,2", dRect(), SC_50k);
+  assert_nom("A01-001-0",  dRect(), SC_50k, false, "nom_to_range: can't parse name: A01-001-0");
+  assert_nom("A01-001-5",  dRect(), SC_50k, false, "nom_to_range: can't parse name: A01-001-5");
+  assert_nom("A01-001-01", dRect(), SC_50k, false, "nom_to_range: can't parse name: A01-001-01");
+  assert_nom("A01-001-",   dRect(), SC_50k, false, "nom_to_range: can't parse name: A01-001-");
+  assert_nom("A01-001-1,2",dRect(), SC_50k, false, "nom_to_range: can't parse name: A01-001-1,2");
+  assert_nom("A01-001-1,2,A01-002-1,2", dRect(), SC_50k, false, "nom_to_range: can't parse name: A01-001-1,2,A01-002-1,2");
 
-  assert_nom("P01-001-1", dRect(), SC_50k);
-  assert_nom("P01-001-2,3", dRect(), SC_50k);
-  assert_nom("P01-001-0,1", dRect(), SC_50k);
-  assert_nom("P01-001-1,2,P01-002-1,2", dRect(), SC_50k);
+  assert_nom("P01-001-1",   dRect(), SC_50k, false, "nom_to_range: can't parse name: P01-001-1");
+  assert_nom("P01-001-2,3", dRect(), SC_50k, false, "nom_to_range: can't parse name: P01-001-2,3");
+  assert_nom("P01-001-0,1", dRect(), SC_50k, false, "nom_to_range: can't parse name: P01-001-0,1");
+  assert_nom("P01-001-1,2,P01-002-1,2", dRect(), SC_50k, false, "nom_to_range: can't parse name: P01-001-1,2,P01-002-1,2");
 
-  assert_nom("T01-001-1", dRect(), SC_50k);
-  assert_nom("T01-001-1,2", dRect(), SC_50k);
-  assert_nom("T01-001-1,2,T01-002-1,2,", dRect(), SC_50k);
-  assert_nom("T01-001-1,2,T01-001-1,2", dRect(), SC_50k);
-  assert_nom("T01-001-1,2,T01-002-3,4", dRect(), SC_50k);
-  assert_nom("T01-001-1,2,T02-002-3,4", dRect(), SC_50k);
-  assert_nom("T01-001-1,2,U01-002-3,4", dRect(), SC_50k);
-  assert_nom("T01-001-1,2,zU01-002-3,4", dRect(), SC_50k);
+  assert_nom("T01-001-1",   dRect(), SC_50k, false, "nom_to_range: can't parse name: T01-001-1");
+  assert_nom("T01-001-1,2", dRect(), SC_50k, false, "nom_to_range: can't parse name: T01-001-1,2");
+  assert_nom("T01-001-1,2,T01-002-1,2,",dRect(), SC_50k, false, "nom_to_range: can't parse name: T01-001-1,2,T01-002-1,2,");
+  assert_nom("T01-001-1,2,T01-001-1,2", dRect(), SC_50k, false, "nom_to_range: can't parse name: T01-001-1,2,T01-001-1,2");
+  assert_nom("T01-001-1,2,T01-002-3,4", dRect(), SC_50k, false, "nom_to_range: can't parse name: T01-001-1,2,T01-002-3,4");
+  assert_nom("T01-001-1,2,T02-002-3,4", dRect(), SC_50k, false, "nom_to_range: can't parse name: T01-001-1,2,T02-002-3,4");
+  assert_nom("T01-001-1,2,U01-002-3,4", dRect(), SC_50k, false, "nom_to_range: can't parse name: T01-001-1,2,U01-002-3,4");
+  assert_nom("T01-001-1,2,zU01-002-3,4",dRect(), SC_50k, false, "nom_to_range: can't parse name: T01-001-1,2,zU01-002-3,4");
 
   // good
   assert_nom("A01-025-3",               dRect(-180,3,0.25,1.0/6.0), SC_50k);
@@ -218,13 +241,13 @@ main(){
   assert_nom("T-33.2x3",  dRect(12,76,12,12), SC_1M, 1);
   assert_nom("R-33.2x3",  dRect(12,68,12,12), SC_1M, 1);
 
-  assert_nom("T-33 ",     dRect(), SC_1M, 1);
-  assert_nom("R-33.2x2 ", dRect(), SC_1M, 1);
-  assert_nom("R-33.2x",   dRect(), SC_1M, 1);
-  assert_nom("R-33.x2",   dRect(), SC_1M, 1);
-  assert_nom("R-33.x2",   dRect(), SC_1M, 1);
-  assert_nom("R-33.2x0",  dRect(), SC_1M, 1);
-  assert_nom("R-33.0x2",  dRect(), SC_1M, 1);
+  assert_nom("T-33 ",     dRect(), SC_1M, 1, "nom_to_range: can't parse name: T-33 ");
+  assert_nom("R-33.2x2 ", dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.2x2 ");
+  assert_nom("R-33.2x",   dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.2x");
+  assert_nom("R-33.x2",   dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.x2");
+  assert_nom("R-33.x2",   dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.x2");
+  assert_nom("R-33.2x0",  dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.2x0");
+  assert_nom("R-33.0x2",  dRect(), SC_1M, 1, "nom_to_range: can't parse name: R-33.0x2");
 
   assert_nom("P37-1", dRect(36,62,3,2), SC_500k, 1);
   assert_nom("P37-1.1x1", dRect(36,62,3,2), SC_500k, 1);
@@ -235,8 +258,8 @@ main(){
   assert_nom("T37-01",          dRect(36, 79+1/3., 1, 2/3.), SC_200k, 1);
   assert_nom("T37-01.1x1",      dRect(36, 79+1/3., 1, 2/3.), SC_200k, 1);
 
-  assert_nom("T37-01,02", dRect(), SC_200k, 1);
-  assert_nom("A37-01,02", dRect(), SC_200k, 1);
+  assert_nom("T37-01,02", dRect(), SC_200k, 1, "nom_to_range: can't parse name: T37-01,02");
+  assert_nom("A37-01,02", dRect(), SC_200k, 1, "nom_to_range: can't parse name: A37-01,02");
 
   assert_nom("P37-025,026",     dRect(36,63,1,1.0/3.0), SC_100k, 1);
   assert_nom("P37-025",         dRect(36,63,0.5,1.0/3.0), SC_100k, 1);
