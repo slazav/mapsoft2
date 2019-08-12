@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include "getopt/getopt.h"
-#include "mapsoft_io/mapsoft_io.h"
+#include "mapsoft_data/mapsoft_data.h"
 #include <cstring>
 
 #define OPT_GG   1  // general options (-v, -h)
