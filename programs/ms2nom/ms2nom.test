@@ -1,0 +1,162 @@
+#!/bin/bash -efu
+
+
+P=${1:-./ms2nom}
+
+. ../test_lib.sh
+
+help_msg="$($P -h ||:)"
+assert "$P -h" "$help_msg" 1
+assert "$P --help" "$help_msg" 1
+assert "$P --xxx " "$help_msg" 1
+
+assert "$P -p [24.94,60.17] a" "Error: can't parse nomenclature map scale: a" 1
+assert "$P -p [190,50] 1:1000000" "Error: pt_to_nom: bad coordinates: [190,50]" 1
+assert "$P -p [190,150] 1:1000000" "Error: pt_to_nom: bad coordinates: [190,150]" 1
+
+assert "$P -p [24.94,60.17] 1:1000000" "p35,36" 0
+assert "$P -p [24.94,60.17] 1:1'000'000" "p35,36" 0
+assert "$P -p [24.94,60.17] 1000000" "p35,36" 0
+assert "$P -p [24.94,60.17] 1M" "p35,36" 0
+assert "$P -p [24.94,60.17] 10km" "p35,36" 0
+assert "$P -p [24.94,60.17] 10km/cm" "p35,36" 0
+
+assert "$P -p [24.94,60.17] 1:500000" "p35-3,4" 0
+assert "$P -p [24.94,60.17] 1:500'000" "p35-3,4" 0
+assert "$P -p [24.94,60.17] 500000" "p35-3,4" 0
+assert "$P -p [24.94,60.17] 500k" "p35-3,4" 0
+assert "$P -p [24.94,60.17] 5km" "p35-3,4" 0
+assert "$P -p [24.94,60.17] 5km/cm" "p35-3,4" 0
+
+assert "$P -p [24.94,60.17] 1:200000" "p35-31,32" 0
+assert "$P -p [24.94,60.17] 1:200'000" "p35-31,32" 0
+assert "$P -p [24.94,60.17] 200000" "p35-31,32" 0
+assert "$P -p [24.94,60.17] 200k" "p35-31,32" 0
+assert "$P -p [24.94,60.17] 2km" "p35-31,32" 0
+assert "$P -p [24.94,60.17] 2km/cm" "p35-31,32" 0
+
+assert "$P -p [24.94,60.17] 1:100000" "p35-133,134" 0
+assert "$P -p [24.94,60.17] 1:100'000" "p35-133,134" 0
+assert "$P -p [24.94,60.17] 100000" "p35-133,134" 0
+assert "$P -p [24.94,60.17] 100k" "p35-133,134" 0
+assert "$P -p [24.94,60.17] 1km" "p35-133,134" 0
+assert "$P -p [24.94,60.17] 1km/cm" "p35-133,134" 0
+
+assert "$P -p [24.94,60.17] 1:50000" "p35-134-1,2" 0
+assert "$P -p [24.94,60.17] 1:50'000" "p35-134-1,2" 0
+assert "$P -p [24.94,60.17] 50000" "p35-134-1,2" 0
+assert "$P -p [24.94,60.17] 50k" "p35-134-1,2" 0
+assert "$P -p [24.94,60.17] 500m" "p35-134-1,2" 0
+assert "$P -p [24.94,60.17] 500m/cm" "p35-134-1,2" 0
+
+assert "$P -E -p [24.94,60.17] 1:1000000" "p35" 0
+assert "$P -E -p [24.94,60.17] 1:500000" "p35-3" 0
+assert "$P -E -p [24.94,60.17] 1:200000" "p35-31" 0
+assert "$P -E -p [24.94,60.17] 1:100000" "p35-134" 0
+assert "$P -E -p [24.94,60.17] 1:50000" "p35-134-2" 0
+
+##############################
+
+assert "$P -r [64,58,10,20] 1:1000000" "o41
+o42
+o43
+p41,42
+p43,44
+q41,42
+q43,44
+r41,42
+r43,44
+s41,42
+s43,44
+t41,42,43,44" 0
+
+assert "$P -E -r [64,58,10,20] 1:1000000" "o41
+o42
+o43
+p41
+p42
+p43
+q41
+q42
+q43
+r41
+r42
+r43
+s41
+s42
+s43
+t41
+t42
+t43" 0
+
+assert "$P -r [-74,-78,10,20] 1:1000000" "xo18
+xo19
+xo20
+xp17,18
+xp19,20
+xq17,18
+xq19,20
+xr17,18
+xr19,20
+xs17,18
+xs19,20
+xt17,18,19,20" 0
+
+assert "$P -n o37-134-1" "[36.5,56.1666667,0.25,0.166666667]" 0
+assert "$P -n o37-134-1,2" "Error: nom_to_range: can't parse name: o37-134-1,2: maps A .. O should be single" 1
+assert "$P -E -n o37-134-1.2x2" "[36.5,56.1666667,0.5,0.333333333]" 0
+assert "$P -n o37-134-1.2x2" "Error: nom_to_range: can't parse name: o37-134-1.2x2: extra symbols after the name" 1
+
+assert "$P -c o37-134-1" "[36.625,56.25]" 0
+assert "$P -c o37-134-1,2" "Error: nom_to_range: can't parse name: o37-134-1,2: maps A .. O should be single" 1
+assert "$P -E -c o37-134-1.2x2" "[36.75,56.3333333]" 0
+assert "$P -c o37-134-1.2x2" "Error: nom_to_range: can't parse name: o37-134-1.2x2: extra symbols after the name" 1
+
+assert "$P -s o37-134-1 1 1" "o37-122-4" 0
+assert "$P -s o37-134-1,2 1 1" "Error: nom_to_range: can't parse name: o37-134-1,2: maps A .. O should be single" 1
+assert "$P -E -s o37-134-1.2x2 1 1" "o37-123-1" 0
+assert "$P -s o37-134-1.2x2 1 1" "Error: nom_to_range: can't parse name: o37-134-1.2x2: extra symbols after the name" 1
+
+assert "$P -S o37-134-1 100k" "o37-134" 0
+assert "$P -S o37-134-1 200k" "o37-31" 0
+assert "$P -S o37-134-1 500k" "o37-3" 0
+assert "$P -S o37-134-1 1M" "o37" 0
+
+assert "$P -S o37 500k" "o37-1
+o37-2
+o37-3
+o37-4" 0
+
+assert "$P -S o37-1 200k" "o37-01
+o37-02
+o37-03
+o37-07
+o37-08
+o37-09
+o37-13
+o37-14
+o37-15" 0
+
+assert "$P -S q37,38 500k" "q37-1,2
+q37-3,4
+q38-1,2
+q38-3,4" 0
+
+assert "$P -E -S q37,38 500k" "q37-1
+q37-2
+q37-3
+q37-4
+q38-1
+q38-2
+q38-3
+q38-4" 0
+
+assert "$P -E -S q37.2x2 1M" "q37
+q38
+r37
+r38" 0
+
+assert "$P -t q37,38 [0,0,10,10]" "" 1
+assert "$P -t q37,38 [35,63,2,2]" "" 0
+assert "$P -t q37,38 [0,0,180,80]" "" 0
+
