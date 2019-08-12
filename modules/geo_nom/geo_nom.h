@@ -4,6 +4,7 @@
 #include "geom/rect.h"
 #include <string>
 #include <set>
+#include <iostream>
 
 typedef enum {
  SC_1M,
@@ -13,12 +14,16 @@ typedef enum {
  SC_50k,
 } nom_scale_t;
 
-
+// input/output for nom_scale_t
+std::ostream & operator<< (std::ostream & s, const nom_scale_t & sc);
+std::istream & operator>> (std::istream & s, nom_scale_t & sc);
 
 /*
 Returns region and set scale for a given soviet nomenclature map.
 Coordinates are in Pulkovo-1942 datum.
 Returns empty dRect if name is bad.
+
+Supported scales: 1:1000000, 1:200000, 1:500000, 1:100000, 1:50000.
 
 Examples:
 1:1000000: xA-10  A-10  A10  P-11,12  T-11,12,13,14
@@ -35,10 +40,6 @@ Examples:
 T10-001  R36-01.2x2
 */
 dRect nom_to_range(const std::string & name, nom_scale_t & scale, bool ex = false);
-
-
-/// The same but throw away scale.
-//dRect nom_to_range(const std::string & name);
 
 
 /*

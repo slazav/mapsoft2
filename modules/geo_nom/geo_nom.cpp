@@ -5,6 +5,36 @@
 
 using namespace std;
 
+// input/output for nom_scale_t
+std::ostream & operator<< (std::ostream & s, const nom_scale_t & sc){
+  switch(sc){
+    case SC_1M:   s << "1:1000000"; break;
+    case SC_500k: s <<  "1:500000"; break;
+    case SC_200k: s <<  "1:200000"; break;
+    case SC_100k: s <<  "1:100000"; break;
+    case SC_50k:  s <<   "1:50000"; break;
+    default: throw Err() << "wrong map scale: " << sc;
+  }
+  return s;
+}
+
+std::istream & operator>> (std::istream & s, nom_scale_t & sc){
+  std::string str;
+  s >> str;
+  if (str == "1:1000000" || str == "1:1'000'000" || str == "1000000" ||
+      str == "1M" || str == "10km/cm" || str == "10km") {sc=SC_1M; return s;}
+  if (str == "1:500000" || str == "1:500'000" || str == "500000" ||
+      str == "500k" || str == "5km/cm" || str == "5km") {sc=SC_500k; return s;}
+  if (str == "1:200000" || str == "1:200'000" || str == "200000" ||
+      str == "200k" || str == "2km/cm" || str == "2km") {sc=SC_200k; return s;}
+  if (str == "1:100000" || str == "1:100'000" || str == "100000" ||
+      str == "100k" || str == "1km/cm" || str == "1km") {sc=SC_100k; return s;}
+  if (str == "1:50000" || str == "1:50'000" || str == "50000" ||
+      str == "50k" || str == "500m/cm" || str == "500m") {sc=SC_50k; return s;}
+  throw Err() << "can't parse nomenclature map scale: " << str;
+}
+
+
 // structure for a "simple" nomenclature name:
 // A-01, A-01-1, A-01-01, A-01-001, or A-01-001-1
 // zA-01, zA-01-1, zA-01-01, zA-01-001, or zA-01-001-1
