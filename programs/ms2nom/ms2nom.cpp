@@ -1,6 +1,5 @@
 #include <cstring>
 #include "geo_nom/geo_nom.h"
-#include "getopt/getopt.h"
 
 using namespace std;
 
