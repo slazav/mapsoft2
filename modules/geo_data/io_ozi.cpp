@@ -623,7 +623,7 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
     }
 
     // calculate m/pix
-    dPoint p1 = m.bbox2d_ref_img().cnt();
+    dPoint p1 = m.bbox_ref_img().cnt();
     dPoint p2 = p1 + dPoint(0,1);
     dPoint p3 = p1 + dPoint(1,0);
     gcnv3.frw(p1);

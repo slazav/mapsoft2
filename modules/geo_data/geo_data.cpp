@@ -11,7 +11,7 @@ double geo_dist_2d(const dPoint &p1, const dPoint &p2){
 }
 
 dRect
-GeoWptList::bbox2d() const {
+GeoWptList::bbox() const {
   dRect ret;
   for (auto i:*this) ret = expand(ret, i);
   return ret;
@@ -23,7 +23,7 @@ GeoWptList::clear_alt() {
 }
 
 dRect
-GeoTrk::bbox2d() const {
+GeoTrk::bbox() const {
   dRect ret;
   for (auto i:*this) ret.expand(i);
   return ret;

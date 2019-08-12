@@ -78,10 +78,10 @@ main(){
     assert (l3.length2d() == 10);
     assert (l3.length2d() == length2d(l3));
 
-    // bbox2d
-    assert(iLine().bbox2d() == iRect());
-    assert(l2.bbox2d() == iRect(0,0,1,2));
-    assert(l2.bbox2d() == bbox2d(l2));
+    // bbox
+    assert(iLine().bbox() == iRect());
+    assert(l2.bbox() == iRect(0,0,1,2));
+    assert(l2.bbox() == bbox(l2));
 
     // empty
     assert(iLine().is_empty() == true);

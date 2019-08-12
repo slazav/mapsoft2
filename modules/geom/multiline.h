@@ -142,9 +142,9 @@ struct MultiLine : std::vector<Line<T> > {
   }
 
   /// MultiLine bounding box.
-  Rect<T> bbox2d() const{
+  Rect<T> bbox() const{
     Rect<T> ret;
-    for(auto const & l:*this) ret.expand(l.bbox2d());
+    for(auto const & l:*this) ret.expand(l.bbox());
     return ret;
   }
 
@@ -212,7 +212,7 @@ double length2d(const MultiLine<T> & l){ return l.length2d(); }
 /// MultiLine bounding box
 /// \relates MultiLine
 template <typename T>
-Rect<T> bbox2d(const MultiLine<T> & l) { return l.bbox2d(); }
+Rect<T> bbox(const MultiLine<T> & l) { return l.bbox(); }
 
 
 

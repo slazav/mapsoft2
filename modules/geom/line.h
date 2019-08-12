@@ -160,7 +160,7 @@ struct Line : std::vector<Point<T> > {
   }
 
   /// Line bounding box in x-y plane
-  Rect<T> bbox2d() const{
+  Rect<T> bbox() const{
     if (this->size()<1) return Rect<T>();
     Point<T> min((*this)[0]), max((*this)[0]);
 
@@ -249,7 +249,7 @@ double length2d(const Line<T> & l){ return l.length2d(); }
 /// Line bounding box
 /// \relates Line
 template <typename T>
-Rect<T> bbox2d(const Line<T> & l) { return l.bbox2d(); }
+Rect<T> bbox(const Line<T> & l) { return l.bbox(); }
 
 /// Is line l just shifted version of this. Shift is returned
 /// \relates Line

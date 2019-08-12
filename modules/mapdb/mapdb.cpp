@@ -177,7 +177,7 @@ MapDB::add(const MapDBObj & o){
   objects.put(id, o.pack());
 
   // write geohash
-  geohash.put(id, o.type, o.bbox2d());
+  geohash.put(id, o.type, o.bbox());
 
   return id;
 }
@@ -193,13 +193,13 @@ MapDB::put(uint32_t id, const MapDBObj & o){
   o1.unpack(str);
 
   // Delete heohashes
-  geohash.del(id, o1.type, o1.bbox2d());
+  geohash.del(id, o1.type, o1.bbox());
 
   // write new object
   objects.put(id, o.pack());
 
   // write geohash
-  geohash.put(id, o.type, o.bbox2d());
+  geohash.put(id, o.type, o.bbox());
 
 }
 
@@ -226,7 +226,7 @@ MapDB::del(uint32_t id){
   o.unpack(str);
 
   // Delete heohashes
-  geohash.del(id, o.type, o.bbox2d());
+  geohash.del(id, o.type, o.bbox());
 
   // Delete the object
   objects.del(id);

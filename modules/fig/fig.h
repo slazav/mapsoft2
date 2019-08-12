@@ -272,11 +272,11 @@ struct Fig:std::list<FigObj>{
 
   /******************************************************************/
 
-  iRect bbox2d() const{
+  iRect bbox() const{
     if (size()<1) return iRect();
     const_iterator i=begin();
-    iRect ret = i->bbox2d();
-    while ((++i) != this->end()) ret.expand(i->bbox2d());
+    iRect ret = i->bbox();
+    while ((++i) != this->end()) ret.expand(i->bbox());
     return ret;
   }
 

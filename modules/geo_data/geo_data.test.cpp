@@ -58,7 +58,7 @@ main(){
       l1.push_back(GeoWpt(37.403169, 55.803693, 210));
       l1.push_back(GeoWpt(24.803224, 60.174925, 20));
       assert(l1.size() == 2);
-      assert(iRect(l1.bbox2d()*10) == iRect(248,558,125,43));
+      assert(iRect(l1.bbox()*10) == iRect(248,558,125,43));
       assert(l1[0].z == 210);
       assert(l1[1].z == 20);
       l1.clear_alt();
@@ -72,7 +72,7 @@ main(){
       l1.push_back(GeoTpt(24.803224, 60.174925, 20,0));
       assert(l1.size() == 2);
       assert(abs(l1.length() - 886625) < 1);
-      assert(iRect(l1.bbox2d()*10) == iRect(248,558,125,43));
+      assert(iRect(l1.bbox()*10) == iRect(248,558,125,43));
       assert(l1[0].z == 210);
       assert(l1[1].z == 20);
       l1.clear_alt();

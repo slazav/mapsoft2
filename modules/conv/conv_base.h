@@ -62,13 +62,13 @@ struct ConvBase{
   /// Convert a rectagle and return bounding box of resulting figure.
   /// Accuracy <acc> is measured in x-y plane in source units.
   virtual dRect frw_acc(const dRect & R, double acc) const {
-    return frw_acc(rect_to_line(R), acc).bbox2d(); }
+    return frw_acc(rect_to_line(R), acc).bbox(); }
 
   /// Convert a rectagle and return bounding box of resulting figure.
   /// Accuracy <acc> is measured in x-y plane in source units (and
   /// thus bck_acc and frw_acc are not symmetric).
   virtual dRect bck_acc(const dRect & R, double acc) const {
-    return bck_acc(rect_to_line(R), acc).bbox2d(); }
+    return bck_acc(rect_to_line(R), acc).bbox(); }
 
 /*
   /// Convert angle from y=const line at point p.

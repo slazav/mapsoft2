@@ -54,7 +54,7 @@ struct GeoWptList : std::vector<GeoWpt>{
   GeoWptList() {}
 
   /// get x-y range in lon-lat coords
-  dRect bbox2d() const;
+  dRect bbox() const;
 
   /// set the altitude of all points to undefined state
   void clear_alt();
@@ -91,7 +91,7 @@ struct GeoTrk : std::vector<GeoTpt>{
   GeoTrk() {}
 
   /// Get x-y range in lon-lat coords.
-  dRect bbox2d() const;
+  dRect bbox() const;
 
   /// Get length in m (using Haversine formula).
   double length() const;
@@ -168,14 +168,14 @@ struct GeoMap{
     ref.insert(std::make_pair(p1,p2)); }
 
   // bbox of reference points in image coordinates
-  dRect bbox2d_ref_img() const{
+  dRect bbox_ref_img() const{
     dRect r;
     for (auto pp:ref) r.expand(pp.first);
     return r;
   }
 
   // bbox of reference points in wgs84 latlong
-  dRect bbox2d_ref_wgs() const{
+  dRect bbox_ref_wgs() const{
     dRect r;
     for (auto pp:ref) r.expand(pp.second);
     return r;
@@ -184,7 +184,7 @@ struct GeoMap{
   /******************************************************************/
 
 //  /// Get x-y range in lon-lat coords (using border, ref, proj).
-//  dRect bbox2d() const;
+//  dRect bbox() const;
 };
 
 /********************************************************************/
@@ -198,7 +198,7 @@ struct GeoMapList : public std::vector<GeoMap>{
   GeoMapList() {}
 
 //  /// get x-y range in lon-lat coords
-//  dRect bbox2d() const;
+//  dRect bbox() const;
 };
 
 /******************************************************************/

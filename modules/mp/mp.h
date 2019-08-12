@@ -100,10 +100,10 @@ struct MP : std::list<MPObj>{
       TreSize=6000;
       RgnLimit=1024;
     }
-    dRect bbox2d() const{
+    dRect bbox() const{
       dRect r;
       for (auto o:*this)
-        for (auto l:o.Data) r.expand(l.bbox2d());
+        for (auto l:o.Data) r.expand(l.bbox());
       return r;
     }
 };

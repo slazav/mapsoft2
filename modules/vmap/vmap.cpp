@@ -58,7 +58,7 @@ VMapObj::VMapObj(){
 dRect
 VMap::range() const{
   dRect ret;
-  for (auto const & o:*this) ret.expand(o.bbox2d());
+  for (auto const & o:*this) ret.expand(o.bbox());
   return ret;
 }
 

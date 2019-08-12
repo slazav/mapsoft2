@@ -120,9 +120,9 @@ main(){
        cnv2.bck(p4);
        assert(dist2d(p3,p4) < 1); // 1px accuracy
 
-       assert(m.bbox2d_ref_img() == dRect("[151,386,2220,2624]"));
+       assert(m.bbox_ref_img() == dRect("[151,386,2220,2624]"));
 
-       dRect r = m.bbox2d_ref_wgs();
+       dRect r = m.bbox_ref_wgs();
        assert(dist2d(r.tlc(), dPoint(35.998051,55.833276)) < 1e-6);
        assert(abs(r.w - 1/4.0) < 1e-4);
        assert(abs(r.h - 1/6.0) < 1e-4);
