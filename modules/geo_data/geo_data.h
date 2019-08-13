@@ -115,13 +115,14 @@ struct GeoMap{
 
   std::string image;           ///< image file for the map (folder for tile maps)
   iPoint image_size;           ///< image dimensions (in image coordinates)
+  double image_dpi;            ///< image dpi value (default: 300)
 
-  iPoint tile_size;            ///< image tile dimensions (for tiled maps)
+  int tile_size;               ///< image tile dimensions (for tiled maps, default: 256)
   std::string tile_fmt;        ///< image tile format (for tiled maps)
   bool tile_yswap;             ///< are image tiles swapped in y (for tiled maps)
 
   /// Constructor: create empty map
-  GeoMap(): tile_yswap(false) {}
+  GeoMap(): image_dpi(300), tile_size(256), tile_yswap(false) {}
 
   /******************************************************************/
   // operators +,-,/,*
