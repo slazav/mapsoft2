@@ -5,7 +5,7 @@
 #include <string>
 #include <cmath>
 #include "geom/point.h"
-#include "geom/line.h"
+#include "geom/multiline.h"
 #include "geom/rect.h"
 #include "opt/opt.h"
 
@@ -110,7 +110,7 @@ struct GeoMap{
   std::string name; ///< name
   std::string comm; ///< comment
   std::map<dPoint,dPoint> ref; ///< reference points, mapping from image to geo coordinates
-  dLine border;                ///< map border (in image coordinates)
+  dMultiLine border;           ///< map border (in image coordinates)
   std::string proj;            ///< map projection (option string for libproj)
 
   std::string image;           ///< image file for the map (folder for tile maps)

@@ -9,9 +9,11 @@
 #include "err/err.h"
 #include "time_fmt/time_fmt.h"
 #include "iconv/iconv.h"
+#include "geom/poly_tools.h"
 
 #include "conv_geo.h"
 #include "geo_data.h"
+
 
 using namespace std;
 string ozi_default_enc("WINDOWS-1251");
@@ -340,6 +342,7 @@ void read_ozi (const char *fname, GeoData & data, const Opt & opts){
     // We care also about MC and MF fields because they
     // contain arbitrary trailing lines which should be skipped.
 
+    dLine brd;
     while(!f.eof()) {
       getline(f,s1);
       v = unpack_ozi_csv(s1, 4, 1);
@@ -354,13 +357,14 @@ void read_ozi (const char *fname, GeoData & data, const Opt & opts){
          dPoint p;
          p.x = atof(v[2].c_str());
          p.y = atof(v[3].c_str());
-         m.border.push_back(p);
+         brd.push_back(p);
       }
       if (v[0]=="IWH"){ // map width/height
         m.image_size.x = atoi(v[2].c_str());
         m.image_size.y = atoi(v[3].c_str());
       }
     }
+    m.border.push_back(brd);
     ml.push_back(m);
     ml.name = m.name;
     data.maps.push_back(ml);
@@ -599,12 +603,14 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
 
   // map border
   // TODO: reduce number of points to 100
-  // TODO: write MMPLL and MM1B
-  if (m.border.size()>0){
+
+  // convert border to a single-segment line
+  dLine brd = join_polygons(m.border);
+  if (brd.size()>0){
     f << "MM0,Yes\r\n"
-      << "MMPNUM," << m.border.size() << "\r\n";
+      << "MMPNUM," << brd.size() << "\r\n";
     int n=0;
-    for (auto p:m.border){
+    for (auto p:brd){
       n++;
       f << "MMPXY," << n << ","
         << int(rint(p.x)) << "," << int(rint(p.y)) << "\r\n";
@@ -613,7 +619,7 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
     n=0;
     ConvMap gcnv3(m, proj0); // image points -> latlong in map datum
     f.precision(8);
-    for (auto p: m.border ){
+    for (auto p: brd ){
       n++;
       dPoint p1(p); gcnv3.frw(p1);
       f << "MMPLL," << n << ","
