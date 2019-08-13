@@ -33,7 +33,7 @@ Opt::get (const std::string & key, const char *def) const {
 }
 
 void
-Opt::check_unknown (std::list<std::string> known) const {
+Opt::check_unknown (const std::list<std::string> & known) const {
   std::string unknown;
   int n=0;
   for (auto i : *this){
@@ -45,6 +45,17 @@ Opt::check_unknown (std::list<std::string> known) const {
                 << (n==1? "option:":"options:")
                 << unknown;
   }
+}
+
+void
+Opt::check_conflict(const std::list<std::string> & confl) const {
+  std::string res;
+  int n=0;
+  for (auto const & i : confl){
+    if (exists(i)) res += (n++ ? ", ": " ") + i;
+  }
+  if (n>1)
+    throw Err() << "options can not be used together:" << res;
 }
 
 // input/output operators for options

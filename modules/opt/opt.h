@@ -126,7 +126,10 @@ class Opt : public std::map<std::string,std::string>{
   bool exists (const std::string & key) const {return find(key) != end();}
 
   /// Find unknown options.
-  void check_unknown (std::list<std::string> known) const;
+  void check_unknown (const std::list<std::string> & known) const;
+
+  /// Find conflicting options.
+  void check_conflict(const std::list<std::string> & confl) const;
 };
 
 

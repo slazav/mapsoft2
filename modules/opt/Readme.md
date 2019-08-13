@@ -33,12 +33,23 @@ If no value is set for this key, the `def` object is returned.
 opts.put(opts1)
 ```
 
+- Find unknown options. List of known option names should be provided.
+```opts.check_unknown (const std::list<std::string> & known) const```
+
+- Find conflicting options. List of conflicting option names should be provided.
+```opts.check_conflict(const std::list<std::string> & confl) const```
+
 Opt object can be converted to a string and back (and thus used inside Opt class).
 String representation is a JSON object with string fields.
 
 
+
+
 -----------------
 ## Changelog:
+
+2019.08.13 V.Zavjalov 1.5:
+- add check_conflict() method
 
 2019.05.24 V.Zavjalov 1.4:
 - allow const char* default value in opt.get()

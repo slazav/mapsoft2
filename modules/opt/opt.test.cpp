@@ -70,6 +70,29 @@ try{
   catch (Err e) {
     assert(e.str() == "unknown option: int");
   }
+
+  /////////////////////////////////////////////
+  // check_conflict()
+  try {
+    std::list<std::string> k = {"int","b"};
+    O1.check_conflict(k);
+    k = {"b","c"};
+    O1.check_conflict(k);
+  }
+  catch (Err e) {
+    std::cerr << "Error:" << e.str() << "\n";
+    assert(false);
+  }
+
+  try {
+    std::list<std::string> k = {"a", "int", "d"};
+    O1.check_conflict(k);
+    assert(false);
+  }
+  catch (Err e) {
+    assert(e.str() == "options can not be used together: int, d");
+  }
+
   /////////////////////////////////////////////
   // dump and parse simple options:
 
