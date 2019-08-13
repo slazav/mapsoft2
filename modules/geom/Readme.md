@@ -253,13 +253,13 @@ Class for walking alone a line (2D).
   - `dPolyTester` -- same as `PolyTester<double>`
   - `iPolyTester` -- same as `PolyTester<int>`
 
-* bool point_in_polygon(const Point<T> & P, const Line<T> & L, const bool borders=true) --
+* `bool point_in_polygon(const Point<T> & P, const Line<T> & L, const bool borders=true)` --
   Check if one-segment polygon L covers point P.
 
-* bool rect_in_polygon(const Rect<T> & R, const Line<T> & L, const bool borders=true) --
+* `bool rect_in_polygon(const Rect<T> & R, const Line<T> & L, const bool borders=true)` --
   Check if one-segment polygon L covers (maybe partially) rectangle R.
 
-* Line<T> join_polygons(const MultiLine<T> & L) -- Join a multi-segment
+* `Line<T> join_polygons(const MultiLine<T> & L)` -- Join a multi-segment
   polygon into a single-segment one using shortest cuts.
 
 * `void remove_holes(MultiLine<T> & L)` -- Remove holes in a multi-segment
