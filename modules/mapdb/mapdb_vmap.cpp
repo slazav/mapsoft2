@@ -4,9 +4,11 @@
 #include <cstring>
 #include <string>
 
-#include "mapdb.h"
 #include "vmap/vmap.h"
 #include "read_words/read_words.h"
+#include "geom/poly_tools.h"
+
+#include "mapdb.h"
 
 using namespace std;
 
@@ -216,9 +218,8 @@ MapDB::export_vmap(const std::string & vmap_file, const Opt & opts){
     str = objects.get_next(key);
   }
 
-  // map border (only first segment)
-  dMultiLine brd = get_map_brd();
-  if (brd.size()>0) vmap_data.brd = *brd.begin();
+  // map border (convert to single-segment line)
+  vmap_data.brd = join_polygons(get_map_brd());
 
   // map name
   vmap_data.name = get_map_name();
