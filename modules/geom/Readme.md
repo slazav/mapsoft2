@@ -230,3 +230,40 @@ Class for walking alone a line (2D).
   - `lw.move_bck_to_node()` - move current point backward to the nearest node.
   - `lw.is_begin()` -- is current point at the first node.
   - `lw.is_end()`   -- is current point at the last node.
+
+-----------------
+## poly_tools.h -- extra polygon-related functions
+
+* `template <typename T> class PolyTester` -- 
+  Class for checking if a point is inside a polygon.
+
+  - `PolyTester(const Line<T> & L, bool horiz_ = true)` -- Constructor,
+    build the tester class for a given polygon (represented by Line object),
+    set test direction (vertical or horizontal).
+
+  - `std::vector<T> get_cr(T y)` -- Get vector of crossings of horizontal
+    (vertical) line y with the polygon.
+
+  - `bool test_cr(const std::vector<T> & cr, T x)` test if point `(x,y)`
+    is inside the polygon.
+
+  Typedefs:
+
+  - `dPolyTester` -- same as `PolyTester<double>`
+  - `iPolyTester` -- same as `PolyTester<int>`
+
+  At the moment boundary behavior is not well-defined.
+
+* bool point_in_polygon(const Point<T> & P, const Line<T> & L) --
+  Check if one-segment polygon L covers point P.
+
+* bool rect_in_polygon(const Rect<T> & R, const Line<T> & L) --
+  Check if one-segment polygon L covers (maybe partially) rectangle R.
+
+* Line<T> join_polygons(const MultiLine<T> & L) -- Join a multi-segment
+  polygon into a single-segment one using shortest cuts.
+
+* `void remove_holes(MultiLine<T> & L)` -- Remove holes in a multi-segment
+  polygon using shortest cuts.
+
+
