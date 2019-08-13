@@ -9,66 +9,73 @@ main(){
   try{
 
     // point_in_polygon (int)
-    {
-       iLine L("[[0,0],[8,0],[4,8]]");
-       assert(point_in_polygon(iPoint("[-1,-1]"),L) == false);
-       assert(point_in_polygon(iPoint("[7,3]"),L) == false);
-       assert(point_in_polygon(iPoint("[1,1]"),L) == true);
+    for (int b=0; b<2; b++){
+      iLine L("[[0,0],[8,0],[4,8]]");
+      assert(point_in_polygon(iPoint("[-1,-1]"),L,b) == false);
+      assert(point_in_polygon(iPoint("[7,3]"),L,b) == false);
+      assert(point_in_polygon(iPoint("[1,1]"),L,b) == true);
 
-       // borders
-       assert(point_in_polygon(iPoint("[0,0]"),L) == false);
-       assert(point_in_polygon(iPoint("[8,0]"),L) == true);
-       assert(point_in_polygon(iPoint("[4,0]"),L) == true);
-       assert(point_in_polygon(iPoint("[4,8]"),L) == false);
-       assert(point_in_polygon(iPoint("[1,2]"),L) == false);
-       assert(point_in_polygon(iPoint("[7,2]"),L) == true);
+      // borders
+      assert(point_in_polygon(iPoint("[0,0]"),L,b) == b);
+      assert(point_in_polygon(iPoint("[8,0]"),L,b) == b);
+      assert(point_in_polygon(iPoint("[4,0]"),L,b) == b);
+      assert(point_in_polygon(iPoint("[4,8]"),L,b) == b);
+      assert(point_in_polygon(iPoint("[1,2]"),L,b) == b);
+      assert(point_in_polygon(iPoint("[7,2]"),L,b) == b);
     }
 
     // rect_in_polygon (int)
-    {
-       iLine L("[[0,0],[8,0],[4,8]]");
-       assert(rect_in_polygon(iRect("[-2,-2,1,1]"),L) == false);
-       assert(rect_in_polygon(iRect("[7,3,1,1]"),L) == false);
+    for (int b=0; b<2; b++){
+      iLine L("[[0,0],[8,0],[4,8]]");
+      assert(rect_in_polygon(iRect("[-2,-2,1,1]"),L,b) == false);
+      assert(rect_in_polygon(iRect("[7,3,1,1]"),L,b) == false);
+      assert(rect_in_polygon(iRect(),L,b) == false);
+      assert(rect_in_polygon(iRect("[1,1,0,0]"),L,b) == true);
 
-       // borders
-       assert(rect_in_polygon(iRect("[-1,-1,0,0]"),L) == false);
-       assert(rect_in_polygon(iRect("[8,0,1,1]"),L) == false);
-       assert(rect_in_polygon(iRect("[4,-1,1,1]"),L) == true);
-       assert(rect_in_polygon(iRect("[4,8,1,1]"),L) == false);
-       assert(rect_in_polygon(iRect("[0,2,1,1]"),L) == true);
-       assert(rect_in_polygon(iRect("[7,2,1,1]"),L) == false);
+      // borders
+      assert(rect_in_polygon(iRect("[0,0,0,0]"),L,b) == b);
+      assert(rect_in_polygon(iRect("[-1,-1,1,1]"),L,b) == b);
+      assert(rect_in_polygon(iRect("[8,0,1,1]"),L,b)  == b);
+      assert(rect_in_polygon(iRect("[4,-1,1,1]"),L,b) == b);
+      assert(rect_in_polygon(iRect("[4,8,1,1]"),L,b) == b);
+      assert(rect_in_polygon(iRect("[0,2,1,1]"),L,b) == b);
+      assert(rect_in_polygon(iRect("[7,2,1,1]"),L,b) == b);
     }
 
     // point_in_polygon (double)
-    {
-       dLine L("[[0,0],[8,0],[4,8]]");
-       assert(point_in_polygon(dPoint("[-1,-1]"),L) == false);
-       assert(point_in_polygon(dPoint("[7,3]"),L) == false);
-       assert(point_in_polygon(dPoint("[1,1]"),L) == true);
+    for (int b=0; b<2; b++){
+      dLine L("[[0,0],[8,0],[4,8]]");
+      assert(point_in_polygon(dPoint("[-1,-1]"),L,b) == false);
+      assert(point_in_polygon(dPoint("[7,3]"),L,b) == false);
+      assert(point_in_polygon(dPoint("[1,1]"),L,b) == true);
 
-       // borders
-       assert(point_in_polygon(dPoint("[0,0]"),L) == false);
-       assert(point_in_polygon(dPoint("[8,0]"),L) == true);
-       assert(point_in_polygon(dPoint("[4,0]"),L) == true);
-       assert(point_in_polygon(dPoint("[4,8]"),L) == false);
-       assert(point_in_polygon(dPoint("[1,2]"),L) == false);
-       assert(point_in_polygon(dPoint("[7,2]"),L) == true);
+      // borders
+      assert(point_in_polygon(dPoint("[0,0]"),L,b) == b);
+      assert(point_in_polygon(dPoint("[8,0]"),L,b) == b);
+      assert(point_in_polygon(dPoint("[4,0]"),L,b) == b);
+      assert(point_in_polygon(dPoint("[4,8]"),L,b) == b);
+      assert(point_in_polygon(dPoint("[1,2]"),L,b) == b);
+      assert(point_in_polygon(dPoint("[7,2]"),L,b) == b);
     }
 
     // rect_in_polygon (double)
-    {
-       dLine L("[[0,0],[8,0],[4,8]]");
-       assert(rect_in_polygon(dRect("[-2,-2,1,1]"),L) == false);
-       assert(rect_in_polygon(dRect("[7,3,1,1]"),L) == false);
+    for (int b=0; b<2; b++){
+      dLine L("[[0,0],[8,0],[4,8]]");
+      assert(rect_in_polygon(dRect("[-2,-2,1,1]"),L,b) == false);
+      assert(rect_in_polygon(dRect("[7,3,1,1]"),L,b) == false);
+      assert(rect_in_polygon(dRect(),L,b) == false);
+      assert(rect_in_polygon(dRect("[1,1,0,0]"),L,b) == true);
 
-       // borders
-       assert(rect_in_polygon(dRect("[-1,-1,0,0]"),L) == false);
-       assert(rect_in_polygon(dRect("[8,0,1,1]"),L) == false);
-       assert(rect_in_polygon(dRect("[4,-1,1,1]"),L) == true);
-       assert(rect_in_polygon(dRect("[4,8,1,1]"),L) == false);
-       assert(rect_in_polygon(dRect("[0,2,1,1]"),L) == true);
-       assert(rect_in_polygon(dRect("[7,2,1,1]"),L) == false);
+      // borders
+      assert(rect_in_polygon(dRect("[0,0,0,0]"),L,b) == b);
+      assert(rect_in_polygon(dRect("[-1,-1,1,1]"),L,b) == b);
+      assert(rect_in_polygon(dRect("[8,0,1,1]"),L,b)  == b);
+      assert(rect_in_polygon(dRect("[4,-1,1,1]"),L,b) == b);
+      assert(rect_in_polygon(dRect("[4,8,1,1]"),L,b) == b);
+      assert(rect_in_polygon(dRect("[0,2,1,1]"),L,b) == b);
+      assert(rect_in_polygon(dRect("[7,2,1,1]"),L,b) == b);
     }
+
 
 
     // join_polygons, remove_holes

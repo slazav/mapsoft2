@@ -237,27 +237,26 @@ Class for walking alone a line (2D).
 * `template <typename T> class PolyTester` -- 
   Class for checking if a point is inside a polygon.
 
-  - `PolyTester(const Line<T> & L, bool horiz_ = true)` -- Constructor,
-    build the tester class for a given polygon (represented by Line object),
-    set test direction (vertical or horizontal).
+  - `PolyTester(const Line<T> & L, const bool horiz = true, const bool borders=true)` --
+    Constructor, build the tester class for a given polygon.
+    Arguments: L - polygon represented by Line object, horiz - test direction,
+    borders -- include polygon borders.
 
   - `std::vector<T> get_cr(T y)` -- Get vector of crossings of horizontal
     (vertical) line y with the polygon.
 
   - `bool test_cr(const std::vector<T> & cr, T x)` test if point `(x,y)`
-    is inside the polygon.
+    is inside the polygon (cr is crossing vector build with y coordinate).
 
   Typedefs:
 
   - `dPolyTester` -- same as `PolyTester<double>`
   - `iPolyTester` -- same as `PolyTester<int>`
 
-  At the moment boundary behavior is not well-defined.
-
-* bool point_in_polygon(const Point<T> & P, const Line<T> & L) --
+* bool point_in_polygon(const Point<T> & P, const Line<T> & L, const bool borders=true) --
   Check if one-segment polygon L covers point P.
 
-* bool rect_in_polygon(const Rect<T> & R, const Line<T> & L) --
+* bool rect_in_polygon(const Rect<T> & R, const Line<T> & L, const bool borders=true) --
   Check if one-segment polygon L covers (maybe partially) rectangle R.
 
 * Line<T> join_polygons(const MultiLine<T> & L) -- Join a multi-segment
