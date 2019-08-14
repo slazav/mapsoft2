@@ -495,3 +495,33 @@ range_to_nomlist(const dRect & range, const nom_scale_t rscale, const bool singl
   return ret;
 }
 
+/********************************************************************/
+// Functions for working with cordinate prefixes and lon0 parameter
+// in soviet map coordinates
+
+double
+lon2lon0(const double lon){
+  double lon0 =floor( lon/6.0 ) * 6 + 3;
+  while (lon0>180)  lon0-=360;
+  while (lon0<-180) lon0+=360;
+  return lon0;
+}
+
+int
+lon2pref(const double lon){
+  double lon0 = lon2lon0(lon);
+  return (lon0<0 ? 60:0) + (lon0-3)/6 + 1;
+}
+
+double
+crdx2lon0(const double X){
+  int pref= floor(X/1e6);
+  if (pref==0) throw Err() << "zero coordinate prefix";
+  return (pref-(pref>30 ? 60:0))*6-3;
+}
+
+double
+crdx2nonpref(const double X){
+  return X - floor( X/1e6 ) * 1e6;
+}
+
