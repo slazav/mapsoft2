@@ -34,6 +34,9 @@ class GeoTiles{
 
   /********************************************************/
 
+  // get tsize
+  int get_tsize() const {return tsize;}
+
   /// Converts XY point from Spherical Mercator EPSG:900913 to lon/lat in WGS84 Datum.
   dPoint m_to_ll(const dPoint & p) const {
     dPoint ret(p/shift * 180.0);
