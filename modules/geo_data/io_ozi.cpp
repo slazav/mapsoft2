@@ -550,11 +550,9 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
 
   for (auto p:m.ref){
     n++;
-    int x = (int)p.first.x;
-    int y = (int)p.first.y;
     f << "Point" << setw(2) << setfill('0') << n << ",xy,"
-      << setw(5) << setfill(' ') << x << ','
-      << setw(5) << setfill(' ') << y << ','
+      << setw(5) << setfill(' ') << (int)rint(p.first.x) << ','
+      << setw(5) << setfill(' ') << (int)rint(p.first.y) << ','
       << "in, deg,";
     dPoint pp(p.second);
     if (!grid) {
