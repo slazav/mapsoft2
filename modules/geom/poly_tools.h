@@ -140,6 +140,7 @@ template<typename T>
 Line<T> join_polygons(const MultiLine<T> & L){
 
   Line<T> ret;
+  if (L.size()==0) return ret;
 
   typename MultiLine<T>::const_iterator l = L.begin();
   ret = *l; l++;

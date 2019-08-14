@@ -97,6 +97,16 @@ main(){
         "[[[0,0],[1,1],[2,1],[1,2],[1,1],[0,0],"
         "[10,0],[10,10],[9,9],[8,9],[9,8],[9,9],[10,10],[0,10]],"
         "[[11,1],[12,1],[11,2]]]"));
+
+      ml = dMultiLine("[]");
+      assert(join_polygons(ml) == dLine("[]"));
+      remove_holes(ml);
+      assert(ml == dMultiLine("[]"));
+
+      ml = dMultiLine("[[]]");
+      assert(join_polygons(ml) == dLine("[]"));
+      remove_holes(ml);
+      assert(ml == dMultiLine("[[]]"));
     }
 
   }
