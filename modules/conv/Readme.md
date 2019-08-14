@@ -23,6 +23,11 @@ Note that in some cases forward and backward conversions are different
   Convert a line. Each segment can be divided to provide
   accuracy `<acc>` in source units (both for `frw_acc` and `bck_acc`).
 
+- `dMultiLine frw_acc(const dMultiLine & l, double acc) const`
+- `dMultiLine bck_acc(const dMultiLine & l, double acc) const` --
+  Convert a MultiLine. Each sub-line is converted by frw_acc/bck_acc.
+  Accuracy `<acc>` is in source units (both for `frw_acc` and `bck_acc`).
+
 - `dRect frw_acc(const dRect & R, double acc) const`,
 - `dRect bck_acc(const dRect & R, double acc) const` --
   Convert a rectagle and return bounding box of resulting figure.

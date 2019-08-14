@@ -59,6 +59,16 @@ struct ConvBase{
   // because accuracy is always calculated on the src side.
   virtual dLine bck_acc(const dLine & l, double acc) const;
 
+  /// Convert a MultiLine. Each segment of each line
+  /// can be divided to provide accuracy <acc> in source units.
+  virtual dMultiLine frw_acc(const dMultiLine & l, double acc) const;
+
+  /// Convert a MultiLine. Each segment of each line can be
+  /// divided to provide accuracy <acc> in source units.
+  // Note that bck_acc and frw_acc are not symmetric
+  // because accuracy is always calculated on the src side.
+  virtual dMultiLine bck_acc(const dMultiLine & l, double acc) const;
+
   /// Convert a rectagle and return bounding box of resulting figure.
   /// Accuracy <acc> is measured in x-y plane in source units.
   virtual dRect frw_acc(const dRect & R, double acc) const {

@@ -78,6 +78,17 @@ main(){
        assert(iLine(10.0*cnv.bck_acc(l1, 0.05)) ==
               iLine("[[0,0],[1,0],[5,0],[9,0],[14,2],[20,4],[26,7],[31,10]]"));
        cnv.rescale_dst(0.1);
+
+     }
+     { // test frw_acc/bck_acc multiline
+       dLine l1("[[0,0],[10,10]]");
+       dMultiLine ml1, ml2;
+       ml1.push_back(l1);
+       ml1.push_back(l1);
+
+       ml2.push_back(cnv.bck_acc(l1,1));
+       ml2.push_back(cnv.bck_acc(l1,1));
+       assert(cnv.bck_acc(ml1, 1) == ml2);
     }
 
     { // test frw_acc/bck_acc line conversions

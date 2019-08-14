@@ -86,6 +86,23 @@ ConvBase::bck_acc(const dLine & l, double acc) const {
   }
   return ret;
 }
+
+dMultiLine
+ConvBase::frw_acc(const dMultiLine & ml, double acc) const{
+  dMultiLine ret;
+  for (auto const &l:ml) ret.push_back(frw_acc(l,acc));
+  return ret;
+}
+
+
+dMultiLine
+ConvBase::bck_acc(const dMultiLine & ml, double acc) const{
+  dMultiLine ret;
+  for (auto const &l:ml) ret.push_back(bck_acc(l,acc));
+  return ret;
+}
+
+
 /*
 
 double
