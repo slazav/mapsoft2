@@ -23,6 +23,10 @@ main(){
   assert(-ml2 == -iMultiLine("[[[0,1],[2,3]],[[4,5],[6,7]]]"));
   assert(-ml2 ==  iMultiLine("[[[0,-1],[-2,-3]],[[-4,-5],[-6,-7]]]"));
 
+  // reading single-segment multiline:
+  assert(iMultiLine("[[1,1],[2,2]]") == iMultiLine("[[[1,1],[2,2]]]"));
+  assert(iMultiLine("[[]]") != iMultiLine("[]")); // exception
+
   // +,-,*,/
   iPoint p(1,2);
   assert((ml2+p) == iMultiLine("[[[1,3],[3,5]],[[5,7],[7,9]]]"));

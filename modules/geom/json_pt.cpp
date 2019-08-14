@@ -49,8 +49,14 @@ json_to_mline(json_t *J) {
   dMultiLine ret;
   json_t *L;
   size_t index;
-  json_array_foreach(J, index, L){
-    ret.push_back(json_to_line(L));
+  try {
+    // try single line
+    dLine l =json_to_line(J);
+    if (l.size()>0) ret.push_back(l);
+  }
+  catch (Err e){
+    // try multiline
+    json_array_foreach(J, index, L){ ret.push_back(json_to_line(L)); }
   }
   return ret;
 }

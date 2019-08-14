@@ -208,6 +208,9 @@ Line with multiple segments (std::vector of Line).
 - MultiLine can be converted to a string and back
   (and thus used inside Opt class). String representation is a
   JSON array with zero or more lines (example: `[[[1,2,1],[3,4,2],[0,0]], [[1,1],[2,2]], []]`).
+  JSON string with non-empty Line can be read as a single-segment MultiLine:
+  `MultiLine("[[1,1],[2,2]]") == MultiLine("[[[1,1],[2,2]]]")`, but
+  `MultiLine("[]") != MultiLine("[[]]")`.
 
 -----------------
 ## LineWalker class

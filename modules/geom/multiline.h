@@ -285,7 +285,7 @@ double dist(const MultiLine<T> & A, const MultiLine<T> & B){
 // input/output
 
 /// \relates MultiLine
-/// \brief Output operator: print Line as a JSON array of lines
+/// \brief Output operator: print MultiLine as a JSON array of lines
 template <typename T>
 std::ostream & operator<< (std::ostream & s, const MultiLine<T> & l){
   s << "[";
@@ -295,7 +295,8 @@ std::ostream & operator<< (std::ostream & s, const MultiLine<T> & l){
   return s;
 }
 
-/// \brief Input operator: read Line from a JSON array of points
+/// \brief Input operator: read MultiLine from a JSON array of lines.
+/// \note Single line is also allowed.
 /// \note This >> operator is different from that in
 /// Point or Rect. It always reads the whole stream and
 /// returns error if there are extra characters.
