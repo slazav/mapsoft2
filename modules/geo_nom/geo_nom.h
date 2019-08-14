@@ -7,11 +7,11 @@
 #include <iostream>
 
 typedef enum {
- SC_1M,
- SC_500k,
- SC_200k,
- SC_100k,
- SC_50k,
+ SC_1M  = 1000000,
+ SC_500k = 500000,
+ SC_200k = 200000,
+ SC_100k = 100000,
+ SC_50k  = 50000,
 } nom_scale_t;
 
 // input/output for nom_scale_t
