@@ -159,7 +159,7 @@ Line is a std::vector of Point.
   - `invert(l)`, `rint(l)`, `to_floor(l)`, `ceil(l)`, `abs(l)`, `rotate2d(l,pc,a)`, `flatten(l)` --
     do same operations, returned modified line, keep original line unchanged.
 
-  - `rect_to_line(r)` -- convert a rectangle to line.
+  - `rect_to_line(r, closed=true)` -- convert a rectangle to line.
   - `dist(l1,l2)` -- "distance" between lines, `sqrt(sum(dist(l1[i],l2[i])^2))`,
                      returns +inf for lines fith different number of points.
 
