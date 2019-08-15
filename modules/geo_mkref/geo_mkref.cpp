@@ -58,8 +58,7 @@ geo_mkref(Opt & o){
 
     // Border in map points (1pt accuracy);
     // We convert a closed line, then removing the last point.
-    dLine brd = cnv1.bck_acc(rect_to_line(R, true), 1);
-    brd.resize(brd.size()-1);
+    dLine brd = open(cnv1.bck_acc(rect_to_line(R, true), 0.5));
 
     // Refpoints:
     dLine pts_r = rect_to_line(R, false),
@@ -202,7 +201,7 @@ geo_mkref(Opt & o){
       // We need ConvGeo because of convenient bck_acc function.
       ConvGeo cnv(map.proj); // webmercator -> wgs84
 
-      map.border = cnv.bck_acc(brd,1); // lonlat -> mercator m
+      map.border = cnv.bck_acc(brd,0.5); // lonlat -> mercator m
       for (auto & l:map.border) for (auto & pt:l)
         pt = tcalc.m_to_px(pt, z); // mercator m -> px
       map.border -= tcalc.get_tsize()*tile_range.tlc();
@@ -262,8 +261,8 @@ geo_mkref(Opt & o){
     if (o.exists("coords_wgs")){
       // try coordinate range
       try {
-        range = cnv.bck_acc(o.get("coords", dRect()),1);
-        dLine b = cnv.bck_acc(rect_to_line(range, true), 1);
+        range = cnv.bck_acc(o.get("coords", dRect()),0.5);
+        dLine b = cnv.bck_acc(rect_to_line(range, true), 0.5);
         b.open();
         brd.push_back(b);
         goto coord_end_r2;
@@ -272,7 +271,7 @@ geo_mkref(Opt & o){
       catch (Err e){
       }
       try {
-        brd = cnv.bck_acc(o.get("coords", dMultiLine()),1);
+        brd = cnv.bck_acc(o.get("coords", dMultiLine()),0.5);
         range = brd.bbox();
         goto coord_end_r2;
       }
@@ -290,7 +289,7 @@ geo_mkref(Opt & o){
       brd = o.get("border", dMultiLine())/k;
 
     if (o.exists("border_wgs"))
-      brd = cnv.bck_acc(o.get("border", dMultiLine()),1);
+      brd = cnv.bck_acc(o.get("border", dMultiLine()),0.5);
 
     /* border and range are set now */
 
