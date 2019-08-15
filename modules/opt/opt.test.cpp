@@ -174,6 +174,11 @@ try{
   assert(O1.get<int>("h3") == 124);
   assert(O1.get<int>("h4") == 0);
 
+  Opt O4("{\"k1\":\"v1\", \"k2\":\"v2\", \"k3\":\"100\"}");
+  assert(O4.get("k1", std::string()) == "v1");
+  assert(O4.get("k2", std::string()) == "v2");
+  assert(O4.get("k3", 0) == 100);
+
 //  assert(O1.get("h1", 0.0) == 255);
 //  assert(O1.get("h2", 0.0) == 254);
 

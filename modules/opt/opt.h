@@ -91,6 +91,13 @@ it will be represented like this:
 class Opt : public std::map<std::string,std::string>{
   public:
 
+  /// Trivial constructor
+  Opt(){}
+
+  /// Constructor: make Opt using string "{'k1':'v1','k2':'v2'}"
+  Opt(const std::string & s) { *this = str_to_type<Opt>(s);}
+
+
   /// Set option value for a given key.
   template<typename T>
   void put (const std::string & key, const T & val) {

@@ -41,12 +41,18 @@ opts.put(opts1)
 
 Opt object can be converted to a string and back (and thus used inside Opt class).
 String representation is a JSON object with string fields.
-
-
+`Opt` object can be constructed from a JSON string:
+```
+Opt o("{\"k1\":\"v1\", \"k2\":\"v2\"}");
+```
 
 
 -----------------
 ## Changelog:
+
+2019.08.16 V.Zavjalov 1.5:
+- Add constructor with string argument
+  Opt("{\"k1\":\"v1\", \"k2\":\"v2\"}");
 
 2019.08.13 V.Zavjalov 1.5:
 - add check_conflict() method
