@@ -9,6 +9,20 @@ main(){
     // avoid zero lat or lon because it is some small number,
     // different on i586 and x86_64
     GeoTiles calc;
+
+    assert(calc.get_tsize() == 256);
+    assert(type_to_str(calc.ll_to_m(dPoint(30,67))) == "[3339584.72,10156058.7]");
+    assert(type_to_str(calc.m_to_ll(dPoint(3339584.72,10156058.7))) == "[30,66.9999999]");
+
+//  calc.px_to_m(const dPoint & p, const int z) const {
+//  calc.px2m(const int z) const { return ires/(1<<z); }
+//  calc.px_to_tile(const dPoint & p) const {
+//  calc.tile_gtile(const iPoint &p, const int z) const {
+//
+//  calc.tile_to_qtree(const iPoint &p, const int z) const {
+
+
+
     assert(type_to_str(calc.tile_to_range(0,0,0)) == "[-180,-85.0511288,360,170.102258]");
     assert(type_to_str(calc.tile_to_range(0,0,1)) == "[-180,-85.0511288,180,85.0511288]");
     assert(type_to_str(calc.tile_to_range(1,0,2)) == "[-90,-85.0511288,90,18.5378683]");
