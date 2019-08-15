@@ -2,10 +2,10 @@
 #include <iomanip>
 
 #include "geo_data/conv_geo.h"
+#include "geo_tiles/geo_tiles.h"
 #include "geo_nom/geo_nom.h"
-#include "geom/line.h"
+#include "geom/multiline.h"
 #include "err/err.h"
-//#include "geo_tiles/geo_tiles.h"
 
 #include "geo_mkref.h"
 
@@ -17,12 +17,12 @@ using namespace std;
 GeoMap
 geo_mkref(Opt & o){
   GeoMap map;
+  GeoTiles tcalc;
 
   if (!o.exists("ref"))
     throw Err() << "mk_ref: reference type (option ref) should be set";
 
   string reftype = o.get("ref",string());
-
 
   /***************************************/
   if (reftype == "nom"){
@@ -87,252 +87,223 @@ geo_mkref(Opt & o){
 
   /***************************************/
   if (reftype == "tms_tile" || reftype == "google_tile"){
+
+    bool G = (reftype == "google_tile");
+    int  z = o.get("zindex",-1);
+    list<string> confl = {"tiles", "coords"};
+    o.check_conflict(confl);
+
+    // get tile range and WGS84 border
+    iRect tile_range;
+    dMultiLine brd;
+
+    if (o.exists("tiles")){
+      try {
+        iPoint p = o.get("tiles", iPoint());
+        if (p.z>0) z = p.z;
+        tile_range = iRect(p, p+iPoint(1,1));
+      }
+      catch (Err e){
+        tile_range = o.get("tiles", iRect());
+      }
+
+      if (tile_range.empty() || tile_range.zsize())
+        throw Err() << "geo_mkref: empty tile range: " << o.get("tiles", string());
+
+    }
+
+    if (o.exists("coords")){
+
+      // try coordinate point
+      try {
+        dPoint p = o.get("coords", dPoint());
+        iPoint t;
+        if (G) t = tcalc.pt_to_gtile(p, z);
+        else   t = tcalc.pt_to_tile(p, z);
+        tile_range = iRect(t, t+iPoint(1,1));
+        goto coord_end;
+      }
+      catch (Err e){}
+
+      // try coordinate range
+      try {
+        dRect r = o.get("coords", dRect());
+        if (G) tile_range = tcalc.range_to_gtiles(r, z);
+        else   tile_range = tcalc.range_to_tiles(r, z);
+        goto coord_end;
+      }
+
+      // try border
+      catch (Err e){}
+      try {
+        brd = o.get("coords", dMultiLine());
+        if (G) tile_range = tcalc.range_to_gtiles(brd.bbox(), z);
+        else   tile_range = tcalc.range_to_tiles(brd.bbox(), z);
+        goto coord_end;
+      }
+      catch (Err e){}
+
+      throw Err() << "geo_mkref: can't parse coords option: " << o.get("coords", string());
+
+      coord_end:;
+    }
+
+    // Override border
+    if (o.exists("border"))
+      brd = o.get("border", dMultiLine());
+
+    // here tile_range should be set to non-zero rectangle
+    // border may be set
+    if (tile_range.empty() || tile_range.zsize())
+      throw Err() << "geo_mkref: empty tile range, use coords or tiles opotions";
+
+    // z-index should be set here
+    if (z<0) throw Err() << "geo_mkref: z-index not set";
+
+
+    //std::cerr << "Z:   " << z << "\n";
+    //std::cerr << "RNG: " << tile_range << "\n";
+    //std::cerr << "BRD: " << brd << "\n";
+
+    /*** fill map parameters ***/
+
+    // map name
+    map.name = type_to_str(tile_range);
+
+    // map projection
+    map.proj = "+proj=webmerc +datum=WGS84"; // from libproj-5.1.0
+    // map.prog = "+proj=merc +a=6378137 +b=6378137 +nadgrids=@null +no_defs";
+
+    // map magnification
+    double mag = o.get("mag",1);
+
+    // find coordinates of opposite corners:
+    dPoint tlc = tcalc.tile_to_range(tile_range.tlc(),z).tlc();
+    dPoint brc = tcalc.tile_to_range(tile_range.brc(),z).brc();
+
+    // Refpoints:
+    map.image_size = iPoint(tile_range.w, tile_range.h)*tcalc.get_tsize() * mag;
+    dLine pts_w = rect_to_line(dRect(tlc,brc), false);
+    dLine pts_r = rect_to_line(dRect(dPoint(0,0),map.image_size));
+
+    for (int i = 0; i<pts_r.size(); i++)
+       map.ref.insert(make_pair(pts_r[i],pts_w[i]));
+
+    // convert border to map pixels
+    if (brd.size()>0){
+      // We need ConvGeo because of convenient bck_acc function.
+      ConvGeo cnv(map.proj); // webmercator -> wgs84
+
+      map.border = cnv.bck_acc(brd,1); // lonlat -> mercator m
+      for (auto & l:map.border) for (auto & pt:l)
+        pt = tcalc.m_to_px(pt, z); // mercator m -> px
+      map.border -= tcalc.get_tsize()*tile_range.tlc();
+      map.border *= mag;
+    }
     return map;
   }
 
   /***************************************/
   if (reftype == "proj"){
+
+    // map projection
+    map.proj = o.get("proj", string());
+    if (map.proj == "") throw Err() << "Option --proj is not set";
+
+    // try to build conversion, proj -> wgs84
+    ConvGeo cnv(map.proj);
+
+    // map resolution
+    double scale = cnv.is_src_deg() ? 0.01:1000;
+    scale = o.get("scale",scale);
+    map.image_dpi = o.get("dpi",300);
+
+    // factor (map coordinates)/(pixels)
+    double k = scale * 2.54/ map.image_dpi;
+    cnv.rescale_src(k); // now cnv1: map pixels -> wgs84
+
+    // get bounding box and border (in map pixels)
+    dRect range;
+    dMultiLine brd;
+
+    list<string> confl = {"coords", "coords_wgs"};
+    o.check_conflict(confl);
+    confl = {"border", "border_wgs"};
+    o.check_conflict(confl);
+
+
+    if (o.exists("coords")){
+      // try coordinate range
+      try {
+        range = o.get("coords", dRect())/k;
+        goto coord_end_r1;
+      }
+      // try border
+      catch (Err e){
+      }
+      try {
+        brd = o.get("coords", dMultiLine())/k;
+        range = brd.bbox();
+        goto coord_end_r1;
+      }
+      catch (Err e){}
+      throw Err() << "geo_mkref: can't parse coords option: " << o.get("coords", string());
+      coord_end_r1:;
+    }
+
+    if (o.exists("coords_wgs")){
+      // try coordinate range
+      try {
+        range = cnv.bck_acc(o.get("coords", dRect()),1);
+        dLine b = cnv.bck_acc(rect_to_line(range, true), 1);
+        b.open();
+        brd.push_back(b);
+        goto coord_end_r2;
+      }
+      // try border
+      catch (Err e){
+      }
+      try {
+        brd = cnv.bck_acc(o.get("coords", dMultiLine()),1);
+        range = brd.bbox();
+        goto coord_end_r2;
+      }
+      catch (Err e){}
+      throw Err() << "geo_mkref: can't parse coords option: " << o.get("coords", string());
+      coord_end_r2:;
+    }
+
+    // check if range is set
+    if (range.empty() || range.zsize())
+      throw Err() << "geo_mkref: empty coordinate range";
+
+    // Override border
+    if (o.exists("border"))
+      brd = o.get("border", dMultiLine())/k;
+
+    if (o.exists("border_wgs"))
+      brd = cnv.bck_acc(o.get("border", dMultiLine()),1);
+
+    /* border and range are set now */
+
+
+    // refpoints
+    dLine pts_r = rect_to_line(range, false);
+    dLine pts_w(pts_r);
+
+    map.border = brd - range.tlc();
+    pts_r -= range.tlc();
+
+    cnv.frw(pts_w);
+    for (int i = 0; i<pts_r.size(); i++)
+       map.ref.insert(make_pair(pts_r[i],pts_w[i]));
+
+    // image_size
+    map.image_size = dPoint(range.w, range.h);
+
     return map;
   }
 
   /***************************************/
   throw Err() << "mk_ref: unknown reference type: " << reftype;
 }
-/*
-  // default values
-  double dpi=300;
-  double google_dpi=-1;
-  double rscale=100000;
-  double rs_factor=1.0; // proj units/m
-  bool verbose=o.exists("verbose");
-  bool sw=!o.exists("swap_y");
-  std::string proj = "+datum=WGS84 +proj=lonlat";
-
-  // first step: process geom, nom, google options
-  // -- create border and 4 refpoints in wgs84 lonlat
-  // -- set map_proj and proj options
-  // -- change defauld dpi and rscale if needed
-  dRect geom;
-  dLine refs;
-  Options proj_opts;
-
-  // rectangular map: no border, no margins, arbitrary projection
-  // rectangular range in this projection
-  if (o.exists("geom")){
-    incompat_warning (o, "geom", "wgs_geom");
-    incompat_warning (o, "geom", "wgs_brd");
-    incompat_warning (o, "geom", "trk_brd");
-    incompat_warning (o, "geom", "nom");
-    incompat_warning (o, "geom", "google");\
-
-    dRect geom = o.get<dRect>("geom");
-    if (geom.empty()) throw Err() << "mk_ref: bad geometry";
-
-    proj = o.get<Proj>("proj", "+datum=WGS84 +proj=lonlat");
-
-    if ((proj == Proj("tmerc")) && (geom.x>=1e6)){
-      double lon0 = convs::lon_pref2lon0(geom.x);
-      geom.x = convs::lon_delprefix(geom.x);
-      proj_opts.put<double>("lon0", lon0);
-    }
-    if (o.exists("lon0"))
-    proj_opts.put("lon0", o.get<double>("lon0"));
-    convs::pt2pt cnv(Datum("wgs84"), Proj("lonlat"), Options(),
-                     datum, proj, proj_opts);
-
-    refs = rect2line(geom, true, sw);
-    ret.border = cnv.line_bck(refs, 1e-6);
-    refs.resize(4);
-    cnv.line_bck_p2p(refs);
-  }
-  else if (o.exists("wgs_geom")){
-    incompat_warning (o, "wgs_geom", "geom");
-    incompat_warning (o, "wgs_geom", "wgs_brd");
-    incompat_warning (o, "wgs_geom", "trk_brd");
-    incompat_warning (o, "wgs_geom", "nom");
-    incompat_warning (o, "wgs_geom", "google");\
-
-    dRect geom = o.get<dRect>("wgs_geom");
-    if (geom.empty())
-     throw Err() << "error: bad geometry";
-
-    proj = o.get<Proj>("proj", Proj("tmerc"));
-    proj_opts.put<double>("lon0",
-      o.get("lon0", convs::lon2lon0(geom.x+geom.w/2)));
-
-    convs::pt2pt cnv(Datum("wgs84"), Proj("lonlat"), Options(),
-                     Datum("wgs84"), proj, proj_opts);
-
-    if (verbose) cerr << "mk_ref: geom = " << geom << "\n";
-    refs = rect2line(geom, true, sw);
-    refs.resize(4);
-    // border is set to be rectanglar in proj:
-    ret.border =
-      cnv.line_bck(rect2line(cnv.bb_frw(geom, 1e-6), true, sw), 1e-6);
-  }
-  else if (o.exists("wgs_brd")){
-    incompat_warning (o, "wgs_brd", "geom");
-    incompat_warning (o, "wgs_brd", "wgs_geom");
-    incompat_warning (o, "wgs_brd", "trk_brd");
-    incompat_warning (o, "wgs_brd", "nom");
-    incompat_warning (o, "wgs_brd", "google");\
-
-    ret.border = o.get<dLine>("wgs_brd");
-    if (ret.border.size()<3)
-     throw Err() << "error: bad border line";
-
-    ret.border.push_back(ret.border[0]);
-
-    proj = o.get<Proj>("proj", Proj("tmerc"));
-    proj_opts.put<double>("lon0",
-      o.get("lon0", convs::lon2lon0(ret.border.range().CNT().x)));
-
-    if (verbose) cerr << "mk_ref: brd = " << ret.border << "\n";
-    refs = generalize(ret.border, -1, 5); // 5pt
-    refs.resize(4);
-  }
-  else if (o.exists("trk_brd")){
-    incompat_warning (o, "wgs_brd", "geom");
-    incompat_warning (o, "wgs_brd", "wgs_geom");
-    incompat_warning (o, "wgs_brd", "wgs_brd");
-    incompat_warning (o, "wgs_brd", "nom");
-    incompat_warning (o, "wgs_brd", "google");\
-
-    geo_data W;
-    io::in(o.get<string>("trk_brd"), W);
-    if (W.trks.size()<1)
-      throw Err() << "error: file with a track is expected in trk_brd option";
-
-    ret.border = W.trks[0];
-    if (ret.border.size()<3)
-     throw Err() << "error: bad border line";
-
-    ret.border.push_back(ret.border[0]);
-
-    proj = o.get<Proj>("proj", Proj("tmerc"));
-    proj_opts.put<double>("lon0",
-      o.get("lon0", convs::lon2lon0(ret.border.range().CNT().x)));
-
-    if (verbose) cerr << "mk_ref: brd = " << ret.border << "\n";
-    refs = generalize(ret.border, -1, 5); // 5pt
-    refs.resize(4);
-  }
-  // nom map
-  else if (o.exists("nom")){
-    incompat_warning (o, "nom", "geom");
-    incompat_warning (o, "nom", "wgs_geom");
-    incompat_warning (o, "nom", "wgs_brd");
-    incompat_warning (o, "nom", "trk_brd");
-    incompat_warning (o, "nom", "google");
-
-    proj=Proj("tmerc");
-    datum=Datum("pulkovo");
-
-    int rs;
-    string name=o.get<string>("nom", string());
-    dRect geom = convs::nom_to_range(name, rs);
-    if (geom.empty())
-      throw Err() << "mk_ref: can't get geometry for map name \"" << name << "\"";
-
-    rscale = rs;
-    double lon0 = convs::lon2lon0(geom.x+geom.w/2.0);
-    proj_opts.put("lon0", lon0);
-    convs::pt2pt cnv(Datum("wgs84"), Proj("lonlat"), Options(),
-                     datum, Proj("lonlat"), proj_opts);
-
-    if (verbose) cerr << "mk_ref: geom = " << geom << "\n";
-    refs = rect2line(geom, true, sw);
-    ret.border = cnv.line_bck(refs, 1e-6);
-    refs.resize(4);
-    cnv.line_bck_p2p(refs);
-  }
-  // google tile
-  else if (o.exists("google")){
-    incompat_warning (o, "google", "geom");
-    incompat_warning (o, "google", "wgs_geom");
-    incompat_warning (o, "google", "wgs_brd");
-    incompat_warning (o, "google", "trk_brd");
-    incompat_warning (o, "google", "nom");
-
-    datum=Datum("wgs84");
-    proj=Proj("google");
-
-    vector<int> crd = read_int_vec(o.get<string>("google"));
-    if (crd.size()!=3)
-      throw Err() << "error: wrong --google coordinates";
-
-    int x=crd[0];
-    int y=crd[1];
-    int z=crd[2];
-    //
-
-    Tiles tcalc;
-    dRect geom = tcalc.gtile_to_range(x,y,z);
-
-    if (verbose) cerr << "mk_ref: geom = " << geom << "\n";
-    refs = rect2line(geom, true,sw);
-    ret.border = refs;
-    refs.resize(4);
-
-    rscale=o.get<double>("rscale", rscale);
-
-    double lat=refs.range().CNT().y;
-    rs_factor = 1/cos(M_PI*lat/180.0);
-
-    // m -> tile pixel
-    double k = 1/tcalc.px2m(z);
-    dpi = k * 2.54/100.0*rscale*rs_factor;
-  }
-  else
-    throw Err() << "error: can't make map reference without"
-                << " --geom or --nom or --google setting";
-
-  ret.map_proj=proj;
-  ret.map_datum=datum;
-  ret.proj_opts=proj_opts;
-
-  // step 2: calculate conversion coeff between map proj units and
-  // output map points
-
-  rscale=o.get<double>("rscale", rscale);
-  if (o.get<string>("dpi", "") == "fig") dpi= 1200/1.05;
-  else dpi=o.get<double>("dpi", dpi);
-
-  dpi*=o.get<double>("mag", 1.0);
-
-  // put real dpi and rscale back to options
-  o.put("dpi", dpi);
-  o.put("rscale", rscale);
-
-  double k = 100.0/2.54 * dpi / rscale / rs_factor;
-
-  if (verbose) cerr << "mk_ref: rscale = " << rscale
-    << ", dpi = " << dpi << ", k = " << k << "\n";
-
-  // step 3:  setting refpoints
-  convs::pt2wgs cnv(datum, proj, proj_opts);
-  dLine refs_r(refs);
-  cnv.line_bck_p2p(refs_r);
-
-  refs_r *= k; // to out units
-  refs_r -= refs_r.range().TLC();
-  double h = refs_r.range().h;
-
-  // swap y if needed
-  if (sw)
-    for (int i=0;i<refs_r.size();i++)
-      refs_r[i].y = h - refs_r[i].y;
-
-  // add refpoints to our map
-  for (int i=0;i<refs.size();i++)
-    ret.push_back(g_refpoint(refs[i], refs_r[i]));
-
-  // step 3:  converting border
-  convs::map2wgs brd_cnv(ret);
-  ret.border = brd_cnv.line_bck(ret.border);
-  ret.border = generalize(ret.border, 1, -1); // 1 unit accuracy
-  ret.border.resize(ret.border.size()-1);
-  return ret;
-}
-
-*/

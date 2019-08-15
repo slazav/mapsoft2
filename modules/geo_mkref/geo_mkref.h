@@ -20,29 +20,31 @@ Options:
   --mag <factor> -- rescale map without changing dpi setting (default 1).
 
 --ref tms_tile
-  --tile <tile-point>
-  --tile_range <tile-rect>
-  --wgs_range <wgs84 rect>
-  --wgs_border <wgs84 line>
-  --wgs_border <wgs84 multiline>
+--ref google_tile -- create a single tile or rectangular area with multiple tiles
 
---ref google_tile
-  --tile <tile-point>
-  --tile_range <tile-rect>
-  --wgs_range <wgs84 rect>
-  --wgs_border <wgs84 line>
-  --wgs_border <wgs84 multiline>
+  --zindex <integer>  -- tile zindex
+
+  --tiles <point or rectangle>
+      Tile or tile range. If single point is given then non-zero z-coordinate
+       overrides zindex option. --tiles "[1,2,3]" is same as --tiles "[1,2]" --zindex 0.
+
+  --coords <wgs84 point, rectangle, line, or multiline>
+      Build a map which covers given figure. If argument is Line or MultiLine then
+      border is set to this line (can be ovrriden by --border option).
+
+  --border <wgs84 line or multiline>
+      Set map border.
 
 --ref proj
-  --proj <proj string>
-  --range <range in proj coords>
-  --border <line in proj coords>
+  --proj <proj string> -- set projection (libproj parameter string)
+  --coords <rect, line or multiline>
+  --coords_wgs <rect, line or multiline>
   --border <multiline in proj coords>
-  --wgs_range  <wgs84 range>
-  --wgs_border <wgs84 multiline>
-  --wgs_border <wgs84 line>
+  --border_wgs <multiline in proj coords>
   --dpi
-  --rscale
+  --scale
+    Scale (projection units per map cm), default 1000 for non-degree projections,
+    1/100 for degree projections.
 
 */
 GeoMap geo_mkref(Opt & o);
