@@ -18,6 +18,12 @@ Options:
   --name <name> -- map name (mapsoft2 extensions are allowed).
   --dpi <double> -- map resolution in dots per inch (default 300).
   --mag <factor> -- rescale map without changing dpi setting (default 1).
+  --margins <pixels>
+  --top_margin <pixels>
+  --left_margin <pixels>
+  --right_margin <pixels>
+  --bottom_margin <pixels>
+    Set margins between map border and image boundary.
 
 --ref tms_tile
 --ref google_tile -- create a single tile or rectangular area with multiple tiles

@@ -68,12 +68,20 @@ geo_mkref(Opt & o){
     cnv2.frw(pts_w);  // pulkovo -> wgs
 
     // image origin and size
-    // TODO: image margins
-    iPoint tlc = floor(pts_r.bbox().tlc());
-    iPoint brc = floor(pts_r.bbox().brc());
-    brd -= tlc;
-    pts_r -= tlc;
-    map.image_size = brc-tlc;
+    iRect image_bbox = ceil(pts_r.bbox());
+    // margins
+    int mt,ml,mr,mb;
+    mt=ml=mr=mb=o.get("margins", 0);
+    mt=o.get("top_margin", mt);
+    ml=o.get("left_margin", ml);
+    mr=o.get("right_margin", mr);
+    mb=o.get("bottom_margin", mb);
+    image_bbox = iRect(image_bbox.x-ml, image_bbox.y-mt,
+                       image_bbox.w+ml+mr, image_bbox.h+mt+mb);
+
+    brd -= image_bbox.tlc();
+    pts_r -= image_bbox.tlc();
+    map.image_size = iPoint(image_bbox.w, image_bbox.h);
 
     // Add map border:
     map.border.push_back(brd);
