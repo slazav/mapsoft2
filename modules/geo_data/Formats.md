@@ -292,6 +292,8 @@ Output pptions:
  - verbose (default 0)
  - ozi_enc (default: Windows-1251)
  - ozi_map_grid -- write grid coordinates in reference points (default 0)
+ - ozi_map_wgs  -- always use wgs84 datum for map coordinates (default 0)
+
 ----------
 ## Mapsoft XML format
 

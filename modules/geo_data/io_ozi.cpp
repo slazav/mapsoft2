@@ -131,6 +131,7 @@ string convert_proj2ozi(const string & s){
   if (pr=="latlong") return "Latitude/Longitude";
   if (pr=="tmerc")   return "Transverse Mercator";
   if (pr=="merc")    return "Mercator";
+  if (pr=="webmerc") return "Mercator"; // not exact
   if (pr=="lcc")     return "Lambert Conformal Conic";
   throw Err() << "io_ozi: unsupported projection: " << pr;
 }
@@ -524,7 +525,14 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
 
   IConv cnv("UTF-8", opts.get("ozi_enc", ozi_default_enc).c_str() );
 
-  string ozi_datum = convert_datum2ozi(m.proj);
+  // Usually wgs84 datum can be used here.
+  string ozi_datum = "WGS 84";
+
+  //if wgs84=false try to use map datum if it is known.
+  if (!opts.get("ozi_map_wgs", false)){
+    try { ozi_datum = convert_datum2ozi(m.proj); }
+    catch (Err e) {};
+  }
 
   // header
   f << "OziExplorer Map Data File Version 2.2\r\n"
