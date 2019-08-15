@@ -48,6 +48,13 @@ ConvGeo::bck_pt(dPoint & p) const{
   if (sc_src!=1.0) {p.x/=sc_src; p.y/=sc_src;}
 }
 
+bool
+ConvGeo::is_src_deg() const {
+  return pj_is_latlong(pj_src.get());}
+
+bool
+ConvGeo::is_dst_deg() const {
+  return pj_is_latlong(pj_dst.get());}
 
 /**********************************************************/
 

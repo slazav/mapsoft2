@@ -24,6 +24,10 @@ public:
   /// Backward point conversion.
   void bck_pt(dPoint & p) const;
 
+  // are source/destination coordinates in degrees (not meters)
+  bool is_src_deg() const;
+  bool is_dst_deg() const;
+
 private:
   std::shared_ptr<void> pj_src, pj_dst;
 };

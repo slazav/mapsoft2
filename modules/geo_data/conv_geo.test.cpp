@@ -13,6 +13,13 @@ main(){
     ConvGeo cnv2(proj_krass);           // krass -> wgs
     ConvGeo cnv3(proj_wgs, proj_krass); // wgs -> krass
 
+    assert(cnv1.is_src_deg() == true);
+    assert(cnv1.is_dst_deg() == true);
+    assert(cnv2.is_src_deg() == false);
+    assert(cnv2.is_dst_deg() == true);
+    assert(cnv3.is_src_deg() == true);
+    assert(cnv3.is_dst_deg() == false);
+
     dPoint p1(25.651054, 60.976941, 0);
     dPoint p1a(427091, 6763808, -11);
 
