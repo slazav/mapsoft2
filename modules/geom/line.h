@@ -218,6 +218,21 @@ struct Line : std::vector<Point<T> > {
   /// Project the line into x-y plane
   void flatten() { for (auto & p:*this) p.z=0; }
 
+  // "close" the line: add last point equals to the first one
+  // (if it is not equal)
+  void close(){
+    if (this->size()>1 && *(this->rbegin())!=*(this->begin()))
+      this->push_back(*(this->begin()));
+  }
+
+  // "open" the line: if the last point equals to the first one
+  // then remove it.
+  void open(){
+    if (this->size()>1 && *(this->rbegin())==*(this->begin()))
+      this->resize(this->size()-1);
+  }
+
+
 };
 
 /******************************************************************/
@@ -318,6 +333,18 @@ Line<T> flatten(const Line<T> & l) {
   for (auto & p:ret) p.z=0;
   return ret;
 }
+
+// "close" the line: add last point equals to the first one
+// (if it is not equal)
+template <typename T>
+Line<T> close(const Line<T> & l){
+  Line<T> ret(l); ret.close(); return ret; }
+
+// "open" the line: if the last point equals to the first one
+// then remove it.
+template <typename T>
+Line<T> open(const Line<T> & l){
+  Line<T> ret(l); ret.open(); return ret; }
 
 /******************************************************************/
 // additional functions

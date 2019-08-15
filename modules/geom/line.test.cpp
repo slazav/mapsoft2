@@ -165,6 +165,21 @@ main(){
 
   }
 
+  // open/close
+  {
+    dLine l("[[1,2],[2,3],[4,5]]");
+    assert(open(l) == l);
+    assert(close(l) == dLine("[[1,2],[2,3],[4,5],[1,2]]"));
+    assert(close(close(l)) == close(l));
+    assert(open(close(l)) == l);
+    assert(close(open(l)) == close(l));
+
+    assert(open(dLine("[]")) == dLine("[]"));
+    assert(close(dLine("[]")) == dLine("[]"));
+    assert(open(dLine("[[1,1]]")) == dLine("[[1,1]]"));
+    assert(close(dLine("[[1,1]]")) == dLine("[[1,1]]"));
+  }
+
   // rect_to_line
   assert(rect_to_line(iRect(1,1,2,2)) == iLine("[[1,1],[3,1],[3,3],[1,3],[1,1]]"));
   assert(rect_to_line(iRect(1,1,2,2), true)  == iLine("[[1,1],[3,1],[3,3],[1,3],[1,1]]"));

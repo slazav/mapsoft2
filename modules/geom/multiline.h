@@ -181,6 +181,12 @@ struct MultiLine : std::vector<Line<T> > {
   /// Project the multiline into x-y plane
   void flatten() { for (auto & l:*this) l.flatten(); }
 
+  // "close" each segment.
+  void close(){ for (auto &l:*this) l.close(); }
+
+  // "open" each segment.
+  void open(){ for (auto &l:*this) l.open(); }
+
 };
 
 /******************************************************************/
@@ -266,6 +272,18 @@ MultiLine<T> flatten(const MultiLine<T> & ml) {
   for (auto & l:ml) ret.push_back(flatten(l));
   return ret;
 }
+
+// "close" the line: add last point equals to the first one
+// (if it is not equal)
+template <typename T>
+MultiLine<T> close(const MultiLine<T> & l){
+  MultiLine<T> ret(l); ret.close(); return ret; }
+
+// "open" the line: if the last point equals to the first one
+// then remove it.
+template <typename T>
+MultiLine<T> open(const MultiLine<T> & l){
+  MultiLine<T> ret(l); ret.open(); return ret; }
 
 /******************************************************************/
 // additional functions

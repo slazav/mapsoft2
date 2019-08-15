@@ -162,6 +162,18 @@ main(){
 
   }
 
+  // open/close
+  {
+    dMultiLine l("[[[1,2],[2,3],[4,5]],[[1,1]],[],[[1,1],[2,2]]]");
+    assert(open(l) == l);
+    assert(close(l) == dMultiLine("[[[1,2],[2,3],[4,5],[1,2]],[[1,1]],[],[[1,1],[2,2],[1,1]]]"));
+    assert(close(close(l)) == close(l));
+    assert(open(close(l)) == l);
+    assert(close(open(l)) == close(l));
+  }
+
+
+
   // dist
   assert(dist(
     dMultiLine("[ [[0,0],[1,1],[2,2]], [[1,1]], [] ]"),

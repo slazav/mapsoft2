@@ -155,9 +155,12 @@ Line is a std::vector of Point.
   - `l.to_abs()` -- set coordinates to their absolute values.
   - `l.rotate2d(pc,a)` -- rotate around central point pc by angle a (rad, clockwise) in x-y plane.
   - `l.flatten()` -- project the line to x-y plane (set z to 0).
+  - `l.close()` -- "close" the line (if it is not closed): add last point equals to the first one.
+  - `l.open()` --  "open" the line: if the last point equals to the first one remove it.
 
-  - `invert(l)`, `rint(l)`, `to_floor(l)`, `ceil(l)`, `abs(l)`, `rotate2d(l,pc,a)`, `flatten(l)` --
-    do same operations, returned modified line, keep original line unchanged.
+  - `invert(l)`, `rint(l)`, `to_floor(l)`, `ceil(l)`, `abs(l)`,
+    `rotate2d(l,pc,a)`, `flatten(l)`, `close(l)`, `open(l)` --
+    do same operations, return modified line, keep original line unchanged.
 
   - `rect_to_line(r, closed=true)` -- convert a rectangle to line.
   - `dist(l1,l2)` -- "distance" between lines, `sqrt(sum(dist(l1[i],l2[i])^2))`,
@@ -198,12 +201,15 @@ Line with multiple segments (std::vector of Line).
   - `p.to_abs()` -- set coordinates to their absolute values.
   - `l.rotate2d(pc,a)` -- rotate around central point pc by angle a (rad, clockwise) in x-y plane.
   - `l.flatten()` -- project the line to x-y plane (set z to 0).
+  - `l.close()` -- "close" the line (if it is not closed): add last point equals to the first one.
+  - `l.open()` --  "open" the line: if the last point equals to the first one remove it.
 
-  - `rint(l)`, `to_floor(l)`, `ceil(l)`, `abs(l)`, `rotate2d(l,pc,a)`, `flatten(l)` --
-    do same operations, returned modified point, keep original point unchanged.
+  - `rint(l)`, `to_floor(l)`, `ceil(l)`, `abs(l)`, `rotate2d(l,pc,a)`,
+    `flatten(l)`, `close(l)`, `open(l)` --
+     do same operations, return modified point, keep original point unchanged.
 
   - `dist(l1,l2)` -- "distance" between multilines, `sqrt(sum(dist(l1[i],l2[i])^2))`,
-                     returns +inf for multylines fith different number of segments.
+                     returns +inf for multilines with different number of segments.
 
 - MultiLine can be converted to a string and back
   (and thus used inside Opt class). String representation is a
