@@ -162,6 +162,43 @@ struct GeoMap{
   /// Divide image coordinates by k (scale the map)
   GeoMap operator/ (const double k) const { GeoMap ret(*this); return ret*=1.0/k; }
 
+
+  /******************************************************************/
+  // operators <=>
+
+  /// Less then operator
+  bool operator< (const GeoMap & other) const {
+    if (name != other.name) return (name < other.name);
+    if (comm != other.comm) return (comm < other.comm);
+    if (ref != other.ref) return (ref < other.ref);
+    if (border != other.border) return (border < other.border);
+    if (proj != other.proj) return (proj < other.proj);
+    if (image != other.image) return (image < other.image);
+    if (image_size != other.image_size) return (image_size < other.image_size);
+    if (image_dpi != other.image_dpi) return (image_dpi < other.image_dpi);
+    if (tile_size != other.tile_size) return (tile_size < other.tile_size);
+    if (tile_fmt != other.tile_fmt) return (tile_fmt < other.tile_fmt);
+    if (tile_yswap != other.tile_yswap) return (tile_yswap < other.tile_yswap);
+    return false;
+  }
+
+  /// Equality opertator
+  bool operator== (const GeoMap & other) const {
+    return (name==other.name)&&(comm==other.comm)&&(ref==other.ref)&&
+           (border==other.border)&&(proj==other.proj)&&(image==other.image)&&
+           (image_size==other.image_size)&&(image_dpi==other.image_dpi)&&
+           (tile_size==other.tile_size)&&(tile_fmt==other.tile_fmt)&&
+           (tile_yswap==other.tile_yswap);
+  }
+
+  // derived operators:
+  bool operator!= (const GeoMap & other) const { return !(*this==other); } ///< operator!=
+  bool operator>= (const GeoMap & other) const { return !(*this<other);  } ///< operator>=
+  bool operator<= (const GeoMap & other) const { return *this<other || *this==other; } ///< operator<=
+  bool operator>  (const GeoMap & other) const { return !(*this<=other); } ///< operator>
+
+  /******************************************************************/
+
   void add_ref(const double x1, const double y1, const double x2, const double y2){
     ref.insert(std::make_pair(dPoint(x1,y1), dPoint(x2,y2))); }
 

@@ -80,6 +80,17 @@ main(){
       assert(std::isnan(l1[1].z));
     }
 
+    { // GeoMap
+      GeoMap m1,m2;
+      assert(m1==m2);
+      assert(m1<=m2);
+      assert(m1>=m2);
+
+      assert(m1.image_dpi == 300);
+      assert(m1.tile_size == 256);
+      assert(m1.tile_yswap == false);
+    }
+
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";
