@@ -166,7 +166,6 @@ geo_mkref(const Opt & o){
     // z-index should be set here
     if (z<0) throw Err() << "geo_mkref: z-index not set";
 
-
     //std::cerr << "Z:   " << z << "\n";
     //std::cerr << "RNG: " << tile_range << "\n";
     //std::cerr << "BRD: " << brd << "\n";
