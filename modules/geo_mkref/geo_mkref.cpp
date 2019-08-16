@@ -86,8 +86,7 @@ geo_mkref(const Opt & o){
     map.border.push_back(brd);
 
     // Add refpoints:
-    for (int i = 0; i<pts_r.size(); i++)
-       map.ref.insert(make_pair(pts_r[i],pts_w[i]));
+    map.add_ref(pts_r, pts_w);
 
     return map;
   }
@@ -191,10 +190,8 @@ geo_mkref(const Opt & o){
     // Refpoints:
     map.image_size = iPoint(tile_range.w, tile_range.h)*tcalc.get_tsize() * mag;
     dLine pts_w = rect_to_line(dRect(tlc,brc), false);
-    dLine pts_r = rect_to_line(dRect(dPoint(0,0),map.image_size));
-
-    for (int i = 0; i<pts_r.size(); i++)
-       map.ref.insert(make_pair(pts_r[i],pts_w[i]));
+    dLine pts_r = rect_to_line(dRect(dPoint(0,0),map.image_size), false);
+    map.add_ref(pts_r, pts_w);
 
     // convert border to map pixels
     if (brd.size()>0){
@@ -293,17 +290,15 @@ geo_mkref(const Opt & o){
 
     /* border and range are set now */
 
-
-    // refpoints
+    // Refpoints
     dLine pts_r = rect_to_line(range, false);
     dLine pts_w(pts_r);
-
-    map.border = brd - range.tlc();
     pts_r -= range.tlc();
-
     cnv.frw(pts_w);
-    for (int i = 0; i<pts_r.size(); i++)
-       map.ref.insert(make_pair(pts_r[i],pts_w[i]));
+    map.add_ref(pts_r, pts_w);
+
+    // border
+    map.border = brd - range.tlc();
 
     // image_size
     map.image_size = dPoint(range.w, range.h);
