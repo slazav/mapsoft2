@@ -3,7 +3,7 @@
 #include <cassert>
 #include <iostream>
 #include "iconv.h"
-#include "err/err.h"
+#include "err/assert_err.h"
 
 int
 main(){
@@ -21,8 +21,8 @@ main(){
     assert( C2("привет!") == "привет!");
 
     // unknown charset:
-    try { IConv C3("UTF8", "AAA"); }
-    catch (Err e) { assert(e.str() == "can't do iconv conversion from UTF8 to AAA"); }
+    assert_err(IConv C3("UTF8", "AAA"),
+      "can't do iconv conversion from UTF8 to AAA");
 
   }
   catch (Err e) {
