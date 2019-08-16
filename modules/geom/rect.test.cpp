@@ -3,7 +3,7 @@
 #include <cassert>
 #include "rect.h"
 #include "opt/opt.h"
-
+#include "err/assert_err.h"
 
 void test_expand_v(const iRect & r0, const int v, const iRect & rr){
     iRect r(r0);
@@ -110,11 +110,12 @@ main(){
   assert (iRect(r1.blc(),r1.trc()) == r1);
 
   r1=iRect();
-  try { r1.tlc(); } catch (Err e) { assert(e.str() == "Empty rectangle in tlc call"); }
-  try { r1.trc(); } catch (Err e) { assert(e.str() == "Empty rectangle in trc call"); }
-  try { r1.blc(); } catch (Err e) { assert(e.str() == "Empty rectangle in blc call"); }
-  try { r1.brc(); } catch (Err e) { assert(e.str() == "Empty rectangle in brc call"); }
-  try { r1.cnt(); } catch (Err e) { assert(e.str() == "Empty rectangle in cnt call"); }
+
+  assert_err(r1.tlc(), "Empty rectangle in tlc call");
+  assert_err(r1.trc(), "Empty rectangle in trc call");
+  assert_err(r1.blc(), "Empty rectangle in blc call");
+  assert_err(r1.brc(), "Empty rectangle in brc call");
+  assert_err(r1.cnt(), "Empty rectangle in cnt call");
 
   // +,-,*,-
   r1=iRect(10,10, 20,20);
@@ -132,12 +133,11 @@ main(){
   assert(-r1 == iRect(-12,-12,8,8));
 
   r1=iRect();
-  try { r1+=iPoint(); } catch (Err e) { assert(e.str() == "Empty rectangle in operator+"); }
-  try { r1-=iPoint(); } catch (Err e) { assert(e.str() == "Empty rectangle in operator-"); }
-  try { r1/=5; } catch (Err e) { assert(e.str() == "Empty rectangle in operator/"); }
-  try { r1*=5; } catch (Err e) { assert(e.str() == "Empty rectangle in operator*"); }
-  try { -r1;   } catch (Err e) { assert(e.str() == "Empty rectangle in operator-"); }
-
+  assert_err(r1+=iPoint(), "Empty rectangle in operator+");
+  assert_err(r1-=iPoint(), "Empty rectangle in operator-");
+  assert_err(r1/=5, "Empty rectangle in operator/");
+  assert_err(r1*=5, "Empty rectangle in operator*");
+  assert_err(-r1, "Empty rectangle in operator-");
 
   // <=>
   r1=iRect();
@@ -212,15 +212,14 @@ main(){
     test_expand_v(iRect(1,1,2,2),  1, iRect(0,0,4,4));
     test_expand_v(iRect(1,1,2,2), -1, iRect(2,2,0,0));
     test_expand_v(iRect(1,1,2,2), -2, iRect());
-    try { iRect().expand(1); } catch (Err e) { assert(e.str() == "Empty rectangle in expand()"); }
-    try { expand(iRect(),1); } catch (Err e) { assert(e.str() == "Empty rectangle in expand()"); }
+    assert_err(iRect().expand(1), "Empty rectangle in expand()");
+    assert_err(expand(iRect(),1), "Empty rectangle in expand()");
 
     test_expand_vv(iRect(1,1,2,2),  2,1, iRect(-1,0,6,4));
     test_expand_vv(iRect(1,1,2,2),  0,-1, iRect(1,2,2,0));
     test_expand_vv(iRect(1,1,2,2),  -2,0, iRect());
-    try { expand(iRect(),1,1); } catch (Err e) { assert(e.str() == "Empty rectangle in expand()"); }
-    try { iRect().expand(1,1); } catch (Err e) { assert(e.str() == "Empty rectangle in expand()"); }
-
+    assert_err(expand(iRect(),1,1), "Empty rectangle in expand()");
+    assert_err(iRect().expand(1,1), "Empty rectangle in expand()");
 
     iPoint p0(0,0), p1(1,2), p2(2,3);
     test_expand_pt(iRect(),      p1, iRect(p1,p1));
@@ -294,14 +293,14 @@ main(){
     assert(str_to_type<dRect>(" [ 0 , 0 , 0 , 0 ] ") == dRect(0,0,0,0));
     assert(str_to_type<dRect>(" [ 1e-10 , 1e5 , 0.1 , 1.23 ] ") == dRect(1e-10,1e5,0.1,1.23));
 
-    try { str_to_type<dRect>(" [ 0 , 1 "); }
-    catch (Err e) { assert(e.str() == "can't parse value:  [ 0 , 1 "); }
+    assert_err(str_to_type<dRect>(" [ 0 , 1 "),
+      "can't parse value:  [ 0 , 1 ");
 
-    try { str_to_type<dRect>("[0,1]"); }
-    catch (Err e) { assert(e.str() == "can't parse value: [0,1]"); }
+    assert_err(str_to_type<dRect>("[0,1]"),
+      "can't parse value: [0,1]");
 
-    try { str_to_type<dRect>("[0,1,1,1]m"); }
-    catch (Err e) { assert(e.str() == "can't parse value: [0,1,1,1]m"); }
+    assert_err(str_to_type<dRect>("[0,1,1,1]m"),
+      "can't parse value: [0,1,1,1]m");
   }
 
   }

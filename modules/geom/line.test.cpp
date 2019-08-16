@@ -3,6 +3,7 @@
 #include <cassert>
 #include "line.h"
 #include "opt/opt.h"
+#include "err/assert_err.h"
 
 int
 main(){
@@ -220,14 +221,17 @@ main(){
   assert(type_to_str(str_to_type<iLine>("[]")) ==
          "[]");
 
-  try { str_to_type<iLine>("[[0,0],[2,0],[2,2]]a"); }
-  catch (Err e) {assert(e.str() == "end of file expected near 'a'");}
+  assert_err(
+    str_to_type<iLine>("[[0,0],[2,0],[2,2]]a"),
+    "end of file expected near 'a'");
 
-  try { str_to_type<iLine>("[[0,0],[2,0],[2,2"); }
-  catch (Err e) {assert(e.str() == "']' expected near end of file");}
+  assert_err(
+    str_to_type<iLine>("[[0,0],[2,0],[2,2"),
+    "']' expected near end of file");
 
-  try { str_to_type<iLine>("[0,0],[2,0],[2,2]"); }
-  catch (Err e) {assert(e.str() == "end of file expected near ','");}
+  assert_err(
+    str_to_type<iLine>("[0,0],[2,0],[2,2]"),
+    "end of file expected near ','");
 
 
   }

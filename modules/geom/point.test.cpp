@@ -3,6 +3,7 @@
 #include <cassert>
 #include "point.h"
 #include "opt/opt.h"
+#include "err/assert_err.h"
 
 int
 main(){
@@ -89,13 +90,7 @@ main(){
     assert(norm2d(iPoint(10,0,5)) == dPoint(1,0));
     assert(norm(iPoint(0,0,1.23)) == dPoint(0,0,1));
 
-    try {
-      norm(dPoint(0,0,0));
-      assert(false);
-    }
-    catch (Err e){
-      assert(e.str() == "Point norm: zero length");
-    }
+    assert_err(norm(dPoint(0,0,0)), "Point norm: zero length");
 
   }
 
@@ -218,17 +213,17 @@ main(){
 
     assert(str_to_type<dPoint>(" [ 0 , 1 ] ") == dPoint(0,1));
 
-    try { str_to_type<dPoint>(" [ 0 , 1 "); }
-    catch (Err e) { assert(e.str() == "can't parse value:  [ 0 , 1 "); }
+    assert_err(str_to_type<dPoint>(" [ 0 , 1 "),
+      "can't parse value:  [ 0 , 1 ");
 
-    try { str_to_type<dPoint>("0,1"); }
-    catch (Err e) { assert(e.str() == "can't parse value: 0,1"); }
+    assert_err(str_to_type<dPoint>("0,1"),
+      "can't parse value: 0,1");
 
-    try { str_to_type<dPoint>("[0.1]"); }
-    catch (Err e) { assert(e.str() == "can't parse value: [0.1]"); }
+    assert_err(str_to_type<dPoint>("[0.1]"),
+      "can't parse value: [0.1]");
 
-    try { str_to_type<dPoint>("[0,1]a"); }
-    catch (Err e) { assert(e.str() == "can't parse value: [0,1]a"); }
+    assert_err(str_to_type<dPoint>("[0,1]a"),
+      "can't parse value: [0,1]a");
   }
 
   // input/output, 3d points (also check that dPoint is printed with setprecision(9))
@@ -263,17 +258,17 @@ main(){
 
     assert(str_to_type<dPoint>(" [ 0 , 1 , 2 ] ") == dPoint(0,1,2));
 
-    try { str_to_type<dPoint>(" [ 0 , 1 ,1"); }
-    catch (Err e) { assert(e.str() == "can't parse value:  [ 0 , 1 ,1"); }
+    assert_err(str_to_type<dPoint>(" [ 0 , 1 ,1"),
+      "can't parse value:  [ 0 , 1 ,1");
 
-    try { str_to_type<dPoint>("0,1,1"); }
-    catch (Err e) { assert(e.str() == "can't parse value: 0,1,1"); }
+    assert_err(str_to_type<dPoint>("0,1,1"),
+      "can't parse value: 0,1,1");
 
-    try { str_to_type<dPoint>("[0.1]"); }
-    catch (Err e) { assert(e.str() == "can't parse value: [0.1]"); }
+    assert_err(str_to_type<dPoint>("[0.1]"),
+      "can't parse value: [0.1]");
 
-    try { str_to_type<dPoint>("[0,1,1]a"); }
-    catch (Err e) { assert(e.str() == "can't parse value: [0,1,1]a"); }
+    assert_err(str_to_type<dPoint>("[0,1,1]a"),
+      "can't parse value: [0,1,1]a");
   }
 
   }
