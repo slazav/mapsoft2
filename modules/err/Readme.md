@@ -18,8 +18,19 @@ catch (Err E){ cerr << "Error: " << E.str() << "\n"; }
 try {throw Err(1); } catch (Err E) {int code=E.code();}
 ```
 
+## assert_err macro
+
+```
+#include "err/assert_err.h"
+assert_err(<code>, <expected error>)
+```
+
+
 ------------------
 ## Changelog:
+
+2019.08.16 V.Zavjalov 1.1:
+- Add assert_err macro
 
 2019.05.02 V.Zavjalov 1.0:
 - First version (used widely in many of my projects)

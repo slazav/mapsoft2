@@ -1,5 +1,4 @@
-MOD_HEADERS  := err.h
-MOD_SOURCES  :=
-SIMPLE_TESTS := err
+MOD_HEADERS  := err.h assert_err.h
+SIMPLE_TESTS := err assert_err
 
 include ../Makefile.inc
