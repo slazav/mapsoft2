@@ -3,6 +3,7 @@
 #include <cassert>
 #include <sstream>
 #include "opt.h"
+#include "err/assert_err.h"
 
 int
 main(){
@@ -13,20 +14,12 @@ try{
   assert ( O1.get<std::string>("int") == "123" );
 
   O1.put("int", "123a");
-  try {
-    O1.get<int>("int");
-  }
-  catch (Err E){
-    assert (E.str() == "can't parse value: 123a");
-  }
+  assert_err(
+    O1.get<int>("int"), "can't parse value: 123a");
 
   O1.put("d", "123.1 ");
-  try {
-    O1.get("d", 1.0);
-  }
-  catch (Err E){
-    assert (E.str() == "can't parse value: 123.1 ");
-  }
+  assert_err(
+    O1.get("d", 1.0), "can't parse value: 123.1 ");
 
   assert(O1.exists("d") == true);
   assert(O1.exists("e") == false);
@@ -44,54 +37,26 @@ try{
 
   /////////////////////////////////////////////
   // check_unknown()
-  try {
-    std::list<std::string> k = {"int","d","a"};
-    O1.check_unknown(k);
-  }
-  catch (Err e) {
-    std::cerr << "Error:" << e.str() << "\n";
-    assert(false);
-  }
+  std::list<std::string> k;
 
-  try {
-    std::list<std::string> k = {"a", "b"};
-    O1.check_unknown(k);
-    assert(false);
-  }
-  catch (Err e) {
-    assert(e.str() == "unknown options: d, int");
-  }
+  k = {"int","d","a"};
+  O1.check_unknown(k);
 
-  try {
-    std::list<std::string> k = {"a", "b", "d"};
-    O1.check_unknown(k);
-    assert(false);
-  }
-  catch (Err e) {
-    assert(e.str() == "unknown option: int");
-  }
+  k = {"a", "b"};
+  assert_err(O1.check_unknown(k), "unknown options: d, int")
+
+  k = {"a", "b", "d"};
+  assert_err(O1.check_unknown(k), "unknown option: int");
 
   /////////////////////////////////////////////
   // check_conflict()
-  try {
-    std::list<std::string> k = {"int","b"};
-    O1.check_conflict(k);
-    k = {"b","c"};
-    O1.check_conflict(k);
-  }
-  catch (Err e) {
-    std::cerr << "Error:" << e.str() << "\n";
-    assert(false);
-  }
+  k = {"int","b"};
+  O1.check_conflict(k);
+  k = {"b","c"};
+  O1.check_conflict(k);
 
-  try {
-    std::list<std::string> k = {"a", "int", "d"};
-    O1.check_conflict(k);
-    assert(false);
-  }
-  catch (Err e) {
-    assert(e.str() == "options can not be used together: int, d");
-  }
+  k = {"a", "int", "d"};
+  assert_err(O1.check_conflict(k), "options can not be used together: int, d");
 
   /////////////////////////////////////////////
   // dump and parse simple options:
@@ -125,36 +90,24 @@ try{
   }
 
   // some error cases
-  try {
+  {
     std::istringstream is("[1,2,3]");
-    is >> O1;
-  }
-  catch (Err e) {
-    assert(e.str() == "Reading Opt: a JSON object with string fields expected");
+    assert_err(is >> O1, "Reading Opt: a JSON object with string fields expected");
   }
 
-  try {
+  {
     std::istringstream is("{");
-    is >> O1;
-  }
-  catch (Err e) {
-    assert(e.str() == "string or '}' expected near end of file");
+    assert_err(is >> O1, "string or '}' expected near end of file");
   }
 
-  try {
+  {
     std::istringstream is("{a: 1}");
-    is >> O1;
-  }
-  catch (Err e) {
-    assert(e.str() == "string or '}' expected near 'a'");
+    assert_err(is >> O1, "string or '}' expected near 'a'");
   }
 
-  try {
+  {
     std::istringstream is("{b: \"2\"}");
-    is >> O1;
-  }
-  catch (Err e) {
-    assert(e.str() == "string or '}' expected near 'b'");
+    assert_err(is >> O1, "string or '}' expected near 'b'");
   }
 
   O1.put("h1", "0xFF");
