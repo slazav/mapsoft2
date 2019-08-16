@@ -205,6 +205,13 @@ struct GeoMap{
   void add_ref(const dPoint & p1, const dPoint & p2){
     ref.insert(std::make_pair(p1,p2)); }
 
+  void add_ref(const dLine & lr, const dLine & lw){
+    if (lr.size()!=lw.size())
+      throw Err() << "GeoMap::add_ref: wrong number of ref points";
+    for (int i = 0; i<lr.size(); i++)
+       ref.insert(std::make_pair(lr[i],lw[i]));
+  }
+
   // bbox of reference points in image coordinates
   dRect bbox_ref_img() const{
     dRect r;
