@@ -1,6 +1,7 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
 #include <cassert>
+#include "err/assert_err.h"
 #include "fig.h"
 
 Fig test_objs(const std::string & in, std::string out = "<in>", int fig_header = 0, int txt7bit = 0){
@@ -104,34 +105,27 @@ main(){
       assert(o.end_x==10990);
       assert(o.end_y==2658);
     }
-    try {
-      FigObj o;
-      read_figobj_header(o, "1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read ellipse object: "
-         "[1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990]");
-    }
 
-    try {
+    {
       FigObj o;
-      read_figobj_header(o, "1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 x 8765 4092 10990 2658");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read ellipse object: "
-         "[1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 x 8765 4092 10990 2658]");
-    }
+      assert_err(
+        read_figobj_header(o,
+          "1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990"),
+        "FigObj: can't read ellipse object: "
+          "[1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990]");
 
-    try {
-      FigObj o;
-      read_figobj_header(o, "1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990 2658 1");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read ellipse object: "
-         "[1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990 2658 1]");
+      assert_err(
+        read_figobj_header(o,
+          "1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 x 8765 4092 10990 2658"),
+        "FigObj: can't read ellipse object: "
+          "[1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 x 8765 4092 10990 2658]");
+
+      assert_err(
+        read_figobj_header(o,
+          "1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990 2658 1"),
+        "FigObj: can't read ellipse object: "
+          "[1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990 2658 1]");
+
     }
 
     // constructing objects from a header string -- lines
@@ -158,34 +152,20 @@ main(){
       assert(o.backward_arrow==0);
     }
 
-    try {
+    {
       FigObj o;
-      read_figobj_header(o, "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read line object: "
-         "[2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0]");
-    }
-
-    try {
-      FigObj o;
-      read_figobj_header(o, "2 1 0.1 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 4");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read line object: "
+      assert_err(
+        read_figobj_header(o, "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0"),
+        "FigObj: can't read line object: "
+          "[2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0]");
+      assert_err(
+        read_figobj_header(o, "2 1 0.1 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 4"),
+        "FigObj: can't read line object: "
          "[2 1 0.1 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 4]");
-    }
-
-    try {
-      FigObj o;
-      read_figobj_header(o, "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 4 1");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read line object: "
-         "[2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 4 1]");
+      assert_err(
+        read_figobj_header(o, "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 4 1"),
+        "FigObj: can't read line object: "
+          "[2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 4 1]");
     }
 
     // constructing objects from a header string -- splines
@@ -210,33 +190,21 @@ main(){
       assert(o.backward_arrow==0);
     }
 
-    try {
+    {
       FigObj o;
-      read_figobj_header(o, "3 0 0 1 0 7 50 -1 -1 0.000 0 0 0");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read spline object: "
-         "[3 0 0 1 0 7 50 -1 -1 0.000 0 0 0]");
-    }
+      assert_err(
+        read_figobj_header(o, "3 0 0 1 0 7 50 -1 -1 0.000 0 0 0"),
+        "FigObj: can't read spline object: "
+        "[3 0 0 1 0 7 50 -1 -1 0.000 0 0 0]");
 
-    try {
-      FigObj o;
-      read_figobj_header(o, "3 0 0 1 0 7 50 -1 -1 0.000 a 0 0 4");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read spline object: "
-         "[3 0 0 1 0 7 50 -1 -1 0.000 a 0 0 4]");
-    }
+      assert_err(
+        read_figobj_header(o, "3 0 0 1 0 7 50 -1 -1 0.000 a 0 0 4"),
+        "FigObj: can't read spline object: "
+        "[3 0 0 1 0 7 50 -1 -1 0.000 a 0 0 4]");
 
-    try {
-      FigObj o;
-      read_figobj_header(o, "3 0 0 1 0 7 50 -1 -1 0.000 0 0 0 4 1");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read spline object: "
+      assert_err(
+        read_figobj_header(o, "3 0 0 1 0 7 50 -1 -1 0.000 0 0 0 4 1"),
+        "FigObj: can't read spline object: "
          "[3 0 0 1 0 7 50 -1 -1 0.000 0 0 0 4 1]");
     }
 
@@ -264,24 +232,17 @@ main(){
 
     }
 
-    try {
+    {
       FigObj o;
-      read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 z -1575 6840 text\\001");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read text object: "
-         "[4 0 0 50 -1 0 12 0.0000 4 210 z -1575 6840 text\\001]");
-    }
+      assert_err(
+        read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 z -1575 6840 text\\001"),
+        "FigObj: can't read text object: "
+        "[4 0 0 50 -1 0 12 0.0000 4 210 z -1575 6840 text\\001]");
 
-    try {
-      FigObj o;
-      read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read text object: "
-         "[4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840]");
+      assert_err(
+        read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840"),
+        "FigObj: can't read text object: "
+        "[4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840]");
     }
 
     {
@@ -336,34 +297,22 @@ main(){
       assert(o.center_y==7477.500);
     }
 
-    try {
+    {
       FigObj o;
-      read_figobj_header(o, "5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 x");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read arc object: "
-         "[5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 x]");
-    }
+      assert_err(
+        read_figobj_header(o, "5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 x"),
+        "FigObj: can't read arc object: "
+        "[5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 x]");
 
-    try {
-      FigObj o;
-      read_figobj_header(o, "5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 7380 1");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read arc object: "
-         "[5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 7380 1]");
-    }
+      assert_err(
+        read_figobj_header(o, "5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 7380 1"),
+        "FigObj: can't read arc object: "
+        "[5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 7380 1]");
 
-    try {
-      FigObj o;
-      read_figobj_header(o, "5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read arc object: "
-         "[5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410]");
+      assert_err(
+        read_figobj_header(o, "5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410"),
+        "FigObj: can't read arc object: "
+        "[5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410]");
     }
 
 
@@ -392,34 +341,19 @@ main(){
       assert(o[1].y==4);
     }
 
-    try {
+    {
       FigObj o;
-      read_figobj_header(o, "6 1 2 3");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read compound object: "
-         "[6 1 2 3]");
-    }
+      assert_err(
+        read_figobj_header(o, "6 1 2 3"),
+        "FigObj: can't read compound object: [6 1 2 3]");
 
-    try {
-      FigObj o;
-      read_figobj_header(o, "6 1 2 3 4 1");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read compound object: "
-         "[6 1 2 3 4 1]");
-    }
+      assert_err(
+        read_figobj_header(o, "6 1 2 3 4 1"),
+        "FigObj: can't read compound object: [6 1 2 3 4 1]");
 
-    try {
-      FigObj o;
-      read_figobj_header(o, "6 1 2 3.2 4");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read compound object: "
-         "[6 1 2 3.2 4]");
+      assert_err(
+        read_figobj_header(o, "6 1 2 3.2 4"),
+        "FigObj: can't read compound object: [6 1 2 3.2 4]");
     }
 
     {
@@ -430,14 +364,11 @@ main(){
       assert(o.size()==0);
     }
 
-    try {
+    {
       FigObj o;
-      read_figobj_header(o, "-6 1");
-      assert(false);
-    }
-    catch (Err e) {
-      assert(e.str() == "FigObj: can't read compound end object: "
-         "[-6 1]");
+      assert_err(
+        read_figobj_header(o, "-6 1"),
+        "FigObj: can't read compound end object: [-6 1]");
     }
 
     /*********************************************************/
