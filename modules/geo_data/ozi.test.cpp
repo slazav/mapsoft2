@@ -4,7 +4,7 @@
 #include <cassert>
 #include <string>
 #include <vector>
-#include "err/err.h"
+#include "err/assert_err.h"
 
 using namespace std;
 
@@ -70,50 +70,30 @@ main() {
     assert(convert_ozi2proj("Transverse Mercator") == "+proj=tmerc");
     assert(convert_ozi2proj("Mercator") == "+proj=merc");
     assert(convert_ozi2proj("Lambert Conformal Conic") == "+proj=lcc");
-    try {
-      convert_ozi2proj("Mercator 1");
-      assert(false);
-    }
-    catch(Err e) {
-      assert(e.str() == "io_ozi: unsupported Ozi projection: Mercator 1");
-    }
+    assert_err(convert_ozi2proj("Mercator 1"),
+       "io_ozi: unsupported Ozi projection: Mercator 1");
 
     // ozi2datum
     assert(convert_ozi2datum("WGS 84") == "+datum=WGS84");
     assert(convert_ozi2datum("Pulkovo 1942") == "+ellps=krass +towgs84=28,-130,-95");
     assert(convert_ozi2datum("Pulkovo 1942 (1)") == "+ellps=krass +towgs84=28,-130,-95");
     assert(convert_ozi2datum("Pulkovo 1942 (2)") == "+ellps=krass +towgs84=28,-130,-95");
-    try {
-      convert_ozi2datum("");
-      assert(false);
-    }
-    catch(Err e) {
-      assert(e.str() == "io_ozi: unsupported Ozi datum: ");
-    }
+    assert_err(convert_ozi2datum(""),
+      "io_ozi: unsupported Ozi datum: ");
 
     // proj2ozi
     assert(convert_proj2ozi("+datum=wgs84 +proj=tmerc") == "Transverse Mercator");
     assert(convert_proj2ozi("+datum=wgs84 +proj=tmerc +lon0=0") == "Transverse Mercator");
-    try {
-      convert_proj2ozi("+datum=wgs84 +proj=tmerc1");
-      assert(false);
-    }
-    catch(Err e) {
-      assert(e.str() == "io_ozi: unsupported projection: tmerc1");
-    }
-    try {
-      convert_proj2ozi("+datum=WGS84 +proj=tmerc1 a");
-      assert(false);
-    }
-    catch(Err e) {
-      assert(e.str() == "io_ozi: unsupported projection: tmerc1");
-    }
+    assert_err(convert_proj2ozi("+datum=wgs84 +proj=tmerc1"),
+      "io_ozi: unsupported projection: tmerc1");
+    assert_err(convert_proj2ozi("+datum=WGS84 +proj=tmerc1 a"),
+      "io_ozi: unsupported projection: tmerc1");
 
     // datum2ozi
     assert(convert_datum2ozi("+datum=WGS84 +proj=tmerc") == "WGS 84");
     assert(convert_datum2ozi("+ellps=krass +proj=tmerc +towgs84=28,-130,-95 +lon0=0") == "Pulkovo 1942 (2)");
-
-
+    assert_err(convert_datum2ozi("+datum=xxx +proj=tmerc"),
+      "io_ozi: unsupported datum: +datum=xxx +proj=tmerc");
 
   }
   catch (Err e) {
