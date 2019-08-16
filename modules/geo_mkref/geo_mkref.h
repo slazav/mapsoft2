@@ -53,6 +53,6 @@ Options:
     1/100 for degree projections.
 
 */
-GeoMap geo_mkref(Opt & o);
+GeoMap geo_mkref(const Opt & o);
 
 #endif

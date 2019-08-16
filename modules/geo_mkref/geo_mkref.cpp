@@ -15,7 +15,7 @@ using namespace std;
 /********************************************************************/
 
 GeoMap
-geo_mkref(Opt & o){
+geo_mkref(const Opt & o){
   GeoMap map;
   GeoTiles tcalc;
 
