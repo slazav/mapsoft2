@@ -3,11 +3,6 @@
 #include <cassert>
 #include "geo_nom.h"
 
-#define assert_err(cmd,ret)\
-  try{ cmd; assert(false); } catch (Err e) {\
-    if (e.str()!=ret) std::cerr<<e.str()<<"\n";\
-    assert(e.str()==(ret));}
-
 void assert_nom(const std::string & name, const dRect & res, nom_scale_t sc0,
                 bool ex=false, std::string error=""){
   nom_scale_t sc;
