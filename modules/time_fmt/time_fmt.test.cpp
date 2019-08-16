@@ -4,6 +4,7 @@
 #include <iostream>
 #include "time_fmt.h"
 #include "err/err.h"
+#include "err/assert_err.h"
 
 int
 main(){
@@ -16,15 +17,15 @@ main(){
 
      assert(parse_utc_time("2018/08/05	12:58:31.1") == 1533473911100);
 
-     try { parse_utc_time(""); }
-     catch (Err e) {assert (e.str() == "Unsupported time format: \"\"");}
+     assert_err(parse_utc_time("1970-01-01T00:00:00Z a"),
+       "Unsupported time format: \"1970-01-01T00:00:00Z a\"");
 
-     try { parse_utc_time("1970-01-01"); }
-     catch (Err e) {assert (e.str() == "Unsupported time format: \"1970-01-01\"");}
-
-     try { parse_utc_time("1970-01-01T00:00:00Z a"); }
-     catch (Err e) {assert (e.str() == "Unsupported time format: \"1970-01-01T00:00:00Z a\"");}
-
+     assert(parse_utc_time("1970") == 0);
+     assert(parse_utc_time("1971") == (long)365*3600*24*1000);
+     assert(parse_utc_time("1970-01") == 0);
+     assert(parse_utc_time("1970-02") == (long)31*3600*24*1000);
+     assert(parse_utc_time("1970-01-01") == 0);
+     assert(parse_utc_time("1970-01-02") == 3600*24*1000);
 
      assert(parse_utc_time("1970-01-01T00:00:00Z") == 0);
      assert(parse_utc_time("2018-08-05T12:58:31Z") == 1533473911000);
