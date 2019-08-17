@@ -13,24 +13,29 @@ main(){
       GeoWpt p1;
       assert(p1.x == 0);
       assert(p1.y == 0);
+      assert(p1.t == 0);
+      assert(std::isnan(p1.z));
       assert(std::isnan(p1.z));
       assert(p1.have_alt() == false);
       p1.z = 0;
+      assert(!std::isnan(p1.z));
       assert(p1.have_alt() == true);
       p1.clear_alt();
       assert(p1.have_alt() == false);
 
-      p1 = dPoint(10,10);
+      p1 = dPoint(10,10,0); // z is undef!
       assert(p1.x == 10);
       assert(p1.y == 10);
-      assert(p1.z == 0);
+      assert(p1.t == 0);
+      assert(p1.have_alt() == false);
       p1.opts.put<double>("test", 10.0);
       assert (p1.opts.get<double>("test", 0.0) == 10);
 
       p1 = GeoWpt(11,11);
       assert(p1.x == 11);
       assert(p1.y == 11);
-      assert(std::isnan(p1.z));
+      assert(p1.t == 0);
+      assert(p1.have_alt() == false);
     }
 
     { // GeoTpt
@@ -40,17 +45,20 @@ main(){
       assert(p1.x == 0);
       assert(p1.y == 0);
       assert(p1.t == 0);
+      assert(p1.start == false);
       assert(std::isnan(p1.z));
       assert(p1.have_alt() == false);
       p1.z = 0;
       assert(p1.have_alt() == true);
+      assert(p1.z == 0);
       p1.clear_alt();
       assert(p1.have_alt() == false);
 
-      p1 = dPoint(10,10);
+      p1 = dPoint(10,10,0);
       assert(p1.x == 10);
       assert(p1.y == 10);
-      assert(p1.z == 0);
+      assert(p1.t == 0);
+      assert(p1.have_alt() == false);
     }
 
     { // GeoWptList

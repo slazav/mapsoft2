@@ -22,8 +22,10 @@ double geo_dist_2d(const dPoint &p1, const dPoint &p2);
 /********************************************************************/
 /// Single waypoint, a child of dPoint. Can have "undefined" altitude,
 /// in this case it is not used in transformations (See ConvGeo class).
-/// All additional information lives in opt variable.
+/// Also has `name` and `comm` text fields, and time `t` (integer, in
+/// milliseconds). All additional information lives in `opts` variable.
 /// Note: default z in GeoWpt is NaN, and in dPoint is 0;
+///       GeoWpt(dPoint p) constructor sets z=NaN  if p.z==0
 struct GeoWpt : dPoint {
   std::string name; ///< name
   std::string comm; ///< comment
@@ -32,7 +34,7 @@ struct GeoWpt : dPoint {
 
   /// constructors
   GeoWpt() {z=nan(""); t=0;}
-  GeoWpt(const dPoint &p): dPoint(p){}
+  GeoWpt(const dPoint &p): dPoint(p), t(0){ if (p.z==0) clear_alt();}
   GeoWpt(const double x, const double y, const double z=nan("")):
     dPoint(x,y,z), t(0){}
 
@@ -44,7 +46,8 @@ struct GeoWpt : dPoint {
 };
 
 /********************************************************************/
-/// Waypoint list. An std::vector of GeoWpt with additional options.
+/// Waypoint list. An std::vector of GeoWpt with additional `name` and
+/// `comm` test fields and options `opts`.
 struct GeoWptList : std::vector<GeoWpt>{
   std::string name; ///< name
   std::string comm; ///< comment
@@ -61,14 +64,18 @@ struct GeoWptList : std::vector<GeoWpt>{
 };
 
 /********************************************************************/
-/// single trackpoint
+/// Single trackpoint, a child of dPoint. Can have "undefined" altitude,
+/// in this case it is not used in transformations (See ConvGeo class).
+/// Also has time `t` (integer, in milliseconds) and `start` flag.
+/// Note: default z in GeoWpt is NaN, and in dPoint is 0;
+///       GeoWpt(dPoint p) constructor sets z=NaN  if p.z==0
 struct GeoTpt : dPoint {
   bool start; ///< start flag
   time_t t;   ///< unix time (ms)
 
   /// constructor
   GeoTpt(): start(false), t(0) {z=nan("");}
-  GeoTpt(const dPoint &p): dPoint(p), start(false) {}
+  GeoTpt(const dPoint &p): dPoint(p), start(false), t(0) { if (p.z==0) clear_alt();}
   GeoTpt(const double x, const double y, const double z=nan(""),
          const bool start = false, const time_t t=0):
     dPoint(x,y,z), start(start), t(t) {}
