@@ -9,7 +9,7 @@ Magnetic Variation,,,E
 Map Projection,Transverse Mercator,PolyCal,No,AutoCalOnly,No,BSBUseWPX,No
 Point01,xy,   37, 4499,in, deg,  55,50.000000,N,  36,0.000000,E, grid,   ,           ,           ,N
 Point02,xy,   51, 2284,in, deg,  55,55.000000,N,  36,0.000000,E, grid,   ,           ,           ,N
-Point03,xy,   65,   66,in, deg,  56,0.000000,N,  35,60.000000,E, grid,   ,           ,           ,N
+Point03,xy,   65,   66,in, deg,  56,0.000000,N,  36,0.000000,E, grid,   ,           ,           ,N
 Point04,xy, 1869, 4499,in, deg,  55,50.000000,N,  36,7.500000,E, grid,   ,           ,           ,N
 Point05,xy, 1909, 2282,in, deg,  55,55.000000,N,  36,7.500000,E, grid,   ,           ,           ,N
 Point06,xy, 1912,   66,in, deg,  56,0.000000,N,  36,7.500000,E, grid,   ,           ,           ,N
