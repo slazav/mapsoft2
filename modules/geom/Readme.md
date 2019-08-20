@@ -203,9 +203,10 @@ Line with multiple segments (std::vector of Line).
   - `l.flatten()` -- project the line to x-y plane (set z to 0).
   - `l.close()` -- "close" the line (if it is not closed): add last point equals to the first one.
   - `l.open()` --  "open" the line: if the last point equals to the first one remove it.
+  - `l.flip_x(x0=0)`, `l.flip_y(y0=0)` -- flip the line around x=x0 or y=y0 line.
 
   - `rint(l)`, `to_floor(l)`, `ceil(l)`, `abs(l)`, `rotate2d(l,pc,a)`,
-    `flatten(l)`, `close(l)`, `open(l)` --
+    `flatten(l)`, `close(l)`, `open(l)`, `flip_x(x0)`, `flip_y(y0)` --
      do same operations, return modified point, keep original point unchanged.
 
   - `dist(l1,l2)` -- "distance" between multilines, `sqrt(sum(dist(l1[i],l2[i])^2))`,

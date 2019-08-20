@@ -173,7 +173,21 @@ main(){
     assert(close(open(l)) == close(l));
   }
 
-
+  // flip_x, flip_y
+  {
+    iMultiLine l1("[[[1,1],[2,2]],[[1,1],[2,2]]]");
+    iMultiLine ly("[[[1,9],[2,8]],[[1,9],[2,8]]]");
+    iMultiLine lx("[[[9,1],[8,2]],[[9,1],[8,2]]]");
+    assert(flip_y(l1,10) == ly);
+    assert(flip_x(l1,10) == lx);
+    assert(flip_y(flip_y(l1,10),10) == l1);
+    assert(flip_x(flip_x(l1,10),10) == l1);
+    l1.flip_x(10);
+    assert(l1 == lx);
+    l1.flip_x(10);
+    l1.flip_y(10);
+    assert(l1 == ly);
+  }
 
   // dist
   assert(dist(

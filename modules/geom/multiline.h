@@ -187,6 +187,16 @@ struct MultiLine : std::vector<Line<T> > {
   // "open" each segment.
   void open(){ for (auto &l:*this) l.open(); }
 
+  // flip the line around y=y0 line
+  void flip_y(const T y0=0){
+    for (auto & l:*this) l.flip_y(y0);
+  }
+
+  // flip the line around x=x0 line
+  void flip_x(const T x0=0){
+    for (auto & l:*this) l.flip_x(x0);
+  }
+
 };
 
 /******************************************************************/
@@ -284,6 +294,16 @@ MultiLine<T> close(const MultiLine<T> & l){
 template <typename T>
 MultiLine<T> open(const MultiLine<T> & l){
   MultiLine<T> ret(l); ret.open(); return ret; }
+
+// flip the line around y=y0 line
+template <typename T>
+MultiLine<T> flip_y(const MultiLine<T> & l, const T y0=0){
+  MultiLine<T> ret(l); ret.flip_y(y0); return ret; }
+
+// flip the line around x=x0 line
+template <typename T>
+MultiLine<T> flip_x(const MultiLine<T> & l, const T x0=0){
+  MultiLine<T> ret(l); ret.flip_x(x0); return ret; }
 
 /******************************************************************/
 // additional functions

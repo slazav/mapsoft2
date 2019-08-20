@@ -232,6 +232,15 @@ struct Line : std::vector<Point<T> > {
       this->resize(this->size()-1);
   }
 
+  // flip the line around y=y0 line
+  void flip_y(const T y0=0){
+    for (auto & p:*this) p.y = y0 - p.y;
+  }
+
+  // flip the line around x=x0 line
+  void flip_x(const T x0=0){
+    for (auto & p:*this) p.x = x0 - p.x;
+  }
 
 };
 
@@ -345,6 +354,16 @@ Line<T> close(const Line<T> & l){
 template <typename T>
 Line<T> open(const Line<T> & l){
   Line<T> ret(l); ret.open(); return ret; }
+
+// flip the line around y=y0 line
+template <typename T>
+Line<T> flip_y(const Line<T> & l, const T y0=0){
+  Line<T> ret(l); ret.flip_y(y0); return ret; }
+
+// flip the line around x=x0 line
+template <typename T>
+Line<T> flip_x(const Line<T> & l, const T x0=0){
+  Line<T> ret(l); ret.flip_x(x0); return ret; }
 
 /******************************************************************/
 // additional functions
