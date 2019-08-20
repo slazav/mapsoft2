@@ -38,6 +38,7 @@ main(){
     assert(calc.pt_to_gtile(dPoint(1,1),1) == iPoint(1,0));
     assert(calc.pt_to_gtile(dPoint(1,1),2) == iPoint(2,1));
 
+
     assert(calc.range_to_tiles(dRect(-1,-1,2,2),0) == iRect(0,0,1,1));
     assert(calc.range_to_tiles(dRect(-1,-1,2,2),1) == iRect(0,0,2,2));
     assert(calc.range_to_tiles(dRect(-1,-1,2,2),2) == iRect(1,1,2,2));
@@ -46,8 +47,11 @@ main(){
     assert(calc.range_to_gtiles(dRect(-1,-1,2,2),1) == iRect(0,0,2,2));
     assert(calc.range_to_gtiles(dRect(-1,-1,2,2),2) == iRect(1,1,2,2));
 
-
     assert(calc.pt_to_gtile(dPoint(77.695619,32.183764),15) == iPoint(23456,13287));
+    assert(calc.pt_to_gtile(dPoint(26.77188,61.33552),14) == iPoint(9410,4633));
+
+    assert(type_to_str(calc.gtile_to_range(iPoint(9410,4633), 14)) ==
+      "[26.7626953,61.3335397,0.0219726562,0.0105387287]");
   }
   catch (Err e){
     std::cerr << "Error:" << e.str() << "\n";
