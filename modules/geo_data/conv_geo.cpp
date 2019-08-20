@@ -3,7 +3,9 @@
 #include "err/err.h"
 #include "conv_geo.h"
 
-ConvGeo::ConvGeo(const std::string & src, const std::string & dst){
+ConvGeo::ConvGeo(const std::string & src,
+       const std::string & dst, const bool use2d){
+  cnv2d = use2d;
   sc_src = sc_dst = 1;
 
   if (src==dst) {
@@ -30,7 +32,7 @@ void
 ConvGeo::frw_pt(dPoint & p) const{
   if (sc_src!=1.0) {p.x*=sc_src; p.y*=sc_src;}  // this if increases speed...
   if (pj_src!=pj_dst) {
-    double *z = isnan(p.z)? NULL:&p.z;
+    double *z = (cnv2d || isnan(p.z))? NULL:&p.z;
     if (pj_transform(pj_src.get(), pj_dst.get(), 1, 1, &p.x, &p.y, z)!=0)
       throw Err() << "Can't convert coordinates: " << pj_strerrno(pj_errno);
   }
@@ -41,7 +43,7 @@ void
 ConvGeo::bck_pt(dPoint & p) const{
   if (sc_dst!=1.0) {p.x/=sc_dst; p.y/=sc_dst;};
   if (pj_src!=pj_dst){
-    double *z = isnan(p.z)? NULL:&p.z;
+    double *z = (cnv2d || isnan(p.z))? NULL:&p.z;
     if (pj_transform(pj_dst.get(), pj_src.get(), 1, 1, &p.x, &p.y, z)!=0)
       throw Err() << "Can't convert coordinates: " << pj_strerrno(pj_errno);
   }

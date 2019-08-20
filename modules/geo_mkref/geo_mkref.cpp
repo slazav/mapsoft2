@@ -257,17 +257,15 @@ geo_mkref(const Opt & o){
     if (o.exists("coords_wgs")){
       // try coordinate range
       try {
-        range = cnv.bck_acc(o.get("coords", dRect()),0.5);
-        dLine b = cnv.bck_acc(rect_to_line(range, true), 0.5);
-        b.open();
-        brd.push_back(b);
+        dRect R = o.get("coords_wgs", dRect());
+        range = cnv.bck_acc(R,0.5);
         goto coord_end_r2;
       }
       // try border
       catch (Err e){
       }
       try {
-        brd = cnv.bck_acc(o.get("coords", dMultiLine()),0.5);
+        brd = cnv.bck_acc(o.get("coords_wgs", dMultiLine()),0.5);
         range = brd.bbox();
         goto coord_end_r2;
       }
@@ -285,7 +283,7 @@ geo_mkref(const Opt & o){
       brd = o.get("border", dMultiLine())/k;
 
     if (o.exists("border_wgs"))
-      brd = cnv.bck_acc(o.get("border", dMultiLine()),0.5);
+      brd = cnv.bck_acc(o.get("border_wgs", dMultiLine()),0.5);
 
     /* border and range are set now */
 

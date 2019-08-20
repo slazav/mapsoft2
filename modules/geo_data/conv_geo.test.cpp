@@ -9,9 +9,9 @@ main(){
     std::string proj_wgs = "+datum=WGS84 +proj=lonlat";
     std::string proj_krass = "+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=500000 +lon_0=27";
 
-    ConvGeo cnv1(proj_wgs,proj_wgs);    // wgs -> wgs
-    ConvGeo cnv2(proj_krass);           // krass -> wgs
-    ConvGeo cnv3(proj_wgs, proj_krass); // wgs -> krass
+    ConvGeo cnv1(proj_wgs,proj_wgs, false);   // wgs -> wgs, 3D
+    ConvGeo cnv2(proj_krass);                 // krass -> wgs, 2D
+    ConvGeo cnv3(proj_wgs, proj_krass, true); // wgs -> krass, 2D
 
     assert(cnv1.is_src_deg() == true);
     assert(cnv1.is_dst_deg() == true);
@@ -20,8 +20,19 @@ main(){
     assert(cnv3.is_src_deg() == true);
     assert(cnv3.is_dst_deg() == false);
 
+    assert(cnv1.get_2d() == false);
+    assert(cnv2.get_2d() == true);
+    assert(cnv3.get_2d() == true);
+
+    cnv3.set_2d(false);
+    assert(cnv3.get_2d() == false);
+    cnv3.set_2d();
+    assert(cnv3.get_2d() == true);
+
     dPoint p1(25.651054, 60.976941, 0);
     dPoint p1a(427091, 6763808, -11);
+    dPoint p1z(427091, 6763808);
+    dPoint p1n(427091, 6763808, nan(""));
 
     // trivial
     dPoint p2(p1);
@@ -30,6 +41,10 @@ main(){
     cnv1.bck(p2);
     assert(p1==p2);
 
+
+    // wgs -> pulkovo -> wgs
+    cnv2.set_2d(false);
+    cnv3.set_2d(false);
     cnv2.bck(p2);
     assert(iPoint(p2) == p1a);
     cnv2.frw(p2);
@@ -40,6 +55,35 @@ main(){
     cnv3.bck(p2);
     assert(dist(p1,p2) < 2e-7);
 
+    // same, 2D
+    cnv2.set_2d();
+    cnv3.set_2d();
+    p2 = p1;
+    cnv2.bck(p2);
+    assert(iPoint(p2) == p1z);
+    cnv2.frw(p2);
+    assert(dist(p1,p2) < 2e-7);
+
+    cnv3.frw(p2);
+    assert(iPoint(p2) == p1z);
+    cnv3.bck(p2);
+    assert(dist(p1,p2) < 2e-7);
+
+    // nan altitude (2d conversion)
+    cnv2.set_2d(false);
+    cnv3.set_2d(false);
+    p2 = p1;
+    p2.z = nan("");
+    cnv2.bck(p2);
+    assert(dist2d(p2,p1n) < 1e-1);
+    cnv2.frw(p2);
+    assert(dist2d(p1,p2) < 2e-7);
+
+    cnv3.frw(p2);
+    assert(dist2d(p2,p1n) < 1e-1);
+    cnv3.bck(p2);
+    assert(dist2d(p1,p2) < 2e-7);
+
     // line
     dLine l1;
     iLine l1a;
@@ -47,21 +91,12 @@ main(){
     cnv3.frw(l1);
     assert(iLine(l1) == l1a);
 
-    // z==nan -- no altitude conversions
-    p1 = dPoint(25.651054, 60.976941, nan(""));
-    p1a = dPoint (427091.023, 6763808.07, nan(""));
-    p2=p1;
-    cnv2.bck(p2);
-    assert(dist2d(p2,p1a) < 1e-2);
-    cnv2.frw(p2);
-    assert(dist2d(p1,p2) < 2e-7);
-
     // rescale_dst (only x,y is affected!)
     cnv3.rescale_dst(2);
     p2=p1;
     cnv3.frw(p2);
     p2.z*=2;
-    assert(dist2d(p2,p1a*2) < 1e-2);
+    assert(dist2d(p2,p1a*2) < 1);
     p2.z/=2;
     cnv3.bck(p2);
     assert(dist2d(p1,p2) < 2e-7);
@@ -71,10 +106,10 @@ main(){
     cnv3.rescale_dst(0.5);
     p2=p1/2; p2.z *= 2;
     cnv3.frw(p2);
-    assert(dist2d(p2,p1a) < 1e-2);
+    assert(dist2d(p2,p1a) < 1);
     cnv3.bck(p2);
     p2.z/=2;
-    assert(dist2d(p1/2,p2) < 2e-7);
+    assert(dist2d(p1,p2*2) < 2e-7);
 
     // no datum
     {

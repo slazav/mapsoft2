@@ -16,7 +16,7 @@ public:
 
   /// Create a transformation. `src` and `dst` are libproj parameters.
   ConvGeo(const std::string & src, const std::string & dst =
-    "+datum=WGS84 +proj=lonlat");
+    "+datum=WGS84 +proj=lonlat", const bool use2d = true);
 
   /// Forward point conversion.
   void frw_pt(dPoint & p) const;
@@ -28,8 +28,13 @@ public:
   bool is_src_deg() const;
   bool is_dst_deg() const;
 
+  // get/set 2d flag
+  bool get_2d() const {return cnv2d;}
+  void set_2d(const bool v = true) {cnv2d = v;}
+
 private:
   std::shared_ptr<void> pj_src, pj_dst;
+  bool cnv2d; // Do 2D or 3D conversion
 };
 
 
