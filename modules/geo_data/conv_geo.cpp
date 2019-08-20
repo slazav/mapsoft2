@@ -35,6 +35,8 @@ ConvGeo::frw_pt(dPoint & p) const{
     double *z = (cnv2d || isnan(p.z))? NULL:&p.z;
     if (pj_transform(pj_src.get(), pj_dst.get(), 1, 1, &p.x, &p.y, z)!=0)
       throw Err() << "Can't convert coordinates: " << pj_strerrno(pj_errno);
+    if (!isnormal(p.x) || !isnormal(p.y))
+      throw Err() << "Can't convert coordinates: non-numeric result";
   }
   if (sc_dst!=1.0) {p.x*=sc_dst; p.y*=sc_dst;};
 }
@@ -46,6 +48,8 @@ ConvGeo::bck_pt(dPoint & p) const{
     double *z = (cnv2d || isnan(p.z))? NULL:&p.z;
     if (pj_transform(pj_dst.get(), pj_src.get(), 1, 1, &p.x, &p.y, z)!=0)
       throw Err() << "Can't convert coordinates: " << pj_strerrno(pj_errno);
+    if (!isnormal(p.x) || !isnormal(p.y))
+      throw Err() << "Can't convert coordinates: non-numeric result";
   }
   if (sc_src!=1.0) {p.x/=sc_src; p.y/=sc_src;}
 }

@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include "conv_geo.h"
+#include "err/assert_err.h"
 
 int
 main(){
@@ -138,6 +139,38 @@ main(){
       cnv1.bck(p2);
       assert(dist2d(p1,p2) < 1e-7);
     }
+
+    // bad coordinates (without datum conversion)
+    {
+      std::string proj_ll = "+proj=lonlat";
+      std::string proj_tmerc = "+proj=tmerc +x_0=500000 +lon_0=27";
+
+      ConvGeo cnv1(proj_ll, proj_tmerc);
+      dPoint p1(25.651054, 160.976941);
+      assert_err(cnv1.frw(p1), "Can't convert coordinates: latitude or longitude exceeded limits");
+
+      p1 = dPoint(426963,16763676);
+      cnv1.bck(p1);
+      assert(p1 == dPoint(27,90)); // strange PROJ feature
+
+      p1 = dPoint(nan(""), 60.976941);
+      assert_err(cnv1.frw(p1), "Can't convert coordinates: non-numeric result");
+    }
+
+    // bad coordinates (with datum conversion)
+    {
+      std::string proj_wgs = "+datum=WGS84 +proj=lonlat";
+      std::string proj_krass = "+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=500000 +lon_0=27";
+
+      ConvGeo cnv1(proj_wgs, proj_krass);
+      dPoint p1(25.651054, 160.976941);
+      assert_err(cnv1.frw(p1), "Can't convert coordinates: non-numeric result");
+
+      p1 = dPoint(nan(""), 60.976941);
+      assert_err(cnv1.frw(p1), "Can't convert coordinates: non-numeric result");
+
+    }
+
 
     // CnvMap
     {
