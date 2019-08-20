@@ -75,11 +75,13 @@ geo_mkref(const Opt & o){
     ml=o.get("left_margin", ml);
     mr=o.get("right_margin", mr);
     mb=o.get("bottom_margin", mb);
-    image_bbox = iRect(image_bbox.x-ml, image_bbox.y-mt,
+    image_bbox = iRect(image_bbox.x-ml, image_bbox.y-mb,
                        image_bbox.w+ml+mr, image_bbox.h+mt+mb);
 
     brd -= image_bbox.tlc();
     pts_r -= image_bbox.tlc();
+    brd.flip_y(image_bbox.h);
+    pts_r.flip_y(image_bbox.h);
     map.image_size = iPoint(image_bbox.w, image_bbox.h);
 
     // Add map border:
@@ -183,13 +185,18 @@ geo_mkref(const Opt & o){
     double mag = o.get("mag",1);
 
     // find coordinates of opposite corners:
-    dPoint tlc = tcalc.tile_to_range(tile_range.tlc(),z).tlc();
-    dPoint brc = tcalc.tile_to_range(tile_range.brc(),z).brc();
+    dPoint tlc = G ? tcalc.gtile_to_range(tile_range.blc(),z).blc():
+                     tcalc.tile_to_range(tile_range.tlc(),z).tlc();
+    dPoint brc = G ? tcalc.gtile_to_range(tile_range.trc(),z).blc():
+                     tcalc.tile_to_range(tile_range.brc(),z).tlc();
 
-    // Refpoints:
+    // Refpoints. Corners correspond to points 0,image_size.
+    // Should it be -0.5 .. image_size-0.5
     map.image_size = iPoint(tile_range.w, tile_range.h)*tcalc.get_tsize() * mag;
     dLine pts_w = rect_to_line(dRect(tlc,brc), false);
     dLine pts_r = rect_to_line(dRect(dPoint(0,0),map.image_size), false);
+
+    pts_r.flip_y(map.image_size.y);
     map.add_ref(pts_r, pts_w);
 
     // convert border to map pixels
@@ -201,6 +208,7 @@ geo_mkref(const Opt & o){
       for (auto & l:map.border) for (auto & pt:l)
         pt = tcalc.m_to_px(pt, z); // mercator m -> px
       map.border -= tcalc.get_tsize()*tile_range.tlc();
+      map.border.flip_y(map.image_size.y);
       map.border *= mag;
     }
     return map;
@@ -286,16 +294,19 @@ geo_mkref(const Opt & o){
       brd = cnv.bck_acc(o.get("border_wgs", dMultiLine()),0.5);
 
     /* border and range are set now */
+    range.to_ceil();
 
     // Refpoints
     dLine pts_r = rect_to_line(range, false);
     dLine pts_w(pts_r);
     pts_r -= range.tlc();
+    pts_r.flip_y(range.h);
     cnv.frw(pts_w);
     map.add_ref(pts_r, pts_w);
 
     // border
-    map.border = brd - range.tlc();
+    map.border = rint(brd - range.tlc());
+    map.border.flip_y(range.h);
 
     // image_size
     map.image_size = dPoint(range.w, range.h);
