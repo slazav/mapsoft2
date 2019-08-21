@@ -257,20 +257,26 @@ main(){
         "\"proj\":\"+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=5500000 +lon_0=39\","
         "\"scale\": \"250\"}");
       o.put("coords_wgs", L);
+      o.put("margins", 10);
+      o.put("left_margin", 5);
+      o.put("top_margin", 15);
       GeoMap map = geo_mkref(o);
       assert(map.name == "");
       assert(map.proj == "+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=5500000 +lon_0=39");
       assert(map.image_dpi == 300);
-      assert(map.image_size == iPoint(160,166));
+//std::cerr << "IMG: " << map.image_size << "\n";
+//std::cerr << "BRD: " << map.border << "\n";
+      assert(map.image_size == iPoint(175,191));
       assert(type_to_str(map.border) ==
-         "[[[11,166],[0,3],[155,0],[159,156]]]");
+         "[[[16,181],[5,18],[160,15],[164,171]]]");
       std::ostringstream ss;
       for (auto & r:map.ref) ss << r.first << " " << r.second;
+//std::cerr << "REF: " << ss.str() << "\n";
       assert(ss.str() ==
-        "[0,0] [24.7997734,60.1767342]"
-        "[0,166] [24.8011206,60.1736769]"
-        "[160,0] [24.8056888,60.177381]"
-        "[160,166] [24.8070355,60.1743236]");
+        "[0,0] [24.7994668,60.1769902]"
+        "[0,191] [24.8010169,60.1734725]"
+        "[175,0] [24.8059368,60.1776977]"
+        "[175,191] [24.8074863,60.1741798]");
     }
 
     { // 2x2 km map, Gauss-Kruger projection, 1:100'000, 300dpi -- write map for manual test

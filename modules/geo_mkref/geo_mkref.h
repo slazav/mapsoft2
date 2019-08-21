@@ -43,14 +43,23 @@ Options:
 
 --ref proj
   --proj <proj string> -- set projection (libproj parameter string)
-  --coords <rect, line or multiline>
-  --coords_wgs <rect, line or multiline>
+  --coords <rect, line or multiline in proj coords>
+  --coords_wgs <rect, line or multiline in wgs84 coordinates>
+       Set map area in projection or wgs84 coordinates
   --border <multiline in proj coords>
-  --border_wgs <multiline in proj coords>
+  --border_wgs <multiline in wgs84 coords>
+       Set map border in projection or wgs84 coordinates
   --dpi
   --scale
-    Scale (projection units per map cm), default 1000 for non-degree projections,
-    1/100 for degree projections.
+      Scale (projection units per map cm), default 1000 for non-degree projections,
+      1/100 for degree projections.
+  --margins <pixels>
+  --top_margin <pixels>
+  --left_margin <pixels>
+  --right_margin <pixels>
+  --bottom_margin <pixels>
+      Set map margins.
+
 
 */
 GeoMap geo_mkref(const Opt & o);

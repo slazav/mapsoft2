@@ -68,6 +68,7 @@ geo_mkref(const Opt & o){
 
     // image origin and size
     iRect image_bbox = ceil(pts_r.bbox());
+
     // margins
     int mt,ml,mr,mb;
     mt=ml=mr=mb=o.get("margins", 0);
@@ -249,9 +250,9 @@ geo_mkref(const Opt & o){
         range = o.get("coords", dRect())/k;
         goto coord_end_r1;
       }
-      // try border
       catch (Err e){
       }
+      // try line
       try {
         brd = o.get("coords", dMultiLine())/k;
         range = brd.bbox();
@@ -269,9 +270,9 @@ geo_mkref(const Opt & o){
         range = cnv.bck_acc(R,0.5);
         goto coord_end_r2;
       }
-      // try border
       catch (Err e){
       }
+      // try line
       try {
         brd = cnv.bck_acc(o.get("coords_wgs", dMultiLine()),0.5);
         range = brd.bbox();
@@ -295,6 +296,16 @@ geo_mkref(const Opt & o){
 
     /* border and range are set now */
     range.to_ceil();
+
+    // margins
+    int mt,ml,mr,mb;
+    mt=ml=mr=mb=o.get("margins", 0);
+    mt=o.get("top_margin", mt);
+    ml=o.get("left_margin", ml);
+    mr=o.get("right_margin", mr);
+    mb=o.get("bottom_margin", mb);
+    range = dRect(range.x-ml, range.y-mb,
+                  range.w+ml+mr, range.h+mt+mb);
 
     // Refpoints
     dLine pts_r = rect_to_line(range, false);
