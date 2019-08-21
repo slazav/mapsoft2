@@ -60,8 +60,15 @@ Options:
   --bottom_margin <pixels>
       Set map margins.
 
-
+Following map fields are set:
+  map.name -- map name
+  map.proj -- map projection (string of libproj parameters)
+  map.image_dpi -- map resolution, dots per inch
+  map.image_size -- map image size (in pixels)
+  map.border -- map border (in pixels)
+  map.ref -- four reference points
 */
+
 GeoMap geo_mkref(const Opt & o);
 
 #endif
