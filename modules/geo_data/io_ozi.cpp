@@ -565,11 +565,18 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
     dPoint pp(p.second);
     if (!grid) {
       gcnv1.bck(pp);
-      f << fixed << setw(4) << abs(int(pp.y)) << ','
-        << fixed << setw(8) << fabs(pp.y*60) - abs(int(pp.y))*60 << ','
+      int xd = abs(int(pp.x));
+      int yd = abs(int(pp.y));
+      double xm = fabs(pp.x*60) - xd*60;
+      double ym = fabs(pp.y*60) - yd*60;
+      if (abs(xm-60)<1e-5) {xm=0; xd--;}
+      if (abs(ym-60)<1e-5) {ym=0; yd--;}
+      f << fixed << setprecision(6)
+        << setw(4) << yd << ','
+        << setw(6) << ym << ','
         << (pp.y<0? 'S':'N') << ','
-        << fixed << setw(4) << abs(int(pp.x))
-        << ',' << fixed << setw(8) << fabs(pp.x*60) - abs(int(pp.x))*60 << ','
+        << setw(4) << xd << ','
+        << setw(6) << xm << ','
         << (pp.x<0? 'W':'E') << ','
         << " grid,   ,           ,           ,N\r\n";
     }
