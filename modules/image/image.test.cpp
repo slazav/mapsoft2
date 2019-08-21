@@ -4,11 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include "image.h"
-
-#define assert_err(cmd,ret)\
-  try{ cmd; assert(false); } catch (Err e) {\
-    if (e.str()!=ret) std::cerr<<e.str()<<"\n";\
-    assert(e.str()==(ret));}
+#include "err/assert_err.h"
 
 int
 main(){
