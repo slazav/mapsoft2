@@ -52,7 +52,7 @@ optional fields inside `opts` variable.
 ----------
 ## GPX format
 
-Mapsoft2 supports reading and writing KML files (tracks and
+Mapsoft2 supports reading and writing GPX files (tracks and
 waypoints).
 
 For waypoints all mandatory
@@ -185,7 +185,7 @@ Track is always written as a Feature with MultiLineString coordinates
 
 Coordinates of each waypoint or track point are written in array `[lon,
 lat, alt, time]`. (GeoJSON format requires only `lat` and `lon` fields
-but allows mere values and recommends to have altitude in the fird
+but allows mere values and recommends to have altitude in the third
 field). The array contains three values if time is zero and two values if
 altitude is not defined. If time is defined but altitude is not then
 `null` is written for the altitude.
@@ -272,6 +272,8 @@ with name same as name of the map. On writing map lists are ignored.
 
 #### Map
 - Only a few datums and projections (more can be added).
+  On writing WGS datum is used if ozi_map_wgs option is set
+  or map datum is unknown.
 - Character encoding conversion is applied only to map name,
   not to filename.
 - No support for user-defined datums (ellipsoid+shift).
