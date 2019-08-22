@@ -140,6 +140,17 @@ main(){
       assert(dist2d(p1,p2) < 1e-7);
     }
 
+    // lonlat = latlon !
+    {
+      ConvGeo cnv1("+proj=lonlat", "+proj=latlon");
+      dPoint p1(25.651054, 60.976941);
+      dPoint p2(p1);
+      cnv1.frw(p2);
+      assert(dist2d(p1,p2) < 1e-7);
+      cnv1.bck(p2);
+      assert(dist2d(p1,p2) < 1e-7);
+    }
+
     // bad coordinates (without datum conversion)
     {
       std::string proj_ll = "+proj=lonlat";
