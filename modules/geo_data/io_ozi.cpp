@@ -145,7 +145,8 @@ string convert_datum2ozi(const string & s){
   string to = get_proj_par(s, "towgs84");
 
   if (dt == "WGS84") return "WGS 84";
-  if (el == "krass" && to == "28,-130,-95") return "Pulkovo 1942 (2)";
+  if (el == "krass" && (to == "28,-130,-95" || to == "+28,-130,-95"))
+    return "Pulkovo 1942 (2)";
 
   throw Err() << "io_ozi: unsupported datum: " << s;
 }
