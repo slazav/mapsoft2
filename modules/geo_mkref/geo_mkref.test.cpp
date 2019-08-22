@@ -149,7 +149,11 @@ main(){
     }
 
     { // tms tiles covering a triangular area.
-      GeoMap map = geo_mkref(Opt("{\"mkref\": \"tms_tile\", \"coords_wgs\": \"[[64,32],[65,31],[63,29]]\", \"zindex\":\"7\"}"));
+      GeoMap map = geo_mkref(Opt("{"
+        "\"mkref\": \"tms_tile\", "
+        "\"border_wgs\": \"[[64,32],[65,31],[63,29]]\", "
+        "\"coords_wgs\": \"[[64,32],[65,31],[63,29]]\", "
+        "\"zindex\":\"7\"}"));
       assert(map.name == "[86,74,2,3]");
       assert(map.proj == "+proj=webmerc +datum=WGS84");
       assert(map.image_dpi == 300);
@@ -169,7 +173,10 @@ main(){
     }
 
     { // single google tile covering a given point -- write map for manual test
-      GeoMap map = geo_mkref(Opt("{\"mkref\": \"google_tile\", \"coords_wgs\": \"[26.77188,61.33552]\", \"zindex\":\"14\"}"));
+      GeoMap map = geo_mkref(Opt("{"
+        "\"mkref\": \"google_tile\", "
+        "\"coords_wgs\": \"[26.77188,61.33552]\", "
+        "\"zindex\":\"14\"}"));
       assert(map.name == "[9410,4633,1,1]");
       assert(map.proj == "+proj=webmerc +datum=WGS84");
       assert(map.image_dpi == 300);
@@ -210,10 +217,14 @@ main(){
     }
 
     { // L-shaped map, Gauss-Kruger projection, 1:100'000, 300dpi
-      GeoMap map = geo_mkref(Opt(
-        "{\"mkref\": \"proj\", \"coords\": \"[[7376000,6208000],[7380000,6208000],[7380000,6212000],[7378000,6212000],[7378000,6210000],[7376000,6210000]]\","
+      dLine L("[[7376000,6208000],[7380000,6208000],[7380000,6212000],[7378000,6212000],[7378000,6210000],[7376000,6210000]]");
+      Opt o(
+        "{\"mkref\": \"proj\", "
         "\"proj\":\"+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=7500000 +lon_0=39\","
-        "\"scale\": \"1000\"}"));
+        "\"scale\": \"1000\"}");
+      o.put("coords", L);
+      o.put("border", L);
+      GeoMap map = geo_mkref(o);
       assert(map.name == "");
       assert(map.proj == "+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=7500000 +lon_0=39");
       assert(map.image_dpi == 300);
@@ -229,9 +240,9 @@ main(){
         "[473,473] [37.0757721,55.978916]");
     }
 
-    dLine L("[[24.801507,60.173730],[24.799790,60.176675],[24.805498,60.177358],[24.806914,60.174498]]");
 
     { // rectangular map defined by wgs rectangle, Gauss-Kruger projection, 1:100'000, 300dpi
+      dLine L("[[24.801507,60.173730],[24.799790,60.176675],[24.805498,60.177358],[24.806914,60.174498]]");
       Opt o("{\"mkref\": \"proj\","
         "\"proj\":\"+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=5500000 +lon_0=39\","
         "\"scale\": \"250\"}");
@@ -253,10 +264,12 @@ main(){
     }
 
     { // rectangular map defined by wgs border, Gauss-Kruger projection, 1:100'000, 300dpi
+      dLine L("[[24.801507,60.173730],[24.799790,60.176675],[24.805498,60.177358],[24.806914,60.174498]]");
       Opt o("{\"mkref\": \"proj\","
         "\"proj\":\"+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=5500000 +lon_0=39\","
         "\"scale\": \"250\"}");
       o.put("coords_wgs", L);
+      o.put("border_wgs", L);
       o.put("margins", 10);
       o.put("left_margin", 5);
       o.put("top_margin", 15);

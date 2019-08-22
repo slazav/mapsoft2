@@ -104,7 +104,6 @@ geo_mkref(const Opt & o){
 
     // get tile range and WGS84 border
     iRect tile_range;
-    dMultiLine brd;
 
     if (o.exists("tiles")){
       try {
@@ -142,10 +141,10 @@ geo_mkref(const Opt & o){
         goto coord_end;
       }
 
-      // try border
+      // try line
       catch (Err e){}
       try {
-        brd = o.get("coords_wgs", dMultiLine());
+        dMultiLine brd = o.get("coords_wgs", dMultiLine());
         if (G) tile_range = tcalc.range_to_gtiles(brd.bbox(), z);
         else   tile_range = tcalc.range_to_tiles(brd.bbox(), z);
         goto coord_end;
@@ -157,21 +156,17 @@ geo_mkref(const Opt & o){
       coord_end:;
     }
 
-    // Override border
-    if (o.exists("border_wgs"))
-      brd = o.get("border_wgs", dMultiLine());
-
     // here tile_range should be set to non-zero rectangle
-    // border may be set
     if (tile_range.empty() || tile_range.zsize())
       throw Err() << "geo_mkref: empty tile range, use coords or tiles opotions";
 
     // z-index should be set here
     if (z<0) throw Err() << "geo_mkref: z-index not set";
 
-    //std::cerr << "Z:   " << z << "\n";
-    //std::cerr << "RNG: " << tile_range << "\n";
-    //std::cerr << "BRD: " << brd << "\n";
+    // Set border
+    dMultiLine brd;
+    if (o.exists("border_wgs"))
+      brd = o.get("border_wgs", dMultiLine());
 
     /*** fill map parameters ***/
 
@@ -236,7 +231,6 @@ geo_mkref(const Opt & o){
 
     // get bounding box and border (in map pixels)
     dRect range;
-    dMultiLine brd;
 
     list<string> confl = {"coords", "coords_wgs"};
     o.check_conflict(confl);
@@ -254,7 +248,7 @@ geo_mkref(const Opt & o){
       }
       // try line
       try {
-        brd = o.get("coords", dMultiLine())/k;
+        dMultiLine brd = o.get("coords", dMultiLine())/k;
         range = brd.bbox();
         goto coord_end_r1;
       }
@@ -274,8 +268,7 @@ geo_mkref(const Opt & o){
       }
       // try line
       try {
-        brd = cnv.bck_acc(o.get("coords_wgs", dMultiLine()),0.5);
-        range = brd.bbox();
+        range = cnv.bck_acc(o.get("coords_wgs", dMultiLine()),0.5).bbox();
         goto coord_end_r2;
       }
       catch (Err e){}
@@ -287,17 +280,10 @@ geo_mkref(const Opt & o){
     if (range.empty() || range.zsize())
       throw Err() << "geo_mkref: empty coordinate range";
 
-    // Override border
-    if (o.exists("border"))
-      brd = o.get("border", dMultiLine())/k;
-
-    if (o.exists("border_wgs"))
-      brd = cnv.bck_acc(o.get("border_wgs", dMultiLine()),0.5);
-
-    /* border and range are set now */
+    // expand range to closiest integers
     range.to_ceil();
 
-    // margins
+    // set margins
     int mt,ml,mr,mb;
     mt=ml=mr=mb=o.get("margins", 0);
     mt=o.get("top_margin", mt);
@@ -306,6 +292,15 @@ geo_mkref(const Opt & o){
     mb=o.get("bottom_margin", mb);
     range = dRect(range.x-ml, range.y-mb,
                   range.w+ml+mr, range.h+mt+mb);
+
+    // Set border
+    dMultiLine brd;
+    if (o.exists("border"))
+      brd = o.get("border", dMultiLine())/k;
+    if (o.exists("border_wgs"))
+      brd = cnv.bck_acc(o.get("border_wgs", dMultiLine()),0.5);
+
+    /* border and range are set now */
 
     // Refpoints
     dLine pts_r = rect_to_line(range, false);

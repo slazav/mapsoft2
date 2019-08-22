@@ -35,8 +35,7 @@ Options:
        overrides zindex option. --tiles "[1,2,3]" is same as --tiles "[1,2]" --zindex 0.
 
   --coords_wgs <wgs84 point, rectangle, line, or multiline>
-      Build a map which covers given figure. If argument is Line or MultiLine then
-      border is set to this line (can be ovrriden by --border option).
+      Build a map which covers given figure.
 
   --border_wgs <wgs84 line or multiline>
       Set map border.
