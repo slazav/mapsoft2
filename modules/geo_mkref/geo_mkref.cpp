@@ -121,11 +121,11 @@ geo_mkref(const Opt & o){
 
     }
 
-    if (o.exists("coords")){
+    if (o.exists("coords_wgs")){
 
       // try coordinate point
       try {
-        dPoint p = o.get("coords", dPoint());
+        dPoint p = o.get("coords_wgs", dPoint());
         iPoint t;
         if (G) t = tcalc.pt_to_gtile(p, z);
         else   t = tcalc.pt_to_tile(p, z);
@@ -136,7 +136,7 @@ geo_mkref(const Opt & o){
 
       // try coordinate range
       try {
-        dRect r = o.get("coords", dRect());
+        dRect r = o.get("coords_wgs", dRect());
         if (G) tile_range = tcalc.range_to_gtiles(r, z);
         else   tile_range = tcalc.range_to_tiles(r, z);
         goto coord_end;
@@ -145,7 +145,7 @@ geo_mkref(const Opt & o){
       // try border
       catch (Err e){}
       try {
-        brd = o.get("coords", dMultiLine());
+        brd = o.get("coords_wgs", dMultiLine());
         if (G) tile_range = tcalc.range_to_gtiles(brd.bbox(), z);
         else   tile_range = tcalc.range_to_tiles(brd.bbox(), z);
         goto coord_end;
@@ -158,8 +158,8 @@ geo_mkref(const Opt & o){
     }
 
     // Override border
-    if (o.exists("border"))
-      brd = o.get("border", dMultiLine());
+    if (o.exists("border_wgs"))
+      brd = o.get("border_wgs", dMultiLine());
 
     // here tile_range should be set to non-zero rectangle
     // border may be set

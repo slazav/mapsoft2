@@ -117,7 +117,7 @@ main(){
     }
 
     { // single TMS tile covering a given point
-      GeoMap map = geo_mkref(Opt("{\"mkref\": \"tms_tile\", \"coords\": \"[64.0,32.0]\", \"zindex\":\"3\"}"));
+      GeoMap map = geo_mkref(Opt("{\"mkref\": \"tms_tile\", \"coords_wgs\": \"[64.0,32.0]\", \"zindex\":\"3\"}"));
       assert(map.name == "[5,4,1,1]");
       assert(map.proj == "+proj=webmerc +datum=WGS84");
       assert(map.image_dpi == 300);
@@ -133,7 +133,7 @@ main(){
     }
 
     { // single google tile covering a given point
-      GeoMap map = geo_mkref(Opt("{\"mkref\": \"google_tile\", \"coords\": \"[64.0,32.0]\", \"zindex\":\"3\"}"));
+      GeoMap map = geo_mkref(Opt("{\"mkref\": \"google_tile\", \"coords_wgs\": \"[64.0,32.0]\", \"zindex\":\"3\"}"));
       assert(map.name == "[5,3,1,1]");
       assert(map.proj == "+proj=webmerc +datum=WGS84");
       assert(map.image_dpi == 300);
@@ -149,7 +149,7 @@ main(){
     }
 
     { // tms tiles covering a triangular area.
-      GeoMap map = geo_mkref(Opt("{\"mkref\": \"tms_tile\", \"coords\": \"[[64,32],[65,31],[63,29]]\", \"zindex\":\"7\"}"));
+      GeoMap map = geo_mkref(Opt("{\"mkref\": \"tms_tile\", \"coords_wgs\": \"[[64,32],[65,31],[63,29]]\", \"zindex\":\"7\"}"));
       assert(map.name == "[86,74,2,3]");
       assert(map.proj == "+proj=webmerc +datum=WGS84");
       assert(map.image_dpi == 300);
@@ -169,7 +169,7 @@ main(){
     }
 
     { // single google tile covering a given point -- write map for manual test
-      GeoMap map = geo_mkref(Opt("{\"mkref\": \"google_tile\", \"coords\": \"[26.77188,61.33552]\", \"zindex\":\"14\"}"));
+      GeoMap map = geo_mkref(Opt("{\"mkref\": \"google_tile\", \"coords_wgs\": \"[26.77188,61.33552]\", \"zindex\":\"14\"}"));
       assert(map.name == "[9410,4633,1,1]");
       assert(map.proj == "+proj=webmerc +datum=WGS84");
       assert(map.image_dpi == 300);

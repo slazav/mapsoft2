@@ -34,11 +34,11 @@ Options:
       Tile or tile range. If single point is given then non-zero z-coordinate
        overrides zindex option. --tiles "[1,2,3]" is same as --tiles "[1,2]" --zindex 0.
 
-  --coords <wgs84 point, rectangle, line, or multiline>
+  --coords_wgs <wgs84 point, rectangle, line, or multiline>
       Build a map which covers given figure. If argument is Line or MultiLine then
       border is set to this line (can be ovrriden by --border option).
 
-  --border <wgs84 line or multiline>
+  --border_wgs <wgs84 line or multiline>
       Set map border.
 
 --mkref proj
