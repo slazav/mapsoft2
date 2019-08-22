@@ -100,7 +100,7 @@ string convert_ozi_text(const string & str){
 
 /***************************************************************************/
 string convert_ozi2proj(const string & s){
-  if (s=="Latitude/Longitude")      return "+proj=latlong";
+  if (s=="Latitude/Longitude")      return "+proj=lonlat";
   if (s=="Transverse Mercator")     return "+proj=tmerc";
   if (s=="Mercator")                return "+proj=merc";
   if (s=="Lambert Conformal Conic") return "+proj=lcc";
@@ -129,6 +129,9 @@ string convert_proj2ozi(const string & s){
   if (pr == "") throw Err() << "io_ozi: can't fing proj setting: " <<s;
 
   if (pr=="latlong") return "Latitude/Longitude";
+  if (pr=="longlat") return "Latitude/Longitude";
+  if (pr=="latlon") return "Latitude/Longitude";
+  if (pr=="lonlat") return "Latitude/Longitude";
   if (pr=="tmerc")   return "Transverse Mercator";
   if (pr=="merc")    return "Mercator";
   if (pr=="webmerc") return "Mercator"; // not exact

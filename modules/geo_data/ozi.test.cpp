@@ -66,7 +66,7 @@ main() {
     assert( convert_ozi_text("abc,def\nghi") == "abc—def ghi");
 
     // ozi2proj
-    assert(convert_ozi2proj("Latitude/Longitude") == "+proj=latlong");
+    assert(convert_ozi2proj("Latitude/Longitude") == "+proj=lonlat");
     assert(convert_ozi2proj("Transverse Mercator") == "+proj=tmerc");
     assert(convert_ozi2proj("Mercator") == "+proj=merc");
     assert(convert_ozi2proj("Lambert Conformal Conic") == "+proj=lcc");
