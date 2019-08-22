@@ -174,8 +174,7 @@ geo_mkref(const Opt & o){
     map.name = type_to_str(tile_range);
 
     // map projection
-    map.proj = "+proj=webmerc +datum=WGS84"; // from libproj-5.1.0
-    // map.prog = "+proj=merc +a=6378137 +b=6378137 +nadgrids=@null +no_defs";
+    map.proj = GEO_PROJ_WEB;
 
     // map magnification
     double mag = o.get("mag",1);
@@ -214,7 +213,7 @@ geo_mkref(const Opt & o){
   if (reftype == "proj"){
 
     // map projection
-    map.proj = o.get("proj", string());
+    map.proj = o.get("proj", GEO_PROJ_DEF);
     if (map.proj == "") throw Err() << "Option --proj is not set";
 
     // try to build conversion, proj -> wgs84

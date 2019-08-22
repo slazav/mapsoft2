@@ -41,7 +41,7 @@ Options:
       Set map border.
 
 --mkref proj
-  --proj <proj string> -- set projection (libproj parameter string)
+  --proj <proj string> -- set datum and projection (libproj parameter string), default: "+datum=WGS84 +proj=lonlat"
   --coords <rect, line or multiline in proj coords>
   --coords_wgs <rect, line or multiline in wgs84 coordinates>
        Set map area in projection or wgs84 coordinates

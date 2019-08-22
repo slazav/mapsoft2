@@ -7,8 +7,8 @@
 int
 main(){
   try{
-    std::string proj_wgs = "+datum=WGS84 +proj=lonlat";
-    std::string proj_krass = "+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=500000 +lon_0=27";
+    std::string proj_wgs = GEO_PROJ_DEF;
+    std::string proj_krass = GEO_PROJ_SU(27, 5);
 
     ConvGeo cnv1(proj_wgs,proj_wgs, false);   // wgs -> wgs, 3D
     ConvGeo cnv2(proj_krass);                 // krass -> wgs, 2D
@@ -31,9 +31,9 @@ main(){
     assert(cnv3.get_2d() == true);
 
     dPoint p1(25.651054, 60.976941, 0);
-    dPoint p1a(427091, 6763808, -11);
-    dPoint p1z(427091, 6763808);
-    dPoint p1n(427091, 6763808, nan(""));
+    dPoint p1a(5427091, 6763808, -11);
+    dPoint p1z(5427091, 6763808);
+    dPoint p1n(5427091, 6763808, nan(""));
 
     // trivial
     dPoint p2(p1);
@@ -112,6 +112,21 @@ main(){
     p2.z/=2;
     assert(dist2d(p1,p2*2) < 2e-7);
 
+    // adding coordinate prefix does not change result
+    {
+      std::string proj1 = GEO_PROJ_SU(99, 17);
+      std::string proj2 = GEO_PROJ_SU(99, 0);
+
+      ConvGeo cnv1(proj1);
+      ConvGeo cnv2(proj2);
+
+      dPoint p1(98.651054, 60.976941), p2(p1), p3(p1);
+      cnv1.bck(p1);
+      cnv2.bck(p2);
+      p2.x += 17000000;
+      assert(p1 == p2);
+    }
+
     // no datum
     {
       std::string proj_ll = "+ellps=krass +proj=lonlat";
@@ -170,8 +185,8 @@ main(){
 
     // bad coordinates (with datum conversion)
     {
-      std::string proj_wgs = "+datum=WGS84 +proj=lonlat";
-      std::string proj_krass = "+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=500000 +lon_0=27";
+      std::string proj_wgs = GEO_PROJ_DEF;
+      std::string proj_krass = GEO_PROJ_SU(27,5);
 
       ConvGeo cnv1(proj_wgs, proj_krass);
       dPoint p1(25.651054, 160.976941);
@@ -194,9 +209,9 @@ main(){
        m.border = dMultiLine("[[[159.1,386.8],[1264.1,386.4],[2369.9,385.3],"
                         "[2371.2,3007.6],[1260.7,3008.9],[150.9,3009.3],[159.1,386.8]]]");
        m.proj = "+datum=WGS84 +proj=tmerc +lon_0=39 +x_0=500000";
-       ConvMap cnv1(m, "+ellps=krass +towgs84=28,-130,-95 +x_0=500000 +proj=tmerc +lon_0=39");
+       ConvMap cnv1(m, GEO_PROJ_SU(39,7));
        dPoint p1(1333, 867);
-       dPoint p2(321000, 6209000);
+       dPoint p2(7321000, 6209000);
        cnv1.frw(p1);
        assert(dist2d(p1,p2) < 15); // 15m accuracy (~2px)
 
