@@ -19,10 +19,10 @@ geo_mkref(const Opt & o){
   GeoMap map;
   GeoTiles tcalc;
 
-  if (!o.exists("ref"))
-    throw Err() << "mk_ref: reference type (option ref) should be set";
+  if (!o.exists("mkref"))
+    throw Err() << "geo_mkref: reference type (option ref) should be set";
 
-  string reftype = o.get("ref",string());
+  string reftype = o.get("mkref",string());
 
   /***************************************/
   if (reftype == "nom"){
@@ -30,7 +30,7 @@ geo_mkref(const Opt & o){
     // map name
     map.name = o.get("name",string());
     if (map.name == "")
-      throw "mk_ref: nomenclature name should be set (name option)";
+      throw "geo_mkref: nomenclature name should be set (name option)";
 
     // Map range (in pulkovo coordinates)
     nom_scale_t sc;
@@ -326,5 +326,5 @@ geo_mkref(const Opt & o){
   }
 
   /***************************************/
-  throw Err() << "mk_ref: unknown reference type: " << reftype;
+  throw Err() << "geo_mkref: unknown reference type: " << reftype;
 }

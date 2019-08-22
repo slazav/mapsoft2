@@ -14,7 +14,7 @@ build certain types of references using test options.
 
 Options:
 
---ref nom -- make Soviet nomenclature map.
+--mkref nom -- make Soviet nomenclature map.
   --name <name> -- map name (mapsoft2 extensions are allowed).
   --dpi <double> -- map resolution in dots per inch (default 300).
   --mag <factor> -- rescale map without changing dpi setting (default 1).
@@ -25,8 +25,8 @@ Options:
   --bottom_margin <pixels>
     Set margins between map border and image boundary.
 
---ref tms_tile
---ref google_tile -- create a single tile or rectangular area with multiple tiles
+--mkref tms_tile
+--mkref google_tile -- create a single tile or rectangular area with multiple tiles
 
   --zindex <integer>  -- tile zindex
 
@@ -41,7 +41,7 @@ Options:
   --border <wgs84 line or multiline>
       Set map border.
 
---ref proj
+--mkref proj
   --proj <proj string> -- set projection (libproj parameter string)
   --coords <rect, line or multiline in proj coords>
   --coords_wgs <rect, line or multiline in wgs84 coordinates>

@@ -15,7 +15,7 @@ main(){
     /**** nom ****/
 
     { // nomenclature map with margins
-      Opt o = Opt("{\"ref\":\"nom\", \"name\":\"n37-001\", \"dpi\":\"200\"}");
+      Opt o = Opt("{\"mkref\":\"nom\", \"name\":\"n37-001\", \"dpi\":\"200\"}");
       GeoMap map = geo_mkref(o);
       assert(map.name == "n37-001");
       assert(map.proj == "+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=500000 +lon_0=39");
@@ -34,7 +34,7 @@ main(){
     }
 
     { // nomenclature map with margins
-      Opt o = Opt("{\"ref\":\"nom\", \"name\":\"n37-001\", \"dpi\":\"100\","
+      Opt o = Opt("{\"mkref\":\"nom\", \"name\":\"n37-001\", \"dpi\":\"100\","
                   "\"margins\": \"100\", \"top_margin\": \"200\" }");
       GeoMap map = geo_mkref(o);
       assert(map.name == "n37-001");
@@ -54,7 +54,7 @@ main(){
     }
 
     { // nomenclature map with margins -- write map for manual test
-      Opt o = Opt("{\"ref\":\"nom\", \"name\":\"m47-022\", \"dpi\":\"50\","
+      Opt o = Opt("{\"mkref\":\"nom\", \"name\":\"m47-022\", \"dpi\":\"50\","
                   "\"margins\": \"0\", \"top_margin\": \"0\" }");
       o.put("top_margin",16);
       o.put("left_margin",18);
@@ -82,8 +82,8 @@ main(){
     /**** tms/google tiles ****/
 
     { // single TMS tile
-      GeoMap map = geo_mkref(Opt("{\"ref\": \"tms_tile\", \"tiles\": \"[1,1,10]\"}"));
-      GeoMap map1 = geo_mkref(Opt("{\"ref\": \"tms_tile\", \"tiles\": \"[1,1]\", \"zindex\":\"10\"}"));
+      GeoMap map = geo_mkref(Opt("{\"mkref\": \"tms_tile\", \"tiles\": \"[1,1,10]\"}"));
+      GeoMap map1 = geo_mkref(Opt("{\"mkref\": \"tms_tile\", \"tiles\": \"[1,1]\", \"zindex\":\"10\"}"));
       assert(map1 == map);
 
       assert(map.name == "[1,1,1,1]");
@@ -101,7 +101,7 @@ main(){
     }
 
     { // 2x3 TMS tile range
-      GeoMap map = geo_mkref(Opt("{\"ref\": \"tms_tile\", \"tiles\": \"[1,1,2,3]\", \"zindex\":\"3\"}"));
+      GeoMap map = geo_mkref(Opt("{\"mkref\": \"tms_tile\", \"tiles\": \"[1,1,2,3]\", \"zindex\":\"3\"}"));
       assert(map.name == "[1,1,2,3]");
       assert(map.proj == "+proj=webmerc +datum=WGS84");
       assert(map.image_dpi == 300);
@@ -117,7 +117,7 @@ main(){
     }
 
     { // single TMS tile covering a given point
-      GeoMap map = geo_mkref(Opt("{\"ref\": \"tms_tile\", \"coords\": \"[64.0,32.0]\", \"zindex\":\"3\"}"));
+      GeoMap map = geo_mkref(Opt("{\"mkref\": \"tms_tile\", \"coords\": \"[64.0,32.0]\", \"zindex\":\"3\"}"));
       assert(map.name == "[5,4,1,1]");
       assert(map.proj == "+proj=webmerc +datum=WGS84");
       assert(map.image_dpi == 300);
@@ -133,7 +133,7 @@ main(){
     }
 
     { // single google tile covering a given point
-      GeoMap map = geo_mkref(Opt("{\"ref\": \"google_tile\", \"coords\": \"[64.0,32.0]\", \"zindex\":\"3\"}"));
+      GeoMap map = geo_mkref(Opt("{\"mkref\": \"google_tile\", \"coords\": \"[64.0,32.0]\", \"zindex\":\"3\"}"));
       assert(map.name == "[5,3,1,1]");
       assert(map.proj == "+proj=webmerc +datum=WGS84");
       assert(map.image_dpi == 300);
@@ -149,7 +149,7 @@ main(){
     }
 
     { // tms tiles covering a triangular area.
-      GeoMap map = geo_mkref(Opt("{\"ref\": \"tms_tile\", \"coords\": \"[[64,32],[65,31],[63,29]]\", \"zindex\":\"7\"}"));
+      GeoMap map = geo_mkref(Opt("{\"mkref\": \"tms_tile\", \"coords\": \"[[64,32],[65,31],[63,29]]\", \"zindex\":\"7\"}"));
       assert(map.name == "[86,74,2,3]");
       assert(map.proj == "+proj=webmerc +datum=WGS84");
       assert(map.image_dpi == 300);
@@ -169,7 +169,7 @@ main(){
     }
 
     { // single google tile covering a given point -- write map for manual test
-      GeoMap map = geo_mkref(Opt("{\"ref\": \"google_tile\", \"coords\": \"[26.77188,61.33552]\", \"zindex\":\"14\"}"));
+      GeoMap map = geo_mkref(Opt("{\"mkref\": \"google_tile\", \"coords\": \"[26.77188,61.33552]\", \"zindex\":\"14\"}"));
       assert(map.name == "[9410,4633,1,1]");
       assert(map.proj == "+proj=webmerc +datum=WGS84");
       assert(map.image_dpi == 300);
@@ -192,7 +192,7 @@ main(){
 
     { // 2x2 km map, Gauss-Kruger projection, 1:100'000, 300dpi
       GeoMap map = geo_mkref(Opt(
-        "{\"ref\": \"proj\", \"coords\": \"[7376000,6208000,2000,2000]\","
+        "{\"mkref\": \"proj\", \"coords\": \"[7376000,6208000,2000,2000]\","
         "\"proj\":\"+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=7500000 +lon_0=39\","
         "\"scale\": \"1000\"}"));
       assert(map.name == "");
@@ -211,7 +211,7 @@ main(){
 
     { // L-shaped map, Gauss-Kruger projection, 1:100'000, 300dpi
       GeoMap map = geo_mkref(Opt(
-        "{\"ref\": \"proj\", \"coords\": \"[[7376000,6208000],[7380000,6208000],[7380000,6212000],[7378000,6212000],[7378000,6210000],[7376000,6210000]]\","
+        "{\"mkref\": \"proj\", \"coords\": \"[[7376000,6208000],[7380000,6208000],[7380000,6212000],[7378000,6212000],[7378000,6210000],[7376000,6210000]]\","
         "\"proj\":\"+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=7500000 +lon_0=39\","
         "\"scale\": \"1000\"}"));
       assert(map.name == "");
@@ -232,7 +232,7 @@ main(){
     dLine L("[[24.801507,60.173730],[24.799790,60.176675],[24.805498,60.177358],[24.806914,60.174498]]");
 
     { // rectangular map defined by wgs rectangle, Gauss-Kruger projection, 1:100'000, 300dpi
-      Opt o("{\"ref\": \"proj\","
+      Opt o("{\"mkref\": \"proj\","
         "\"proj\":\"+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=5500000 +lon_0=39\","
         "\"scale\": \"250\"}");
       o.put("coords_wgs", L.bbox());
@@ -253,7 +253,7 @@ main(){
     }
 
     { // rectangular map defined by wgs border, Gauss-Kruger projection, 1:100'000, 300dpi
-      Opt o("{\"ref\": \"proj\","
+      Opt o("{\"mkref\": \"proj\","
         "\"proj\":\"+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=5500000 +lon_0=39\","
         "\"scale\": \"250\"}");
       o.put("coords_wgs", L);
@@ -281,7 +281,7 @@ main(){
 
     { // 2x2 km map, Gauss-Kruger projection, 1:100'000, 300dpi -- write map for manual test
       GeoMap map = geo_mkref(Opt(
-        "{\"ref\": \"proj\", \"coords\": \"[17552000,5624000,12000,6000]\","
+        "{\"mkref\": \"proj\", \"coords\": \"[17552000,5624000,12000,6000]\","
         "\"proj\":\"+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=17500000 +lon_0=99\","
         "\"scale\": \"1000\", \"dpi\":\"200\"}"));
       assert(map.name == "");
