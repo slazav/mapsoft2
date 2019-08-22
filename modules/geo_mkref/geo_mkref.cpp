@@ -40,9 +40,11 @@ geo_mkref(const Opt & o){
     double lon0 = lon2lon0(R.x + 1e-6);
 
     // map projection
-    map.proj = "+ellps=krass +towgs84=28,-130,-95 +proj=tmerc +x_0=500000 +lon_0="
-             + type_to_str(lon0);
-    string proj_pulk = "+ellps=krass +towgs84=28,-130,-95 +proj=lonlat";
+    map.proj = "+ellps=krass +towgs84=+28,-130,-95 +proj=tmerc"
+               " +lon_0=" + type_to_str(lon0) +
+               " +x_0=" + type_to_str(lon2pref(lon0)) + "500000";
+
+    string proj_pulk = "+ellps=krass +towgs84=+28,-130,-95 +proj=lonlat";
     // conversion map_projection -> pulkovo
     ConvGeo cnv1(map.proj, proj_pulk);
     // conversion pulkovo -> wgs84
@@ -60,14 +62,17 @@ geo_mkref(const Opt & o){
     // We convert a closed line, then removing the last point.
     dLine brd = open(cnv1.bck_acc(rect_to_line(R, true), 0.5));
 
-    // Refpoints:
-    dLine pts_r = rect_to_line(R, false),
-          pts_w = pts_r;
-    cnv1.bck(pts_r); // pulkovo -> map points
-    cnv2.frw(pts_w);  // pulkovo -> wgs
+    // image size
+    iRect image_bbox = ceil(cnv1.bck_acc(R, 0.5));
 
-    // image origin and size
-    iRect image_bbox = ceil(pts_r.bbox());
+    // Refpoints:
+    dLine pts_r = rect_to_line(R, false);
+    cnv1.bck(pts_r); // pulkovo -> map points
+    pts_r.to_floor();
+
+    dLine pts_w = pts_r;
+    cnv1.frw(pts_w); // map points -> pulkovo
+    cnv2.frw(pts_w);  // pulkovo -> wgs
 
     // margins
     int mt,ml,mr,mb;
