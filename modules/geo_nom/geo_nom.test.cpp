@@ -1,6 +1,7 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
 #include <cassert>
+#include "err/assert_err.h"
 #include "geo_nom.h"
 
 void assert_nom(const std::string & name, const dRect & res, nom_scale_t sc0,
@@ -98,11 +99,11 @@ main(){
   assert(str_to_type<nom_scale_t>("500m/cm") == SC_50k);
   assert(str_to_type<nom_scale_t>("500m")    == SC_50k);
 
-  try { str_to_type<nom_scale_t>("a"); assert(false); }
-  catch (Err e){ assert(e.str()=="can't parse nomenclature map scale: a"); }
+  assert_err(str_to_type<nom_scale_t>("a"),
+    "can't parse nomenclature map scale: a");
 
-  try { str_to_type<nom_scale_t>("500m "); assert(false); }
-  catch (Err e){ assert(e.str()=="can't parse value: 500m "); }
+  assert_err(str_to_type<nom_scale_t>("500m "),
+    "can't parse value: 500m ");
 
   assert(type_to_str<nom_scale_t>(SC_1M) == "1:1000000");
   assert(type_to_str<nom_scale_t>(SC_500k) == "1:500000");
@@ -499,8 +500,7 @@ main(){
   assert(crdx2lon0(48800000) == -75);
   assert(crdx2lon0(1800000) == 3);
 
-  try{ crdx2lon0(800000); assert(false); }
-  catch (Err e) {assert(e.str()=="zero coordinate prefix");}
+  assert_err(crdx2lon0(800000), "zero coordinate prefix");
 
   // crdx2nonpref
   assert(crdx2nonpref(7800000) == 800000);
