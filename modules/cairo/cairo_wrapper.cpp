@@ -45,10 +45,9 @@ CairoExtra::mkpath_smline(const dLine & o, bool close, double curve_l){
   if (close) close_path();
 }
 
+
 void
-CairoExtra::render_text_fig(const char *text, dPoint pos, double ang,
-       int color, int fig_font, double font_size, double dpi, int hdir, int vdir){
-  Cairo::Context::save();
+CairoExtra::set_fig_font(int color, int fig_font, double font_size, double dpi){
   set_color(color);
 
   std::string       face;
@@ -106,26 +105,13 @@ CairoExtra::render_text_fig(const char *text, dPoint pos, double ang,
   Cairo::Context::set_font_size(font_size*dpi/89.0);
   Cairo::Context::set_font_face(
     Cairo::ToyFontFace::create(face, slant, weight));
-
-  dRect ext = get_text_extents(text);
-  move_to(pos);
-  Cairo::Context::rotate(ang);
-  if (hdir == 1) Cairo::Context::rel_move_to(-ext.w/2, 0.0);
-  if (hdir == 2) Cairo::Context::rel_move_to(-ext.w, 0.0);
-  if (vdir == 1) Cairo::Context::rel_move_to(0.0, ext.h/2);
-  if (vdir == 2) Cairo::Context::rel_move_to(0.0, ext.h);
-  Cairo::Context::reset_clip();
-  Cairo::Context::show_text(text);
-  Cairo::Context::restore();
 }
 
+
 void
-CairoExtra::render_text_fc(const char *text, dPoint pos, double ang,
-       int color, const char *fc_patt, double font_size, int hdir, int vdir){
-  Cairo::Context::save();
+CairoExtra::set_fc_font(int color, const char *fc_patt, double font_size){
   set_color(color);
   Cairo::Context::set_font_size(font_size);
-
   // For work with patterns see:
   // https://www.freedesktop.org/software/fontconfig/fontconfig-devel/x103.html#AEN242
   // For font properties see:
@@ -135,15 +121,29 @@ CairoExtra::render_text_fc(const char *text, dPoint pos, double ang,
   FcPattern *patt = FcNameParse((const FcChar8 *)fc_patt);
   set_font_face( Cairo::FtFontFace::create(patt));
   FcPatternDestroy(patt);
+}
 
-  dRect ext = get_text_extents(text);
+void
+CairoExtra::text(const char *text, dPoint pos, double ang, int hdir, int vdir){
+  Cairo::Context::save();
   move_to(pos);
   Cairo::Context::rotate(ang);
-  if (hdir == 1) Cairo::Context::rel_move_to(-ext.w/2, 0.0);
-  if (hdir == 2) Cairo::Context::rel_move_to(-ext.w, 0.0);
-  if (vdir == 1) Cairo::Context::rel_move_to(0.0, ext.h/2);
-  if (vdir == 2) Cairo::Context::rel_move_to(0.0, ext.h);
-  Cairo::Context::reset_clip();
+  if (hdir!=0 || vdir!=0) {
+    dRect ext = get_text_extents(text);
+    switch (hdir){
+      case 1: Cairo::Context::rel_move_to(-ext.w/2, 0.0); break;
+      case 2: Cairo::Context::rel_move_to(-ext.w, 0.0); break;
+      case 0: break;
+      default: throw Err() << "cairo_wrapper: wrong hdir parameter for text";
+    }
+    switch (vdir){
+      case 1: Cairo::Context::rel_move_to(0.0, ext.h/2); break;
+      case 2: Cairo::Context::rel_move_to(0.0, ext.h); break;
+      case 0: break;
+      default: throw Err() << "cairo_wrapper: wrong hdir parameter for text";
+    }
+  }
+//  Cairo::Context::reset_clip();
   Cairo::Context::show_text(text);
   Cairo::Context::restore();
 }

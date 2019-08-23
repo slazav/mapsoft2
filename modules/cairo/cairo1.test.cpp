@@ -47,10 +47,18 @@ main(){
       cw->set_color(0x000000);
 
       // render text using fig fonts
-      cw->render_text_fig("Test/Тест", dPoint(0,0), 0, 0xFF0000FF, 0, 10, 150, 0, 2);
-      cw->render_text_fig("Test/Тест", dPoint(0,20), 0.1, 0xFF0000FF, 1, 10, 150, 0, 2);
-      cw->render_text_fig("Test/Тест", dPoint(0,40), 0.1, 0xFF0000FF, 16, 10, 150, 0, 2);
-      cw->render_text_fig("Test/Тест", dPoint(150,100),0 , 0xFF0000FF, 18, 10, 150, 2, 0);
+      cw->set_fig_font(0xFF0000FF, 0, 10, 150);
+      cw->text("Test/Тест", dPoint(0,0), 0, 0,2);
+
+      cw->set_fig_font(0xFF0000FF, 1, 10, 150);
+      cw->text("Test/Тест", dPoint(0,20), 0.1, 0,2);
+
+      cw->set_fig_font(0xFF0000FF, 16, 10, 150);
+      cw->text("Test/Тест", dPoint(0,40), 0.1, 0,2);
+
+      cw->set_fig_font(0xFF0000FF, 18, 10, 150);
+      cw->text("Test/Тест", dPoint(150,100), 0, 2,0);
+
       cw->save_png("tmp2.png");
     }
 
@@ -64,37 +72,40 @@ main(){
       cw->set_color(0xFFFFFF);
       cw->paint();
 
+      const char *fonts_it[] = {
+        "DejaVu Serif:Italic:semicondensed:rgba=none",
+        "Free Serif:Italic:semicondensed:rgba=none",
+        "Liberation Serif:Italic:semicondensed:rgba=none",
+        "Nimbus Roman No9 L:Italic:semicondensed:rgba=none",
+        "URW Bookman L:Italic:semicondensed:rgba=none",
+        "URW Palladio L:Italic:semicondensed:rgba=none",
+        "Century Schoolbook L:Italic:semicondensed:rgba=none",
+        NULL};
+
+      const char *fonts_bf[] = {
+         "DejaVu Sans:Bold:semicondensed:rgba=none",
+         "FreeSans:semibold:semicondensed:rgba=none",
+         "Liberation Sans:bold:rgba=none:autohint",
+         "Nimbus Sans L:bold:rgba=none:autohint",
+         "URW Gothic L:semibold:rgba=none:autohint",
+         "Open Sans:bold:rgba=none:autohint",
+         "Open Sans:semibold:rgba=none:autohint",
+        NULL};
+
+      const char *text = "Дод-Уха-Хем-Голын-Барун-Сала";
+
       // render text using fontconfig
-      cw->render_text_fc("Дод-Уха-Хем-Голын-Барун-Сала", dPoint(10,20),-0.1, 0xFF0000FF,
-         "DejaVu Serif:Italic:semicondensed:rgba=none", 8, 0, 0);
-      cw->render_text_fc("Дод-Уха-Хем-Голын-Барун-Сала", dPoint(10,30),-0.1, 0xFF0000FF,
-         "Free Serif:Italic:semicondensed:rgba=none", 8.5, 0, 0);
-      cw->render_text_fc("Дод-Уха-Хем-Голын-Барун-Сала", dPoint(10,40),-0.1, 0xFF0000FF,
-         "Liberation Serif:Italic:semicondensed:rgba=none", 8.5, 0, 0);
-      cw->render_text_fc("Дод-Уха-Хем-Голын-Барун-Сала", dPoint(10,50),-0.1, 0xFF0000FF,
-         "Nimbus Roman No9 L:Italic:semicondensed:rgba=none", 8, 0, 0);
-      cw->render_text_fc("Дод-Уха-Хем-Голын-Барун-Сала", dPoint(10,60),-0.1, 0xFF0000FF,
-         "URW Bookman L:Italic:semicondensed:rgba=none", 8, 0, 0);
-      cw->render_text_fc("Дод-Уха-Хем-Голын-Барун-Сала", dPoint(10,70),-0.1, 0xFF0000FF,
-         "URW Palladio L:Italic:semicondensed:rgba=none", 8.5, 0, 0);
-      cw->render_text_fc("Дод-Уха-Хем-Голын-Барун-Сала", dPoint(10,80),-0.1, 0xFF0000FF,
-         "Century Schoolbook L:Italic:semicondensed:rgba=none", 8, 0, 0);
+      for (int i=0; fonts_it[i]; ++i) {
+        double fs = (i==1||i==2||i==5)? 8.5:8;
+        cw->set_fc_font(0xFF0000FF, fonts_it[i], fs);
+        cw->text(text, dPoint(10,20+10*i),-0.1);
+      }
 
-      cw->render_text_fc("Дод-Уха-Хем-Голын-Барун-Сала", dPoint(10,100),0, 0xFF000000,
-         "DejaVu Sans:Bold:semicondensed:rgba=none", 8, 0, 0);
-      cw->render_text_fc("Дод-Уха-Хем-Голын-Барун-Сала", dPoint(10,110),0, 0xFF000000,
-         "FreeSans:semibold:semicondensed:rgba=none", 8, 0, 0);
-      cw->render_text_fc("Дод-Уха-Хем-Голын-Барун-Сала", dPoint(10,120),0, 0xFF000000,
-         "Liberation Sans:bold:rgba=none:autohint", 8, 0, 0); //+
-      cw->render_text_fc("Дод-Уха-Хем-Голын-Барун-Сала", dPoint(10,130),0, 0xFF000000,
-         "Nimbus Sans L:bold:rgba=none:autohint", 8, 0, 0);
-      cw->render_text_fc("Дод-Уха-Хем-Голын-Барун-Сала", dPoint(10,140),0, 0xFF000000,
-         "URW Gothic L:semibold:rgba=none:autohint", 8, 0, 0);
-      cw->render_text_fc("Дод-Уха-Хем-Голын-Барун-Сала", dPoint(10,150),0, 0xFF000000,
-         "Open Sans:bold:rgba=none:autohint", 8, 0, 0);
-      cw->render_text_fc("Дод-Уха-Хем-Голын-Барун-Сала", dPoint(10,160),0, 0xFF000000,
-         "Open Sans:semibold:rgba=none:autohint", 8, 0, 0); //+
-
+      for (int i=0; fonts_bf[i]; ++i) {
+        double fs = 8;
+        cw->set_fc_font(0xFF000000, fonts_bf[i], fs);
+        cw->text(text, dPoint(10,100+10*i),0);
+      }
 
       cw->save_png("tmp3.png");
     }

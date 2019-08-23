@@ -128,18 +128,21 @@ struct CairoExtra : public Cairo::Context {
     Cairo::Context::set_dash(d, 0);
   }
 
-  // render text using fig font and font size
-  void render_text_fig(const char *text, dPoint pos, double ang,
-       int color, int fig_font, double font_size, double dpi, int hdir=0, int vdir=0);
+  // set FIG font (not full support, not recommended)
+  void set_fig_font(int color, int fig_font, double font_size, double dpi);
 
+  // set FC font
   // For font properties see:
   // https://www.freedesktop.org/software/fontconfig/fontconfig-devel/x19.html
   // https://www.freedesktop.org/software/fontconfig/fontconfig-user.html
   // https://wiki.archlinux.org/index.php/Font_configuration
   // Examples of fc_patt:
   //   "Century Schoolbook L:Italic:semicondensed:rgba=none"
-  void render_text_fc(const char *text, dPoint pos, double ang,
-       int color, const char *fc_patt, double font_size, int hdir=0, int vdir=0);
+  void set_fc_font(int color, const char *fc_patt, double font_size);
+
+  // render text
+  void text(const char *text, dPoint pos, double ang, int hdir=0, int vdir=0);
+
 
   void render_border(const iRect & range, const dLine & brd, const int bgcolor);
 
