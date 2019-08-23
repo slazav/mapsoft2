@@ -10,6 +10,9 @@ main(){
       CairoWrapper cw;
       cw.set_surface_pdf("tmp1.pdf", 150,100);
 
+      assert(cw.width() == 150);
+      assert(cw.height() == 100);
+      assert(cw.bbox() == dRect(0,0,150,100));
       cw->set_color(0xFF0000); // red color
       cw->mkpath(dLine("[[10,50],[130,10],[80,90]]"), 0);
       cw->fill_preserve();
@@ -35,6 +38,10 @@ main(){
     {
       CairoWrapper cw;
       cw.set_surface_pdf("tmp2.pdf", 150,100);
+      assert(cw.width() == 150);
+      assert(cw.height() == 100);
+      assert(cw.bbox() == dRect(0,0,150,100));
+
       cw->set_color(0xFFFF00);
       cw->paint();
       cw->set_color(0x000000);
@@ -50,6 +57,10 @@ main(){
     {
       CairoWrapper cw;
       cw.set_surface_pdf("tmp3.pdf", 150,200);
+      assert(cw.width() == 150);
+      assert(cw.height() == 200);
+      assert(cw.bbox() == dRect(0,0,150,200));
+
       cw->set_color(0xFFFFFF);
       cw->paint();
 

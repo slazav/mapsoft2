@@ -158,6 +158,7 @@ private:
   // for keeping data of the original image
   Image image;
   Cairo::RefPtr<Cairo::Surface> surface;
+  int w,h; // surface size in pixels
 
 public:
 
@@ -188,5 +189,15 @@ public:
 
   // get the surface
   Cairo::RefPtr<Cairo::Surface> get_surface() { return surface; }
+
+  // get surface width
+  int width() const { return w; }
+
+  // get surface height
+  int height() const { return h; }
+
+  // get surface bbox (starting at 0,0)
+  iRect bbox() const { return dRect(0,0,w,h); }
+
 };
 #endif
