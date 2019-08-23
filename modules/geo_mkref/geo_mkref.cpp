@@ -60,10 +60,10 @@ geo_mkref(const Opt & o){
 
     // Border in map points (1pt accuracy);
     // We convert a closed line, then removing the last point.
-    dLine brd = open(cnv1.bck_acc(rect_to_line(R, true), 0.5));
+    dLine brd = open(cnv1.bck_acc(rect_to_line(R, true)));
 
     // image size
-    iRect image_bbox = ceil(cnv1.bck_acc(R, 0.5));
+    iRect image_bbox = ceil(cnv1.bck_acc(R));
 
     // Refpoints:
     dLine pts_r = rect_to_line(R, false);
@@ -204,7 +204,7 @@ geo_mkref(const Opt & o){
       // We need ConvGeo because of convenient bck_acc function.
       ConvGeo cnv(map.proj); // webmercator -> wgs84
 
-      map.border = cnv.bck_acc(brd,0.5); // lonlat -> mercator m
+      map.border = cnv.bck_acc(brd); // lonlat -> mercator m
       for (auto & l:map.border) for (auto & pt:l)
         pt = tcalc.m_to_px(pt, z); // mercator m -> px
       map.border -= tcalc.get_tsize()*tile_range.tlc();
@@ -265,14 +265,14 @@ geo_mkref(const Opt & o){
       // try coordinate range
       try {
         dRect R = o.get("coords_wgs", dRect());
-        range = cnv.bck_acc(R,0.5);
+        range = cnv.bck_acc(R);
         goto coord_end_r2;
       }
       catch (Err e){
       }
       // try line
       try {
-        range = cnv.bck_acc(o.get("coords_wgs", dMultiLine()),0.5).bbox();
+        range = cnv.bck_acc(o.get("coords_wgs", dMultiLine())).bbox();
         goto coord_end_r2;
       }
       catch (Err e){}
@@ -302,7 +302,7 @@ geo_mkref(const Opt & o){
     if (o.exists("border"))
       brd = o.get("border", dMultiLine())/k;
     if (o.exists("border_wgs"))
-      brd = cnv.bck_acc(o.get("border_wgs", dMultiLine()),0.5);
+      brd = cnv.bck_acc(o.get("border_wgs", dMultiLine()));
 
     /* border and range are set now */
 

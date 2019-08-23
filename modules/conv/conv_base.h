@@ -51,33 +51,33 @@ struct ConvBase{
 
   /// Convert a line. Each segment can be divided to provide
   /// accuracy <acc> in source units.
-  virtual dLine frw_acc(const dLine & l, double acc) const;
+  virtual dLine frw_acc(const dLine & l, double acc = 0.5) const;
 
   /// Convert a line. Each segment can be divided to provide
   /// accuracy <acc> in source units.
   // Note that bck_acc and frw_acc are not symmetric
   // because accuracy is always calculated on the src side.
-  virtual dLine bck_acc(const dLine & l, double acc) const;
+  virtual dLine bck_acc(const dLine & l, double acc = 0.5) const;
 
   /// Convert a MultiLine. Each segment of each line
   /// can be divided to provide accuracy <acc> in source units.
-  virtual dMultiLine frw_acc(const dMultiLine & l, double acc) const;
+  virtual dMultiLine frw_acc(const dMultiLine & l, double acc = 0.5) const;
 
   /// Convert a MultiLine. Each segment of each line can be
   /// divided to provide accuracy <acc> in source units.
   // Note that bck_acc and frw_acc are not symmetric
   // because accuracy is always calculated on the src side.
-  virtual dMultiLine bck_acc(const dMultiLine & l, double acc) const;
+  virtual dMultiLine bck_acc(const dMultiLine & l, double acc = 0.5) const;
 
   /// Convert a rectagle and return bounding box of resulting figure.
   /// Accuracy <acc> is measured in x-y plane in source units.
-  virtual dRect frw_acc(const dRect & R, double acc) const {
+  virtual dRect frw_acc(const dRect & R, double acc = 0.5) const {
     return frw_acc(rect_to_line(R), acc).bbox(); }
 
   /// Convert a rectagle and return bounding box of resulting figure.
   /// Accuracy <acc> is measured in x-y plane in source units (and
   /// thus bck_acc and frw_acc are not symmetric).
-  virtual dRect bck_acc(const dRect & R, double acc) const {
+  virtual dRect bck_acc(const dRect & R, double acc = 0.5) const {
     return bck_acc(rect_to_line(R), acc).bbox(); }
 
 /*

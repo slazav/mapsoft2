@@ -77,6 +77,9 @@ main(){
               iLine("[[0,0],[7,0],[23,5],[31,10]]"));
        assert(iLine(10.0*cnv.bck_acc(l1, 0.05)) ==
               iLine("[[0,0],[1,0],[5,0],[9,0],[14,2],[20,4],[26,7],[31,10]]"));
+
+       assert(cnv.bck_acc(l1, 0.5) == cnv.bck_acc(l1));
+
        cnv.rescale_dst(0.1);
 
      }
@@ -108,6 +111,9 @@ main(){
               iLine("[[0,0],[7,0],[23,5],[31,10]]"));
        assert(iLine(10.0*cnv.bck_acc(l1, 0.05)) ==
               iLine("[[0,0],[1,0],[5,0],[9,0],[14,2],[20,4],[26,7],[31,10]]"));
+
+       assert(cnv.bck_acc(l1, 0.5) == cnv.bck_acc(l1));
+
        cnv.rescale_dst(0.1);
     }
 
