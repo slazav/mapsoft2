@@ -21,9 +21,12 @@ draw_pulk_grid(CairoWrapper & cr, const iPoint & origin,
   int lon0a = lon2lon0(rng_wgs.tlc().x);
   int lon0b = lon2lon0(rng_wgs.brc().x);
 
+  cr->set_color_a(opt.get("grid_draw_color", 0xFF000000));
+  cr->set_line_width(opt.get("grid_draw_thick", 2));
+  cr->set_fig_font(0xFF000000, 18, 15, 100);
+
   /* for all zones */
   for (int lon0=lon0a; lon0<=lon0b; lon0+=6){
-
     /* build  pulkovo -> wgs conversion or get it from the cache */
     if (!draw_pulk_grid_convs.contains(lon0))
       draw_pulk_grid_convs.add(lon0, ConvGeo(GEO_PROJ_SU(lon0)));
@@ -43,18 +46,18 @@ draw_pulk_grid(CairoWrapper & cr, const iPoint & origin,
     double ymin = floor(tlc.y/step)*step;
     double ymax = ceil(brc.y/step)*step;
 
-    cr->set_color_a(opt.get("grid_draw_color", 0xFF000000));
-    cr->set_line_width(opt.get("grid_draw_thick", 2));
+    cr->save();
 
     if (lon0a!=lon0b){ /* clip the zone */
       dRect rng_clip(lon0-3.0, rng_wgs.y, 6.0, rng_wgs.h);
-      rng_wgs.y-=rng_wgs.h*0.2;
-      rng_wgs.h+=rng_wgs.h*0.4;
+      rng_clip.y-=rng_clip.h*0.2;
+      rng_clip.h+=rng_clip.h*0.4;
       cr->mkpath(cnv.bck_acc(rect_to_line(rng_clip,true)) - origin);
       cr->clip_preserve();
       cr->stroke();
     }
 
+    // draw lines
     for (double x=xmin; x<=xmax; x+=step){
       dLine l;
       l.push_back(dPoint(x, tlc.y));
@@ -69,15 +72,13 @@ draw_pulk_grid(CairoWrapper & cr, const iPoint & origin,
     }
     cr->stroke();
 
-    /* step for labels */
+    // draw labels
     step*=2;
     xmin = floor(tlc.x/step)*step;
     xmax = ceil(brc.x/step)*step;
     ymin = floor(tlc.y/step)*step;
     ymax = ceil(brc.y/step)*step;
 
-    /* labels */
-    cr->set_fig_font(0xFF000000, 18, 15, 100);
     for (double x=xmin; x<=xmax; x+=step){
       for (double y=ymin; y<=ymax; y+=step){
         stringstream sx, sy;
@@ -93,6 +94,7 @@ draw_pulk_grid(CairoWrapper & cr, const iPoint & origin,
         cr->restore();
       }
     }
+    cr->restore();
 
   }
 }
