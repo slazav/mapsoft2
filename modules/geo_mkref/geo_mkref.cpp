@@ -35,14 +35,9 @@ geo_mkref(const Opt & o){
     // Map range (in pulkovo coordinates)
     nom_scale_t sc;
     dRect R = nom_to_range(map.name, sc, true);
-    // lon0 projection parameter.
-    // Should be correct at least for normal (non-multiplied) maps.
-    double lon0 = lon2lon0(R.x + 1e-6);
 
-    // map projection
-    map.proj = "+ellps=krass +towgs84=+28,-130,-95 +proj=tmerc"
-               " +lon_0=" + type_to_str(lon0) +
-               " +x_0=" + type_to_str(lon2pref(lon0)) + "500000";
+    // map projection (use a bit shifted longitude to calculate boundary lon0)
+    map.proj = GEO_PROJ_SU(R.x + 1e-6);
 
     string proj_pulk = "+ellps=krass +towgs84=+28,-130,-95 +proj=lonlat";
     // conversion map_projection -> pulkovo

@@ -5,6 +5,7 @@
 #include "geo_mkref.h"
 #include "geo_data/geo_io.h"
 #include "geo_data/conv_geo.h"
+#include "geo_nom/geo_nom.h"
 
 int
 main(){
@@ -20,7 +21,7 @@ main(){
 
       GeoMap map = geo_mkref(o);
       assert(map.name == "n37-001");
-      assert(map.proj == GEO_PROJ_SU(39, 7));
+      assert(map.proj == GEO_PROJ_SU(39));
       assert(map.image_dpi == 200);
       assert(map.image_size == iPoint(2583,3020));
       assert(type_to_str(map.border) ==
@@ -40,7 +41,7 @@ main(){
                   "\"margins\": \"100\", \"top_margin\": \"200\" }");
       GeoMap map = geo_mkref(o);
       assert(map.name == "n37-001");
-      assert(map.proj == GEO_PROJ_SU(39, 7));
+      assert(map.proj == GEO_PROJ_SU(39));
       assert(map.image_dpi == 100);
       assert(map.image_size == iPoint(1492,1810));
       assert(type_to_str(map.border) ==
@@ -64,7 +65,7 @@ main(){
       o.put("right_margin",733-18-702);
       GeoMap map = geo_mkref(o);
       assert(map.name == "m47-022");
-      assert(map.proj == GEO_PROJ_SU(99, 17));
+      assert(map.proj == GEO_PROJ_SU(99));
       assert(map.image_dpi == 50);
       assert(map.image_size == iPoint(732,775));
       assert(type_to_str(map.border) ==
@@ -202,13 +203,13 @@ main(){
     { // 2x2 km map, Gauss-Kruger projection, 1:100'000, 300dpi
       Opt o;
       o.put("mkref", "proj");
-      o.put("proj", GEO_PROJ_SU(39,7));
+      o.put("proj", GEO_PROJ_SU(39));
       o.put("coords", "[7376000,6208000,2000,2000]");
       o.put("scale", 1000);
       GeoMap map = geo_mkref(o);
 
       assert(map.name == "");
-      assert(map.proj == GEO_PROJ_SU(39,7));
+      assert(map.proj == GEO_PROJ_SU(39));
       assert(map.image_dpi == 300);
       assert(map.image_size == iPoint(237,237));
       assert(type_to_str(map.border) == "[]");
@@ -225,13 +226,13 @@ main(){
       dLine L("[[7376000,6208000],[7380000,6208000],[7380000,6212000],[7378000,6212000],[7378000,6210000],[7376000,6210000]]");
       Opt o;
       o.put("mkref", "proj");
-      o.put("proj", GEO_PROJ_SU(39,7));
+      o.put("proj", GEO_PROJ_SU(39));
       o.put("scale", 1000);
       o.put("coords", L);
       o.put("border", L);
       GeoMap map = geo_mkref(o);
       assert(map.name == "");
-      assert(map.proj == GEO_PROJ_SU(39,7));
+      assert(map.proj == GEO_PROJ_SU(39));
       assert(map.image_dpi == 300);
       assert(map.image_size == iPoint(473,473));
       assert(type_to_str(map.border) ==
@@ -250,15 +251,14 @@ main(){
       dLine L("[[24.801507,60.173730],[24.799790,60.176675],[24.805498,60.177358],[24.806914,60.174498]]");
       Opt o;
       o.put("mkref", "proj");
-      o.put("proj", GEO_PROJ_SU(29,5));
+      o.put("proj", GEO_PROJ_SU(27));
       o.put("scale", 250);
       o.put("coords_wgs", L.bbox());
       GeoMap map = geo_mkref(o);
 
       assert(map.name == "");
-      assert(map.proj == GEO_PROJ_SU(29,5));
+      assert(map.proj == GEO_PROJ_SU(27));
       assert(map.image_dpi == 300);
-      assert(map.image_size == iPoint(200,204));
       assert(type_to_str(map.border) == "[]");
       std::ostringstream ss;
       for (auto & r:map.ref) ss << r.first << " " << r.second;
@@ -266,17 +266,17 @@ main(){
 //std::cerr << "BRD: " << map.border << "\n";
 //std::cerr << "REF: " << ss.str() << "\n";
       assert(ss.str() ==
-        "[0,0] [24.7993147,60.1773537]"
-        "[0,204] [24.799809,60.1734885]"
-        "[200,0] [24.8069217,60.1775949]"
-        "[200,204] [24.8074152,60.1737297]");
+        "[0,0] [24.7995093,60.1773656]"
+        "[0,198] [24.7997608,60.1736068]"
+        "[195,0] [24.8069407,60.1774888]"
+        "[195,198] [24.8071913,60.1737299]");
     }
 
     { // rectangular map defined by wgs border, Gauss-Kruger projection, 1:100'000, 300dpi
       dLine L("[[24.801507,60.173730],[24.799790,60.176675],[24.805498,60.177358],[24.806914,60.174498]]");
       Opt o;
       o.put("mkref", "proj");
-      o.put("proj", GEO_PROJ_SU(27,5));
+      o.put("proj", GEO_PROJ_SU(27));
       o.put("scale", 250);
       o.put("coords_wgs", L);
       o.put("border_wgs", L);
@@ -285,7 +285,7 @@ main(){
       o.put("top_margin", 15);
       GeoMap map = geo_mkref(o);
       assert(map.name == "");
-      assert(map.proj == GEO_PROJ_SU(27,5));
+      assert(map.proj == GEO_PROJ_SU(27));
       assert(map.image_dpi == 300);
       assert(map.image_size == iPoint(199,214));
       assert(type_to_str(map.border) ==
@@ -302,13 +302,13 @@ main(){
     { // 2x2 km map, Gauss-Kruger projection, 1:100'000, 300dpi -- write map for manual test
       Opt o;
       o.put("mkref", "proj");
-      o.put("proj", GEO_PROJ_SU(99,17));
+      o.put("proj", GEO_PROJ_SU(99));
       o.put("coords", "[17552000,5624000,12000,6000]");
       o.put("dpi", 200);
       o.put("scale", 1000);
       GeoMap map = geo_mkref(o);
       assert(map.name == "");
-      assert(map.proj == GEO_PROJ_SU(99,17));
+      assert(map.proj == GEO_PROJ_SU(99));
       assert(map.image_dpi == 200);
       assert(map.image_size == iPoint(946,474));
       assert(type_to_str(map.border) == "[]");

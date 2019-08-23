@@ -1,14 +1,15 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
 #include <cassert>
-#include "conv_geo.h"
+#include "geo_nom/geo_nom.h"
 #include "err/assert_err.h"
+#include "conv_geo.h"
 
 int
 main(){
   try{
     std::string proj_wgs = GEO_PROJ_DEF;
-    std::string proj_krass = GEO_PROJ_SU(27, 5);
+    std::string proj_krass = GEO_PROJ_SU(27);
 
     ConvGeo cnv1(proj_wgs,proj_wgs, false);   // wgs -> wgs, 3D
     ConvGeo cnv2(proj_krass);                 // krass -> wgs, 2D
@@ -114,8 +115,10 @@ main(){
 
     // adding coordinate prefix does not change result
     {
-      std::string proj1 = GEO_PROJ_SU(99, 17);
-      std::string proj2 = GEO_PROJ_SU(99, 0);
+      std::string proj1 = GEO_PROJ_SU(99);
+      std::string proj2 = "+ellps=krass +towgs84=+28,-130,-95 +proj=tmerc"
+                          " +lon_0=99 +x_0=500000";
+;
 
       ConvGeo cnv1(proj1);
       ConvGeo cnv2(proj2);
@@ -186,7 +189,7 @@ main(){
     // bad coordinates (with datum conversion)
     {
       std::string proj_wgs = GEO_PROJ_DEF;
-      std::string proj_krass = GEO_PROJ_SU(27,5);
+      std::string proj_krass = GEO_PROJ_SU(27);
 
       ConvGeo cnv1(proj_wgs, proj_krass);
       dPoint p1(25.651054, 160.976941);
@@ -209,7 +212,7 @@ main(){
        m.border = dMultiLine("[[[159.1,386.8],[1264.1,386.4],[2369.9,385.3],"
                         "[2371.2,3007.6],[1260.7,3008.9],[150.9,3009.3],[159.1,386.8]]]");
        m.proj = "+datum=WGS84 +proj=tmerc +lon_0=39 +x_0=500000";
-       ConvMap cnv1(m, GEO_PROJ_SU(39,7));
+       ConvMap cnv1(m, GEO_PROJ_SU(39));
        dPoint p1(1333, 867);
        dPoint p2(7321000, 6209000);
        cnv1.frw(p1);

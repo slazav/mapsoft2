@@ -27,9 +27,7 @@
                      " +ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0"\
                      " +units=m +no_defs"
 
-// USSR
-#define GEO_PROJ_SU(lon0, zone)  "+ellps=krass +towgs84=+28,-130,-95 +proj=tmerc"\
-                                 " +lon_0=" #lon0 " +x_0=" #zone "500000"
+// see also GEO_PROJ_SU() function in modules/geo_nom
 
 
 /// Geo transformation, libproj wrapper

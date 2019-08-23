@@ -510,6 +510,18 @@ main(){
   // no prefix
   assert(crdx2nonpref(800000) == 800000);
 
+  assert(GEO_PROJ_SU(31) ==
+  "+ellps=krass +towgs84=+28,-130,-95 +proj=tmerc"
+  " +lon_0=33 +x_0=6500000");
+  assert(GEO_PROJ_SU(30) ==
+  "+ellps=krass +towgs84=+28,-130,-95 +proj=tmerc"
+  " +lon_0=33 +x_0=6500000");
+  assert(GEO_PROJ_SU(5) ==
+  "+ellps=krass +towgs84=+28,-130,-95 +proj=tmerc"
+  " +lon_0=3 +x_0=1500000");
+  assert(GEO_PROJ_SU(-10) ==
+  "+ellps=krass +towgs84=+28,-130,-95 +proj=tmerc"
+  " +lon_0=-9 +x_0=59500000");
 
   }
   catch (Err E){

@@ -74,7 +74,7 @@ std::set<std::string> range_to_nomlist(const dRect & range,
 
 // Get lon0 (-3,3,9,15...).
 // Example: 0.25 -> 3
-double lon2lon0(const double lon);
+int lon2lon0(const double lon);
 
 // Get prefix (1..60) for given longitude.
 // Example 38.5 -> 7
@@ -82,11 +82,13 @@ int lon2pref(const double lon);
 
 // Extract prefix from coordinate and return lon0.
 // Example: 7800000 -> 39
-double crdx2lon0(const double X);
+int crdx2lon0(const double X);
 
 // Extract non-prefix part.
 // Example: 7800000 -> 800000
 double crdx2nonpref(const double X);
+
+std::string GEO_PROJ_SU(double lon);
 
 /********************************************************************/
 
