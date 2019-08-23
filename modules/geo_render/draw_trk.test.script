@@ -1,0 +1,12 @@
+#!/bin/sh -efu
+
+. ../../programs/test_lib.sh
+
+prog=${1:-./draw_trk.test}
+
+#assert $prog "" 0
+#sed -i 's/CreationDate (D:[^)]\+)/CreationDate ()/' tmp{1,2,3}.pdf
+#assert_diff test_data/cairo1.pdf tmp1.pdf
+#assert_diff test_data/cairo2.pdf tmp2.pdf
+#assert_diff test_data/cairo3.pdf tmp3.pdf
+
