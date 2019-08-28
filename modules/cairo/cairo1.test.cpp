@@ -6,6 +6,25 @@
 int
 main(){
   try{
+
+    {
+      CairoWrapper cw;
+      Image img(150,100, 32);
+      cw.set_surface_img(img);
+
+      assert(cw.width() == 150);
+      assert(cw.height() == 100);
+      assert(cw.bbox() == dRect(0,0,150,100));
+      cw->set_color_a(0xF0FF0000); // red color
+      cw->cap_round(); // 1-point line is only visible with round or butt cap
+      cw->mkpath(dLine("[[80,50]]"));
+      cw->set_line_width(3);
+      cw->stroke();
+      assert(img.get<uint32_t>(80,50) == 0xF0F00000); // scaled color!
+      assert(img.get<uint32_t>(80,60) == 0x00000000);
+
+    }
+
     {
       CairoWrapper cw;
       cw.set_surface_pdf("tmp1.pdf", 150,100);
@@ -32,7 +51,6 @@ main(){
       cw->stroke_preserve();
       cw->set_color(0xFF00FF);
       cw->fill();
-
       cw->save_png("tmp1.png");
     }
     {
