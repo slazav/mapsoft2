@@ -19,6 +19,11 @@ int main(int argc, char **argv){
     rubber.add_rect(p);
     rubber.add_line(p);
 
+//    rubber.add_ell(p);
+//    rubber.add_ellc(p);
+//    rubber.add_circ(p);
+    rubber.add_circc(p);
+
     win.add(viewer);
     win.set_default_size(640,480);
     win.show_all();
