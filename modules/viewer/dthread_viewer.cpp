@@ -35,7 +35,8 @@ DThreadViewer::redraw (void){
   stop_drawing=true;
   tiles_cache.clear();
   updater_mutex->unlock();
-  draw(iRect(0, 0, get_width(), get_height()));
+  auto win = get_window();
+  if (win) win->invalidate(false);
 }
 
 void
@@ -127,10 +128,12 @@ void DThreadViewer::on_done_signal(){
   while (!tiles_done.empty()){
     iPoint key=tiles_done.front();
 
-    if (tiles_cache.count(key))
-      draw_image(tiles_cache.find(key)->second,
-        iRect(0,0,1,1)*TILE_SIZE,
-        key*TILE_SIZE-get_origin());
+    if (tiles_cache.count(key)){
+      auto win = get_window();
+      iPoint pt = key*TILE_SIZE-get_origin();
+      if (win) win->invalidate_rect(
+        {pt.x,pt.y, TILE_SIZE, TILE_SIZE}, true);
+    }
 
     updater_mutex->lock();
     tiles_done.pop();
@@ -140,7 +143,8 @@ void DThreadViewer::on_done_signal(){
 }
 
 
-void DThreadViewer::draw(const iRect & r){
+void DThreadViewer::draw(Cairo::RefPtr<Cairo::Context> const & cr, const iRect & r){
+
   if (is_waiting()) return;
   if (r.empty()) {redraw(); return;}
   iRect tiles = ceil(dRect(r + get_origin())/TILE_SIZE);
@@ -157,7 +161,7 @@ void DThreadViewer::draw(const iRect & r){
 
       if (tiles_cache.count(key)==0){ // if there is no tile in cache
         Image img(TILE_SIZE, TILE_SIZE, 32, get_bgcolor());
-        draw_image(img, rect.tlc()-get_origin());
+        draw_image(cr, img, rect.tlc()-get_origin());
         if (tiles_todo.count(key)==0){
           updater_mutex->lock();
           tiles_todo.insert(key);
@@ -166,8 +170,9 @@ void DThreadViewer::draw(const iRect & r){
         }
       }
       else {
-        draw_image(tiles_cache.find(key)->second,
-          rect - key*TILE_SIZE, rect.tlc()-get_origin());
+        draw_image(cr,
+          tiles_cache.find(key)->second,
+          rect.tlc()-get_origin());
       }
     }
   }

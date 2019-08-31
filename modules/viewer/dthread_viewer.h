@@ -20,7 +20,7 @@ class DThreadViewer : public SimpleViewer {
     iRect tile_to_rect(const iPoint & key) const;
     void updater();
     void on_done_signal();
-    void draw(const iRect & r);
+    void draw(Cairo::RefPtr<Cairo::Context> const & cr, const iRect & r);
 
     void redraw (void);
     void rescale(const double k, const iPoint & cnt);

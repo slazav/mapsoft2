@@ -2,6 +2,8 @@
 #include <cassert>
 #include <iostream> // for std::cerr
 
+/****************************************************************/
+
 RubberSegment::RubberSegment(
   const iPoint & p1_, const iPoint & p2_, const rubbfl_t flags_):
       p1(p1_), p2(p2_), flags(flags_){
@@ -15,124 +17,98 @@ RubberSegment::fix(Point<int> mouse, Point<int> origin){
                 (flags & RUBBFL_MOUSE_P2Y)? (p2.y+mouse.y) : (p2.y-origin.y));
 }
 
+/****************************************************************/
+
+// show event -> (Viewer::draw)
+//            \-> (Rubber::draw)
+// mouse events -> (Rubber::move) -> invalidate region -|
+
 Rubber::Rubber(Viewer * v): viewer(v){
   assert(viewer != NULL);
 
-  /// We need to initialize our GC after viewer window will be set up.
-  /// Connect this stuff to Gtk::Widget::signal_realize signal...
-  viewer->signal_realize().connect_notify(
-    sigc::mem_fun (*this, &Rubber::init_gc));
-
   /// Remove rubber before redraw, put it back after.
-  viewer->signal_before_draw().connect(
-    sigc::bind( sigc::mem_fun (*this, &Rubber::erase), true));
-  viewer->signal_after_draw().connect(
-    sigc::bind( sigc::mem_fun (*this, &Rubber::draw), true));
+  viewer->signal_draw().connect_notify(
+    sigc::mem_fun (*this, &Rubber::on_draw), true);
 
   /// Remove rubber before mouse motion, put it back after.
   viewer->signal_motion_notify_event().connect_notify(
-    sigc::mem_fun (*this, &Rubber::before_motion_notify), false);
-  viewer->signal_motion_notify_event().connect_notify(
-    sigc::mem_fun (*this, &Rubber::after_motion_notify), true);
+    sigc::mem_fun (*this, &Rubber::on_motion), true);
 
   // Rescale rubber
   viewer->signal_on_rescale().connect(
     sigc::mem_fun (*this, &Rubber::rescale));
-
 }
 
-/// On mouse motions we need to redraw only mouse-connected lines
-/// (false argument to draw/erase)
-/// But in multy-thread viewers a full rubber redraw can occure
-/// after such a partial erase then viewer is in drag mode.
-/// So let's radraw all if viewer->on_drag. May be it is better
-/// to make some lock here instead...
+/// After mouse motion we need to record mouse position and
+/// redraw everything
 void
-Rubber::before_motion_notify (GdkEventMotion * event) {
+Rubber::on_motion (GdkEventMotion * event) {
   if (!event->is_hint) return;
+  if (rubber.empty()) return;
   mouse_pos=iPoint((int)event->x,(int)event->y);
-  erase(viewer->is_on_drag());
-}
-void
-Rubber::after_motion_notify (GdkEventMotion * event) {
-  if (!event->is_hint) return;
-  draw(viewer->is_on_drag());
-}
-
-/// This stuff must be done after viewer window is set up
-void
-Rubber::init_gc() {
-  gc = Gdk::GC::create(viewer->get_window());
-  gc->set_rgb_fg_color(Gdk::Color("white"));
-  gc->set_function(Gdk::XOR);
-  gc->set_line_attributes(3, Gdk::LINE_SOLID,
-    Gdk::CAP_ROUND, Gdk::JOIN_ROUND);
-}
-
-/// Function for drawing single rubber segment.
-/// Used by both draw() and erase()
-
-void
-Rubber::draw_segment(const RubberSegment &s){
-  int r,w,h,x,y;
-  if (!gc) return;
-  switch (s.flags & RUBBFL_TYPEMASK){
-     case RUBBFL_LINE:
-       viewer->get_window()->draw_line(gc, s.pf1.x, s.pf1.y, s.pf2.x, s.pf2.y);
-       break;
-     case RUBBFL_ELL:
-       w=abs(s.pf2.x-s.pf1.x);
-       h=abs(s.pf2.y-s.pf1.y);
-       x=s.pf1.x < s.pf2.x  ? s.pf1.x:s.pf2.x;
-       y=s.pf1.y < s.pf2.y  ? s.pf1.y:s.pf2.y;
-       viewer->get_window()->draw_arc(gc, false, x, y, w, h, 0, 360*64);
-       break;
-     case RUBBFL_ELLC:
-       w=2*abs(s.pf2.x-s.pf1.x);
-       h=2*abs(s.pf2.y-s.pf1.y);
-       x=s.pf1.x-w;
-       y=s.pf1.y-h;
-       viewer->get_window()->draw_arc(gc, false, x, y, w, h, 0, 360*64);
-       break;
-     case RUBBFL_CIRC:
-       w=(int)dist(s.pf2, s.pf1);
-       x=(s.pf1.x + s.pf2.x - w)/2;
-       y=(s.pf1.y + s.pf2.y - w)/2;
-       viewer->get_window()->draw_arc(gc, false, x, y, w, w, 0, 360*64);
-       break;
-     case RUBBFL_CIRCC:
-       r=(int)dist(s.pf2, s.pf1);
-       x=s.pf1.x - r;
-       y=s.pf1.y - r;
-       viewer->get_window()->draw_arc(gc, false, x, y, 2*r, 2*r, 0, 360*64);
-       break;
-     default:
-       std::cerr << "rubber: bad type: " << (s.flags & RUBBFL_TYPEMASK) << "\n";
-  }
+  redraw();
 }
 
 /// functions for drawing and erasing rubber
 void
-Rubber::draw(const bool all){
-  for (auto & s:rubber){
-    if ((!all && !(s.flags & RUBBFL_MOUSE)) ||
-        (s.flags & RUBBFL_DRAWN)) continue; // already drawn
+Rubber::on_draw(Cairo::RefPtr<Cairo::Context> const & cr){
 
+  cr->set_source_rgb(1,1,1);
+//  cr->set_operator(Cairo::OPERATOR_XOR);
+  cr->set_line_width(2);
+  cr->set_line_cap(Cairo::LINE_CAP_ROUND);
+  cr->set_line_join(Cairo::LINE_JOIN_ROUND);
+
+  for (auto & s:rubber){
     s.fix(mouse_pos, viewer->get_origin());
-    s.flags |= RUBBFL_DRAWN;
-    draw_segment(s);
+
+    int w,h,x,y;
+
+    switch (s.flags & RUBBFL_TYPEMASK){
+       case RUBBFL_LINE:
+         cr->move_to(s.pf1.x, s.pf1.y);
+         cr->line_to(s.pf2.x, s.pf2.y);
+         break;
+       case RUBBFL_ELL:
+         w=abs(s.pf2.x-s.pf1.x);
+         h=abs(s.pf2.y-s.pf1.y);
+         x=(s.pf2.x+s.pf1.x)/2;
+         y=(s.pf2.y+s.pf1.y)/2;
+         goto circles;
+       case RUBBFL_ELLC:
+         w=2*abs(s.pf2.x-s.pf1.x);
+         h=2*abs(s.pf2.y-s.pf1.y);
+         x=s.pf1.x;
+         y=s.pf1.y;
+         goto circles;
+       case RUBBFL_CIRC:
+         w=h=(int)dist(s.pf2, s.pf1);
+         x=(s.pf2.x+s.pf1.x)/2;
+         y=(s.pf2.y+s.pf1.y)/2;
+         goto circles;
+       case RUBBFL_CIRCC:
+         w=h=(int)dist(s.pf2, s.pf1)*2;
+         x=s.pf1.x;
+         y=s.pf1.y;
+       circles:
+         if (w==0 || h==0) break;
+         cr->save();
+         cr->translate(x, y);
+         cr->scale(w/2.0, h/2.0);
+         cr->arc(0.0, 0.0, 1.0, 0.0, 2*M_PI);
+         cr->restore();
+         break;
+       default:
+         throw Err() << "Rubber: bad type: " << (s.flags & RUBBFL_TYPEMASK);
+    }
+    cr->stroke();
   }
 }
 
 void
-Rubber::erase(const bool all){
-  std::list<RubberSegment>::iterator i;
-  for (auto & s:rubber){
-    if ((!all && !(s.flags & RUBBFL_MOUSE)) ||
-        !(s.flags & RUBBFL_DRAWN)) continue; // wasn't drawn
-    draw_segment(s);
-    s.flags &= ~RUBBFL_DRAWN;
-  }
+Rubber::redraw() {
+  auto win = viewer->get_window();
+  if (win) win->invalidate(true);
 }
 
 /// add segment to a rubber
@@ -140,8 +116,7 @@ void
 Rubber::add(const RubberSegment & s){
   rubber.push_back(s);
   rubber.rbegin()->fix(mouse_pos, viewer->get_origin());
-  rubber.rbegin()->flags |= RUBBFL_DRAWN;
-  draw_segment(*rubber.rbegin());
+  redraw();
 }
 
 void
@@ -160,50 +135,37 @@ RubberSegment
 Rubber::pop(void){
   if (rubber.size()<1) return RubberSegment(iPoint(),iPoint(),0);
   RubberSegment s = *rubber.rbegin();
-  if (s.flags & RUBBFL_DRAWN) draw_segment(s); // erase segment
   rubber.pop_back();
+  redraw();
   return s;
 }
 
 /// get the last segment from the rubber
 RubberSegment
-Rubber::get(void){
+Rubber::get(void) const{
   if (rubber.size()<1) return RubberSegment(iPoint(),iPoint(),0);
   return *rubber.rbegin();
 }
 
-/// fix mouse points at point p
-void
-Rubber::fix(const iPoint & p){
-  for (auto & s:rubber){
-    if (s.flags & RUBBFL_MOUSE_P1X) s.p1.x*=p.x;
-    if (s.flags & RUBBFL_MOUSE_P1Y) s.p1.y*=p.y;
-    if (s.flags & RUBBFL_MOUSE_P2X) s.p2.x*=p.x;
-    if (s.flags & RUBBFL_MOUSE_P2Y) s.p2.y*=p.y;
-    s.flags &= ~RUBBFL_MOUSE;
-  }
-}
-
-/// cleanup rubber
 void
 Rubber::clear(){
-  erase();
   rubber.clear();
+  redraw();
 }
 
 int
-Rubber::size(){
+Rubber::size() const{
   return rubber.size();
 }
 
 void Rubber::rescale(double k){
-  erase();
   for (auto & s:rubber){
     if (!(s.flags & RUBBFL_MOUSE_P1X)) s.p1.x*=k;
     if (!(s.flags & RUBBFL_MOUSE_P1Y)) s.p1.y*=k;
     if (!(s.flags & RUBBFL_MOUSE_P2X)) s.p2.x*=k;
     if (!(s.flags & RUBBFL_MOUSE_P2Y)) s.p2.y*=k;
   }
+  redraw();
 }
 
 void Rubber::dump(void) const{
@@ -220,6 +182,7 @@ void Rubber::dump(void) const{
   std::cerr << "-------\n";
 }
 
+/****************************************************************/
 /// High-level functions for adding some types of segments
 
 void

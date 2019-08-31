@@ -29,8 +29,6 @@ typedef unsigned int rubbfl_t;
 #define RUBBFL_CIRC  0x30    ///< circle with p1-p2 diameter
 #define RUBBFL_CIRCC 0x40    ///< circle with p1-p2 radius
 
-#define RUBBFL_DRAWN 0x100   ///< is segment drawn?
-
 /**
  Class for the rubber segment -- two points with some flags
  flags bits (see definitions above):
@@ -44,7 +42,6 @@ typedef unsigned int rubbfl_t;
    0x20 -- ellipse with center in p1
    0x30 -- circle with p1-p2 diameter
    0x40 -- circle with p1-p2 radius
- 8 - was segment drawn?
 */
 
 struct RubberSegment{
@@ -65,7 +62,6 @@ class Rubber{
 private:
   std::list<RubberSegment> rubber;
   iPoint mouse_pos;
-  Glib::RefPtr<Gdk::GC> gc;
   Viewer * viewer;
 
 public:
@@ -74,19 +70,15 @@ public:
 
 private:
 
-  /// helpers to be connected with viewer signals
-  void before_motion_notify (GdkEventMotion * event);
-  void after_motion_notify (GdkEventMotion * event);
-  void init_gc();
+  /// callbacks to be connected to viewer signals
+  void on_motion(GdkEventMotion * event);
+  void on_draw(Cairo::RefPtr<Cairo::Context> const & cr); ///<draw rubber
 
-  /// Function for drawing single rubber segment.
-  /// Used by both draw() and erase()
-  void draw_segment(const RubberSegment &s);
-
-  void draw(const bool all=true); ///<draw rubber
-  void erase(const bool all=true);///<erase rubber
 
 public:
+
+  /// redraw rabber
+  void redraw();
 
   /// add segment to a rubber
   void add(const RubberSegment & s);
@@ -99,16 +91,13 @@ public:
   /// remove the last segment from the rubber and get it
   RubberSegment pop(void);
   /// get the last segment from the rubber
-  RubberSegment get(void);
-  /// fix mouse points at point p
-  void fix(const iPoint & p);
+  RubberSegment get(void) const;
   /// cleanup rubber
   void clear();
   /// count segments
-  int size();
+  int size() const;
   /// dump rubber to stderr
   void dump(void) const;
-
   /// modify coordinates connected to plane
   void rescale(double k);
 

@@ -1,10 +1,11 @@
 #include "simple_viewer.h"
 
-#include <gdk/gdk.h>
 #include <cassert>
 #include "image_gdk.h"
 #include "image/image.h"
 #include "geom/rect.h"
+
+#include "cairo/cairo_wrapper.h" // tmp?
 
 SimpleViewer::SimpleViewer(GObj * o) :
     obj(o),
@@ -47,9 +48,13 @@ SimpleViewer::set_origin (iPoint p) {
     if (p.y < r.y) p.y=r.y;
   }
 
-  if (is_realized()){
-    get_window()->scroll(origin.x-p.x, origin.y-p.y);
-  }
+
+  // now win->scroll invalidates the whole window,
+  // see Scrolling section in
+  //   https://developer.gnome.org/gtk3/stable/chap-drawing-model.html
+  auto win = get_window();
+  if (win) win->scroll(origin.x-p.x, origin.y-p.y);
+
   origin = p;
   signal_ch_origin_.emit(p);
 }
@@ -57,39 +62,33 @@ SimpleViewer::set_origin (iPoint p) {
 /***********************************************************/
 
 void
-SimpleViewer::draw(const iRect & r){
+SimpleViewer::draw(Cairo::RefPtr<Cairo::Context> const & cr, const iRect & r){
   if (is_waiting()) return;
   if (r.empty()) {redraw(); return;}
   signal_busy_.emit();
   Image img(r.w, r.h, 32, 0xFF000000 | bgcolor);
   if (obj) obj->draw(img, r.tlc()+origin);
-  draw_image(img, r.tlc());
+  draw_image(cr, img, r.tlc());
   signal_idle_.emit();
 }
 
 void
-SimpleViewer::draw_image (const Image & img, const iPoint & p){
-  if (!is_realized()) return;
-  Glib::RefPtr<Gdk::Pixbuf> pixbuf = make_pixbuf_from_image(img);
-  Glib::RefPtr<Gdk::GC> gc = get_style()->get_fg_gc (get_state());
-  Glib::RefPtr<Gdk::Window> widget = get_window();
-  signal_before_draw_.emit();
-  widget->draw_pixbuf(gc, pixbuf,
-          0,0,  p.x, p.y,  img.width(), img.height(),
-          Gdk::RGB_DITHER_NORMAL, 0, 0);
-  signal_after_draw_.emit();
-}
+SimpleViewer::draw_image(const Cairo::RefPtr<Cairo::Context> & cr,
+                         const Image & img, const iPoint & p){
 
-void
-SimpleViewer::draw_image (const Image & img, const iRect & part, const iPoint & p){
-  if (!is_realized()) return;
-  Glib::RefPtr<Gdk::Pixbuf> pixbuf = make_pixbuf_from_image(img);
-  Glib::RefPtr<Gdk::GC> gc = get_style()->get_fg_gc (get_state());
-  Glib::RefPtr<Gdk::Window> widget = get_window();
+  // convert image to cairo surface
+  Cairo::Format format = Cairo::FORMAT_ARGB32;
+  // check if surface raw data compatable with Image
+  if (img.bpp()!=32)
+    throw Err() << "SimpleViewer: only 32-bpp images are supported";
+  if (Cairo::ImageSurface::format_stride_for_width(format, img.width()) != img.width()*4)
+    throw Err() << "SimpleViewer: non-compatable data";
+  auto surface = Cairo::ImageSurface::create((unsigned char*)img.data(),
+      format, img.width(), img.height(), img.width()*4);
+
+  cr->set_source(surface, p.x, p.y);
   signal_before_draw_.emit();
-  widget->draw_pixbuf(gc, pixbuf,
-          part.x, part.y,  p.x, p.y,  part.w, part.h,
-          Gdk::RGB_DITHER_NORMAL, 0, 0);
+  cr->paint();
   signal_after_draw_.emit();
 }
 
@@ -98,7 +97,8 @@ SimpleViewer::draw_image (const Image & img, const iRect & part, const iPoint & 
 void
 SimpleViewer::redraw (void){
   if (is_waiting()) return;
-  draw(iRect(0, 0, get_width(), get_height()));
+  auto win = get_window();
+  if (win) win->invalidate(false);
 }
 
 void
@@ -117,16 +117,14 @@ SimpleViewer::rescale(const double k, const iPoint & cnt){
 /***********************************************************/
 
 bool
-SimpleViewer::on_expose_event (GdkEventExpose * event){
-  GdkRectangle *rects;
-  int nrects;
-  gdk_region_get_rectangles(event->region, &rects, &nrects);
-  for (int i = 0; i < nrects; ++i) {
-    iRect r(rects[i].x, rects[i].y, rects[i].width, rects[i].height);
-    draw(r);
-  }
-  g_free(rects);
-  return true;
+SimpleViewer::on_draw (Cairo::RefPtr<Cairo::Context> const & cr){
+  std::vector<Cairo::Rectangle> rects;
+  cr->copy_clip_rectangle_list(rects);
+
+  for (auto const & r:rects)
+    draw(cr, dRect(r.x,r.y,r.width,r.height));
+
+  return false;
 }
 
 bool

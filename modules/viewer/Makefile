@@ -7,7 +7,7 @@ MOD_SOURCES  :=  rubber.cpp gobj.cpp\
                 action_manager.cpp\
                 gobj_solid_fill.cpp
 
-PKG_CONFIG = 'glibmm-2.4 gtkmm-2.4 gthread-2.0'
+PKG_CONFIG = 'gtkmm-3.0 gthread-2.0'
 
 include ../Makefile.inc
 

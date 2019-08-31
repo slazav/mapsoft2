@@ -2,6 +2,7 @@
 #define SIMPLE_VIEWER
 
 #include <gtkmm.h>
+#include <cairomm/context.h>
 #include "gobj.h"
 #include "viewer.h"
 
@@ -39,12 +40,12 @@ class SimpleViewer : public Viewer {
     virtual iRect range() const {
       return obj?obj->range():GObj::MAX_RANGE;}
 
-    // draw image from the GObj on the screen
-    virtual void draw(const iRect & r);
-    // draw the given image on the screen
-    virtual void draw_image (const Image & img, const iPoint & p);
-    // draw part of the given image on the screen
-    virtual void draw_image (const Image & img, const iRect & part, const iPoint & p);
+    // redraw part of the screen (will be overriden in DThreadViewer)
+    virtual void draw(Cairo::RefPtr<Cairo::Context> const & cr, const iRect & r);
+
+    // draw an image on the screen
+    virtual void draw_image(const Cairo::RefPtr<Cairo::Context> & cr,
+                            const Image & img, const iPoint & p);
 
     virtual void redraw();
     void start_waiting(){ waiting++;}
@@ -56,7 +57,8 @@ class SimpleViewer : public Viewer {
       rescale(k,iPoint(get_width(), get_height())/2);
     }
 
-    virtual bool on_expose_event (GdkEventExpose * event);
+    virtual bool on_draw (Cairo::RefPtr<Cairo::Context> const & cr) override;
+
     virtual bool on_button_press_event (GdkEventButton * event);
     virtual bool on_button_release_event (GdkEventButton * event);
     virtual bool on_motion_notify_event (GdkEventMotion * event);

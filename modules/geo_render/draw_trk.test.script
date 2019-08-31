@@ -4,6 +4,10 @@
 
 prog=${1:-./draw_trk.test}
 
+#$prog --grid 20190804wz.plt -o a1.png -m a1.map
+
+$prog --grid --mkref nom --name n37-012.2x2 -o a2.png -m a2.map
+
 #assert $prog "" 0
 #sed -i 's/CreationDate (D:[^)]\+)/CreationDate ()/' tmp{1,2,3}.pdf
 #assert_diff test_data/cairo1.pdf tmp1.pdf
