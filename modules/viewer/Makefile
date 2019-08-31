@@ -1,4 +1,4 @@
-MOD_HEADERS  := image_gdk.h viewer.h rubber.h gobj.h\
+MOD_HEADERS  := viewer.h rubber.h gobj.h\
                 simple_viewer.h dthread_viewer.h\
                 gobj_solid_fill.h
 

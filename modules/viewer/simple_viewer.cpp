@@ -1,7 +1,6 @@
 #include "simple_viewer.h"
 
 #include <cassert>
-#include "image_gdk.h"
 #include "image/image.h"
 #include "geom/rect.h"
 
