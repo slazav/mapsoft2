@@ -85,6 +85,7 @@ SimpleViewer::draw(Cairo::RefPtr<Cairo::Context> const & cr, const iRect & r){
   if (r.empty()) {redraw(); return;}
   signal_busy_.emit();
   Image img(r.w, r.h, 32, 0xFF000000 | bgcolor);
+
   if (obj) obj->draw(img, r.tlc()+origin);
   draw_image(cr, img, r.tlc());
   signal_idle_.emit();

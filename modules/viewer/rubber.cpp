@@ -1,4 +1,5 @@
 #include <cassert>
+#include "cairo/cairo_wrapper.h"
 #include "rubber.h"
 
 /****************************************************************/
@@ -60,7 +61,8 @@ Rubber::on_motion (GdkEventMotion * event) {
 
 /// functions for drawing and erasing rubber
 void
-Rubber::on_draw(Cairo::RefPtr<Cairo::Context> const & cr){
+Rubber::on_draw(Cairo::RefPtr<Cairo::Context> const & cr_){
+  CairoWrapper cr(cr_);
 
   for (auto & s:rubber){
     dPoint p1 = s.get_p1(mouse_pos, viewer->get_origin());
@@ -69,8 +71,8 @@ Rubber::on_draw(Cairo::RefPtr<Cairo::Context> const & cr){
 
     switch (s.flags & RUBBFL_TYPEMASK){
        case RUBBFL_LINE:
-         cr->move_to(p1.x, p1.y);
-         cr->line_to(p2.x, p2.y);
+         cr->move_to(p1);
+         cr->line_to(p2);
          break;
        case RUBBFL_ELL:
          w=abs(p2.x-p1.x);
@@ -112,10 +114,7 @@ Rubber::on_draw(Cairo::RefPtr<Cairo::Context> const & cr){
 
   cr->stroke_preserve();
   cr->set_source_rgb(0,0,0);
-  std::vector<double> d;
-  d.push_back(3);
-  d.push_back(3);
-  cr->set_dash(d, 0);
+  cr->set_dash(3,3);
   cr->stroke();
 }
 
