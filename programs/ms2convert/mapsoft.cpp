@@ -58,11 +58,13 @@ main(int argc, char *argv[]){
     if (O.exists("pod"))  usage(true);
     bool verb = O.exists("verbose");
 
+    string ofile = O.get("out", "");
+    O.erase("out");
+
     Opt GO(O); // global options
-    bool go_out = O.exists("out");
 
     // read input files
-    while (!go_out) {
+    while (ofile=="") {
       if (argc<1) break;
       const char * ifile = argv[0];
 
@@ -71,26 +73,25 @@ main(int argc, char *argv[]){
         MS2OPT_GEO_I | MS2OPT_GEO_IO | MS2OPT_OUT, "out");
       O.insert(GO.begin(), GO.end());
 
-      go_out = O.exists("out");
-      if (go_out) O.erase("out");
+      ofile = O.get("out", "");
+      O.erase("out");
 
       mapsoft_read(ifile, data, O);
     }
 
     // write output file if needed
-    if (argc>0){
-      const char * ofile = argv[0];
+    if (ofile!=""){
 
       // parse output options
+      argc++; argv--;
       O = parse_options(&argc, &argv, options,
         MS2OPT_GEO_IO | MS2OPT_GEO_O);
 
       // copy verbose option to output options
       if (GO.exists("verbose")) O.put("verbose", GO["verbose"]);
 
-      mapsoft_write(ofile, data, O);
+      mapsoft_write(ofile.c_str(), data, O);
     }
-    else if (go_out) throw Err() << "output file expected";
 
     return 0;
   }

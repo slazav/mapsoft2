@@ -71,10 +71,10 @@ main(int argc, char *argv[]){
     bool verb = O.exists("verbose");
 
     Opt GO(O); // global options
-    bool go_out = O.exists("out");
+    string ofile = O.get("out", "");
 
     // read input files
-    while (!go_out) {
+    while (ofile == "") {
       if (argc<1) break;
       const char * ifile = argv[0];
 
@@ -82,24 +82,21 @@ main(int argc, char *argv[]){
       O = parse_options(&argc, &argv, options, MASK_INP, "out");
       O.insert(GO.begin(), GO.end());
 
-      go_out = O.exists("out");
-      if (go_out) O.erase("out");
+      ofile = O.get("out", "");
+      O.erase("out");
 
       if (verb) cout << "reading: " << ifile
                      << " options: " << O << "\n";
     }
-
     // write output file if needed
-    if (argc>0){
-      const char * ofile = argv[0];
-
+    if (ofile != ""){
       // parse output options
+      argc++; argv--;
       O = parse_options(&argc, &argv, options, MASK_OUT);
 
       if (verb) cout << "writing: " << ofile
                      << " options: " << O << "\n";
     }
-    else if (go_out) throw Err() << "output file expected";
   }
 
   catch(Err e){

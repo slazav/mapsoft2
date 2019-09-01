@@ -22,7 +22,7 @@ ms2opt_add_std(ext_option_list & opts){
 void
 ms2opt_add_out(ext_option_list & opts){
   ext_option_list add = {
-    {"out", 0,'o', MS2OPT_OUT, "output file"}
+    {"out", 1, 'o', MS2OPT_OUT, "output file"}
   };
   opts.insert(opts.end(), add.begin(), add.end());
 }
