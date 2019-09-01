@@ -19,7 +19,8 @@ read_geo (const char* fname, GeoData & data, const Opt & opt){
   else if (file_ext_check(fname, ".map"))  fmt="ozi";
   else if (file_ext_check(fname, ".zip"))  fmt="zip";
 
-  if (opt.get("fmt","") != "") fmt = opt.get("fmt", "");
+  if (opt.get("fmt","") != "")    fmt = opt.get("fmt", "");
+  if (opt.get("in_fmt","") != "") fmt = opt.get("in_fmt", "");
 
   // JSON format
   if (fmt == "json"){
@@ -91,7 +92,8 @@ write_geo (const char* fname, const GeoData & data, const Opt & opt){
   else if (file_ext_check(fname, ".plt"))  fmt="ozi";
   else if (file_ext_check(fname, ".map"))  fmt="ozi";
 
-  if (opt.exists("fmt")) fmt = opt.get("fmt", string());
+  if (opt.get("fmt","") != "")    fmt = opt.get("fmt", "");
+  if (opt.get("out_fmt","") != "") fmt = opt.get("out_fmt", "");
 
   // JSON format
   if (fmt == "json"){
