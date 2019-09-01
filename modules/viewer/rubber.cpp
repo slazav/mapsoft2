@@ -8,11 +8,15 @@ RubberSegment::RubberSegment(
       p1(p1_), p2(p2_), flags(flags_){
 }
 
-void
-RubberSegment::fix(Point<int> mouse, Point<int> origin){
-  pf1 = iPoint ((flags & RUBBFL_MOUSE_P1X)? (p1.x+mouse.x) : (p1.x-origin.x),
+iPoint
+RubberSegment::get_p1(Point<int> mouse, Point<int> origin){
+  return iPoint ((flags & RUBBFL_MOUSE_P1X)? (p1.x+mouse.x) : (p1.x-origin.x),
                 (flags & RUBBFL_MOUSE_P1Y)? (p1.y+mouse.y) : (p1.y-origin.y));
-  pf2 = iPoint ((flags & RUBBFL_MOUSE_P2X)? (p2.x+mouse.x) : (p2.x-origin.x),
+}
+
+iPoint
+RubberSegment::get_p2(Point<int> mouse, Point<int> origin){
+  return iPoint ((flags & RUBBFL_MOUSE_P2X)? (p2.x+mouse.x) : (p2.x-origin.x),
                 (flags & RUBBFL_MOUSE_P2Y)? (p2.y+mouse.y) : (p2.y-origin.y));
 }
 
@@ -53,36 +57,37 @@ void
 Rubber::on_draw(Cairo::RefPtr<Cairo::Context> const & cr){
 
   for (auto & s:rubber){
-    s.fix(mouse_pos, viewer->get_origin());
+    iPoint p1 = s.get_p1(mouse_pos, viewer->get_origin());
+    iPoint p2 = s.get_p2(mouse_pos, viewer->get_origin());
 
     int w,h,x,y;
 
     switch (s.flags & RUBBFL_TYPEMASK){
        case RUBBFL_LINE:
-         cr->move_to(s.pf1.x, s.pf1.y);
-         cr->line_to(s.pf2.x, s.pf2.y);
+         cr->move_to(p1.x, p1.y);
+         cr->line_to(p2.x, p2.y);
          break;
        case RUBBFL_ELL:
-         w=abs(s.pf2.x-s.pf1.x);
-         h=abs(s.pf2.y-s.pf1.y);
-         x=(s.pf2.x+s.pf1.x)/2;
-         y=(s.pf2.y+s.pf1.y)/2;
+         w=abs(p2.x-p1.x);
+         h=abs(p2.y-p1.y);
+         x=(p2.x+p1.x)/2;
+         y=(p2.y+p1.y)/2;
          goto circles;
        case RUBBFL_ELLC:
-         w=2*abs(s.pf2.x-s.pf1.x);
-         h=2*abs(s.pf2.y-s.pf1.y);
-         x=s.pf1.x;
-         y=s.pf1.y;
+         w=2*abs(p2.x-p1.x);
+         h=2*abs(p2.y-p1.y);
+         x=p1.x;
+         y=p1.y;
          goto circles;
        case RUBBFL_CIRC:
-         w=h=(int)dist(s.pf2, s.pf1);
-         x=(s.pf2.x+s.pf1.x)/2;
-         y=(s.pf2.y+s.pf1.y)/2;
+         w=h=(int)dist(p2, p1);
+         x=(p2.x+p1.x)/2;
+         y=(p2.y+p1.y)/2;
          goto circles;
        case RUBBFL_CIRCC:
-         w=h=(int)dist(s.pf2, s.pf1)*2;
-         x=s.pf1.x;
-         y=s.pf1.y;
+         w=h=(int)dist(p2, p1)*2;
+         x=p1.x;
+         y=p1.y;
        circles:
          if (w==0 || h==0) break;
          cr->save();
@@ -119,7 +124,6 @@ Rubber::redraw() {
 void
 Rubber::add(const RubberSegment & s){
   rubber.push_back(s);
-  rubber.rbegin()->fix(mouse_pos, viewer->get_origin());
   redraw();
 }
 

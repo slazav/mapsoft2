@@ -47,13 +47,16 @@ typedef unsigned int rubbfl_t;
 struct RubberSegment{
   rubbfl_t flags;
   iPoint p1, p2;
-  iPoint pf1, pf2; // absolute coordinates of drawn segment
 
   /// create RubberSegment from two points and flags
   RubberSegment(const iPoint & p1_, const iPoint & p2_, const rubbfl_t flags_);
 
-  /// save current absolute coordinates for drawing
-  void fix(Point<int> mouse, Point<int> origin);
+  // calculate absolute coordinates of the first point
+  iPoint get_p1(Point<int> mouse, Point<int> origin);
+
+  // calculate absolute coordinates of the second point
+  iPoint get_p2(Point<int> mouse, Point<int> origin);
+
 };
 
 
