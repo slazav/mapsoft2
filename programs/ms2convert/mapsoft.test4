@@ -11,6 +11,16 @@ assert "$P test_data/gu1.gu"  "" 0
 assert "$P test_data/gu1.gu -o tmp.gu"  "" 0
 assert_diff test_data/gu1a.gu tmp.gu
 
+#verbose
+assert "$P -v test_data/gu1.gu -o tmp.gu" \
+"Reading GarminUtils file: test_data/gu1.gu
+  Reading waypoints: (9 points)
+  Reading track: (10 points)
+Writing GarminUtils file: tmp.gu
+  Writing waypoints: (9 points)
+  Writing track: (10 points)" 0
+assert_diff test_data/gu1a.gu tmp.gu
+
 # encodings:
 assert "$P test_data/gu1.gu -o tmp.gu --gu_enc Windows-1251"  "" 0
 assert_diff test_data/gu1b.gu tmp.gu

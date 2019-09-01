@@ -13,6 +13,19 @@ assert "$P test_data/kml1.kml"  "" 0
 assert "$P test_data/kml1.kml -o tmp.kml"  "" 0
 assert_diff test_data/kml1a.kml tmp.kml
 
+# verbose
+assert "$P -v test_data/kml1.kml -o tmp.kml" \
+"Reading KML file: test_data/kml1.kml
+  Reading waypoints: WPTS_0 (2 points)
+  Reading waypoints: WPTS_1 (2 points)
+  Reading track: track name (10 points)
+Writing KML file: tmp.kml
+  Writing waypoints: WPTS_0 (2 points)
+  Writing waypoints: WPTS_1 (2 points)
+  Writing track: track name (10 points)" 0
+
+assert_diff test_data/kml1a.kml tmp.kml
+
 # Use --xml_indent option
 assert "$P test_data/kml1.kml -o tmp.kml --xml_indent 0"  "" 0
 assert_diff test_data/kml1b.kml tmp.kml
