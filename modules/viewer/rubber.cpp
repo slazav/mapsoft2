@@ -190,29 +190,22 @@ void Rubber::dump(void) const{
 /// High-level functions for adding some types of segments
 
 void
-Rubber::add_src_sq(const iPoint & p, int size){
+Rubber::add_sq_mark(const iPoint & p, bool mouse, int size){
+  int fl = mouse? RUBBFL_MOUSE:RUBBFL_PLANE;
   iPoint p1(size,size), p2(size,-size);
-  add( p-p1, p-p2, RUBBFL_PLANE);
-  add( p-p2, p+p1, RUBBFL_PLANE);
-  add( p+p1, p+p2, RUBBFL_PLANE);
-  add( p+p2, p-p1, RUBBFL_PLANE);
+  add( p-p1, p-p2, fl);
+  add( p-p2, p+p1, fl);
+  add( p+p1, p+p2, fl);
+  add( p+p2, p-p1, fl);
 }
 
 void
-Rubber::add_src_mark(const iPoint & p, int size){
-  add(p-iPoint(size-1,0), p+iPoint(size-1,0), RUBBFL_PLANE);
-  add(p-iPoint(0,size-1), p+iPoint(0,size-1), RUBBFL_PLANE);
-  add(p, p+iPoint(size,0), RUBBFL_CIRCC);
-}
-
-void
-Rubber::add_dst_sq(int size){
-  iPoint p1(-size,-size), p2(-size,size);
-  iPoint p3( size, size), p4(size,-size);
-  add( p1, p2, RUBBFL_MOUSE);
-  add( p2, p3, RUBBFL_MOUSE);
-  add( p3, p4, RUBBFL_MOUSE);
-  add( p4, p1, RUBBFL_MOUSE);
+Rubber::add_cr_mark(const iPoint & p, bool mouse, int size){
+  int fl = mouse? RUBBFL_MOUSE:RUBBFL_PLANE;
+  int s = sqrt(0.5)*size;
+  add(p-iPoint(s,s),  p+iPoint(s,s), fl);
+  add(p-iPoint(s,-s), p+iPoint(s,-s), fl);
+  add(p, p+iPoint(size,0), fl | RUBBFL_CIRCC);
 }
 
 void

@@ -102,9 +102,8 @@ public:
   void rescale(double k);
 
   /// High-level functions for adding some types of segments
-  void add_src_sq(const iPoint & p, int size=5);    ///< square mark on the plane
-  void add_src_mark(const iPoint & p, int size=5);  ///< mark with cross and circle on the plane
-  void add_dst_sq(int size=5);                      ///< square mark around the mouse
+  void add_sq_mark(const iPoint & p, bool mouse=true, int size=5); ///< square mark
+  void add_cr_mark(const iPoint & p, bool mouse=true, int size=5);  ///< cross-and-circle mark
   void add_line(const iPoint & p);                     ///< line from p to mouse
   void add_line(const iPoint & p1, const iPoint & p2); ///< line from p1 to p2
   void add_rect(const iPoint & p);                     ///< rectangle from p to mouse

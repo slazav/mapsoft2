@@ -29,6 +29,15 @@ class TestWin : public Gtk::Window{
       " 'd' - DThreadViewer\n"
       " 'c' - Color gradient object\n"
       " 'g' - Grid object\n"
+      " '0' - Clear lines\n"
+      " '1' - Line from mouse to the center\n"
+      " '2' - Box from mouse to the center\n"
+      " '3' - Ellipse\n"
+      " '4' - Centered ellipse\n"
+      " '5' - Circle\n"
+      " '6' - Centered circle\n"
+      " '7' - Square marks\n"
+      " '8' - Cross-in-circle marks\n"
       " 's' - Refresh\n"
       " 'q' - Quit\n";
  }
@@ -42,6 +51,43 @@ class TestWin : public Gtk::Window{
        case 'd': case 'D': change_viewer(&v2); return true;
        case 'c': case 'C': v->set_obj(&o2);   return true;
        case 'g': case 'G': v->set_obj(&o3);   return true;
+       case '0':
+         rubber.clear();
+         return true;
+       case '1':
+         rubber.clear();
+         rubber.add_line(v->get_center());
+         return true;
+       case '2':
+         rubber.clear();
+         rubber.add_rect(v->get_center());
+         return true;
+       case '3':
+         rubber.clear();
+         rubber.add_ell(v->get_center());
+         return true;
+       case '4':
+         rubber.clear();
+         rubber.add_ellc(v->get_center());
+         return true;
+       case '5':
+         rubber.clear();
+         rubber.add_circ(v->get_center());
+         return true;
+       case '6':
+         rubber.clear();
+         rubber.add_circc(v->get_center());
+         return true;
+       case '7':
+         rubber.clear();
+         rubber.add_sq_mark(iPoint(0,0), true);
+         rubber.add_sq_mark(v->get_center(), false);
+         return true;
+       case '8':
+         rubber.clear();
+         rubber.add_cr_mark(iPoint(0,0), true);
+         rubber.add_cr_mark(v->get_center(), false);
+         return true;
      }
      return false;
   }
