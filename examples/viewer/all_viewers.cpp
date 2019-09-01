@@ -12,49 +12,36 @@ class TestWin : public Gtk::Window{
   GObjTestGrid      o3;
 
   SimpleViewer *v;
-  SimpleViewer *v1;
-  DThreadViewer *v2;
+  SimpleViewer v1;
+  DThreadViewer v2;
+  Rubber rubber;
 
-  TestWin(): o3(150000), o2(true){
-    v1 = new SimpleViewer(&o1);
-    v2 = new DThreadViewer(&o2);
+
+  TestWin(): o3(150000), o2(true), v1(&o1), v2(&o2), v(&v2), rubber(v){
     signal_key_press_event().connect (sigc::mem_fun (this, &TestWin::on_key_press));
-    v=(SimpleViewer *)v2;
 
     add(*v);
     set_default_size(640,480);
     show_all();
-    std::cerr << "Viewer Test\n"
-              << " '1' - SimpleViewer\n"
-              << " '2' - DThreadViewer\n"
-              << " '9' - Gradient object\n"
-              << " '0' - Grid object\n"
-              << " 'R' - Refresh\n"
-              << " 'Q' - Quit\n";
+    std::cerr <<
+      "Viewer Test\n"
+      " 's' - SimpleViewer\n"
+      " 'd' - DThreadViewer\n"
+      " 'c' - Color gradient object\n"
+      " 'g' - Grid object\n"
+      " 's' - Refresh\n"
+      " 'q' - Quit\n";
  }
 
   bool on_key_press(GdkEventKey * event) {
      std::cerr << "key_press: " << event->keyval << "\n";
      switch (event->keyval) {
-       case 'r':
-       case 'R':
-         v->redraw();
-         return true;
-       case 'q':
-       case 'Q':
-         hide();
-       case '1':
-         change_viewer(v1);
-         return true;
-       case '2':
-         change_viewer(v2);
-         return true;
-       case '9':
-         v->set_obj(&o2);
-         return true;
-       case '0':
-         v->set_obj(&o3);
-         return true;
+       case 'r': case 'R': v->redraw(); return true;
+       case 'q': case 'Q': hide();  return true;
+       case 's': case 'S': change_viewer(&v1); return true;
+       case 'd': case 'D': change_viewer(&v2); return true;
+       case 'c': case 'C': v->set_obj(&o2);   return true;
+       case 'g': case 'G': v->set_obj(&o3);   return true;
      }
      return false;
   }

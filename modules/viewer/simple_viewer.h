@@ -4,7 +4,6 @@
 #include <gtkmm.h>
 #include <cairomm/context.h>
 #include "gobj.h"
-#include "viewer.h"
 
 ///\addtogroup gred
 ///@{
@@ -18,38 +17,46 @@ This viewer is good only for objects which can draw fast.
 For slow objects see DThreadViewer.
 */
 
-class SimpleViewer : public Viewer {
+class SimpleViewer : public Gtk::DrawingArea {
   public:
 
     SimpleViewer(GObj * o = NULL);
 
+    // Change object.
+    virtual void   set_obj (GObj * o) {obj=o; redraw();}
+
+    // Get pointer to the current object.
+    virtual GObj * get_obj (void) const {return obj;}
+
+    // Scroll to a position given by object
+    // coordinates of the top-left corner of viewer window.
     virtual void   set_origin (iPoint new_origin);
+
+    // Get object coordinates of top-left corner.
     virtual iPoint get_origin (void) const { return origin;}
 
+    // Scroll to a position given by object
+    // coordinates of the center of viewer window.
     virtual void   set_center (iPoint new_center){
       set_origin(new_center - iPoint(get_width(), get_height())/2);}
+
+    // Get coordinates of the center.
     virtual iPoint get_center (void) const {
       return origin + iPoint(get_width(), get_height())/2;}
 
-    virtual void   set_obj (GObj * o) {obj=o; redraw();}
-    virtual GObj * get_obj (void) const {return obj;}
+    // Set background color.
+    virtual void set_bgcolor(int c) {bgcolor=c | 0xFF000000;}
 
-    virtual void   set_bgcolor(int c) {bgcolor=c | 0xFF000000;}
-    virtual int    get_bgcolor(void) const {return bgcolor;}
+    // Get background color.
+    virtual int get_bgcolor(void) const {return bgcolor;}
 
+    // Return range of object coordinates.
     virtual iRect range() const {
       return obj?obj->range():GObj::MAX_RANGE;}
 
-    // redraw part of the screen (will be overriden in DThreadViewer)
-    virtual void draw(Cairo::RefPtr<Cairo::Context> const & cr, const iRect & r);
-
-    // draw an image on the screen
-    virtual void draw_image(const Cairo::RefPtr<Cairo::Context> & cr,
-                            const Image & img, const iPoint & p);
-
     virtual void redraw();
     void start_waiting(){ waiting++;}
-    void stop_waiting(){ waiting--; if (waiting==0) redraw();}
+    void stop_waiting(){ if (waiting>0) waiting--; if (waiting==0) redraw();}
     bool is_waiting() const { return waiting; }
 
     virtual void rescale(const double k, const iPoint & cnt);
@@ -57,8 +64,14 @@ class SimpleViewer : public Viewer {
       rescale(k,iPoint(get_width(), get_height())/2);
     }
 
-    virtual bool on_draw (Cairo::RefPtr<Cairo::Context> const & cr) override;
+    // Redraw part of the screen (will be overriden in DThreadViewer).
+    virtual void draw(Cairo::RefPtr<Cairo::Context> const & cr, const iRect & r);
 
+    // Draw an image on the screen.
+    virtual void draw_image(const Cairo::RefPtr<Cairo::Context> & cr,
+                            const Image & img, const iPoint & p);
+
+    virtual bool on_draw (Cairo::RefPtr<Cairo::Context> const & cr) override;
     virtual bool on_button_press_event (GdkEventButton * event);
     virtual bool on_button_release_event (GdkEventButton * event);
     virtual bool on_motion_notify_event (GdkEventMotion * event);

@@ -1,7 +1,7 @@
 #include "action_manager.h"
 #include <cassert>
 
-ActionManager::ActionManager(Viewer * v):
+ActionManager::ActionManager(SimpleViewer * v):
     viewer(v),
     current(NULL){
 

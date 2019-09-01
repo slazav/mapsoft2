@@ -2,7 +2,7 @@
 #define RUBBER_VIEWER_H
 
 #include <list>
-#include "viewer.h"
+#include "simple_viewer.h"
 
 ///\addtogroup gred
 ///@{
@@ -62,11 +62,11 @@ class Rubber{
 private:
   std::list<RubberSegment> rubber;
   iPoint mouse_pos;
-  Viewer * viewer;
+  SimpleViewer * viewer;
 
 public:
 
-  Rubber(Viewer * v);
+  Rubber(SimpleViewer * v);
 
 private:
 

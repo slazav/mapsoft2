@@ -1,6 +1,5 @@
-#include "rubber.h"
 #include <cassert>
-#include <iostream> // for std::cerr
+#include "rubber.h"
 
 /****************************************************************/
 
@@ -23,7 +22,7 @@ RubberSegment::fix(Point<int> mouse, Point<int> origin){
 //            \-> (Rubber::draw)
 // mouse events -> (Rubber::move) -> invalidate region -|
 
-Rubber::Rubber(Viewer * v): viewer(v){
+Rubber::Rubber(SimpleViewer * v): viewer(v){
   assert(viewer != NULL);
 
   /// Remove rubber before redraw, put it back after.

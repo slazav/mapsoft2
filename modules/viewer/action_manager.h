@@ -5,7 +5,7 @@
 #include <map>
 #include <string>
 #include "action.h"
-#include "viewer.h"
+#include "simple_viewer.h"
 #include "geom/point.h"
 
 ///\addtogroup gred
@@ -18,7 +18,7 @@
 class ActionManager : public std::map<std::string, Action *> {
 public:
 
-  ActionManager(Viewer * v);
+  ActionManager(SimpleViewer * v);
 
   /// Add action. If name=="" try to get it from action->get_name().
   void add(Action * a, std::string name="");
@@ -36,7 +36,7 @@ private:
   struct timeval click_started;
   Gdk::ModifierType state;
   iPoint p;
-  Viewer * viewer;
+  SimpleViewer * viewer;
 };
 
 #endif

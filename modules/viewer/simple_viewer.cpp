@@ -4,8 +4,6 @@
 #include "image/image.h"
 #include "geom/rect.h"
 
-#include "cairo/cairo_wrapper.h" // tmp?
-
 SimpleViewer::SimpleViewer(GObj * o) :
     obj(o),
     origin(iPoint(0,0)),
@@ -47,7 +45,6 @@ SimpleViewer::set_origin (iPoint p) {
     if (p.y < r.y) p.y=r.y;
   }
 
-
   // now win->scroll invalidates the whole window,
   // see Scrolling section in
   //   https://developer.gnome.org/gtk3/stable/chap-drawing-model.html
@@ -56,6 +53,28 @@ SimpleViewer::set_origin (iPoint p) {
 
   origin = p;
   signal_ch_origin_.emit(p);
+}
+
+/***********************************************************/
+
+void
+SimpleViewer::redraw (void){
+  if (is_waiting()) return;
+  auto win = get_window();
+  if (win) win->invalidate(false);
+}
+
+void
+SimpleViewer::rescale(const double k, const iPoint & cnt){
+  if (!obj) return;
+  signal_on_rescale_.emit(k);
+  start_waiting();
+  obj->rescale(k);
+  iPoint wsize(get_width(), get_height());
+  iPoint wcenter = get_origin() + cnt;
+  wcenter=iPoint(wcenter.x * k, wcenter.y * k);
+  set_origin(wcenter - cnt);
+  stop_waiting();
 }
 
 /***********************************************************/
@@ -90,30 +109,6 @@ SimpleViewer::draw_image(const Cairo::RefPtr<Cairo::Context> & cr,
   cr->paint();
   signal_after_draw_.emit();
 }
-
-/***********************************************************/
-
-void
-SimpleViewer::redraw (void){
-  if (is_waiting()) return;
-  auto win = get_window();
-  if (win) win->invalidate(false);
-}
-
-void
-SimpleViewer::rescale(const double k, const iPoint & cnt){
-  if (!obj) return;
-  signal_on_rescale_.emit(k);
-  start_waiting();
-  obj->rescale(k);
-  iPoint wsize(get_width(), get_height());
-  iPoint wcenter = get_origin() + cnt;
-  wcenter=iPoint(wcenter.x * k, wcenter.y * k);
-  set_origin(wcenter - cnt);
-  stop_waiting();
-}
-
-/***********************************************************/
 
 bool
 SimpleViewer::on_draw (Cairo::RefPtr<Cairo::Context> const & cr){
