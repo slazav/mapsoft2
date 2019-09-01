@@ -113,10 +113,10 @@ TmpDir::zip(const std::string & zipname) const{
 
 
 void
-TmpDir::unzip(const char* zipname) {
+TmpDir::unzip(const std::string & zipname) {
 
   int err;
-  struct zip *zip_file = zip_open(zipname, 0, &err);
+  struct zip *zip_file = zip_open(zipname.c_str(), 0, &err);
   if (!zip_file)
     throw Err() << "Can't open ZIP file " << zipname << ": " << zip_strerror(zip_file);
 

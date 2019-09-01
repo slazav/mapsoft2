@@ -16,7 +16,7 @@ mapsoft_read(const string &fname, MapsoftData & data, const Opt & opt){
   // ZIP format
   if (fmt == "zip") {
     TmpDir tmpdir("mapsoft_read_zip_XXXXXX");
-    tmpdir.unzip(fname.c_str());
+    tmpdir.unzip(fname);
     vector<string> paths = tmpdir.get_paths();
     for (int i=0; i<paths.size(); i++){
       if (*paths[i].rbegin() == '/') continue;

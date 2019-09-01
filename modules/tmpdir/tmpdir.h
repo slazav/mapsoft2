@@ -43,7 +43,7 @@ class TmpDir {
   void zip(const std::string & zipname) const;
 
   // Unzip file to the directory.
-  void unzip(const char* zipname);
+  void unzip(const std::string & zipname);
 
 };
 
