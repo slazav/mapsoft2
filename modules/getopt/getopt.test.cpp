@@ -18,7 +18,7 @@
 
 using namespace std;
 
-static struct ext_option options[] = {
+ext_option_list options = {
   {"out",                   0,'o', OPT_STP, ""},
 
   {"help",                  0,'h', OPT_IN0, "show help message"},
@@ -31,7 +31,6 @@ static struct ext_option options[] = {
   {"cmn2",                  0,'D', OPT_CMN, "common option w/o argument"},
   {"out1",                  1,'O', OPT_OUT, "output option with argument"},
   {"out2",                  0,'P', OPT_OUT, "output option w/o argument"},
-  {0,0,0,0}
 };
 
 void
@@ -65,7 +64,6 @@ usage(bool pod=false){
 int
 main(int argc, char *argv[]){
   try{
-
     if (argc<2) usage();
 
     Opt O = parse_options(&argc, &argv, options, MASK_IN0, "out");

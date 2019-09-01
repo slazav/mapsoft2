@@ -76,22 +76,19 @@ parse_options(int * argc, char ***argv,
 /**********************************************/
 Opt
 parse_options(int *argc, char ***argv,
-              struct ext_option ext_options[],
+              const ext_option_list & ext_options,
               int mask,
               const char * last_opt) {
-  // get number of options
-  int num;
-  for (num=0; ext_options[num].name; num++){ }
 
   // build long_options structure
-  option * long_options = new option[num+1];
-  int i,j;
-  for (i=0, j=0; i<num; i++){
-    if ((ext_options[i].group & mask) == 0) continue;
-    long_options[j].name    = ext_options[i].name;
-    long_options[j].has_arg = ext_options[i].has_arg;
+  option * long_options = new option[ext_options.size()+1];
+  int j = 0;
+  for (auto const & opt:ext_options) {
+    if ((opt.group & mask) == 0) continue;
+    long_options[j].name    = opt.name.c_str();
+    long_options[j].has_arg = opt.has_arg;
     long_options[j].flag    = NULL;
-    long_options[j].val     = ext_options[i].val;
+    long_options[j].val     = opt.val;
     j++;
   }
   long_options[j].name    = NULL;
@@ -111,53 +108,50 @@ parse_options(int *argc, char ***argv,
 
 /**********************************************/
 void
-print_options(struct ext_option ext_options[],
+print_options(const ext_option_list & ext_options,
               int mask, std::ostream & s, bool pod){
   const int option_width = 25;
   const int indent_width = option_width+4;
   const int text_width = 77-indent_width;
 
-  for (int i = 0; ext_options[i].name; i++){
-    if ((ext_options[i].group & mask) == 0) continue;
+  for (auto const & opt:ext_options){
+    if ((opt.group & mask) == 0) continue;
 
     ostringstream oname;
 
-    if (ext_options[i].val)
-      oname << " -" << (const char)ext_options[i].val << ",";
-    oname << " --" << ext_options[i].name;
+    if (opt.val)
+      oname << " -" << (const char)opt.val << ",";
+    oname << " --" << opt.name;
 
-    if (ext_options[i].has_arg == 1) oname << " <arg>";
-    if (ext_options[i].has_arg == 2) oname << " [<arg>]";
-
-    string desc(ext_options[i].desc);
+    if (opt.has_arg == 1) oname << " <arg>";
+    if (opt.has_arg == 2) oname << " [<arg>]";
 
     if (!pod){
       s << setw(option_width) << oname.str() << " -- ";
 
       int lsp=0;
       int ii=0;
-      for (int i=0; i<desc.size(); i++,ii++){
-        if ((desc[i]==' ') || (desc[i]=='\n')) lsp=i+1;
-        if ((ii>=text_width) || (desc[i]=='\n')){
+      for (int i=0; i<opt.desc.size(); i++,ii++){
+        if ((opt.desc[i]==' ') || (opt.desc[i]=='\n')) lsp=i+1;
+        if ((ii>=text_width) || (opt.desc[i]=='\n')){
           if (lsp <= i-ii) lsp = i;
           if (ii!=i) s << string(indent_width, ' ');
-          s << desc.substr(i-ii, lsp-i+ii-1) << endl;
+          s << opt.desc.substr(i-ii, lsp-i+ii-1) << endl;
           ii=i-lsp;
         }
       }
-      if (ii!=desc.size()) s << string(indent_width, ' ');
-      s << desc.substr(desc.size()-ii, ii) << "\n";
+      if (ii!=opt.desc.size()) s << string(indent_width, ' ');
+      s << opt.desc.substr(opt.desc.size()-ii, ii) << "\n";
     }
     else {
-      s << "\nB<< " << oname.str() << " >> -- " << desc << "\n";
+      s << "\nB<< " << oname.str() << " >> -- " << opt.desc << "\n";
     }
-
   }
 }
 
 Opt
 parse_options_all(int *argc, char ***argv,
-              struct ext_option ext_options[],
+              const ext_option_list & ext_options,
               int mask, vector<string> & non_opts){
 
   Opt O = parse_options(argc, argv, ext_options, mask);

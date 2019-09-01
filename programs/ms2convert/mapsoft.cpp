@@ -18,7 +18,7 @@
 
 using namespace std;
 
-static struct ext_option options[] = {
+ext_option_list options = {
   {"out",                   0,'o', OPT_STP, ""},
 
   {"help",                  0,'h', OPT_GG, "show help message"},
@@ -39,8 +39,6 @@ static struct ext_option options[] = {
   {"json_indent",           1, 0,  OPT_OUT, "use json indentation (GeoJSON format), default 1"},
   {"geo_skip_zt",           1, 0,  OPT_OUT, "skip altitude and time information when writing GeoJSON, default 0"},
   {"ozi_map_grid",          1, 0,  OPT_OUT, "write grid coordinates in map reference points (OziExplorer format), default 0"},
-
-  {0,0,0,0}
 };
 
 void usage(bool pod=false, ostream & S = cout){
