@@ -1,0 +1,42 @@
+#!/bin/bash -efu
+
+# General interface and option tests
+# See also getopt module tests
+
+P=${1:-./ms2xyz}
+
+. ../test_lib.sh
+
+help_msg="$($P -h ||:)"
+assert "$P" "$help_msg" 1
+assert "$P --help" "$help_msg" 1
+assert "$P --xxx " "Error: unknown option: --xxx" 1
+
+assert "$P missing_file" "Error: Can't determine input format for file: missing_file" 1
+assert "$P missing_file.gpx" "Error: Can't open GPX file: missing_file.gpx" 1
+assert "$P missing_file.kml" "Error: Can't open KML file: missing_file.kml" 1
+
+assert "$P missing_file.kml" "Error: Can't open KML file: missing_file.kml" 1
+
+#############
+
+# default
+assert "$P test_data/test.plt -o tmp" "" 0
+assert_diff test_data/test1.txt tmp
+
+# split by track segments
+assert "$P test_data/test.plt --break track -o tmp" "" 0
+assert_diff test_data/test2.txt tmp
+
+# split by days
+assert "$P test_data/test.plt --break day -o tmp" "" 0
+assert_diff test_data/test3.txt tmp
+
+# all fields
+a=$($P test_data/test.plt --break day --fmt "%% %x %y %z -- %t %T %u -- %d %D %e -- %S -- %n %N %p" -o tmp)
+assert "echo $a" "" 0
+assert_diff test_data/test5.txt tmp
+
+# time shift
+assert "$P test_data/test.plt --tshift 9 --break day -o tmp" "" 0
+assert_diff test_data/test6.txt tmp
