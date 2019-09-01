@@ -53,12 +53,6 @@ Rubber::on_motion (GdkEventMotion * event) {
 void
 Rubber::on_draw(Cairo::RefPtr<Cairo::Context> const & cr){
 
-  cr->set_source_rgb(1,1,1);
-//  cr->set_operator(Cairo::OPERATOR_XOR);
-  cr->set_line_width(2);
-  cr->set_line_cap(Cairo::LINE_CAP_ROUND);
-  cr->set_line_join(Cairo::LINE_JOIN_ROUND);
-
   for (auto & s:rubber){
     s.fix(mouse_pos, viewer->get_origin());
 
@@ -101,8 +95,19 @@ Rubber::on_draw(Cairo::RefPtr<Cairo::Context> const & cr){
        default:
          throw Err() << "Rubber: bad type: " << (s.flags & RUBBFL_TYPEMASK);
     }
-    cr->stroke();
   }
+  cr->set_source_rgb(1,1,1);
+  cr->set_line_width(1);
+  cr->set_line_cap(Cairo::LINE_CAP_ROUND);
+  cr->set_line_join(Cairo::LINE_JOIN_ROUND);
+
+  cr->stroke_preserve();
+  cr->set_source_rgb(0,0,0);
+  std::vector<double> d;
+  d.push_back(3);
+  d.push_back(3);
+  cr->set_dash(d, 0);
+  cr->stroke();
 }
 
 void
