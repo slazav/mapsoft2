@@ -19,7 +19,6 @@ void
 ms2opt_add_geo_io(ext_option_list & opts){
   int m = MS2OPT_GEO_IO;
   ext_option_list add = {
-    {"fmt",     1, 0, m, "geodata format (overrides --in_fmt and --out_fmt)"},
     {"gu_enc",  1, 0, m, "Garmin Utils format charset (default KOI8-R)"},
     {"ozi_enc", 1, 0, m, "OziExplorer format charset (default Windows-1251)"}
   };
@@ -60,7 +59,6 @@ read_geo (const char* fname, GeoData & data, const Opt & opt){
   else if (file_ext_check(fname, ".map"))  fmt="ozi";
   else if (file_ext_check(fname, ".zip"))  fmt="zip";
 
-  if (opt.get("fmt","") != "")    fmt = opt.get("fmt", "");
   if (opt.get("in_fmt","") != "") fmt = opt.get("in_fmt", "");
 
   // JSON format
@@ -133,7 +131,6 @@ write_geo (const char* fname, const GeoData & data, const Opt & opt){
   else if (file_ext_check(fname, ".plt"))  fmt="ozi";
   else if (file_ext_check(fname, ".map"))  fmt="ozi";
 
-  if (opt.get("fmt","") != "")    fmt = opt.get("fmt", "");
   if (opt.get("out_fmt","") != "") fmt = opt.get("out_fmt", "");
 
   // JSON format
