@@ -21,7 +21,7 @@ using namespace std;
 #define MAP 16
 
 #define ALL 0xFFFFFF
-static struct ext_option options[] = {
+ext_option_list options = {
   {"out",                   1,'o', STD, "output file (.pdf, .ps, .svg, .png)"},
   {"map",                   1,'m', STD, "write map file in OziExprorer format"},
   {"help",                  0,'h', STD, "show help message"},
@@ -68,8 +68,6 @@ static struct ext_option options[] = {
   {"ozi_enc",               1,0, MAP, "encoding of the map file, default: Windows-1251"},
   {"ozi_map_grid",          0,0, MAP, "write grid coordinates in reference points"},
   {"ozi_map_wgs",           0,0, MAP, "use wgs84 datum for map coordinates"},
-
-  {0,0,0,0}
 };
 
 void usage(bool pod=false, ostream & S = cout){
