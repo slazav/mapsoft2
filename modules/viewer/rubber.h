@@ -46,10 +46,17 @@ typedef unsigned int rubbfl_t;
 
 struct RubberSegment{
   rubbfl_t flags;
-  dPoint p1, p2;
+  dPoint p1, p2; // scalable parts for segment ends
+  dPoint q1, q2; // non-scalable parts for segment ends
+
+  /// Empty constructor
+  RubberSegment():flags(0) {}
 
   /// create RubberSegment from two points and flags
-  RubberSegment(const dPoint & p1_, const dPoint & p2_, const rubbfl_t flags_);
+  RubberSegment(
+    const dPoint & p1_, const dPoint & p2_,
+    const dPoint & q1_, const dPoint & q2_,
+    const rubbfl_t flags_);
 
   // calculate absolute coordinates of the first point
   dPoint get_p1(const iPoint & mouse, const iPoint & origin);
@@ -86,9 +93,7 @@ public:
   /// add segment to a rubber
   void add(const RubberSegment & s);
   void add(const dPoint & p1, const dPoint & p2,
-           const rubbfl_t flags = RUBBFL_PLANE);
-  void add(const double x1, const double y1,
-           const double x2, const double y2,
+           const dPoint & q1, const dPoint & q2,
            const rubbfl_t flags = RUBBFL_PLANE);
 
   /// remove the last segment from the rubber and get it

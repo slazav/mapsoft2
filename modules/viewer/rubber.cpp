@@ -4,20 +4,26 @@
 /****************************************************************/
 
 RubberSegment::RubberSegment(
-  const dPoint & p1_, const dPoint & p2_, const rubbfl_t flags_):
-      p1(p1_), p2(p2_), flags(flags_){
+    const dPoint & p1_, const dPoint & p2_,
+    const dPoint & q1_, const dPoint & q2_,
+    const rubbfl_t flags_):
+    p1(p1_), p2(p2_), q1(q1_), q2(q2_), flags(flags_){
 }
 
 dPoint
 RubberSegment::get_p1(const iPoint & mouse, const iPoint & origin){
-  return dPoint ((flags & RUBBFL_MOUSE_P1X)? (p1.x+mouse.x) : (p1.x-origin.x),
-                (flags & RUBBFL_MOUSE_P1Y)? (p1.y+mouse.y) : (p1.y-origin.y));
+  return dPoint (
+    p1.x + q1.x + ((flags & RUBBFL_MOUSE_P1X)? mouse.x : -origin.x),
+    p1.y + q1.y + ((flags & RUBBFL_MOUSE_P1Y)? mouse.y : -origin.y)
+  );
 }
 
 dPoint
 RubberSegment::get_p2(const iPoint & mouse, const iPoint & origin){
-  return dPoint ((flags & RUBBFL_MOUSE_P2X)? (p2.x+mouse.x) : (p2.x-origin.x),
-                (flags & RUBBFL_MOUSE_P2Y)? (p2.y+mouse.y) : (p2.y-origin.y));
+  return dPoint (
+    p2.x + q2.x + ((flags & RUBBFL_MOUSE_P2X)? mouse.x : -origin.x),
+    p2.y + q2.y + ((flags & RUBBFL_MOUSE_P2Y)? mouse.y : -origin.y)
+  );
 }
 
 /****************************************************************/
@@ -59,7 +65,6 @@ Rubber::on_draw(Cairo::RefPtr<Cairo::Context> const & cr){
   for (auto & s:rubber){
     dPoint p1 = s.get_p1(mouse_pos, viewer->get_origin());
     dPoint p2 = s.get_p2(mouse_pos, viewer->get_origin());
-
     int w,h,x,y;
 
     switch (s.flags & RUBBFL_TYPEMASK){
@@ -128,21 +133,16 @@ Rubber::add(const RubberSegment & s){
 }
 
 void
-Rubber::add(const dPoint & p1, const dPoint & p2, const rubbfl_t flags){
-  add(RubberSegment(p1, p2, flags));
-}
-
-void
-Rubber::add(const double x1, const double y1,
-            const double x2, const double y2,
+Rubber::add(const dPoint & p1, const dPoint & p2,
+            const dPoint & q1, const dPoint & q2,
             const rubbfl_t flags){
-  add(RubberSegment(dPoint(x1,y1), dPoint(x2,y2), flags));
+  add(RubberSegment(p1, p2, q1, q2, flags));
 }
 
 /// remove the last segment from the rubber and get it
 RubberSegment
 Rubber::pop(void){
-  if (rubber.size()<1) return RubberSegment(dPoint(),dPoint(),0);
+  if (rubber.size()<1) throw Err() << "Rubber::pop: empty rubber";
   RubberSegment s = *rubber.rbegin();
   rubber.pop_back();
   redraw();
@@ -152,7 +152,7 @@ Rubber::pop(void){
 /// get the last segment from the rubber
 RubberSegment
 Rubber::get(void) const{
-  if (rubber.size()<1) return RubberSegment(dPoint(),dPoint(),0);
+  if (rubber.size()<1) throw Err() << "Rubber::get: empty rubber";
   return *rubber.rbegin();
 }
 
@@ -169,10 +169,10 @@ Rubber::size() const{
 
 void Rubber::rescale(double k){
   for (auto & s:rubber){
-    if (!(s.flags & RUBBFL_MOUSE_P1X)) s.p1.x*=k;
-    if (!(s.flags & RUBBFL_MOUSE_P1Y)) s.p1.y*=k;
-    if (!(s.flags & RUBBFL_MOUSE_P2X)) s.p2.x*=k;
-    if (!(s.flags & RUBBFL_MOUSE_P2Y)) s.p2.y*=k;
+    s.p1.x*=k;
+    s.p1.y*=k;
+    s.p2.x*=k;
+    s.p2.y*=k;
   }
   redraw();
 }
@@ -198,63 +198,71 @@ void
 Rubber::add_sq_mark(const dPoint & p, bool mouse, int size){
   int fl = mouse? RUBBFL_MOUSE:RUBBFL_PLANE;
   dPoint p1(size,size), p2(size,-size);
-  add( p-p1, p-p2, fl);
-  add( p-p2, p+p1, fl);
-  add( p+p1, p+p2, fl);
-  add( p+p2, p-p1, fl);
+  add(p,p, -p1,-p2, fl);
+  add(p,p, -p2, p1, fl);
+  add(p,p,  p1, p2, fl);
+  add(p,p,  p2,-p1, fl);
 }
 
 void
 Rubber::add_cr_mark(const dPoint & p, bool mouse, int size){
   int fl = mouse? RUBBFL_MOUSE:RUBBFL_PLANE;
   double s = sqrt(0.5)*size;
-  add(p-dPoint(s,s),  p+dPoint(s,s), fl);
-  add(p-dPoint(s,-s), p+dPoint(s,-s), fl);
-  add(p, p+dPoint(size,0), fl | RUBBFL_CIRCC);
+  add(p,p, -dPoint(s,s),  dPoint(s,s), fl);
+  add(p,p, -dPoint(s,-s), dPoint(s,-s), fl);
+  add(p,p, dPoint(0,0), dPoint(size,0), fl | RUBBFL_CIRCC);
 }
 
 void
 Rubber::add_line(const dPoint & p){
-  add(p, dPoint(0,0), RUBBFL_MOUSE_P2);
+  dPoint pz(0,0);
+  add(p, pz, pz, pz, RUBBFL_MOUSE_P2);
 }
 
 void
 Rubber::add_line(const dPoint & p1, const dPoint & p2){
-  add(p1, p2);
+  dPoint pz(0,0);
+  add(p1, p2, pz, pz);
 }
 
 void
 Rubber::add_rect(const dPoint & p){
-  add(dPoint(0,p.y), dPoint(0,0), RUBBFL_MOUSE_P1X | RUBBFL_MOUSE_P2);
-  add(dPoint(p.x,0), dPoint(0,0), RUBBFL_MOUSE_P1Y | RUBBFL_MOUSE_P2);
-  add(dPoint(0,p.y), p, RUBBFL_MOUSE_P1X);
-  add(dPoint(p.x,0), p, RUBBFL_MOUSE_P1Y);
+  dPoint pz(0,0);
+  add(dPoint(0,p.y), pz,pz,pz, RUBBFL_MOUSE_P1X | RUBBFL_MOUSE_P2);
+  add(dPoint(p.x,0), pz,pz,pz, RUBBFL_MOUSE_P1Y | RUBBFL_MOUSE_P2);
+  add(dPoint(0,p.y), p,pz,pz, RUBBFL_MOUSE_P1X);
+  add(dPoint(p.x,0), p,pz,pz, RUBBFL_MOUSE_P1Y);
 }
 
 void
 Rubber::add_rect(const dPoint & p1, const dPoint & p2){
-  add(p1, dPoint(p1.x,p2.y));
-  add(dPoint(p1.x,p2.y), p2);
-  add(p2, dPoint(p2.x,p1.y));
-  add(dPoint(p2.x,p1.y), p1);
+  dPoint pz(0,0);
+  add(p1, dPoint(p1.x,p2.y), pz,pz);
+  add(dPoint(p1.x,p2.y), p2, pz,pz);
+  add(p2, dPoint(p2.x,p1.y), pz,pz);
+  add(dPoint(p2.x,p1.y), p1, pz,pz);
 }
 
 void
 Rubber::add_ell(const dPoint & p){
-  add(p, dPoint(0,0), RUBBFL_MOUSE_P2 | RUBBFL_ELL);
+  dPoint pz(0,0);
+  add(p, pz,pz,pz, RUBBFL_MOUSE_P2 | RUBBFL_ELL);
 }
 
 void
 Rubber::add_ellc(const dPoint & p){
-  add(p, dPoint(0,0), RUBBFL_MOUSE_P2 | RUBBFL_ELLC);
+  dPoint pz(0,0);
+  add(p, pz,pz,pz, RUBBFL_MOUSE_P2 | RUBBFL_ELLC);
 }
 
 void
 Rubber::add_circ(const dPoint & p){
-  add(p, dPoint(0,0), RUBBFL_MOUSE_P2 | RUBBFL_CIRC);
+  dPoint pz(0,0);
+  add(p, pz,pz,pz, RUBBFL_MOUSE_P2 | RUBBFL_CIRC);
 }
 
 void
 Rubber::add_circc(const dPoint & p){
-  add(p, dPoint(0,0), RUBBFL_MOUSE_P2 | RUBBFL_CIRCC);
+  dPoint pz(0,0);
+  add(p, pz,pz,pz, RUBBFL_MOUSE_P2 | RUBBFL_CIRCC);
 }
