@@ -8,6 +8,26 @@
 using namespace std;
 
 /**********************************************/
+
+void
+ms2opt_add_std(ext_option_list & opts){
+  ext_option_list add = {
+    {"help",    0,'h', MS2OPT_STD, "show help message"},
+    {"pod",     0, 0 , MS2OPT_STD, "show help message as POD template"},
+    {"verbose", 0,'v', MS2OPT_STD, "be verbose\n"}
+  };
+  opts.insert(opts.end(), add.begin(), add.end());
+}
+
+void
+ms2opt_add_out(ext_option_list & opts){
+  ext_option_list add = {
+    {"out", 0,'o', MS2OPT_OUT, "output file"}
+  };
+  opts.insert(opts.end(), add.begin(), add.end());
+}
+
+/**********************************************/
 /* Simple getopt_long wrapper.
 Parse cmdline options up to the first non-option argument
 or last_opt. For the long_options structure see getopt_long (3).
@@ -106,6 +126,21 @@ parse_options(int *argc, char ***argv,
   return O;
 }
 
+
+Opt
+parse_options_all(int *argc, char ***argv,
+              const ext_option_list & ext_options,
+              int mask, vector<string> & non_opts){
+
+  Opt O = parse_options(argc, argv, ext_options, mask);
+  while (*argc>0) {
+    non_opts.push_back(*argv[0]);
+    Opt O1 = parse_options(argc, argv, ext_options, mask);
+    O.insert(O1.begin(), O1.end());
+  }
+  return O;
+}
+
 /**********************************************/
 void
 print_options(const ext_option_list & ext_options,
@@ -147,19 +182,5 @@ print_options(const ext_option_list & ext_options,
       s << "\nB<< " << oname.str() << " >> -- " << opt.desc << "\n";
     }
   }
-}
-
-Opt
-parse_options_all(int *argc, char ***argv,
-              const ext_option_list & ext_options,
-              int mask, vector<string> & non_opts){
-
-  Opt O = parse_options(argc, argv, ext_options, mask);
-  while (*argc>0) {
-    non_opts.push_back(*argv[0]);
-    Opt O1 = parse_options(argc, argv, ext_options, mask);
-    O.insert(O1.begin(), O1.end());
-  }
-  return O;
 }
 

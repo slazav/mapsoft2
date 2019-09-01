@@ -6,32 +6,26 @@
 #include "getopt.h"
 #include <cstring>
 
-#define OPT_IN0  1  // global input options (-v, -h)
-#define OPT_INP  2  // input-only options
-#define OPT_CMN  4  // filter options (used both as input and output)
-#define OPT_OUT  8  // output-only options
-#define OPT_STP 16  // special option -o/--out
+#define OPT_INP  1<<10  // input-only options
+#define OPT_CMN  1<<11  // filter options (used both as input and output)
+#define OPT_OUT  1<<12  // output-only options
 
-#define MASK_IN0  (MASK_INP | OPT_IN0) // mask to select global input options
-#define MASK_INP  (OPT_INP | OPT_CMN | OPT_STP) // mask to select input options
-#define MASK_OUT  (OPT_OUT | OPT_CMN)  // mask to select output options
+#define MASK_IN0  (MASK_INP | MS2OPT_STD)          // mask to select global input options
+#define MASK_INP  (OPT_INP | OPT_CMN | MS2OPT_OUT) // mask to select input options
+#define MASK_OUT  (OPT_OUT | OPT_CMN)              // mask to select output options
 
 using namespace std;
 
+// non-standard options
 ext_option_list options = {
-  {"out",                   0,'o', OPT_STP, ""},
-
-  {"help",                  0,'h', OPT_IN0, "show help message"},
-  {"pod",                   0, 0 , OPT_IN0, "show this message as POD template"},
-  {"verbose",               0,'v', OPT_IN0, "be verbose\n"},
-
-  {"inp1",                  1,'I', OPT_INP, "input option with argument"},
-  {"inp2",                  0,'J', OPT_INP, "input option w/o argument"},
-  {"cmn1",                  1,'C', OPT_CMN, "common option with argument"},
-  {"cmn2",                  0,'D', OPT_CMN, "common option w/o argument"},
-  {"out1",                  1,'O', OPT_OUT, "output option with argument"},
-  {"out2",                  0,'P', OPT_OUT, "output option w/o argument"},
+  {"inp1",  1,'I', OPT_INP, "input option with argument"},
+  {"inp2",  0,'J', OPT_INP, "input option w/o argument"},
+  {"cmn1",  1,'C', OPT_CMN, "common option with argument"},
+  {"cmn2",  0,'D', OPT_CMN, "common option w/o argument"},
+  {"out1",  1,'O', OPT_OUT, "output option with argument"},
+  {"out2",  0,'P', OPT_OUT, "output option w/o argument"},
 };
+
 
 void
 usage(bool pod=false){
@@ -50,7 +44,7 @@ usage(bool pod=false){
      << "output file according with output options.\n"
   ;
   cerr << head << "General options:\n";
-  print_options(options, OPT_IN0, cerr, pod);
+  print_options(options, MS2OPT_STD, cerr, pod);
   cerr << head << "Input options:\n";
   print_options(options, OPT_INP, cerr, pod);
   cerr << head << "Common options (can be used as input and output options):\n";
@@ -64,6 +58,11 @@ usage(bool pod=false){
 int
 main(int argc, char *argv[]){
   try{
+
+    // standard options: MS2OPT_STD, MS2OPT_OUT
+    ms2opt_add_std(options);
+    ms2opt_add_out(options);
+
     if (argc<2) usage();
 
     Opt O = parse_options(&argc, &argv, options, MASK_IN0, "out");
