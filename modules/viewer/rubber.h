@@ -46,16 +46,16 @@ typedef unsigned int rubbfl_t;
 
 struct RubberSegment{
   rubbfl_t flags;
-  iPoint p1, p2;
+  dPoint p1, p2;
 
   /// create RubberSegment from two points and flags
-  RubberSegment(const iPoint & p1_, const iPoint & p2_, const rubbfl_t flags_);
+  RubberSegment(const dPoint & p1_, const dPoint & p2_, const rubbfl_t flags_);
 
   // calculate absolute coordinates of the first point
-  iPoint get_p1(Point<int> mouse, Point<int> origin);
+  dPoint get_p1(const iPoint & mouse, const iPoint & origin);
 
   // calculate absolute coordinates of the second point
-  iPoint get_p2(Point<int> mouse, Point<int> origin);
+  dPoint get_p2(const iPoint & mouse, const iPoint & origin);
 
 };
 
@@ -85,10 +85,10 @@ public:
 
   /// add segment to a rubber
   void add(const RubberSegment & s);
-  void add(const iPoint & p1, const iPoint & p2,
+  void add(const dPoint & p1, const dPoint & p2,
            const rubbfl_t flags = RUBBFL_PLANE);
-  void add(const int x1, const int y1,
-           const int x2, const int y2,
+  void add(const double x1, const double y1,
+           const double x2, const double y2,
            const rubbfl_t flags = RUBBFL_PLANE);
 
   /// remove the last segment from the rubber and get it
@@ -105,16 +105,16 @@ public:
   void rescale(double k);
 
   /// High-level functions for adding some types of segments
-  void add_sq_mark(const iPoint & p, bool mouse=true, int size=5); ///< square mark
-  void add_cr_mark(const iPoint & p, bool mouse=true, int size=5);  ///< cross-and-circle mark
-  void add_line(const iPoint & p);                     ///< line from p to mouse
-  void add_line(const iPoint & p1, const iPoint & p2); ///< line from p1 to p2
-  void add_rect(const iPoint & p);                     ///< rectangle from p to mouse
-  void add_rect(const iPoint & p1, const iPoint & p2); ///< rectangle from p1 to p2
-  void add_ell(const iPoint & p);                      ///< ellipse
-  void add_ellc(const iPoint & p);
-  void add_circ(const iPoint & p);
-  void add_circc(const iPoint & p);
+  void add_sq_mark(const dPoint & p, bool mouse=true, int size=5); ///< square mark
+  void add_cr_mark(const dPoint & p, bool mouse=true, int size=5);  ///< cross-and-circle mark
+  void add_line(const dPoint & p);                     ///< line from p to mouse
+  void add_line(const dPoint & p1, const dPoint & p2); ///< line from p1 to p2
+  void add_rect(const dPoint & p);                     ///< rectangle from p to mouse
+  void add_rect(const dPoint & p1, const dPoint & p2); ///< rectangle from p1 to p2
+  void add_ell(const dPoint & p);                      ///< ellipse
+  void add_ellc(const dPoint & p);
+  void add_circ(const dPoint & p);
+  void add_circc(const dPoint & p);
 
 };
 
