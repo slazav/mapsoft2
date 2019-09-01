@@ -49,14 +49,14 @@ main(int argc, char *argv[]){
 
     GeoData data;
     for (auto const & f:infiles)
-      if (!read_geo(f.c_str(), data, O))
+      if (!read_geo(f, data, O))
         throw Err() << "Can't determine input format for file: " << f;
 
 
     // write output file if needed
     std::string ofile = O.get("out", "");
     if (ofile != ""){
-      if (!write_geo(ofile.c_str(), data, O))
+      if (!write_geo(ofile, data, O))
         throw Err() << "Can't determine output format for file: " << ofile;
     }
 
