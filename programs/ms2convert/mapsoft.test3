@@ -45,6 +45,6 @@ assert_diff test_data/kml1a.kml tmp.kml
 rm -f tmp.kmz
 
 # specify format
-assert "$P test_data/kml1.kml -o tmp --fmt kml"  "" 0
-assert "$P tmp --fmt kml -o tmp --fmt kml"  "" 0
+assert "$P test_data/kml1.kml -o tmp --out_fmt kml"  "" 0
+assert "$P tmp --fmt kml -o tmp --out_fmt kml"  "" 0
 assert_diff test_data/kml1a.kml tmp

@@ -34,8 +34,8 @@ assert_diff test_data/json1.json tmp.json
 
 
 # specify format
-assert "$P test_data/json1a.json -o tmp --fmt json"  "" 0
-assert "$P tmp --fmt json -o tmp --fmt json"  "" 0
+assert "$P test_data/json1a.json -o tmp --out_fmt json"  "" 0
+assert "$P tmp --in_fmt json -o tmp --out_fmt json"  "" 0
 assert_diff test_data/json1a.json tmp
 
 # skip_zt
