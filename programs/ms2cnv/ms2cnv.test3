@@ -2,7 +2,7 @@
 
 ## KML input/output
 
-P=${1:-./mapsoft}
+P=${1:-./ms2cnv}
 . ../test_lib.sh
 
 # read and do nothing

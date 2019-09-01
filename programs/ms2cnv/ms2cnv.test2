@@ -1,0 +1,59 @@
+#!/bin/bash -efu
+
+## GPX input/output
+
+P=${1:-./ms2cnv}
+. ../test_lib.sh
+
+# read and do nothing
+assert "$P test_data/gpx1.gpx"  "" 0
+
+# Convert a simple gpx with track, waypoints, route.
+# By default all routes are converted to waypoints.
+assert "$P test_data/gpx1.gpx -o tmp.gpx"  "" 0
+assert_diff test_data/gpx1a.gpx tmp.gpx
+
+# verbose
+assert "$P -v test_data/gpx1.gpx -o tmp.gpx" \
+"Reading GPX file: test_data/gpx1.gpx
+  Reading track: 2018-04-28 09:12:42 Day (3 points)
+  Reading route: route-1 (2 points)
+  Reading waypoints:  (3 points)
+Writing GPX file: tmp.gpx
+  Writing route: route-1 (2 points)
+  Writing route:  (3 points)
+  Writing track: 2018-04-28 09:12:42 Day (3 points)" 0
+assert_diff test_data/gpx1a.gpx tmp.gpx
+
+
+# Same, but use --gpx_write_rte option --
+# Waypoint lists are written as separate routes.
+assert "$P test_data/gpx1.gpx -o tmp.gpx --gpx_write_rte 1"  "" 0
+assert_diff test_data/gpx1b.gpx tmp.gpx
+
+# Use --xml_indent option
+assert "$P test_data/gpx1.gpx -o tmp.gpx --gpx_write_rte 1 --xml_indent 0"  "" 0
+assert_diff test_data/gpx1c.gpx tmp.gpx
+
+# read written files again
+assert "$P test_data/gpx1a.gpx -o tmp.gpx"  "" 0
+assert_diff test_data/gpx1a.gpx tmp.gpx
+
+assert "$P test_data/gpx1b.gpx -o tmp.gpx --gpx_write_rte 1"  "" 0
+assert_diff test_data/gpx1b.gpx tmp.gpx
+
+assert "$P test_data/gpx1b.gpx -o tmp.gpx"  "" 0
+assert_diff test_data/gpx1a.gpx tmp.gpx
+
+assert "$P test_data/gpx1c.gpx -o tmp.gpx"  "" 0
+assert_diff test_data/gpx1a.gpx tmp.gpx
+
+# set output format manually
+assert "$P test_data/gpx1.gpx -o tmp --out_fmt gpx"  "" 0
+assert "$P tmp --in_fmt gpx -o tmp --out_fmt gpx"  "" 0
+assert_diff test_data/gpx1a.gpx tmp
+
+# gpx2 -- empty wpt/trk elements
+assert "$P test_data/gpx2.gpx -o tmp.gpx"  "" 0
+assert_diff test_data/gpx2.gpx tmp.gpx
+
