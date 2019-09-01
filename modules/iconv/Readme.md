@@ -10,6 +10,10 @@ std::string s = cnv(text);
 -----------
 ## Changelog:
 
+2019.05.20 V.Zavjalov 1.5:
+- Use std::string constructor arguments
+  instead of const char*
+
 2019.05.20 V.Zavjalov 1.4:
 - Use operator() instead of cnv method.
   Allow to use IConv as a constant object.
