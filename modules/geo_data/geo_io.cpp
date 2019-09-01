@@ -19,7 +19,7 @@ read_geo (const char* fname, GeoData & data, const Opt & opt){
   else if (file_ext_check(fname, ".map"))  fmt="ozi";
   else if (file_ext_check(fname, ".zip"))  fmt="zip";
 
-  if (opt.exists("fmt")) fmt = opt.get("fmt", string());
+  if (opt.get("fmt","") != "") fmt = opt.get("fmt", "");
 
   // JSON format
   if (fmt == "json"){

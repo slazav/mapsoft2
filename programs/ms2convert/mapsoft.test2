@@ -13,6 +13,19 @@ assert "$P test_data/gpx1.gpx"  "" 0
 assert "$P test_data/gpx1.gpx -o tmp.gpx"  "" 0
 assert_diff test_data/gpx1a.gpx tmp.gpx
 
+# verbose
+assert "$P -v test_data/gpx1.gpx -o tmp.gpx" \
+"Reading GPX file: test_data/gpx1.gpx
+  Reading track: 2018-04-28 09:12:42 Day (3 points)
+  Reading route: route-1 (2 points)
+  Reading waypoints:  (3 points)
+Writing GPX file: tmp.gpx
+  Writing route: route-1 (2 points)
+  Writing route:  (3 points)
+  Writing track: 2018-04-28 09:12:42 Day (3 points)" 0
+assert_diff test_data/gpx1a.gpx tmp.gpx
+
+
 # Same, but use --gpx_write_rte option --
 # Waypoint lists are written as separate routes.
 assert "$P test_data/gpx1.gpx -o tmp.gpx --gpx_write_rte 1"  "" 0

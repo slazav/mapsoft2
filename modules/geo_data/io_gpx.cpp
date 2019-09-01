@@ -172,8 +172,8 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
   if (writer == NULL)
     throw Err() << "write_gpx: can't write to file: " << filename;
 
-  if (opts.exists("verbose")) cerr <<
-    "Writing GPX file: " << filename << endl;
+  bool v = opts.get("verbose", false);
+  if (v) cerr << "Writing GPX file: " << filename << endl;
 
   try {
     // set some parameters
@@ -203,6 +203,10 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
 
     // Writing waypoints:
     for (auto wpl: data.wpts) {
+
+      if (v) cerr << "  Writing " << (use_rte? "waypoints":"route") << ": "
+                  << wpl.name << " (" << wpl.size() << " points)" << endl;
+
       if (use_rte){
         if (xmlTextWriterStartElement(writer, BAD_CAST "rte")<0)
           throw "starting <rte> element";
@@ -276,6 +280,9 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
 
     // Write tracks:
     for (auto trk: data.trks) {
+
+      if (v) cerr << "  Writing track: "
+                  << trk.name << " (" << trk.size() << " points)" << endl;
 
       if (xmlTextWriterStartElement(writer, BAD_CAST "trk")<0)
           throw "starting <trk> element";
@@ -549,7 +556,7 @@ read_trkseg_node(xmlTextReaderPtr reader, GeoTrk & trk){
 }
 
 int
-read_trk_node(xmlTextReaderPtr reader, GeoData & data){
+read_trk_node(xmlTextReaderPtr reader, GeoData & data, const Opt & opts){
   GeoTrk trk;
   std::string state;
   while(1){
@@ -606,11 +613,14 @@ read_trk_node(xmlTextReaderPtr reader, GeoData & data){
     }
   }
   data.trks.push_back(trk);
+  if (opts.get("verbose", false))
+    cerr << "  Reading track: " << trk.name
+         << " (" << trk.size() << " points)" << endl;
   return 1;
 }
 
 int
-read_rte_node(xmlTextReaderPtr reader, GeoData & data){
+read_rte_node(xmlTextReaderPtr reader, GeoData & data, const Opt & opts){
   GeoWptList wptl;
   std::string state;
   while(1){
@@ -670,13 +680,16 @@ read_rte_node(xmlTextReaderPtr reader, GeoData & data){
     }
   }
   data.wpts.push_back(wptl);
+  if (opts.get("verbose", false))
+    cerr << "  Reading route: " << wptl.name
+         << " (" << wptl.size() << " points)" << endl;
   return 1;
 }
 
 
 
 int
-read_gpx_node(xmlTextReaderPtr reader, GeoData & data){
+read_gpx_node(xmlTextReaderPtr reader, GeoData & data, const Opt & opts){
   GeoWptList wptl;
   bool is_meta=false;
   while(1){
@@ -701,11 +714,11 @@ read_gpx_node(xmlTextReaderPtr reader, GeoData & data){
       if (ret != 1) return ret;
     }
     else if (NAMECMP("trk") && (type == TYPE_ELEM)){
-      ret=read_trk_node(reader, data);
+      ret=read_trk_node(reader, data, opts);
       if (ret != 1) return ret;
     }
     else if (NAMECMP("rte") && (type == TYPE_ELEM)){
-      ret=read_rte_node(reader, data);
+      ret=read_rte_node(reader, data, opts);
       if (ret != 1) return ret;
     }
 
@@ -722,7 +735,12 @@ read_gpx_node(xmlTextReaderPtr reader, GeoData & data){
       cerr << "Warning: Unknown node \"" << name << "\" in gpx (type: " << type << ")\n";
     }
   }
-  if (wptl.size()) data.wpts.push_back(wptl);
+  if (wptl.size()){
+    if (opts.get("verbose", false))
+      cerr << "  Reading waypoints: " << wptl.name 
+           << " (" << wptl.size() << " points)" << endl;
+    data.wpts.push_back(wptl);
+  }
   return 1;
 }
 
@@ -739,7 +757,7 @@ read_gpx(const char* filename, GeoData & data, const Opt & opts) {
   if (reader == NULL)
     throw Err() << "Can't open GPX file: " << filename;
 
-  if (opts.exists("verbose")) cerr <<
+  if (opts.get("verbose", false)) cerr <<
     "Reading GPX file: " << filename << endl;
 
   // parse file
@@ -750,7 +768,7 @@ read_gpx(const char* filename, GeoData & data, const Opt & opts) {
     const xmlChar *name = xmlTextReaderConstName(reader);
     int type = xmlTextReaderNodeType(reader);
     if (NAMECMP("gpx") && (type == TYPE_ELEM))
-      ret = read_gpx_node(reader, data);
+      ret = read_gpx_node(reader, data, opts);
     if (ret!=1) break;
   }
 

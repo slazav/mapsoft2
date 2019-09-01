@@ -64,8 +64,8 @@ write_kml (const char* filename, const GeoData & data, const Opt & opts){
   if (writer == NULL)
     throw Err() << "write_kml: can't write to file: " << filename;
 
-  if (opts.exists("verbose")) cerr <<
-    "Writing KML file: " << filename << endl;
+  bool v = opts.get("verbose", false);
+  if (v) cerr << "Writing KML file: " << filename << endl;
 
   try {
     // set some parameters
@@ -93,6 +93,10 @@ write_kml (const char* filename, const GeoData & data, const Opt & opts){
 
     // Writing waypoints:
     for (auto wpl: data.wpts) {
+
+     if (v) cerr << "  Writing waypoints: " << wpl.name
+                 << " (" << wpl.size() << " points)" << endl;
+
       start_element(writer, "Folder");
       write_cdata_element(writer, "name", wpl.name);
       write_cdata_element(writer, "description", wpl.comm);
@@ -123,6 +127,10 @@ write_kml (const char* filename, const GeoData & data, const Opt & opts){
 
     // Writing tracks:
     for (auto trk: data.trks) {
+
+     if (v) cerr << "  Writing track: " << trk.name
+                 << " (" << trk.size() << " points)" << endl;
+
       start_element(writer, "Placemark");
       write_cdata_element(writer, "name", trk.name);
       write_cdata_element(writer, "description", trk.comm);
@@ -514,7 +522,7 @@ read_placemark_node(xmlTextReaderPtr reader,
 
 
 int
-read_folder_node(xmlTextReaderPtr reader, GeoData & data){ // similar to document node
+read_folder_node(xmlTextReaderPtr reader, GeoData & data, const bool v){ // similar to document node
   GeoWptList W;
   GeoTrk     T;
   GeoMapList M;
@@ -554,7 +562,7 @@ read_folder_node(xmlTextReaderPtr reader, GeoData & data){ // similar to documen
       if (ret != 1) break;
     }
     else if (NAMECMP("Folder") && (type == TYPE_ELEM)){
-      ret=read_folder_node(reader, data);
+      ret=read_folder_node(reader, data, v);
       if (ret != 1) break;
     }
     else if (NAMECMP("Folder") && (type == TYPE_ELEM_END)){
@@ -565,13 +573,21 @@ read_folder_node(xmlTextReaderPtr reader, GeoData & data){ // similar to documen
       cerr << "Skipping node\"" << name << "\" in Folder (type: " << type << ")\n";
     }
   }
-  if (W.size()) data.wpts.push_back(W);
-  if (M.size()) data.maps.push_back(M);
+  if (W.size()){
+    if (v) cerr << "  Reading waypoints: " << W.name
+                << " (" << W.size() << " points)" << endl;
+    data.wpts.push_back(W);
+  }
+  if (M.size()){ // not supported yet
+    if (v) cerr << "  Reading maps: " << M.name
+                << " (" << M.size() << " maps)" << endl;
+    data.maps.push_back(M);
+  }
   return ret;
 }
 
 int
-read_document_node(xmlTextReaderPtr reader, GeoData & data){
+read_document_node(xmlTextReaderPtr reader, GeoData & data, const bool v){
   string skip_el="";
   GeoWptList W;
   GeoTrk     T;
@@ -610,7 +626,7 @@ read_document_node(xmlTextReaderPtr reader, GeoData & data){
       if (ret != 1) break;
     }
     else if (NAMECMP("Folder") && (type == TYPE_ELEM)){
-      ret=read_folder_node(reader, data);
+      ret=read_folder_node(reader, data, v);
       if (ret != 1) break;
     }
     else if (NAMECMP("Document") && (type == TYPE_ELEM_END)){
@@ -621,14 +637,26 @@ read_document_node(xmlTextReaderPtr reader, GeoData & data){
       cerr << "Skipping node\"" << name << "\" in Document (type: " << type << ")\n";
     }
   }
-  if (W.size()) data.wpts.push_back(W);
-  if (T.size()) data.trks.push_back(T);
-  if (M.size()) data.maps.push_back(M);
+  if (W.size()){
+    if (v) cerr << "  Reading waypoints: " << W.name
+                << " (" << W.size() << " points)" << endl;
+    data.wpts.push_back(W);
+  }
+  if (T.size()){
+    if (v) cerr << "  Reading track: " << T.name
+                << " (" << T.size() << " points)" << endl;
+    data.trks.push_back(T);
+  }
+  if (M.size()){ // not supported yet
+    if (v) cerr << "  Reading maps: " << M.name
+                << " (" << M.size() << " maps)" << endl;
+    data.maps.push_back(M);
+  }
   return ret;
 }
 
 int
-read_kml_node(xmlTextReaderPtr reader, GeoData & data){
+read_kml_node(xmlTextReaderPtr reader, GeoData & data, const bool v){
   while(1){
     int ret =xmlTextReaderRead(reader);
     if (ret != 1) return ret;
@@ -639,7 +667,7 @@ read_kml_node(xmlTextReaderPtr reader, GeoData & data){
     if (type == TYPE_SWS) continue;
 
     else if (NAMECMP("Document") && (type == TYPE_ELEM)){
-      ret=read_document_node(reader, data);
+      ret=read_document_node(reader, data, v);
       if (ret != 1) return ret;
     }
 
@@ -667,8 +695,8 @@ read_kml(const char* filename, GeoData & data, const Opt & opts) {
   if (reader == NULL)
     throw Err() << "Can't open KML file: " << filename;
 
-  if (opts.exists("verbose")) cerr <<
-    "Reading KML file: " << filename << endl;
+  bool v = opts.get("verbose", false);
+  if (v) cerr << "Reading KML file: " << filename << endl;
 
   // parse file
   while (1){
@@ -678,7 +706,7 @@ read_kml(const char* filename, GeoData & data, const Opt & opts) {
     const xmlChar *name = xmlTextReaderConstName(reader);
     int type = xmlTextReaderNodeType(reader);
     if (NAMECMP("kml") && (type == TYPE_ELEM))
-      ret = read_kml_node(reader, data);
+      ret = read_kml_node(reader, data, v);
     if (ret!=1) break;
   }
 

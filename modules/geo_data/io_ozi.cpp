@@ -154,8 +154,8 @@ string convert_datum2ozi(const string & s){
 /***************************************************************************/
 /***************************************************************************/
 void read_ozi (const char *fname, GeoData & data, const Opt & opts){
-  if (opts.exists("verbose")) cerr <<
-    "Reading OziExplorer file " << fname << endl;
+  bool vv = opts.get("verbose", false);
+  if (vv) cerr << "Reading OziExplorer file " << fname << endl;
 
   ifstream f(fname);
   if (!f.good()) throw Err()
@@ -201,7 +201,10 @@ void read_ozi (const char *fname, GeoData & data, const Opt & opts){
       // fields 6,7 are ignored.
       trk.push_back(pt);
     }
+    if (vv) cerr << "  Reading track: " << trk.name
+                 << " (" << trk.size() << " points)" << endl;
     data.trks.push_back(trk);
+
     return;
   }
 
@@ -243,6 +246,8 @@ void read_ozi (const char *fname, GeoData & data, const Opt & opts){
       if (v[23] != "") pt.opts.put("ozi_prox_symb",  v[23]);
       wptl.push_back(pt);
     }
+    if (vv) cerr << "  Reading waypoints: " << wptl.name
+                 << " (" << wptl.size() << " points)" << endl;
     data.wpts.push_back(wptl);
     return;
   }
@@ -373,6 +378,7 @@ void read_ozi (const char *fname, GeoData & data, const Opt & opts){
     ml.push_back(m);
     ml.name = m.name;
     data.maps.push_back(ml);
+    if (vv) cerr << "  Reading map: " << m.name << endl;
     return;
   }
 }
@@ -380,8 +386,9 @@ void read_ozi (const char *fname, GeoData & data, const Opt & opts){
 /***************************************************************************/
 /// Write PLT.
 void write_ozi_plt (const char *fname, const GeoTrk & trk, const Opt & opts){
-  if (opts.exists("verbose")) cerr <<
-    "Writing track to OziExplorer file " << fname << endl;
+
+  bool vv = opts.get("verbose", false);
+  if (vv) cerr << "Writing track to OziExplorer file: " << fname << endl;
 
   ofstream f(fname);
   if (!f.good()) throw Err()
@@ -442,8 +449,8 @@ void write_ozi_plt (const char *fname, const GeoTrk & trk, const Opt & opts){
 /***************************************************************************/
 /// Write WPT.
 void write_ozi_wpt (const char *fname, const GeoWptList & wpt, const Opt & opts){
-  if (opts.exists("verbose")) cerr <<
-    "Writing waypoints to OziExplorer file " << fname << endl;
+  bool vv = opts.get("verbose", false);
+  if (vv) cerr << "Writing waypoints to OziExplorer file: " << fname << endl;
 
   ofstream f(fname);
   if (!f.good()) throw Err()
@@ -520,8 +527,9 @@ void write_ozi_wpt (const char *fname, const GeoWptList & wpt, const Opt & opts)
 
 /***************************************************************************/
 void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
-  if (opts.exists("verbose")) cerr <<
-    "Writing map to OziExplorer file " << fname << endl;
+
+  bool vv = opts.get("verbose", false);
+  if (vv) cerr << "Writing map to OziExplorer file " << fname << endl;
 
   ofstream f(fname);
   if (!f.good()) throw Err()

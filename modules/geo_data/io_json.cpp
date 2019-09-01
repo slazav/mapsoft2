@@ -23,8 +23,8 @@ using namespace std;
 void
 write_json (const char* fname, const GeoData & data, const Opt & opts){
 
-  if (opts.exists("verbose")) cerr <<
-    "Writing GeoJSON file: " << fname << endl;
+  bool v = opts.get("verbose", false);
+  if (v) cerr << "Writing GeoJSON file: " << fname << endl;
 
   json_t *features = json_array();
   bool skip_zt = opts.get("geo_skip_zt", false);
@@ -32,11 +32,14 @@ write_json (const char* fname, const GeoData & data, const Opt & opts){
   // tracks
   // Each track is a feature with MultiLineString objects.
   // First we write tracks to have them below points on leaflet maps.
-  for (auto i: data.trks) {
+  for (auto const & trk: data.trks) {
+    if (v) cerr << "  Writing track: " << trk.name
+           << " (" << trk.size() << " points)" << endl;
+
     // coordinates
     json_t *j_crd = json_array();
     json_t *j_seg = json_array();
-    for (auto tp: i) {
+    for (auto const & tp: trk) {
       if (tp.start && json_array_size(j_seg)){
         json_array_append_new(j_crd, j_seg);
         j_seg = json_array();
@@ -59,9 +62,11 @@ write_json (const char* fname, const GeoData & data, const Opt & opts){
 
     // properties
     json_t *j_prop = json_object();
-    if (i.name != "") json_object_set_new(j_prop, "name", json_string(i.name.c_str()));
-    if (i.comm != "") json_object_set_new(j_prop, "cmt",  json_string(i.comm.c_str()));
-    for (auto o:i.opts)
+    if (trk.name != "") json_object_set_new(
+                          j_prop, "name", json_string(trk.name.c_str()));
+    if (trk.comm != "") json_object_set_new(
+                          j_prop, "cmt",  json_string(trk.comm.c_str()));
+    for (auto const & o:trk.opts)
       json_object_set_new(j_prop, o.first.c_str(), json_string(o.second.c_str()));
 
     // track
@@ -74,9 +79,12 @@ write_json (const char* fname, const GeoData & data, const Opt & opts){
   }
 
   // waypoints
-  for (auto i: data.wpts) {
+  for (auto const & wpl: data.wpts) {
+    if (v) cerr << "  Writing waypoints: " << wpl.name
+           << " (" << wpl.size() << " points)" << endl;
+
     json_t *j_wpts = json_array();
-    for (auto wp: i ) {
+    for (auto const & wp: wpl ) {
 
       // coordinate array
       json_t *j_pt = json_array();
@@ -110,9 +118,11 @@ write_json (const char* fname, const GeoData & data, const Opt & opts){
 
     // properties
     json_t *j_prop = json_object();
-    if (i.name != "") json_object_set_new(j_prop, "name", json_string(i.name.c_str()));
-    if (i.comm != "") json_object_set_new(j_prop, "cmt",  json_string(i.comm.c_str()));
-    for (auto o:i.opts)
+    if (wpl.name != "") json_object_set_new(
+                          j_prop, "name", json_string(wpl.name.c_str()));
+    if (wpl.comm != "") json_object_set_new(
+                          j_prop, "cmt", json_string(wpl.comm.c_str()));
+    for (auto const & o:wpl.opts)
       json_object_set_new(j_prop, o.first.c_str(), json_string(o.second.c_str()));
 
     json_t *j_wptl = json_object();
@@ -245,7 +255,8 @@ GeoWptList read_geojson_wptl(json_t *prop){
 
 // read GeoJSON Feature of FeatureCollection (recursively)
 void
-read_geojson_feature(json_t *feature, GeoData & data, GeoWptList & wptl){
+read_geojson_feature(json_t *feature, GeoData & data,
+                     GeoWptList & wptl, const bool v){
     if (!json_is_object(feature))
       throw Err() << "JSON object expected";
     json_t *j_type = json_object_get(feature, "type");
@@ -266,11 +277,15 @@ read_geojson_feature(json_t *feature, GeoData & data, GeoWptList & wptl){
       size_t i;
       json_t *sub_feature;
       json_array_foreach(sub_features, i, sub_feature) {
-        read_geojson_feature(sub_feature, data, wptl1);
+        read_geojson_feature(sub_feature, data, wptl1, v);
       }
 
       // add waypoint list if it is not empty
-      if (wptl1.size()) data.wpts.push_back(wptl1);
+      if (wptl1.size()){
+        if (v) cerr << "  Reading waypoints: " << wptl1.name
+                    << " (" << wptl1.size() << " points)" << endl;
+        data.wpts.push_back(wptl1);
+      }
       return;
     }
 
@@ -296,12 +311,12 @@ read_geojson_feature(json_t *feature, GeoData & data, GeoWptList & wptl){
         wptl.push_back(read_geojson_wpt(j_geom_coord, j_prop));
       }
       // Track
-      else if (geom_type == "MultiLineString") {
-        data.trks.push_back(read_geojson_trk(j_geom_coord, j_prop, 1));
-      }
-      // Track
-      else if (geom_type == "LineString") {
-        data.trks.push_back(read_geojson_trk(j_geom_coord, j_prop, 0));
+      else if (geom_type == "MultiLineString" || geom_type == "LineString") {
+        GeoTrk trk = read_geojson_trk(
+            j_geom_coord, j_prop, geom_type == "MultiLineString");
+        if (v) cerr << "  Reading track: " << trk.name
+                    << " (" << trk.size() << " points)" << endl;
+        data.trks.push_back(trk);
       }
       else
         throw Err() << "Unknown type in a GeoJSON feature: " << type;
@@ -311,9 +326,8 @@ read_geojson_feature(json_t *feature, GeoData & data, GeoWptList & wptl){
 
 void
 read_json(const char* fname, GeoData & data, const Opt & opts) {
-
-  if (opts.exists("verbose")) cerr <<
-    "Reading GeoJSON file: " << fname << endl;
+  bool v = opts.get("verbose", false);
+  if (v) cerr << "Reading GeoJSON file: " << fname << endl;
 
   ifstream f(fname);
   std::istreambuf_iterator<char> begin(f), end;
@@ -326,7 +340,7 @@ read_json(const char* fname, GeoData & data, const Opt & opts) {
   if (!J) throw Err() << "Can't parse JSON: " << e.text;
 
   GeoWptList tmp;
-  try { read_geojson_feature(J, data, tmp); }
+  try { read_geojson_feature(J, data, tmp, v); }
   catch(Err e){
     json_decref(J);
     throw e;
