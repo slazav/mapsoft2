@@ -90,7 +90,7 @@ main(int argc, char *argv[]){
       // copy verbose option to output options
       if (GO.exists("verbose")) O.put("verbose", GO["verbose"]);
 
-      mapsoft_write(ofile.c_str(), data, O);
+      mapsoft_write(ofile, data, O);
     }
 
     return 0;

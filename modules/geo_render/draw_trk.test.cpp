@@ -103,7 +103,7 @@ main(int argc, char **argv){
 
     // read geodata
     MapsoftData data;
-    for (auto const &f:files) mapsoft_read(f.c_str(), data, opts);
+    for (auto const &f:files) mapsoft_read(f, data, opts);
 
     // set some defaults:
     if (!opts.exists("mkref")) opts.put("mkref", "proj");
