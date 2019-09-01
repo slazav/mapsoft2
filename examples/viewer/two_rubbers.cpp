@@ -17,8 +17,8 @@ int main(int argc, char **argv){
 
     // add box to rubber1
     iPoint p(20,20);
-    rubber1.add_src_sq(p, 3);
-    rubber1.add_dst_sq(3);
+    rubber1.add_sq_mark(iPoint(0,0), true, 3);
+    rubber1.add_sq_mark(p, false, 3);
     rubber1.add_rect(p);
     rubber1.add_line(p);
 

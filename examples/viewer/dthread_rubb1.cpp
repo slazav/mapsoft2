@@ -14,8 +14,8 @@ int main(int argc, char **argv){
     Rubber rubber(&viewer);
 
     iPoint p(20,20);
-    rubber.add_src_sq(p, 3);
-    rubber.add_dst_sq(3);
+    rubber.add_sq_mark(iPoint(0,0), true);
+    rubber.add_sq_mark(p, false);
     rubber.add_rect(p);
     rubber.add_line(p);
 

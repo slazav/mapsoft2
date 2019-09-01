@@ -18,8 +18,8 @@ class ActionTestBox : public Action{
   }
   void click(const iPoint & p, const Gdk::ModifierType & state){
     if (clear){
-      rubber->add_src_sq(p, 3);
-      rubber->add_dst_sq(3);
+      rubber->add_sq_mark(iPoint(0,0), true, 3);
+      rubber->add_sq_mark(p, false, 3);
       rubber->add_rect(p);
       rubber->add_line(p);
     } else {
