@@ -47,7 +47,7 @@ ms2opt_add_geo_o(ext_option_list & opts){
 
 /**********************************************************/
 bool
-read_geo (const char* fname, GeoData & data, const Opt & opt){
+read_geo (const string &fname, GeoData & data, const Opt & opt){
   string fmt;
   if      (file_ext_check(fname, ".json")) fmt="json";
   else if (file_ext_check(fname, ".gu"))   fmt="gu";
@@ -88,11 +88,11 @@ read_geo (const char* fname, GeoData & data, const Opt & opt){
   // KMZ format
   if (fmt == "kmz") {
     TmpDir tmpdir("mapsoft_read_kmz_XXXXXX");
-    tmpdir.unzip(fname);
+    tmpdir.unzip(fname.c_str());
     vector<string> paths = tmpdir.get_paths();
     for (int i=0; i<paths.size(); i++){
       if (*paths[i].rbegin() == '/') continue;
-      read_kml(paths[i].c_str(), (GeoData &) data, opt);
+      read_kml(paths[i], (GeoData &) data, opt);
     }
     return true;
   }
@@ -106,11 +106,11 @@ read_geo (const char* fname, GeoData & data, const Opt & opt){
   // ZIP format
   if (fmt == "zip") {
     TmpDir tmpdir("mapsoft_read_zip_XXXXXX");
-    tmpdir.unzip(fname);
+    tmpdir.unzip(fname.c_str());
     vector<string> paths = tmpdir.get_paths();
     for (auto p:paths){
       if (*p.rbegin() == '/') continue;
-      read_geo(p.c_str(), data, opt);
+      read_geo(p, data, opt);
     }
     return true;
   }
@@ -119,7 +119,7 @@ read_geo (const char* fname, GeoData & data, const Opt & opt){
 }
 
 bool
-write_geo (const char* fname, const GeoData & data, const Opt & opt){
+write_geo (const string &fname, const GeoData & data, const Opt & opt){
 
   string fmt;
   if      (file_ext_check(fname, ".json")) fmt="json";
@@ -161,7 +161,7 @@ write_geo (const char* fname, const GeoData & data, const Opt & opt){
   if (fmt == "kmz") {
     TmpDir tmpdir("mapsoft_write_kmz_XXXXXX");
     string fpath = tmpdir.add(file_ext_repl(fname, ".kml").c_str());
-    write_kml(fpath.c_str(), data, opt);
+    write_kml(fpath, data, opt);
     tmpdir.zip(fname);
     return true;
   }
@@ -188,7 +188,7 @@ write_geo (const char* fname, const GeoData & data, const Opt & opt){
       ostringstream f;
       if (ww>0) f << base << setw(ww) << setfill('0') << n << ".wpt";
       else      f << base << ".wpt";
-      write_ozi_wpt(f.str().c_str(), wpl, opt);
+      write_ozi_wpt(f.str(), wpl, opt);
       files.push_back(f.str());
     }
 
@@ -199,7 +199,7 @@ write_geo (const char* fname, const GeoData & data, const Opt & opt){
       if (tw>0) f << base << setw(tw) << setfill('0') << n << ".plt";
       else      f << base << ".plt";
 
-      write_ozi_plt (f.str().c_str(), trk, opt);
+      write_ozi_plt(f.str(), trk, opt);
       files.push_back(f.str());
     }
 
@@ -220,7 +220,7 @@ write_geo (const char* fname, const GeoData & data, const Opt & opt){
         if (mmw > 0)  f << setw(mmw) << setfill('0') << nn;
         f << ".map";
 
-        write_ozi_map(f.str().c_str(), map, opt);
+        write_ozi_map(f.str(), map, opt);
         files.push_back(f.str());
       }
     }

@@ -14,8 +14,8 @@
 using namespace std;
 string gu_default_enc("KOI8-R");
 
-void read_gu (const char *fname, GeoData & data, const Opt & opts){
-  IConv cnv(opts.get("gu_enc", gu_default_enc).c_str(), "UTF-8");
+void read_gu (const string &fname, GeoData & data, const Opt & opts){
+  IConv cnv(opts.get("gu_enc", gu_default_enc), "UTF-8");
   bool v = opts.get("verbose", false);
   if (v) cerr << "Reading GarminUtils file: " << fname << endl;
 
@@ -25,7 +25,7 @@ void read_gu (const char *fname, GeoData & data, const Opt & opts){
   GeoTrk trk;
   while (!s.eof()){
     string l;
-    std::getline(s, l);
+    getline(s, l);
 
     if (l.compare(0, 10, "[waypoints")==0) {
       wpt.clear(); trk.clear(); mode = 1;
@@ -55,7 +55,7 @@ void read_gu (const char *fname, GeoData & data, const Opt & opts){
       char c;
       istringstream s1(l);
       s1 >> p.name >> p.y >> p.x >> symb >> c >> displ >> ws;
-      std::getline(s1, p.comm);
+      getline(s1, p.comm);
       if (s1.fail() || !s1.eof() || c != '/')
         throw Err() << "io_gu: can't parse a waypoint: [" << l << "]";
       p.name = cnv(p.name);
@@ -65,7 +65,7 @@ void read_gu (const char *fname, GeoData & data, const Opt & opts){
     }
     if (mode == 2){
       GeoTpt p;
-      std::string t1,t2,st;
+      string t1,t2,st;
       istringstream s1(l);
       s1 >> p.y >> p.x >> t1 >> t2 >> ws;
       p.t = parse_utc_time(t1 + " " + t2);
@@ -85,17 +85,17 @@ void read_gu (const char *fname, GeoData & data, const Opt & opts){
 }
 
 
-void write_gu_waypoints(std::ostream & s, const GeoWptList & wp,
+void write_gu_waypoints(ostream & s, const GeoWptList & wp,
                         const IConv & cnv, const bool v){
   int num = wp.size();
-  if (v) std::cerr << "  Writing waypoints: (" << num << " points)" << endl;
+  if (v) cerr << "  Writing waypoints: (" << num << " points)" << endl;
   s << "[waypoints, " << num << " records]\n";
   int symb  = 0;
   int displ = 0;
   for (auto p : wp){
     string name = cnv(p.name);
     string comm = cnv(p.comm);
-    std::replace(name.begin(), name.end(), ' ', '_');
+    replace(name.begin(), name.end(), ' ', '_');
 
     s << left << setw(6) << setfill(' ') << name << " "
       << right << fixed << setprecision(6)
@@ -109,9 +109,9 @@ void write_gu_waypoints(std::ostream & s, const GeoWptList & wp,
 }
 
 
-void write_gu_track(std::ostream & s, const GeoTrk & tr, const bool v){
+void write_gu_track(ostream & s, const GeoTrk & tr, const bool v){
   int num = tr.size();
-  if (v) std::cerr << "  Writing track: (" << num << " points)" << endl;
+  if (v) cerr << "  Writing track: (" << num << " points)" << endl;
   s << "[tracks, " << num << " records]\n";
   for (auto p : tr){
     s << right << fixed << setprecision(6) << setfill(' ')
@@ -125,8 +125,8 @@ void write_gu_track(std::ostream & s, const GeoTrk & tr, const bool v){
 }
 
 
-void write_gu (const char *fname, const GeoData & data, const Opt & opts){
-  IConv cnv("UTF-8", opts.get("gu_enc", gu_default_enc).c_str());
+void write_gu (const string &fname, const GeoData & data, const Opt & opts){
+  IConv cnv("UTF-8", opts.get("gu_enc", gu_default_enc));
   bool v = opts.get("verbose", false);
   if (v) cerr << "Writing GarminUtils file: " << fname << endl;
 

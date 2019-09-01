@@ -162,13 +162,13 @@ const char *gps_trk_names[] = {
 ///   xml_qchar:   quoting character for attributes, default \'
 ///   gpx_write_rte: write waypoint lists as routes, 0|1, default 0
 void
-write_gpx (const char* filename, const GeoData & data, const Opt & opts){
+write_gpx (const string &filename, const GeoData & data, const Opt & opts){
 
   LIBXML_TEST_VERSION
 
   // create XML writer
   xmlTextWriterPtr writer =
-    xmlNewTextWriterFilename(filename, opts.get<int>("xml_compr", 0));
+    xmlNewTextWriterFilename(filename.c_str(), opts.get<int>("xml_compr", 0));
   if (writer == NULL)
     throw Err() << "write_gpx: can't write to file: " << filename;
 
@@ -179,7 +179,7 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
     // set some parameters
     int indent = opts.get<int>("xml_indent", 1);
     char qchar = opts.get<char>("xml_qchar", '\'');
-    xmlChar *ind_str = (xmlChar *)opts.get<std::string>("xml_ind_str", "  ").c_str();
+    xmlChar *ind_str = (xmlChar *)opts.get<string>("xml_ind_str", "  ").c_str();
 
     if (xmlTextWriterSetIndent(writer, indent)<0 ||
         xmlTextWriterSetIndentString(writer, ind_str)<0 ||
@@ -218,7 +218,7 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
 
         // other option elements:
         for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
-          std::string pfn = std::string("gpx_") + (*fn);
+          string pfn = string("gpx_") + (*fn);
           if (!wpl.opts.exists(pfn)) continue;
           if (xmlTextWriterWriteFormatElement(writer,
              BAD_CAST *fn, "%s", wpl.opts.get<string>(pfn).c_str())<0)
@@ -261,7 +261,7 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
 
         // other option elements:
         for (const char **fn = gps_wpt_names; *fn!=NULL; fn++){
-          std::string pfn = std::string("gpx_") + (*fn);
+          string pfn = string("gpx_") + (*fn);
           if (!wp.opts.exists(pfn)) continue;
           if (xmlTextWriterWriteFormatElement(writer,
              BAD_CAST *fn, "%s", wp.opts.get<string>(pfn).c_str())<0)
@@ -295,7 +295,7 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
 
       // other option elements:
       for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
-        std::string pfn = std::string("gpx_") + (*fn);
+        string pfn = string("gpx_") + (*fn);
         if (!trk.opts.exists(pfn)) continue;
         if (xmlTextWriterWriteFormatElement(writer,
            BAD_CAST *fn, "%s", trk.opts.get<string>(pfn).c_str())<0)
@@ -374,7 +374,7 @@ write_gpx (const char* filename, const GeoData & data, const Opt & opts){
 // read <extensions>. In gpx/track/rte/wpt/trkseg
 int
 read_ext_node(xmlTextReaderPtr reader, Opt & opts){
-  std::string state = "";
+  string state = "";
   while(1){
     int ret =xmlTextReaderRead(reader);
     if (ret != 1) return ret;
@@ -399,7 +399,7 @@ read_wpt_node(xmlTextReaderPtr reader, GeoWptList & data){
   GeoWpt wpt;
   wpt.y = atof(GETATTR("lat"));
   wpt.x = atof(GETATTR("lon"));
-  std::string state="";
+  string state="";
 
   if (xmlTextReaderIsEmptyElement(reader)) {
     data.push_back(wpt);
@@ -449,8 +449,8 @@ read_wpt_node(xmlTextReaderPtr reader, GeoWptList & data){
       if (state == "name") wpt.name = GETVAL;
       if (state == "comm") wpt.comm = GETVAL;
       for (const char **fn = gps_wpt_names; *fn!=NULL; fn++){
-        std::string pfn = std::string("gpx_") + (*fn);
-        if (state == *fn) wpt.opts.put<std::string>(pfn, GETVAL);
+        string pfn = string("gpx_") + (*fn);
+        if (state == *fn) wpt.opts.put<string>(pfn, GETVAL);
       }
     }
     else {
@@ -558,7 +558,7 @@ read_trkseg_node(xmlTextReaderPtr reader, GeoTrk & trk){
 int
 read_trk_node(xmlTextReaderPtr reader, GeoData & data, const Opt & opts){
   GeoTrk trk;
-  std::string state;
+  string state;
   while(1){
     int ret =xmlTextReaderRead(reader);
     if (ret != 1) return ret;
@@ -604,7 +604,7 @@ read_trk_node(xmlTextReaderPtr reader, GeoData & data, const Opt & opts){
       if (state == "name") trk.name = GETVAL;
       if (state == "comm") trk.comm = GETVAL;
       for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
-        if (state == *fn) trk.opts.put<std::string>(*fn, GETVAL);
+        if (state == *fn) trk.opts.put<string>(*fn, GETVAL);
       }
     }
 
@@ -622,7 +622,7 @@ read_trk_node(xmlTextReaderPtr reader, GeoData & data, const Opt & opts){
 int
 read_rte_node(xmlTextReaderPtr reader, GeoData & data, const Opt & opts){
   GeoWptList wptl;
-  std::string state;
+  string state;
   while(1){
     int ret =xmlTextReaderRead(reader);
     if (ret != 1) return ret;
@@ -671,7 +671,7 @@ read_rte_node(xmlTextReaderPtr reader, GeoData & data, const Opt & opts){
       if (state == "name") wptl.name = GETVAL;
       if (state == "comm") wptl.comm = GETVAL;
       for (const char **fn = gps_trk_names; *fn!=NULL; fn++){
-        if (state == *fn) wptl.opts.put<std::string>(*fn, GETVAL);
+        if (state == *fn) wptl.opts.put<string>(*fn, GETVAL);
       }
     }
 
@@ -746,14 +746,14 @@ read_gpx_node(xmlTextReaderPtr reader, GeoData & data, const Opt & opts){
 
 
 void
-read_gpx(const char* filename, GeoData & data, const Opt & opts) {
+read_gpx(const string &filename, GeoData & data, const Opt & opts) {
 
   LIBXML_TEST_VERSION
 
   xmlTextReaderPtr reader;
   int ret;
 
-  reader = xmlReaderForFile(filename, NULL, 0);
+  reader = xmlReaderForFile(filename.c_str(), NULL, 0);
   if (reader == NULL)
     throw Err() << "Can't open GPX file: " << filename;
 

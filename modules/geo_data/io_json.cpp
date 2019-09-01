@@ -21,7 +21,7 @@ using namespace std;
  */
 
 void
-write_json (const char* fname, const GeoData & data, const Opt & opts){
+write_json (const string &fname, const GeoData & data, const Opt & opts){
 
   bool v = opts.get("verbose", false);
   if (v) cerr << "Writing GeoJSON file: " << fname << endl;
@@ -194,7 +194,7 @@ GeoWpt read_geojson_wpt(json_t *coord, json_t *prop){
     if (!json_is_string(val)) continue;
     else if (strcasecmp(key, "name")==0) ret.name = json_string_value(val);
     else if (strcasecmp(key, "cmt")==0) ret.comm = json_string_value(val);
-    else ret.opts.put(key, std::string(json_string_value(val)));
+    else ret.opts.put(key, string(json_string_value(val)));
   }
   // set coordinates
   read_geojson_pt(coord, ret);
@@ -211,7 +211,7 @@ GeoTrk read_geojson_trk(json_t *coord, json_t *prop, const bool multi){
     if (!json_is_string(val)) continue;
     else if (strcasecmp(key, "name")==0) ret.name = json_string_value(val);
     else if (strcasecmp(key, "cmt")==0) ret.comm = json_string_value(val);
-    else ret.opts.put(key, std::string(json_string_value(val)));
+    else ret.opts.put(key, string(json_string_value(val)));
   }
   // set coordinates
   size_t i;
@@ -247,7 +247,7 @@ GeoWptList read_geojson_wptl(json_t *prop){
     if (!json_is_string(val)) continue;
     else if (strcasecmp(key, "name")==0) ret.name = json_string_value(val);
     else if (strcasecmp(key, "cmt")==0) ret.comm = json_string_value(val);
-    else ret.opts.put(key, std::string(json_string_value(val)));
+    else ret.opts.put(key, string(json_string_value(val)));
   }
   return ret;
 }
@@ -325,13 +325,13 @@ read_geojson_feature(json_t *feature, GeoData & data,
 }
 
 void
-read_json(const char* fname, GeoData & data, const Opt & opts) {
+read_json(const string &fname, GeoData & data, const Opt & opts) {
   bool v = opts.get("verbose", false);
   if (v) cerr << "Reading GeoJSON file: " << fname << endl;
 
   ifstream f(fname);
-  std::istreambuf_iterator<char> begin(f), end;
-  std::string buf(begin, end);
+  istreambuf_iterator<char> begin(f), end;
+  string buf(begin, end);
   if (!f.good()) throw Err() << "Can't read file " << fname << " for writing";
 
   size_t flags = 0;

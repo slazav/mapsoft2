@@ -17,7 +17,7 @@ class IConv{
 
     /// Constructors
     IConv();
-    IConv(const char *from, const char *to);
+    IConv(const std::string & from, const std::string & to);
 
     /// Destructor
     ~IConv();

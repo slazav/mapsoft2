@@ -54,13 +54,13 @@ void write_cdata_element(xmlTextWriterPtr & writer, const char *name, const stri
 
 /*******************************/
 void
-write_kml (const char* filename, const GeoData & data, const Opt & opts){
+write_kml (const string &filename, const GeoData & data, const Opt & opts){
 
   LIBXML_TEST_VERSION
 
   // create XML writer
   xmlTextWriterPtr writer =
-    xmlNewTextWriterFilename(filename, opts.get<int>("xml_compr", 0));
+    xmlNewTextWriterFilename(filename.c_str(), opts.get<int>("xml_compr", 0));
   if (writer == NULL)
     throw Err() << "write_kml: can't write to file: " << filename;
 
@@ -71,7 +71,7 @@ write_kml (const char* filename, const GeoData & data, const Opt & opts){
     // set some parameters
     int indent = opts.get<int>("xml_indent", 1);
     char qchar = opts.get<char>("xml_qchar", '\'');
-    xmlChar *ind_str = (xmlChar *)opts.get<std::string>("xml_ind_str", "  ").c_str();
+    xmlChar *ind_str = (xmlChar *)opts.get<string>("xml_ind_str", "  ").c_str();
 
     if (xmlTextWriterSetIndent(writer, indent)<0 ||
         xmlTextWriterSetIndentString(writer, ind_str)<0 ||
@@ -140,7 +140,7 @@ write_kml (const char* filename, const GeoData & data, const Opt & opts){
       int cnt=0;
       for (auto tp : trk) {
         cnt++;
-        linename = trk.opts.get<std::string>("type")=="closed"? "Polygon":"LineString";
+        linename = trk.opts.get<string>("type")=="closed"? "Polygon":"LineString";
 
         if (tp.start || cnt == 1) {
           if (cnt >1) {
@@ -245,15 +245,15 @@ read_point_node(xmlTextReaderPtr reader, GeoWpt & ww){
       if (ret != 1) break;
       char s1,s2;
       istringstream s(str);
-      s >> std::ws >> ww.x >> std::ws >> s1 >>
-           std::ws >> ww.y >> std::ws;
+      s >> ws >> ww.x >> ws >> s1 >>
+           ws >> ww.y >> ws;
       if (s.fail() || s1!=','){
         cerr << "Warning: Coord error (" << str << ")\n";
         ret=0;
         break;
       }
       if (!s.eof()) {
-         s >> s2 >> std::ws >> ww.z;
+         s >> s2 >> ws >> ww.z;
         if (s.fail() || s2!=',') {
           cerr << "Warning: Coord error (" << str << ")\n";
           ret=0;
@@ -296,9 +296,9 @@ read_linestring_node(xmlTextReaderPtr reader, GeoTrk & T){
       GeoTpt tp;
       tp.start=true;
       while (!s.eof()){
-        s >> std::ws >> tp.x >> std::ws >> s1 >>
-             std::ws >> tp.y >> std::ws >> s2 >>
-             std::ws >> tp.z >> std::ws;
+        s >> ws >> tp.x >> ws >> s1 >>
+             ws >> tp.y >> ws >> s2 >>
+             ws >> tp.z >> ws;
         if (s1!=',' || s2!=','){
           cerr << "Warning: Coord error\n";
           break;
@@ -345,9 +345,9 @@ read_polygon_node(xmlTextReaderPtr reader, GeoTrk & T){
       GeoTpt tp;
       tp.start=true;
       while (!s.eof()){
-        s >> std::ws >> tp.x >> std::ws >> s1 >>
-             std::ws >> tp.y >> std::ws >> s2 >>
-             std::ws >> tp.z >> std::ws;
+        s >> ws >> tp.x >> ws >> s1 >>
+             ws >> tp.y >> ws >> s2 >>
+             ws >> tp.z >> ws;
         if (s1!=',' || s2!=','){
           cerr << "Warning: Coord error\n";
           break;
@@ -390,9 +390,9 @@ read_gx_track_node(xmlTextReaderPtr reader, GeoTrk & T){
       if (ret != 1) break;
       istringstream s(str);
       GeoTpt tp;
-      s >> std::ws >> tp.x >> std::ws
-        >> std::ws >> tp.y >> std::ws
-        >> std::ws >> tp.z >> std::ws;
+      s >> ws >> tp.x >> ws
+        >> ws >> tp.y >> ws
+        >> ws >> tp.z >> ws;
       T.push_back(tp);
     }
     else if (NAMECMP("gx:Track") && (type == TYPE_ELEM_END)){
@@ -684,14 +684,14 @@ read_kml_node(xmlTextReaderPtr reader, GeoData & data, const bool v){
 
 
 void
-read_kml(const char* filename, GeoData & data, const Opt & opts) {
+read_kml(const string &filename, GeoData & data, const Opt & opts) {
 
   LIBXML_TEST_VERSION
 
   xmlTextReaderPtr reader;
   int ret;
 
-  reader = xmlReaderForFile(filename, NULL, 0);
+  reader = xmlReaderForFile(filename.c_str(), NULL, 0);
   if (reader == NULL)
     throw Err() << "Can't open KML file: " << filename;
 

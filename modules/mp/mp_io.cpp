@@ -141,7 +141,7 @@ void read_mp(istream & f, MP & data, const Opt & opts){
     throw Err() << "read_mp: not all levels are set in the header";
  
   // make encoding converter, convert name and comments in the header
-  IConv cnv(string("CP" + data.Codepage).c_str(), "UTF-8");
+  IConv cnv(string("CP" + data.Codepage), "UTF-8");
   data.Name = cnv(data.Name);
   for (auto & o: data.Opts) o.second = cnv(o.second);
   for (auto & c: data.Comment) c = cnv(c);
@@ -265,7 +265,7 @@ void write_mp(ostream & out, const MP & data, const Opt & opts){
 
   // converting some fields from UTF8 to MP codepage
   string codepage=data.Opts.get("CodePage", "1251");   // override by file setting
-  IConv cnv("UTF-8", string("CP" + codepage).c_str());
+  IConv cnv("UTF-8", string("CP" + codepage));
 
   for (auto c:data.Comment) out << ";" << cnv(c) << "\r\n";
 

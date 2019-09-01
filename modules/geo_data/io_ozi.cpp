@@ -153,7 +153,7 @@ string convert_datum2ozi(const string & s){
 
 /***************************************************************************/
 /***************************************************************************/
-void read_ozi (const char *fname, GeoData & data, const Opt & opts){
+void read_ozi (const string &fname, GeoData & data, const Opt & opts){
   bool vv = opts.get("verbose", false);
   if (vv) cerr << "Reading OziExplorer file " << fname << endl;
 
@@ -161,7 +161,7 @@ void read_ozi (const char *fname, GeoData & data, const Opt & opts){
   if (!f.good()) throw Err()
       << "Can't read data from OziExplorer file: " << fname;
 
-  IConv cnv(opts.get("ozi_enc", ozi_default_enc).c_str(), "UTF-8");
+  IConv cnv(opts.get("ozi_enc", ozi_default_enc), "UTF-8");
 
   string s1,s2,s3;
   f >> s1 >> s2;
@@ -385,7 +385,7 @@ void read_ozi (const char *fname, GeoData & data, const Opt & opts){
 
 /***************************************************************************/
 /// Write PLT.
-void write_ozi_plt (const char *fname, const GeoTrk & trk, const Opt & opts){
+void write_ozi_plt (const string &fname, const GeoTrk & trk, const Opt & opts){
 
   bool vv = opts.get("verbose", false);
   if (vv) cerr << "Writing track to OziExplorer file: " << fname << endl;
@@ -394,7 +394,7 @@ void write_ozi_plt (const char *fname, const GeoTrk & trk, const Opt & opts){
   if (!f.good()) throw Err()
       << "Can't write data to OziExplorer file: " << fname;
 
-  IConv cnv("UTF-8", opts.get("ozi_enc", ozi_default_enc).c_str() );
+  IConv cnv("UTF-8", opts.get("ozi_enc", ozi_default_enc) );
 
   int num = trk.size();
   f << "OziExplorer Track Point File Version 2.0\r\n"
@@ -448,7 +448,7 @@ void write_ozi_plt (const char *fname, const GeoTrk & trk, const Opt & opts){
 
 /***************************************************************************/
 /// Write WPT.
-void write_ozi_wpt (const char *fname, const GeoWptList & wpt, const Opt & opts){
+void write_ozi_wpt (const string &fname, const GeoWptList & wpt, const Opt & opts){
   bool vv = opts.get("verbose", false);
   if (vv) cerr << "Writing waypoints to OziExplorer file: " << fname << endl;
 
@@ -456,7 +456,7 @@ void write_ozi_wpt (const char *fname, const GeoWptList & wpt, const Opt & opts)
   if (!f.good()) throw Err()
       << "Can't write data to OziExplorer file: " << fname;
 
-  IConv cnv("UTF-8", opts.get("ozi_enc", ozi_default_enc).c_str() );
+  IConv cnv("UTF-8", opts.get("ozi_enc", ozi_default_enc) );
 
   int num = wpt.size();
   int n=0;
@@ -526,7 +526,7 @@ void write_ozi_wpt (const char *fname, const GeoWptList & wpt, const Opt & opts)
 }
 
 /***************************************************************************/
-void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
+void write_ozi_map (const string &fname, const GeoMap & m, const Opt & opts){
 
   bool vv = opts.get("verbose", false);
   if (vv) cerr << "Writing map to OziExplorer file " << fname << endl;
@@ -535,7 +535,7 @@ void write_ozi_map (const char *fname, const GeoMap & m, const Opt & opts){
   if (!f.good()) throw Err()
       << "Can't write data to OziExplorer file: " << fname;
 
-  IConv cnv("UTF-8", opts.get("ozi_enc", ozi_default_enc).c_str() );
+  IConv cnv("UTF-8", opts.get("ozi_enc", ozi_default_enc));
 
   // Usually wgs84 datum can be used here.
   string ozi_datum = "WGS 84";

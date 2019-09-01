@@ -12,8 +12,8 @@ class IConv::Impl {
 
   public:
 
-  Impl(const char *from, const char *to){
-    cdp = std::shared_ptr<void>(iconv_open(to, from), iconv_close);
+  Impl(const std::string & from, const std::string & to){
+    cdp = std::shared_ptr<void>(iconv_open(to.c_str(), from.c_str()), iconv_close);
     if ((iconv_t)(cdp.get()) == ERR) throw Err() <<
       "can't do iconv conversion from " << from << " to " << to;
   }
@@ -25,7 +25,7 @@ class IConv::Impl {
 };
 
 
-IConv::IConv(const char *from, const char *to):
+IConv::IConv(const std::string & from, const std::string & to):
   impl(std::unique_ptr<Impl>(new Impl(from,to))) { }
 
 IConv::IConv() {}
