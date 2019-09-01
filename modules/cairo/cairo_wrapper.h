@@ -165,6 +165,12 @@ private:
 
 public:
 
+  CairoWrapper(){}
+
+  CairoWrapper(const Cairo::RefPtr<Cairo::Context> & cr):
+    Cairo::RefPtr<CairoExtra>(
+      Cairo::RefPtr<CairoExtra>::cast_static(cr)) {}
+
   // Create surface and new cairo context
   // using internal image.
   // This should be done before any drawing.
