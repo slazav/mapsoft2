@@ -12,10 +12,10 @@
 
 #define OPT_G   1  // general options (-v, -h)
 #define OPT_A   2  // action options (mixed for all actions)
-static struct ext_option options[] = {
+
+ext_option_list options = {
   {"help",                  0,'h', OPT_G|OPT_A, "show help message"},
   {"pod",                   0, 0,  OPT_G|OPT_A, "show this message as POD template"},
-  {0,0,0,0}
 };
 
 void usage(bool pod=false, std::ostream & S = std::cout){
