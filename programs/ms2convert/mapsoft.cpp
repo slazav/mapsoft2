@@ -3,48 +3,18 @@
 #include <string>
 #include <vector>
 #include "getopt/getopt.h"
+#include "geo_data/geo_io.h"
 #include "mapsoft_data/mapsoft_data.h"
 #include <cstring>
 
-#define OPT_GG   1  // general options (-v, -h)
-#define OPT_INP  2  // input-only options
-#define OPT_CMN  4  // common (filter) options: used both as input and output
-#define OPT_OUT  8  // output-only options
-#define OPT_STP 16  // special option -o/--out
-
-#define MASK_IN0  (MASK_INP | OPT_GG) // mask to select global input options
-#define MASK_INP  (OPT_INP | OPT_CMN | OPT_STP) // mask to select input options
-#define MASK_OUT  (OPT_OUT | OPT_CMN)  // mask to select output options
-
 using namespace std;
 
-ext_option_list options = {
-  {"out",                   0,'o', OPT_STP, ""},
-
-  {"help",                  0,'h', OPT_GG, "show help message"},
-  {"pod",                   0, 0 , OPT_GG, "show this message as POD template"},
-  {"verbose",               0,'v', OPT_GG, "be verbose\n"},
-
-  {"fmt",                   1, 0,  OPT_CMN, "input/ouput format"},
-  {"gu_enc",                1, 0,  OPT_CMN, "Garmin Utils format charset (default KOI8-R)"},
-  {"ozi_enc",               1, 0,  OPT_CMN, "OziExplorer format charset (default Windows-1251)"},
-
-  {"xml_compr",             1, 0,  OPT_OUT, "compress xml output (GPX and KML formats), default 0"},
-  {"xml_indent",            1, 0,  OPT_OUT, "use xml indentation (GPX and KML formats), default 1"},
-  {"xml_ind_str",           1, 0,  OPT_OUT, "xml indentation string (GPX and KML formats), default '  '"},
-  {"xml_qchar",             1, 0,  OPT_OUT, "xml quoting character (GPX and KML formats), default '\''"},
-  {"gpx_write_rte",         1, 0,  OPT_OUT, "write waypoint lists as routes (GPX format), default 0"},
-  {"json_sort_keys",        1, 0,  OPT_OUT, "sort json objects by keys (GeoJSON format), default 1"},
-  {"json_compact",          1, 0,  OPT_OUT, "write compact json (GeoJSON format), default 0"},
-  {"json_indent",           1, 0,  OPT_OUT, "use json indentation (GeoJSON format), default 1"},
-  {"geo_skip_zt",           1, 0,  OPT_OUT, "skip altitude and time information when writing GeoJSON, default 0"},
-  {"ozi_map_grid",          1, 0,  OPT_OUT, "write grid coordinates in map reference points (OziExplorer format), default 0"},
-};
+ext_option_list options;
 
 void usage(bool pod=false, ostream & S = cout){
   string head = pod? "\n=head1 ":"\n";
-  const char * prog = "mapsoft_convert";
-  S << prog << " -- example of mapsoft-style getopt\n"
+  const char * prog = "mapsoft";
+  S << prog << " -- mapsoft2 geodata converter\n"
     << head << "Usage:\n"
     << prog << " [<general_options>|<global_input_options>]\\\n"
     << "         <input_file_1> [<input_options_1>]     \\\n"
@@ -57,25 +27,33 @@ void usage(bool pod=false, ostream & S = cout){
     << "output file according with output options.\n"
   ;
   S << head << "General options:\n";
-  print_options(options, OPT_GG, S, pod);
+  print_options(options, MS2OPT_STD, S, pod);
   S << head << "Input options:\n";
-  print_options(options, OPT_INP, S, pod);
+  print_options(options, MS2OPT_GEO_I, S, pod);
   S << head << "Common options (can be used as input and output options):\n";
-  print_options(options, OPT_CMN, S, pod);
+  print_options(options, MS2OPT_GEO_IO, S, pod);
   S << head << "Output options:\n";
-  print_options(options, OPT_OUT, S, pod);
+  print_options(options, MS2OPT_OUT, S, pod);
+  print_options(options, MS2OPT_GEO_O, S, pod);
   throw Err();
 }
-
 
 int
 main(int argc, char *argv[]){
   try{
+    ms2opt_add_std(options);
+    ms2opt_add_out(options);
+    ms2opt_add_geo_i(options);
+    ms2opt_add_geo_o(options);
+    ms2opt_add_geo_io(options);
+
     if (argc<2) usage();
 
     MapsoftData data;
 
-    Opt O = parse_options(&argc, &argv, options, MASK_IN0, "out");
+    Opt O = parse_options(&argc, &argv, options,
+       MS2OPT_STD | MS2OPT_GEO_I | MS2OPT_GEO_IO | MS2OPT_OUT, "out");
+
     if (O.exists("help")) usage();
     if (O.exists("pod"))  usage(true);
     bool verb = O.exists("verbose");
@@ -89,7 +67,8 @@ main(int argc, char *argv[]){
       const char * ifile = argv[0];
 
       // parse file-specific options and append global options
-      O = parse_options(&argc, &argv, options, MASK_INP, "out");
+      O = parse_options(&argc, &argv, options,
+        MS2OPT_GEO_I | MS2OPT_GEO_IO | MS2OPT_OUT, "out");
       O.insert(GO.begin(), GO.end());
 
       go_out = O.exists("out");
@@ -103,7 +82,8 @@ main(int argc, char *argv[]){
       const char * ofile = argv[0];
 
       // parse output options
-      O = parse_options(&argc, &argv, options, MASK_OUT);
+      O = parse_options(&argc, &argv, options,
+        MS2OPT_GEO_IO | MS2OPT_GEO_O);
 
       // copy verbose option to output options
       if (GO.exists("verbose")) O.put("verbose", GO["verbose"]);

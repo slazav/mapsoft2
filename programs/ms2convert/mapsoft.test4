@@ -28,6 +28,6 @@ assert "$P test_data/gu1b.gu --gu_enc Windows-1251 -o tmp.gu --gu_enc Windows-12
 assert_diff test_data/gu1b.gu tmp.gu
 
 # specify format
-assert "$P test_data/gu1.gu -o tmp --fmt gu"  "" 0
-assert "$P tmp --fmt gu -o tmp --fmt gu"  "" 0
+assert "$P test_data/gu1.gu -o tmp --out_fmt gu"  "" 0
+assert "$P tmp --in_fmt gu -o tmp --out_fmt gu"  "" 0
 assert_diff test_data/gu1a.gu tmp
