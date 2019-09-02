@@ -106,9 +106,7 @@ SimpleViewer::draw_image(const Cairo::RefPtr<Cairo::Context> & cr,
       format, img.width(), img.height(), img.width()*4);
 
   cr->set_source(surface, p.x, p.y);
-  signal_before_draw_.emit();
   cr->paint();
-  signal_after_draw_.emit();
 }
 
 bool

@@ -80,8 +80,6 @@ class SimpleViewer : public Gtk::DrawingArea {
 
     virtual bool is_on_drag() const {return on_drag;}
 
-    sigc::signal<void> & signal_before_draw() {return signal_before_draw_;}
-    sigc::signal<void> & signal_after_draw()  {return signal_after_draw_;}
     sigc::signal<void> & signal_busy()        {return signal_busy_;}
     sigc::signal<void> & signal_idle()        {return signal_idle_;}
     sigc::signal<void, double> & signal_on_rescale()  {return signal_on_rescale_;}
@@ -92,8 +90,6 @@ class SimpleViewer : public Gtk::DrawingArea {
 
   private:
 
-    sigc::signal<void> signal_before_draw_;
-    sigc::signal<void> signal_after_draw_;
     sigc::signal<void> signal_busy_;
     sigc::signal<void> signal_idle_;
     sigc::signal<void, double> signal_on_rescale_;
