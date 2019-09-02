@@ -5,6 +5,7 @@
 
 #include "geo_data/geo_io.h"
 #include "geo_data/conv_geo.h"
+#include "geo_data/geo_utils.h"
 #include "err/err.h"
 #include "getopt/getopt.h"
 #include "time_fmt/time_fmt.h"
