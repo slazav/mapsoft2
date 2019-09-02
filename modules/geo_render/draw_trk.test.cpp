@@ -14,39 +14,11 @@
 
 using namespace std;
 
-#define STD 1
-#define REF 2
-#define TRK 4
-#define DAT 8
-#define MAP 16
+#define TRK 1<<10
+#define MAP 1<<11
 
 #define ALL 0xFFFFFF
 ext_option_list options = {
-  {"out",                   1,'o', STD, "output file (.pdf, .ps, .svg, .png)"},
-  {"map",                   1,'m', STD, "write map file in OziExprorer format"},
-  {"help",                  0,'h', STD, "show help message"},
-  {"pod",                   0, 0 , STD, "show this message as POD template"},
-  {"verbose",               0,'v', STD, "print some information"},
-
-  // geo_mkref options
-  {"mkref",                 1,0, REF, "map reference type (nom, google_tile, tms_tile, proj)"},
-  {"name",                  1,0, REF, "map name (for \"nom\" references)"},
-  {"dpi",                   1,0, REF, "map resolution, pixels per inch (for \"nom\" and \"proj\" references)"},
-  {"mag",                   1,0, REF, "map magnification (for \"nom\" references)"},
-  {"margins",               1,0, REF, "map margins, pixels (for \"nom\" and \"proj\" references)"},
-  {"top_margin",            1,0, REF, "override top margin value (for \"nom\" and \"proj\" references)"},
-  {"left_margin",           1,0, REF, "override left margin value (for \"nom\" and \"proj\" references)"},
-  {"right_margin",          1,0, REF, "override right margin value (for \"nom\" and \"proj\" references)"},
-  {"bottom_margin",         1,0, REF, "override bottom margin value (for \"nom\" and \"proj\" references)"},
-  {"zindex",                1,0, REF, "tile zindex (for \"*_tile\" references)"},
-  {"tiles",                 1,0, REF, "tile or tile range (for \"*_tile\" references)"},
-  {"coords",                1,0, REF, "figure in projection coordinates to be covered by the map (for \"proj\" references)"},
-  {"border",                1,0, REF, "map border in projection coordinates (for \"proj\" references)"},
-  {"coords_wgs",            1,0, REF, "figure in wgs84 coordinates to be covered by the map (for \"*_tile\" or \"proj\" references)"},
-  {"border_wgs",            1,0, REF, "map border in wgs84 coordinates (for \"*_tile\" or \"proj\" references)"},
-  {"proj",                  1,0, REF, "projection setting (for \"proj\" references)"},
-  {"scale",                 1,0, REF, "map scale, projection units per map cm (for \"proj\" references)"},
-
   // track drawing options
   {"trk_draw_mode",         1,0, TRK, "track drawing mode (normal, speed, height)"},
   {"trk_draw_color",        1,0, TRK, "color (for normal drawing mode), default: BCGYRM"},
@@ -65,6 +37,7 @@ ext_option_list options = {
   // ...
 
   // map writing  options
+  {"map",                   1,'m', MAP, "write map file in OziExprorer format"},
   {"ozi_enc",               1,0, MAP, "encoding of the map file, default: Windows-1251"},
   {"ozi_map_grid",          0,0, MAP, "write grid coordinates in reference points"},
   {"ozi_map_wgs",           0,0, MAP, "use wgs84 datum for map coordinates"},
@@ -78,13 +51,13 @@ void usage(bool pod=false, ostream & S = cout){
     << prog << "  [<options>] <input files>\n"
     << "\n";
   S << head << "General options:\n";
-  print_options(options, STD, S, pod);
+  print_options(options, MS2OPT_STD, S, pod);
   S << head << "Options for making map reference:\n";
-  print_options(options, REF, S, pod);
+  print_options(options, MS2OPT_MKREF, S, pod);
   S << head << "Options for drawing tracks:\n";
   print_options(options, TRK, S, pod);
   S << head << "Options for reading geodata:\n";
-  print_options(options, DAT, S, pod);
+  print_options(options, MS2OPT_GEO_I | MS2OPT_GEO_O, S, pod);
   S << head << "Options for writing map in OziExplorer format:\n";
   print_options(options, MAP, S, pod);
   throw Err();
@@ -93,10 +66,16 @@ void usage(bool pod=false, ostream & S = cout){
 int
 main(int argc, char **argv){
   try {
+    ms2opt_add_std(options);
+    ms2opt_add_out(options);
+    ms2opt_add_geo_o(options);
+    ms2opt_add_geo_io(options);
+    ms2opt_add_mkref(options);
+
     if (argc<2) usage();
 
     std::vector<std::string> files;
-    Opt opts = parse_options_all(&argc, &argv, options, ALL, files);
+    Opt opts = parse_options_all(&argc, &argv, options, ~0, files);
 
     if (opts.exists("help")) usage();
     if (opts.exists("pod")) usage(true);
