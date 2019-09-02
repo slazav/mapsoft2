@@ -50,6 +50,9 @@ Opt o("{\"k1\":\"v1\", \"k2\":\"v2\"}");
 -----------------
 ## Changelog:
 
+2019.09.02 V.Zavjalov 1.5.1:
+- More descriptive error message
+
 2019.08.16 V.Zavjalov 1.5:
 - Add constructor with string argument
   Opt("{\"k1\":\"v1\", \"k2\":\"v2\"}");

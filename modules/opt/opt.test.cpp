@@ -97,17 +97,17 @@ try{
 
   {
     std::istringstream is("{");
-    assert_err(is >> O1, "string or '}' expected near end of file");
+    assert_err(is >> O1, "JSON error: string or '}' expected near end of file");
   }
 
   {
     std::istringstream is("{a: 1}");
-    assert_err(is >> O1, "string or '}' expected near 'a'");
+    assert_err(is >> O1, "JSON error: string or '}' expected near 'a'");
   }
 
   {
     std::istringstream is("{b: \"2\"}");
-    assert_err(is >> O1, "string or '}' expected near 'b'");
+    assert_err(is >> O1, "JSON error: string or '}' expected near 'b'");
   }
 
   O1.put("h1", "0xFF");

@@ -84,7 +84,7 @@ std::istream & operator>> (std::istream & s, Opt & o){
 
   o.clear(); // clear old contents
   if (!J)
-    throw Err() << e.text;
+    throw Err() << "JSON error: " << e.text;
   try {
     if (!json_is_object(J))
       throw Err() << "Reading Opt: a JSON object with string fields expected";
