@@ -13,11 +13,12 @@
 // add MS2OPT_GEO_I options
 void ms2opt_add_geo_i(ext_option_list & opts);
 
-// add MS2OPT_GEO_O options
-void ms2opt_add_geo_o(ext_option_list & opts);
-
 // add MS2OPT_GEO_IO options
 void ms2opt_add_geo_io(ext_option_list & opts);
+
+// add MS2OPT_GEO_O options
+void ms2opt_add_geo_o(ext_option_list & opts);
+void ms2opt_add_ozimap_o(ext_option_list & opts);
 
 /********************************************************************/
 

@@ -39,7 +39,16 @@ ms2opt_add_geo_o(ext_option_list & opts){
     {"json_compact",   1, 0, m, "write compact json (GeoJSON format), default 0"},
     {"json_indent",    1, 0, m, "use json indentation (GeoJSON format), default 1"},
     {"geo_skip_zt",    1, 0, m, "skip altitude and time information when writing GeoJSON, default 0"},
-    {"ozi_map_grid",   1, 0, m, "write grid coordinates in map reference points (OziExplorer format), default 0"},
+  };
+  ms2opt_add_ozimap_o(opts);
+  opts.insert(opts.end(), add.begin(), add.end());
+}
+
+void
+ms2opt_add_ozimap_o(ext_option_list & opts){
+  int m = MS2OPT_GEO_O;
+  ext_option_list add = {
+    {"ozi_map_grid",   1, 0, m, "write map reference points in grid coordinates (OziExplorer format), default 0"},
     {"ozi_map_wgs",    1, 0, m, "always use wgs84 datum for map coordinates (OziExplorer format), default 0"}
   };
   opts.insert(opts.end(), add.begin(), add.end());
