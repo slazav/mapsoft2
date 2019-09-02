@@ -1,5 +1,4 @@
 #include "dthread_viewer.h"
-
 #include "cairo/cairo_wrapper.h"
 
 #define TILE_SIZE 256
@@ -156,15 +155,25 @@ void DThreadViewer::draw(const CairoWrapper & crw, const iRect & r){
   if (tiles_todo.empty()) signal_busy().emit();
   updater_mutex->unlock();
 
+  crw->save();
   for (key.y = tiles.y; key.y<tiles.y+tiles.h; key.y++){
     for (key.x = tiles.x; key.x<tiles.x+tiles.w; key.x++){
 
-      iRect rect=tile_to_rect(key);
+      iRect rect = tile_to_rect(key) - get_origin();
+      crw->rectangle(rect);
+      crw->reset_clip();
+      crw->clip(); // set clip region
 
-      if (tiles_cache.count(key)==0){ // if there is no tile in cache
+      // draw the tile from cache
+      if (tiles_cache.count(key)>0){
+        auto surf = image_to_surface(tiles_cache.find(key)->second);
+        crw->set_source(surf, rect.x, rect.y);
+      }
+      else { // no tile in cache
+        // background painting
         crw->set_color(get_bgcolor());
-        crw->paint();
 
+        // put this tile in todo queue
         if (tiles_todo.count(key)==0){
           updater_mutex->lock();
           tiles_todo.insert(key);
@@ -172,13 +181,12 @@ void DThreadViewer::draw(const CairoWrapper & crw, const iRect & r){
           updater_mutex->unlock();
         }
       }
-      else {
-        draw_image(crw,
-          tiles_cache.find(key)->second,
-          rect.tlc()-get_origin());
-      }
+
+      crw->paint();
     }
   }
+  crw->restore();
+
   updater_mutex->lock();
   if (tiles_todo.empty()) signal_idle().emit();
   updater_mutex->unlock();

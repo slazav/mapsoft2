@@ -72,10 +72,6 @@ class SimpleViewer : public Gtk::DrawingArea {
     // Redraw part of the screen (will be overriden in DThreadViewer).
     virtual void draw(const CairoWrapper & crw, const iRect & r);
 
-    // Draw an image on the screen.
-    virtual void draw_image(const CairoWrapper & crw, const Image & img, const iPoint & p);
-
-
 
     virtual bool on_button_press_event (GdkEventButton * event);
     virtual bool on_button_release_event (GdkEventButton * event);

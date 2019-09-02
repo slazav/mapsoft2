@@ -87,25 +87,9 @@ SimpleViewer::draw(const CairoWrapper & crw, const iRect & r){
   Image img(r.w, r.h, 32, 0xFF000000 | bgcolor);
 
   if (obj) obj->draw(img, r.tlc()+origin);
-  draw_image(crw, img, r.tlc());
-  signal_idle_.emit();
-}
-
-void
-SimpleViewer::draw_image(const CairoWrapper & crw, const Image & img, const iPoint & p){
-
-  // convert image to cairo surface
-  Cairo::Format format = Cairo::FORMAT_ARGB32;
-  // check if surface raw data compatable with Image
-  if (img.bpp()!=32)
-    throw Err() << "SimpleViewer: only 32-bpp images are supported";
-  if (Cairo::ImageSurface::format_stride_for_width(format, img.width()) != img.width()*4)
-    throw Err() << "SimpleViewer: non-compatable data";
-  auto surface = Cairo::ImageSurface::create((unsigned char*)img.data(),
-      format, img.width(), img.height(), img.width()*4);
-
-  crw->set_source(surface, p.x, p.y);
+  crw->set_source(image_to_surface(img), r.x, r.y);
   crw->paint();
+  signal_idle_.emit();
 }
 
 bool
