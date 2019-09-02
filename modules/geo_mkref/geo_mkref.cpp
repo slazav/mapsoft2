@@ -16,6 +16,7 @@ ms2opt_add_mkref(ext_option_list & opts){
   int m = MS2OPT_MKREF;
   ext_option_list add = {
   {"mkref",         1,0,m, "map reference type (nom, google_tile, tms_tile, proj)"},
+  {"image",         1,0,m, "set image file name in the map"},
   {"name",          1,0,m, "map name (\"nom\" references)"},
   {"dpi",           1,0,m, "map resolution, pixels per inch (\"nom\" and \"proj\" references)"},
   {"mag",           1,0,m, "map magnification (\"nom\" references)"},
@@ -47,7 +48,9 @@ geo_mkref(const Opt & o){
   if (!o.exists("mkref"))
     throw Err() << "geo_mkref: reference type (option ref) should be set";
 
-  string reftype = o.get("mkref",string());
+  map.image = o.get("image","");
+
+  string reftype = o.get("mkref","");
 
   /***************************************/
   if (reftype == "nom"){

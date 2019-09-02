@@ -58,13 +58,14 @@ main(){
 
     { // nomenclature map with margins -- write map for manual test
       Opt o = Opt("{\"mkref\":\"nom\", \"name\":\"m47-022\", \"dpi\":\"50\","
-                  "\"margins\": \"0\", \"top_margin\": \"0\" }");
+                  "\"margins\": \"0\", \"top_margin\": \"0\", \"image\": \"m47-022.jpg\" }");
       o.put("top_margin",16);
       o.put("left_margin",18);
       o.put("bottom_margin",775-16-747);
       o.put("right_margin",733-18-702);
       GeoMap map = geo_mkref(o);
       assert(map.name == "m47-022");
+      assert(map.image == "m47-022.jpg");
       assert(map.proj == GEO_PROJ_SU(99));
       assert(map.image_dpi == 50);
       assert(map.image_size == iPoint(732,775));
@@ -78,7 +79,6 @@ main(){
         "[33,763] [100.4999,51.3335156]"
         "[699,17] [100.999943,51.6667138]"
         "[718,747] [100.999251,51.3333618]");
-      map.image = "m47-022.jpg";
       write_ozi_map("test_data/m47-022.map", map, Opt());
     }
 
@@ -179,8 +179,9 @@ main(){
       GeoMap map = geo_mkref(Opt("{"
         "\"mkref\": \"google_tile\", "
         "\"coords_wgs\": \"[26.77188,61.33552]\", "
-        "\"zindex\":\"14\"}"));
+        "\"zindex\":\"14\", \"image\": \"9410_4633_14.png\"}"));
       assert(map.name == "[9410,4633,1,1]");
+      assert(map.image == "9410_4633_14.png");
       assert(map.proj == GEO_PROJ_WEB);
       assert(map.image_dpi == 300);
       assert(map.image_size == iPoint(256,256));
@@ -192,7 +193,6 @@ main(){
         "[0,256] [26.7626953,61.3335397]"
         "[256,0] [26.784668,61.3440784]"
         "[256,256] [26.784668,61.3335397]");
-      map.image = "9410_4633_14.png";
       write_ozi_map("test_data/9410_4633_14.map", map, Opt());
 
     }
@@ -306,8 +306,10 @@ main(){
       o.put("coords", "[17552000,5624000,12000,6000]");
       o.put("dpi", 200);
       o.put("scale", 1000);
+      o.put("image", "12x6+17552+5624k.png");
       GeoMap map = geo_mkref(o);
       assert(map.name == "");
+      assert(map.image == "12x6+17552+5624k.png");
       assert(map.proj == GEO_PROJ_SU(99));
       assert(map.image_dpi == 200);
       assert(map.image_size == iPoint(946,474));
@@ -319,7 +321,6 @@ main(){
         "[0,474] [99.7365908,50.744654]"
         "[946,0] [99.9078347,50.7975618]"
         "[946,474] [99.9067879,50.7434547]");
-      map.image = "12x6+17552+5624k.png";
       write_ozi_map("test_data/12x6+17552+5624k.map", map, Opt());
 
     }
