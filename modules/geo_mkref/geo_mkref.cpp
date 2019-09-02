@@ -66,7 +66,7 @@ geo_mkref(const Opt & o){
     dRect R = nom_to_range(map.name, sc, true);
 
     // map projection (use a bit shifted longitude to calculate boundary lon0)
-    map.proj = GEO_PROJ_SU(R.x + 1e-6);
+    map.proj = "SU(" + type_to_str(lon2lon0(R.x + 1e-6)) + ")";
 
     string proj_pulk = "+ellps=krass +towgs84=+28,-130,-95 +proj=lonlat";
     // conversion map_projection -> pulkovo
@@ -203,7 +203,7 @@ geo_mkref(const Opt & o){
     map.name = type_to_str(tile_range);
 
     // map projection
-    map.proj = GEO_PROJ_WEB;
+    map.proj = "WEB";
 
     // map magnification
     double mag = o.get("mag",1);
@@ -242,7 +242,7 @@ geo_mkref(const Opt & o){
   if (reftype == "proj"){
 
     // map projection
-    map.proj = o.get("proj", GEO_PROJ_DEF);
+    map.proj = o.get("proj", "WGS");
     if (map.proj == "") throw Err() << "Option --proj is not set";
 
     // try to build conversion, proj -> wgs84

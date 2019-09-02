@@ -2,6 +2,40 @@
 
 #include "err/err.h"
 #include "conv_geo.h"
+#include "geo_utils.h"
+
+std::string expand_proj_aliases(const std::string & pars){
+
+  // a few predefined projections
+  if (pars == "WGS") // default projection: lon-lat in WGS84 datum
+    return "+datum=WGS84 +proj=lonlat";
+
+  if (pars == "WEB") // web mercator
+    return "+proj=webmerc +datum=WGS84";
+
+  if (pars == "FI") // Finnish maps
+    return "+proj=tmerc +lon0=27 +ellps=intl"
+      " +towgs84=-90.7,-106.1,-119.2,4.09,0.218,-1.05,1.37";
+
+  if (pars == "CH") // Swiss maps
+    return "+proj=somerc +lat_0=46.95240555555556"\
+      " +lon_0=7.439583333333333 +x_0=600000 +y_0=200000"\
+      " +ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0"\
+      " +units=m +no_defs";
+
+  if (pars.length()>5 &&
+      pars.substr(0,3) == "SU(" &&
+      pars.substr(pars.length()-1,1) == ")"){
+    int lon = str_to_type<int>(pars.substr(3,pars.length()-4));
+    int lon0 = lon2lon0(lon);
+    int pref = (lon0<0 ? 60:0) + (lon0-3)/6 + 1;
+    return "+ellps=krass +towgs84=+28,-130,-95 +proj=tmerc"
+           " +lon_0=" + type_to_str(lon0) +
+           " +x_0=" + type_to_str(pref) + "500000";
+  }
+
+  return pars;
+}
 
 ConvGeo::ConvGeo(const std::string & src,
        const std::string & dst, const bool use2d){
@@ -13,12 +47,15 @@ ConvGeo::ConvGeo(const std::string & src,
     return;
   }
 
-  pj_src = std::shared_ptr<void>(pj_init_plus(src.c_str()), pj_free);
+  // build PROJ handlers
+  pj_src = std::shared_ptr<void>(
+             pj_init_plus(expand_proj_aliases(src).c_str()), pj_free);
   if (!pj_src)
     throw Err() << "Can't create projection \""
                 << src << "\": " << pj_strerrno(pj_errno);
 
-  pj_dst = std::shared_ptr<void>(pj_init_plus(dst.c_str()), pj_free);
+  pj_dst = std::shared_ptr<void>(
+             pj_init_plus(expand_proj_aliases(dst).c_str()), pj_free);
   if (!pj_dst)
     throw Err() << "Can't create projection \""
                 << dst << "\": " << pj_strerrno(pj_errno);

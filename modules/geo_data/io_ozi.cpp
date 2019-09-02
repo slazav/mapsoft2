@@ -117,17 +117,19 @@ string convert_ozi2datum(const string & s){
 }
 
 string get_proj_par(const string & proj, const string & key){
+  string exp = expand_proj_aliases(proj);
+
   string kv = string("+") + key + "=";
   size_t kl = kv.size();
 
-  size_t n1 = proj.find(kv);
-  size_t n2 = proj.find(" ", n1);
-  return n1!=string::npos ? proj.substr(n1+kl,n2-n1-kl) : "";
+  size_t n1 = exp.find(kv);
+  size_t n2 = exp.find(" ", n1);
+  return n1!=string::npos ? exp.substr(n1+kl,n2-n1-kl) : "";
 }
 
 string convert_proj2ozi(const string & s){
   string pr = get_proj_par(s, "proj");
-  if (pr == "") throw Err() << "io_ozi: can't fing proj setting: " <<s;
+  if (pr == "") throw Err() << "io_ozi: can't find proj setting: " << s;
 
   if (pr=="latlong") return "Latitude/Longitude";
   if (pr=="longlat") return "Latitude/Longitude";

@@ -10,33 +10,35 @@
 ///\addtogroup libmapsoft
 ///@{
 
-// default datum and projection.
-#define GEO_PROJ_DEF  "+datum=WGS84 +proj=lonlat"
 
-// Web tiles projection.
-// before libproj-5.1.0 it was "+proj=merc +a=6378137 +b=6378137 +nadgrids=@null +no_defs";
-#define GEO_PROJ_WEB  "+proj=webmerc +datum=WGS84"
+/**
+Geo transformation, libproj wrapper.
 
-// Finland
-#define GEO_PROJ_FI  "+proj=tmerc +lon0=27 +ellps=intl"\
-                     " +towgs84=-90.7,-106.1,-119.2,4.09,0.218,-1.05,1.37"
+Conversions are constructed using <src> and <dst> strings
+which are libproj option string (such as "+datum=WGS84 +proj=lonlat").
 
-// Switzerland
-#define GEO_PROJ_CH  "+proj=somerc +lat_0=46.95240555555556"\
-                     " +lon_0=7.439583333333333 +x_0=600000 +y_0=200000"\
-                     " +ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0"\
-                     " +units=m +no_defs"
+A few aliases are supported:
+ WGS -- default projection: lon-lat in WGS84 datum
+ WEB -- web mercator
+ FI  -- transverse mercator projection for Finnish maps
+ CH  -- transverse mercator projection for Swiss maps
+ SU(N) -- transverse mercator projection for Soviet maps
+          (N is central meridian: 3, 9, 15, etc.)
 
-// see also GEO_PROJ_SU() function in geo_utils.h
+Additional parameter 2d switches altitude conversions
+(by default altitude is not converted).
+
+*/
+
+// expand proj aliases (such as "WGS", "WEB", "FI", "SU(39)")
+std::string expand_proj_aliases(const std::string & pars);
 
 
-/// Geo transformation, libproj wrapper
 class ConvGeo: public ConvBase {
 public:
 
   /// Create a transformation. `src` and `dst` are libproj parameters.
-  ConvGeo(const std::string & src, const std::string & dst =
-    GEO_PROJ_DEF, const bool use2d = true);
+  ConvGeo(const std::string & src, const std::string & dst = "WGS", const bool use2d = true);
 
   /// Forward point conversion.
   void frw_pt(dPoint & p) const;
@@ -64,7 +66,7 @@ public:
 
   /// Create a transformation. `src` is a GeoMap and `dst` is
   /// libproj parameter string.
-  ConvMap(const GeoMap & m, const std::string & dst = GEO_PROJ_DEF);
+  ConvMap(const GeoMap & m, const std::string & dst = "WGS");
 
 private:
   ConvAff2D img2map;

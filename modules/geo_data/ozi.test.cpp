@@ -88,12 +88,16 @@ main() {
       "io_ozi: unsupported projection: tmerc1");
     assert_err(convert_proj2ozi("+datum=WGS84 +proj=tmerc1 a"),
       "io_ozi: unsupported projection: tmerc1");
+    assert_err(convert_proj2ozi("+datum=WGS84 a"),
+      "io_ozi: can't find proj setting: +datum=WGS84 a");
 
     // datum2ozi
     assert(convert_datum2ozi("+datum=WGS84 +proj=tmerc") == "WGS 84");
     assert(convert_datum2ozi("+ellps=krass +proj=tmerc +towgs84=28,-130,-95 +lon0=0") == "Pulkovo 1942 (2)");
     assert_err(convert_datum2ozi("+datum=xxx +proj=tmerc"),
       "io_ozi: unsupported datum: +datum=xxx +proj=tmerc");
+    assert_err(convert_datum2ozi("+proj=tmerc"),
+      "io_ozi: unsupported datum: +proj=tmerc");
 
   }
   catch (Err e) {
