@@ -4,6 +4,7 @@
 #include "geo_data/conv_geo.h"
 #include "geo_tiles/geo_tiles.h"
 #include "geo_nom/geo_nom.h"
+#include "geo_data/geo_utils.h"
 #include "geom/multiline.h"
 #include "err/err.h"
 

@@ -27,7 +27,7 @@
                      " +ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0"\
                      " +units=m +no_defs"
 
-// see also GEO_PROJ_SU() function in modules/geo_nom
+// see also GEO_PROJ_SU() function in geo_utils.h
 
 
 /// Geo transformation, libproj wrapper

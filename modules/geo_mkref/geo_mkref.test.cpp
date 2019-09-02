@@ -4,6 +4,7 @@
 #include <sstream>
 #include "geo_mkref.h"
 #include "geo_data/geo_io.h"
+#include "geo_data/geo_utils.h"
 #include "geo_data/conv_geo.h"
 #include "geo_nom/geo_nom.h"
 

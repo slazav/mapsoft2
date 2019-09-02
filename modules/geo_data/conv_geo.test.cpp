@@ -1,9 +1,9 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
 #include <cassert>
-#include "geo_nom/geo_nom.h"
 #include "err/assert_err.h"
 #include "conv_geo.h"
+#include "geo_utils.h"
 
 int
 main(){
