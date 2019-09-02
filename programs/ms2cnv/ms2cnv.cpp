@@ -40,8 +40,6 @@ main(int argc, char *argv[]){
 
     if (argc<2) usage();
     vector<string> infiles;
-    int optmask = MS2OPT_STD | MS2OPT_OUT | MS2OPT_GEO_I |
-                  MS2OPT_GEO_IO | MS2OPT_GEO_O;
     Opt O = parse_options_all(&argc, &argv, options, ~0, infiles);
     if (O.exists("help")) usage();
     if (O.exists("pod"))  usage(true);
