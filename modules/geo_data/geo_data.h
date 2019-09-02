@@ -16,10 +16,6 @@
 ///@{
 
 /********************************************************************/
-/// Distance in m between two points (haversine formula, altitude is ignored).
-double geo_dist_2d(const dPoint &p1, const dPoint &p2);
-
-/********************************************************************/
 /// Single waypoint, a child of dPoint. Can have "undefined" altitude,
 /// in this case it is not used in transformations (See ConvGeo class).
 /// Also has `name` and `comm` text fields, and time `t` (integer, in

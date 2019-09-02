@@ -1,14 +1,5 @@
 #include "geo_data.h"
-
-// see https://en.wikipedia.org/wiki/Haversine_formula
-double geo_dist_2d(const dPoint &p1, const dPoint &p2){
-  double R = 6380e3; // metres
-  double cy1 = cos(p1.y * M_PI/180.0);
-  double cy2 = cos(p2.y * M_PI/180.0);
-  double hdx = (1 - cos((p2.x - p1.x) * M_PI/180.0))/2;
-  double hdy = (1 - cos((p2.y - p1.y) * M_PI/180.0))/2;
-  return 2*R * asin(sqrt(hdy + cy1*cy2*hdx));
-}
+#include "geo_utils.h"
 
 dRect
 GeoWptList::bbox() const {

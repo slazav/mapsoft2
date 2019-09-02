@@ -1,6 +1,12 @@
 #ifndef GEO_LON0_H
 #define GEO_LON0_H
 
+#include "geom/point.h"
+
+/********************************************************************/
+/// Distance in m between two points (haversine formula, altitude is ignored).
+double geo_dist_2d(const dPoint &p1, const dPoint &p2);
+
 /********************************************************************/
 // Functions for working with cordinate prefixes and lon0 parameter
 // in soviet map coordinates
