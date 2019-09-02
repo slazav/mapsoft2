@@ -36,6 +36,7 @@ typedef std::vector<ext_option> ext_option_list;
 #define MS2OPT_GEO_I   1<<2  // geodata input-only options
 #define MS2OPT_GEO_O   1<<3  // geodata output-only options
 #define MS2OPT_GEO_IO  1<<4  // geodata output and output options
+#define MS2OPT_MKREF   1<<5  // making map reference
 
 // add MS2OPT_STD options
 void ms2opt_add_std(ext_option_list & opts);
