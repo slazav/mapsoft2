@@ -3,6 +3,7 @@
 
 #include <gtkmm.h>
 #include <cairomm/context.h>
+#include "cairo/cairo_wrapper.h"
 #include "gobj.h"
 
 ///\addtogroup gred
@@ -64,14 +65,18 @@ class SimpleViewer : public Gtk::DrawingArea {
       rescale(k,iPoint(get_width(), get_height())/2);
     }
 
+    // Handler for GTK draw sidnal. It calsulates which parts should be redrawn
+    // and calls draw() method.
+    virtual bool on_draw (Cairo::RefPtr<Cairo::Context> const & cr) override;
+
     // Redraw part of the screen (will be overriden in DThreadViewer).
-    virtual void draw(Cairo::RefPtr<Cairo::Context> const & cr, const iRect & r);
+    virtual void draw(const CairoWrapper & crw, const iRect & r);
 
     // Draw an image on the screen.
-    virtual void draw_image(const Cairo::RefPtr<Cairo::Context> & cr,
-                            const Image & img, const iPoint & p);
+    virtual void draw_image(const CairoWrapper & crw, const Image & img, const iPoint & p);
 
-    virtual bool on_draw (Cairo::RefPtr<Cairo::Context> const & cr) override;
+
+
     virtual bool on_button_press_event (GdkEventButton * event);
     virtual bool on_button_release_event (GdkEventButton * event);
     virtual bool on_motion_notify_event (GdkEventMotion * event);

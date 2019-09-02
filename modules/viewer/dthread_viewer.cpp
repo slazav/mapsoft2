@@ -1,5 +1,7 @@
 #include "dthread_viewer.h"
 
+#include "cairo/cairo_wrapper.h"
+
 #define TILE_SIZE 256
 
 DThreadViewer::DThreadViewer(GObj * pl) :
@@ -143,7 +145,7 @@ void DThreadViewer::on_done_signal(){
 }
 
 
-void DThreadViewer::draw(Cairo::RefPtr<Cairo::Context> const & cr, const iRect & r){
+void DThreadViewer::draw(const CairoWrapper & crw, const iRect & r){
 
   if (is_waiting()) return;
   if (r.empty()) {redraw(); return;}
@@ -160,8 +162,9 @@ void DThreadViewer::draw(Cairo::RefPtr<Cairo::Context> const & cr, const iRect &
       iRect rect=tile_to_rect(key);
 
       if (tiles_cache.count(key)==0){ // if there is no tile in cache
-        Image img(TILE_SIZE, TILE_SIZE, 32, get_bgcolor());
-        draw_image(cr, img, rect.tlc()-get_origin());
+        crw->set_color(get_bgcolor());
+        crw->paint();
+
         if (tiles_todo.count(key)==0){
           updater_mutex->lock();
           tiles_todo.insert(key);
@@ -170,7 +173,7 @@ void DThreadViewer::draw(Cairo::RefPtr<Cairo::Context> const & cr, const iRect &
         }
       }
       else {
-        draw_image(cr,
+        draw_image(crw,
           tiles_cache.find(key)->second,
           rect.tlc()-get_origin());
       }

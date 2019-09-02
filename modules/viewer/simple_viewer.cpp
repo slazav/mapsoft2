@@ -80,20 +80,19 @@ SimpleViewer::rescale(const double k, const iPoint & cnt){
 /***********************************************************/
 
 void
-SimpleViewer::draw(Cairo::RefPtr<Cairo::Context> const & cr, const iRect & r){
+SimpleViewer::draw(const CairoWrapper & crw, const iRect & r){
   if (is_waiting()) return;
   if (r.empty()) {redraw(); return;}
   signal_busy_.emit();
   Image img(r.w, r.h, 32, 0xFF000000 | bgcolor);
 
   if (obj) obj->draw(img, r.tlc()+origin);
-  draw_image(cr, img, r.tlc());
+  draw_image(crw, img, r.tlc());
   signal_idle_.emit();
 }
 
 void
-SimpleViewer::draw_image(const Cairo::RefPtr<Cairo::Context> & cr,
-                         const Image & img, const iPoint & p){
+SimpleViewer::draw_image(const CairoWrapper & crw, const Image & img, const iPoint & p){
 
   // convert image to cairo surface
   Cairo::Format format = Cairo::FORMAT_ARGB32;
@@ -105,17 +104,18 @@ SimpleViewer::draw_image(const Cairo::RefPtr<Cairo::Context> & cr,
   auto surface = Cairo::ImageSurface::create((unsigned char*)img.data(),
       format, img.width(), img.height(), img.width()*4);
 
-  cr->set_source(surface, p.x, p.y);
-  cr->paint();
+  crw->set_source(surface, p.x, p.y);
+  crw->paint();
 }
 
 bool
-SimpleViewer::on_draw (Cairo::RefPtr<Cairo::Context> const & cr){
+SimpleViewer::on_draw (const Cairo::RefPtr<Cairo::Context> & cr){
   std::vector<Cairo::Rectangle> rects;
   cr->copy_clip_rectangle_list(rects);
+  CairoWrapper crw(cr);
 
   for (auto const & r:rects)
-    draw(cr, dRect(r.x,r.y,r.width,r.height));
+    draw(crw, dRect(r.x,r.y,r.width,r.height));
 
   return false;
 }
