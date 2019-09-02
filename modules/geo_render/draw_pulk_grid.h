@@ -13,6 +13,14 @@ Options:
 
 */
 
+/********************************************************************/
+#include "getopt/getopt.h"
+
+// add MS2OPT_DRAWGRD options
+void ms2opt_add_drawgrd(ext_option_list & opts);
+
+/********************************************************************/
+
 void
 draw_pulk_grid(CairoWrapper & cr, const iPoint & origin,
                const ConvBase & cnv, const Opt & opt);

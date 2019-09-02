@@ -31,6 +31,14 @@ Options:
 
 */
 
+/********************************************************************/
+#include "getopt/getopt.h"
+
+// add MS2OPT_DRAWTRK options
+void ms2opt_add_drawtrk(ext_option_list & opts);
+
+/********************************************************************/
+
 void
 draw_trk(CairoWrapper & cr, const iPoint & origin,
          const ConvBase & cnv, const GeoTrk & trk,

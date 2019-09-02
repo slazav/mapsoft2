@@ -14,33 +14,9 @@
 
 using namespace std;
 
-#define TRK 1<<10
-#define MAP 1<<11
-
-#define ALL 0xFFFFFF
 ext_option_list options = {
-  // track drawing options
-  {"trk_draw_mode",         1,0, TRK, "track drawing mode (normal, speed, height)"},
-  {"trk_draw_color",        1,0, TRK, "color (for normal drawing mode), default: BCGYRM"},
-  {"trk_draw_dots",         1,0, TRK, "draw dots (for normal drawing mode), default: 1"},
-  {"trk_draw_arrows",       1,0, TRK, "draw arrows (for normal drawing mode), default: 0"},
-  {"trk_draw_min",          1,0, TRK, "min value (km/h for speed mode, m for height mode)"},
-  {"trk_draw_max",          1,0, TRK, "max value (km/h for speed mode, m for height mode)"},
-  {"trk_draw_grad",         1,0, TRK, "color gradient (for speed or height modes), default: BCGYRM"},
-
-  // grid drawing options
-  {"grid",                  0,0, TRK, "draw grid"},
-  {"grid_draw_color",       1,0, TRK, "grid color"},
-  {"grid_draw_thick",       1,0, TRK, "grid line thickness"},
-
-  // geodata reading options
-  // ...
-
-  // map writing  options
-  {"map",                   1,'m', MAP, "write map file in OziExprorer format"},
-  {"ozi_enc",               1,0, MAP, "encoding of the map file, default: Windows-1251"},
-  {"ozi_map_grid",          0,0, MAP, "write grid coordinates in reference points"},
-  {"ozi_map_wgs",           0,0, MAP, "use wgs84 datum for map coordinates"},
+  {"grid", 0,0, MS2OPT_DRAWGRD, "draw grid"},
+  {"map",  1,'m', MS2OPT_GEO_O, "write map file in OziExprorer format"},
 };
 
 void usage(bool pod=false, ostream & S = cout){
@@ -55,11 +31,13 @@ void usage(bool pod=false, ostream & S = cout){
   S << head << "Options for making map reference:\n";
   print_options(options, MS2OPT_MKREF, S, pod);
   S << head << "Options for drawing tracks:\n";
-  print_options(options, TRK, S, pod);
+  print_options(options, MS2OPT_DRAWTRK, S, pod);
+  S << head << "Options for drawing map grid:\n";
+  print_options(options, MS2OPT_DRAWGRD, S, pod);
   S << head << "Options for reading geodata:\n";
-  print_options(options, MS2OPT_GEO_I | MS2OPT_GEO_O, S, pod);
+  print_options(options, MS2OPT_GEO_I | MS2OPT_GEO_IO, S, pod);
   S << head << "Options for writing map in OziExplorer format:\n";
-  print_options(options, MAP, S, pod);
+  print_options(options, MS2OPT_GEO_O, S, pod);
   throw Err();
 }
 
@@ -68,9 +46,12 @@ main(int argc, char **argv){
   try {
     ms2opt_add_std(options);
     ms2opt_add_out(options);
-    ms2opt_add_geo_o(options);
+    ms2opt_add_geo_i(options);
     ms2opt_add_geo_io(options);
+    ms2opt_add_ozimap_o(options);
     ms2opt_add_mkref(options);
+    ms2opt_add_drawtrk(options);
+    ms2opt_add_drawgrd(options);
 
     if (argc<2) usage();
 

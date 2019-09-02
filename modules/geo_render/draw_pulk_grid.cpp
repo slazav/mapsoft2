@@ -12,6 +12,18 @@ using namespace std;
 Cache<int, ConvGeo> draw_pulk_grid_convs(10); // lon0 -> Conv
 
 void
+ms2opt_add_drawgrd(ext_option_list & opts){
+  int m = MS2OPT_DRAWGRD;
+  ext_option_list add = {
+  {"grid_draw_color", 1,0,m, "grid color"},
+  {"grid_draw_thick", 1,0,m, "grid line thickness"},
+  };
+  opts.insert(opts.end(), add.begin(), add.end());
+}
+
+/********************************************************************/
+
+void
 draw_pulk_grid(CairoWrapper & cr, const iPoint & origin,
                const ConvBase & cnv, const Opt & opt){
 
