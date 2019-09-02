@@ -32,7 +32,8 @@ ms2opt_add_mkref(ext_option_list & opts){
   {"border",        1,0,m, "map border in projection coordinates (\"proj\" references)"},
   {"coords_wgs",    1,0,m, "figure in wgs84 coordinates to be covered by the map (\"*_tile\" or \"proj\" references)"},
   {"border_wgs",    1,0,m, "map border in wgs84 coordinates (\"*_tile\" or \"proj\" references)"},
-  {"proj",          1,0,m, "projection setting (\"proj\" references)"},
+  {"proj",          1,0,m, "projection setting, \"proj\" parameter string (e.g. \"+datum=WGS84 +proj=lonlat\")"
+                           " or mapsoft2 alias (\"WGS\", \"WEB\", \"FI\", \"CH\", \"SU(39)\", etc.)"},
   {"scale",         1,0,m, "map scale, projection units per map cm (\"proj\" references)"},
   };
   opts.insert(opts.end(), add.begin(), add.end());
