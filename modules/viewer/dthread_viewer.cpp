@@ -77,7 +77,7 @@ DThreadViewer::updater(){
       updater_mutex->lock();
       if (!stop_drawing){
         if (tiles_cache.count(key)>0) tiles_cache.erase(key);
-        tiles_cache.insert(std::pair<iPoint,Image>(key, tile));
+        tiles_cache.insert(std::make_pair(key, image_to_surface(tile)));
         tiles_done.push(key);
         tiles_todo.erase(key);
         done_signal.emit();
@@ -105,7 +105,7 @@ DThreadViewer::updater(){
     tiles_to_keep = expand(tiles_to_keep, TILE_MARG);
 
     updater_mutex->lock();
-    std::map<iPoint,Image>::iterator it=tiles_cache.begin(), it1;
+    std::map<iPoint, Cairo::RefPtr<Cairo::ImageSurface> >::iterator it=tiles_cache.begin(), it1;
     while (it!=tiles_cache.end()) {
       if (tiles_to_keep.contains(it->first)) it++;
       else {
@@ -166,8 +166,7 @@ void DThreadViewer::draw(const CairoWrapper & crw, const iRect & r){
 
       // draw the tile from cache
       if (tiles_cache.count(key)>0){
-        auto surf = image_to_surface(tiles_cache.find(key)->second);
-        crw->set_source(surf, rect.x, rect.y);
+        crw->set_source(tiles_cache.find(key)->second, rect.x, rect.y);
       }
       else { // no tile in cache
         // background painting

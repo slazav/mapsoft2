@@ -33,7 +33,7 @@ class DThreadViewer : public SimpleViewer {
     // this value:
     const static int TILE_MARG=2;
 
-    std::map<iPoint,Image> tiles_cache;
+    std::map<iPoint, Cairo::RefPtr<Cairo::ImageSurface> > tiles_cache;
     std::set<iPoint>       tiles_todo;
     std::queue<iPoint>     tiles_done;
 
