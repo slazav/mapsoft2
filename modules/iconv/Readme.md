@@ -10,7 +10,7 @@ std::string s = cnv(text);
 -----------
 ## Changelog:
 
-2019.05.20 V.Zavjalov 1.5:
+2019.09.02 V.Zavjalov 1.5:
 - Use std::string constructor arguments
   instead of const char*
 
