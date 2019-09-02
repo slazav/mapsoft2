@@ -68,6 +68,14 @@ Following map fields are set:
   map.ref -- four reference points
 */
 
+/********************************************************************/
+#include "getopt/getopt.h"
+
+// add MS2OPT_GEO_MKREF options
+void ms2opt_add_mkref(ext_option_list & opts);
+
+/********************************************************************/
+
 GeoMap geo_mkref(const Opt & o);
 
 #endif
