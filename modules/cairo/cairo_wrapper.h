@@ -13,6 +13,10 @@
 #include "geom/multiline.h"
 #include "geom/rect.h"
 
+// convert image to a Cairo ImageSurface
+Cairo::RefPtr<Cairo::ImageSurface> image_to_surface(const Image & img);
+
+//////////////////////////////////////////////////////////////////
 /// This class contains functions
 /// we want to add to the Cairo::Context
 struct CairoExtra : public Cairo::Context {

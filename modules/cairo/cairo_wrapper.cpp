@@ -2,6 +2,19 @@
 #include "geom/line.h"
 #include "err/err.h"
 
+Cairo::RefPtr<Cairo::ImageSurface>
+image_to_surface(const Image & img) {
+  // convert image to cairo surface
+  Cairo::Format format = Cairo::FORMAT_ARGB32;
+  // check if surface raw data compatable with Image
+  if (img.bpp()!=32)
+    throw Err() << "SimpleViewer: only 32-bpp images are supported";
+  if (Cairo::ImageSurface::format_stride_for_width(format, img.width()) != img.width()*4)
+    throw Err() << "SimpleViewer: non-compatable data";
+  return Cairo::ImageSurface::create((unsigned char*)img.data(),
+      format, img.width(), img.height(), img.width()*4);
+}
+
 void
 CairoExtra::mkpath_smline(const dMultiLine & o, bool close, double curve_l){
   for (dMultiLine::const_iterator l=o.begin(); l!=o.end(); l++)
