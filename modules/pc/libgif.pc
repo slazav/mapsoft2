@@ -1,0 +1,5 @@
+Name: libgif
+Description: libgif
+Requires:
+Version: 1
+Libs: -lgif
