@@ -17,7 +17,7 @@ An image: 2d array of arbitrary data
 // base class
 class Image {
   private:
-    std::shared_ptr<void> data_;
+    std::shared_ptr<unsigned char> data_;
     size_t w,h; // width, height
     size_t b;   // bits per data point
 
@@ -27,7 +27,7 @@ class Image {
     size_t height() const {return h;}
     size_t bpp() const    {return b;}
     iRect bbox() const    {return iRect(0,0,w,h);}
-    void *data() const    {return data_.get();}
+    unsigned char *data() const {return data_.get();}
 
     // constructor -- create an empty image
     Image(): w(0), h(0), b(0) {}
@@ -43,7 +43,7 @@ class Image {
         throw Err() << "unsuported bpp for image: " << b;
 
       try{
-        data_ = std::shared_ptr<void>(new uint8_t[w*h*bpp/8]);
+        data_ = std::shared_ptr<unsigned char>(new uint8_t[w*h*bpp/8]);
       }
       catch (const std::bad_alloc & e) {
         throw Err() << "can't allocate memory for "
