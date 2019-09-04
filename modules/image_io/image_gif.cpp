@@ -109,11 +109,23 @@ public:
     GifRecordType RecordType;
     int ExtCode, GifLineLen;
     GifByteType *Extension;
+    int trcol = -1; // transparent color index
     do {
       if (DGifGetRecordType(gif, &RecordType) == GIF_ERROR) GifErr();
       if (RecordType == TERMINATE_RECORD_TYPE) GifErr();
       if (RecordType ==  EXTENSION_RECORD_TYPE){
         if (DGifGetExtension(gif, &ExtCode, &Extension) == GIF_ERROR) GifErr();
+
+        // Graphic control extension (5 bytes)
+        // byte 0: 4 (data size),
+        // byte 1: bits 1-3 - reserved, 4-6 - disposal method,
+        //         7 - user input flag, 8 - transparent flag.
+        // bytes 2-3:  delay time
+        // byte 4: transparent color index
+        if (ExtCode == 0xF9 && Extension[0]==4 && (Extension[1]&1))
+          trcol = Extension[4];
+
+        // Skip extension tail
         while (Extension != NULL){
           if (DGifGetExtensionNext(gif, &Extension) == GIF_ERROR) GifErr();
         }
@@ -147,16 +159,8 @@ public:
     int bgcolor = colors[gif->SBackGroundColor];
     //std::cerr << "BGCOLOR: " << gif->SBackGroundColor << ": " <<  bgcolor << "\n";
 
-    // get transparent color (LIBGIF>5.0)
-    /*
-    struct GraphicsControlBlock cblock;
-    int image_index=0;
-    if (DGifSavedExtensionToGCB(gif, image_index, cblock) != GIF_ERROR){
-      if (cblock->TransparentColor >=0){
-        colors[cblock->TransparentColor] = 0x00000000;
-      }
-    }
-    */
+    // transparent color
+    if (trcol > 0 && trcol < 256) colors[trcol] = 0;
 
     // allocate memory for one data line
     GifLine = new GifByteType[w];
@@ -216,11 +220,13 @@ image_load_gif(const std::string & file, const int scale){
 void
 image_save_gif(const Image & im, const std::string & file){
 
-  // reduce nu,ber of colors to 256
+  // reduce number of colors to 256
   int clen = 256;
   uint32_t colors[clen];
   image_color_mkpal(im, colors, clen);
   Image im8 = image_color_reduce(im, colors, clen);
+
+
   GifFileType *gif = NULL;
   ColorMapObject *cmap = NULL;
 #if GIFV == 500

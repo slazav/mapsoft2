@@ -2,12 +2,12 @@
 
 * image_size_gif() -- Supported, gif screen size is returned.
 
-* image_load_gif() -- Supported. No transparent color, first image only,
+* image_load_gif() -- Supported. First image only,
 image size should match gif screen size. Image scaling is not supported.
 All images are loaded as 32-bpp.
 
 * image_save_gif() -- Supported, all images are converted to 8 bpp (not
-in a good way, see image/image_colors.h).
+in a good way, see image/image_colors.h). No transparent colors.
 
 * Not full support of different libgif versions (now it works with libgif
 <4.2, but sume incomplete support is done for 4.2 and 5.0 versions)

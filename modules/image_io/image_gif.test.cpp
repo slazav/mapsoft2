@@ -35,8 +35,7 @@ main(){
     assert(img.get<int>(7,8)  == 0xFF000000);
     assert(img.get<int>(7,24) == 0xFFFF0000);
     assert(img.get<int>(7,36) == 0xFF0000FF);
-//  transparent colors are not supported yet
-//    assert(img.get<int>(21,8) == 0x00000000);
+    assert(img.get<int>(21,8) == 0x00000000);
 
   }
   catch (Err e) {
