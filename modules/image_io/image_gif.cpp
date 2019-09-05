@@ -166,6 +166,7 @@ public:
     if (n<line) throw Err() << "gif: can't go back in image lines";
     for (;line<n; ++line)
       if (DGifGetLine(gif, GifLine, w) == GIF_ERROR) GifErr();
+
   }
 
   /// Get raw data line
@@ -213,13 +214,6 @@ image_load_gif(const std::string & file, const int scale){
 void
 image_save_gif(const Image & im, const std::string & file){
 
-  // reduce number of colors to 256
-  int clen = 256;
-  uint32_t colors[clen];
-  image_color_mkpal(im, colors, clen);
-  Image im8 = image_color_reduce(im, colors, clen);
-
-
   GifFileType *gif = NULL;
   ColorMapObject *cmap = NULL;
 #if GIFV == 500
@@ -229,6 +223,17 @@ image_save_gif(const Image & im, const std::string & file){
   gif = EGifOpenFileName(file.c_str(), false);
 #endif
   if (!gif) throw Err() << "GIF error: can't open file: " << file;
+
+  // reduce number of colors to 256
+  int clen = 256;
+  uint32_t colors[clen];
+  image_color_mkpal(im, colors, clen);
+  Image im8 = image_color_reduce(im, colors, clen);
+
+  // find fully transparent color
+  int trcol = -1;
+  for (int i=0; i<clen; i++)
+    if (((colors[i]>>24)&0xFF) == 0) {trcol = i; break;}
 
   try {
 //    EGifSetGifVersion(gif, true);
@@ -246,6 +251,14 @@ image_save_gif(const Image & im, const std::string & file){
 
     if (EGifPutScreenDesc(gif, im8.width(), im8.height(),
       clen, 0, cmap)==GIF_ERROR) GifErr();
+
+    // Graphic control extension (0xF9, 4 bytes)
+    if (trcol>=0){
+      char buf[4] = {1,0xA,0,(char)trcol};
+      unsigned int ext = 0x01000000 + trcol;
+      if (EGifPutExtension(gif, 0xF9, 4, &buf) == GIF_ERROR)
+        GifErr();
+    }
 
     if (EGifPutImageDesc(gif, 0,0, im8.width(), im8.height(),
       false, cmap)==GIF_ERROR) GifErr();
