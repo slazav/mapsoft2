@@ -13,7 +13,7 @@
 // distance between two colors
 double color_dist(const uint32_t c1, const uint32_t c2);
 
-// Remove transparency (for scaled colors).
+// Remove transparency (with color scaling).
 // if gifmode = true, then keep fully transparent colors.
 uint32_t color_rem_transp(const uint32_t c, const bool gifmode);
 
@@ -27,7 +27,7 @@ Image image_remap(const Image & img, const std::vector<uint32_t> & cmap);
 // Image tranparency (only for 32bpp images)
 // returns 0: fully non-transparent image.
 // returns 1: image contains transparent (but not semi-transparent) pixels.
-// returns 2: image contains only semi-transparent pixels.
+// returns 2: image contains semi-transparent pixels.
 int image_classify_alpha(const Image & img);
 
 // Image colors (only for 32bpp images)
