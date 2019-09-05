@@ -46,6 +46,9 @@ image_color_mkpal(const Image & img, uint32_t *colors, int clen){
   if (clen < 1 || clen > 256)
     throw Err() << "image_color_reduce: palette length is out of range";
 
+  if (img.bpp()!=32) throw Err() <<
+    "image_color_mkpal: only 32-bpp images are supported";
+
   // Step 1: build full color map
   std::map<uint32_t, uint64_t> cmap; // color -> number of points
   for (int y=0; y<img.height(); ++y){
@@ -94,6 +97,9 @@ image_color_reduce(const Image & img, uint32_t *colors, int clen){
   // we return 8bpp image, palette length should be 1..256
   if (clen < 1 || clen > 256)
     throw Err() << "image_color_reduce: palette length is out of range";
+
+  if (img.bpp()!=32) throw Err() <<
+    "image_color_reduce: only 32-bpp images are supported";
 
   // encode color palette
   for (int i=0; i<clen; i++) colors[i]=image_reduce_color_enc(colors[i]);
