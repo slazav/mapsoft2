@@ -26,7 +26,7 @@ in a good way, see image/image_colors.h).
 
 * image_load_png() -- Supported. No scaling. No ADAM7 interlace support. All images are loaded as 32-bpp.
 
-* image_save_png() -- Not supported
+* image_save_png() -- Supported. Only 32-bpp images.
 
 ### TIFF format support
 

@@ -1,4 +1,5 @@
 #include "image_png.h"
+#include "image/image_colors.h"
 #include <png.h>
 #include <cstring>
 #include "imgsrc.h"
@@ -94,6 +95,8 @@ public:
       png_read_update_info(png_ptr, info_ptr);
       row_buf = (png_bytep)png_malloc(png_ptr,
         png_get_rowbytes(png_ptr, info_ptr));
+
+      if (!row_buf) throw Err() << "PNG: malloc error";
 
     }
     if (n>=height) throw Err() << "PNG: too large line number";
@@ -193,25 +196,24 @@ image_save_png(const Image & im, const std::string & file){
 
     png_init_io(png_ptr, outfile);
 
-// alpha
-// full alpha
-// color
-// fullcolor
-/*
-
-  }
 
     // png header
-    int color_type = PNG_COLOR_TYPE_PALETTE;
+    int color_type = PNG_COLOR_TYPE_RGB_ALPHA;
+
+/*
+    if (image_classify_alpha(im) > 0)
+
     if (!color) color_type = PNG_COLOR_TYPE_GRAY;
     if ((fullc || fulla) && color)  color_type = PNG_COLOR_TYPE_RGB;
     if (alpha && color_type!=PNG_COLOR_TYPE_PALETTE)
       color_type |= PNG_COLOR_MASK_ALPHA;
+*/
 
-    png_set_IHDR(png_ptr, info_ptr, src_rect.w, src_rect.h,
+    png_set_IHDR(png_ptr, info_ptr, im.width(), im.height(),
        8, color_type, PNG_INTERLACE_NONE,
        PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 
+/*
     // png palette
     if (color_type == PNG_COLOR_TYPE_PALETTE){
       png_color pcolors[256];
@@ -231,56 +233,52 @@ image_save_png(const Image & im, const std::string & file){
         png_set_tRNS(png_ptr, info_ptr, trans, mc, 0);
       }
     }
+*/
 
     png_write_info(png_ptr, info_ptr);
+    png_bytep buf = (png_bytep)png_malloc(png_ptr, im.width()*4);
+    if (!buf) throw Err() << "PNG: malloc error";
 
-    png_bytep buf = (png_bytep)png_malloc(png_ptr, src_rect.w*4);
-    if (!info_ptr) {
-      png_destroy_write_struct(&png_ptr, &info_ptr);
-      return 2;
-    }
+    for (int y=0; y<im.height(); y++){
+      for (int x=0; x<im.width(); x++){
+        int c = im.get<uint32_t>(x, y);
 
-    for (int y = src_rect.y; y < src_rect.y+src_rect.h; y++){
-      if ((y<0)||(y>=im.h)){
-        for (int x = 0; x < src_rect.w*4; x++) buf[x] = 0;
-      } else {
-        for (int x = 0; x < src_rect.w; x++){
-          int c = 0;
-          if ((x+src_rect.x >= 0) && (x+src_rect.x<im.w))
-            c = im.get(x+src_rect.x, y);
-          switch (color_type){
-          case PNG_COLOR_TYPE_GRAY:
-            buf[x]   = c & 0xFF;
-            break;
-          case PNG_COLOR_TYPE_GRAY_ALPHA:
-            buf[2*x]   = c & 0xFF;
-            buf[2*x+1] = (c >> 24) & 0xFF;
-            break;
-          case PNG_COLOR_TYPE_RGB:
-            buf[3*x]   = c & 0xFF;
-            buf[3*x+1] = (c >> 8) & 0xFF;
-            buf[3*x+2] = (c >> 16) & 0xFF;
-            break;
-          case PNG_COLOR_TYPE_RGB_ALPHA:
-            buf[4*x]   = c & 0xFF;
-            buf[4*x+1] = (c >> 8) & 0xFF;
-            buf[4*x+2] = (c >> 16) & 0xFF;
-            buf[4*x+3] = (c >> 24) & 0xFF;
-            break;
-          case PNG_COLOR_TYPE_PALETTE:
-            for (int i=0; i<mc; i++)
-              if (colors[i] == c) {buf[x] = (unsigned char)i; break;}
-            break;
-          }
+/*
+        switch (color_type){
+        case PNG_COLOR_TYPE_GRAY:
+          buf[x]   = c & 0xFF;
+          break;
+        case PNG_COLOR_TYPE_GRAY_ALPHA:
+          buf[2*x]   = c & 0xFF;
+          buf[2*x+1] = (c >> 24) & 0xFF;
+          break;
+        case PNG_COLOR_TYPE_RGB:
+          buf[3*x]   = c & 0xFF;
+          buf[3*x+1] = (c >> 8) & 0xFF;
+          buf[3*x+2] = (c >> 16) & 0xFF;
+          break;
+        case PNG_COLOR_TYPE_RGB_ALPHA:
+          buf[4*x]   = c & 0xFF;
+          buf[4*x+1] = (c >> 8) & 0xFF;
+          buf[4*x+2] = (c >> 16) & 0xFF;
+          buf[4*x+3] = (c >> 24) & 0xFF;
+          break;
+        case PNG_COLOR_TYPE_PALETTE:
+          for (int i=0; i<mc; i++)
+            if (colors[i] == c) {buf[x] = (unsigned char)i; break;}
+          break;
         }
+*/
+          buf[4*x+3] = (c >> 24) & 0xFF;  // A
+          c = color_rem_transp(c, false); // scale color!
+          buf[4*x] = (c >> 16) & 0xFF;  // R
+          buf[4*x+1] = (c >> 8) & 0xFF;   // G
+          buf[4*x+2] = c & 0xFF;          // B
       }
       png_write_row(png_ptr, buf);
     }
-    png_free(png_ptr, buf);
+
     png_write_end(png_ptr, info_ptr);
-    png_destroy_write_struct(&png_ptr, &info_ptr);
-    fclose(outfile);
-*/
     throw Err();
   }
   catch (Err e) {
@@ -290,19 +288,3 @@ image_save_png(const Image & im, const std::string & file){
     if (e.str() != "") throw e;
   }
 }
-
-/*
-iImage
-load(const std::string & file, const int scale){
-  iPoint s = size(file);
-  iImage ret(s.x/scale,s.y/scale);
-  if (s.x*s.y==0) return ret;
-  load(file, iRect(0,0,s.x,s.y), ret, iRect(0,0,s.x/scale,s.y/scale));
-  return ret;
-}
-
-int
-save(const iImage & im, const char * file){
-  return save(im, im.range(), file);
-}
-*/
