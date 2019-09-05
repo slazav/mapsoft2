@@ -209,9 +209,9 @@ image_load_gif(const std::string & file, const int scale){
   iPoint size = SRC.size();
   Image img(size.x, size.y, 32);
 
-  for (int y=0; y<size.x; ++y){
+  for (int y=0; y<size.y; ++y){
     SRC.goto_line(y);
-    for (int x=0; x<size.y; ++x) img.set(x,y, SRC.get_col(x));
+    for (int x=0; x<size.x; ++x) img.set(x,y, SRC.get_col(x));
   }
   return img;
 }
