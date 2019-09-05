@@ -38,6 +38,7 @@ main(){
     assert(color_dist(img.get<int>(7,8),  0xFF000000) < 10);
     assert(color_dist(img.get<int>(7,24), 0xFFFF0000) < 10);
     assert(color_dist(img.get<int>(7,36), 0xFF0000FF) < 10);
+    assert(color_dist(img.get<int>(60,63),0xFFFFFFFF) < 10);
 
   }
   catch (Err e) {

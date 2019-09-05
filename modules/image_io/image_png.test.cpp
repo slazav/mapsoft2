@@ -41,6 +41,7 @@ main(){
     assert(img1.get<int>(7,24) == 0xFFFF0000);
     assert(img1.get<int>(7,36) == 0xFF0000FF);
     assert(img1.get<int>(21,7) == 0x00000000);
+    assert(img2.get<int>(60,63) == 0xFFFFFFFF);
 
     assert(img2.get<int>(0,0)  == 0xFFFFFFFF);
     assert(img2.get<int>(7,8)  == 0xFF000000);
@@ -48,6 +49,10 @@ main(){
     assert(img2.get<int>(7,36) == 0xFF0000FF);
     assert(img2.get<int>(21,7) == 0x00000000);
     assert(img2.get<int>(22,22) == 0x80808080);
+    assert(img2.get<int>(22,36) == 0x7f7f0000);
+    assert(img2.get<int>(38,22) == 0x7f00007f);
+    assert(img2.get<int>(38,36) == 0x7f000000);
+    assert(img2.get<int>(60,63) == 0xFFFFFFFF);
 
   }
   catch (Err e) {

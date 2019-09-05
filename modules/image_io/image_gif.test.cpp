@@ -36,6 +36,7 @@ main(){
     assert(img.get<int>(7,24) == 0xFFFF0000);
     assert(img.get<int>(7,36) == 0xFF0000FF);
     assert(img.get<int>(21,8) == 0x00000000);
+    assert(img.get<int>(60,63) == 0xFFFFFFFF);
 
   }
   catch (Err e) {
