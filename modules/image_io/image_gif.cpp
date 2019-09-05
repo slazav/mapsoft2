@@ -24,51 +24,24 @@
 // GIFLIB_MAJOR and GIFLIB_MINOR defined in 4.1.6 and later
 // GifErrorString(code)
 #if GIFV == 500
-  GifFileType* GifOpen(const char *file){
-    int code;
-    GifFileType *gif = DGifOpenFileName(file, &code);
-    if (!gif) throw Err() << "GIF error: can't open file: " << file;
-    return gif;
-  }
-  void GifClose(GifFileType *gif){
-    int code;
-    DGifCloseFile(gif, &code);
-    // do not throw error because GifClose will be use in destructors
-  }
   void GifErr(){
     //throw Err() << "libgif error: " << GifErrorString(code);
-    throw Err() << "libgif error";
+    throw Err() << "GIF error";
   }
 #endif
 // 4.2 <= v < 5
 // GifErrorString()
 #if GIFV == 420
-  GifFileType* GifOpen(const char *file){
-    GifFileType *gif = DGifOpenFileName(file);
-    if (!gif) throw Err() << "GIF error: can't open file: " << file;
-    return gif;
-  }
-  void GifClose(GifFileType *gif){
-    DGifCloseFile(gif);
-  }
   void GifErr(){
-    throw Err() << "libgif error: " << GifErrorString();
+    throw Err() << "GIF error: " << GifErrorString();
   }
 #endif
 
 // old versions
 // GifLastError()
 #if GIFV == 0
-  GifFileType* GifOpen(const char *file){
-    GifFileType *gif = DGifOpenFileName(file);
-    if (!gif) throw Err() << "GIF error: can't open file: " << file;
-    return gif;
-  }
-  void GifClose(GifFileType *gif){
-    DGifCloseFile(gif);
-  }
   void GifErr(){
-    throw Err() << "libgif error: " << GifLastError();
+    throw Err() << "GIF error: " << GifLastError();
   }
 #endif
 /**********************************************************/
@@ -91,19 +64,30 @@ public:
 
   // Destructor
   ~ImageSourceGIF(){
-    if (gif) GifClose(gif);
+#if GIFV == 500
+    int code
+    if (gif) DGifCloseFile(gif, &code);
+#else
+    if (gif) DGifCloseFile(gif);
+#endif
     if (GifLine) delete[] GifLine;
   }
 
   // Constructor: open file
-  ImageSourceGIF(const std::string & fname):
+  ImageSourceGIF(const std::string & file):
        gif(NULL), GifLine(NULL), w(0),h(0),dx(0),dy(0),line(-1){
 
     // reset color palette
     memset(colors, 0, sizeof(colors));
 
     // open file and read screen descriptor
-    gif = GifOpen(fname.c_str());
+#if GIFV == 500
+    int code;
+    gif = DGifOpenFileName(file.c_str(), &code);
+#else
+    gif = DGifOpenFileName(file.c_str());
+#endif
+    if (!gif) throw Err() << "GIF error: can't open file: " << file;
 
     // Go to the first image, skip all extensions
     GifRecordType RecordType;
@@ -196,9 +180,18 @@ public:
 
 iPoint
 image_size_gif(const std::string & file){
-    GifFileType *gif = GifOpen(file.c_str());
+#if GIFV == 500
+    int code;
+    GifFileType *gif = DGifOpenFileName(file.c_str(), &code);
+    if (!gif) throw Err() << "GIF error: can't open file: " << file;
     iPoint ret(gif->SWidth, gif->SHeight);
-    GifClose(gif);
+    if (gif) DGifCloseFile(gif, &code);
+#else
+    GifFileType *gif = DGifOpenFileName(file.c_str());
+    if (!gif) throw Err() << "GIF error: can't open file: " << file;
+    iPoint ret(gif->SWidth, gif->SHeight);
+    if (gif) DGifCloseFile(gif);
+#endif
     return ret;
 }
 
@@ -263,10 +256,12 @@ image_save_gif(const Image & im, const std::string & file){
     throw Err();
   }
   catch(Err e){
-    if (gif) EGifCloseFile(gif);
 #if GIFV == 500
+    int code;
+    if (gif) EGifCloseFile(gif, &code);
     if (cmap) GifFreeMapObject(cmap);
 #else
+    if (gif) EGifCloseFile(gif);
     if (cmap) FreeMapObject(cmap);
 #endif
     if (e.str()!="") throw e;
