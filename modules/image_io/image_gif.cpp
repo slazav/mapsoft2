@@ -228,7 +228,7 @@ image_save_gif(const Image & im, const std::string & file){
   int clen = 256;
   uint32_t colors[clen];
   image_color_mkpal(im, colors, clen);
-  Image im8 = image_color_reduce(im, colors, clen);
+  Image im8 = image_color_reduce(im, colors, clen, 2);
 
   // find fully transparent color
   int trcol = -1;
