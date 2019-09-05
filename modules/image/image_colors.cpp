@@ -1,32 +1,13 @@
 #include "image_colors.h"
 #include <map>
+#include <vector>
+#include <algorithm>
 #include <cassert>
 
-// Reshape color bits to have more sugnificant ones first:
-uint32_t
-image_reduce_color_enc(const uint32_t c){
-  uint32_t ret=0;
-  for (int i=7; i>=0; i--){ // 8 bits
-    for (int j=3; j>=0; j--){ // 4 bytes
-      ret <<= 1;
-      ret |= (c >> (j*8+i)) & 1;
-    }
-  }
-  return ret;
-}
+#include <fstream>
 
-// Inverse transformation:
-uint32_t
-image_reduce_color_dec(const uint32_t c){
-  uint32_t ret=0;
-  for (int j=3; j>=0; j--){ // 4 bytes
-    for (int i=7; i>=0; i--){ // 8 bits
-      ret <<= 1;
-      ret |= (c >> (i*4+j)) & 1;
-    }
-  }
-  return ret;
-}
+enum methodForLargest {LARGE_NORM, LARGE_LUM};
+enum methodForRep {REP_CENTER_BOX, REP_AVERAGE_COLORS, REP_AVERAGE_PIXELS};
 
 // distance between two colors
 double
@@ -58,97 +39,206 @@ uint32_t color_rem_transp(const uint32_t c, const bool gifmode){
   return (0xFF<<24)+(r<<16)+(g<<8)+b;
 }
 
+/**********************************************************/
+// Create a colormap.
+// Based on pnmcolormap.c from netpbm package.
+std::vector<uint32_t>
+image_colormap(const Image & img){
 
-// Create color palette
-void
-image_color_mkpal(const Image & img, uint32_t *colors, int clen, int mode){
-  // palette length should be 1..256
-  if (clen < 1 || clen > 256)
-    throw Err() << "image_color_reduce: palette length is out of range";
+  // parameters -- move to options?
+  bool all_colors = false;
+  int req_colors = 256;
+  methodForLargest method_for_largest = LARGE_NORM;
+  methodForRep method_for_rep = REP_AVERAGE_PIXELS;
+  int transp_mode = 1;
 
   if (img.bpp()!=32) throw Err() <<
-    "image_color_mkpal: only 32-bpp images are supported";
+    "image_color_reduce: only 32-bpp images are supported";
 
-  // Step 1: build full color map
-  std::map<uint32_t, uint64_t> cmap; // color -> number of points
+  // make vector with a single box with the whole image histogram
+  struct box_t {
+    std::map<uint32_t, uint64_t> hist;
+    int64_t pixels;
+  };
+  std::vector<box_t> bv;
+  bv.push_back(box_t());
+  bv[0].pixels = img.width()*img.height();
+
+  // compute the histogram
   for (int y=0; y<img.height(); ++y){
     for (int x=0; x<img.width(); ++x){
       uint32_t c = img.get<uint32_t>(x,y);
-      if (mode>0) c = color_rem_transp(c, mode>1);
-      c = image_reduce_color_enc(c);
-      if (cmap.count(c) == 0) cmap[c] = 1;
-      else ++cmap[c];
+      if (transp_mode>0) c = color_rem_transp(c, transp_mode>1);
+      if (bv[0].hist.count(c) == 0) bv[0].hist[c] = 1;
+      else ++bv[0].hist[c];
     }
   }
 
-  // Split the colormap into 256 ranges with equal number of points
-  // Find "center of mass" of each region
-  // Fill color palette with encoded colors
-  uint64_t total = img.width()*img.height();
-  uint64_t rsize = total/clen;
-  while (rsize*clen < total) ++rsize;
+  // if we want all colors OR
+  // if we want more colors then we have in the image
+  // THEN make and return full colormap
+  if (all_colors || bv[0].hist.size() < req_colors) {
+    std::vector<uint32_t> ret;
+    for (auto const & c:bv[0].hist) ret.push_back(c.first);
+    return ret;
+  }
 
-  uint64_t sum1=0, sum2=0, sum12=0;
-  int ci=0;
-  for (int i=0; i<clen; i++) colors[i]=0;
-  for (auto const & cm:cmap){
-    sum1 += cm.first;
-    sum2 += cm.second;
-    sum12 += cm.second*cm.first;
+  // Step 2: median cut
+  while (bv.size() < req_colors){
 
-    if (sum2>=rsize){
-      assert(ci<clen);
-      colors[ci++] = sum12/sum2;
-      sum1=sum2=sum12=0;
+    // Find the largest (by number of pixels) box for splitting.
+    // The box should contain at least two colors.
+    int bi=-1; // box index
+    int64_t bs=0;
+    for (int i=0; i<bv.size(); ++i){
+      if (bv[i].hist.size() > 1 && bs < bv[i].pixels) {
+        bs = bv[i].pixels; bi = i;
+      }
     }
-  }
-  if (sum2>0){
-    assert(ci<clen);
-    colors[ci++] = sum12/sum2;
+    if (bi<0) break; // nothing to split
+
+    // component weights
+    double weight[4]; // b-r-g-a!
+    switch (method_for_largest){
+      case LARGE_NORM:
+        weight[0]=weight[1]=weight[2]=weight[3] = 1;
+        break;
+      case LARGE_LUM:
+        weight[0] = COLOR_LUMINB;
+        weight[1] = COLOR_LUMING;
+        weight[2] = COLOR_LUMINR;
+        weight[3] = 1;
+        break;
+    }
+
+    // Find box boundaries (min and max of each color component).
+    // Find spread value for each component (using weight array).
+    // Find component with the largest spread.
+    double maxspread = 0;
+    int maxdim = -1;
+    for (int pl = 0; pl<4; ++pl){
+      uint8_t minv = 0xFF, maxv = 0;
+      for (auto const & c:bv[bi].hist){
+        uint8_t v = (c.first >> (pl*8)) & 0xFF;
+        if (minv > v) minv = v;
+        if (maxv < v) maxv = v;
+      }
+      double spread = (maxv-minv) * weight[pl];
+      if (maxspread < spread){
+        maxspread = spread; maxdim = pl;
+      }
+    }
+    assert(maxdim>=0 && maxdim < 4);
+
+    // Sort the histogram using component with the
+    // largest spread.
+    // Here I use additional map, this needs more
+    // memory then in the original code where sorting
+    // is done in the histogram.
+    std::map<uint8_t, uint64_t> dim_hist;
+    for (auto const & c:bv[bi].hist){
+      uint8_t key = (c.first >> (maxdim*8)) & 0xFF;
+      if (dim_hist.count(key) == 0) dim_hist[key] = c.second;
+      else dim_hist[key]+=c.second;
+    }
+
+    // Find median point.
+    uint64_t sum = 0;
+    uint8_t median = 0;
+    for (auto const & c:dim_hist){
+      sum += c.second;
+      if (sum < bv[bi].pixels/2) continue;
+      median = c.first;
+      break;
+    }
+
+    // note: for 2-color boxes with pixel distribution {1000,1} {1,1000}
+    // median will be different, but we should split them in the same way!
+    // We want to split the box before the median value unless it is the
+    // first value.
+
+    // Split boxes
+    // Transfer all points which are above median to a new box
+    box_t newbox; newbox.pixels = 0;
+    auto it = bv[bi].hist.begin();
+    ++it; // always keep the first value!
+    uint64_t count=0;
+    while (it != bv[bi].hist.end()){
+      uint8_t key = (it->first >> (maxdim*8)) & 0xFF;
+      if (key<median) {it++; continue;}
+      newbox.hist[it->first] = it->second;
+      newbox.pixels += it->second;
+      bv[bi].pixels -= it->second;
+      it = bv[bi].hist.erase(it);
+    }
+    bv.push_back(newbox);
+
+    //std::cerr << "Split box: "
+    //          << "  pixels: " << bv[bi].pixels
+    //          << " + " << newbox.pixels << "\n"
+    //          << "  colors: " << bv[bi].hist.size()
+    //          << " + " << newbox.hist.size() << "\n";
   }
 
-  // decode color palette
-  for (int i=0; i<clen; i++)
-    colors[i]=image_reduce_color_dec(colors[i]);
+  // Make colormap from the box vector
+  std::vector<uint32_t> ret;
+  for (auto const & b:bv){
+    uint8_t buf[4];
+
+    for (int pl = 0; pl < 4; pl++){
+      uint64_t sum_pix=0, sum_col=0;
+      int min=0xFF, max=0;
+      for (auto const & c:b.hist){
+        uint8_t v = (c.first >> (pl*8)) & 0xFF;
+        sum_col += v;
+        sum_pix += v*c.second;
+        if (v<min) min = v;
+        if (v>max) max = v;
+      }
+
+      switch (method_for_rep) {
+        case REP_CENTER_BOX:     buf[pl] = (max+min)/2; break;
+        case REP_AVERAGE_COLORS: buf[pl] = sum_col/b.hist.size(); break;
+        case REP_AVERAGE_PIXELS: buf[pl] = sum_pix/b.pixels; break;
+      }
+    }
+    ret.push_back(buf[0] + (buf[1]<<8) + (buf[2]<<16) + (buf[3]<<24));
+  }
+  return ret;
 }
+
 
 // Reduce number of colors
 Image
-image_color_reduce(const Image & img, uint32_t *colors, int clen, int mode){
+image_remap(const Image & img, const std::vector<uint32_t> & cmap){
+
+  int transp_mode = 1;
 
   // we return 8bpp image, palette length should be 1..256
-  if (clen < 1 || clen > 256)
+  if (cmap.size() < 1 || cmap.size() > 256)
     throw Err() << "image_color_reduce: palette length is out of range";
 
   if (img.bpp()!=32) throw Err() <<
     "image_color_reduce: only 32-bpp images are supported";
 
-  // encode color palette
-  for (int i=0; i<clen; i++) colors[i]=image_reduce_color_enc(colors[i]);
-
   // Construct the new image
   Image img1(img.width(), img.height(), 8);
   for (int y=0; y<img.height(); ++y){
     for (int x=0; x<img.width(); ++x){
-      // get encoded color
+      // get color
       uint32_t c = img.get<uint32_t>(x,y);
-      if (mode>0) c = color_rem_transp(c, mode>1);
-      c = image_reduce_color_enc(c);
+      if (transp_mode>0) c = color_rem_transp(c, transp_mode>1);
 
       // find nearest palette value
-      uint32_t d0=0xFFFFFFFF, i0=0;
-      for (int i=0; i<clen; i++){
-        // note type overfulls
-        uint32_t d = c>colors[i] ? c-colors[i] : colors[i]-c;
-        if (d < d0) {d0=d; i0=i;}
+      double d0 = +HUGE_VAL;
+      int i0 = 0;
+      for (int i=0; i<cmap.size(); ++i){
+        double d = color_dist(c, cmap[i]);
+        if (d0>d) {d0=d; i0 = i;}
       }
       img1.set<uint8_t>(x,y,i0);
     }
   }
-
-  // decode color palette
-  for (int i=0; i<clen; i++) colors[i]=image_reduce_color_dec(colors[i]);
-
   return img1;
 }
 

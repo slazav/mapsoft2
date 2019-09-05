@@ -10,25 +10,19 @@ int
 main(){
   try{
 
-    assert(image_reduce_color_enc(0xF0F0F0F0) == 0xFFFF0000);
-    assert(image_reduce_color_enc(0xF1F1F1F1) == 0xFFFF000F);
-    assert(image_reduce_color_enc(0x11111111) == 0x000F000F);
-    assert(image_reduce_color_enc(0x01000000) == 0x00000008);
-    assert(image_reduce_color_enc(0x00010000) == 0x00000004);
-    assert(image_reduce_color_enc(0x00000100) == 0x00000002);
-    assert(image_reduce_color_enc(0x00000001) == 0x00000001);
-
-    assert(image_reduce_color_dec(0xFFFF0000) == 0xF0F0F0F0);
-    assert(image_reduce_color_dec(0xFFFF000F) == 0xF1F1F1F1);
-    assert(image_reduce_color_dec(0x000F000F) == 0x11111111);
-    assert(image_reduce_color_dec(0x00000008) == 0x01000000);
-    assert(image_reduce_color_dec(0x00000004) == 0x00010000);
-    assert(image_reduce_color_dec(0x00000002) == 0x00000100);
-    assert(image_reduce_color_dec(0x00000001) == 0x00000001);
-
     assert(color_dist(0xFFFFFFFF, 0xFEFEFEFE) == 2);
     assert(color_dist(0xFFFFFFFF, 0xFFFFFFFE) == 1);
     assert(color_dist(0xFEFFFFFF, 0xFFFFFFFF) == 1);
+
+    assert(color_rem_transp(0x80FFFF00, 0) == 0xFFFFFF00);
+    assert(color_rem_transp(0x80808000, 0) == 0xFFFFFF00);
+    assert(color_rem_transp(0x00FF00FF, 0) == 0xFFFFFFFF);
+    assert(color_rem_transp(0xFF00FFFF, 0) == 0xFF00FFFF);
+
+    assert(color_rem_transp(0x80FFFF00, 1) == 0xFFFFFF00);
+    assert(color_rem_transp(0x80808000, 1) == 0xFFFFFF00);
+    assert(color_rem_transp(0x00FF00FF, 1) == 0x00000000);
+    assert(color_rem_transp(0xFF00FFFF, 1) == 0xFF00FFFF);
 
 
     uint32_t colors[256];

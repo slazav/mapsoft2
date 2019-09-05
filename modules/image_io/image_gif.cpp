@@ -215,7 +215,7 @@ void
 image_save_gif(const Image & im, const std::string & file){
 
   GifFileType *gif = NULL;
-  ColorMapObject *cmap = NULL;
+  ColorMapObject *gif_cmap = NULL;
 #if GIFV == 500
   int code;
   gif = EGifOpenFileName(file.c_str(), false, &code);
@@ -224,33 +224,30 @@ image_save_gif(const Image & im, const std::string & file){
 #endif
   if (!gif) throw Err() << "GIF error: can't open file: " << file;
 
-  // reduce number of colors to 256
-  int clen = 256;
-  uint32_t colors[clen];
-  image_color_mkpal(im, colors, clen);
-  Image im8 = image_color_reduce(im, colors, clen, 2);
+  std::vector<uint32_t> colors = image_colormap(im);
+  Image im8 = image_remap(im, colors);
 
   // find fully transparent color
   int trcol = -1;
-  for (int i=0; i<clen; i++)
+  for (int i=0; i<colors.size(); i++)
     if (((colors[i]>>24)&0xFF) == 0) {trcol = i; break;}
 
   try {
 //    EGifSetGifVersion(gif, true);
 
 #if GIFV == 500
-    cmap = GifMakeMapObject(clen, NULL);
+    gif_cmap = GifMakeMapObject(colors.size(), NULL);
 #else
-    cmap = MakeMapObject(clen, NULL);
+    gif_cmap = MakeMapObject(colors.size(), NULL);
 #endif
-    for (int i=0; i<clen; i++){
-      cmap->Colors[i].Blue  = colors[i] & 0xFF;
-      cmap->Colors[i].Green = (colors[i] >> 8) & 0xFF;
-      cmap->Colors[i].Red   = (colors[i] >> 16) & 0xFF;
+    for (int i=0; i<colors.size(); i++){
+      gif_cmap->Colors[i].Blue  = colors[i] & 0xFF;
+      gif_cmap->Colors[i].Green = (colors[i] >> 8) & 0xFF;
+      gif_cmap->Colors[i].Red   = (colors[i] >> 16) & 0xFF;
     }
 
     if (EGifPutScreenDesc(gif, im8.width(), im8.height(),
-      clen, 0, cmap)==GIF_ERROR) GifErr();
+      colors.size(), 0, gif_cmap)==GIF_ERROR) GifErr();
 
     // Graphic control extension (0xF9, 4 bytes)
     if (trcol>=0){
@@ -261,7 +258,7 @@ image_save_gif(const Image & im, const std::string & file){
     }
 
     if (EGifPutImageDesc(gif, 0,0, im8.width(), im8.height(),
-      false, cmap)==GIF_ERROR) GifErr();
+      false, gif_cmap)==GIF_ERROR) GifErr();
 
     if (EGifPutLine(gif, im8.data(), im8.width()*im8.height()) ==GIF_ERROR)
       GifErr();
@@ -275,7 +272,7 @@ image_save_gif(const Image & im, const std::string & file){
     if (cmap) GifFreeMapObject(cmap);
 #else
     if (gif) EGifCloseFile(gif);
-    if (cmap) FreeMapObject(cmap);
+    if (gif_cmap) FreeMapObject(gif_cmap);
 #endif
     if (e.str()!="") throw e;
   }
