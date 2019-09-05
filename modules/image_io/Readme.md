@@ -30,7 +30,12 @@ in a good way, see image/image_colors.h).
 
 ### TIFF format support
 
-Not supported yet.
+* image_size_tiff() -- Supported.
+
+* image_load_tiff() -- Supported. All images are loaded as 32-bpp.
+
+* image_save_png() -- Not supported.
+
 
 ### tiled images
 
