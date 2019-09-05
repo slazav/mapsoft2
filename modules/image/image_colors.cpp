@@ -38,10 +38,30 @@ color_dist(const uint32_t c1, const uint32_t c2){
     pow( (int)(c1&0xFF) - (int)(c2&0xFF), 2));
 }
 
+// remove transparency (for scaled colors)
+uint32_t color_rem_transp(const uint32_t c, const bool gifmode){
+  int a = (c>>24)&0xFF;
+  if (a==0) return gifmode? 0 : c|0xFFFFFFFF;
+  if (a==255) return c;
+
+  int r = (c>>16)&0xFF;
+  int g = (c>> 8)&0xFF;
+  int b = c&0xFF;
+  if (a>0 && a<0xFF){
+    r = (r*256)/a;
+    g = (g*256)/a;
+    b = (b*256)/a;
+    if (r>0xFF) r=0xFF;
+    if (g>0xFF) g=0xFF;
+    if (b>0xFF) b=0xFF;
+  }
+  return (0xFF<<24)+(r<<16)+(g<<8)+b;
+}
+
 
 // Create color palette
 void
-image_color_mkpal(const Image & img, uint32_t *colors, int clen){
+image_color_mkpal(const Image & img, uint32_t *colors, int clen, int mode){
   // palette length should be 1..256
   if (clen < 1 || clen > 256)
     throw Err() << "image_color_reduce: palette length is out of range";
@@ -53,7 +73,9 @@ image_color_mkpal(const Image & img, uint32_t *colors, int clen){
   std::map<uint32_t, uint64_t> cmap; // color -> number of points
   for (int y=0; y<img.height(); ++y){
     for (int x=0; x<img.width(); ++x){
-      uint32_t c = image_reduce_color_enc(img.get<uint32_t>(x,y));
+      uint32_t c = img.get<uint32_t>(x,y);
+      if (mode>0) c = color_rem_transp(c, mode>1);
+      c = image_reduce_color_enc(c);
       if (cmap.count(c) == 0) cmap[c] = 1;
       else ++cmap[c];
     }
@@ -92,7 +114,7 @@ image_color_mkpal(const Image & img, uint32_t *colors, int clen){
 
 // Reduce number of colors
 Image
-image_color_reduce(const Image & img, uint32_t *colors, int clen){
+image_color_reduce(const Image & img, uint32_t *colors, int clen, int mode){
 
   // we return 8bpp image, palette length should be 1..256
   if (clen < 1 || clen > 256)
@@ -109,7 +131,9 @@ image_color_reduce(const Image & img, uint32_t *colors, int clen){
   for (int y=0; y<img.height(); ++y){
     for (int x=0; x<img.width(); ++x){
       // get encoded color
-      uint32_t c = image_reduce_color_enc(img.get<uint32_t>(x,y));
+      uint32_t c = img.get<uint32_t>(x,y);
+      if (mode>0) c = color_rem_transp(c, mode>1);
+      c = image_reduce_color_enc(c);
 
       // find nearest palette value
       uint32_t d0=0xFFFFFFFF, i0=0;

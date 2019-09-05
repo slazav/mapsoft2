@@ -14,12 +14,19 @@ uint32_t image_reduce_color_dec(const uint32_t c);
 // distance between two colors
 double color_dist(const uint32_t c1, const uint32_t c2);
 
+// Remove transparency (for scaled colors).
+// if gifmode = true, then keep fully transparent colors.
+uint32_t color_rem_transp(const uint32_t c, const bool gifmode);
+
 // Create image color palette colors[clen] (0<clen<=256) for reducing color number.
-void image_color_mkpal(const Image & img, uint32_t *colors, int clen=256);
+// mode: 0 - keep transparency channel
+//       1 - remove transparency
+//       2 - remove transparency except fully transparent pixels (GIF mode)
+void image_color_mkpal(const Image & img, uint32_t *colors, int clen=256, int mode=0);
 
 // Reduce number of colors using color pallette colors[clen] (0<clen<=256).
-// New 8-bpp image is returned.
-Image image_color_reduce(const Image & img, uint32_t *colors, int clen=256);
+// New 8-bpp image is returned. Mode parameter is same as in image_color_mkpal.
+Image image_color_reduce(const Image & img, uint32_t *colors, int clen=256, int mode=0);
 
 // Image tranparency (only for 32bpp images)
 // returns 0: fully non-transparent image.
