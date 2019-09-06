@@ -201,11 +201,11 @@ image_load_gif(const std::string & file, const int scale){
 
   ImageSourceGIF SRC(file);
   iPoint size = SRC.size();
-  Image img(size.x, size.y, 32);
+  Image img(size.x, size.y, IMAGE_32ARGB);
 
   for (int y=0; y<size.y; ++y){
     SRC.goto_line(y);
-    for (int x=0; x<size.x; ++x) img.set(x,y, SRC.get_col(x));
+    for (int x=0; x<size.x; ++x) img.set32(x,y, SRC.get_col(x));
   }
   return img;
 }
@@ -213,6 +213,9 @@ image_load_gif(const std::string & file, const int scale){
 
 void
 image_save_gif(const Image & im, const std::string & file){
+
+  if (im.type() != IMAGE_32ARGB)
+    throw Err() << "GIF error: only 32-bpp images are supported";
 
   GifFileType *gif = NULL;
   ColorMapObject *gif_cmap = NULL;

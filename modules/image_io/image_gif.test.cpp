@@ -31,12 +31,12 @@ main(){
 
     assert(img.width()==61);
     assert(img.height()==64);
-    assert(img.get<int>(0,0)  == 0xFFFFFFFF);
-    assert(img.get<int>(7,8)  == 0xFF000000);
-    assert(img.get<int>(7,24) == 0xFFFF0000);
-    assert(img.get<int>(7,36) == 0xFF0000FF);
-    assert(img.get<int>(21,8) == 0x00000000);
-    assert(img.get<int>(60,63) == 0xFFFFFFFF);
+    assert(img.get32(0,0)  == 0xFFFFFFFF);
+    assert(img.get32(7,8)  == 0xFF000000);
+    assert(img.get32(7,24) == 0xFFFF0000);
+    assert(img.get32(7,36) == 0xFF0000FF);
+    assert(img.get32(21,8) == 0x00000000);
+    assert(img.get32(60,63) == 0xFFFFFFFF);
 
   }
   catch (Err e) {

@@ -84,7 +84,8 @@ SimpleViewer::draw(const CairoWrapper & crw, const iRect & r){
   if (is_waiting()) return;
   if (r.empty()) {redraw(); return;}
   signal_busy_.emit();
-  Image img(r.w, r.h, 32, 0xFF000000 | bgcolor);
+  Image img(r.w, r.h, IMAGE_32ARGB);
+  img.fill32(0xFF000000 | bgcolor);
 
   if (obj) obj->draw(img, r.tlc()+origin);
   crw->set_source(image_to_surface(img), r.x, r.y);

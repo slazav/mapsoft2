@@ -38,7 +38,8 @@ public:
 
   virtual Image get_image (iRect src){
     if (intersect(range(), src).empty()) return Image();
-    Image ret(src.w, src.h, 32, 0);
+    Image ret(src.w, src.h, IMAGE_32ARGB);
+    ret.fill32(0);
     if (draw(ret, src.tlc()) == GObj::FILL_NONE) return Image();
     return ret;
   }

@@ -52,7 +52,7 @@ image_colormap(const Image & img){
   methodForRep method_for_rep = REP_AVERAGE_PIXELS;
   int transp_mode = 1;
 
-  if (img.bpp()!=32) throw Err() <<
+  if (img.type() != IMAGE_32ARGB) throw Err() <<
     "image_color_reduce: only 32-bpp images are supported";
 
   // make vector with a single box with the whole image histogram
@@ -67,7 +67,7 @@ image_colormap(const Image & img){
   // compute the histogram
   for (int y=0; y<img.height(); ++y){
     for (int x=0; x<img.width(); ++x){
-      uint32_t c = img.get<uint32_t>(x,y);
+      uint32_t c = img.get32(x,y);
       if (transp_mode>0) c = color_rem_transp(c, transp_mode>1);
       if (bv[0].hist.count(c) == 0) bv[0].hist[c] = 1;
       else ++bv[0].hist[c];
@@ -218,15 +218,15 @@ image_remap(const Image & img, const std::vector<uint32_t> & cmap){
   if (cmap.size() < 1 || cmap.size() > 256)
     throw Err() << "image_color_reduce: palette length is out of range";
 
-  if (img.bpp()!=32) throw Err() <<
+  if (img.type() != IMAGE_32ARGB) throw Err() <<
     "image_color_reduce: only 32-bpp images are supported";
 
   // Construct the new image
-  Image img1(img.width(), img.height(), 8);
+  Image img1(img.width(), img.height(), IMAGE_8PAL);
   for (int y=0; y<img.height(); ++y){
     for (int x=0; x<img.width(); ++x){
       // get color
-      uint32_t c = img.get<uint32_t>(x,y);
+      uint32_t c = img.get32(x,y);
       if (transp_mode>0) c = color_rem_transp(c, transp_mode>1);
 
       // find nearest palette value
@@ -236,7 +236,7 @@ image_remap(const Image & img, const std::vector<uint32_t> & cmap){
         double d = color_dist(c, cmap[i]);
         if (d0>d) {d0=d; i0 = i;}
       }
-      img1.set<uint8_t>(x,y,i0);
+      img1.set8(x,y,i0);
     }
   }
   return img1;
@@ -247,12 +247,12 @@ image_remap(const Image & img, const std::vector<uint32_t> & cmap){
 int
 image_classify_alpha(const Image & img){
   int ret=0;
-  if (img.bpp()!=32) throw Err() <<
+  if (img.type() != IMAGE_32ARGB) throw Err() <<
     "image_classify: only 32-bpp images are supported";
 
   for (int y=0; y<img.height(); y++){
     for (int x=0; x<img.width(); x++){
-      uint32_t c = img.get<uint32_t>(x, y);
+      uint32_t c = img.get32(x, y);
       int a = (c >> 24) & 0xFF;
 
       if (a>0 && a<255) {ret=2; break;}
@@ -265,7 +265,8 @@ image_classify_alpha(const Image & img){
 int
 image_classify_color(const Image & img, uint32_t *colors, int clen){
   int ret=0;
-  if (img.bpp()!=32) throw Err() <<
+  if (img.type() != IMAGE_32ARGB &&
+      img.type() != IMAGE_24RGB) throw Err() <<
     "image_classify: only 32-bpp images are supported";
 
   int nc=0; // number of colors
@@ -273,7 +274,7 @@ image_classify_color(const Image & img, uint32_t *colors, int clen){
 
   for (int y=0; y<img.height(); ++y){
     for (int x=0; x<img.width(); ++x){
-      uint32_t c = img.get<uint32_t>(x, y);
+      uint32_t c = img.get_col(x, y);
       int r = (c >> 16) & 0xFF;
       int g = (c >> 8) & 0xFF;
       int b = c & 0xFF;

@@ -99,11 +99,11 @@ image_load_jpeg(const std::string & file, const int scale){
 
   ImageSourceJPEG SRC(file);
   iPoint size = SRC.size();
-  Image img(size.x, size.y, 32);
+  Image img(size.x, size.y, IMAGE_32ARGB);
 
   for (int y=0; y<size.y; ++y){
     SRC.goto_line(y);
-    for (int x=0; x<size.x; ++x) img.set(x,y, SRC.get_col(x));
+    for (int x=0; x<size.x; ++x) img.set32(x,y, SRC.get_col(x));
   }
   return img;
 }
@@ -134,6 +134,9 @@ image_save_jpeg(const Image & im, const char *file, int quality){
   if ((quality<0)||(quality>100))
       throw Err() << "JPEG error: quality not in range 0..100: " << quality;
 
+  if (im.type() != IMAGE_32ARGB)
+    throw Err() << "JPEG error: only 32-bpp images are supported";
+
   FILE * outfile = NULL;
   unsigned char *buf = NULL;
   std::string msg;
@@ -161,7 +164,7 @@ image_save_jpeg(const Image & im, const char *file, int quality){
 
     for (int y = 0; y < im.height(); y++){
       for (int x = 0; x < im.width(); x++){
-        int c = im.get<int>(x, y);
+        int c = im.get32(x, y);
         buf[3*x+2] = c & 0xFF;
         buf[3*x+1] = (c >> 8) & 0xFF;
         buf[3*x]   = (c >> 16) & 0xFF;

@@ -22,29 +22,29 @@ main(){
     assert_err(image_load_tiff("test_data/image.gif"),
       "test_data/image.gif error: Not a TIFF or MDI file, bad magic number 18759 (0x4947)");
     // 8bit
-    Image img1 = image_load_tiff("test_data/image1.tif", 1);
+    Image img1 = image_load_tiff("test_data/image.tif", 1);
 
     assert(img1.width()==61);
     assert(img1.height()==64);
-    assert(img1.get<int>(0,0)  == 0xFFFFFFFF);
-    assert(img1.get<int>(7,8)  == 0xFF000000);
-    assert(img1.get<int>(7,24) == 0xFFFF0000);
-    assert(img1.get<int>(7,36) == 0xFF0000FF);
-//    assert(img1.get<int>(21,7) == 0x00000000);
+    assert(img1.get32(0,0)  == 0xFFFFFFFF);
+    assert(img1.get32(7,8)  == 0xFF000000);
+    assert(img1.get32(7,24) == 0xFFFF0000);
+    assert(img1.get32(7,36) == 0xFF0000FF);
+//    assert(img1.get32(21,7) == 0x00000000);
 
     // 32bit, rgba
     Image img2 = image_load_tiff("test_data/image_rgba.tif", 1);
 
-    assert(img2.get<int>(0,0)  == 0xFFFFFFFF);
-    assert(img2.get<int>(7,8)  == 0xFF000000);
-    assert(img2.get<int>(7,24) == 0xFFFF0000);
-    assert(img2.get<int>(7,36) == 0xFF0000FF);
-    assert(img2.get<int>(21,7) == 0x00000000);
-    assert(img2.get<int>(22,22) == 0x80808080);
-    assert(img2.get<int>(22,36) == 0x7f7f0000);
-    assert(img2.get<int>(38,22) == 0x7f00007f);
-    assert(img2.get<int>(38,36) == 0x7f000000);
-    assert(img2.get<int>(60,63) == 0xFFFFFFFF);
+    assert(img2.get32(0,0)  == 0xFFFFFFFF);
+    assert(img2.get32(7,8)  == 0xFF000000);
+    assert(img2.get32(7,24) == 0xFFFF0000);
+    assert(img2.get32(7,36) == 0xFF0000FF);
+    assert(img2.get32(21,7) == 0x00000000);
+    assert(img2.get32(22,22) == 0x80808080);
+    assert(img2.get32(22,36) == 0x7f7f0000);
+    assert(img2.get32(38,22) == 0x7f00007f);
+    assert(img2.get32(38,36) == 0x7f000000);
+    assert(img2.get32(60,63) == 0xFFFFFFFF);
 
 /*
     // save

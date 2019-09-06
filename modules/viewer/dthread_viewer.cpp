@@ -68,7 +68,8 @@ DThreadViewer::updater(){
       stop_drawing=false;
       updater_mutex->unlock();
 
-      Image tile(TILE_SIZE, TILE_SIZE, 32, 0xFF000000 | get_bgcolor());
+      Image tile(TILE_SIZE, TILE_SIZE, IMAGE_32ARGB);
+      tile.fill32(0xFF000000 | get_bgcolor());
       GObj * o = get_obj();
       draw_mutex->lock();
       if (o) o->draw(tile, tile_to_rect(key).tlc());

@@ -3,137 +3,267 @@
 
 #include <stdint.h>
 
+#include <vector>
 #include <memory>
 #include <err/err.h>
 #include <geom/rect.h>
 
+
 /*
-An image: 2d array of arbitrary data
+An image: 2d array of arbitrary data.
 */
 
-
+// ImageDataType shows data type of the image.
+// One shoukd not directly access data if type
+// is IMAGE_UNKNOWN.
+enum ImageDataType {
+  IMAGE_32ARGB, // 4 bytes per pixel data: ARGB colors
+  IMAGE_24RGB,  // 3 bytes per pixel data: RGB colors
+  IMAGE_16,     // 2 bytes per pixel, gryscale
+  IMAGE_8,      // 1 byte per pixel, gryscale
+  IMAGE_8PAL,   // 1 byte per pixel + color palette
+  IMAGE_1,      // 1 bit per pixel, black and white
+  IMAGE_FLOAT,  // float-value pixel
+  IMAGE_DOUBLE, // double-value pixel
+  IMAGE_UNKNOWN,// unknown data format
+};
 
 /*********************************************************************/
 // base class
 class Image {
   private:
-    std::shared_ptr<unsigned char> data_;
+    std::shared_ptr<uint8_t> data_;
     size_t w,h; // width, height
-    size_t b;   // bits per data point
+    ImageDataType t;
 
   public:
 
+    uint32_t cmap[256];
+
+    size_t type() const   {return t;}
     size_t width() const  {return w;}
     size_t height() const {return h;}
-    size_t bpp() const    {return b;}
     iRect bbox() const    {return iRect(0,0,w,h);}
+    iPoint size() const   {return iPoint(w,h);}
     unsigned char *data() const {return data_.get();}
 
+    bool is_empty() const {return w==0 || h==0;}
+
+    // get data size
+    size_t dsize() const {
+      switch (t){
+        case IMAGE_32ARGB: return w*h*4;
+        case IMAGE_24RGB:  return w*h*3;
+        case IMAGE_16:     return w*h*2;
+        case IMAGE_8:      return w*h;
+        case IMAGE_8PAL:   return w*h;
+        case IMAGE_1:      return (w*h-1)/8+1;
+        case IMAGE_FLOAT:  return (w*h)*sizeof(float);
+        case IMAGE_DOUBLE: return (w*h)*sizeof(double);
+        case IMAGE_UNKNOWN: return 0;
+      }
+      return 0;
+    }
+
     // constructor -- create an empty image
-    Image(): w(0), h(0), b(0) {}
+    Image(): w(0), h(0), t(IMAGE_UNKNOWN) {}
 
     // constructor -- create WxH non-initialized image
-    Image(const size_t W, const size_t H, const size_t bpp):
-          w(W), h(H), b(bpp) {
+    Image(const size_t W, const size_t H,
+          const ImageDataType type): w(W), h(H), t(type){
 
       if (w<=0 || h<=0)
-      throw Err() << "non-positive image dimension: " << w << "x" << h;
-
-      if ((b != 1 && b%8) || b<=0)
-        throw Err() << "unsuported bpp for image: " << b;
+        throw Err() << "non-positive image dimension: " << w << "x" << h;
 
       try{
-        data_ = std::shared_ptr<unsigned char>(new uint8_t[w*h*bpp/8]);
+        data_ = std::shared_ptr<unsigned char>(new uint8_t[dsize()]);
       }
       catch (const std::bad_alloc & e) {
-        throw Err() << "can't allocate memory for "
+        throw Err() << "Image: can't allocate memory for "
                     << *this << ": " << e.what();
       }
     }
 
-    // constructor -- create WxH initialized with v
-    template <typename T>
-    Image(const size_t W, const size_t H, const size_t bpp, const T val):
-          Image(W,H,bpp) { fill_int<T>(val); }
 
-    bool is_empty() const {return w==0 || h==0 || b==0;}
+    /******************************************************/
+    // Fast get functions for different image types.
+    // Image type and coordinate range should be checked before.
 
-    // Fast set -- set value without any checks.
-    // Check before that
-    //  - image.bpp() == sizeof(T)*8
-    //  - x>=0 && x<image.width() 
-    //  - y>=0 && x<image.height() 
-    // For 1-bpp images use set_int() instead.
-    template <typename T>
-    void set(const size_t x, const size_t y, const T v) { ((T*)data_.get())[w*y+x] = v; }
+    // Fast get function for image type IMAGE_32ARGB.
+    uint32_t get32(const size_t x, const size_t y) const{
+      return ((uint32_t*)data_.get())[w*y+x]; }
 
-    // Fast fill -- fill the whole image without any checks.
-    // Same checks as for `set` are required.
-    // For 1-bpp images use get_int() instead.
-    template <typename T>
-    void fill(const T v) { for (int i=0; i<w*h; i++) ((T*)data_.get())[i] = v; }
+    // Fast get function for image type IMAGE_24RGB
+    uint32_t get24(const size_t x, const size_t y) const{
+      return 0xFF000000 +
+             (data_.get()[3*(w*y+x)]<<16) +
+             (data_.get()[3*(w*y+x)+1]<<8) +
+              data_.get()[3*(w*y+x)+2];
+    }
 
-    // Fast get -- get value without any checks.
-    // Same checks as for `set` are required.
-    // For 1-bpp images use get_int() instead.
-    template <typename T>
-    T get(const size_t x, const size_t y) const { return ((T*)data_.get())[w*y+x]; }
+    // Fast get function for image type IMAGE_16
+    uint16_t get16(const size_t x, const size_t y) const{
+      return ((uint16_t*)data_.get())[w*y+x]; }
 
-    // Smart set: convert integer value to correct size (1,8,16,32, or 64 bits)
-    // and write to an image point.
-    template <typename T>
-    void set_int(const size_t x, const size_t y, const T val) {
-      switch (b){
-        case 1: {
-          size_t b = (w*y+x)/8;
-          size_t o = (w*y+x)%8;
-          uint8_t old = ((uint8_t*)data_.get())[b];
-          ((uint8_t*)data_.get())[b] = val? old|(1<<o) : old&~(1<<o);
-          break;
-          }
-        case 8:  set(x,y, (uint8_t)val); break;
-        case 16: set(x,y, (uint16_t)val); break;
-        case 32: set(x,y, (uint32_t)val); break;
-        case 64: set(x,y, (uint64_t)val); break;
-        default:
-          throw Err() << "unsuported image bpp in set_int: " << b;
+    // Fast color get function for image type IMAGE_16.
+    // To convert 16-bit data into color the less sagnificant byte is skipped.
+    uint32_t get16col(const size_t x, const size_t y) const{
+      uint16_t c = (((uint16_t*)data_.get())[w*y+x] >> 8) & 0xFF;
+      return 0xFF000000 + (c<<16) + (c<<8) + c;
+    }
+
+    // Fast get function for image types IMAGE_8 and IMAGE_8PAL
+    uint8_t get8(const size_t x, const size_t y) const{
+      return data_.get()[w*y+x]; }
+
+    // Fast color get function for image type IMAGE_8
+    // Image type and coordinate range should be checked before.
+    uint32_t get8col(const size_t x, const size_t y) const{
+      uint8_t c = data_.get()[w*y+x];
+      return 0xFF000000 + (c<<16) + (c<<8) + c;
+    }
+
+    // Fast color get function for image type IMAGE_8PAL
+    uint32_t get8pal(const size_t x, const size_t y) const{
+      return cmap[data_.get()[w*y+x]];
+    }
+
+    // Fast get function for image type IMAGE_1.
+    bool get1(const size_t x, const size_t y) const{
+      size_t b = (w*y+x)/8; // byte
+      size_t o = (w*y+x)%8; // offset
+      uint8_t v = data_.get()[b];
+      return (v >> o) & 1;
+    }
+
+    // Fast color get function for image type IMAGE_1.
+    uint32_t get1col(const size_t x, const size_t y) const{
+      return get1(x,y) ? 0xFFFFFFFF:0xFF000000;
+    }
+
+    // Fast get function for image type IMAGE_FLOAT
+    float getF(const size_t x, const size_t y) const{
+      return ((float *)data_.get())[w*y+x]; }
+
+    // Fast get function for image type IMAGE_DOUBLE
+    double getD(const size_t x, const size_t y) const{
+      return ((double *)data_.get())[w*y+x]; }
+
+    // Color get function for IMAGE_UNKNOWN.
+    // To be redefined in non-standard image classes.
+    virtual uint32_t getUcol(const size_t x, const size_t y) const{
+      return 0;
+    }
+
+    // Get color. A fallback function to be used if data type
+    // is unknown.
+    uint32_t get_col(const size_t x, const size_t y) const{
+      switch (t){
+        case IMAGE_32ARGB: return get32(x,y);
+        case IMAGE_24RGB:  return get24(x,y);
+        case IMAGE_16:     return get16col(x,y);
+        case IMAGE_8:      return get8col(x,y);
+        case IMAGE_8PAL:   return get8pal(x,y);
+        case IMAGE_1:      return get1col(x,y);
+        case IMAGE_FLOAT:  return 0; // todo: rainbow calculation?
+        case IMAGE_DOUBLE: return 0; // todo: rainbow calculation?
+        case IMAGE_UNKNOWN: return getUcol(x,y);
+      }
+      return 0;
+    }
+
+    /******************************************************/
+    // Fast set functions for different image types.
+    // Image type and coordinate range should be checked before.
+
+    // Fast set function for image type IMAGE_32ARGB.
+    void set32(const size_t x, const size_t y, const uint32_t v) const{
+      ((uint32_t*)data_.get())[w*y+x] = v; }
+
+    // Fast set function for image type IMAGE_24RGB
+    void set24(const size_t x, const size_t y, const uint32_t v) const{
+      data_.get()[3*(w*y+x)]   = (v>>16) & 0xFF;
+      data_.get()[3*(w*y+x)+1] = (v>>8)  & 0xFF;
+      data_.get()[3*(w*y+x)+2] = v & 0xFF;
+    }
+
+    // Fast set function for image type IMAGE_16
+    void set16(const size_t x, const size_t y, const uint16_t v) const{
+      ((uint16_t *)data_.get())[w*y+x] = v; }
+
+    // Fast set function for image types IMAGE_8 and IMAGE_8PAL
+    void set8(const size_t x, const size_t y, const uint8_t v) const{
+      data_.get()[w*y+x] = v; }
+
+    // Fast set function for image type IMAGE_1.
+    void set1(const size_t x, const size_t y, const bool v) const{
+      size_t b = (w*y+x)/8; // byte
+      size_t o = (w*y+x)%8; // offset
+      uint8_t old = data_.get()[b];
+      data_.get()[b] = v? old|(1<<o) : old&~(1<<o);
+    }
+
+    // Fast set function for image type IMAGE_FLOAT
+    void setF(const size_t x, const size_t y, const float v) const{
+      ((float*)data_.get())[w*y+x] = v; }
+
+    // Fast set function for image type IMAGE_DOUBLE
+    void setD(const size_t x, const size_t y, const double v) const{
+      ((double*)data_.get())[w*y+x] = v; }
+
+    // Color set function for IMAGE_UNKNOWN.
+    // To be redefined in non-standard image classes.
+    virtual void setUcol(const size_t x, const size_t y) const{
+    }
+
+    /******************************************************/
+    // Fill functions for different image types.
+    // Image type should be checked before.
+
+    // Fill function for image type IMAGE_32ARGB.
+    void fill32(const uint32_t v) const{
+      for (int i=0; i<w*h; i++)
+        ((uint32_t*)data_.get())[i] = v;
+    }
+
+    // Fill function for image type IMAGE_24RGB
+    void fill24(const uint32_t v) const{
+      for (int i=0; i<w*h; i++) {
+        data_.get()[3*i]   = (v>>16) & 0xFF;
+        data_.get()[3*i+1] = (v>>8)  & 0xFF;
+        data_.get()[3*i+2] = v & 0xFF;
       }
     }
 
-    // Smart fill: convert integer value to correct size (1,8,16,32, or 64 bits)
-    // and fill the image.
-    template <typename T>
-    void fill_int(const T val) {
-      switch (b){
-        case 1:
-          for (int i=0; i<w*h/8; i++) ((uint8_t*)data_.get())[i] = val ? 0xFF:0x00;
-          break;
-        case 8:  fill((uint8_t)val); break;
-        case 16: fill((uint16_t)val); break;
-        case 32: fill((uint32_t)val); break;
-        case 64: fill((uint64_t)val); break;
-        default:
-          throw Err() << "unsuported image bpp in set_int: " << b;
-      }
+    // Fill function for image type IMAGE_16
+    void fill16(const uint16_t v) const{
+      for (int i=0; i<w*h; i++)
+        ((uint16_t *)data_.get())[i] = v;
     }
 
-    // Smart get: get integer value according with bpp setting
-    template <typename T>
-    T get_int(const size_t x, const size_t y) const {
-      switch (b){
-        case 1: {
-          size_t b = (w*y+x)/8;
-          size_t o = (w*y+x)%8;
-          uint8_t v = ((uint8_t*)data_.get())[b];
-          return (v >> o) & 1;
-          }
-        case 8:  return get<uint8_t>(x,y);
-        case 16: return get<uint16_t>(x,y);
-        case 32: return get<uint32_t>(x,y);
-        case 64: return get<uint64_t>(x,y);
-        default:
-          throw Err() << "unsuported image bpp in get_int: " << b;
-      }
+    // Fill function for image types IMAGE_8 and IMAGE_8PAL
+    void fill8(const uint8_t v) const{
+      for (int i=0; i<w*h; i++)
+        data_.get()[i] = v;
+    }
+
+    // Fill function for image type IMAGE_1.
+    void fill1(const bool v) const{
+      for (int i=0; i<dsize(); i++)
+        data_.get()[i] = v? 0xFF:0x00;
+    }
+
+    // Fill function for image type IMAGE_FLOAT
+    void fillF(const float v) const{
+      for (int i=0; i<w*h; i++)
+        ((float*)data_.get())[i] = v;
+    }
+
+
+    // Fill function for image type IMAGE_DOUBLE
+    void fillD(const double v) const{
+      for (int i=0; i<w*h; i++)
+        ((double*)data_.get())[i] = v;
     }
 
 };

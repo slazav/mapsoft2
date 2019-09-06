@@ -9,7 +9,7 @@ main(){
 
     {
       CairoWrapper cw;
-      Image img(150,100, 32);
+      Image img(150,100, IMAGE_32ARGB);
       cw.set_surface_img(img);
 
       assert(cw.width() == 150);
@@ -20,8 +20,8 @@ main(){
       cw->mkpath(dLine("[[80,50]]"));
       cw->set_line_width(3);
       cw->stroke();
-      assert(img.get<uint32_t>(80,50) == 0xF0F00000); // scaled color!
-      assert(img.get<uint32_t>(80,60) == 0x00000000);
+      assert(img.get32(80,50) == 0xF0F00000); // scaled color!
+      assert(img.get32(80,60) == 0x00000000);
 
     }
 

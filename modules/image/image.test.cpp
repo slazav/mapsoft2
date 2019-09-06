@@ -14,129 +14,153 @@ main(){
       Image im1;
       assert(im1.width() == 0);
       assert(im1.height() == 0);
-      assert(im1.bpp() == 0);
+      assert(im1.type() == IMAGE_UNKNOWN);
       assert(im1.is_empty());
 
-      Image im2(100,100, 32);
+      Image im2(100,100, IMAGE_32ARGB);
 
-      std::ostringstream s1; s1 << im1;
-      assert(s1.str() == "Image(empty)");
+      assert(type_to_str(im1) == "Image(empty)");
 
-      std::ostringstream s2; s2 << im2;
-      assert(s2.str() == "Image(100x100x32bpp)");
+      assert(type_to_str(im2) == "Image(100x100, ARGB, 32bpp)");
 
       assert(im2.width() == 100);
       assert(im2.height() == 100);
-      assert(im2.bpp() == 32);
+      assert(im2.type() == IMAGE_32ARGB);
       assert(!im2.is_empty());
     }
 
     {
-      assert_err(Image im2(100,0, 1),    "non-positive image dimension: 100x0");
-      assert_err(Image im2(0,1,   1),    "non-positive image dimension: 0x1");
-      assert_err(Image im2(100,100, 2),  "unsuported bpp for image: 2");
-      assert_err(Image im2(100,100, 0),  "unsuported bpp for image: 0");
-      assert_err(Image im2(100,-1, 32),  "can't allocate memory for "
-                             "Image(100x18446744073709551615x32bpp): std::bad_alloc");
+      assert_err(Image im2(100,0,  IMAGE_32ARGB),    "non-positive image dimension: 100x0");
+      assert_err(Image im2(0,1,    IMAGE_32ARGB),    "non-positive image dimension: 0x1");
+      assert_err(Image im2(100,-1, IMAGE_32ARGB),
+        "Image: can't allocate memory for Image(100x18446744073709551615, ARGB, 32bpp): std::bad_alloc");
     }
 
-    { // 1bpp image
-      Image im(100,100, 1);
-      assert(im.width() == 100);
-      assert(im.height() == 100);
-      assert(im.bpp() == 1);
 
-      im.set_int(0,9, 1);
-      im.set_int(2,9, 5);
-      im.set_int(2,0, 2);
-      im.set_int(2,1, 0);
-      assert(im.get_int<int>(0,9) == 1);
-      assert(im.get_int<int>(2,9) == 1);
-      assert(im.get_int<int>(2,0) == 1);
-      assert(im.get_int<int>(2,1) == 0);
 
-      im.fill_int(0);
-      assert(im.get_int<int>(2,9) == 0);
+    { // 32bpp image
+      Image im(640,480, IMAGE_32ARGB);
+      im.fill32(0xFF000010);
+      assert(im.width() == 640);
+      assert(im.height() == 480);
+      assert(im.type() == IMAGE_32ARGB);
+      assert(im.get32(0,0) == 0xFF000010);
+      assert(im.get32(639,479) == 0xFF000010);
 
-      im.fill_int(1);
-      assert(im.get_int<int>(2,9) == 1);
+      im.set32(0,9, 1);
+      im.set32(2,9, 5);
+      im.set32(2,0, 2);
+      assert(im.get32(0,9) == 1);
+      assert(im.get32(2,9) == 5);
+      assert(im.get32(2,0) == 2);
+      assert(im.get32(0,0) == 0xFF000010);
+      assert(im.get32(639,479) == 0xFF000010);
+    }
+
+    { // 24bpp image
+      Image im(640,480, IMAGE_24RGB);
+      im.fill24(0x10);
+      assert(im.width() == 640);
+      assert(im.height() == 480);
+      assert(im.type() == IMAGE_24RGB);
+      assert(im.get24(0,0) == 0xFF000010);
+      assert(im.get24(639,479) == 0xFF000010);
+
+      im.set24(0,9, 1);
+      im.set24(2,9, 5);
+      im.set24(2,0, 2);
+      assert(im.get24(0,9) == 0xFF000001);
+      assert(im.get24(2,9) == 0xFF000005);
+      assert(im.get24(2,0) == 0xFF000002);
+      assert(im.get24(0,0) == 0xFF000010);
+      assert(im.get24(639,479) == 0xFF000010);
     }
 
     { // 8bpp image
-      Image im(100,100, 8);
+      Image im(100,100, IMAGE_8);
+      im.fill8(11);
       assert(im.width() == 100);
       assert(im.height() == 100);
-      assert(im.bpp() == 8);
+      assert(im.type() == IMAGE_8);
+      assert(im.get8(0,0) == 11);
+      assert(im.get8(99,99) == 11);
 
-      // get_int, set_int can work with other types
-
-      im.set_int(0,9, 1);
-      im.set_int(2,9, 5);
-      im.set_int(2,0, 255);
-      im.set_int(2,1, 0x1FF);
-      im.set_int(2,2, -1);
-      im.set_int(2,3, -2);
-      assert(im.get_int<int>(0,9) == 1);
-      assert(im.get_int<int>(2,9) == 5);
-      assert(im.get_int<int>(2,0) == 255);
-      assert(im.get_int<int>(2,1) == 255);
-      assert(im.get_int<int>(2,2) == 255);
-      assert(im.get_int<int>(2,3) == 254);
-
-      assert(im.get_int<int>(2,2) == 255);
-
-      assert(im.get<int8_t>(0,9) == 1);
-      assert(im.get<int8_t>(2,9) == 5);
-      assert(im.get<int8_t>(2,0) == -1);
-      assert(im.get<int8_t>(2,1) == -1);
-      assert(im.get<int8_t>(2,2) == -1);
-      assert(im.get<uint8_t>(2,2) == 255);
-      assert(im.get<int8_t>(2,3) == -2);
+      im.set8(0,9, 1);
+      im.set8(2,9, 5);
+      im.set8(2,0, 255);
+      im.set8(2,2, -1);
+      im.set8(2,3, -2);
+      assert(im.get8(0,9) == 1);
+      assert(im.get8(2,9) == 5);
+      assert(im.get8(2,0) == 255);
+      assert(im.get8(2,2) == 255);
+      assert(im.get8(2,3) == 254);
     }
 
-    { // 32bpp image with filling
-      Image im(1640,480, 32, 0xFF000010);
-      assert(im.width() == 1640);
-      assert(im.height() == 480);
-      assert(im.bpp() == 32);
-
-      im.set_int(0,9, 1);
-      im.set_int(2,9, 5);
-      im.set_int(2,0, 2);
-      assert(im.get_int<int>(0,9) == 1);
-      assert(im.get_int<int>(2,9) == 5);
-      assert(im.get_int<int>(2,0) == 2);
-      assert(im.get_int<int>(3,0) == 0xFF000010);
-    }
-
-    { // 64bpp image
-      Image im(100,100, 64);
+    { // 1bpp image, w*h % 8 = 0
+      Image im(100,100, IMAGE_1);
+      im.fill1(1);
       assert(im.width() == 100);
       assert(im.height() == 100);
-      assert(im.bpp() == 64);
+      assert(im.type() == IMAGE_1);
+      assert(im.get1(0,0) == 1);
+      assert(im.get1(99,99) == 1);
+      assert(im.dsize() == 1250);
+      im.fill1(0);
+      assert(im.get1(0,0) == 0);
+      assert(im.get1(99,99) == 0);
 
-      im.set_int(0,9, 0xFF00FF00FF00FF);
-      im.set_int(2,9, (int64_t)-1);
-      assert(im.get_int<int64_t>(0,9) == 0xFF00FF00FF00FF);
-      assert(im.get_int<int64_t>(2,9) == -1);
+      im.set1(0,9, 1);
+      im.set1(2,9, 5);
+      im.set1(2,0, 2);
+      im.set1(2,1, 0);
+      im.set1(99,99, 1);
+      assert(im.get1(0,9) == 1);
+      assert(im.get1(2,9) == 1);
+      assert(im.get1(2,0) == 1);
+      assert(im.get1(2,1) == 0);
+      assert(im.get1(99,99) == 1);
+    }
 
-      assert(im.get_int<int32_t>(0,9) == 0xFF00FF);
-      assert(im.get_int<int32_t>(2,9) == -1);
-      assert(im.get_int<uint8_t>(2,9) == 255);
-      assert(im.get_int<int8_t>(2,9) == -1);
+    { // 1bpp image, w*h % 8 != 0
+      Image im(99,101, IMAGE_1);
+      im.fill1(1);
+      assert(im.width() == 99);
+      assert(im.height() == 101);
+      assert(im.type() == IMAGE_1);
+      assert(im.get1(0,0) == 1);
+      assert(im.get1(98,100) == 1);
+      assert(im.dsize() == 1250);
+      im.fill1(0);
+      assert(im.get1(0,0) == 0);
+      assert(im.get1(98,100) == 0);
+
+      im.set1(0,9, 1);
+      im.set1(2,9, 5);
+      im.set1(2,0, 2);
+      im.set1(2,1, 0);
+      im.set1(98,100, 1);
+      assert(im.get1(0,9) == 1);
+      assert(im.get1(2,9) == 1);
+      assert(im.get1(2,0) == 1);
+      assert(im.get1(2,1) == 0);
+      assert(im.get1(98,100) == 1);
     }
 
     { // double image
-      Image im(100,100, sizeof(double));
+      Image im(100,100, IMAGE_DOUBLE);
+      im.fillD(0.123);
       assert(im.width() == 100);
       assert(im.height() == 100);
-      assert(im.bpp() == sizeof(double));
+      assert(im.type() == IMAGE_DOUBLE);
+      assert(im.getD(0,0) == 0.123);
+      assert(im.getD(99,99) == 0.123);
 
-      im.set<double>(0,1, 1);
-      im.set<double>(0,2, 1e-8);
+      im.setD(0,1, 1);
+      im.setD(0,2, 1e-8);
 
-      assert(im.get<double>(0,1) == 1);
-      assert(im.get<double>(0,2) == 1e-8);
+      assert(im.getD(0,1) == 1);
+      assert(im.getD(0,2) == 1e-8);
     }
 
 

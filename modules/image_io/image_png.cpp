@@ -138,11 +138,11 @@ image_load_png(const std::string & file, const int scale){
 
   ImageSourcePNG SRC(file);
   iPoint size = SRC.size();
-  Image img(size.x, size.y, 32);
+  Image img(size.x, size.y, IMAGE_32ARGB);
 
   for (int y=0; y<size.y; ++y){
     SRC.goto_line(y);
-    for (int x=0; x<size.x; ++x) img.set(x,y, SRC.get_col(x));
+    for (int x=0; x<size.x; ++x) img.set32(x,y, SRC.get_col(x));
   }
   return img;
 }
@@ -176,6 +176,9 @@ image_save_png(const Image & im, const std::string & file){
   png_structp png_ptr = NULL;
   png_infop info_ptr = NULL;
   png_bytep buf = NULL;
+
+  if (im.type() != IMAGE_32ARGB)
+    throw Err() << "PNG error: only 32-bpp images are supported";
 
   try {
 
@@ -241,7 +244,7 @@ image_save_png(const Image & im, const std::string & file){
 
     for (int y=0; y<im.height(); y++){
       for (int x=0; x<im.width(); x++){
-        int c = im.get<uint32_t>(x, y);
+        int c = im.get32(x, y);
 
 /*
         switch (color_type){
