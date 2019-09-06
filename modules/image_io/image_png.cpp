@@ -177,9 +177,6 @@ image_save_png(const Image & im, const std::string & file){
   png_infop info_ptr = NULL;
   png_bytep buf = NULL;
 
-  if (im.type() != IMAGE_32ARGB)
-    throw Err() << "PNG error: only 32-bpp images are supported";
-
   try {
 
     outfile = fopen(file.c_str(), "wb");
@@ -200,43 +197,60 @@ image_save_png(const Image & im, const std::string & file){
     png_init_io(png_ptr, outfile);
 
 
-    // png header
-    int color_type = PNG_COLOR_TYPE_RGB_ALPHA;
+    // Choose default PNG color type
+    int color_type;
 
-/*
-    if (image_classify_alpha(im) > 0)
+    switch (im.type()){
+      case IMAGE_32ARGB: color_type = PNG_COLOR_TYPE_RGB_ALPHA; break;
+      case IMAGE_24RGB:  color_type = PNG_COLOR_TYPE_RGB; break;
+      case IMAGE_16:     color_type = PNG_COLOR_TYPE_GRAY; break;
+      case IMAGE_8:      color_type = PNG_COLOR_TYPE_GRAY; break;
+      case IMAGE_8PAL:   color_type = PNG_COLOR_TYPE_PALETTE; break;
+      case IMAGE_1:      color_type = PNG_COLOR_TYPE_PALETTE; break;
+      case IMAGE_FLOAT:  color_type = PNG_COLOR_TYPE_RGB; break;
+      case IMAGE_DOUBLE: color_type = PNG_COLOR_TYPE_RGB; break;
+      case IMAGE_UNKNOWN: color_type = PNG_COLOR_TYPE_RGB; break;
+    }
 
-    if (!color) color_type = PNG_COLOR_TYPE_GRAY;
-    if ((fullc || fulla) && color)  color_type = PNG_COLOR_TYPE_RGB;
-    if (alpha && color_type!=PNG_COLOR_TYPE_PALETTE)
-      color_type |= PNG_COLOR_MASK_ALPHA;
-*/
+    // TODO: set PNG color type from options
 
     png_set_IHDR(png_ptr, info_ptr, im.width(), im.height(),
        8, color_type, PNG_INTERLACE_NONE,
        PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 
-/*
     // png palette
+    Image im8 = im;
     if (color_type == PNG_COLOR_TYPE_PALETTE){
-      png_color pcolors[256];
-      for (int i=0; i<mc; i++){
-        pcolors[i].red   = colors[i] & 0xFF;
-        pcolors[i].green = (colors[i] >>8) & 0xFF;
-        pcolors[i].blue  = (colors[i] >>16) & 0xFF;
-      }
-      png_set_PLTE(png_ptr, info_ptr, pcolors, mc);
 
-      if (alpha){
-       // tRNS
-        png_byte trans[256];
-        for (int i=0; i<mc; i++){
-          trans[i] = (colors[i]>>24) & 0xFF;
-        }
-        png_set_tRNS(png_ptr, info_ptr, trans, mc, 0);
+      int maxcol = 256;
+      if (im8.type()==IMAGE_1){
+        maxcol = 2;
+        im8.cmap[0]=0xFF000000;
+        im8.cmap[1]=0xFFFFFFFF;
       }
+      else if (im8.type()!=IMAGE_8PAL){
+        std::vector<uint32_t> colors = image_colormap(im);
+        Image im8 = image_remap(im, colors);
+        maxcol = colors.size();
+      }
+
+      png_color pcolors[maxcol];
+      for (int i=0; i<maxcol; i++){
+        pcolors[i].red   = (im8.cmap[i] >>16) & 0xFF;
+        pcolors[i].green = (im8.cmap[i] >>8)  & 0xFF;
+        pcolors[i].blue  =  im8.cmap[i] & 0xFF;
+      }
+      png_set_PLTE(png_ptr, info_ptr, pcolors, maxcol);
+
+      //transparent palette colors
+      png_byte trans[maxcol];
+      bool is_transp = false;
+      for (int i=0; i<maxcol; i++){
+        trans[i] = (im8.cmap[i]>>24) & 0xFF;
+        if (trans[i] != 0xFF) is_transp = true;
+      }
+      if (is_transp) png_set_tRNS(png_ptr, info_ptr, trans, maxcol, 0);
     }
-*/
 
     png_write_info(png_ptr, info_ptr);
     png_bytep buf = (png_bytep)png_malloc(png_ptr, im.width()*4);
@@ -244,39 +258,33 @@ image_save_png(const Image & im, const std::string & file){
 
     for (int y=0; y<im.height(); y++){
       for (int x=0; x<im.width(); x++){
-        int c = im.get32(x, y);
-
-/*
+        uint32_t c;
         switch (color_type){
         case PNG_COLOR_TYPE_GRAY:
-          buf[x]   = c & 0xFF;
+          buf[x] = im.get_grey8(x, y);
           break;
         case PNG_COLOR_TYPE_GRAY_ALPHA:
-          buf[2*x]   = c & 0xFF;
-          buf[2*x+1] = (c >> 24) & 0xFF;
+          ((uint16_t*)buf)[x]  = im.get_agrey8(x, y);
           break;
         case PNG_COLOR_TYPE_RGB:
-          buf[3*x]   = c & 0xFF;
+          c = im.get_rgb(x, y);
+          buf[3*x]   = (c >> 16) & 0xFF;
           buf[3*x+1] = (c >> 8) & 0xFF;
-          buf[3*x+2] = (c >> 16) & 0xFF;
+          buf[3*x+2] = c & 0xFF;
           break;
         case PNG_COLOR_TYPE_RGB_ALPHA:
-          buf[4*x]   = c & 0xFF;
+          c = im.get_argb(x, y);
+          buf[4*x+3] = (c>>24) & 0xFF;
+          c = color_rem_transp(c, false); // unscale color!
+          buf[4*x]   = (c >> 16) & 0xFF;
           buf[4*x+1] = (c >> 8) & 0xFF;
-          buf[4*x+2] = (c >> 16) & 0xFF;
-          buf[4*x+3] = (c >> 24) & 0xFF;
+          buf[4*x+2] = c & 0xFF;
           break;
         case PNG_COLOR_TYPE_PALETTE:
-          for (int i=0; i<mc; i++)
-            if (colors[i] == c) {buf[x] = (unsigned char)i; break;}
+          if (im8.type() == IMAGE_8PAL) buf[x] = im8.get8(x,y);
+          else if (im8.type() == IMAGE_1) buf[x] = (uint8_t)im8.get1(x,y);
           break;
         }
-*/
-          buf[4*x+3] = (c >> 24) & 0xFF;  // A
-          c = color_rem_transp(c, false); // scale color!
-          buf[4*x] = (c >> 16) & 0xFF;  // R
-          buf[4*x+1] = (c >> 8) & 0xFF;   // G
-          buf[4*x+2] = c & 0xFF;          // B
       }
       png_write_row(png_ptr, buf);
     }
