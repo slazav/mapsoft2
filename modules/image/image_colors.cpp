@@ -154,11 +154,13 @@ image_colormap(const Image & img){
     // Transfer all points which are above median to a new box
     box_t newbox; newbox.pixels = 0;
     auto it = bv[bi].hist.begin();
-    ++it; // always keep the first value!
     uint64_t count=0;
+    int first = -1;
     while (it != bv[bi].hist.end()){
       uint8_t key = (it->first >> (bv[bi].maxdim*8)) & 0xFF;
-      if (key<median) {it++; continue;}
+      if (first == -1) first = key;
+
+      if (key==first || key<median) {it++; continue;}
       newbox.hist[it->first] = it->second;
       newbox.pixels += it->second;
       bv[bi].pixels -= it->second;
@@ -168,11 +170,13 @@ image_colormap(const Image & img){
     bv[bi].maxspread = 0;
     bv.push_back(newbox);
 
-    //std::cerr << "Split box: "
-    //          << "  pixels: " << bv[bi].pixels
-    //          << " + " << newbox.pixels << "\n"
-    //          << "  colors: " << bv[bi].hist.size()
-    //          << " + " << newbox.hist.size() << "\n";
+/*
+    std::cerr << "Split box: "
+              << "  pixels: " << bv[bi].pixels
+              << " + " << newbox.pixels << "\n"
+              << "  colors: " << bv[bi].hist.size()
+              << " + " << newbox.hist.size() << "\n";
+*/
   }
 
   // Make colormap from the box vector
