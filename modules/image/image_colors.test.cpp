@@ -24,6 +24,9 @@ main(){
     assert(color_rem_transp(0x00FF00FF, 1) == 0x00000000);
     assert(color_rem_transp(0xFF00FFFF, 1) == 0xFF00FFFF);
 
+    assert(color_argb(0,1,2,3) == 0x00000000);
+    assert(color_argb(0xFF,1,2,3) == 0xFF010203);
+    assert(color_argb(0x80,2,4,6) == 0x80010203);
 
     uint32_t colors[256];
 

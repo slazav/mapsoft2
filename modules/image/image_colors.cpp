@@ -20,6 +20,16 @@ color_dist(const uint32_t c1, const uint32_t c2){
     pow( (int)(c1&0xFF) - (int)(c2&0xFF), 2));
 }
 
+// Assemble 32-bit color from a,r,g,b components.
+// Prescaled semi-transparent colors are used
+uint32_t color_argb(const uint8_t a, const uint8_t r,
+                    const uint8_t g, const uint8_t b){
+  if (a==0) return 0;
+  if (a==0xFF) return 0xFF000000 + ((uint32_t)r<<16) + ((uint32_t)g<<8) + b;
+  return ((uint32_t)a<<24) + ((uint32_t)r*a/256<<16) +
+         ((uint32_t)g*a/256<<8) + ((uint32_t)b*a/256);
+}
+
 // remove transparency (for scaled colors)
 uint32_t color_rem_transp(const uint32_t c, const bool gifmode){
   int a = (c>>24)&0xFF;
