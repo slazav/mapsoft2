@@ -234,6 +234,11 @@ image_remap(const Image & img, const std::vector<uint32_t> & cmap){
       img1.set8(x,y,i0);
     }
   }
+
+  // fill image colormap
+  for (int i=0; i<256; ++i)
+    img1.cmap[i] = i<cmap.size()? cmap[i]: 0xFF000000;
+
   return img1;
 }
 
