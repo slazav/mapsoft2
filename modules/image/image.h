@@ -8,7 +8,6 @@
 #include <err/err.h>
 #include <geom/rect.h>
 
-
 /*
 An image: 2d array of arbitrary data.
 */
@@ -27,6 +26,33 @@ enum ImageDataType {
   IMAGE_DOUBLE, // double-value pixel
   IMAGE_UNKNOWN,// unknown data format
 };
+
+/*********************************************************************/
+// Luminance (from ITU-R BT.601.5)
+#define COLOR_LUMINR (0.2989)
+#define COLOR_LUMING (0.5866)
+#define COLOR_LUMINB (0.1145)
+
+/*********************************************************************/
+// a few color-handling functions
+
+// distance between two colors
+double color_dist(const uint32_t c1, const uint32_t c2);
+
+// Assemble 32-bit color from a,r,g,b components.
+// Prescaled semi-transparent colors are used
+uint32_t color_argb(const uint8_t a, const uint8_t r,
+                    const uint8_t g, const uint8_t b);
+
+// Remove transparency (with color scaling).
+// if gifmode = true, then keep fully transparent colors.
+uint32_t color_rem_transp(const uint32_t c, const bool gifmode);
+
+// Convert RGB color to 8-bit greyscale
+uint8_t color_rgb_to_grey8(const uint32_t c);
+
+// Convert RGB color to 16-bit greyscale
+uint16_t color_rgb_to_grey16(const uint32_t c);
 
 /*********************************************************************/
 // base class
@@ -155,9 +181,11 @@ class Image {
       return 0;
     }
 
-    // Get color. A fallback function to be used if data type
-    // is unknown.
-    uint32_t get_col(const size_t x, const size_t y) const{
+    /******************************************************/
+    // universal get functions, should work for any image type
+
+    // Get ARGB (prescaled) color for any image type.
+    uint32_t get_argb(const size_t x, const size_t y) const{
       switch (t){
         case IMAGE_32ARGB: return get32(x,y);
         case IMAGE_24RGB:  return get24(x,y);
@@ -170,6 +198,35 @@ class Image {
         case IMAGE_UNKNOWN: return getUcol(x,y);
       }
       return 0;
+    }
+
+    // Get RGB color for any image type.
+    uint32_t get_rgb(const size_t x, const size_t y) const{
+      if (t==IMAGE_24RGB) return get24(x,y);
+      return color_rem_transp(get_argb(x,y),false);
+    }
+
+    // Get 8-bit grey color for any image type.
+    uint8_t get_grey8(const size_t x, const size_t y) const{
+      if (t==IMAGE_8)  return get8(x,y);
+      if (t==IMAGE_16) return get16(x,y)>>8;
+      return color_rgb_to_grey8(get_rgb(x,y));
+    }
+
+    // Get alpha channel + 8-bit grey color for any image type.
+    uint16_t get_agrey8(const size_t x, const size_t y) const{
+      if (t==IMAGE_8)  return 0xFF + get8(x,y);
+      if (t==IMAGE_16) return 0xFF + (get16(x,y)>>8);
+      uint32_t c = get_argb(x,y);
+      return ((c>>16) & 0xFF00) +
+             color_rgb_to_grey8(color_rem_transp(c,false));
+    }
+
+    // Get 16-bit grey color for any image type.
+    uint16_t get_grey16(const size_t x, const size_t y) const{
+      if (t==IMAGE_8)  return get8(x,y)<<8;
+      if (t==IMAGE_16) return get16(x,y);
+      return color_rgb_to_grey16(get_rgb(x,y));
     }
 
     /******************************************************/

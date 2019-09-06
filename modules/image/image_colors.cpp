@@ -10,45 +10,6 @@ enum methodForLargest {LARGE_NORM, LARGE_LUM};
 enum methodForRep {REP_CENTER_BOX, REP_AVERAGE_COLORS, REP_AVERAGE_PIXELS};
 enum methodForSplit {SPLIT_MAX_PIXELS, SPLIT_MAX_SPREAD, SPLIT_MAX_COLORS};
 
-// distance between two colors
-double
-color_dist(const uint32_t c1, const uint32_t c2){
-  return sqrt(
-    pow( (int)((c1>>24)&0xFF)-(int)((c2>>24)&0xFF), 2) +
-    pow( (int)((c1>>16)&0xFF)-(int)((c2>>16)&0xFF), 2) +
-    pow( (int)((c1>> 8)&0xFF)-(int)((c2>>8)&0xFF), 2) +
-    pow( (int)(c1&0xFF) - (int)(c2&0xFF), 2));
-}
-
-// Assemble 32-bit color from a,r,g,b components.
-// Prescaled semi-transparent colors are used
-uint32_t color_argb(const uint8_t a, const uint8_t r,
-                    const uint8_t g, const uint8_t b){
-  if (a==0) return 0;
-  if (a==0xFF) return 0xFF000000 + ((uint32_t)r<<16) + ((uint32_t)g<<8) + b;
-  return ((uint32_t)a<<24) + ((uint32_t)r*a/256<<16) +
-         ((uint32_t)g*a/256<<8) + ((uint32_t)b*a/256);
-}
-
-// remove transparency (for scaled colors)
-uint32_t color_rem_transp(const uint32_t c, const bool gifmode){
-  int a = (c>>24)&0xFF;
-  if (a==0) return gifmode? 0 : c|0xFFFFFFFF;
-  if (a==255) return c;
-
-  int r = (c>>16)&0xFF;
-  int g = (c>> 8)&0xFF;
-  int b = c&0xFF;
-  if (a>0 && a<0xFF){
-    r = (r*256)/a;
-    g = (g*256)/a;
-    b = (b*256)/a;
-    if (r>0xFF) r=0xFF;
-    if (g>0xFF) g=0xFF;
-    if (b>0xFF) b=0xFF;
-  }
-  return (0xFF<<24)+(r<<16)+(g<<8)+b;
-}
 
 /**********************************************************/
 // Create a colormap.
@@ -308,7 +269,7 @@ image_classify_color(const Image & img, uint32_t *colors, int clen){
 
   for (int y=0; y<img.height(); ++y){
     for (int x=0; x<img.width(); ++x){
-      uint32_t c = img.get_col(x, y);
+      uint32_t c = img.get_argb(x, y);
       int r = (c >> 16) & 0xFF;
       int g = (c >> 8) & 0xFF;
       int b = c & 0xFF;
