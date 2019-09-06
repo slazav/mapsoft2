@@ -8,6 +8,7 @@
 
 enum methodForLargest {LARGE_NORM, LARGE_LUM};
 enum methodForRep {REP_CENTER_BOX, REP_AVERAGE_COLORS, REP_AVERAGE_PIXELS};
+enum methodForSplit {SPLIT_MAX_PIXELS, SPLIT_MAX_SPREAD, SPLIT_MAX_COLORS};
 
 // distance between two colors
 double
@@ -49,7 +50,8 @@ image_colormap(const Image & img){
   bool all_colors = false;
   int req_colors = 256;
   methodForLargest method_for_largest = LARGE_NORM;
-  methodForRep method_for_rep = REP_AVERAGE_PIXELS;
+  methodForRep     method_for_rep = REP_AVERAGE_PIXELS;
+  methodForSplit   method_for_split = SPLIT_MAX_SPREAD;
   int transp_mode = 1;
 
   if (img.type() != IMAGE_32ARGB) throw Err() <<
@@ -59,6 +61,9 @@ image_colormap(const Image & img){
   struct box_t {
     std::map<uint32_t, uint64_t> hist;
     int64_t pixels;
+    int maxdim;
+    double maxspread;
+    box_t(): pixels(0), maxdim(-1), maxspread(0) {}
   };
   std::vector<box_t> bv;
   bv.push_back(box_t());
@@ -83,52 +88,69 @@ image_colormap(const Image & img){
     return ret;
   }
 
+  // component weights
+  double weight[4]; // b-r-g-a!
+  switch (method_for_largest){
+    case LARGE_NORM:
+      weight[0]=weight[1]=weight[2]=weight[3] = 1;
+      break;
+    case LARGE_LUM:
+      weight[0] = COLOR_LUMINB;
+      weight[1] = COLOR_LUMING;
+      weight[2] = COLOR_LUMINR;
+      weight[3] = 1;
+      break;
+  }
+
   // Step 2: median cut
   while (bv.size() < req_colors){
 
-    // Find the largest (by number of pixels) box for splitting.
+    // Calculate max spread and max dimension for each box if needed
+    for (int i=0; i<bv.size(); ++i){
+      if (bv[i].maxdim>0) continue;
+
+      bv[i].maxspread=0;
+      for (int pl = 0; pl<4; ++pl){
+        uint8_t minv = 0xFF, maxv = 0;
+        for (auto const & c:bv[i].hist){
+          uint8_t v = (c.first >> (pl*8)) & 0xFF;
+          if (minv > v) minv = v;
+          if (maxv < v) maxv = v;
+        }
+        double spread = (maxv-minv) * weight[pl];
+        if (bv[i].maxspread < spread){
+          bv[i].maxspread = spread; bv[i].maxdim = pl;
+        }
+      }
+    }
+
+    // Find the largest box for splitting.
     // The box should contain at least two colors.
     int bi=-1; // box index
-    int64_t bs=0;
-    for (int i=0; i<bv.size(); ++i){
-      if (bv[i].hist.size() > 1 && bs < bv[i].pixels) {
-        bs = bv[i].pixels; bi = i;
+    {
+      int64_t bs=0;
+      double max = 0;
+      for (int i=0; i<bv.size(); ++i){
+        if (bv[i].hist.size() < 2) continue;
+
+        switch (method_for_split) {
+          case SPLIT_MAX_SPREAD:
+            // find maximum by maxdim spread
+            if (bv[i].maxspread>max) {max=bv[i].maxspread; bi=i;}
+            break;
+          case SPLIT_MAX_PIXELS:
+            // find maximum by number of pixels
+            if (bs < bv[i].pixels) { bs = bv[i].pixels; bi=i;}
+          case SPLIT_MAX_COLORS:
+           // find maximum by number of colors
+           if (bs < bv[i].hist.size()) { bs = bv[i].hist.size(); bi=i;}
+        }
       }
     }
     if (bi<0) break; // nothing to split
 
-    // component weights
-    double weight[4]; // b-r-g-a!
-    switch (method_for_largest){
-      case LARGE_NORM:
-        weight[0]=weight[1]=weight[2]=weight[3] = 1;
-        break;
-      case LARGE_LUM:
-        weight[0] = COLOR_LUMINB;
-        weight[1] = COLOR_LUMING;
-        weight[2] = COLOR_LUMINR;
-        weight[3] = 1;
-        break;
-    }
 
-    // Find box boundaries (min and max of each color component).
-    // Find spread value for each component (using weight array).
-    // Find component with the largest spread.
-    double maxspread = 0;
-    int maxdim = -1;
-    for (int pl = 0; pl<4; ++pl){
-      uint8_t minv = 0xFF, maxv = 0;
-      for (auto const & c:bv[bi].hist){
-        uint8_t v = (c.first >> (pl*8)) & 0xFF;
-        if (minv > v) minv = v;
-        if (maxv < v) maxv = v;
-      }
-      double spread = (maxv-minv) * weight[pl];
-      if (maxspread < spread){
-        maxspread = spread; maxdim = pl;
-      }
-    }
-    assert(maxdim>=0 && maxdim < 4);
+    assert(bv[bi].maxdim>=0 && bv[bi].maxdim < 4);
 
     // Sort the histogram using component with the
     // largest spread.
@@ -137,7 +159,7 @@ image_colormap(const Image & img){
     // is done in the histogram.
     std::map<uint8_t, uint64_t> dim_hist;
     for (auto const & c:bv[bi].hist){
-      uint8_t key = (c.first >> (maxdim*8)) & 0xFF;
+      uint8_t key = (c.first >> (bv[bi].maxdim*8)) & 0xFF;
       if (dim_hist.count(key) == 0) dim_hist[key] = c.second;
       else dim_hist[key]+=c.second;
     }
@@ -164,13 +186,15 @@ image_colormap(const Image & img){
     ++it; // always keep the first value!
     uint64_t count=0;
     while (it != bv[bi].hist.end()){
-      uint8_t key = (it->first >> (maxdim*8)) & 0xFF;
+      uint8_t key = (it->first >> (bv[bi].maxdim*8)) & 0xFF;
       if (key<median) {it++; continue;}
       newbox.hist[it->first] = it->second;
       newbox.pixels += it->second;
       bv[bi].pixels -= it->second;
       it = bv[bi].hist.erase(it);
     }
+    bv[bi].maxdim = -1;
+    bv[bi].maxspread = 0;
     bv.push_back(newbox);
 
     //std::cerr << "Split box: "
