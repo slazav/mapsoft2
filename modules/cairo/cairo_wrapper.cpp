@@ -184,20 +184,11 @@ CairoExtra::render_border(const iRect & range, const dLine & brd, const int bgco
 Cairo::RefPtr<Cairo::SurfacePattern>
 CairoExtra::img2patt(const Image & img, double sc){
   try{
-    const Cairo::Format format = Cairo::FORMAT_ARGB32;
-    if (img.type() != IMAGE_32ARGB)
-      throw Err() << "CairoWrapper: only 32-bpp images are supported";
-    if (Cairo::ImageSurface::format_stride_for_width(format, img.width())
-        != img.width()*4)
-      throw Err() << "CairoWrapper: non-compatable data";
-
-    Cairo::RefPtr<Cairo::ImageSurface> patt_surf =
-      Cairo::ImageSurface::create((unsigned char*)img.data(),
-        format, img.width(), img.height(), img.width()*4);
+    auto surf = image_to_surface(img);
     Cairo::RefPtr<Cairo::SurfacePattern> patt =
-      Cairo::SurfacePattern::create(patt_surf);
+      Cairo::SurfacePattern::create(surf);
     Cairo::Matrix M=Cairo::identity_matrix();
-    M.translate(patt_surf->get_width()/2.0, patt_surf->get_height()/2.0);
+    M.translate(surf->get_width()/2.0, surf->get_height()/2.0);
     M.scale(sc,sc);
     patt->set_matrix(M);
     return patt;
@@ -212,37 +203,21 @@ CairoExtra::img2patt(const Image & img, double sc){
 void
 CairoWrapper::set_surface_img(int w_, int h_){
   w = w_; h=h_;
-  image=Image();
-  Cairo::Format format = Cairo::FORMAT_ARGB32;
-  // check if surface raw data compatable with iImage
-  if (image.type() != IMAGE_32ARGB)
-    throw Err() << "CairoWrapper: only 32-bpp images are supported";
-  if (Cairo::ImageSurface::format_stride_for_width(format, w)!= w*4)
-    throw Err() << "CairoWrapper: non-compatable data";
+  image=Image(w, h, IMAGE_32ARGB);
 
-  // create surface
-  surface = Cairo::ImageSurface::create(format, w, h);
-
+  auto surf = image_to_surface(image);
   Cairo::RefPtr<CairoExtra>::operator=
-    (cast_static(Cairo::Context::create(surface)));
+    (cast_static(Cairo::Context::create(surf)));
 }
 
 void
 CairoWrapper::set_surface_img(const Image & img){
   w = img.width(); h=img.height();
   image=img; // increase refcount of image
-  Cairo::Format format = Cairo::FORMAT_ARGB32;
-  // check if surface raw data compatable with Image
-  if (img.type() != IMAGE_32ARGB)
-    throw Err() << "CairoWrapper: only 32-bpp images are supported";
-  if (Cairo::ImageSurface::format_stride_for_width(format, img.width())
-      != img.width()*4)
-    throw Err() << "CairoWrapper: non-compatable data";
 
-  surface = Cairo::ImageSurface::create((unsigned char*)img.data(),
-      format, img.width(), img.height(), img.width()*4);
+  auto surf = image_to_surface(image);
   Cairo::RefPtr<CairoExtra>::operator=
-    (cast_static(Cairo::Context::create(surface)));
+    (cast_static(Cairo::Context::create(surf)));
 }
 
 void
