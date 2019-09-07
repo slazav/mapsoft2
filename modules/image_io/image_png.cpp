@@ -170,7 +170,8 @@ image_load_png(const std::string & file, const int scale){
 
 
 void
-image_save_png(const Image & im, const std::string & file){
+image_save_png(const Image & im, const std::string & file,
+               const Opt & opt){
 
   FILE *outfile = NULL;
   png_structp png_ptr = NULL;
@@ -199,23 +200,33 @@ image_save_png(const Image & im, const std::string & file){
 
     // Choose default PNG color type
     int color_type;
-
+    int bits = 8; // only 8-bit colors are supported now
     switch (im.type()){
       case IMAGE_32ARGB: color_type = PNG_COLOR_TYPE_RGB_ALPHA; break;
-      case IMAGE_24RGB:  color_type = PNG_COLOR_TYPE_RGB; break;
+      case IMAGE_24RGB:  color_type = PNG_COLOR_TYPE_RGB;  break;
       case IMAGE_16:     color_type = PNG_COLOR_TYPE_GRAY; break;
       case IMAGE_8:      color_type = PNG_COLOR_TYPE_GRAY; break;
-      case IMAGE_8PAL:   color_type = PNG_COLOR_TYPE_PALETTE; break;
       case IMAGE_1:      color_type = PNG_COLOR_TYPE_PALETTE; break;
-      case IMAGE_FLOAT:  color_type = PNG_COLOR_TYPE_RGB; break;
-      case IMAGE_DOUBLE: color_type = PNG_COLOR_TYPE_RGB; break;
-      case IMAGE_UNKNOWN: color_type = PNG_COLOR_TYPE_RGB; break;
+      case IMAGE_8PAL:   color_type = PNG_COLOR_TYPE_PALETTE; break;
+      case IMAGE_FLOAT:  color_type = PNG_COLOR_TYPE_RGB;  break;
+      case IMAGE_DOUBLE: color_type = PNG_COLOR_TYPE_RGB;  break;
+      case IMAGE_UNKNOWN: color_type = PNG_COLOR_TYPE_RGB;  break;
     }
 
-    // TODO: set PNG color type from options
+    // set PNG color type from options
+    std::string str;
+    str = opt.get("png_format", "");
+    if (str != "") {
+      if      (str == "argb")  color_type = PNG_COLOR_TYPE_RGB_ALPHA;
+      else if (str == "rgb")   color_type = PNG_COLOR_TYPE_RGB;
+      else if (str == "grey")  color_type = PNG_COLOR_TYPE_GRAY;
+      else if (str == "agrey") color_type = PNG_COLOR_TYPE_GRAY_ALPHA;
+      else if (str == "pal")   color_type = PNG_COLOR_TYPE_PALETTE;
+      else throw Err() << "image_save_png: unknown png_format setting: " << str << "\n";
+    }
 
     png_set_IHDR(png_ptr, info_ptr, im.width(), im.height(),
-       8, color_type, PNG_INTERLACE_NONE,
+       bits, color_type, PNG_INTERLACE_NONE,
        PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 
     // png palette
@@ -229,8 +240,8 @@ image_save_png(const Image & im, const std::string & file){
         im8.cmap[1]=0xFFFFFFFF;
       }
       else if (im8.type()!=IMAGE_8PAL){
-        std::vector<uint32_t> colors = image_colormap(im);
-        Image im8 = image_remap(im, colors);
+        std::vector<uint32_t> colors = image_colormap(im, opt);
+        im8 = image_remap(im, colors, opt);
         maxcol = colors.size();
       }
 
@@ -253,6 +264,7 @@ image_save_png(const Image & im, const std::string & file){
     }
 
     png_write_info(png_ptr, info_ptr);
+    // for 16-bit RGB this will not be enough!
     png_bytep buf = (png_bytep)png_malloc(png_ptr, im.width()*4);
     if (!buf) throw Err() << "PNG: malloc error";
 
@@ -281,8 +293,10 @@ image_save_png(const Image & im, const std::string & file){
           buf[4*x+2] = c & 0xFF;
           break;
         case PNG_COLOR_TYPE_PALETTE:
-          if (im8.type() == IMAGE_8PAL) buf[x] = im8.get8(x,y);
-          else if (im8.type() == IMAGE_1) buf[x] = (uint8_t)im8.get1(x,y);
+          if (im8.type() == IMAGE_8PAL)
+            buf[x] = im8.get8(x,y);
+          else if (im8.type() == IMAGE_1)
+            buf[x] = (uint8_t)im8.get1(x,y);
           break;
         }
       }

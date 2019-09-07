@@ -203,6 +203,9 @@ class Image {
     // Get RGB color for any image type.
     uint32_t get_rgb(const size_t x, const size_t y) const{
       if (t==IMAGE_24RGB) return get24(x,y);
+      if (t==IMAGE_16)    return get16col(x,y);
+      if (t==IMAGE_8)     return get8col(x,y);
+      if (t==IMAGE_1)     return get1col(x,y);
       return color_rem_transp(get_argb(x,y),false);
     }
 

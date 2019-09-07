@@ -265,10 +265,7 @@ image_remap(const Image & img, const std::vector<uint32_t> & cmap, const Opt & o
 
   // we return 8bpp image, palette length should be 1..256
   if (cmap.size() < 1 || cmap.size() > 256)
-    throw Err() << "image_color_reduce: palette length is out of range";
-
-  if (img.type() != IMAGE_32ARGB) throw Err() <<
-    "image_color_reduce: only 32-bpp images are supported";
+    throw Err() << "image_remap: palette length is out of range";
 
   // Construct the new image
   Image img1(img.width(), img.height(), IMAGE_8PAL);
