@@ -135,13 +135,17 @@ image_colormap(const Image & img){
       else dim_hist[key]+=c.second;
     }
 
-    // Find median point.
+    // should be at least two colors in the largest dimension
+    assert(dim_hist.size()>1);
+
+    // Find median point. It should not be the first point.
     uint64_t sum = 0;
     uint8_t median = 0;
-    for (auto const & c:dim_hist){
-      sum += c.second;
+    for (auto c = dim_hist.begin(); c!=dim_hist.end(); ++c){
+      sum += c->second;
+      if (c==dim_hist.begin()) continue; // not the first point
       if (sum < bv[bi].pixels/2) continue;
-      median = c.first;
+      median = c->first;
       break;
     }
 
@@ -155,12 +159,9 @@ image_colormap(const Image & img){
     box_t newbox; newbox.pixels = 0;
     auto it = bv[bi].hist.begin();
     uint64_t count=0;
-    int first = -1;
     while (it != bv[bi].hist.end()){
       uint8_t key = (it->first >> (bv[bi].maxdim*8)) & 0xFF;
-      if (first == -1) first = key;
-
-      if (key==first || key<median) {it++; continue;}
+      if (key<median) {++it; continue;}
       newbox.hist[it->first] = it->second;
       newbox.pixels += it->second;
       bv[bi].pixels -= it->second;
@@ -169,6 +170,9 @@ image_colormap(const Image & img){
     bv[bi].maxdim = -1;
     bv[bi].maxspread = 0;
     bv.push_back(newbox);
+
+    assert(bv[bi].pixels > 0);
+    assert(newbox.pixels > 0);
 
 /*
     std::cerr << "Split box: "
