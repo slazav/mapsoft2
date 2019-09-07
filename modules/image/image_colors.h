@@ -4,13 +4,15 @@
 #include <stdint.h>
 #include <vector>
 #include "image.h"
+#include "opt/opt.h"
 
 // Create a colormap.
 // Based on pnmcolormap.c from netpbm package.
-std::vector<uint32_t> image_colormap(const Image & img);
+std::vector<uint32_t> image_colormap(const Image & img, const Opt & opt = Opt());
 
 // Reduce number of colors
-Image image_remap(const Image & img, const std::vector<uint32_t> & cmap);
+Image image_remap(const Image & img, const std::vector<uint32_t> & cmap,
+                  const Opt & opt = Opt());
 
 // Image tranparency (only for 32bpp images)
 // returns 0: fully non-transparent image.

@@ -8,25 +8,52 @@
 
 enum methodForLargest {LARGE_NORM, LARGE_LUM};
 enum methodForRep {REP_CENTER_BOX, REP_AVERAGE_COLORS, REP_AVERAGE_PIXELS};
-enum methodForSplit {SPLIT_MAX_PIXELS, SPLIT_MAX_SPREAD, SPLIT_MAX_COLORS};
+enum methodForSplit {SPLIT_MAX_PIXELS, SPLIT_MAX_DIM, SPLIT_MAX_COLORS};
 
 
 /**********************************************************/
 // Create a colormap.
 // Based on pnmcolormap.c from netpbm package.
 std::vector<uint32_t>
-image_colormap(const Image & img){
+image_colormap(const Image & img, const Opt & opt){
 
-  // parameters -- move to options?
-  bool all_colors = false;
-  int req_colors = 256;
+  // parameters
+  int  req_colors = opt.get("cmap_colors", 256);
+  if (req_colors < 0) throw Err() << "image_colormap: bad "
+     " cmap_colors value: " << opt.get("cmap_colors", "");
+
+  std::string str;
+
   methodForLargest method_for_largest = LARGE_NORM;
-  methodForRep     method_for_rep = REP_AVERAGE_PIXELS;
-  methodForSplit   method_for_split = SPLIT_MAX_SPREAD;
-  int transp_mode = 1;
+  str = opt.get("cmap_dim_method", "norm");
+  if      (str == "norm")  method_for_largest = LARGE_NORM;
+  else if (str == "lumin") method_for_largest = LARGE_LUM;
+  else throw Err() << "image_colormap: unknown "
+                      "cmap_dim_method value: " << str;
 
-  if (img.type() != IMAGE_32ARGB) throw Err() <<
-    "image_color_reduce: only 32-bpp images are supported";
+  methodForRep method_for_rep = REP_AVERAGE_PIXELS;
+  str = opt.get("cmap_rep_method", "meanpix");
+  if      (str == "center")  method_for_rep = REP_CENTER_BOX;
+  else if (str == "meanpix") method_for_rep = REP_AVERAGE_PIXELS;
+  else if (str == "meancol") method_for_rep = REP_AVERAGE_COLORS;
+  else throw Err() << "image_colormap: unknown "
+                      "cmap_rep_method value: " << str;
+
+  methodForSplit method_for_split = SPLIT_MAX_DIM;
+  str = opt.get("cmap_split_method", "maxdim");
+  if      (str == "maxdim")  method_for_split = SPLIT_MAX_DIM;
+  else if (str == "maxpix") method_for_split = SPLIT_MAX_PIXELS;
+  else if (str == "maxcol") method_for_split = SPLIT_MAX_COLORS;
+  else throw Err() << "image_colormap: unknown value "
+                      "for cmap_split_method parameter: " << str;
+
+  int transp_mode = 1;
+  str = opt.get("cmap_alpha", "none");
+  if      (str == "full") transp_mode = 0;
+  else if (str == "none") transp_mode = 1;
+  else if (str == "gif")  transp_mode = 2;
+  else throw Err() << "image_colormap: unknown value "
+                      "for cmap_alpha parameter: " << str;
 
   // make vector with a single box with the whole image histogram
   struct box_t {
@@ -43,8 +70,19 @@ image_colormap(const Image & img){
   // compute the histogram
   for (int y=0; y<img.height(); ++y){
     for (int x=0; x<img.width(); ++x){
-      uint32_t c = img.get32(x,y);
-      if (transp_mode>0) c = color_rem_transp(c, transp_mode>1);
+      uint32_t c;
+      // no transparency
+      if (transp_mode == 1 ||
+          img.type() == IMAGE_24RGB ||
+          img.type() == IMAGE_16 ||
+          img.type() == IMAGE_8 ||
+          img.type() == IMAGE_1)
+        c = img.get_rgb(x,y);
+      else
+        c = img.get_argb(x,y);
+      if (transp_mode==2)
+        c = color_rem_transp(c, 1);
+
       if (bv[0].hist.count(c) == 0) bv[0].hist[c] = 1;
       else ++bv[0].hist[c];
     }
@@ -53,7 +91,7 @@ image_colormap(const Image & img){
   // if we want all colors OR
   // if we want more colors then we have in the image
   // THEN make and return full colormap
-  if (all_colors || bv[0].hist.size() < req_colors) {
+  if (req_colors < 1 || bv[0].hist.size() < req_colors) {
     std::vector<uint32_t> ret;
     for (auto const & c:bv[0].hist) ret.push_back(c.first);
     return ret;
@@ -105,7 +143,7 @@ image_colormap(const Image & img){
         if (bv[i].hist.size() < 2) continue;
 
         switch (method_for_split) {
-          case SPLIT_MAX_SPREAD:
+          case SPLIT_MAX_DIM:
             // find maximum by maxdim spread
             if (bv[i].maxspread>max) {max=bv[i].maxspread; bi=i;}
             break;
@@ -183,6 +221,7 @@ image_colormap(const Image & img){
 */
   }
 
+
   // Make colormap from the box vector
   std::vector<uint32_t> ret;
   for (auto const & b:bv){
@@ -213,9 +252,16 @@ image_colormap(const Image & img){
 
 // Reduce number of colors
 Image
-image_remap(const Image & img, const std::vector<uint32_t> & cmap){
+image_remap(const Image & img, const std::vector<uint32_t> & cmap, const Opt & opt){
 
+  std::string str;
   int transp_mode = 1;
+  str = opt.get("cmap_alpha", "none");
+  if      (str == "full") transp_mode = 0;
+  else if (str == "none") transp_mode = 1;
+  else if (str == "gif")  transp_mode = 2;
+  else throw Err() << "image_remap: unknown value "
+                      "for cmap_alpha parameter: " << str;
 
   // we return 8bpp image, palette length should be 1..256
   if (cmap.size() < 1 || cmap.size() > 256)
@@ -229,8 +275,18 @@ image_remap(const Image & img, const std::vector<uint32_t> & cmap){
   for (int y=0; y<img.height(); ++y){
     for (int x=0; x<img.width(); ++x){
       // get color
-      uint32_t c = img.get32(x,y);
-      if (transp_mode>0) c = color_rem_transp(c, transp_mode>1);
+      uint32_t c;
+      // no transparency
+      if (transp_mode == 1 ||
+          img.type() == IMAGE_24RGB ||
+          img.type() == IMAGE_16 ||
+          img.type() == IMAGE_8 ||
+          img.type() == IMAGE_1)
+        c = img.get_rgb(x,y);
+      else
+        c = img.get_argb(x,y);
+      if (transp_mode==2)
+        c = color_rem_transp(c, 1);
 
       // find nearest palette value
       double d0 = +HUGE_VAL;
@@ -304,4 +360,3 @@ image_classify_color(const Image & img, uint32_t *colors, int clen){
   if (nc>clen) ret+=1;
   return ret;
 }
-
