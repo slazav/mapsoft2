@@ -149,7 +149,8 @@ image_load_gif(const std::string & file, const double scale){
     // scaled image
     int w1 = floor((w-1)/scale+1);
     int h1 = floor((h-1)/scale+1);
-    img = Image(w1,h1, IMAGE_32ARGB);
+    img = Image(w1,h1, IMAGE_8PAL);
+    img.cmap = colors;
 
     /// Main loop
 
@@ -163,7 +164,7 @@ image_load_gif(const std::string & file, const double scale){
 
       for (int x=0; x<w1; ++x){
         int xs = scale==1.0? x:rint(x*scale);
-        img.set32(x,y, colors[GifLine[xs]]);
+        img.set8(x,y, GifLine[xs]);
       }
     }
 
