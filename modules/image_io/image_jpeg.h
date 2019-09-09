@@ -9,7 +9,7 @@
 iPoint image_size_jpeg(const std::string & file);
 
 // load the whole image
-Image image_load_jpeg(const std::string & file, const int scale=1);
+Image image_load_jpeg(const std::string & file, const double scale=1);
 
 // save the whole image
 void image_save_jpeg(const Image & im, const char * file,

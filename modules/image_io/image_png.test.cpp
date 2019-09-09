@@ -568,15 +568,20 @@ main(){
     }
 
     { //scale tests
-      Image I1 = image_load_png("test_png/img_32_def.png", 1);
-      Image I;
+      Image I0 = image_load_png("test_png/img_32_def.png", 1);
       iPoint pt(101,32);
-      for (int sc=1; sc<10; sc++){
-        I = image_load_png("test_png/img_32_def.png", sc);
-        assert(I.width() == (I1.width()-1)/sc+1);
-        assert(I.height() == (I1.height()-1)/sc+1);
-        iPoint pt1 = pt/sc;
-        assert(I.get_rgb(pt1.x, pt1.y) == I1.get_rgb(pt1.x*sc, pt1.y*sc));
+      for (double sc=1; sc<10; sc+=0.8){
+        Image I1 = image_load_png("test_png/img_32_def.png", sc);
+        assert(I1.width() == floor((I0.width()-1)/sc+1));
+        assert(I1.height() == floor((I0.height()-1)/sc+1));
+        iPoint pt1 = (dPoint)pt/sc;
+        assert(I1.get_rgb(pt1.x, pt1.y) == I0.get_rgb(rint(pt1.x*sc), rint(pt1.y*sc)));
+
+        pt = iPoint(I0.width()-1, I0.height()-1);
+        pt1 = (dPoint)pt/sc;
+        assert(pt1.x < I1.width());
+        assert(pt1.y < I1.height());
+        assert(I1.get_rgb(pt1.x, pt1.y) == I0.get_rgb(rint(pt1.x*sc), rint(pt1.y*sc)));
       }
       assert_err(image_load_png("test_png/img_32_def.png", 0),
         "image_load_png: wrong scale: 0");

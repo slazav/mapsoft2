@@ -11,7 +11,7 @@
 iPoint image_size_png(const std::string & file);
 
 // load the whole image
-Image image_load_png(const std::string & file, const int scale=1);
+Image image_load_png(const std::string & file, const double scale=1);
 
 // save the whole image
 void image_save_png(const Image & im, const std::string & file,

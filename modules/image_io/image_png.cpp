@@ -63,7 +63,7 @@ image_size_png(const std::string & file){
 /**********************************************************/
 
 Image
-image_load_png(const std::string & file, const int scale){
+image_load_png(const std::string & file, const double scale){
 
   FILE * infile = NULL;
   png_structp png_ptr = NULL;
@@ -131,8 +131,8 @@ image_load_png(const std::string & file, const int scale){
     if (!row_buf) throw Err() << "PNG: malloc error";
 
     // scaled image
-    int w1 = (w-1)/scale+1;
-    int h1 = (h-1)/scale+1;
+    int w1 = floor((w-1)/scale+1);
+    int h1 = floor((h-1)/scale+1);
     img = Image(w1,h1, IMAGE_32ARGB);
 
     /// Main loop
@@ -140,13 +140,13 @@ image_load_png(const std::string & file, const int scale){
     int line = 0;
     for (int y=0; y<h1; ++y){
 
-      while (line<=y*scale){
+      while (line<=rint(y*scale)){
         png_read_row(png_ptr, row_buf, NULL);
         line++;
       }
 
       for (int x=0; x<w1; ++x){
-        int xs4 = 4*x*scale;
+        int xs4 = 4*(scale==1.0? x:rint(x*scale));
         uint32_t c = color_argb(row_buf[xs4+3], row_buf[xs4],
                                 row_buf[xs4+1], row_buf[xs4+2]);
         img.set32(x,y, c);

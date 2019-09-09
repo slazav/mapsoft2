@@ -65,7 +65,7 @@ image_size_gif(const std::string & file){
 
 /**********************************************************/
 Image
-image_load_gif(const std::string & file, const int scale){
+image_load_gif(const std::string & file, const double scale){
 
   Image img;
   GifFileType *gif = NULL; // gif handler
@@ -150,8 +150,8 @@ image_load_gif(const std::string & file, const int scale){
     if (!GifLine) throw Err() << "image_load_gif: can't allocate memory";
 
     // scaled image
-    int w1 = (w-1)/scale+1;
-    int h1 = (h-1)/scale+1;
+    int w1 = floor((w-1)/scale+1);
+    int h1 = floor((h-1)/scale+1);
     img = Image(w1,h1, IMAGE_32ARGB);
 
     /// Main loop
@@ -159,13 +159,15 @@ image_load_gif(const std::string & file, const int scale){
     int line = 0;
     for (int y=0; y<h1; ++y){
 
-      while (line<=y*scale){
+      while (line<=rint(y*scale)){
         if (DGifGetLine(gif, GifLine, w) == GIF_ERROR) GifErr();
         line++;
       }
 
-      for (int x=0; x<w1; ++x)
-        img.set32(x,y, colors[GifLine[x*scale]]);
+      for (int x=0; x<w1; ++x){
+        int xs = scale==1.0? x:rint(x*scale);
+        img.set32(x,y, colors[GifLine[xs]]);
+      }
     }
 
     throw Err();

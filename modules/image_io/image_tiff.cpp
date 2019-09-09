@@ -44,7 +44,7 @@ iPoint image_size_tiff(const std::string & file){
 /**********************************************************/
 
 Image
-image_load_tiff(const std::string & file, const int scale){
+image_load_tiff(const std::string & file, const double scale){
   TIFF* tif = NULL;
   uint8_t *cbuf = NULL;
   Image img;
@@ -99,8 +99,8 @@ image_load_tiff(const std::string & file, const int scale){
     cbuf = (uint8 *)_TIFFmalloc(scan);
 
     // scaled image
-    int w1 = (w-1)/scale+1;
-    int h1 = (h-1)/scale+1;
+    int w1 = floor((w-1)/scale+1);
+    int h1 = floor((h-1)/scale+1);
     img = Image(w1,h1, IMAGE_32ARGB);
 
     // Main loop
@@ -110,14 +110,14 @@ image_load_tiff(const std::string & file, const int scale){
 
       if (can_skip_lines) line = y*scale;
 
-      while (line<=y*scale){
+      while (line<=rint(y*scale)){
         TIFFReadScanline(tif, cbuf, line);
         line++;
       }
 
       for (int x=0; x<w1; ++x){
         uint32_t c;
-        int xs = x*scale;
+        int xs = scale==1.0? x:rint(x*scale);
         switch (photometric){
 
           case PHOTOMETRIC_PALETTE:

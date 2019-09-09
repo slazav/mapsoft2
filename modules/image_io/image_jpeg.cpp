@@ -51,13 +51,12 @@ image_size_jpeg(const std::string & file){
 /**********************************************************/
 // todo: scale and denominator support!
 Image
-image_load_jpeg(const std::string & file, const int scale){
+image_load_jpeg(const std::string & file, const double scale){
 
   unsigned char *buf = NULL;
   struct jpeg_decompress_struct cinfo;
   struct jpeg_error_mgr jerr;
   FILE * infile;
-  int denom = 1;
   Image img;
 
   // note: it is an error to do jpeg_destroy_decompress
@@ -79,30 +78,32 @@ image_load_jpeg(const std::string & file, const int scale){
     jpeg_stdio_src(&cinfo, infile);
     jpeg_read_header(&cinfo, TRUE);
 
+    int denom = 1;
+
     cinfo.out_color_space = JCS_RGB; // always load in RGB mode
     cinfo.scale_denom = denom; // set denominator
-
     jpeg_start_decompress(&cinfo);
+
     buf  = new unsigned char[(cinfo.image_width+1) * 3];
 
     // scaled image
     int w = cinfo.image_width;
     int h = cinfo.image_height;
-    int w1 = (w-1)/scale+1;
-    int h1 = (h-1)/scale+1;
+    int w1 = floor((w-1)/scale+1);
+    int h1 = floor((h-1)/scale+1);
     img = Image(w1,h1, IMAGE_32ARGB);
 
     // main loop
 
     int line = 0;
     for (int y=0; y<h1; ++y){
-      while (line<=y*scale){
+      while (line<=rint(y*scale)){
         jpeg_read_scanlines(&cinfo, (JSAMPLE**)&buf, 1);
         line++;
       }
 
       for (int x=0; x<w1; ++x){
-        int xs3 = 3*x*scale;
+        int xs3 = 3*( scale==1.0? x:rint(x*scale) );
         img.set32(x,y,
           0xFF000000 + buf[xs3+2] + (buf[xs3+1]<<8) + (buf[xs3]<<16));
       }
