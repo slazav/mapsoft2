@@ -3,7 +3,6 @@
 #include "err/err.h"
 #include "image/image_colors.h"
 #include "image_gif.h"
-#include "imgsrc.h"
 
 /**********************************************************/
 // Version-specific GifOpen/GifClose wrappers
@@ -44,41 +43,38 @@
     throw Err() << "GIF error: " << GifLastError();
   }
 #endif
-/**********************************************************/
-
 
 /**********************************************************/
-/// ImageSource for gif files
-
-#include "imgsrc.h"
-
-class ImageSourceGIF : ImageSource{
-private:
-  GifFileType *gif; // gif handler
-  GifByteType *GifLine;
-  int w, h, dx, dy;
-  unsigned int colors[256]; // color palette
-  int line;
-
-public:
-
-  // Destructor
-  ~ImageSourceGIF(){
+iPoint
+image_size_gif(const std::string & file){
 #if GIFV == 500
-    int code
+    int code;
+    GifFileType *gif = DGifOpenFileName(file.c_str(), &code);
+    if (!gif) throw Err() << "GIF error: can't open file: " << file;
+    iPoint ret(gif->SWidth, gif->SHeight);
     if (gif) DGifCloseFile(gif, &code);
 #else
+    GifFileType *gif = DGifOpenFileName(file.c_str());
+    if (!gif) throw Err() << "GIF error: can't open file: " << file;
+    iPoint ret(gif->SWidth, gif->SHeight);
     if (gif) DGifCloseFile(gif);
 #endif
-    if (GifLine) delete[] GifLine;
-  }
+    return ret;
+}
 
-  // Constructor: open file
-  ImageSourceGIF(const std::string & file):
-       gif(NULL), GifLine(NULL), w(0),h(0),dx(0),dy(0),line(-1){
 
-    // reset color palette
-    memset(colors, 0, sizeof(colors));
+/**********************************************************/
+Image
+image_load_gif(const std::string & file, const int scale){
+
+  Image img;
+  GifFileType *gif = NULL; // gif handler
+  GifByteType *GifLine = NULL;
+  int w, h, dx, dy;
+  unsigned int colors[256]; // color palette
+  memset(colors, 0, sizeof(colors));
+
+  try {
 
     // open file and read screen descriptor
 #if GIFV == 500
@@ -149,68 +145,36 @@ public:
     // allocate memory for one data line
     GifLine = new GifByteType[w];
     if (!GifLine) throw Err() << "gif: can't allocate memory";
-  }
 
-  /// Image range
-  iPoint size() const {return iPoint(w,h);};
+    img = Image(w,h, IMAGE_32ARGB);
 
-  /// Get bits per pixed for data
-  int get_bpp() const  {return 8;}
+    /// Main loop
 
-  /// Get line number
-  int get_line() const  {return line;};
-
-  /// Goto line n (n should be >= get_line())
-  void goto_line(const int n){
-    if (n>=h)   throw Err() << "gif: too large line number";
-    if (n<line) throw Err() << "gif: can't go back in image lines";
-    for (;line<n; ++line)
+    for (int y=0; y<h; ++y){
       if (DGifGetLine(gif, GifLine, w) == GIF_ERROR) GifErr();
 
+      for (int x=0; x<w; ++x){
+        img.set32(x,y, colors[GifLine[x]]);
+      }
+    }
+
+    throw Err();
   }
-
-  /// Get raw data line
-  unsigned char* get_data() const {return GifLine;}
-
-  /// Get color value (at x coordinate of the current line)
-  /// (no range checking!)
-  unsigned int get_col(const int x) const {
-     return colors[GifLine[x]]; }
-
-};
-
-iPoint
-image_size_gif(const std::string & file){
+  catch (Err e){
 #if GIFV == 500
-    int code;
-    GifFileType *gif = DGifOpenFileName(file.c_str(), &code);
-    if (!gif) throw Err() << "GIF error: can't open file: " << file;
-    iPoint ret(gif->SWidth, gif->SHeight);
+    int code
     if (gif) DGifCloseFile(gif, &code);
 #else
-    GifFileType *gif = DGifOpenFileName(file.c_str());
-    if (!gif) throw Err() << "GIF error: can't open file: " << file;
-    iPoint ret(gif->SWidth, gif->SHeight);
     if (gif) DGifCloseFile(gif);
 #endif
-    return ret;
-}
-
-Image
-image_load_gif(const std::string & file, const int scale){
-
-  ImageSourceGIF SRC(file);
-  iPoint size = SRC.size();
-  Image img(size.x, size.y, IMAGE_32ARGB);
-
-  for (int y=0; y<size.y; ++y){
-    SRC.goto_line(y);
-    for (int x=0; x<size.x; ++x) img.set32(x,y, SRC.get_col(x));
+    if (GifLine) delete[] GifLine;
+    if (e.str() != "") throw e;
   }
   return img;
 }
 
 
+/**********************************************************/
 void
 image_save_gif(const Image & im, const std::string & file, const Opt & opt){
 

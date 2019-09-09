@@ -2,7 +2,6 @@
 #include <cstring>
 #include "image_tiff.h"
 #include "image/image_colors.h"
-#include "imgsrc.h"
 
 // custom error handler
 #include <cstdarg>
@@ -17,22 +16,14 @@ my_error_exit (const char* module, const char* fmt, const char *x, ...) {
 }
 
 
-class ImageSourceTIFF : ImageSource {
-private:
-  TIFF* tif;
-  int line;
+/**********************************************************/
+
+// getting file dimensions
+iPoint image_size_tiff(const std::string & file){
+  TIFF* tif = NULL;
   uint32_t w, h;
-  int scan, bpp;
-  uint8_t *cbuf;
-  bool can_skip_lines;
-  uint16_t photometric;
-  uint32_t colors[256];
 
-public:
-  ImageSourceTIFF(const std::string & file):
-       tif(NULL), cbuf(NULL), line(-1), w(0), h(0), bpp(0), scan(0),
-       photometric(-1), can_skip_lines(false) {
-
+  try {
     TIFFSetErrorHandler((TIFFErrorHandler)&my_error_exit);
 
     tif = TIFFOpen(file.c_str(), "rb");
@@ -40,31 +31,46 @@ public:
 
     TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &w);
     TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &h);
-    scan = TIFFScanlineSize(tif);
-    bpp = scan/w;
-  }
 
-  ~ImageSourceTIFF(){
-    if (cbuf) _TIFFfree(cbuf);
+    throw Err();
+  }
+  catch (Err e){
     if (tif) TIFFClose(tif);
+    if (e.str()!="") throw e;
   }
+  return iPoint(w,h);
+}
 
-  iPoint size() const { return iPoint(w,h); }
+/**********************************************************/
 
-  int get_bpp() const  {return 32;}
+Image
+image_load_tiff(const std::string & file, const int scale){
+  TIFF* tif = NULL;
+  uint8_t *cbuf = NULL;
+  Image img;
 
-  int get_line() const{ return line; }
+  try {
+    TIFFSetErrorHandler((TIFFErrorHandler)&my_error_exit);
 
-  void prepare_reading(){ // should be done once before reading data
-    cbuf = (uint8 *)_TIFFmalloc(scan);
-    int compression_type, rows_per_strip;
+    tif = TIFFOpen(file.c_str(), "rb");
+    if (!tif) throw Err() << "TIFF error: can't open file: " << file;
+
+    uint32_t w, h;
+    TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &w);
+    TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &h);
+    int scan = TIFFScanlineSize(tif);
+    int bpp = scan/w;
+
 
     // can we do random access to lines?
+    int compression_type, rows_per_strip;
     TIFFGetField(tif, TIFFTAG_COMPRESSION,  &compression_type);
     TIFFGetField(tif, TIFFTAG_ROWSPERSTRIP, &rows_per_strip);
-    if ((compression_type==COMPRESSION_NONE)||(rows_per_strip==1))
-      can_skip_lines = true;
+    bool can_skip_lines =
+      (compression_type==COMPRESSION_NONE)||(rows_per_strip==1);
 
+    uint16_t photometric;
+    uint32_t colors[256];
     TIFFGetField(tif, TIFFTAG_PHOTOMETRIC, &photometric);
 
     if(photometric == PHOTOMETRIC_RGB ||
@@ -85,80 +91,76 @@ public:
     else
       throw Err() << "TIFF error: unsupported photometric type: " << photometric;
 
+    img = Image(w,h, IMAGE_32ARGB);
+    cbuf = (uint8 *)_TIFFmalloc(scan);
+
+    // Main loop
+
+    for (int y=0; y<h; ++y){
+      // if (can_skip_lines) ...
+      TIFFReadScanline(tif, cbuf, y);
+
+      for (int x=0; x<w; ++x){
+        uint32_t c;
+        switch (photometric){
+
+          case PHOTOMETRIC_PALETTE:
+            c = colors[cbuf[x]]; break;
+
+          case PHOTOMETRIC_RGB:
+            if (bpp==3){ // RGB
+              c = 0xFF000000 + (cbuf[3*x]<<16) + (cbuf[3*x+1]<<8) + cbuf[3*x+2];
+              break;
+            }
+            if (bpp==4){ // RGBA
+              c = (cbuf[4*x]<<16) + (cbuf[4*x+1]<<8) + cbuf[4*x+2] + (cbuf[4*x+3]<<24);
+              break;
+            }
+            if (bpp==1){ // G
+              c = cbuf[x] + (cbuf[x]<<8) + (cbuf[x]<<16) + (0xFF<<24);
+              break;
+            }
+            throw Err() << "TIFF error: unsupported format: PHOTOMETRIC_RGB, bpp: " << bpp;
+
+          case PHOTOMETRIC_MINISWHITE:
+            if (bpp==2){ // 16bit
+              c = 0xFFFFFFFF - (cbuf[2*x+1] + (cbuf[2*x+1]<<8) + (cbuf[2*x+1]<<16));
+              break;
+            }
+            if (bpp==1){ // 8bit
+              c = 0xFFFFFFFF - (cbuf[x] + (cbuf[x]<<8) + (cbuf[x]<<16));
+              break;
+            }
+            throw Err() << "TIFF error: unsupported format: PHOTOMETRIC_MINISWHITE, bpp: " << bpp;
+
+          case PHOTOMETRIC_MINISBLACK:
+            if (bpp==2){ // 16bit
+              c = cbuf[2*x+1] + (cbuf[2*x+1]<<8) + (cbuf[2*x+1]<<16) + (0xFF<<24);
+              break;
+            }
+            if (bpp==1){ // 8bit
+              c = cbuf[x] + (cbuf[x]<<8) + (cbuf[x]<<16) + (0xFF<<24);
+              break;
+            }
+            throw Err() << "TIFF error: unsupported format: PHOTOMETRIC_MINISBLACK, bpp: " << bpp;
+
+          default: throw Err() << "TIFF error: unsupported data format: photometric: "
+                               << photometric << " bpp: " << bpp;
+        }
+        img.set32(x,y,c);
+      }
+    }
+    throw Err();
   }
-
-  void goto_line(const int n){
-    if (line<0) prepare_reading();
-    if (n>=h) throw Err() << "JPEG: too large line number";
-    if (n<line) throw Err() << "JPEG: can't go back in image lines";
-    if (can_skip_lines){
-      line = n;
-      TIFFReadScanline(tif, cbuf, line);
-    }
-    else {
-      for (;line<n; ++line)
-        TIFFReadScanline(tif, cbuf, line+1);
-    }
-
-  }
-
-  /// Get raw data line
-  unsigned char* get_data() const {return cbuf;}
-
-  /// Get color value (at x coordinate of the current line)
-  /// (no range checking!)
-  unsigned int get_col(const int x) const {
-
-    if (photometric == PHOTOMETRIC_PALETTE)
-       return colors[cbuf[x]];
-
-    if (photometric == PHOTOMETRIC_RGB){
-       if (bpp==3) // RGB
-         return 0xFF000000 + (cbuf[3*x]<<16) + (cbuf[3*x+1]<<8) + cbuf[3*x+2];
-       if (bpp==4) // RGBA
-         return (cbuf[4*x]<<16) + (cbuf[4*x+1]<<8) + cbuf[4*x+2] + (cbuf[4*x+3]<<24);
-       if (bpp==1) // G
-         return cbuf[x] + (cbuf[x]<<8) + (cbuf[x]<<16) + (0xFF<<24);
-    }
-    if (photometric == PHOTOMETRIC_MINISWHITE){
-       if (bpp==2) // 16bit
-         return 0xFFFFFFFF - (cbuf[2*x+1] + (cbuf[2*x+1]<<8) + (cbuf[2*x+1]<<16));
-       if (bpp==1) // 8bit
-         return 0xFFFFFFFF - (cbuf[x] + (cbuf[x]<<8) + (cbuf[x]<<16));
-    }
-    if (photometric == PHOTOMETRIC_MINISBLACK){
-      if (bpp==2) // 16bit
-         return cbuf[2*x+1] + (cbuf[2*x+1]<<8) + (cbuf[2*x+1]<<16) + (0xFF<<24);
-      if (bpp==1) // 8bit
-         return cbuf[x] + (cbuf[x]<<8) + (cbuf[x]<<16) + (0xFF<<24);
-    }
-    throw Err() << "TIFF error: data format: photometric: "
-                << photometric << " bpp: " << bpp;
-  }
-
-};
-
-// getting file dimensions
-iPoint image_size_tiff(const std::string & file){
-  ImageSourceTIFF SRC(file);
-  return SRC.size();
-}
-
-Image
-image_load_tiff(const std::string & file, const int scale){
-
-  ImageSourceTIFF SRC(file);
-  iPoint size = SRC.size();
-  Image img(size.x, size.y, IMAGE_32ARGB);
-
-  for (int y=0; y<size.y; ++y){
-    SRC.goto_line(y);
-    for (int x=0; x<size.x; ++x) img.set32(x,y, SRC.get_col(x));
+  catch (Err e) {
+    if (cbuf) _TIFFfree(cbuf);
+    if (tif) TIFFClose(tif);
+    if (e.str() != "") throw e;
   }
   return img;
 }
 
-
+/**********************************************************/
 
 void image_save_tiff(const Image & im, const std::string & file, const Opt & opt){
 
@@ -166,9 +168,6 @@ void image_save_tiff(const Image & im, const std::string & file, const Opt & opt
   tdata_t buf = NULL;
 
   try {
-
-
-
     int samples = 3; // samples per pixel
     int bps = 8;     // bits per sample
     bool use_cmap = false;
