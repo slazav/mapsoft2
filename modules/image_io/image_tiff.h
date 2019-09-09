@@ -10,7 +10,8 @@ iPoint image_size_tiff(const std::string & file);
 
 Image image_load_tiff(const std::string & file, const int scale=1);
 
-// save the whole image
-//void image_save_tiff(const Image & im, const std::string & file);
+//save the whole image
+void image_save_tiff(const Image & im, const std::string & file,
+                     const Opt & opt = Opt());
 
 #endif

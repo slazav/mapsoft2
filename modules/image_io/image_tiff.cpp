@@ -1,6 +1,7 @@
-#include "image_tiff.h"
 #include <tiffio.h>
 #include <cstring>
+#include "image_tiff.h"
+#include "image/image_colors.h"
 #include "imgsrc.h"
 
 // custom error handler
@@ -41,7 +42,6 @@ public:
     TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &h);
     scan = TIFFScanlineSize(tif);
     bpp = scan/w;
-
   }
 
   ~ImageSourceTIFF(){
@@ -159,154 +159,138 @@ image_load_tiff(const std::string & file, const int scale){
 }
 
 
-/*
 
-// save part of image
-void image_save_tiff(const Image & im, const std::string & file){
+void image_save_tiff(const Image & im, const std::string & file, const Opt & opt){
 
-  if (im.type() != IMAGE_32ARGB)
-    throw Err() << "GIF error: only 32-bpp images are supported";
+  TIFF *tif = NULL;
+  tdata_t buf = NULL;
 
-  TIFF* tif = TIFFOpen(file, "wb");
+  try {
 
-    if (!tif){
-      cerr << "image_tiff: can't write " << file << endl;
-      return 1;
+
+
+    int samples = 3; // samples per pixel
+    int bps = 8;     // bits per sample
+    bool use_cmap = false;
+    switch (im.type()){
+      case IMAGE_32ARGB:  samples=4; break;
+      case IMAGE_24RGB:   samples=3; break;
+      case IMAGE_16:      samples=1; bps=16; break;
+      case IMAGE_8:       samples=1; break;
+      case IMAGE_1:       samples=1; break;
+      case IMAGE_8PAL:    samples=1; use_cmap=1; break;
+      case IMAGE_FLOAT:   samples=3; break;
+      case IMAGE_DOUBLE:  samples=3; break;
+      case IMAGE_UNKNOWN: samples=4; break;
     }
 
-    // scan image for colors and alpha
-    bool alpha = false;
-    bool fulla = false;
-    bool fullc = false;
-    bool color = false;
-    uint32 colors[256], mc=0;
-    memset(colors, 0, 256*sizeof(int));
-    for (int y = src_rect.y; y < src_rect.y+src_rect.h; y++){
-      if ((y<0)||(y>=im.h)) continue;
-      for (int x = 0; x < src_rect.w; x++){
-        if ((x+src_rect.x < 0) || (x+src_rect.x>=im.w)) continue;
-        unsigned int c = im.get(x+src_rect.x, y);
-
-        if (!alpha){
-          int a = (c >> 24) & 0xFF;
-          if (a<255) alpha=true;
-        }
-
-        if (!fulla){
-          int a = (c >> 24) & 0xFF;
-          if (a>0 && a<255) fulla=true;
-        }
-
-        if (!color){
-          int r = (c >> 16) & 0xFF;
-          int g = (c >> 8) & 0xFF;
-          int b = c & 0xFF;
-          if (r!=g || r!=b) color=true;
-        }
-
-        if (!fullc){
-          bool found=false;
-          for (int i=0; i<mc; i++)
-            if (c==colors[i]){ found=true; break;}
-          if (!found){
-            if (mc==256) fullc=true;
-            else colors[mc++] = c;
-          }
-        }
-      }
+    // set TIFF type from options
+    std::string str;
+    str = opt.get("tiff_format", "");
+    if (str != "") {
+      if      (str == "argb")  {bps=8; samples = 4; use_cmap = 0; }
+      else if (str == "rgb")   {bps=8; samples = 3; use_cmap = 0; }
+      else if (str == "grey")  {bps=8; samples = 1; use_cmap = 0; }
+      else if (str == "pal")   {bps=8; samples = 1; use_cmap = 1;}
+      else throw Err() << "image_save_tiff: unknown tiff_format setting: " << str << "\n";
     }
 
-    int bpp = 3;
-    if (!color || !fullc) {bpp=1;}
-    if (alpha)  {bpp=4; fullc=true;}
-    int scan = bpp*src_rect.w;
+    // palette
+    Image im8 = im;
+    if (str == "pal"){
+      Opt opt1(opt);
+      opt1.put("cmap_alpha", "none");
+      std::vector<uint32_t> colors = image_colormap(im, opt1);
+      im8 = image_remap(im, colors, opt1);
+    }
 
-    TIFFSetField(tif, TIFFTAG_IMAGEWIDTH, src_rect.w);
-    TIFFSetField(tif, TIFFTAG_IMAGELENGTH, src_rect.h);
-    TIFFSetField(tif, TIFFTAG_SAMPLESPERPIXEL, bpp);
-    TIFFSetField(tif, TIFFTAG_BITSPERSAMPLE,   8);
+    tif = TIFFOpen(file.c_str(), "wb");
+    if (!tif) throw Err() << "TIFF error: can't open file: " << file;
+
+    TIFFSetField(tif, TIFFTAG_IMAGEWIDTH, im.width());
+    TIFFSetField(tif, TIFFTAG_IMAGELENGTH, im.height());
+    TIFFSetField(tif, TIFFTAG_SAMPLESPERPIXEL, samples);
+    TIFFSetField(tif, TIFFTAG_BITSPERSAMPLE,   bps);
     TIFFSetField(tif, TIFFTAG_PLANARCONFIG,    1);
     TIFFSetField(tif, TIFFTAG_ROWSPERSTRIP,    1);
     TIFFSetField(tif, TIFFTAG_COMPRESSION,     COMPRESSION_LZW);
 
-    uint16 cmap[3][256];
-    if (fullc){
+    if (samples == 3 || samples == 4){
       TIFFSetField(tif, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
     }
-    else{
-      if (color){
-        for (int i=0; i<256; i++){
-          cmap[0][i] = (colors[i]<<8)&0xFF00;
-          cmap[1][i] =  colors[i]    &0xFF00;
-          cmap[2][i] = (colors[i]>>8)&0xFF00;
-        }
-      }
-      else{
-        for (uint16 i=0; i<256; i++){
-          cmap[0][i] = cmap[1][i] = cmap[2][i] = i<<8;
-          colors[i] = i;
-        }
+
+    if (samples == 4){
+      int type=EXTRASAMPLE_UNASSALPHA;
+      TIFFSetField(tif, TIFFTAG_EXTRASAMPLES,  1, &type);
+    }
+
+    if (samples == 1 && !use_cmap ){
+      if (opt.get("tiff_minwhite", false))
+        TIFFSetField(tif, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISWHITE);
+      else
+        TIFFSetField(tif, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK);
+    }
+
+    uint16 cmap[3][256];
+    if (use_cmap){
+      for (int i=0; i<im8.cmap.size(); i++){
+        cmap[0][i] = (im8.cmap[i]>>8)&0xFF00;
+        cmap[1][i] =  im8.cmap[i]    &0xFF00;
+        cmap[2][i] = (im8.cmap[i]<<8)&0xFF00;
       }
       TIFFSetField(tif, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_PALETTE);
       TIFFSetField(tif, TIFFTAG_COLORMAP, cmap, cmap+1, cmap+2);
     }
 
-    if (bpp==4){
-      int type=EXTRASAMPLE_UNASSALPHA;
-      TIFFSetField(tif, TIFFTAG_EXTRASAMPLES,  1, &type);
-    }
+    // note: only for bps>=8!
+    int scan = samples*bps*im.width()/8;
 
-    tdata_t buf = _TIFFmalloc(scan);
+    buf = _TIFFmalloc(scan);
     uint8 *cbuf = (uint8 *)buf;
 
-    for (int row = 0; row < src_rect.h; row++){
-      if ((row+src_rect.y <0)||(row+src_rect.y>=im.h)){
-	for (int col = 0; col < src_rect.w*bpp; col++) cbuf[col] = 0;
-      } else {
-        for (int col = 0; col < src_rect.w; col++){
-	  int c = 0;
-          if ((col+src_rect.x >=0)&&(col+src_rect.x<im.w))
-             c = im.get(src_rect.x+col,src_rect.y+row);
-	  if (bpp==3){ // RGB
-    	      cbuf[3*col]   = c & 0xFF;
-    	      cbuf[3*col+1] = (c >> 8)  & 0xFF;
-    	      cbuf[3*col+2] = (c >> 16) & 0xFF;
-          }
-	  else if (bpp==4){ // RGBA
-    	      cbuf[4*col]   = c & 0xFF;
-    	      cbuf[4*col+1] = (c >> 8)  & 0xFF;
-    	      cbuf[4*col+2] = (c >> 16) & 0xFF;
-    	      cbuf[4*col+3] = (c >> 24) & 0xFF;
-          }
-          else if (bpp==1){
-            if (color){
-              for (int i=0; i<mc; i++)
-                if (colors[i] == c) {cbuf[col] = (unsigned char)i; break;}
-            }
-            else{
-              cbuf[col] = c;
-            }
-          }
+    for (int y=0; y<im.height(); y++){
+      for (int x=0; x<im.width(); x++){
+        uint32_t c;
+        //uint16_t c16;
+        switch (samples*bps){
+          case 32:
+            c = im.get_argb(x, y);
+            cbuf[4*x]   = (c >> 16) & 0xFF;
+            cbuf[4*x+1] = (c >> 8)  & 0xFF;
+            cbuf[4*x+2] = c & 0xFF;
+            cbuf[4*x+3] = (c >> 24) & 0xFF;
+            break;
+          case 24:
+            c = im.get_rgb(x, y);
+            cbuf[3*x]   = (c >> 16) & 0xFF;
+            cbuf[3*x+1] = (c >> 8)  & 0xFF;
+            cbuf[3*x+2] = c & 0xFF;
+            break;
+          case 16:
+            //c16 = im.get_grey16(x, y);
+            //cbuf[2*x]   = (c16>>8) & 0xFF;
+            //cbuf[2*x+1] = c16 & 0xFF;
+
+            ((uint16_t *)cbuf)[x] = im.get_grey16(x, y);
+
+            break;
+          case 8:
+          if (use_cmap)
+            cbuf[x] = im8.get8(x,y);
+          else
+            cbuf[x] = im.get_grey8(x,y);
+          break;
         }
       }
-      TIFFWriteScanline(tif, buf, row);
+      TIFFWriteScanline(tif, buf, y);
     }
-    _TIFFfree(buf);
-    TIFFClose(tif);
-    return 0;
+    throw Err();
+  }
+  catch (Err e) {
+    if (buf) _TIFFfree(buf);
+    if (tif) TIFFClose(tif);
+    if (e.str() != "") throw e;
+  }
 }
 
-Image load(const std::string & file, const int scale){
-  iPoint s = size(file);
-  Image ret(s.x/scale,s.y/scale);
-  if (s.x*s.y==0) return ret;
-  load(file, iRect(0,0,s.x,s.y), ret, iRect(0,0,s.x/scale,s.y/scale));
-  return ret;
-}
-
-// save the whole image
-int save(const Image & im, const std::string & file){
-  return save(im, im.range(), file);
-}
-*/
 
