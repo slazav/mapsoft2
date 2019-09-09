@@ -232,25 +232,24 @@ image_save_gif(const Image & im, const std::string & file){
 
   // find fully transparent color
   int trcol = -1;
-  for (int i=0; i<colors.size(); i++)
-    if (((colors[i]>>24)&0xFF) == 0) {trcol = i; break;}
+  for (int i=0; i<im8.cmap.size(); i++)
+    if (((im8.cmap[i]>>24)&0xFF) == 0) {trcol = i; break;}
 
   try {
 //    EGifSetGifVersion(gif, true);
-
 #if GIFV == 500
-    gif_cmap = GifMakeMapObject(colors.size(), NULL);
+    gif_cmap = GifMakeMapObject(im8.cmap.size(), NULL);
 #else
-    gif_cmap = MakeMapObject(colors.size(), NULL);
+    gif_cmap = MakeMapObject(im8.cmap.size(), NULL);
 #endif
-    for (int i=0; i<colors.size(); i++){
-      gif_cmap->Colors[i].Blue  = colors[i] & 0xFF;
-      gif_cmap->Colors[i].Green = (colors[i] >> 8) & 0xFF;
-      gif_cmap->Colors[i].Red   = (colors[i] >> 16) & 0xFF;
+    for (int i=0; i<im8.cmap.size(); i++){
+      gif_cmap->Colors[i].Blue  = im8.cmap[i] & 0xFF;
+      gif_cmap->Colors[i].Green = (im8.cmap[i] >> 8) & 0xFF;
+      gif_cmap->Colors[i].Red   = (im8.cmap[i] >> 16) & 0xFF;
     }
 
     if (EGifPutScreenDesc(gif, im8.width(), im8.height(),
-      colors.size(), 0, gif_cmap)==GIF_ERROR) GifErr();
+      im8.cmap.size(), 0, gif_cmap)==GIF_ERROR) GifErr();
 
     // Graphic control extension (0xF9, 4 bytes)
     if (trcol>=0){

@@ -64,7 +64,7 @@ class Image {
 
   public:
 
-    uint32_t cmap[256];
+    std::vector<uint32_t> cmap;
 
     size_t type() const   {return t;}
     size_t width() const  {return w;}

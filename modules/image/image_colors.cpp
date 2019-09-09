@@ -297,8 +297,7 @@ image_remap(const Image & img, const std::vector<uint32_t> & cmap, const Opt & o
   }
 
   // fill image colormap
-  for (int i=0; i<256; ++i)
-    img1.cmap[i] = i<cmap.size()? cmap[i]: 0xFF000000;
+  img1.cmap = cmap;
 
   return img1;
 }
