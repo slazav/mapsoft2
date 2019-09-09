@@ -99,18 +99,19 @@ image_load_jpeg(const std::string & file, const double scale){
     // adjust scale
     sc = std::min((double)(w-1)/(w1-1), (double)(h-1)/(h1-1));
 
-    // memory buffer
-    buf  = new unsigned char[(w+1)*3];
 
     // main loop
 
     if (0 && w==w1 && h==h1){
       for (int y=0; y<h; ++y){
-        jpeg_read_scanlines(&cinfo, (JSAMPLE**)&buf, 1);
-        memcpy(img.data() + 3*y*w1, buf, 3*w1);
+        JSAMPLE *sbuf = img.data() + 3*y*w1;
+        jpeg_read_scanlines(&cinfo, &sbuf, 1);
       }
     }
     else {
+      // memory buffer
+      buf  = new unsigned char[(w+1)*3];
+
       int line = 0;
       for (int y=0; y<h1; ++y){
         while (line<=rint(y*sc) && line<h){
