@@ -47,7 +47,7 @@ main(){
       assert(I.height() == 128);
       assert(I.get32(0,0)     == 0xff0a0000);
       assert(I.get32(127,127) == 0xfff6f600);
-      assert(I.get32(128,0)   == 0xFF000000);
+      assert(I.get32(128,0)   == 0x00000000);
       assert(I.get32(255,127) == 0xfff50000);
       assert(I.get32(64,64)   == 0xFF848600);
       assert(I.get32(192,64)  == 0xFF830000);
@@ -76,7 +76,7 @@ main(){
       assert(I.height() == 128);
       assert(I.get32(0,0)     == 0xff0a0000);
       assert(I.get32(127,127) == 0xfff6f600);
-      assert(I.get32(128,0)   == 0xff000000);
+      assert(I.get32(128,0)   == 0x00000000);
       assert(I.get32(255,127) == 0xfff50000);
       assert(I.get32(64,64)   == 0xFF8C7600);
       assert(I.get32(192,64)  == 0xFF8B0000);
@@ -90,7 +90,7 @@ main(){
       assert(I.height() == 128);
       assert(I.get32(0,0)     == 0xff0A0000);
       assert(I.get32(127,127) == 0xfff6f600);
-      assert(I.get32(128,0)   == 0xff000000);
+      assert(I.get32(128,0)   == 0x00000000);
       assert(I.get32(255,127) == 0xfff50000);
       assert(I.get32(64,64)   == 0xFF8C7600);
       assert(I.get32(192,64)  == 0xFF8B0000);

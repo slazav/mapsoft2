@@ -71,8 +71,7 @@ image_load_gif(const std::string & file, const double scale){
   GifFileType *gif = NULL; // gif handler
   GifByteType *GifLine = NULL;
   int w, h, dx, dy;
-  unsigned int colors[256]; // color palette
-  memset(colors, 0, sizeof(colors));
+  std::vector<uint32_t> colors; // color palette
 
   try {
 
@@ -133,17 +132,15 @@ image_load_gif(const std::string & file, const double scale){
           << w << "x" << h << " vs. "
           << gif->Image.Width << "x" << gif->Image.Height << "\n";
 
+    colors.resize(gif->SColorMap->ColorCount);
     for (int i=0; i<gif->SColorMap->ColorCount; i++){
       colors[i] = gif->SColorMap->Colors[i].Blue +
-                  (gif->SColorMap->Colors[i].Green << 8) +
-                  (gif->SColorMap->Colors[i].Red << 16) + (0xFF<<24);
+                 (gif->SColorMap->Colors[i].Green << 8) +
+                 (gif->SColorMap->Colors[i].Red << 16) + 0xFF000000;
       //std::cerr << "PALETTE: " << i << ": " << std::hex << colors[i] << "\n";
+      //if (i==gif->SBackGroundColor) bgcolor = colors[i]; // bgcolor - not used
+      if (i==trcol) colors[i] = 0;
     }
-    int bgcolor = colors[gif->SBackGroundColor];
-    //std::cerr << "BGCOLOR: " << gif->SBackGroundColor << ": " <<  bgcolor << "\n";
-
-    // transparent color
-    if (trcol > 0 && trcol < 256) colors[trcol] = 0;
 
     // allocate memory for one data line
     GifLine = new GifByteType[w];
