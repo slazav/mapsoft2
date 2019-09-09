@@ -48,7 +48,7 @@ main(){
       assert(I.get32(0,0)     == 0xFF000000);
       assert(I.get32(127,127) == 0xFFFEFE00);
       assert(I.get32(128,0)   == 0x00000000);
-      assert(I.get32(255,127) == 0xFEFC0000);
+      assert(I.get32(255,127) == 0xFEFD0000);
       assert(I.get32(64,64)   == 0xFF808000);
       assert(I.get32(192,64)  == 0x80400000);
 
@@ -62,7 +62,7 @@ main(){
       assert(I.get32(0,0)     == 0xFF000000);
       assert(I.get32(127,127) == 0xFFFEFE00);
       assert(I.get32(128,0)   == 0xFFFFFFFF);
-      assert(I.get32(255,127) == 0xFFFd0000);
+      assert(I.get32(255,127) == 0xFFFE0000);
       assert(I.get32(64,64)   == 0xFF808000);
       assert(I.get32(192,64)  == 0xFF800000);
 
@@ -90,9 +90,9 @@ main(){
       assert(I.get32(0,0)     == 0xff0a0000);
       assert(I.get32(127,127) == 0xfff6f600);
       assert(I.get32(128,0)   == 0xffffffff);
-      assert(I.get32(255,127) == 0xfff40000);
+      assert(I.get32(255,127) == 0xfff50000);
       assert(I.get32(64,64)   == 0xFF8C7600);
-      assert(I.get32(192,64)  == 0xFF8A0000);
+      assert(I.get32(192,64)  == 0xFF8B0000);
 
       o.put("tiff_format", "pal");
       o.put("cmap_colors", 120);
@@ -105,9 +105,9 @@ main(){
       assert(I.get32(0,0)     == 0xff0a0000);
       assert(I.get32(127,127) == 0xfff6f600);
       assert(I.get32(128,0)   == 0xffffffff);
-      assert(I.get32(255,127) == 0xfff40000);
+      assert(I.get32(255,127) == 0xfff50000);
       assert(I.get32(64,64)   == 0xFF8C7600);
-      assert(I.get32(192,64)  == 0xFF8A0000);
+      assert(I.get32(192,64)  == 0xFF8B0000);
 
       o.put("tiff_format", "pal");
       o.put("cmap_colors", 120);
@@ -120,9 +120,9 @@ main(){
       assert(I.get32(0,0)     == 0xff0a0000);
       assert(I.get32(127,127) == 0xfff6f600);
       assert(I.get32(128,0)   == 0xffffffff);
-      assert(I.get32(255,127) == 0xfff40000);
+      assert(I.get32(255,127) == 0xfff50000);
       assert(I.get32(64,64)   == 0xFF8C7600);
-      assert(I.get32(192,64)  == 0xFF8A0000);
+      assert(I.get32(192,64)  == 0xFF8B0000);
 
       o.put("tiff_format", "pal");
       o.put("cmap_colors", 300); // too many colors
@@ -147,7 +147,7 @@ main(){
       assert(I.get32(0,0) == 0xFF000000);
       assert(I.get32(127,127) == 0xFFFEFE00);
       assert(I.get32(128,0)   == 0xFFFFFFFF);
-      assert(I.get32(255,127) == 0xFFFd0000);
+      assert(I.get32(255,127) == 0xFFFE0000);
       assert(I.get32(64,64)   == 0xFF808000);
       assert(I.get32(192,64)  == 0xFF800000);
 
@@ -161,7 +161,7 @@ main(){
       assert(I.get32(0,0) == 0xFF000000);
       assert(I.get32(127,127) == 0xFFFEFE00);
       assert(I.get32(128,0)   == 0xFFFFFFFF);
-      assert(I.get32(255,127) == 0xFFFd0000);
+      assert(I.get32(255,127) == 0xFFFE0000);
       assert(I.get32(64,64)   == 0xFF808000);
       assert(I.get32(192,64)  == 0xFF800000);
 
@@ -188,9 +188,9 @@ main(){
       assert(I.get32(0,0)     == 0xff0a0000);
       assert(I.get32(127,127) == 0xfff6f600);
       assert(I.get32(128,0)   == 0xffffffff);
-      assert(I.get32(255,127) == 0xfff40000);
+      assert(I.get32(255,127) == 0xfff50000);
       assert(I.get32(64,64)   == 0xFF8C7600);
-      assert(I.get32(192,64)  == 0xFF8A0000);
+      assert(I.get32(192,64)  == 0xFF8B0000);
     }
 
     /*********************************************/
@@ -344,8 +344,8 @@ main(){
       assert(I.get32(0,0)     == 0xFF020202);
       assert(I.get32(127,127) == 0xFFDDDDDD);
       assert(I.get32(128,0)   == 0xFFFFFFFF);
-      assert(I.get32(255,127) == 0xFF4D4D4D);
-      assert(I.get32(64,64)   == 0xFF737373);
+      assert(I.get32(255,127) == 0xFF4F4F4F);
+      assert(I.get32(64,64)   == 0xFF6e6e6e);
       assert(I.get32(192,64)  == 0xFF242424);
     }
 
@@ -361,7 +361,7 @@ main(){
       assert(I.get32(0,0)     == 0xff0a0000);
       assert(I.get32(127,127) == 0xfff6f600);
       assert(I.get32(128,0)   == 0xffffffff);
-      assert(I.get32(255,127) == 0xfff40000);
+      assert(I.get32(255,127) == 0xfff50000);
       assert(I.get32(64,64)   == 0xff848600);
       assert(I.get32(192,64)  == 0xff830000);
 
@@ -376,7 +376,7 @@ main(){
       assert(I.get32(0,0)     == 0xff0a0000);
       assert(I.get32(127,127) == 0xfff6f600);
       assert(I.get32(128,0)   == 0xffffffff);
-      assert(I.get32(255,127) == 0xfff40000);
+      assert(I.get32(255,127) == 0xfff50000);
       assert(I.get32(64,64)   == 0xff848600);
       assert(I.get32(192,64)  == 0xff830000);
 
@@ -389,7 +389,7 @@ main(){
       assert(I.get32(0,0)     == 0xff0a0000);
       assert(I.get32(127,127) == 0xfff6f600);
       assert(I.get32(128,0)   == 0xffffffff);
-      assert(I.get32(255,127) == 0xfff40000);
+      assert(I.get32(255,127) == 0xfff50000);
       assert(I.get32(64,64)   == 0xff848600);
       assert(I.get32(192,64)  == 0xff830000);
 
@@ -416,9 +416,9 @@ main(){
       assert(I.get32(0,0)     == 0xFF0A0000);
       assert(I.get32(127,127) == 0xFFEEEE00);
       assert(I.get32(128,0)   == 0xFFFFFFFF);
-      assert(I.get32(255,127) == 0xFFEB0000);
+      assert(I.get32(255,127) == 0xFFEC0000);
       assert(I.get32(64,64)   == 0xFF7C8600);
-      assert(I.get32(192,64)  == 0xFF8A0000);
+      assert(I.get32(192,64)  == 0xFF830000);
 
     }
 

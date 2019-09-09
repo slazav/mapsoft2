@@ -151,7 +151,7 @@ main(){
       assert(color_dist(I.get32(10,10),   0xff101801) < 2);
       assert(color_dist(I.get32(117,117), 0xffe6e600) < 2);
       assert(color_dist(I.get32(138,10),  0xFF0a0000) < 2);
-      assert(color_dist(I.get32(245,117), 0xffe50001) < 2);
+      assert(color_dist(I.get32(245,117), 0xffe60001) < 2);
       assert(color_dist(I.get32(64,64),   0xFF858501) < 2);
       assert(color_dist(I.get32(192,64),  0xFF820201) < 2);
     }

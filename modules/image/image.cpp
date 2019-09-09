@@ -16,8 +16,8 @@ uint32_t color_argb(const uint8_t a, const uint8_t r,
                     const uint8_t g, const uint8_t b){
   if (a==0) return 0;
   if (a==0xFF) return 0xFF000000 + ((uint32_t)r<<16) + ((uint32_t)g<<8) + b;
-  return ((uint32_t)a<<24) + ((uint32_t)r*a/256<<16) +
-         ((uint32_t)g*a/256<<8) + ((uint32_t)b*a/256);
+  return ((uint32_t)a<<24) + ((uint32_t)r*a/255<<16) +
+         ((uint32_t)g*a/255<<8) + ((uint32_t)b*a/255);
 }
 
 // remove transparency (for scaled colors)
