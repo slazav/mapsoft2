@@ -491,6 +491,21 @@ main(){
       assert(I.get32(203,27)  == 0xFF000000);
     }
 
+    { //scale tests
+      Image I1 = image_load_tiff("test_tiff/img_32_def.tif", 1);
+      Image I;
+      iPoint pt(101,32);
+      for (int sc=1; sc<10; sc++){
+        I = image_load_tiff("test_tiff/img_32_def.tif", sc);
+        assert(I.width() == (I1.width()-1)/sc+1);
+        assert(I.height() == (I1.height()-1)/sc+1);
+        iPoint pt1 = pt/sc;
+        assert(I.get_rgb(pt1.x, pt1.y) == I1.get_rgb(pt1.x*sc, pt1.y*sc));
+      }
+      assert_err(image_load_tiff("test_tiff/img_32_def.tif", 0),
+        "image_load_tiff: wrong scale: 0");
+    }
+
 /*
 std::cerr << std::hex << I.get32(0,0) << "\n";
 std::cerr << std::hex << I.get32(127,127) << "\n";

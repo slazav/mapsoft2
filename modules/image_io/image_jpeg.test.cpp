@@ -12,15 +12,15 @@ main(){
 
     // size
     assert_err(image_size_jpeg("test_jpeg/missing"),
-      "JPEG error: can't open file: test_jpeg/missing");
+      "image_size_jpeg: can't open file: test_jpeg/missing");
     assert_err(image_size_jpeg("test_jpeg/Readme.md"),
-      "JPEG error: Not a JPEG file: starts with 0x45 0x6d");
+      "image_size_jpeg: Not a JPEG file: starts with 0x45 0x6d");
 
     // load
     assert_err(image_load_jpeg("test_jpeg/missing"),
-      "JPEG error: can't open file: test_jpeg/missing");
+      "image_load_jpeg: can't open file: test_jpeg/missing");
     assert_err(image_load_jpeg("test_jpeg/Readme.md"),
-      "JPEG error: Not a JPEG file: starts with 0x45 0x6d");
+      "image_load_jpeg: Not a JPEG file: starts with 0x45 0x6d");
 
     /*********************************************/
     // Original image
@@ -58,7 +58,7 @@ main(){
       o.put("jpeg_quality", 120);
 
       assert_err(image_save_jpeg(img, "test_jpeg/img_32_x.jpg", o),
-         "JPEG error: quality not in range 0..100: 120");
+         "image_save_jpeg: quality not in range 0..100: 120");
 
       o.put("jpeg_quality", 100);
       image_save_jpeg(img, "test_jpeg/img_32_100.jpg", o);
@@ -176,6 +176,21 @@ main(){
       assert(I.get32(15,45)   == 0xFF000000);
       assert(I.get32(43,123)  == 0xFFFFFFFF);
       assert(I.get32(203,27)  == 0xFF000000);
+    }
+
+    { //scale tests
+      Image I1 = image_load_jpeg("test_jpeg/img_32_def.jpg", 1);
+      Image I;
+      iPoint pt(101,32);
+      for (int sc=1; sc<10; sc++){
+        I = image_load_jpeg("test_jpeg/img_32_def.jpg", sc);
+        assert(I.width() == (I1.width()-1)/sc+1);
+        assert(I.height() == (I1.height()-1)/sc+1);
+        iPoint pt1 = pt/sc;
+        assert(I.get_rgb(pt1.x, pt1.y) == I1.get_rgb(pt1.x*sc, pt1.y*sc));
+      }
+      assert_err(image_load_jpeg("test_jpeg/img_32_def.jpg", 0),
+        "image_load_jpeg: wrong scale: 0");
     }
 
 /*

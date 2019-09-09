@@ -50,12 +50,12 @@ image_size_gif(const std::string & file){
 #if GIFV == 500
     int code;
     GifFileType *gif = DGifOpenFileName(file.c_str(), &code);
-    if (!gif) throw Err() << "GIF error: can't open file: " << file;
+    if (!gif) throw Err() << "image_size_gif: can't open file: " << file;
     iPoint ret(gif->SWidth, gif->SHeight);
     if (gif) DGifCloseFile(gif, &code);
 #else
     GifFileType *gif = DGifOpenFileName(file.c_str());
-    if (!gif) throw Err() << "GIF error: can't open file: " << file;
+    if (!gif) throw Err() << "image_size_gif: can't open file: " << file;
     iPoint ret(gif->SWidth, gif->SHeight);
     if (gif) DGifCloseFile(gif);
 #endif
@@ -76,6 +76,9 @@ image_load_gif(const std::string & file, const int scale){
 
   try {
 
+    if (scale < 1)
+      throw Err() << "image_load_gif: wrong scale: " << scale;
+
     // open file and read screen descriptor
 #if GIFV == 500
     int code;
@@ -83,7 +86,7 @@ image_load_gif(const std::string & file, const int scale){
 #else
     gif = DGifOpenFileName(file.c_str());
 #endif
-    if (!gif) throw Err() << "GIF error: can't open file: " << file;
+    if (!gif) throw Err() << "image_load_gif: can't open file: " << file;
 
     // Go to the first image, skip all extensions
     GifRecordType RecordType;
@@ -126,7 +129,7 @@ image_load_gif(const std::string & file, const int scale){
 
     if (w != gif->SWidth ||
         h != gif->SHeight) throw Err() 
-          << "gif: image size differs from gif page size: "
+          << "image_load_gif: image size differs from gif page size: "
           << w << "x" << h << " vs. "
           << gif->Image.Width << "x" << gif->Image.Height << "\n";
 
@@ -144,18 +147,25 @@ image_load_gif(const std::string & file, const int scale){
 
     // allocate memory for one data line
     GifLine = new GifByteType[w];
-    if (!GifLine) throw Err() << "gif: can't allocate memory";
+    if (!GifLine) throw Err() << "image_load_gif: can't allocate memory";
 
-    img = Image(w,h, IMAGE_32ARGB);
+    // scaled image
+    int w1 = (w-1)/scale+1;
+    int h1 = (h-1)/scale+1;
+    img = Image(w1,h1, IMAGE_32ARGB);
 
     /// Main loop
 
-    for (int y=0; y<h; ++y){
-      if (DGifGetLine(gif, GifLine, w) == GIF_ERROR) GifErr();
+    int line = 0;
+    for (int y=0; y<h1; ++y){
 
-      for (int x=0; x<w; ++x){
-        img.set32(x,y, colors[GifLine[x]]);
+      while (line<=y*scale){
+        if (DGifGetLine(gif, GifLine, w) == GIF_ERROR) GifErr();
+        line++;
       }
+
+      for (int x=0; x<w1; ++x)
+        img.set32(x,y, colors[GifLine[x*scale]]);
     }
 
     throw Err();
@@ -186,7 +196,7 @@ image_save_gif(const Image & im, const std::string & file, const Opt & opt){
 #else
   gif = EGifOpenFileName(file.c_str(), false);
 #endif
-  if (!gif) throw Err() << "GIF error: can't open file: " << file;
+  if (!gif) throw Err() << "image_save_gif: can't open file: " << file;
 
   Opt opt1(opt);
   if (opt1.get("cmap_alpha", "")!="none")

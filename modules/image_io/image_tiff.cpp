@@ -27,7 +27,7 @@ iPoint image_size_tiff(const std::string & file){
     TIFFSetErrorHandler((TIFFErrorHandler)&my_error_exit);
 
     tif = TIFFOpen(file.c_str(), "rb");
-    if (!tif) throw Err() << "TIFF error: can't open file: " << file;
+    if (!tif) throw Err() << "image_size_tiff: can't open file: " << file;
 
     TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &w);
     TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &h);
@@ -50,10 +50,14 @@ image_load_tiff(const std::string & file, const int scale){
   Image img;
 
   try {
+
+    if (scale < 1)
+      throw Err() << "image_load_tiff: wrong scale: " << scale;
+
     TIFFSetErrorHandler((TIFFErrorHandler)&my_error_exit);
 
     tif = TIFFOpen(file.c_str(), "rb");
-    if (!tif) throw Err() << "TIFF error: can't open file: " << file;
+    if (!tif) throw Err() << "image_load_tiff: can't open file: " << file;
 
     uint32_t w, h;
     TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &w);
@@ -89,62 +93,74 @@ image_load_tiff(const std::string & file, const int scale){
       }
     }
     else
-      throw Err() << "TIFF error: unsupported photometric type: " << photometric;
+      throw Err() << "image_load_tiff: unsupported photometric type: " << photometric;
 
-    img = Image(w,h, IMAGE_32ARGB);
+    // allocate buffer
     cbuf = (uint8 *)_TIFFmalloc(scan);
+
+    // scaled image
+    int w1 = (w-1)/scale+1;
+    int h1 = (h-1)/scale+1;
+    img = Image(w1,h1, IMAGE_32ARGB);
 
     // Main loop
 
-    for (int y=0; y<h; ++y){
-      // if (can_skip_lines) ...
-      TIFFReadScanline(tif, cbuf, y);
+    int line = 0;
+    for (int y=0; y<h1; ++y){
 
-      for (int x=0; x<w; ++x){
+      if (can_skip_lines) line = y*scale;
+
+      while (line<=y*scale){
+        TIFFReadScanline(tif, cbuf, line);
+        line++;
+      }
+
+      for (int x=0; x<w1; ++x){
         uint32_t c;
+        int xs = x*scale;
         switch (photometric){
 
           case PHOTOMETRIC_PALETTE:
-            c = colors[cbuf[x]]; break;
+            c = colors[cbuf[xs]]; break;
 
           case PHOTOMETRIC_RGB:
             if (bpp==3){ // RGB
-              c = 0xFF000000 + (cbuf[3*x]<<16) + (cbuf[3*x+1]<<8) + cbuf[3*x+2];
+              c = 0xFF000000 + (cbuf[3*xs]<<16) + (cbuf[3*xs+1]<<8) + cbuf[3*xs+2];
               break;
             }
             if (bpp==4){ // RGBA
-              c = (cbuf[4*x]<<16) + (cbuf[4*x+1]<<8) + cbuf[4*x+2] + (cbuf[4*x+3]<<24);
+              c = (cbuf[4*xs]<<16) + (cbuf[4*xs+1]<<8) + cbuf[4*xs+2] + (cbuf[4*xs+3]<<24);
               break;
             }
             if (bpp==1){ // G
-              c = cbuf[x] + (cbuf[x]<<8) + (cbuf[x]<<16) + (0xFF<<24);
+              c = cbuf[xs] + (cbuf[xs]<<8) + (cbuf[xs]<<16) + 0xFF000000;
               break;
             }
-            throw Err() << "TIFF error: unsupported format: PHOTOMETRIC_RGB, bpp: " << bpp;
+            throw Err() << "image_load_tiff: unsupported format: PHOTOMETRIC_RGB, bpp: " << bpp;
 
           case PHOTOMETRIC_MINISWHITE:
             if (bpp==2){ // 16bit
-              c = 0xFFFFFFFF - (cbuf[2*x+1] + (cbuf[2*x+1]<<8) + (cbuf[2*x+1]<<16));
+              c = 0xFFFFFFFF - (cbuf[2*xs+1] + (cbuf[2*xs+1]<<8) + (cbuf[2*xs+1]<<16));
               break;
             }
             if (bpp==1){ // 8bit
-              c = 0xFFFFFFFF - (cbuf[x] + (cbuf[x]<<8) + (cbuf[x]<<16));
+              c = 0xFFFFFFFF - (cbuf[xs] + (cbuf[xs]<<8) + (cbuf[xs]<<16));
               break;
             }
-            throw Err() << "TIFF error: unsupported format: PHOTOMETRIC_MINISWHITE, bpp: " << bpp;
+            throw Err() << "image_load_tiff: unsupported format: PHOTOMETRIC_MINISWHITE, bpp: " << bpp;
 
           case PHOTOMETRIC_MINISBLACK:
             if (bpp==2){ // 16bit
-              c = cbuf[2*x+1] + (cbuf[2*x+1]<<8) + (cbuf[2*x+1]<<16) + (0xFF<<24);
+              c = cbuf[2*xs+1] + (cbuf[2*xs+1]<<8) + (cbuf[2*xs+1]<<16) + 0xFF000000;
               break;
             }
             if (bpp==1){ // 8bit
-              c = cbuf[x] + (cbuf[x]<<8) + (cbuf[x]<<16) + (0xFF<<24);
+              c = cbuf[xs] + (cbuf[xs]<<8) + (cbuf[xs]<<16) + 0xFF000000;
               break;
             }
-            throw Err() << "TIFF error: unsupported format: PHOTOMETRIC_MINISBLACK, bpp: " << bpp;
+            throw Err() << "image_load_tiff: unsupported format: PHOTOMETRIC_MINISBLACK, bpp: " << bpp;
 
-          default: throw Err() << "TIFF error: unsupported data format: photometric: "
+          default: throw Err() << "image_load_tiff: unsupported data format: photometric: "
                                << photometric << " bpp: " << bpp;
         }
         img.set32(x,y,c);

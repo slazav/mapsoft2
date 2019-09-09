@@ -12,15 +12,15 @@ main(){
 
     // size
     assert_err(image_size_png("test_png/missing"),
-      "PNG error: can't open file: test_png/missing");
+      "image_size_png: can't open file: test_png/missing");
     assert_err(image_size_png("test_png/Readme.md"),
-      "PNG error: not a PNG file: test_png/Readme.md");
+      "image_size_png: not a PNG file: test_png/Readme.md");
 
     // load
     assert_err(image_load_png("test_png/missing"),
-      "PNG error: can't open file: test_png/missing");
+      "image_load_png: can't open file: test_png/missing");
     assert_err(image_load_png("test_png/Readme.md"),
-      "PNG error: not a PNG file: test_png/Readme.md");
+      "image_load_png: not a PNG file: test_png/Readme.md");
 
     /*********************************************/
     // Original image
@@ -565,6 +565,21 @@ main(){
       assert(I.get32(15,45)   == 0xFF000000);
       assert(I.get32(43,123)  == 0xFFFFFFFF);
       assert(I.get32(203,27)  == 0xFF000000);
+    }
+
+    { //scale tests
+      Image I1 = image_load_png("test_png/img_32_def.png", 1);
+      Image I;
+      iPoint pt(101,32);
+      for (int sc=1; sc<10; sc++){
+        I = image_load_png("test_png/img_32_def.png", sc);
+        assert(I.width() == (I1.width()-1)/sc+1);
+        assert(I.height() == (I1.height()-1)/sc+1);
+        iPoint pt1 = pt/sc;
+        assert(I.get_rgb(pt1.x, pt1.y) == I1.get_rgb(pt1.x*sc, pt1.y*sc));
+      }
+      assert_err(image_load_png("test_png/img_32_def.png", 0),
+        "image_load_png: wrong scale: 0");
     }
 
 /*

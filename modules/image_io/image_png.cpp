@@ -18,26 +18,26 @@ image_size_png(const std::string & file){
   try {
 
     if ((infile = fopen(file.c_str(), "rb")) == NULL)
-      throw Err() << "PNG error: can't open file: " << file;
+      throw Err() << "image_size_png: can't open file: " << file;
 
     png_byte sign[8];
     const char sign_size = 8;
     if ((fread(sign, 1,sign_size,infile)!=sign_size)||
         (png_sig_cmp(sign, 0, sign_size)!=0))
-      throw Err() << "PNG error: not a PNG file: " << file;
+      throw Err() << "image_size_png: not a PNG file: " << file;
 
     png_ptr = png_create_read_struct
        (PNG_LIBPNG_VER_STRING, NULL,NULL,NULL);
-    if (!png_ptr) throw Err() << "PNG error: can't make png_read_struct";
+    if (!png_ptr) throw Err() << "image_size_png: can't make png_read_struct";
 
     info_ptr = png_create_info_struct(png_ptr);
-    if (!info_ptr) throw Err() << "PNG error: can't make png_info_struct";
+    if (!info_ptr) throw Err() << "image_size_png: can't make png_info_struct";
 
     end_info = png_create_info_struct(png_ptr);
-    if (!end_info) throw Err() << "PNG error: can't make png_info_struct";
+    if (!end_info) throw Err() << "image_size_png: can't make png_info_struct";
 
     if (setjmp(png_jmpbuf(png_ptr)))
-      throw Err() << "PNG error: can't do setjmp";
+      throw Err() << "image_size_png: can't do setjmp";
 
     png_init_io(png_ptr, infile);
     png_set_sig_bytes(png_ptr, sign_size);
@@ -74,27 +74,30 @@ image_load_png(const std::string & file, const int scale){
 
   try {
 
+    if (scale < 1)
+      throw Err() << "image_load_png: wrong scale: " << scale;
+
     if ((infile = fopen(file.c_str(), "rb")) == NULL)
-      throw Err() << "PNG error: can't open file: " << file;
+      throw Err() << "image_load_png: can't open file: " << file;
 
     png_byte sign[8];
     const char sign_size = 8;
     if ((fread(sign, 1,sign_size,infile)!=sign_size)||
         (png_sig_cmp(sign, 0, sign_size)!=0))
-      throw Err() << "PNG error: not a PNG file: " << file;
+      throw Err() << "image_load_png: not a PNG file: " << file;
 
     png_ptr = png_create_read_struct
        (PNG_LIBPNG_VER_STRING, NULL,NULL,NULL);
-    if (!png_ptr) throw Err() << "PNG error: can't make png_read_struct";
+    if (!png_ptr) throw Err() << "image_load_png: can't make png_read_struct";
 
     info_ptr = png_create_info_struct(png_ptr);
-    if (!info_ptr) throw Err() << "PNG error: can't make png_info_struct";
+    if (!info_ptr) throw Err() << "image_load_png: can't make png_info_struct";
 
     end_info = png_create_info_struct(png_ptr);
-    if (!end_info) throw Err() << "PNG error: can't make png_info_struct";
+    if (!end_info) throw Err() << "image_load_png: can't make png_info_struct";
 
     if (setjmp(png_jmpbuf(png_ptr)))
-      throw Err() << "PNG error: can't do setjmp";
+      throw Err() << "image_load_png: can't do setjmp";
 
     png_init_io(png_ptr, infile);
     png_set_sig_bytes(png_ptr, sign_size);
@@ -127,16 +130,25 @@ image_load_png(const std::string & file, const int scale){
         png_get_rowbytes(png_ptr, info_ptr));
     if (!row_buf) throw Err() << "PNG: malloc error";
 
-    img = Image(w, h, IMAGE_32ARGB);
+    // scaled image
+    int w1 = (w-1)/scale+1;
+    int h1 = (h-1)/scale+1;
+    img = Image(w1,h1, IMAGE_32ARGB);
 
     /// Main loop
 
-    for (int y=0; y<h; ++y){
-      png_read_row(png_ptr, row_buf, NULL);
+    int line = 0;
+    for (int y=0; y<h1; ++y){
 
-      for (int x=0; x<w; ++x){
-        uint32_t c = color_argb(row_buf[4*x+3], row_buf[4*x],
-                                row_buf[4*x+1], row_buf[4*x+2]);
+      while (line<=y*scale){
+        png_read_row(png_ptr, row_buf, NULL);
+        line++;
+      }
+
+      for (int x=0; x<w1; ++x){
+        int xs4 = 4*x*scale;
+        uint32_t c = color_argb(row_buf[xs4+3], row_buf[xs4],
+                                row_buf[xs4+1], row_buf[xs4+2]);
         img.set32(x,y, c);
       }
     }
@@ -186,19 +198,19 @@ image_save_png(const Image & im, const std::string & file,
   try {
 
     outfile = fopen(file.c_str(), "wb");
-    if (!outfile) throw Err() << "PNG error: can't open file: " << file;
+    if (!outfile) throw Err() << "image_save_png: can't open file: " << file;
 
     png_ptr = png_create_write_struct
       (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
     if (!png_ptr)
-      throw Err() << "PNG error: can't make png_read_struct";
+      throw Err() << "image_save_png: can't make png_read_struct";
 
     info_ptr = png_create_info_struct(png_ptr);
     if (!info_ptr)
-      throw Err() << "PNG error: can't make png_info_struct";
+      throw Err() << "image_save_png: can't make png_info_struct";
 
     if (setjmp(png_jmpbuf(png_ptr)))
-      throw Err() << "PNG error: can't do setjmp";
+      throw Err() << "image_save_png: can't do setjmp";
 
     png_init_io(png_ptr, outfile);
 

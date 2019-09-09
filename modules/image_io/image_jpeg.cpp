@@ -5,12 +5,14 @@
 std::string jpeg_error_message;
 
 
+// error prefix
+std::string error_pref = "jpeg";
 // custom error handler
 void
 my_error_exit (j_common_ptr cinfo) {
   const char buffer[JMSG_LENGTH_MAX] = "";
   (*cinfo->err->format_message) (cinfo, (char *)buffer);
-  throw Err() << "JPEG error: " << buffer;
+  throw Err() << error_pref << ": " << buffer;
 }
 
 /**********************************************************/
@@ -21,13 +23,17 @@ image_size_jpeg(const std::string & file){
   struct jpeg_error_mgr jerr;
   FILE * infile;
 
+  // open file, get image size
+  cinfo.err = jpeg_std_error(&jerr);
+  jerr.error_exit = my_error_exit;
+  error_pref = "image_size_jpeg";
+  // note: it is an error to do jpeg_destroy_decompress
+  // before jpeg_create_decompress.
+  jpeg_create_decompress(&cinfo);
+
   try {
-    // open file, get image size
-    cinfo.err = jpeg_std_error(&jerr);
-    jerr.error_exit = my_error_exit;
-    jpeg_create_decompress(&cinfo);
     if ((infile = fopen(file.c_str(), "rb")) == NULL)
-      throw Err() << "JPEG error: can't open file: " << file;
+      throw Err() << "image_size_jpeg: can't open file: " << file;
 
     jpeg_stdio_src(&cinfo, infile);
     jpeg_read_header(&cinfo, TRUE);
@@ -54,13 +60,21 @@ image_load_jpeg(const std::string & file, const int scale){
   int denom = 1;
   Image img;
 
+  // note: it is an error to do jpeg_destroy_decompress
+  // before jpeg_create_decompress.
+  cinfo.err = jpeg_std_error(&jerr);
+  jerr.error_exit = my_error_exit;
+  error_pref = "image_load_jpeg";
+  jpeg_create_decompress(&cinfo);
+
   try {
+
+    if (scale < 1)
+      throw Err() << "image_load_jpeg: wrong scale: " << scale;
+
     // open file, get image size
-    cinfo.err = jpeg_std_error(&jerr);
-    jerr.error_exit = my_error_exit;
-    jpeg_create_decompress(&cinfo);
     if ((infile = fopen(file.c_str(), "rb")) == NULL)
-      throw Err() << "JPEG error: can't open file: " << file;
+      throw Err() << "image_load_jpeg: can't open file: " << file;
 
     jpeg_stdio_src(&cinfo, infile);
     jpeg_read_header(&cinfo, TRUE);
@@ -68,20 +82,29 @@ image_load_jpeg(const std::string & file, const int scale){
     cinfo.out_color_space = JCS_RGB; // always load in RGB mode
     cinfo.scale_denom = denom; // set denominator
 
-    int w = cinfo.image_width;
-    int h = cinfo.image_height;
-    img = Image(w,h, IMAGE_32ARGB);
-
     jpeg_start_decompress(&cinfo);
     buf  = new unsigned char[(cinfo.image_width+1) * 3];
 
+    // scaled image
+    int w = cinfo.image_width;
+    int h = cinfo.image_height;
+    int w1 = (w-1)/scale+1;
+    int h1 = (h-1)/scale+1;
+    img = Image(w1,h1, IMAGE_32ARGB);
+
     // main loop
 
-    for (int y=0; y<h; ++y){
-      jpeg_read_scanlines(&cinfo, (JSAMPLE**)&buf, 1);
-      for (int x=0; x<w; ++x){
+    int line = 0;
+    for (int y=0; y<h1; ++y){
+      while (line<=y*scale){
+        jpeg_read_scanlines(&cinfo, (JSAMPLE**)&buf, 1);
+        line++;
+      }
+
+      for (int x=0; x<w1; ++x){
+        int xs3 = 3*x*scale;
         img.set32(x,y,
-          0xFF000000 + buf[3*x+2] + (buf[3*x+1]<<8) + (buf[3*x]<<16));
+          0xFF000000 + buf[xs3+2] + (buf[xs3+1]<<8) + (buf[xs3]<<16));
       }
     }
 
@@ -105,7 +128,7 @@ image_save_jpeg(const Image & im, const char *file, const Opt & opt){
   int quality = opt.get("jpeg_quality", 95);
 
   if ((quality<0)||(quality>100))
-      throw Err() << "JPEG error: quality not in range 0..100: " << quality;
+      throw Err() << "image_save_jpeg: quality not in range 0..100: " << quality;
 
   FILE * outfile = NULL;
   unsigned char *buf = NULL;
@@ -114,12 +137,13 @@ image_save_jpeg(const Image & im, const char *file, const Opt & opt){
   struct jpeg_compress_struct cinfo;
   struct jpeg_error_mgr jerr;
   cinfo.err = jpeg_std_error(&jerr);
+  error_pref = "image_save_jpeg";
+  jpeg_create_compress(&cinfo);
 
   try {
-    jpeg_create_compress(&cinfo);
 
     if ((outfile = fopen(file, "wb")) == NULL)
-     throw Err() << "JPEG error: can't open file: " << file;
+     throw Err() << "image_load_jpeg: can't open file: " << file;
 
     jpeg_stdio_dest(&cinfo, outfile);
     cinfo.image_width = im.width();

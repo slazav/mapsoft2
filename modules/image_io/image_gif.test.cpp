@@ -12,15 +12,15 @@ main(){
 
     // size
     assert_err(image_size_gif("test_gif/missing"),
-      "GIF error: can't open file: test_gif/missing");
+      "image_size_gif: can't open file: test_gif/missing");
     assert_err(image_size_gif("test_gif/Readme.md"),
-      "GIF error: can't open file: test_gif/Readme.md");
+      "image_size_gif: can't open file: test_gif/Readme.md");
 
     // load
     assert_err(image_load_gif("test_gif/missing"),
-      "GIF error: can't open file: test_gif/missing");
+      "image_load_gif: can't open file: test_gif/missing");
     assert_err(image_load_gif("test_gif/Readme.md"),
-      "GIF error: can't open file: test_gif/Readme.md");
+      "image_load_gif: can't open file: test_gif/Readme.md");
 
     /*********************************************/
     // Original image
@@ -203,6 +203,21 @@ main(){
       assert(I.get32(15,45)   == 0xFF000000);
       assert(I.get32(43,123)  == 0xFFFFFFFF);
       assert(I.get32(203,27)  == 0xFF000000);
+    }
+
+    { //scale tests
+      Image I1 = image_load_gif("test_gif/img_32_def.gif", 1);
+      Image I;
+      iPoint pt(101,32);
+      for (int sc=1; sc<10; sc++){
+        I = image_load_gif("test_gif/img_32_def.gif", sc);
+        assert(I.width() == (I1.width()-1)/sc+1);
+        assert(I.height() == (I1.height()-1)/sc+1);
+        iPoint pt1 = pt/sc;
+        assert(I.get_rgb(pt1.x, pt1.y) == I1.get_rgb(pt1.x*sc, pt1.y*sc));
+      }
+      assert_err(image_load_gif("test_gif/img_32_def.gif", 0),
+        "image_load_gif: wrong scale: 0");
     }
 
 /*
