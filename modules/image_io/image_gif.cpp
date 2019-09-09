@@ -212,10 +212,7 @@ image_load_gif(const std::string & file, const int scale){
 
 
 void
-image_save_gif(const Image & im, const std::string & file){
-
-  if (im.type() != IMAGE_32ARGB)
-    throw Err() << "GIF error: only 32-bpp images are supported";
+image_save_gif(const Image & im, const std::string & file, const Opt & opt){
 
   GifFileType *gif = NULL;
   ColorMapObject *gif_cmap = NULL;
@@ -227,22 +224,39 @@ image_save_gif(const Image & im, const std::string & file){
 #endif
   if (!gif) throw Err() << "GIF error: can't open file: " << file;
 
-  std::vector<uint32_t> colors = image_colormap(im);
-  Image im8 = image_remap(im, colors);
+  Opt opt1(opt);
+  if (opt1.get("cmap_alpha", "")!="none")
+    opt1.put("cmap_alpha", "gif");
+  std::vector<uint32_t> colors = image_colormap(im, opt1);
+  Image im8 = image_remap(im, colors, opt1);
+
+  if (im8.cmap.size()<2 || im8.cmap.size()>2562) throw Err() <<
+    "image_save_gif: bad size of image colormap" << im8.cmap.size();
 
   // find fully transparent color
   int trcol = -1;
   for (int i=0; i<im8.cmap.size(); i++)
     if (((im8.cmap[i]>>24)&0xFF) == 0) {trcol = i; break;}
 
+  // gif color map should have 2^x size.
+  int cnum=2;
+  for (int i = 8; i>0; i--){
+    if (im8.cmap.size()<=pow(2,i)) cnum = pow(2,i);
+    else break;
+  }
+
   try {
 //    EGifSetGifVersion(gif, true);
 #if GIFV == 500
-    gif_cmap = GifMakeMapObject(im8.cmap.size(), NULL);
+    gif_cmap = GifMakeMapObject(cnum, NULL);
 #else
-    gif_cmap = MakeMapObject(im8.cmap.size(), NULL);
+    gif_cmap = MakeMapObject(cnum, NULL);
 #endif
-    for (int i=0; i<im8.cmap.size(); i++){
+
+    if (!gif_cmap) throw Err() <<
+      "image_save_gif: can't initialize GIF color map";
+
+    for (int i=0; i<im8.cmap.size(); ++i){
       gif_cmap->Colors[i].Blue  = im8.cmap[i] & 0xFF;
       gif_cmap->Colors[i].Green = (im8.cmap[i] >> 8) & 0xFF;
       gif_cmap->Colors[i].Red   = (im8.cmap[i] >> 16) & 0xFF;

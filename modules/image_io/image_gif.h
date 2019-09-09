@@ -12,6 +12,7 @@ iPoint image_size_gif(const std::string & file);
 Image image_load_gif(const std::string & file, const int scale=1);
 
 // save the whole image
-void image_save_gif(const Image & im, const std::string & file);
+void image_save_gif(const Image & im, const std::string & file,
+                    const Opt & opt = Opt());
 
 #endif
