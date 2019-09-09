@@ -142,10 +142,6 @@ image_load_gif(const std::string & file, const double scale){
       if (i==trcol) colors[i] = 0;
     }
 
-    // allocate memory for one data line
-    GifLine = new GifByteType[w];
-    if (!GifLine) throw Err() << "image_load_gif: can't allocate memory";
-
     // scaled image
     int w1 = floor((w-1)/scale+1);
     int h1 = floor((h-1)/scale+1);
@@ -154,17 +150,28 @@ image_load_gif(const std::string & file, const double scale){
 
     /// Main loop
 
-    int line = 0;
-    for (int y=0; y<h1; ++y){
-
-      while (line<=rint(y*scale)){
-        if (DGifGetLine(gif, GifLine, w) == GIF_ERROR) GifErr();
-        line++;
+    if (h==h1 && w==w1){
+      for (int y=0; y<h; ++y){
+        if (DGifGetLine(gif, img.data() + y*w, w) == GIF_ERROR) GifErr();
       }
+    }
+    else {
+      // allocate memory for one data line
+      GifLine = new GifByteType[w];
+      if (!GifLine) throw Err() << "image_load_gif: can't allocate memory";
 
-      for (int x=0; x<w1; ++x){
-        int xs = scale==1.0? x:rint(x*scale);
-        img.set8(x,y, GifLine[xs]);
+      int line = 0;
+      for (int y=0; y<h1; ++y){
+
+        while (line<=rint(y*scale)){
+          if (DGifGetLine(gif, GifLine, w) == GIF_ERROR) GifErr();
+          line++;
+        }
+
+        for (int x=0; x<w1; ++x){
+          int xs = scale==1.0? x:rint(x*scale);
+          img.set8(x,y, GifLine[xs]);
+        }
       }
     }
 
