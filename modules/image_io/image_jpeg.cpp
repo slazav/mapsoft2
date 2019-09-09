@@ -129,13 +129,12 @@ load(const std::string & file, const int scale){
 
 
 void
-image_save_jpeg(const Image & im, const char *file, int quality){
+image_save_jpeg(const Image & im, const char *file, const Opt & opt){
+
+  int quality = opt.get("jpeg_quality", 95);
 
   if ((quality<0)||(quality>100))
       throw Err() << "JPEG error: quality not in range 0..100: " << quality;
-
-  if (im.type() != IMAGE_32ARGB)
-    throw Err() << "JPEG error: only 32-bpp images are supported";
 
   FILE * outfile = NULL;
   unsigned char *buf = NULL;
@@ -164,7 +163,7 @@ image_save_jpeg(const Image & im, const char *file, int quality){
 
     for (int y = 0; y < im.height(); y++){
       for (int x = 0; x < im.width(); x++){
-        int c = im.get32(x, y);
+        int c = im.get_rgb(x, y);
         buf[3*x+2] = c & 0xFF;
         buf[3*x+1] = (c >> 8) & 0xFF;
         buf[3*x]   = (c >> 16) & 0xFF;

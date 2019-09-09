@@ -12,6 +12,7 @@ iPoint image_size_jpeg(const std::string & file);
 Image image_load_jpeg(const std::string & file, const int scale=1);
 
 // save the whole image
-void image_save_jpeg(const Image & im, const char * file, const int quality);
+void image_save_jpeg(const Image & im, const char * file,
+                     const Opt & opt = Opt());
 
 #endif
