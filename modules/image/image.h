@@ -218,8 +218,8 @@ class Image {
 
     // Get alpha channel + 8-bit grey color for any image type.
     uint16_t get_agrey8(const size_t x, const size_t y) const{
-      if (t==IMAGE_8)  return 0xFF + get8(x,y);
-      if (t==IMAGE_16) return 0xFF + (get16(x,y)>>8);
+      if (t==IMAGE_8)  return 0xFF00 + get8(x,y);
+      if (t==IMAGE_16) return 0xFF00 + (get16(x,y)>>8);
       uint32_t c = get_argb(x,y);
       return ((c>>16) & 0xFF00) +
              color_rgb_to_grey8(color_rem_transp(c,false));
