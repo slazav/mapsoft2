@@ -186,13 +186,15 @@ main(){
         assert(I1.width() == floor((I0.width()-1)/sc+1));
         assert(I1.height() == floor((I0.height()-1)/sc+1));
         iPoint pt1 = (dPoint)pt/sc;
-        assert(I1.get_rgb(pt1.x, pt1.y) == I0.get_rgb(rint(pt1.x*sc), rint(pt1.y*sc)));
+        assert(color_dist(I1.get_rgb(pt1.x, pt1.y),
+                          I0.get_rgb(rint(pt1.x*sc), rint(pt1.y*sc))) < 10);
 
         pt = iPoint(I0.width()-1, I0.height()-1);
         pt1 = (dPoint)pt/sc;
         assert(pt1.x < I1.width());
         assert(pt1.y < I1.height());
-        assert(I1.get_rgb(pt1.x, pt1.y) == I0.get_rgb(rint(pt1.x*sc), rint(pt1.y*sc)));
+        assert(color_dist(I1.get_rgb(pt1.x, pt1.y),
+                          I0.get_rgb(rint(pt1.x*sc), rint(pt1.y*sc))) < 20);
       }
       assert_err(image_load_jpeg("test_jpeg/img_32_def.jpg", 0),
         "image_load_jpeg: wrong scale: 0");

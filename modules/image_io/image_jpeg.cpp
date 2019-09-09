@@ -78,32 +78,40 @@ image_load_jpeg(const std::string & file, const double scale){
     jpeg_stdio_src(&cinfo, infile);
     jpeg_read_header(&cinfo, TRUE);
 
-    int denom = 1;
+    int denom;
+    if (scale <2) denom = 1;
+    else if (scale <4)  denom = 2;
+    else if (scale <8)  denom = 4;
+    else denom = 8;
+    double sc = scale/denom;
 
     cinfo.out_color_space = JCS_RGB; // always load in RGB mode
     cinfo.scale_denom = denom; // set denominator
     jpeg_start_decompress(&cinfo);
 
-    buf  = new unsigned char[(cinfo.image_width+1) * 3];
-
     // scaled image
-    int w = cinfo.image_width;
-    int h = cinfo.image_height;
-    int w1 = floor((w-1)/scale+1);
-    int h1 = floor((h-1)/scale+1);
+    int w = cinfo.output_width;
+    int h = cinfo.output_height;
+    int w1 = floor((cinfo.image_width-1)/scale+1);
+    int h1 = floor((cinfo.image_height-1)/scale+1);
     img = Image(w1,h1, IMAGE_32ARGB);
+    // adjust scale
+    sc = std::min((double)(w-1)/(w1-1), (double)(h-1)/(h1-1));
+
+    // memory buffer
+    buf  = new unsigned char[(cinfo.output_width+1) * 3];
 
     // main loop
 
     int line = 0;
     for (int y=0; y<h1; ++y){
-      while (line<=rint(y*scale)){
+      while (line<=rint(y*sc) && line<h){
         jpeg_read_scanlines(&cinfo, (JSAMPLE**)&buf, 1);
         line++;
       }
 
       for (int x=0; x<w1; ++x){
-        int xs3 = 3*( scale==1.0? x:rint(x*scale) );
+        int xs3 = 3*( sc==1.0? x:rint(x*sc));
         img.set32(x,y,
           0xFF000000 + buf[xs3+2] + (buf[xs3+1]<<8) + (buf[xs3]<<16));
       }
