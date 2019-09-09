@@ -42,17 +42,18 @@ main(){
       assert(image_size_jpeg("test_jpeg/img_32_def.jpg") == iPoint(256,128));
 
       Image I = image_load_jpeg("test_jpeg/img_32_def.jpg", 1);
-      assert(I.type() == IMAGE_32ARGB);
+      image_save_jpeg(I, "test_jpeg/img_32_def1.jpg");
+      assert(I.type() == IMAGE_24RGB);
       assert(I.width() == 256);
       assert(I.height() == 128);
 
       // check far from edges (smaller jpeg artifacts)
-      assert(color_dist(I.get32(10,10),   0xff141400) < 5);
-      assert(color_dist(I.get32(117,117), 0xffeaea00) < 5);
-      assert(color_dist(I.get32(138,10),  0xFF090000) < 5);
-      assert(color_dist(I.get32(245,117), 0xffE90000) < 5);
-      assert(color_dist(I.get32(64,64),   0xFF808000) < 5);
-      assert(color_dist(I.get32(192,64),  0xFF800000) < 5);
+      assert(color_dist(I.get_argb(10,10),   0xff141400) < 5);
+      assert(color_dist(I.get_argb(117,117), 0xffeaea00) < 5);
+      assert(color_dist(I.get_argb(138,10),  0xFF090000) < 5);
+      assert(color_dist(I.get_argb(245,117), 0xffE90000) < 5);
+      assert(color_dist(I.get_argb(64,64),   0xFF808000) < 5);
+      assert(color_dist(I.get_argb(192,64),  0xFF800000) < 5);
 
       Opt o;
       o.put("jpeg_quality", 120);
@@ -63,12 +64,12 @@ main(){
       o.put("jpeg_quality", 100);
       image_save_jpeg(img, "test_jpeg/img_32_100.jpg", o);
       I = image_load_jpeg("test_jpeg/img_32_100.jpg", 1);
-      assert(color_dist(I.get32(10,10),   0xff141400) < 5);
-      assert(color_dist(I.get32(117,117), 0xffeaea00) < 5);
-      assert(color_dist(I.get32(138,10),  0xFF090000) < 5);
-      assert(color_dist(I.get32(245,117), 0xffE90000) < 5);
-      assert(color_dist(I.get32(64,64),   0xFF808000) < 5);
-      assert(color_dist(I.get32(192,64),  0xFF800000) < 5);
+      assert(color_dist(I.get_argb(10,10),   0xff141400) < 5);
+      assert(color_dist(I.get_argb(117,117), 0xffeaea00) < 5);
+      assert(color_dist(I.get_argb(138,10),  0xFF090000) < 5);
+      assert(color_dist(I.get_argb(245,117), 0xffE90000) < 5);
+      assert(color_dist(I.get_argb(64,64),   0xFF808000) < 5);
+      assert(color_dist(I.get_argb(192,64),  0xFF800000) < 5);
     }
 
     /*********************************************/
@@ -81,15 +82,15 @@ main(){
       }
       image_save_jpeg(img, "test_jpeg/img_24_def.jpg");
       Image I = image_load_jpeg("test_jpeg/img_24_def.jpg", 1);
-      assert(I.type() == IMAGE_32ARGB);
+      assert(I.type() == IMAGE_24RGB);
       assert(I.width() == 256);
       assert(I.height() == 128);
-      assert(color_dist(I.get32(10,10),   0xff141400) < 5);
-      assert(color_dist(I.get32(117,117), 0xffeaea00) < 5);
-      assert(color_dist(I.get32(138,10),  0xFF090000) < 5);
-      assert(color_dist(I.get32(245,117), 0xffE90000) < 5);
-      assert(color_dist(I.get32(64,64),   0xFF808000) < 5);
-      assert(color_dist(I.get32(192,64),  0xFF800000) < 5);
+      assert(color_dist(I.get_argb(10,10),   0xff141400) < 5);
+      assert(color_dist(I.get_argb(117,117), 0xffeaea00) < 5);
+      assert(color_dist(I.get_argb(138,10),  0xFF090000) < 5);
+      assert(color_dist(I.get_argb(245,117), 0xffE90000) < 5);
+      assert(color_dist(I.get_argb(64,64),   0xFF808000) < 5);
+      assert(color_dist(I.get_argb(192,64),  0xFF800000) < 5);
     }
 
     /*********************************************/
@@ -104,15 +105,15 @@ main(){
 
       image_save_jpeg(img, "test_jpeg/img_16_def.jpg");
       Image I = image_load_jpeg("test_jpeg/img_16_def.jpg", 1);
-      assert(I.type() == IMAGE_32ARGB);
+      assert(I.type() == IMAGE_24RGB);
       assert(I.width() == 256);
       assert(I.height() == 128);
-      assert(color_dist(I.get32(10,10),   0xff111111) < 2);
-      assert(color_dist(I.get32(117,117), 0xffcfcfcf) < 2);
-      assert(color_dist(I.get32(138,10),  0xFF030303) < 2);
-      assert(color_dist(I.get32(245,117), 0xff454545) < 2);
-      assert(color_dist(I.get32(64,64),   0xFF717171) < 2);
-      assert(color_dist(I.get32(192,64),  0xFF262626) < 2);
+      assert(color_dist(I.get_argb(10,10),   0xff111111) < 2);
+      assert(color_dist(I.get_argb(117,117), 0xffcfcfcf) < 2);
+      assert(color_dist(I.get_argb(138,10),  0xFF030303) < 2);
+      assert(color_dist(I.get_argb(245,117), 0xff454545) < 2);
+      assert(color_dist(I.get_argb(64,64),   0xFF717171) < 2);
+      assert(color_dist(I.get_argb(192,64),  0xFF262626) < 2);
     }
 
     /*********************************************/
@@ -128,15 +129,15 @@ main(){
 
       image_save_jpeg(img, "test_jpeg/img_8_def.jpg");
       Image I = image_load_jpeg("test_jpeg/img_8_def.jpg", 1);
-      assert(I.type() == IMAGE_32ARGB);
+      assert(I.type() == IMAGE_24RGB);
       assert(I.width() == 256);
       assert(I.height() == 128);
-      assert(color_dist(I.get32(10,10),   0xff111111) < 2);
-      assert(color_dist(I.get32(117,117), 0xffcfcfcf) < 2);
-      assert(color_dist(I.get32(138,10),  0xFF030303) < 2);
-      assert(color_dist(I.get32(245,117), 0xff454545) < 2);
-      assert(color_dist(I.get32(64,64),   0xFF717171) < 2);
-      assert(color_dist(I.get32(192,64),  0xFF262626) < 2);
+      assert(color_dist(I.get_argb(10,10),   0xff111111) < 2);
+      assert(color_dist(I.get_argb(117,117), 0xffcfcfcf) < 2);
+      assert(color_dist(I.get_argb(138,10),  0xFF030303) < 2);
+      assert(color_dist(I.get_argb(245,117), 0xff454545) < 2);
+      assert(color_dist(I.get_argb(64,64),   0xFF717171) < 2);
+      assert(color_dist(I.get_argb(192,64),  0xFF262626) < 2);
     }
 
 
@@ -145,15 +146,15 @@ main(){
       Image img = image_remap(img32, colors);
       image_save_jpeg(img, "test_jpeg/img_8p_def.jpg");
       Image I = image_load_jpeg("test_jpeg/img_8p_def.jpg", 1);
-      assert(I.type() == IMAGE_32ARGB);
+      assert(I.type() == IMAGE_24RGB);
       assert(I.width() == 256);
       assert(I.height() == 128);
-      assert(color_dist(I.get32(10,10),   0xff101801) < 2);
-      assert(color_dist(I.get32(117,117), 0xffe6e600) < 2);
-      assert(color_dist(I.get32(138,10),  0xFF0a0000) < 2);
-      assert(color_dist(I.get32(245,117), 0xffe60001) < 2);
-      assert(color_dist(I.get32(64,64),   0xFF858501) < 2);
-      assert(color_dist(I.get32(192,64),  0xFF820201) < 2);
+      assert(color_dist(I.get_argb(10,10),   0xff101801) < 2);
+      assert(color_dist(I.get_argb(117,117), 0xffe6e600) < 2);
+      assert(color_dist(I.get_argb(138,10),  0xFF0a0000) < 2);
+      assert(color_dist(I.get_argb(245,117), 0xffe60001) < 2);
+      assert(color_dist(I.get_argb(64,64),   0xFF858501) < 2);
+      assert(color_dist(I.get_argb(192,64),  0xFF820201) < 2);
     }
 
     { // IMAGE_1
@@ -165,17 +166,17 @@ main(){
       }
       image_save_jpeg(img, "test_jpeg/img_1_def.jpg");
       Image I = image_load_jpeg("test_jpeg/img_1_def.jpg", 1);
-      assert(I.type() == IMAGE_32ARGB);
+      assert(I.type() == IMAGE_24RGB);
       assert(I.width() == 256);
       assert(I.height() == 128);
       assert(img.get1(0,0)     == 0);
       assert(img.get1(15,45)   == 0);
       assert(img.get1(43,123)  == 1);
       assert(img.get1(203,27)  == 0);
-      assert(I.get32(0,0)     == 0xFF000000);
-      assert(I.get32(15,45)   == 0xFF000000);
-      assert(I.get32(43,123)  == 0xFFFFFFFF);
-      assert(I.get32(203,27)  == 0xFF000000);
+      assert(I.get_argb(0,0)     == 0xFF000000);
+      assert(I.get_argb(15,45)   == 0xFF000000);
+      assert(I.get_argb(43,123)  == 0xFFFFFFFF);
+      assert(I.get_argb(203,27)  == 0xFF000000);
     }
 
     { //scale tests
@@ -201,12 +202,12 @@ main(){
     }
 
 /*
-std::cerr << std::hex << I.get32(10,10) << "\n";
-std::cerr << std::hex << I.get32(117,117) << "\n";
-std::cerr << std::hex << I.get32(138,10) << "\n";
-std::cerr << std::hex << I.get32(245,117) << "\n";
-std::cerr << std::hex << I.get32(64,64) << "\n";
-std::cerr << std::hex << I.get32(192,64) << "\n";
+std::cerr << std::hex << I.get_argb(10,10) << "\n";
+std::cerr << std::hex << I.get_argb(117,117) << "\n";
+std::cerr << std::hex << I.get_argb(138,10) << "\n";
+std::cerr << std::hex << I.get_argb(245,117) << "\n";
+std::cerr << std::hex << I.get_argb(64,64) << "\n";
+std::cerr << std::hex << I.get_argb(192,64) << "\n";
 */
 
   }

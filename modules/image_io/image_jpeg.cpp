@@ -1,6 +1,7 @@
 #include "image_jpeg.h"
 #include <jpeglib.h>
 #include <stdio.h>
+#include <cstring>
 
 std::string jpeg_error_message;
 
@@ -94,26 +95,33 @@ image_load_jpeg(const std::string & file, const double scale){
     int h = cinfo.output_height;
     int w1 = floor((cinfo.image_width-1)/scale+1);
     int h1 = floor((cinfo.image_height-1)/scale+1);
-    img = Image(w1,h1, IMAGE_32ARGB);
+    img = Image(w1,h1, IMAGE_24RGB);
     // adjust scale
     sc = std::min((double)(w-1)/(w1-1), (double)(h-1)/(h1-1));
 
     // memory buffer
-    buf  = new unsigned char[(cinfo.output_width+1) * 3];
+    buf  = new unsigned char[(w+1)*3];
 
     // main loop
 
-    int line = 0;
-    for (int y=0; y<h1; ++y){
-      while (line<=rint(y*sc) && line<h){
+    if (0 && w==w1 && h==h1){
+      for (int y=0; y<h; ++y){
         jpeg_read_scanlines(&cinfo, (JSAMPLE**)&buf, 1);
-        line++;
+        memcpy(img.data() + 3*y*w1, buf, 3*w1);
       }
-
-      for (int x=0; x<w1; ++x){
-        int xs3 = 3*( sc==1.0? x:rint(x*sc));
-        img.set32(x,y,
-          0xFF000000 + buf[xs3+2] + (buf[xs3+1]<<8) + (buf[xs3]<<16));
+    }
+    else {
+      int line = 0;
+      for (int y=0; y<h1; ++y){
+        while (line<=rint(y*sc) && line<h){
+          jpeg_read_scanlines(&cinfo, (JSAMPLE**)&buf, 1);
+          line++;
+        }
+        uint8_t *dst_buf = img.data() + 3*y*w1;
+        for (int x=0; x<w1; ++x){
+          int xs3 = 3*rint(x*sc);
+          memcpy(dst_buf + 3*x, buf + xs3, 3);
+        }
       }
     }
 
