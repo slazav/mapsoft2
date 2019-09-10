@@ -56,15 +56,18 @@ image_load_tiff(const std::string & file, const double scale){
 
     TIFFSetErrorHandler((TIFFErrorHandler)&my_error_exit);
 
+    // open file
     tif = TIFFOpen(file.c_str(), "rb");
     if (!tif) throw Err() << "image_load_tiff: can't open file: " << file;
 
+    // image dimensions
     uint32_t w, h;
     TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &w);
     TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &h);
-    int scan = TIFFScanlineSize(tif);
-    int bpp = scan/w;
 
+    // scaled image size
+    int w1 = floor((w-1)/scale+1);
+    int h1 = floor((h-1)/scale+1);
 
     // can we do random access to lines?
     int compression_type, rows_per_strip;
@@ -73,37 +76,75 @@ image_load_tiff(const std::string & file, const double scale){
     bool can_skip_lines =
       (compression_type==COMPRESSION_NONE)||(rows_per_strip==1);
 
-    uint16_t photometric;
-    uint32_t colors[256];
+    // samples per pixel, bits per sample, photometric type
+    int samples=0, bps=0;
+    uint16_t photometric = 0;
+    TIFFGetField(tif, TIFFTAG_SAMPLESPERPIXEL, &samples);
+    TIFFGetField(tif, TIFFTAG_BITSPERSAMPLE,   &bps);
     TIFFGetField(tif, TIFFTAG_PHOTOMETRIC, &photometric);
+    //std::cerr << "TIFF TYPE: " << photometric << " "
+    //          << samples << "x" << bps << "\n";
 
-    if(photometric == PHOTOMETRIC_RGB ||
-       photometric == PHOTOMETRIC_MINISWHITE ||
-       photometric == PHOTOMETRIC_MINISBLACK){
+    // create image (type depends on TIFF type)
+    switch (photometric){
+
+      case PHOTOMETRIC_PALETTE:
+        if (samples == 1 && bps == 8) {
+          img = Image(w1,h1, IMAGE_8PAL);
+          uint16 *cmap[3];
+          TIFFGetField(tif, TIFFTAG_COLORMAP, cmap, cmap+1, cmap+2);
+          for (int i=0; i<256; i++){
+            img.cmap.push_back(
+              (((uint32)cmap[0][i] & 0xFF00)<<8) +
+               ((uint32)cmap[1][i] & 0xFF00) +
+              (((uint32)cmap[2][i] & 0xFF00)>>8) +
+              0xFF000000);
+          }
+          break;
+        }
+        throw Err() << "image_load_tiff: unsupported format: "
+                    << "PALETTE " << samples << "x" << bps;
+
+      case PHOTOMETRIC_RGB:
+        if (samples == 3 && bps==8){ // RGB
+          img = Image(w1,h1, IMAGE_24RGB);
+          break;
+        }
+        if (samples == 4 && bps==8){ // RGBA
+          img = Image(w1,h1, IMAGE_32ARGB);
+          break;
+        }
+        if (samples == 1 && bps==8){ // G
+          img = Image(w1,h1, IMAGE_8);
+          break;
+        }
+        throw Err() << "image_load_tiff: unsupported format: "
+                    << "RGB " << samples << "x" << bps;
+
+      case PHOTOMETRIC_MINISWHITE:
+      case PHOTOMETRIC_MINISBLACK:
+        if (samples == 1 && bps==16){ // 16bit
+          img = Image(w1,h1, IMAGE_16);
+          break;
+        }
+        if (samples == 1 && bps == 8){ // 8bit
+          img = Image(w1,h1, IMAGE_8);
+          break;
+        }
+        throw Err() << "image_load_tiff: unsupported format: "
+                    << "MINISWHITE/MINISBLACK " << samples << "x" << bps;
+
+      default: throw Err() << "image_load_tiff: unsupported photometric type: " << photometric;
     }
-    else if (photometric == PHOTOMETRIC_PALETTE){
-      uint16 *cmap[3];
-      TIFFGetField(tif, TIFFTAG_COLORMAP, cmap, cmap+1, cmap+2);
-      for (int i=0; i<256; i++){
-        colors[i] =
-          (((uint32)cmap[0][i] & 0xFF00)<<8) +
-           ((uint32)cmap[1][i] & 0xFF00) +
-          (((uint32)cmap[2][i] & 0xFF00)>>8) +
-          (0xFF<<24);
-      }
-    }
-    else
-      throw Err() << "image_load_tiff: unsupported photometric type: " << photometric;
+
 
     // allocate buffer
+    int scan = TIFFScanlineSize(tif);
     cbuf = (uint8 *)_TIFFmalloc(scan);
 
-    // scaled image
-    int w1 = floor((w-1)/scale+1);
-    int h1 = floor((h-1)/scale+1);
-    img = Image(w1,h1, IMAGE_32ARGB);
-
     // Main loop
+    // Note that there are less checks then in the image creation switch().
+    //
 
     int line = 0;
     for (int y=0; y<h1; ++y){
@@ -112,7 +153,7 @@ image_load_tiff(const std::string & file, const double scale){
 
       while (line<=rint(y*scale)){
         TIFFReadScanline(tif, cbuf, line);
-        line++;
+        ++line;
       }
 
       for (int x=0; x<w1; ++x){
@@ -121,49 +162,53 @@ image_load_tiff(const std::string & file, const double scale){
         switch (photometric){
 
           case PHOTOMETRIC_PALETTE:
-            c = colors[cbuf[xs]]; break;
+            img.data()[y*w1+x] = cbuf[xs];
+            break;
 
           case PHOTOMETRIC_RGB:
-            if (bpp==3){ // RGB
-              c = 0xFF000000 + (cbuf[3*xs]<<16) + (cbuf[3*xs+1]<<8) + cbuf[3*xs+2];
+            if (samples==3){ // RGB
+              memcpy(img.data() + 3*(y*w1+x), cbuf + 3*xs, 3);
               break;
             }
-            if (bpp==4){ // RGBA
-              c = (cbuf[4*xs]<<16) + (cbuf[4*xs+1]<<8) + cbuf[4*xs+2] + (cbuf[4*xs+3]<<24);
+            if (samples==4){ // RGBA
+              ((uint32_t*)img.data())[y*w1+x] =
+                 color_argb(cbuf[4*xs+3], cbuf[4*xs], cbuf[4*xs+1], cbuf[4*xs+2]);
               break;
             }
-            if (bpp==1){ // G
-              c = cbuf[xs] + (cbuf[xs]<<8) + (cbuf[xs]<<16) + 0xFF000000;
+            if (samples==1){ // G
+              img.data()[y*w1+x] = cbuf[xs];
               break;
             }
-            throw Err() << "image_load_tiff: unsupported format: PHOTOMETRIC_RGB, bpp: " << bpp;
+            throw Err() << "image_load_tiff: unsupported format: "
+                        << "RGB " << samples << "x" << bps;
 
           case PHOTOMETRIC_MINISWHITE:
-            if (bpp==2){ // 16bit
-              c = 0xFFFFFFFF - (cbuf[2*xs+1] + (cbuf[2*xs+1]<<8) + (cbuf[2*xs+1]<<16));
+            if (bps==16){ // 16bit
+              ((uint16_t*)img.data())[y*w1+x] = 0xFFFF - ((uint16_t*)cbuf)[xs];
               break;
             }
-            if (bpp==1){ // 8bit
-              c = 0xFFFFFFFF - (cbuf[xs] + (cbuf[xs]<<8) + (cbuf[xs]<<16));
+            if (bps==8){ // 8bit
+              img.data()[y*w1+x] = 0xFF - cbuf[xs];
               break;
             }
-            throw Err() << "image_load_tiff: unsupported format: PHOTOMETRIC_MINISWHITE, bpp: " << bpp;
+            throw Err() << "image_load_tiff: unsupported format: "
+                        << "MINISWHITE " << samples << "x" << bps;
 
           case PHOTOMETRIC_MINISBLACK:
-            if (bpp==2){ // 16bit
-              c = cbuf[2*xs+1] + (cbuf[2*xs+1]<<8) + (cbuf[2*xs+1]<<16) + 0xFF000000;
+            if (bps==16){ // 16bit
+              ((uint16_t*)img.data())[y*w1+x] = ((uint16_t*)cbuf)[xs];
               break;
             }
-            if (bpp==1){ // 8bit
-              c = cbuf[xs] + (cbuf[xs]<<8) + (cbuf[xs]<<16) + 0xFF000000;
+            if (bps==8){ // 8bit
+              img.data()[y*w1+x] = cbuf[xs];
               break;
             }
-            throw Err() << "image_load_tiff: unsupported format: PHOTOMETRIC_MINISBLACK, bpp: " << bpp;
+            throw Err() << "image_load_tiff: unsupported format: "
+                        << "MINISBLACK " << samples << "x" << bps;
 
-          default: throw Err() << "image_load_tiff: unsupported data format: photometric: "
-                               << photometric << " bpp: " << bpp;
+          default: throw Err() <<
+            "image_load_tiff: unsupported photometric type: " << photometric;
         }
-        img.set32(x,y,c);
       }
     }
     throw Err();
@@ -219,6 +264,7 @@ void image_save_tiff(const Image & im, const std::string & file, const Opt & opt
       im8 = image_remap(im, colors, opt1);
     }
 
+    // open file
     tif = TIFFOpen(file.c_str(), "wb");
     if (!tif) throw Err() << "TIFF error: can't open file: " << file;
 
@@ -268,33 +314,32 @@ void image_save_tiff(const Image & im, const std::string & file, const Opt & opt
         uint32_t c;
         //uint16_t c16;
         switch (samples*bps){
+
           case 32:
             c = im.get_argb(x, y);
+            cbuf[4*x+3] = (c >> 24) & 0xFF;
+            c = color_rem_transp(c, false);
             cbuf[4*x]   = (c >> 16) & 0xFF;
             cbuf[4*x+1] = (c >> 8)  & 0xFF;
             cbuf[4*x+2] = c & 0xFF;
-            cbuf[4*x+3] = (c >> 24) & 0xFF;
             break;
+
           case 24:
             c = im.get_rgb(x, y);
             cbuf[3*x]   = (c >> 16) & 0xFF;
             cbuf[3*x+1] = (c >> 8)  & 0xFF;
             cbuf[3*x+2] = c & 0xFF;
             break;
+
           case 16:
-            //c16 = im.get_grey16(x, y);
-            //cbuf[2*x]   = (c16>>8) & 0xFF;
-            //cbuf[2*x+1] = c16 & 0xFF;
-
             ((uint16_t *)cbuf)[x] = im.get_grey16(x, y);
-
             break;
+
           case 8:
-          if (use_cmap)
-            cbuf[x] = im8.get8(x,y);
-          else
-            cbuf[x] = im.get_grey8(x,y);
-          break;
+            if (use_cmap) cbuf[x] = im8.get8(x,y);
+            else          cbuf[x] = im.get_grey8(x,y);
+            break;
+
         }
       }
       TIFFWriteScanline(tif, buf, y);
