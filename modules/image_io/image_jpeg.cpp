@@ -141,7 +141,7 @@ image_load_jpeg(const std::string & file, const double scale){
 /**********************************************************/
 
 void
-image_save_jpeg(const Image & im, const char *file, const Opt & opt){
+image_save_jpeg(const Image & im, const std::string & file, const Opt & opt){
 
   int quality = opt.get("jpeg_quality", 95);
 
@@ -160,7 +160,7 @@ image_save_jpeg(const Image & im, const char *file, const Opt & opt){
 
   try {
 
-    if ((outfile = fopen(file, "wb")) == NULL)
+    if ((outfile = fopen(file.c_str(), "wb")) == NULL)
      throw Err() << "image_load_jpeg: can't open file: " << file;
 
     jpeg_stdio_dest(&cinfo, outfile);
