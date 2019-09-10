@@ -1,7 +1,7 @@
-MOD_HEADERS := image_gif.h image_jpeg.h image_png.h image_tiff.h
-MOD_SOURCES := image_gif.cpp image_jpeg.cpp image_png.cpp image_tiff.cpp
+MOD_HEADERS := image_gif.h image_jpeg.h image_png.h image_tiff.h image_io.h
+MOD_SOURCES := image_gif.cpp image_jpeg.cpp image_png.cpp image_tiff.cpp image_io.cpp
 
-SIMPLE_TESTS := image_gif image_jpeg image_png image_tiff image_reduce
+SIMPLE_TESTS := image_gif image_jpeg image_png image_tiff image_reduce image_io
 
 PKG_CONFIG   := libgif libjpeg libpng libtiff-4
 
