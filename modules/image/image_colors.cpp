@@ -356,3 +356,39 @@ image_classify_color(const Image & img, uint32_t *colors, int clen){
   if (nc>clen) ret+=1;
   return ret;
 }
+
+#include "geom/poly_tools.h"
+
+// Change image color outside border line.
+// If border line is empty, set color in the whole image
+void image_apply_border(const Image & img, const iLine & brd, uint32_t color ){
+
+  if (img.type() != IMAGE_32ARGB) throw Err() <<
+    "image_classify: only 32-bpp images are supported";
+
+  if (brd.size()==0) {img.fill32(color); return;}
+
+  iPolyTester ptst(brd);
+  int h = img.height();
+  int w = img.width();
+
+  //process image rows
+  for (int y = 0; y < h; y++){
+    // get sorted border crossings for each row
+    std::vector<double> cr = ptst.get_cr(y);
+
+    // set color outside the border
+    int i=0;
+    for (int k = 0; k < cr.size()+1; k++){
+      int xc = (k<cr.size()) ? rint(cr[k]) : w;
+      int ic = std::min(xc, w);
+      if (ic < 0) continue;
+      for (int x=i; x<ic; x++){
+        if (k%2 == 0) img.set32(x, y, color);
+      }
+      i=ic;
+      if (i>=w) break;
+    }
+  }
+}
+

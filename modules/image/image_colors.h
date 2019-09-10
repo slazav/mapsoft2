@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <vector>
 #include "image.h"
+#include "geom/line.h"
 #include "opt/opt.h"
 
 // Create a colormap.
@@ -26,5 +27,10 @@ int image_classify_alpha(const Image & img);
 // returns 2: color,     >clen colors.
 // colors[clen] array is filled with the color palette.
 int image_classify_color(const Image & img, uint32_t *colors, int clen=256);
+
+// Change image color outside border line.
+// If border line is empty, set color in the whole image
+void image_apply_border(const Image & img, const iLine & brd = iLine(),
+                        const uint32_t color = 0);
 
 #endif
