@@ -1,7 +1,7 @@
 #include <cstring>
 #include <gif_lib.h>
 #include "err/err.h"
-#include "image/image_colors.h"
+#include "image_colors.h"
 #include "image_gif.h"
 
 /**********************************************************/

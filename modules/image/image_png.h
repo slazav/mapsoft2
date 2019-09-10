@@ -4,7 +4,7 @@
 #include <string>
 #include "geom/point.h"
 #include "opt/opt.h"
-#include "image/image.h"
+#include "image.h"
 
 
 // getting file dimensions

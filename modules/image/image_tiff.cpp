@@ -1,7 +1,7 @@
 #include <tiffio.h>
 #include <cstring>
 #include "image_tiff.h"
-#include "image/image_colors.h"
+#include "image_colors.h"
 
 // custom error handler
 #include <cstdarg>

@@ -2,9 +2,9 @@
 
 #include <cassert>
 #include <iostream>
-#include "image_gif.h"
-#include "image/image_colors.h"
 #include "err/assert_err.h"
+#include "image_gif.h"
+#include "image_colors.h"
 
 int
 main(){

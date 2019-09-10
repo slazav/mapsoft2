@@ -1,4 +1,81 @@
-### GIF format support
+## Mapsoft2 Image library
+
+------
+### Image class
+
+class `Image` in mapsoft2 represents a 2D array or data. Usually it is 
+color images. Data can be stored in different forms, some methods for
+converting data are also provided. `Image` can be used as a base class
+for implementing images with non-standard data storage.
+
+* type() method returns data type:
+
+  * IMAGE_32ARGB  -- 4 bytes per pixel data: ARGB colors. Prescaled semi-transparent pixels are used.
+                     Data is compatable with Cairo::Image Surface data.
+  * IMAGE_24RGB   -- 3 bytes per pixel data: RGB colors
+  * IMAGE_16      -- 2 bytes per pixel, gryscale, 0=black, 0xFFFF=white
+  * IMAGE_8       -- 1 byte per pixel, gryscale, 0=black, 0xFF=white
+  * IMAGE_8PAL    -- 1 byte per pixel + color palette
+  * IMAGE_1       -- 1 bit per pixel, black and white
+  * IMAGE_FLOAT   -- float-value pixel
+  * IMAGE_DOUBLE  -- double-value pixel
+  * IMAGE_UNKNOWN -- unknown data format
+
+------
+### Color handling functions
+
+* distance between two colors
+``` c++
+double color_dist(const uint32_t c1, const uint32_t c2);
+```
+
+* Assemble 32-bit color from a,r,g,b components.
+Prescaled semi-transparent colors are used.
+``` c++
+uint32_t color_argb(const uint8_t a, const uint8_t r,
+                    const uint8_t g, const uint8_t b);
+```
+
+* Remove transparency (with color scaling).
+  if gifmode = true, then keep fully transparent colors.
+``` c++
+uint32_t color_rem_transp(const uint32_t c, const bool gifmode);
+```
+
+* Convert RGB color to 8-bit greyscale
+``` c++
+uint8_t color_rgb_to_grey8(const uint32_t c);
+```
+
+* Convert RGB color to 16-bit greyscale
+``` c++
+uint16_t color_rgb_to_grey16(const uint32_t c);
+```
+
+------
+### Options
+
+image_colormap:
+
+ "cmap_alpha"        Use transparency channel: none (default), full, gif.
+ "cmap_colors"       Number of colors, or 0 for all colors (default: 256)
+ "cmap_dim_method"   Method for calculating color box dimentions: norm (default), lumin.
+ "cmap_rep_method"   Method for color box representation: meanpix (default), meancol, center.
+ "cmap_split_method" Method for box splitting: maxdim (default), maxpix, maxcol.
+
+
+image_remap:
+ "cmap_alpha"        Use transparency channel: none (default), full, gif.
+
+image_save_png:
+ "png_format"         How to save PNG files: argb, rgb, grey, agrey, pal (default depends on the image format)
+
+image_save_tiff:
+ "tiff_format"         How to save PNG files: argb, rgb, grey, pal (default depends on the image format)
+ "tiff_minwhite"       For IMAGE_16 type minimum value corresponds to white (default: false)
+
+------
+### GIF format
 
 * image_size_gif() -- Supported, gif screen size is returned.
 
@@ -14,7 +91,7 @@ semi-transparent colors supported).
 * Not full support of different libgif versions (now it works with libgif
 <4.2, but sume incomplete support is done for 4.2 and 5.0)
 
-### JPEG format support
+### JPEG format
 
 * image_size_jpeg() -- Supported.
 
@@ -22,11 +99,9 @@ semi-transparent colors supported).
 
 * image_save_jpeg() -- Supported.
 
-### PNG format support
+### PNG format
 
 * image_size_png() -- Supported.
-
-
 
 * image_load_png() -- Supported. No ADAM7 interlace support.
 
@@ -63,7 +138,7 @@ Supported PNG types for saving:
 |IMAGE_DOUBLE   |             | RGB
 |IMAGE_UNKNOWN  |             | RGB
 
-### TIFF format support
+### TIFF format
 
 * image_size_tiff() -- Supported.
 

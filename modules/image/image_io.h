@@ -2,9 +2,9 @@
 #define IMAGE_IO_H
 
 #include <string>
-#include "image/image.h"
 #include "opt/opt.h"
 #include "geom/point.h"
+#include "image.h"
 
 // get image size
 iPoint image_size(const std::string & file, const Opt & opt = Opt());

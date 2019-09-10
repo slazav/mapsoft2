@@ -1,8 +1,7 @@
-#include "image_png.h"
-#include "image/image_colors.h"
-#include <png.h>
 #include <cstring>
-
+#include <png.h>
+#include "image_png.h"
+#include "image_colors.h"
 
 /**********************************************************/
 
