@@ -24,6 +24,19 @@ main(){
       assert(point_in_polygon(iPoint("[7,2]"),L,b) == b);
     }
 
+    {
+      iLine L("[[-10,-10], [64,-10], [128,64], [-10,100]]");
+      assert(point_in_polygon(iPoint("[130,64]"),L,1) == false);
+      assert(point_in_polygon(iPoint("[120,64]"),L,1) == true);
+    }
+
+    {
+      iLine L("[[0,0], [10,0], [5,10], [0,0]]");
+      assert(point_in_polygon(iPoint("[10,10]"),L,1) == false);
+      assert(point_in_polygon(iPoint("[0,10]"),L,1) == false);
+      assert(point_in_polygon(iPoint("[5,10]"),L,1) == true);
+    }
+
     // rect_in_polygon (int)
     for (int b=0; b<2; b++){
       iLine L("[[0,0],[8,0],[4,8]]");

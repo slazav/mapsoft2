@@ -51,16 +51,31 @@ public:
   std::vector<double> get_cr(T y){
     std::vector<double> cr;
     for (int k = 0; k < sb.size(); k++){
-      if (borders){
-        if ((sb[k].y > y)&&(se[k].y > y)) continue; // segment is above the row
-        if ((sb[k].y < y)&&(se[k].y < y)) continue; // segment is below the row
+      if ((sb[k].y > y)&&(se[k].y > y)) continue; // segment is above the row
+      if ((sb[k].y < y)&&(se[k].y < y)) continue; // segment is below the row
+
+      // if two segments are crossing the row in the same point
+      // it could be 0, 1, or 2 actual crossings.
+      if (sb[k].y == y){
+        int kp = k>0? k-1:sb.size()-1;
+        if ((sb[kp].y < y && se[k].y > y) ||
+            (sb[kp].y > y && se[k].y < y))
+          cr.push_back(sb[k].x);
+        else if (borders){
+          cr.push_back(sb[k].x);
+          cr.push_back(se[kp].x);
+        }
+        continue;
       }
-      else {
-        if ((sb[k].y >= y)&&(se[k].y >= y)) continue; // segment is above the row
-        if ((sb[k].y <= y)&&(se[k].y <= y)) continue; // segment is below the row
+
+      if (se[k].y == y){
+        continue;
       }
+
       // segment is crossing the row
       cr.push_back((ss[k] * double(y - sb[k].y)) + sb[k].x);
+
+
     }
     sort(cr.begin(), cr.end());
     return cr;
