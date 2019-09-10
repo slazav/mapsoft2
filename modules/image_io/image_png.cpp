@@ -289,24 +289,6 @@ image_save_png(const Image & im, const std::string & file,
 
   try {
 
-    outfile = fopen(file.c_str(), "wb");
-    if (!outfile) throw Err() << "image_save_png: can't open file: " << file;
-
-    png_ptr = png_create_write_struct
-      (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-    if (!png_ptr)
-      throw Err() << "image_save_png: can't make png_read_struct";
-
-    info_ptr = png_create_info_struct(png_ptr);
-    if (!info_ptr)
-      throw Err() << "image_save_png: can't make png_info_struct";
-
-    if (setjmp(png_jmpbuf(png_ptr)))
-      throw Err() << "image_save_png: can't do setjmp";
-
-    png_init_io(png_ptr, outfile);
-
-
     // Choose default PNG color type
     int color_type;
     int bits = 8; // only 8-bit colors are supported now
@@ -336,11 +318,29 @@ image_save_png(const Image & im, const std::string & file,
 
     // png palette
     Image im8 = im;
-
     if (str == "pal"){
       std::vector<uint32_t> colors = image_colormap(im, opt);
       im8 = image_remap(im, colors, opt);
     }
+
+    // open file
+    outfile = fopen(file.c_str(), "wb");
+    if (!outfile) throw Err() << "image_save_png: can't open file: " << file;
+
+    png_ptr = png_create_write_struct
+      (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    if (!png_ptr)
+      throw Err() << "image_save_png: can't make png_read_struct";
+
+    info_ptr = png_create_info_struct(png_ptr);
+    if (!info_ptr)
+      throw Err() << "image_save_png: can't make png_info_struct";
+
+    if (setjmp(png_jmpbuf(png_ptr)))
+      throw Err() << "image_save_png: can't do setjmp";
+
+    png_init_io(png_ptr, outfile);
+
 
     png_set_IHDR(png_ptr, info_ptr, im.width(), im.height(),
        bits, color_type, PNG_INTERLACE_NONE,
