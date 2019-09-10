@@ -121,10 +121,11 @@ class Image {
 
     // Fast get function for image type IMAGE_24RGB
     uint32_t get24(const size_t x, const size_t y) const{
+      int i0 = 3*(w*y+x);
       return 0xFF000000 +
-             (data_.get()[3*(w*y+x)]<<16) +
-             (data_.get()[3*(w*y+x)+1]<<8) +
-              data_.get()[3*(w*y+x)+2];
+             (data_.get()[i0]<<16) +
+             (data_.get()[i0+1]<<8) +
+              data_.get()[i0+2];
     }
 
     // Fast get function for image type IMAGE_16
