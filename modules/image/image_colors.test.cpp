@@ -45,7 +45,7 @@ main(){
     assert(img.get32(100,0) == 0);
     assert(img.get32(0,101) == 0);
     assert(img.get32(0,64) == c);
-//    assert(img.get32(130,64) == 0);
+    assert(img.get32(130,64) == 0);
 
     // apply border
     img.fill32(c);
