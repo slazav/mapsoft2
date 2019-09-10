@@ -66,7 +66,7 @@ class Image {
 
     std::vector<uint32_t> cmap;
 
-    size_t type() const   {return t;}
+    ImageDataType type() const   {return t;}
     size_t width() const  {return w;}
     size_t height() const {return h;}
     iRect bbox() const    {return iRect(0,0,w,h);}
