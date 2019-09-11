@@ -15,8 +15,11 @@ void
 ms2opt_add_drawgrd(ext_option_list & opts){
   int m = MS2OPT_DRAWGRD;
   ext_option_list add = {
-  {"grid_draw_color", 1,0,m, "grid color"},
-  {"grid_draw_thick", 1,0,m, "grid line thickness"},
+  {"grid_draw_color", 1,0,m, "grid color (default 0x80000000)"},
+  {"grid_draw_thick", 1,0,m, "grid line thickness (default 1)"},
+  {"grid_text_color", 1,0,m, "grid text color (default 0xff000000)"},
+  {"grid_text_font",  1,0,m, "grid text color (default \"serif:bold\")"},
+  {"grid_text_size",  1,0,m, "grid text size, pixels (default 15)"},
   };
   opts.insert(opts.end(), add.begin(), add.end());
 }
@@ -33,9 +36,13 @@ draw_pulk_grid(CairoWrapper & cr, const iPoint & origin,
   int lon0a = lon2lon0(rng_wgs.tlc().x);
   int lon0b = lon2lon0(rng_wgs.brc().x);
 
-  cr->set_color_a(opt.get("grid_draw_color", 0xFF000000));
-  cr->set_line_width(opt.get("grid_draw_thick", 2));
-  cr->set_fig_font(0xFF000000, 18, 15, 100);
+  int text_size = opt.get("grid_text_size",  15);
+  cr->set_color_a(opt.get("grid_draw_color", 0x8000000));
+  cr->set_line_width(opt.get("grid_draw_thick", 1));
+  cr->set_fc_font(opt.get("grid_text_color", 0xFF000000),
+                  opt.get("grid_text_font",  "serif:bold").c_str(),
+                  text_size);
+  int text_space = 5;
 
   /* for all zones */
   for (int lon0=lon0a; lon0<=lon0b; lon0+=6){
@@ -48,9 +55,11 @@ draw_pulk_grid(CairoWrapper & cr, const iPoint & origin,
 
     dRect rng_pulk = cnv1.bck_acc(rng_wgs); // wgs -> pulkovo
 
+    // Grid step. We want to have ~1 line/ 200 px
+    int nlines = rng.w/200;
     double step = 1000;
-    while (rng_pulk.w> step*10 || rng_pulk.h> step*10) step*=10.0;
-    while (rng_pulk.w< step/10 || rng_pulk.h< step/10) step/=10.0;
+    while (rng_pulk.w > step*nlines) step*=10.0;
+    while (rng_pulk.w < step*nlines) step/=10.0;
 
     dPoint tlc = rng_pulk.tlc(), brc= rng_pulk.brc();
     double xmin = floor(tlc.x/step)*step;
@@ -97,10 +106,15 @@ draw_pulk_grid(CairoWrapper & cr, const iPoint & origin,
         sx << int(x/1000), sy << int(y/1000);
         dPoint p1(x,y);
         cnv2.bck(p1); // pulkovo -> wgs
-        cr->move_to(p1-origin + dPoint(5, -5));
-        cr->show_text(sy.str());
-        cr->move_to(p1-origin + dPoint(20, -25));
+        double a = cnv2.frw_ang(p1, 0, 1000);
         cr->save();
+        cr->translate(p1-origin);
+        cr->rotate(a);
+        cr->move_to(dPoint(text_space,-text_space));
+        cr->show_text(sy.str());
+
+        dRect e = cr->get_text_extents(sx.str());
+        cr->move_to(dPoint(text_space+e.h, -2*text_space-e.h));
         cr->rotate(-M_PI/2.0);
         cr->show_text(sx.str());
         cr->restore();
