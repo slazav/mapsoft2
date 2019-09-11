@@ -10,6 +10,7 @@
 #include "geo_data/geo_io.h"
 
 #include "draw_trk.h"
+#include "draw_wpts.h"
 #include "draw_pulk_grid.h"
 
 using namespace std;
@@ -32,6 +33,8 @@ void usage(bool pod=false, ostream & S = cout){
   print_options(options, MS2OPT_MKREF, S, pod);
   S << head << "Options for drawing tracks:\n";
   print_options(options, MS2OPT_DRAWTRK, S, pod);
+  S << head << "Options for drawing waypoints:\n";
+  print_options(options, MS2OPT_DRAWWPT, S, pod);
   S << head << "Options for drawing map grid:\n";
   print_options(options, MS2OPT_DRAWGRD, S, pod);
   S << head << "Options for reading geodata:\n";
@@ -81,7 +84,6 @@ main(int argc, char **argv){
     GeoMap map = geo_mkref(opts);
     ConvMap cnv(map);
 
-
     // setup cairo context
     CairoWrapper cr;
     if      (file_ext_check(fname, ".pdf")) cr.set_surface_pdf(fname.c_str(), map.image_size.x,map.image_size.y);
@@ -90,14 +92,19 @@ main(int argc, char **argv){
     else if (file_ext_check(fname, ".png")) cr.set_surface_img(Image(map.image_size.x,map.image_size.y,IMAGE_32ARGB));
     else throw Err() << "Unknown output format, use .pdf, .ps, .svg, .png extension";
 
+    dPoint origin(0,0);
+
     // draw tracks
-    dPoint origin;
     for (auto const & t:data.trks)
       draw_trk(cr, origin, cnv, t, opts);
 
     // draw grid
     if (opts.get("grid", 0))
       draw_pulk_grid(cr, origin, cnv, opts);
+
+    // draw waypoints
+    for (auto const & w:data.wpts)
+      draw_wpts(cr, origin, cnv, w, opts);
 
     // if format is png write file
     if (file_ext_check(fname, ".png"))
