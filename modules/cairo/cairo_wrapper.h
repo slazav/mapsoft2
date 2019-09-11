@@ -13,7 +13,9 @@
 #include "geom/multiline.h"
 #include "geom/rect.h"
 
-// convert image to a Cairo ImageSurface
+// Convert image to a Cairo::ImageSurface.
+// Data is kept in the Image, it should be alive while
+// the ImageSurface is used.
 Cairo::RefPtr<Cairo::ImageSurface> image_to_surface(const Image & img);
 
 //////////////////////////////////////////////////////////////////

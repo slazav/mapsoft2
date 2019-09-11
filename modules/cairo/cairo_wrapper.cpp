@@ -11,7 +11,7 @@ image_to_surface(const Image & img) {
     throw Err() << "SimpleViewer: only 32-bpp images are supported";
   if (Cairo::ImageSurface::format_stride_for_width(format, img.width()) != img.width()*4)
     throw Err() << "SimpleViewer: non-compatable data";
-  return Cairo::ImageSurface::create((unsigned char*)img.data(),
+  return Cairo::ImageSurface::create(img.data(),
       format, img.width(), img.height(), img.width()*4);
 }
 
