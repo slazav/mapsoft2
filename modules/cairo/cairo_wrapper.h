@@ -41,41 +41,50 @@ struct CairoExtra : public Cairo::Context {
 
   // move_to/line_to functions for dPoint arguments
 
-  void move_to(const dPoint & p){
-    Cairo::Context::move_to(p.x, p.y); }
+  using Cairo::Context::translate;
+  void translate(const dPoint & p){ translate(p.x, p.y); }
 
-  void line_to(const dPoint & p){
-    Cairo::Context::line_to(p.x, p.y); }
+  using Cairo::Context::move_to;
+  void move_to(const dPoint & p){ move_to(p.x, p.y); }
 
-  void rel_move_to(const dPoint & p){
-    Cairo::Context::rel_move_to(p.x, p.y); }
+  using Cairo::Context::line_to;
+  void line_to(const dPoint & p){ line_to(p.x, p.y); }
 
-  void rel_line_to(const dPoint & p){
-    Cairo::Context::rel_line_to(p.x, p.y); }
+  using Cairo::Context::rel_move_to;
+  void rel_move_to(const dPoint & p){ rel_move_to(p.x, p.y); }
 
+  using Cairo::Context::rel_line_to;
+  void rel_line_to(const dPoint & p){ rel_line_to(p.x, p.y); }
+
+  using Cairo::Context::curve_to;
   void curve_to(const dPoint & p1, const dPoint & p2, const dPoint & p3){
-    Cairo::Context::curve_to(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y); }
+    curve_to(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y); }
 
+  using Cairo::Context::rel_curve_to;
   void rel_curve_to(const dPoint & p1, const dPoint & p2, const dPoint & p3){
-    Cairo::Context::rel_curve_to(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y); }
+    rel_curve_to(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y); }
 
-  void rectangle(const dRect &r){
-    Cairo::Context::rectangle(r.x, r.y, r.w, r.h);
-  }
+  using Cairo::Context::rectangle;
+  void rectangle(const dRect &r){ rectangle(r.x, r.y, r.w, r.h); }
+
   void circle(const dPoint &p, const double r){
     Cairo::Context::begin_new_sub_path();
     Cairo::Context::arc(p.x, p.y, r, 0, 2*M_PI);
   }
+
+  using Cairo::Context::get_current_point;
   dPoint get_current_point(){
     dPoint ret;
-    Cairo::Context::get_current_point(ret.x, ret.y);
+    get_current_point(ret.x, ret.y);
     return ret;
   }
+
+  using Cairo::Context::get_text_extents;
   dRect get_text_extents(const std::string & utf8){
     dPoint p;
-    Cairo::Context::get_current_point(p.x, p.y);
+    get_current_point(p.x, p.y);
     Cairo::TextExtents extents;
-    Cairo::Context::get_text_extents (utf8, extents);
+    get_text_extents (utf8, extents);
     return dRect(p.x+extents.x_bearing, p.y+extents.y_bearing,
                  extents.width, extents.height);
   }
@@ -114,14 +123,14 @@ struct CairoExtra : public Cairo::Context {
   void join_round() { set_line_join(Cairo::LINE_JOIN_ROUND); }
 
   // short functions for dash line settings
-  void set_dash(std::vector<double> d){
-    Cairo::Context::set_dash(d, 0);
-  }
+  using Cairo::Context::set_dash;
+  void set_dash(std::vector<double> d){ set_dash(d, 0); }
+
   void set_dash(double d1, double d2){
     std::vector<double> d;
     d.push_back(d1);
     d.push_back(d2);
-    Cairo::Context::set_dash(d, 0);
+    set_dash(d, 0);
   }
   void set_dash(double d1, double d2, double d3, double d4){
     std::vector<double> d;
@@ -129,7 +138,7 @@ struct CairoExtra : public Cairo::Context {
     d.push_back(d2);
     d.push_back(d3);
     d.push_back(d4);
-    Cairo::Context::set_dash(d, 0);
+    set_dash(d, 0);
   }
 
   // set FIG font (not full support, not recommended)
