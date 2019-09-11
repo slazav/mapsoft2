@@ -36,12 +36,11 @@ draw_pulk_grid(CairoWrapper & cr, const iPoint & origin,
   int lon0a = lon2lon0(rng_wgs.tlc().x);
   int lon0b = lon2lon0(rng_wgs.brc().x);
 
-  int text_size = opt.get("grid_text_size",  15);
   cr->set_color_a(opt.get("grid_draw_color", 0x8000000));
   cr->set_line_width(opt.get("grid_draw_thick", 1));
   cr->set_fc_font(opt.get("grid_text_color", 0xFF000000),
                   opt.get("grid_text_font",  "serif:bold").c_str(),
-                  text_size);
+                  opt.get("grid_text_size",  15));
   int text_space = 5;
 
   /* for all zones */
