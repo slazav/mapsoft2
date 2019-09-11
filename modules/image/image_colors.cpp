@@ -383,8 +383,9 @@ void image_apply_border(const Image & img, const iLine & brd, uint32_t color ){
       int xc = (k<cr.size()) ? rint(cr[k]) : w;
       int ic = std::min(xc, w);
       if (ic < 0) continue;
-      for (int x=i; x<ic; x++){
-        if (k%2 == 0) img.set32(x, y, color);
+      if (k%2 == 0) {
+        for (int x=i; x<ic; x++)
+          img.set32(x, y, color);
       }
       i=ic;
       if (i>=w) break;
