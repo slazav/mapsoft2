@@ -20,6 +20,10 @@ class GeoHashStorage {
    // get id of objects which may be found in the range
    std::set<int> get(const dRect & range);
 
+   // Delete an object with id and range.
+   // If the record does not exist do nothing.
+   void del(const int id, const dRect & range);
+
    // set bbox for coordinate transformation
    void set_bbox(const dRect & bbox_){ bbox = bbox_; }
 };

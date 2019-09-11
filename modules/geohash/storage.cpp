@@ -40,8 +40,7 @@ std::set<int>
 GeoHashStorage::get_hash(const std::string & hash0, bool exact){
 
   std::set<int> ret;
-  std::multimap<std::string, int>::const_iterator i;
-  for (i = storage.lower_bound(hash0); i != storage.end(); i++) {
+  for (auto i = storage.lower_bound(hash0); i != storage.end(); i++) {
     std::string hash = i->first;
     if (exact && hash!=hash0) break;
 
@@ -53,4 +52,19 @@ GeoHashStorage::get_hash(const std::string & hash0, bool exact){
     break;
   }
   return ret;
+}
+
+void
+GeoHashStorage::del(const int id, const dRect & range){
+  if (range.empty()) return;
+  std::set<std::string> hashes =
+    GEOHASH_encode4(GEOHASH_convert_box(range,bbox), HASHLEN);
+  for (auto const & h:hashes) {
+    auto rng = storage.equal_range(h);
+    auto i = rng.first;
+    while (i!=rng.second){
+      if (i->second==id) i = storage.erase(i);
+      else i++;
+    }
+  }
 }

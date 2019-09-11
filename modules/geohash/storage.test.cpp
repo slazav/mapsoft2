@@ -65,6 +65,13 @@ main(){
       assert(v1.count(6)==1);
       assert(v1.count(9)==1);
 
+      // del
+      db.del(6, dRect(36,57, 0.11,0.11));
+      v1 = db.get(dRect(36,57, 0.001,0.001));
+      //for (auto i:v1) std::cerr << "> " << i << "\n";
+      assert(v1.size()==2);
+      assert(v1.count(5)==1);
+      assert(v1.count(9)==1);
 
   }
   catch (Err e) {

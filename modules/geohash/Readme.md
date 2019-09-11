@@ -58,6 +58,12 @@ virtual void put(const int id, const dRect & range);
 std::set<int> get(const dRect & range);
 ```
 
+* Delete an object with id and range.
+If the record does not exist do nothing.
+``` c++
+void del(const int id, const dRect & range);
+```
+
 * set bbox for coordinate transformation.
 ``` c++
 void set_bbox(const dRect & bbox_);
