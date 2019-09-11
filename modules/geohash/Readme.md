@@ -44,10 +44,21 @@ If bor or bbox is empty then original box is returned without modification.
 dRect GEOHASH_convert_box(const dRect & box, const dRect & bbox);
 ```
 
-## storage.h
+## GeoHashStorage -- spatial indexing storage (see storage.h)
 
-* GeoHashStorage -- spatial indexing storage. Now it supports two operations:
-- Add object with an ID and a coordinate range.
-- Get list of IDs of objects which may touch some coordinate range.
-TODO:
-- deleting objects (slow, by only ID or fast, by using also a coordinate range).
+Methods:
+
+* Add object with id and range.
+``` c++
+virtual void put(const int id, const dRect & range);
+```
+
+* Get id of objects which may be found in the range.
+``` c++
+std::set<int> get(const dRect & range);
+```
+
+* set bbox for coordinate transformation.
+``` c++
+void set_bbox(const dRect & bbox_);
+```

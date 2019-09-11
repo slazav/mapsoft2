@@ -11,13 +11,15 @@
 
 void
 GeoHashStorage::put(const int id, const dRect & range){
-  std::set<std::string> hashes = GEOHASH_encode4(range, HASHLEN);
+  std::set<std::string> hashes =
+    GEOHASH_encode4(GEOHASH_convert_box(range, bbox), HASHLEN);
   for (auto const & h:hashes) storage.insert(std::make_pair(h, id));
 }
 
 std::set<int>
 GeoHashStorage::get(const dRect & range){
-  std::set<std::string> hashes = GEOHASH_encode4(range, HASHLEN);
+  std::set<std::string> hashes =
+    GEOHASH_encode4(GEOHASH_convert_box(range, bbox), HASHLEN);
   std::set<int> ret;
   std::set<std::string> done;
   for (auto const & h:hashes) {

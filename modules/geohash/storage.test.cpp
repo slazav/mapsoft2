@@ -38,9 +38,34 @@ main(){
       assert(v1.count(6)==1);
       assert(v1.count(9)==1);
 
+
       v1 = db.get(dRect(-180,-90, 360,180));
       //for (auto i:v1) std::cerr << "> " << i << "\n";
       assert(v1.size()==9);
+
+      // set_bbox
+      db.set_bbox(dRect(-1800,-900, 3600, 1800)); // x10
+      v1 = db.get(dRect(360,570, 0.01,0.01));
+      //for (auto i:v1) std::cerr << "> " << i << "\n";
+      assert(v1.size()==3);
+      assert(v1.count(5)==1);
+      assert(v1.count(6)==1);
+      assert(v1.count(9)==1);
+
+      v1 = db.get(dRect(-1800,-900, 3600,1800));
+      //for (auto i:v1) std::cerr << "> " << i << "\n";
+      assert(v1.size()==9);
+
+      // set_bbox
+      db.set_bbox(dRect()); // reset
+      v1 = db.get(dRect(36,57, 0.001,0.001));
+      //for (auto i:v1) std::cerr << "> " << i << "\n";
+      assert(v1.size()==3);
+      assert(v1.count(5)==1);
+      assert(v1.count(6)==1);
+      assert(v1.count(9)==1);
+
+
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";
