@@ -2,7 +2,8 @@
 #include "err/err.h"
 #include <unistd.h> // usleep
 
-GObjTestTile::GObjTestTile(const bool slow_):slow(slow_){}
+GObjTestTile::GObjTestTile(const bool slow_):
+  GObj(ConvBase()), slow(slow_){}
 
 int
 GObjTestTile::draw(Image &img, const iPoint &origin){

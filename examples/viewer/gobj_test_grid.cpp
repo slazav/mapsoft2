@@ -1,7 +1,8 @@
 #include "gobj_test_grid.h"
 #include <unistd.h> // usleep
 
-GObjTestGrid::GObjTestGrid(const int delay_):delay(delay_){}
+GObjTestGrid::GObjTestGrid(const int delay_):
+   GObj(ConvBase()), delay(delay_){}
 
 int
 GObjTestGrid::draw(Image &img, const iPoint &origin){
