@@ -152,5 +152,16 @@ int main( /* int argc, char **argv */ ) {
     assert(v.count("") == 1); // [-180,-90,360,180]
   }
 
+  {
+    assert(GEOHASH_convert_box(dRect(1,1,1,1), dRect(0,0,10,10)) ==
+           dRect(-180+36,-90+18,36,18));
+
+    assert(GEOHASH_convert_box(dRect(1,1,1,1), dRect()) ==
+           dRect(1,1,1,1));
+
+    assert(GEOHASH_convert_box(dRect(), dRect(0,0,10,10)) ==
+           dRect());
+  }
+
   return 0;
 }

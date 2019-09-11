@@ -34,4 +34,12 @@ dRect GEOHASH_decode(const std::string & hash);
 // return empty string on errors.
 std::string GEOHASH_adjacent(const std::string & hash, int dir);
 
+// Sometimes it is needed to encode arbitrary type of coordinates,
+// not lat-lon. This function does a linear transformation of
+// coordinates in such a way that bbox -> dRect(-180,-90,360,90).
+// If bbox is empty then original box is returned.
+// If box is empty then empty box is returned.
+dRect GEOHASH_convert_box(const dRect & box, const dRect & bbox);
+
+
 #endif
