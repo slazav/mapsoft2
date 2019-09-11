@@ -102,11 +102,8 @@ ConvBase::bck_acc(const dMultiLine & ml, double acc) const{
   return ret;
 }
 
-
-/*
-
 double
-ConvBase::ang_frw(dPoint p, double a, double dx) const{
+ConvBase::frw_ang(dPoint p, double a, double dx) const{
   dPoint p1 = p + dPoint(dx*cos(a), dx*sin(a));
   dPoint p2 = p - dPoint(dx*cos(a), dx*sin(a));
  frw(p1); frw(p2);
@@ -115,7 +112,7 @@ ConvBase::ang_frw(dPoint p, double a, double dx) const{
 }
 
 double
-ConvBase::ang_bck(dPoint p, double a, double dx) const{
+ConvBase::bck_ang(dPoint p, double a, double dx) const{
   dPoint p1 = p + dPoint(dx*cos(a), dx*sin(a));
   dPoint p2 = p - dPoint(dx*cos(a), dx*sin(a));
   bck(p1); bck(p2);
@@ -124,14 +121,16 @@ ConvBase::ang_bck(dPoint p, double a, double dx) const{
 }
 
 double
-ConvBase::angd_frw(dPoint p, double a, double dx) const{
-  return 180.0/M_PI * ang_frw(p, M_PI/180.0*a, dx);
+ConvBase::frw_angd(dPoint p, double a, double dx) const{
+  return 180.0/M_PI * frw_ang(p, M_PI/180.0*a, dx);
 }
 
 double
-ConvBase::angd_bck(dPoint p, double a, double dx) const{
-  return 180.0/M_PI * ang_bck(p, M_PI/180.0*a, dx);
+ConvBase::bck_angd(dPoint p, double a, double dx) const{
+  return 180.0/M_PI * bck_ang(p, M_PI/180.0*a, dx);
 }
+
+/*
 
 dPoint
 ConvBase::units_frw(dPoint p) const{

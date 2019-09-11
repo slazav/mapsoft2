@@ -11,6 +11,7 @@ main(){
     dPoint ps1(0,0), ps2(1,0), ps3(0,1);
     dPoint pc(0.11, 0.12);
 
+    // rotate clockwise by a
     double a=30*M_PI/180;
     dPoint pd1 = rotate2d(ps1, pc, a);
     dPoint pd2 = rotate2d(ps2, pc, a);
@@ -30,6 +31,20 @@ main(){
     assert(dist2d(p,rotate2d(dPoint(2,8), pc, -a)) < 1e-8);
     p=dPoint(2,8); cnv1.frw(p);
     assert(dist2d(p,rotate2d(dPoint(2,8), pc,  a)) < 1e-8);
+
+    // convert angles  a -> a-30deg
+    {
+      assert(abs(cnv1.frw_ang(dPoint(1,1), 0, 1) + a) <1e-6 );
+      assert(abs(cnv1.bck_ang(dPoint(1,1), 0, 1) - a) <1e-6 );
+      assert(abs(cnv1.frw_ang(dPoint(1,1), -a, 1) + 2*a) <1e-6 );
+      assert(abs(cnv1.bck_ang(dPoint(1,1), +a, 1) - 2*a) <1e-6 );
+
+      assert(abs(cnv1.frw_angd(dPoint(1,1), 0, 1) + 30) <1e-6 );
+      assert(abs(cnv1.bck_angd(dPoint(1,1), 0, 1) - 30) <1e-6 );
+      assert(abs(cnv1.frw_angd(dPoint(1,1), -30, 1) + 60) <1e-6 );
+      assert(abs(cnv1.bck_angd(dPoint(1,1), +30, 1) - 60) <1e-6 );
+
+    }
 
     // rescale_src, rescale_dst, shift
     {
