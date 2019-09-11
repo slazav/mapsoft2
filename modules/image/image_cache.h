@@ -6,6 +6,7 @@
 #include "geom/line.h"
 #include "image_io.h"
 #include "image.h"
+#include "image_colors.h"
 
 // class for image cache
 class ImageCache {
@@ -27,7 +28,7 @@ public:
     }
 
     Image img = image_load(fn, sc);
-//    if (border.size()) img.set_border(border/sc);
+    if (border.size()) image_apply_border(img, border/sc, 0);
     cache.add(fn, std::make_pair(sc, img));
     return img;
   }
