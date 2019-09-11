@@ -3,6 +3,7 @@
 
 #include "geom/rect.h"
 #include "image/image.h"
+#include "conv/conv_base.h"
 #include <sigc++/sigc++.h>
 
 ///\addtogroup gred
@@ -19,12 +20,15 @@ should not be done during drawing).
 */
 class GObj{
 public:
+  ConvBase cnv; //< coversion from viewer coordinates to object
+  dRect range;
+
   const static int FILL_NONE = 0; // object draws nothing
   const static int FILL_PART = 1; // object draws some points
   const static int FILL_ALL  = 2; // object fills in the whole image with opaque colors
   const static iRect MAX_RANGE;
 
-  GObj() {}
+  GObj(const ConvBase c): cnv(c), range(MAX_RANGE) {}
 
   /** Draw on an <img> with <origin> shift.
    \return one of:
@@ -36,24 +40,26 @@ public:
   */
   virtual int draw(Image &img, const iPoint &origin) = 0;
 
-  virtual Image get_image (iRect src){
-    if (intersect(range(), src).empty()) return Image();
-    Image ret(src.w, src.h, IMAGE_32ARGB);
-    ret.fill32(0);
-    if (draw(ret, src.tlc()) == GObj::FILL_NONE) return Image();
-    return ret;
-  }
+//  virtual Image get_image (iRect src){
+//    if (intersect(range(), src).empty()) return Image();
+//    Image ret(src.w, src.h, IMAGE_32ARGB);
+//    ret.fill32(0);
+//    if (draw(ret, src.tlc()) == GObj::FILL_NONE) return Image();
+//    return ret;
+//  }
 
-  virtual iRect range(void) const {return GObj::MAX_RANGE;}
-  virtual void rescale(double k) {} ///< change scale (refresh must be inside)
+  // return data bounding box
+  virtual iRect bbox(void) const {return range;}
+
+  // change scale (refresh must be inside)
+  virtual void rescale(double k) {cnv.rescale_src(k);} ///< change scale (refresh must be inside)
 
   virtual bool get_xloop() const {return false;};
   virtual bool get_yloop() const {return false;}
 
-  sigc::signal<void, iRect> & signal_redraw_me()  {return signal_redraw_me_;}
-
-private:
-  sigc::signal<void, iRect> signal_redraw_me_;
+//  sigc::signal<void, iRect> & signal_redraw_me()  {return signal_redraw_me_;}
+//private:
+//  sigc::signal<void, iRect> signal_redraw_me_;
 };
 
 #endif

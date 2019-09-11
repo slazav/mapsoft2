@@ -53,7 +53,7 @@ class SimpleViewer : public Gtk::DrawingArea {
 
     // Return range of object coordinates.
     virtual iRect range() const {
-      return obj?obj->range():GObj::MAX_RANGE;}
+      return obj?obj->bbox():GObj::MAX_RANGE;}
 
     virtual void redraw();
     void start_waiting(){ waiting++;}

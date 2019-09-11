@@ -1,6 +1,6 @@
 #include "gobj_solid_fill.h"
 
-GObjSolidFill::GObjSolidFill(const int c): color(c) {
+GObjSolidFill::GObjSolidFill(const int c): GObj(ConvBase()), color(c) {
 }
 
 int
