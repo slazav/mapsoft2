@@ -12,7 +12,7 @@ ms2opt_add_drawtrk(ext_option_list & opts){
   int m = MS2OPT_DRAWTRK;
   ext_option_list add = {
   {"trk_draw_mode",   1,0,m, "track drawing mode (normal, speed, height)"},
-  {"trk_draw_color",  1,0,m, "color (for normal drawing mode), default: BCGYRM"},
+  {"trk_draw_color",  1,0,m, "color (for normal drawing mode), overrides track color"},
   {"trk_draw_dots",   1,0,m, "draw dots (for normal drawing mode), default: 1"},
   {"trk_draw_arrows", 1,0,m, "draw arrows (for normal drawing mode), default: 0"},
   {"trk_draw_min",    1,0,m, "min value (km/h for speed mode, m for height mode)"},
