@@ -5,7 +5,7 @@
 
 class `Image` in mapsoft2 represents a 2D array or data. Usually it is 
 color images. Data can be stored in different forms, some methods for
-converting data are also provided. `Image` can be used as a base class
+converting data are also provided. `Image` can be also used as a base class
 for implementing images with non-standard data storage.
 
 * type() method returns data type:
@@ -22,7 +22,7 @@ for implementing images with non-standard data storage.
   * IMAGE_UNKNOWN -- unknown data format
 
 ------
-### Color handling functions
+### Color handling functions (image.h)
 
 * distance between two colors
 ``` c++
@@ -53,57 +53,120 @@ uint16_t color_rgb_to_grey16(const uint32_t c);
 ```
 
 ------
-### Options
+### Image handling functions (image_color.h)
 
-image_colormap:
+* Create a colormap. Based on `pnmcolormap.c` from `netpbm` package.
+``` c++
+std::vector<uint32_t> image_colormap(const Image & img, const Opt & opt = Opt());
+```
+Options:
+  * `cmap_alpha`        -- Use transparency channel: none (default), full, gif.
+  * `cmap_colors`       -- Number of colors, or 0 for all colors (default: 256)
+  * `cmap_dim_method`   -- Method for calculating color box dimentions: norm (default), lumin.
+  * `cmap_rep_method`   -- Method for color box representation: meanpix (default), meancol, center.
+  * `cmap_split_method` -- Method for box splitting: maxdim (default), maxpix, maxcol.
 
- "cmap_alpha"        Use transparency channel: none (default), full, gif.
- "cmap_colors"       Number of colors, or 0 for all colors (default: 256)
- "cmap_dim_method"   Method for calculating color box dimentions: norm (default), lumin.
- "cmap_rep_method"   Method for color box representation: meanpix (default), meancol, center.
- "cmap_split_method" Method for box splitting: maxdim (default), maxpix, maxcol.
 
+* Reduce number of colors
+``` c++
+Image image_remap(const Image & img, const std::vector<uint32_t> & cmap,
+                  const Opt & opt = Opt());
+```
+Options:
+  * `cmap_alpha` -- Use transparency channel: none (default), full, gif.
 
-image_remap:
- "cmap_alpha"        Use transparency channel: none (default), full, gif.
+* Image tranparency (only for 32bpp images).
+Return values: 0 - fully non-transparent image,
+1 -- image contains transparent (but not semi-transparent) pixels,
+2 -- image contains semi-transparent pixels.
+``` c++
+int image_classify_alpha(const Image & img);
+```
+(NOT USED?)
 
-image_save_png:
- "png_format"         How to save PNG files: argb, rgb, grey, agrey, pal (default depends on the image format)
+* Image colors (only for 32bpp images).
+Return values: 0 -- grayscale, 1 -- color image, number of colors is less or equal ti `clen`.
+2 -- color image, more then `clen` colors.
+`colors[clen]` array is filled with the color palette.
 
-image_save_tiff:
- "tiff_format"         How to save PNG files: argb, rgb, grey, pal (default depends on the image format)
- "tiff_minwhite"       For IMAGE_16 type minimum value corresponds to white (default: false)
+``` c++
+int image_classify_color(const Image & img, uint32_t *colors, int clen=256);
+```
+(NOT USED?)
+
+* Change image color outside border line.
+If border line is empty, set color in the whole image
+``` c++
+void image_apply_border(const Image & img, const iLine & brd = iLine(),
+                        const uint32_t color = 0);
+```
 
 ------
-### GIF format
 
-* image_size_gif() -- Supported, gif screen size is returned.
+### Reading raster formats (image_io.h)
+* get image size
+``` c++
+iPoint image_size(const std::string & file, const Opt & opt = Opt());
+```
 
-* image_load_gif() -- Supported. First image only,
+* load the whole image at some scale
+``` c++
+Image image_load(const std::string & file, const double scale=1, const Opt & opt = Opt());
+```
+
+* save the whole image
+``` c++
+void image_save(const Image & im, const std::string & file, const Opt & opt = Opt());
+```
+#### Options:
+
+* `png_format`        -- How to save PNG files: argb, rgb, grey, agrey, pal (default depends on the image format)
+* `tiff_format`       -- How to save TIFF files: argb, rgb, grey, pal (default depends on the image format)
+* `tiff_minwhite`     -- Write IMAGE_8 and IMAGE_16 data to TIFF as MINISWHITE image (default: false)
+
+When converting full-color images to palette images (writing GIF, PNG with `png_format=pal`, or
+TIFF with `tiff_format=pal`) colormap options can be used:
+* `cmap_alpha`        -- Use transparency channel: none (default), full, gif.
+* `cmap_colors`       -- Number of colors, or 0 for all colors (default: 256)
+* `cmap_dim_method`   -- Method for calculating color box dimentions: norm (default), lumin.
+* `cmap_rep_method`   -- Method for color box representation: meanpix (default), meancol, center.
+* `cmap_split_method` -- Method for box splitting: maxdim (default), maxpix, maxcol.
+
+------
+### Image cache (image_cache.h)
+
+A cache of raster images (came from mapsoft1 without any changes, not used yet).
+
+------
+### GIF format (image_gif.h)
+
+* `image_size_gif()` -- Supported, gif screen size is returned.
+
+* `image_load_gif()` -- Supported. First image only,
 image size should match gif screen size. All images are loaded as
-IMAGE_8PAL.
+`IMAGE_8PAL`.
 
-* image_save_gif() -- Supported, all images are converted to 8 bpp.
-Standard image_colormap() options are used for this conversion except
-cmap_alpha=full which is substituted by cmap_alpha=gif (no
+* `image_save_gif()` -- Supported, all images are converted to 8 bpp.
+Standard `image_colormap()` options are used for this conversion except
+`cmap_alpha=full` which is substituted by cmap_alpha=gif (no
 semi-transparent colors supported).
 
-* Not full support of different libgif versions (now it works with libgif
+* Not full support of different libgif versions (now it works with `libgif`
 <4.2, but sume incomplete support is done for 4.2 and 5.0)
 
-### JPEG format
+### JPEG format (image_jpeg.h)
 
-* image_size_jpeg() -- Supported.
+* `image_size_jpeg()` -- Supported.
 
-* image_load_jpeg() -- Supported, all images are loaded as IMAGE_24RGB.
+* `image_load_jpeg()` -- Supported, all images are loaded as IMAGE_24RGB.
 
-* image_save_jpeg() -- Supported.
+* `image_save_jpeg()` -- Supported.
 
-### PNG format
+### PNG format (image_png.h)
 
-* image_size_png() -- Supported.
+* `image_size_png()` -- Supported.
 
-* image_load_png() -- Supported. No ADAM7 interlace support.
+* `image_load_png()` -- Supported. No ADAM7 interlace support.
 
 Supported PNG types for loading:
 
@@ -117,11 +180,11 @@ Supported PNG types for loading:
 | RGB_ALPHA    | 16        | IMAGE_32RGBA
 
 
-* image_save_png() -- All image types are supported. PNG type is chosen
-according to image type, but can be changed using png_format option
-(possible values: argb, rgb, grey, agrey, pal). Only 8 bit per channel
-are used except for 16-bit grey images. All palette images
-are saved with 1-byte per point with transparency support.
+* `image_save_png()` -- All image types are supported. PNG type is chosen
+according to image type, but can be changed using `png_format` option
+(possible values: `argb`, `rgb`, `grey`, `agrey`, `pal`). Only 8 bit per
+channel are used except for 16-bit grey images. All palette images are
+saved with 1-byte per point with transparency support.
 
 Supported PNG types for saving:
 
@@ -138,11 +201,11 @@ Supported PNG types for saving:
 |IMAGE_DOUBLE   |             | RGB
 |IMAGE_UNKNOWN  |             | RGB
 
-### TIFF format
+### TIFF format (image_tiff.h)
 
-* image_size_tiff() -- Supported.
+* `image_size_tiff()` -- Supported.
 
-* image_load_tiff() -- Supported.
+* `image_load_tiff()` -- Supported.
 
 Supported TIFF types for loading:
 
@@ -156,12 +219,12 @@ Supported TIFF types for loading:
 | 2.RGB        |   4     |     8     | IMAGE_32ARGB
 | 3.PALETTE    |   1     |     8     | IMAGE_8PAL
 
-* image_save_tiff() -- All image types are supported. TIFF type is chosen
-according to image type, but can be changed using tiff_format option
-(possible values: argb, rgb, grey, pal). Only 8 bit per channel are used
+* `image_save_tiff()` -- All image types are supported. TIFF type is chosen
+according to image type, but can be changed using `tiff_format` option
+(possible values: `argb`, `rgb`, `grey`, `pal`). Only 8 bit per channel are used
 except for IMAGE_16 image type. All palette images are saved with 1-byte
 per point. No transparency is supported in palette images. Writing of
-MINISWHITE or MINISBLACK is controlled by tiff_minwhite option (default:
+MINISWHITE or MINISBLACK is controlled by `tiff_minwhite` option (default:
 false).
 
 Supported TIFF types for saving:
