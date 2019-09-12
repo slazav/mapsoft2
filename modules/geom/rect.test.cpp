@@ -69,10 +69,12 @@ main(){
   // constructors, empty, zsize, ==, !=
   iRect r1;
   assert (r1.empty());
+  assert (!r1);
   assert (!r1.zsize());
 
   iRect r2(iPoint(0,0), iPoint(1,0));
   assert (!r2.empty());
+  assert (r2);
   assert (r2.zsize());
 
   assert (iRect(0,0,0,0) != iRect());
@@ -80,6 +82,7 @@ main(){
 
   iRect r3(iPoint(0,0), iPoint(1,2));
   assert (!r3.empty());
+  assert (r3);
   assert (!r3.zsize());
 
   assert (iRect(iPoint(1,2),iPoint(3,4)) == iRect(1,2,2,2));

@@ -181,6 +181,9 @@ struct Rect {
                      int(this->w), int(this->h));
   }
 
+  /// Cast to bool
+  operator bool() const{ return !e; }
+
   /******************************************************************/
   // Some functions. Below same functions are defined outside the class
 
