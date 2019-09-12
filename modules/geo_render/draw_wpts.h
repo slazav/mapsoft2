@@ -16,48 +16,82 @@ void ms2opt_add_drawwpt(ext_option_list & opts);
 
 void
 draw_wpts(CairoWrapper & cr, const iPoint & origin,
-         const ConvBase & cnv, const GeoWptList & wpts,
+         ConvBase & cnv, GeoWptList & wpts,
          const Opt & opt);
 
-/***********************************************************/
+#include "viewer/gobj.h"
 
-/* Drawing can be splitted into two parts:
-   Creating small drawing template (can be slow)
-   and then drawing it.
-   Also, while creating template we go through
-   all wpts and can calculate the total range */
+/************************************************/
+class GObjWpts : public GObj {
+private:
 
-/* waypoint templates */
-struct WptDrawTmpl : dPoint{
-  double text_size, text_pad, size, linewidth;
-  dPoint text_pt;
-  dRect  text_box;
-  int color, bgcolor;
-  std::string text_font;
-  std::string name;
+  // Waypoint template for fast drawing: coorinates are converted,
+  // text box is placed correctly, all parameters are set...
+  struct WptDrawTmpl : dPoint{
+    double text_size, size, linewidth;
+    dPoint text_pt;
+    dRect  text_box; // relative to text_pt!
+    dRect  bbox;
+    int color, bgcolor;
+    std::string text_font;
+    std::string name;
+    GeoWpt * src;
+  };
+
+  WptDrawTmpl wt0;    // default waypoint template
+  int wpt_bar_length; // default bar length
+  int wpt_text_pad;
+  bool do_adj_pos;    // adjust text positions to avoid collisions
+  bool do_adj_brd;    // adjust text positions fit into picture
+
+  // Original data. It may be edited through the GObj interface.
+  GeoWptList & wpts;
+
+  // Templates. Should be syncronized with the data.
+  std::vector<WptDrawTmpl> tmpls;
+
+public:
+  // constructor
+  GObjWpts(ConvBase & cnv, GeoWptList & wpts, const Opt & opt);
+
+  // drawing waypoints on the image
+  int draw(const CairoWrapper & cr, const iPoint &origin) override;
+
+  /***************/
+
+  // Update template coordinates for a waypoint template (including bbox!).
+  void update_pt_crd(WptDrawTmpl & t);
+
+  // Update bbox for a waypoint template (after changing coordinates)
+  void update_pt_bbox(WptDrawTmpl & t);
+
+  // Update name and flag dimensions for a waypoint template.
+  void update_pt_name(const CairoWrapper & cr, WptDrawTmpl & t);
+
+  /***************/
+
+  // Update range
+  // Should be done after update_pt_crd() and update_pt_name()
+  // and before adjust_text_pos() or any drawing.
+  void update_range();
+
+  // Adjust text positions to prevent collisions between points
+  void adjust_text_pos();
+
+  // Adjust text positions to fit into rng
+  void adjust_text_brd(const dRect & rng);
+
+  /***************/
+
+  // update parameters form options.
+  void on_change_opt(const Opt & opt);
+
+  // update point coordinates
+  void on_change_cnv() override;
+
+  // rescale point coordinates, update range
+  void on_rescale(double k) override;
+
 };
-
-struct WptsDrawTmpl{
-  private:
-    std::vector<WptDrawTmpl> data;
-    dRect bbox;
-  public:
-
-
-  /* make template and calculate bbox */
-  WptsDrawTmpl(CairoWrapper & cr, const iPoint & origin,
-               const ConvBase & cnv, const GeoWptList & wpts,
-               const Opt & opt);
-
-  /* adjust text positions to prevent point collisions */
-  void adjust();
-
-  /* adjust text positions to avoid text outside rng */
-  void adjust_brd(const dRect & rng);
-
-  /* plot template */
-  void draw(CairoWrapper & cr) const;
-};
-
 
 #endif

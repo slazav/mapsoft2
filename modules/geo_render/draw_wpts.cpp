@@ -1,8 +1,9 @@
 #include <vector>
 #include <cmath>
+#include "geohash/storage.h"
+#include "geom/line.h"
 
 #include "draw_wpts.h"
-#include "geom/line.h"
 
 using namespace std;
 
@@ -29,123 +30,49 @@ ms2opt_add_drawwpt(ext_option_list & opts){
 
 void
 draw_wpts(CairoWrapper & cr, const iPoint & origin,
-         const ConvBase & cnv, const GeoWptList & wpts,
+         ConvBase & cnv, GeoWptList & wpts,
          const Opt & opt){
 
-  WptsDrawTmpl WT(cr, origin, cnv, wpts, opt);
-  if (opt.get("wpt_adj", 1))     WT.adjust();
-  if (opt.get("wpt_adj_brd", 1)) WT.adjust_brd(cr.bbox());
-  WT.draw(cr);
+  GObjWpts gobj(cnv, wpts, opt);
+  gobj.draw(cr, origin);
 }
 
 /**********************************************************/
 
-WptsDrawTmpl::WptsDrawTmpl(CairoWrapper & cr, const iPoint & origin,
-                     const ConvBase & cnv, const GeoWptList & wpts,
-                     const Opt & opt){
+GObjWpts::GObjWpts(ConvBase & cnv, GeoWptList & wpts, const Opt & opt):
+           GObj(cnv), wpts(wpts){
 
-  // create default waypoint template
-  WptDrawTmpl wt0;
-  wt0.text_font = opt.get("wpt_text_font",  "serif");
-  wt0.text_size = opt.get("wpt_text_size",  10);
-  wt0.text_pad  = opt.get("wpt_text_pad",   2);
-  wt0.size      = opt.get("wpt_draw_size",  3);
-  wt0.linewidth = opt.get("wpt_line_width", 1);
-  wt0.color     = opt.get("wpt_color",      0xFF000000);
-  wt0.bgcolor   = opt.get("wpt_bgcolor",    0xFFFFFFFF);
+  on_change_opt(opt);
 
-  // default bar length
-  int wpt_bar    = 10;
-
+  CairoWrapper cr;
+  cr.set_surface_img(1000,1000);
   cr->save();
   cr->set_fc_font(wt0.color, wt0.text_font.c_str(), wt0.text_size);
-  for (auto const & w:wpts){
 
-    dPoint pt(w);
-    cnv.bck(pt);
-    pt-=origin;
-
+  for (auto & w:wpts){
     WptDrawTmpl wt(wt0);
-    wt.x = pt.x; wt.y = pt.y;
-    wt.name = w.name;
-    wt.text_pt = pt;
-    wt.text_pt.y -= wt.text_size + wt.text_pad + wpt_bar;
-
-    cr->move_to(wt.text_pt);
-    wt.text_box = cr->get_text_extents(w.name);
-    wt.text_box.expand(wt.text_pad);
-//    wt.color = w.opts.get("color", wt.color);
-//    wt.bgcolor = w.opts.get("color", wt.bgcolor);
-
-    data.push_back(wt);
-
-    bbox.expand(wt.text_box);
-    bbox.expand(wt.text_pt);
-    bbox.expand((dPoint)wt);
+    wt.src = &w;
+    update_pt_name(cr, wt); // update name
+    tmpls.push_back(wt);
   }
   cr->restore();
+  on_change_cnv();
+
 }
 
-#include "geohash/storage.h"
+int
+GObjWpts::draw(const CairoWrapper & cr, const iPoint &origin) {
 
-/* adjust text positions */
-void
-WptsDrawTmpl::adjust(){
+  dRect draw_range = cr.bbox()+origin;
+  if (!intersect(draw_range, range)) return GObj::FILL_NONE;
 
-  // create geohash storage
-  GeoHashStorage db;
-  db.set_bbox(bbox);
+  if (do_adj_brd) adjust_text_brd(draw_range);
 
-  // but all text boxes in the storage
-  for (int i=0; i<data.size(); ++i)
-    db.put(i, data[i].text_box);
-
-  // for each box
-  for (int i=0; i<data.size(); ++i){
-    std::set<int> v = db.get(data[i].text_box);
-    // find box with smaller number which may touch this one
-    int i0 = -1;
-    for (auto j:v){
-      if (j>=i || intersect(data[j].text_box,data[i].text_box).empty()) continue;
-      else i0=j;
-    }
-    if (i0==-1) continue;
-    // delete old position drom the db
-    db.del(i, data[i].text_box);
-    // adjust box position
-    dPoint shift(
-      data[i0].text_box.x - data[i].text_box.x + 10,
-      data[i0].text_box.y - data[i].text_box.y + data[i0].text_box.h + 1
-    );
-    data[i].text_box += shift;
-    data[i].text_pt += shift;
-    // put new position in the database
-    db.put(i, data[i].text_box);
-    i--;
-  }
-}
-
-void
-WptsDrawTmpl::adjust_brd(const dRect & rng){
-  for (auto & w:data){
-    dPoint sh(0,0);
-    if (w.text_box.x < rng.x) sh.x = rng.x - w.text_box.x;
-    if (w.text_box.y < rng.y) sh.y = rng.y - w.text_box.y;
-
-    if (w.text_box.x + w.text_box.w > rng.x + rng.w)
-      sh.x = rng.x + rng.w - w.text_box.x - w.text_box.w;
-    if (w.text_box.y + w.text_box.h > rng.y + rng.h)
-      sh.y = rng.y + rng.h - w.text_box.y - w.text_box.h;
-    w.text_box += sh;
-    w.text_pt += sh;
-  }
-}
-
-/* plot template */
-void
-WptsDrawTmpl::draw(CairoWrapper & cr) const{
   cr->save();
-  for (auto const & wt:data){
+  cr->translate(-origin);
+  for (auto const & wt:tmpls){
+
+    if (!intersect(draw_range, wt.bbox)) continue;
 
     cr->set_line_width(wt.linewidth);
 
@@ -160,7 +87,7 @@ WptsDrawTmpl::draw(CairoWrapper & cr) const{
     cr->stroke();
 
     // flag
-    cr->rectangle(wt.text_box);
+    cr->rectangle(wt.text_pt+wt.text_box);
     cr->set_color(wt.bgcolor);
     cr->fill_preserve();
 
@@ -172,7 +99,146 @@ WptsDrawTmpl::draw(CairoWrapper & cr) const{
     cr->set_fc_font(wt.color, wt.text_font.c_str(), wt.text_size);
     cr->show_text(wt.name);
 
+    // bbox
+//    cr->rectangle(wt.bbox);
+//    cr->stroke();
+
   }
   cr->restore();
+  return GObj::FILL_PART;
 }
+
+/***************/
+
+void
+GObjWpts::update_pt_crd(WptDrawTmpl & wt){
+  dPoint pt(*wt.src);
+  cnv.bck(pt);
+  wt.x = pt.x; wt.y = pt.y;
+  wt.text_pt = (dPoint)wt;
+  wt.text_pt.y -= wt.text_size + wpt_text_pad + wpt_bar_length;
+  update_pt_bbox(wt);
+}
+
+void
+GObjWpts::update_pt_bbox(WptDrawTmpl & wt){
+  wt.bbox = dRect(dPoint(wt), dPoint(wt));
+  wt.bbox.expand(wt.size + wt.linewidth);
+  wt.bbox.expand(wt.text_pt + wt.text_box);
+  wt.bbox.to_ceil();
+}
+
+void
+GObjWpts::update_pt_name(const CairoWrapper & cr, WptDrawTmpl & wt){
+  wt.name = wt.src->name;
+  cr->move_to(0,0);
+  wt.text_box = cr->get_text_extents(wt.name);
+  wt.text_box.expand(wpt_text_pad);
+}
+
+/***************/
+
+void
+GObjWpts::update_range(){
+  range = dRect();
+  for (auto & wt:tmpls) range.expand(wt.bbox);
+  range.to_ceil();
+}
+
+void
+GObjWpts::adjust_text_pos() {
+  // create geohash storage
+  GeoHashStorage db;
+  db.set_bbox(GObj::MAX_RANGE);
+
+  // for each box
+  for (int i=0; i<tmpls.size(); ++i){
+    dRect bi = tmpls[i].text_box + tmpls[i].text_pt;
+    db.put(i, bi);
+    std::set<int> v = db.get(bi);
+    // find box with smaller number which may touch this one
+    int i0 = -1;
+    for (auto j:v){
+      if (j>=i) continue;
+      dRect bj = tmpls[j].text_box + tmpls[j].text_pt;
+      if (intersect(bi,bj).empty()) continue;
+      else i0=j;
+    }
+    if (i0==-1) continue;
+    // delete old position drom the db
+    db.del(i, bi);
+    // adjust box position
+    tmpls[i].text_pt = tmpls[i0].text_pt
+                     + dPoint(10, tmpls[i0].text_box.h + 2);
+    // update bbox
+    update_pt_bbox(tmpls[i]);
+    // put new position in the tmplsbase
+    db.put(i, tmpls[i].text_box + tmpls[i].text_pt);
+    i--;
+  }
+}
+
+void
+GObjWpts::adjust_text_brd(const dRect & rng){
+  for (auto & wt:tmpls){
+
+    if (!rng.contains(wt)) continue;
+
+    dPoint sh(0,0);
+    dRect b = wt.text_box + wt.text_pt;
+    if (b.x < rng.x) sh.x = rng.x - b.x;
+    if (b.y < rng.y) sh.y = rng.y - b.y;
+
+    if (b.x + b.w > rng.x + rng.w)
+      sh.x = rng.x + rng.w - b.x - b.w;
+    if (b.y + b.h > rng.y + rng.h)
+      sh.y = rng.y + rng.h - b.y - b.h;
+    wt.text_pt += sh;
+    update_pt_bbox(wt);
+  }
+}
+
+/***************/
+
+void
+GObjWpts::on_change_opt(const Opt & opt){
+  wt0.text_font = opt.get("wpt_text_font",  "serif");
+  wt0.text_size = opt.get("wpt_text_size",  10);
+  wt0.size      = opt.get("wpt_draw_size",  3);
+  wt0.linewidth = opt.get("wpt_line_width", 1);
+  wt0.color     = opt.get("wpt_color",      0xFF000000);
+  wt0.bgcolor   = opt.get("wpt_bgcolor",    0xFFFFFFFF);
+
+  do_adj_pos = opt.get("wpt_adj", 1);
+  do_adj_brd = opt.get("wpt_adj_brd", 0);
+
+  wpt_text_pad  = opt.get("wpt_text_pad",   2);
+  wpt_bar_length = 10; // default bar length
+}
+
+void
+GObjWpts::on_change_cnv(){
+  // recalculate coordinates, update range
+  if (wpts.size()!=tmpls.size())
+    throw Err() << "GObjWpts: templates are not syncronized with data";
+
+  for (auto & wt:tmpls) update_pt_crd(wt);
+
+  update_range();
+  if (do_adj_pos) adjust_text_pos();
+}
+
+void
+GObjWpts::on_rescale(double k){
+  // rescale coordinates, update range
+  for (auto & wt:tmpls){
+    wt.x*=k; wt.y*=k;
+    wt.text_pt = wt;
+    wt.text_pt.y -= wt.text_size + wpt_text_pad + wpt_bar_length;
+    update_pt_bbox(wt);
+  }
+  update_range();
+  if (do_adj_pos) adjust_text_pos();
+}
+
 

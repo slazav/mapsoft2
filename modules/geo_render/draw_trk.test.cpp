@@ -8,6 +8,7 @@
 #include "geo_mkref/geo_mkref.h"
 #include "geo_data/conv_geo.h"
 #include "geo_data/geo_io.h"
+#include "viewer/dthread_viewer.h"
 
 #include "draw_trk.h"
 #include "draw_wpts.h"
@@ -18,6 +19,7 @@ using namespace std;
 ext_option_list options = {
   {"grid", 0,0, MS2OPT_DRAWGRD, "draw grid"},
   {"map",  1,'m', MS2OPT_GEO_O, "write map file in OziExprorer format"},
+  {"map",  1,'m', MS2OPT_GEO_O, "output file, or \"view\""},
 };
 
 void usage(bool pod=false, ostream & S = cout){
@@ -54,6 +56,7 @@ main(int argc, char **argv){
     ms2opt_add_ozimap_o(options);
     ms2opt_add_mkref(options);
     ms2opt_add_drawtrk(options);
+    ms2opt_add_drawwpt(options);
     ms2opt_add_drawgrd(options);
 
     if (argc<2) usage();
@@ -73,6 +76,7 @@ main(int argc, char **argv){
     if (!opts.exists("coords") && !opts.exists("coords_wgs")){
        dRect bbox;
        for (auto const & t:data.trks) bbox.expand(t.bbox());
+       for (auto const & w:data.wpts) bbox.expand(w.bbox());
        opts.put("coords_wgs", bbox);
       //opts.put("coords_wgs", data.bbox());
     }
@@ -83,6 +87,26 @@ main(int argc, char **argv){
     // create map reference
     GeoMap map = geo_mkref(opts);
     ConvMap cnv(map);
+
+    if (fname == "view"){
+      opts.put("wpt_adj_brd", 0);
+
+      if (data.wpts.size()<1) throw Err() << "no waypoint lists to show";
+      Gtk::Main     kit(argc, argv);
+      Gtk::Window   win;
+      GObjWpts      pl(cnv, *data.wpts.begin(), opts);
+
+      DThreadViewer viewer(&pl);
+      viewer.set_bgcolor(0x809090);
+
+      win.add(viewer);
+      win.set_default_size(640,480);
+      win.show_all();
+
+      kit.run(win);
+      return 0;
+    }
+
 
     // setup cairo context
     CairoWrapper cr;
@@ -95,7 +119,7 @@ main(int argc, char **argv){
     dPoint origin(0,0);
 
     // draw tracks
-    for (auto const & t:data.trks)
+    for (auto & t:data.trks)
       draw_trk(cr, origin, cnv, t, opts);
 
     // draw grid
@@ -103,7 +127,7 @@ main(int argc, char **argv){
       draw_pulk_grid(cr, origin, cnv, opts);
 
     // draw waypoints
-    for (auto const & w:data.wpts)
+    for (auto & w:data.wpts)
       draw_wpts(cr, origin, cnv, w, opts);
 
     // if format is png write file
@@ -114,7 +138,6 @@ main(int argc, char **argv){
       map.image = fname;
       write_ozi_map(opts.get("map","").c_str(), map, opts);
     }
-
 
   }
   catch (Err e) {
