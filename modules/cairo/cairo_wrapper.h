@@ -172,9 +172,7 @@ struct CairoExtra : public Cairo::Context {
 struct CairoWrapper: Cairo::RefPtr<CairoExtra> {
 
 private:
-  // image is used only in set_surface_img(img)
-  // for keeping data of the original image
-  Image image;
+  Image image; // keeps actual data for image surfaces.
   Cairo::RefPtr<Cairo::Surface> surface;
   int w,h; // surface size in pixels
 
@@ -212,7 +210,10 @@ public:
   void set_surface_svg(const char *fname, int w, int h);
 
   // get the surface
-  Cairo::RefPtr<Cairo::Surface> get_surface() { return surface; }
+  Cairo::RefPtr<Cairo::Surface> get_surface() const { return surface; }
+
+  // get the image (empty image for non-image surfaces!)
+  Image get_image() const { return image; }
 
   // get surface width
   int width() const { return w; }

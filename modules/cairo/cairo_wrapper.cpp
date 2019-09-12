@@ -222,7 +222,7 @@ CairoWrapper::set_surface_img(const Image & img){
 
 void
 CairoWrapper::set_surface_ps(const char *fname, int w_, int h_){
-  w = w_; h=h_;
+  w = w_; h=h_; image = Image();
   surface = Cairo::PsSurface::create(fname, w, h);
   Cairo::RefPtr<CairoExtra>::operator=
     (cast_static(Cairo::Context::create(surface)));
@@ -230,7 +230,7 @@ CairoWrapper::set_surface_ps(const char *fname, int w_, int h_){
 
 void
 CairoWrapper::set_surface_pdf(const char *fname, int w_, int h_){
-  w = w_; h=h_;
+  w = w_; h=h_; image = Image();
   surface = Cairo::PdfSurface::create(fname, w, h);
   Cairo::RefPtr<CairoExtra>::operator=
     (cast_static(Cairo::Context::create(surface)));
@@ -238,7 +238,7 @@ CairoWrapper::set_surface_pdf(const char *fname, int w_, int h_){
 
 void
 CairoWrapper::set_surface_svg(const char *fname, int w_, int h_){
-  w = w_; h=h_;
+  w = w_; h=h_; image = Image();
   surface = Cairo::SvgSurface::create(fname, w, h);
   Cairo::RefPtr<CairoExtra>::operator=
     (cast_static(Cairo::Context::create(surface)));
