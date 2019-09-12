@@ -6,9 +6,10 @@ GObjTestTile::GObjTestTile(const bool slow_):
   GObj(ConvBase()), slow(slow_){}
 
 int
-GObjTestTile::draw(Image &img, const iPoint &origin){
-  if (img.type() != IMAGE_32ARGB) throw Err() <<
-    "image_classify: only 32-bpp images are supported";
+GObjTestTile::draw(const CairoWrapper & cr, const iPoint &origin){
+
+  Image img = cr.get_image();
+  if (img.is_empty()) return GObj::FILL_NONE;
 
   for (int j=0; j<img.height(); j++){
     for (int i=0; i<img.width(); i++){
@@ -16,6 +17,7 @@ GObjTestTile::draw(Image &img, const iPoint &origin){
       img.set32(i,j, val);
     }
   }
+
   if (slow) usleep(img.width()*img.height()*10);
   return GObj::FILL_ALL;
 }
