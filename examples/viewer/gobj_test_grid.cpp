@@ -5,9 +5,10 @@ GObjTestGrid::GObjTestGrid(const int delay_):
    GObj(ConvBase()), delay(delay_){}
 
 int
-GObjTestGrid::draw(Image &img, const iPoint &origin){
-  if (img.type() != IMAGE_32ARGB) throw Err() <<
-    "image_classify: only 32-bpp images are supported";
+GObjTestGrid::draw(const CairoWrapper & cr, const iPoint &origin){
+
+  Image img = cr.get_image();
+  if (img.is_empty()) return GObj::FILL_NONE;
 
   for (int j=0; j<img.height(); j++){
     for (int i=0; i<img.width(); i++){
@@ -24,6 +25,7 @@ GObjTestGrid::draw(Image &img, const iPoint &origin){
       }
     }
   }
+
   if (delay) usleep(delay);
   return GObj::FILL_ALL;
 }

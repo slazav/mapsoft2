@@ -2,7 +2,7 @@
 #define GRED_GOBJ_H
 
 #include "geom/rect.h"
-#include "image/image.h"
+#include "cairo/cairo_wrapper.h"
 #include "conv/conv_base.h"
 #include <sigc++/sigc++.h>
 
@@ -12,7 +12,7 @@
 ///@{
 
 /**
-An object which know how to draw itself on an Image.
+An object which know how to draw itself using Cairo::Context.
 
 Important: draw() method may be called from a separate thread
 (if DThreadViewer is used). A locking maybe needed (data modification
@@ -38,15 +38,7 @@ public:
    NOTE:
     - range() returns range in viewer coords
   */
-  virtual int draw(Image &img, const iPoint &origin) = 0;
-
-//  virtual Image get_image (iRect src){
-//    if (intersect(range(), src).empty()) return Image();
-//    Image ret(src.w, src.h, IMAGE_32ARGB);
-//    ret.fill32(0);
-//    if (draw(ret, src.tlc()) == GObj::FILL_NONE) return Image();
-//    return ret;
-//  }
+  virtual int draw(const CairoWrapper & cr, const iPoint &origin) = 0;
 
   // return data bounding box
   virtual iRect bbox(void) const {return range;}

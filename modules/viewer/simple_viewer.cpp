@@ -84,11 +84,19 @@ SimpleViewer::draw(const CairoWrapper & crw, const iRect & r){
   if (is_waiting()) return;
   if (r.empty()) {redraw(); return;}
   signal_busy_.emit();
-  Image img(r.w, r.h, IMAGE_32ARGB);
-  img.fill32(0xFF000000 | bgcolor);
 
-  if (obj) obj->draw(img, r.tlc()+origin);
-  crw->set_source(image_to_surface(img), r.x, r.y);
+  // some objects want to draw on an image, without using
+  // Cairo::Context. We create an image, make new CairoWrapper
+  // and then transfer information back. Not very good-looking solution.
+
+  CairoWrapper crw1;
+  crw1.set_surface_img(r.w, r.h);
+  crw1->set_color(bgcolor);
+  crw1->paint();
+
+  if (obj) obj->draw(crw1, r.tlc()+origin);
+  crw1.get_surface()->flush();
+  crw->set_source(crw1.get_surface(), r.x, r.y);
   crw->paint();
   signal_idle_.emit();
 }

@@ -33,12 +33,9 @@ class DThreadViewer : public SimpleViewer {
     // this value:
     const static int TILE_MARG=2;
 
-    // We want to have surface cache for fast access from Cairo
-    // (we use it to redraw window after each rubber change).
-    // But we keep actual data in Image object.
-    // Here two parallel caches are used. Not very nice solution.
-    std::map<iPoint, Cairo::RefPtr<Cairo::ImageSurface> > surf_cache;
-    std::map<iPoint, Image> tiles_cache; // it keeps actual data
+    // CairoContext keeps image surface for fast access
+    // for redrawing and Image for keeping actual data
+    std::map<iPoint, CairoWrapper> tiles_cache;
 
     std::set<iPoint>       tiles_todo;
     std::queue<iPoint>     tiles_done;

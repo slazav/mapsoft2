@@ -68,20 +68,23 @@ DThreadViewer::updater(){
       stop_drawing=false;
       updater_mutex->unlock();
 
-      Image tile(TILE_SIZE, TILE_SIZE, IMAGE_32ARGB);
-      tile.fill32(0xFF000000 | get_bgcolor());
+      CairoWrapper crw;
+      crw.set_surface_img(TILE_SIZE, TILE_SIZE);
+      crw->set_color(get_bgcolor());
+      crw->paint();
+
       GObj * o = get_obj();
       if (o){
         draw_mutex->lock();
-        o->draw(tile, tile_to_rect(key).tlc());
+        o->draw(crw, tile_to_rect(key).tlc());
+        crw.get_surface()->flush();
         draw_mutex->unlock();
       }
 
       updater_mutex->lock();
       if (!stop_drawing){
         if (tiles_cache.count(key)>0) tiles_cache.erase(key);
-        tiles_cache.insert(std::make_pair(key, tile));
-        surf_cache.insert(std::make_pair(key, image_to_surface(tile)));
+        tiles_cache.insert(std::make_pair(key, crw));
         tiles_done.push(key);
         tiles_todo.erase(key);
         done_signal.emit();
@@ -116,12 +119,6 @@ DThreadViewer::updater(){
       else it = tiles_cache.erase(it);
     }
 
-    auto is=surf_cache.begin();
-    while (is!=surf_cache.end()) {
-      if (tiles_to_keep.contains(is->first)) is++;
-      else is = surf_cache.erase(is);
-    }
-
     updater_mutex->unlock();
 
     updater_mutex->lock();
@@ -137,7 +134,7 @@ void DThreadViewer::on_done_signal(){
   while (!tiles_done.empty()){
     iPoint key=tiles_done.front();
 
-    if (surf_cache.count(key)){
+    if (tiles_cache.count(key)){
       auto win = get_window();
       iPoint pt = key*TILE_SIZE-get_origin();
       if (win) win->invalidate_rect(
@@ -173,8 +170,10 @@ void DThreadViewer::draw(const CairoWrapper & crw, const iRect & r){
       crw->clip(); // set clip region
 
       // draw the tile from cache
-      if (surf_cache.count(key)>0){
-        crw->set_source(surf_cache.find(key)->second, rect.x, rect.y);
+      if (tiles_cache.count(key)>0){
+        crw->set_source(
+          tiles_cache.find(key)->second.get_surface(),
+          rect.x, rect.y);
       }
       else { // no tile in cache
         // background painting
