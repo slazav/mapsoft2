@@ -205,9 +205,9 @@ CairoWrapper::set_surface_img(int w_, int h_){
   w = w_; h=h_;
   image=Image(w, h, IMAGE_32ARGB);
 
-  auto surf = image_to_surface(image);
+  surface = image_to_surface(image);
   Cairo::RefPtr<CairoExtra>::operator=
-    (cast_static(Cairo::Context::create(surf)));
+    (cast_static(Cairo::Context::create(surface)));
 }
 
 void
@@ -215,9 +215,9 @@ CairoWrapper::set_surface_img(const Image & img){
   w = img.width(); h=img.height();
   image=img; // increase refcount of image
 
-  auto surf = image_to_surface(image);
+  surface = image_to_surface(image);
   Cairo::RefPtr<CairoExtra>::operator=
-    (cast_static(Cairo::Context::create(surf)));
+    (cast_static(Cairo::Context::create(surface)));
 }
 
 void
