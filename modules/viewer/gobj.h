@@ -20,7 +20,7 @@ should not be done during drawing).
 */
 class GObj{
 public:
-  ConvBase cnv; //< coversion from viewer coordinates to object
+  ConvBase & cnv; //< coversion from viewer coordinates to object
   dRect range;
 
   const static int FILL_NONE = 0; // object draws nothing
@@ -28,7 +28,7 @@ public:
   const static int FILL_ALL  = 2; // object fills in the whole image with opaque colors
   const static iRect MAX_RANGE;
 
-  GObj(const ConvBase c): cnv(c), range(MAX_RANGE) {}
+  GObj(ConvBase & c): cnv(c), range(MAX_RANGE) { }
 
   /** Draw on an <img> with <origin> shift.
    \return one of:
@@ -44,7 +44,10 @@ public:
   virtual iRect bbox(void) const {return range;}
 
   // change scale (refresh must be inside)
-  virtual void rescale(double k) {cnv.rescale_src(k);} ///< change scale (refresh must be inside)
+  virtual void rescale(double k) {
+    cnv.rescale_src(k);
+    on_rescale(k);
+  }
 
   virtual bool get_xloop() const {return false;};
   virtual bool get_yloop() const {return false;}
@@ -52,6 +55,10 @@ public:
 //  sigc::signal<void, iRect> & signal_redraw_me()  {return signal_redraw_me_;}
 //private:
 //  sigc::signal<void, iRect> signal_redraw_me_;
+protected:
+  virtual void on_change_cnv() {}
+  virtual void on_rescale(double k) {}
+
 };
 
 #endif

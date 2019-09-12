@@ -9,7 +9,7 @@ class GObjSolidFill: public GObj{
   int color;
 
 public:
-  GObjSolidFill(const int c=0xFF000000);
+  GObjSolidFill(ConvBase & cnv, const int c=0xFF000000);
   virtual int draw(const CairoWrapper & cr,
               const iPoint &origin) override;
 };

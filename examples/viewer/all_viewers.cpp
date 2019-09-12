@@ -8,8 +8,9 @@
 class TestWin : public Gtk::Window{
   public:
 
-  GObjTestTile      o1, o2;
-  GObjTestGrid      o3;
+  ConvBase      cnv;
+  GObjTestTile  o1, o2;
+  GObjTestGrid  o3;
 
   SimpleViewer *v;
   SimpleViewer v1;
@@ -17,7 +18,7 @@ class TestWin : public Gtk::Window{
   Rubber rubber;
 
 
-  TestWin(): o3(150000), o2(true), v1(&o1), v2(&o2), v(&v2), rubber(v){
+  TestWin(): o3(cnv,150000), o2(cnv,true), o1(cnv), v1(&o1), v2(&o2), v(&v2), rubber(v){
     signal_key_press_event().connect (sigc::mem_fun (this, &TestWin::on_key_press));
 
     add(*v);

@@ -1,7 +1,7 @@
 #include "gobj_solid_fill.h"
 
-GObjSolidFill::GObjSolidFill(const int c):
-     GObj(ConvBase()), color(c) { }
+GObjSolidFill::GObjSolidFill(ConvBase & cnv, const int c):
+     GObj(cnv), color(c) { }
 
 int
 GObjSolidFill::draw(const CairoWrapper & cr,
