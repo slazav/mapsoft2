@@ -54,10 +54,14 @@ public:
   // constructor
   GObjWpts(ConvBase & cnv, GeoWptList & wpts, const Opt & opt);
 
+  /************************************************/
   // drawing waypoints on the image
   int draw(const CairoWrapper & cr, const iPoint &origin) override;
 
-  /***************/
+  /************************************************/
+  // These functions modify drawing templates, but
+  // do not have any locking. They should be called
+  // only from locked functions (on_change_opt, on_change_cnv, on_rescale)
 
   // Update template coordinates for a waypoint template (including bbox!).
   void update_pt_crd(WptDrawTmpl & t);
@@ -67,8 +71,6 @@ public:
 
   // Update name and flag dimensions for a waypoint template.
   void update_pt_name(const CairoWrapper & cr, WptDrawTmpl & t);
-
-  /***************/
 
   // Update range
   // Should be done after update_pt_crd() and update_pt_name()
@@ -81,7 +83,9 @@ public:
   // Adjust text positions to fit into rng
   void adjust_text_brd(const dRect & rng);
 
-  /***************/
+  /************************************************/
+  // These unctions update drawing templates.
+  // They have proper multi-thread locking.
 
   // update parameters form options.
   void on_change_opt(const Opt & opt);

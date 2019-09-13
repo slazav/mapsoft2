@@ -41,36 +41,30 @@ draw_wpts(CairoWrapper & cr, const iPoint & origin,
 
 GObjWpts::GObjWpts(ConvBase & cnv, GeoWptList & wpts, const Opt & opt):
            GObj(cnv), wpts(wpts){
-
   on_change_opt(opt);
-
-  CairoWrapper cr;
-  cr.set_surface_img(1000,1000);
-  cr->save();
-  cr->set_fc_font(wt0.color, wt0.text_font.c_str(), wt0.text_size);
-
-  for (auto & w:wpts){
-    WptDrawTmpl wt(wt0);
-    wt.src = &w;
-    update_pt_name(cr, wt); // update name
-    tmpls.push_back(wt);
-  }
-  cr->restore();
   on_change_cnv();
-
 }
 
 int
 GObjWpts::draw(const CairoWrapper & cr, const iPoint &origin) {
 
+  if (stop_drawing) return GObj::FILL_NONE;
+
   dRect draw_range = cr.bbox()+origin;
   if (!intersect(draw_range, range)) return GObj::FILL_NONE;
+
+  auto lock = get_lock();
 
   if (do_adj_brd) adjust_text_brd(draw_range);
 
   cr->save();
   cr->translate(-origin);
   for (auto const & wt:tmpls){
+
+    if (stop_drawing){
+      cr->restore();
+      return GObj::FILL_NONE;
+    }
 
     if (!intersect(draw_range, wt.bbox)) continue;
 
@@ -100,15 +94,15 @@ GObjWpts::draw(const CairoWrapper & cr, const iPoint &origin) {
     cr->show_text(wt.name);
 
     // bbox
-//    cr->rectangle(wt.bbox);
-//    cr->stroke();
+    //cr->rectangle(wt.bbox);
+    //cr->stroke();
 
   }
   cr->restore();
   return GObj::FILL_PART;
 }
 
-/***************/
+/**********************************************************/
 
 void
 GObjWpts::update_pt_crd(WptDrawTmpl & wt){
@@ -135,8 +129,6 @@ GObjWpts::update_pt_name(const CairoWrapper & cr, WptDrawTmpl & wt){
   wt.text_box = cr->get_text_extents(wt.name);
   wt.text_box.expand(wpt_text_pad);
 }
-
-/***************/
 
 void
 GObjWpts::update_range(){
@@ -198,10 +190,14 @@ GObjWpts::adjust_text_brd(const dRect & rng){
   }
 }
 
-/***************/
+/**********************************************************/
 
 void
 GObjWpts::on_change_opt(const Opt & opt){
+
+  stop_drawing = true;
+  auto lock = get_lock();
+
   wt0.text_font = opt.get("wpt_text_font",  "serif");
   wt0.text_size = opt.get("wpt_text_size",  10);
   wt0.size      = opt.get("wpt_draw_size",  3);
@@ -214,31 +210,58 @@ GObjWpts::on_change_opt(const Opt & opt){
 
   wpt_text_pad  = opt.get("wpt_text_pad",   2);
   wpt_bar_length = 10; // default bar length
+
+  CairoWrapper cr;
+  cr.set_surface_img(1000,1000);
+  cr->save();
+  cr->set_fc_font(wt0.color, wt0.text_font.c_str(), wt0.text_size);
+
+  for (auto & w:wpts){
+    WptDrawTmpl wt(wt0);
+    wt.src = &w;
+    update_pt_name(cr, wt); // update name
+    tmpls.push_back(wt);
+  }
+  cr->restore();
+
+  stop_drawing = false;
 }
 
 void
 GObjWpts::on_change_cnv(){
   // recalculate coordinates, update range
+
+  stop_drawing = true;
+  auto lock = get_lock();
+
   if (wpts.size()!=tmpls.size())
     throw Err() << "GObjWpts: templates are not syncronized with data";
 
   for (auto & wt:tmpls) update_pt_crd(wt);
 
-  update_range();
   if (do_adj_pos) adjust_text_pos();
+  update_range();
+
+  stop_drawing = false;
 }
 
 void
 GObjWpts::on_rescale(double k){
   // rescale coordinates, update range
+
+  stop_drawing = true;
+  auto lock = get_lock();
+
   for (auto & wt:tmpls){
     wt.x*=k; wt.y*=k;
     wt.text_pt = wt;
     wt.text_pt.y -= wt.text_size + wpt_text_pad + wpt_bar_length;
     update_pt_bbox(wt);
   }
-  update_range();
   if (do_adj_pos) adjust_text_pos();
+  update_range();
+
+  stop_drawing = false;
 }
 
 
