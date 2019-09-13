@@ -28,7 +28,7 @@ ms2opt_add_drawgrd(ext_option_list & opts){
 
 void
 draw_pulk_grid(CairoWrapper & cr, const iPoint & origin,
-               const ConvBase & cnv, const Opt & opt){
+               ConvBase & cnv, const Opt & opt){
 
   /* find wgs coordinate range and 6 degree zones */
   dRect rng = cr.bbox() + origin;
