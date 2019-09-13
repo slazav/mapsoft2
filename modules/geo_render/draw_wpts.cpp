@@ -53,8 +53,6 @@ GObjWpts::draw(const CairoWrapper & cr, const iPoint &origin) {
   dRect draw_range = cr.bbox()+origin;
   if (!intersect(draw_range, range)) return GObj::FILL_NONE;
 
-  auto lock = get_lock();
-
   if (do_adj_brd) adjust_text_brd(draw_range);
 
   cr->save();
@@ -231,9 +229,6 @@ void
 GObjWpts::on_change_cnv(){
   // recalculate coordinates, update range
 
-  stop_drawing = true;
-  auto lock = get_lock();
-
   if (wpts.size()!=tmpls.size())
     throw Err() << "GObjWpts: templates are not syncronized with data";
 
@@ -249,9 +244,6 @@ void
 GObjWpts::on_rescale(double k){
   // rescale coordinates, update range
 
-  stop_drawing = true;
-  auto lock = get_lock();
-
   for (auto & wt:tmpls){
     wt.x*=k; wt.y*=k;
     wt.text_pt = wt;
@@ -263,5 +255,4 @@ GObjWpts::on_rescale(double k){
 
   stop_drawing = false;
 }
-
 
