@@ -5,6 +5,7 @@
 #include "cairo/cairo_wrapper.h"
 #include "conv/conv_base.h"
 #include <sigc++/sigc++.h>
+#include <glibmm.h> // Mutex, Lock
 
 ///\addtogroup gred
 ///@{
@@ -43,10 +44,16 @@ public:
   // return data bounding box
   virtual iRect bbox(void) const {return range;}
 
-  // change scale (refresh must be inside)
+  // change scale
   virtual void rescale(double k) {
     cnv.rescale_src(k);
     on_rescale(k);
+  }
+
+  // change cnv
+  virtual void set_cnv(const ConvBase & c) {
+    cnv = c;
+    on_change_cnv();
   }
 
   virtual bool get_xloop() const {return false;};
@@ -55,14 +62,33 @@ public:
   // signal_redraw_me should be emitted when data was changed and the
   // object has to be redrawn. Normally it is attached to Viewer::redraw
   // method.
-  sigc::signal<void, iRect> & signal_redraw_me()  {return signal_redraw_me_;}
+  sigc::signal<void, iRect> & signal_redraw_me() {
+    return signal_redraw_me_;
+  }
 
 private:
   sigc::signal<void, iRect> signal_redraw_me_;
 
+  // Mutex for locking multi-thread operations.
+  Glib::Mutex draw_mutex;
+
+
 protected:
   virtual void on_change_cnv() {}
   virtual void on_rescale(double k) {}
+
+  // If GObj is used from a DThreadViewer then the draw() method
+  // is called from a sepereate thread. In this case all modifications
+  // of data used in draw() should be locked (including on_change_cnv, on_rescale).
+  // Method get_lock() returns the lock object.
+  Glib::Mutex::Lock get_lock() {
+    return Glib::Mutex::Lock(draw_mutex);
+  }
+
+  // stop_drawing flag shows that drawing should be stopped as soon as
+  // possible. We set it before doing get_lock() when we want to do
+  // any change in sub-objects.
+  bool stop_drawing;
 
 };
 
