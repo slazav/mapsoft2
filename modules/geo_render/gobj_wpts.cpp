@@ -1,9 +1,10 @@
 #include <vector>
 #include <cmath>
+
 #include "geohash/storage.h"
 #include "geom/line.h"
 
-#include "draw_wpts.h"
+#include "gobj_wpts.h"
 
 using namespace std;
 

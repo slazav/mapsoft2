@@ -11,8 +11,8 @@
 #include "viewer/dthread_viewer.h"
 //#include "viewer/gobj_multi.h"
 
-#include "draw_trk.h"
-#include "draw_wpts.h"
+#include "gobj_trk.h"
+#include "gobj_wpts.h"
 #include "draw_pulk_grid.h"
 
 using namespace std;

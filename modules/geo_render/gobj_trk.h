@@ -1,5 +1,5 @@
-#ifndef DRAW_TRK_H
-#define DRAW_TRK_H
+#ifndef GOBJ_TRK_H
+#define GOBJ_TRK_H
 
 #include "cairo/cairo_wrapper.h"
 #include "conv/conv_base.h"

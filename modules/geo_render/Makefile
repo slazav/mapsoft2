@@ -1,5 +1,5 @@
-MOD_HEADERS  := draw_trk.h draw_wpts.h draw_pulk_grid.h
-MOD_SOURCES  := draw_trk.cpp draw_wpts.cpp draw_pulk_grid.cpp
+MOD_HEADERS  := gobj_trk.h   gobj_wpts.h   draw_pulk_grid.h
+MOD_SOURCES  := gobj_trk.cpp gobj_wpts.cpp draw_pulk_grid.cpp
 SCRIPT_TESTS := draw_trk
 
 include ../Makefile.inc

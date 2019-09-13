@@ -1,5 +1,5 @@
-#ifndef DRAW_WPTS_H
-#define DRAW_WPTS_H
+#ifndef GOBJ_WPTS_H
+#define GOBJ_WPTS_H
 
 #include "cairo/cairo_wrapper.h"
 #include "conv/conv_base.h"
