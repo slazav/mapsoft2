@@ -30,12 +30,12 @@ ms2opt_add_drawwpt(ext_option_list & opts){
 /********************************************************************/
 
 void
-draw_wpts(CairoWrapper & cr, const iPoint & origin,
+draw_wpts(CairoWrapper & cr, const dRect & box,
          ConvBase & cnv, GeoWptList & wpts,
          const Opt & opt){
 
   GObjWpts gobj(cnv, wpts, opt);
-  gobj.draw(cr, origin);
+  gobj.draw(cr, box);
 }
 
 /**********************************************************/
@@ -47,17 +47,14 @@ GObjWpts::GObjWpts(ConvBase & cnv, GeoWptList & wpts, const Opt & opt):
 }
 
 int
-GObjWpts::draw(const CairoWrapper & cr, const iPoint &origin) {
+GObjWpts::draw(const CairoWrapper & cr, const dRect & draw_range) {
 
   if (stop_drawing) return GObj::FILL_NONE;
 
-  dRect draw_range = cr.bbox()+origin;
   if (!intersect(draw_range, range)) return GObj::FILL_NONE;
 
   if (do_adj_brd) adjust_text_brd(draw_range);
 
-  cr->save();
-  cr->translate(-origin);
   for (auto const & wt:tmpls){
 
     if (stop_drawing){
@@ -97,7 +94,6 @@ GObjWpts::draw(const CairoWrapper & cr, const iPoint &origin) {
     //cr->stroke();
 
   }
-  cr->restore();
   return GObj::FILL_PART;
 }
 

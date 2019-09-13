@@ -64,11 +64,13 @@ public:
   }
 
   // draw all objects
-  int draw(const CairoWrapper & cr, const iPoint &origin) override{
+  int draw(const CairoWrapper & cr, const dRect & draw_range) override{
     int res = GObj::FILL_NONE;
     for (auto const & p:data){
       if (!p.second.on) continue;
-      int res1 = p.second.obj->draw(cr, origin);
+      cr->save();
+      int res1 = p.second.obj->draw(cr, draw_range);
+      cr->restore();
       if (res1 != GObj::FILL_NONE &&
           res!=GObj::FILL_ALL) res=res1;
     }

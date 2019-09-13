@@ -4,8 +4,7 @@ GObjSolidFill::GObjSolidFill(ConvBase & cnv, const int c):
      GObj(cnv), color(c) { }
 
 int
-GObjSolidFill::draw(const CairoWrapper & cr,
-                    const iPoint &origin){
+GObjSolidFill::draw(const CairoWrapper & cr, const dRect & draw_range){
 
   if (color>>24 == 0) return GObj::FILL_NONE;
   cr->set_color(color);

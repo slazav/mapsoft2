@@ -15,7 +15,7 @@ void ms2opt_add_drawwpt(ext_option_list & opts);
 /********************************************************************/
 
 void
-draw_wpts(CairoWrapper & cr, const iPoint & origin,
+draw_wpts(CairoWrapper & cr, const dRect & box,
          ConvBase & cnv, GeoWptList & wpts,
          const Opt & opt);
 
@@ -56,7 +56,7 @@ public:
 
   /************************************************/
   // drawing waypoints on the image
-  int draw(const CairoWrapper & cr, const iPoint &origin) override;
+  int draw(const CairoWrapper & cr, const dRect & draw_range) override;
 
   /************************************************/
   // These functions modify drawing templates, but

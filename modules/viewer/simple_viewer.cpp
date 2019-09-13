@@ -100,12 +100,19 @@ SimpleViewer::draw(const CairoWrapper & crw, const iRect & r){
   // Cairo::Context. We create an image, make new CairoWrapper
   // and then transfer information back. Not very good-looking solution.
 
+  // TODO: remove such objects, remove extra CairoWrapper
+
   CairoWrapper crw1;
   crw1.set_surface_img(r.w, r.h);
   crw1->set_color(bgcolor);
   crw1->paint();
 
-  if (obj) obj->draw(crw1, r.tlc()+origin);
+  if (obj){
+    crw1->save();
+    crw1->translate(-r.tlc()-origin);
+    obj->draw(crw1, r+origin);
+    crw1->restore();
+  }
   crw1.get_surface()->flush();
   crw->set_source(crw1.get_surface(), r.x, r.y);
   crw->paint();

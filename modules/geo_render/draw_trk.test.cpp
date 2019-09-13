@@ -134,7 +134,10 @@ main(int argc, char **argv){
     dPoint origin(0,0);
 
     // draw tracks and waypoints
-    obj.draw(cr, origin);
+    dRect box = map.border.bbox();
+    if (!box) box = dRect(dPoint(), (dPoint)map.image_size);
+
+    obj.draw(cr, box);
 
     // draw grid
     if (opts.get("grid", 0))

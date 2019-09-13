@@ -22,7 +22,7 @@ void ms2opt_add_drawtrk(ext_option_list & opts);
 /********************************************************************/
 
 void
-draw_trk(CairoWrapper & cr, const iPoint & origin,
+draw_trk(CairoWrapper & cr, const dRect & box,
          ConvBase & cnv, GeoTrk & trk,
          const Opt & opt);
 
@@ -52,7 +52,7 @@ public:
   GObjTrk(ConvBase & cnv, GeoTrk & trk, const Opt & opt);
 
   // drawing waypoints on the image
-  int draw(const CairoWrapper & cr, const iPoint &origin) override;
+  int draw(const CairoWrapper & cr, const dRect & draw_range) override;
 
   // recalculate range (after changing coordinates)
   void update_range();

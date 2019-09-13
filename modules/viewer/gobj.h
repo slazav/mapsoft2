@@ -31,17 +31,18 @@ public:
 
   GObj(ConvBase & c): cnv(c), range(MAX_RANGE), stop_drawing(false) { }
 
-  /** Draw on an <img> with <origin> shift.
+  /** Draw with CairoWrapper.
    \return one of:
    - GObj::FILL_NONE  -- nothing has been drawn
    - GObj::FILL_PART  -- something has been drawn
    - GObj::FILL_ALL   -- all image has been covered with a non-dransparent drawing
    NOTE:
-    - range() returns range in viewer coords
+    - There is no need to save/restore Cairo::Context in GObj,
+      it is done in Viewer.
   */
-  virtual int draw(const CairoWrapper & cr, const iPoint &origin) = 0;
+  virtual int draw(const CairoWrapper & cr, const dRect & draw_range) = 0;
 
-  // return data bounding box
+  // return data bounding box (in viewer coords)
   virtual iRect bbox(void) const {return range;}
 
   // change scale

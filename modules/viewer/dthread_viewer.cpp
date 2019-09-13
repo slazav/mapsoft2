@@ -61,10 +61,14 @@ DThreadViewer::updater(){
 
       auto * o = get_obj();
       if (o){
+        dRect r = tile_to_rect(key);
         o->get_lock();
-        o->draw(crw, tile_to_rect(key).tlc());
-        crw.get_surface()->flush();
+        crw->save();
+        crw->translate(-r.tlc());
+        o->draw(crw, r);
+        crw->restore();
       }
+      crw.get_surface()->flush();
 
       updater_mutex->lock();
       if (!stop_drawing){

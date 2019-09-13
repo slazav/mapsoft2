@@ -10,8 +10,7 @@ class GObjSolidFill: public GObj{
 
 public:
   GObjSolidFill(ConvBase & cnv, const int c=0xFF000000);
-  virtual int draw(const CairoWrapper & cr,
-              const iPoint &origin) override;
+  int draw(const CairoWrapper & cr, const dRect & draw_range) override;
 };
 
 #endif

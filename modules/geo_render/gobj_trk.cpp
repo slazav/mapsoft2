@@ -29,12 +29,13 @@ ms2opt_add_drawtrk(ext_option_list & opts){
 /********************************************************************/
 
 void
-draw_trk(CairoWrapper & cr, const iPoint & origin,
+draw_trk(CairoWrapper & cr, const dRect & box,
          ConvBase & cnv, GeoTrk & trk,
          const Opt & opt){
 
   GObjTrk gobj(cnv, trk, opt);
-  gobj.draw(cr, origin);
+  cr->translate(box.tlc());
+  gobj.draw(cr, box);
 }
 
 /********************************************************************/
@@ -48,10 +49,9 @@ GObjTrk::GObjTrk(ConvBase & cnv, GeoTrk & trk_, const Opt & opt):
 }
 
 int
-GObjTrk::draw(const CairoWrapper & cr, const iPoint &origin){
+GObjTrk::draw(const CairoWrapper & cr, const dRect & draw_range){
 
   if (stop_drawing) return GObj::FILL_NONE;
-  dRect draw_range = cr.bbox()+origin;
   if (!intersect(draw_range, range)) return GObj::FILL_NONE;
 
   int arr_w = linewidth * 2.0;
@@ -59,9 +59,7 @@ GObjTrk::draw(const CairoWrapper & cr, const iPoint &origin){
   int arr_dist = linewidth * 10; // minimal segment with arrow
 
   // draw all segments
-  cr->save();
   cr->cap_round();
-  cr->translate(-origin);
   cr->set_line_width(linewidth);
   for (int i = 0; i<segments.size(); ++i){
 
@@ -101,7 +99,6 @@ GObjTrk::draw(const CairoWrapper & cr, const iPoint &origin){
     cr->stroke();
   }
 
-  cr->restore();
   return GObj::FILL_PART;
 }
 
