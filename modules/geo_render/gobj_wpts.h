@@ -84,7 +84,7 @@ public:
   void adjust_text_brd(const dRect & rng);
 
   /************************************************/
-  // These unctions update drawing templates.
+  // These functions update drawing templates.
   // They have proper multi-thread locking.
 
   // update parameters form options.

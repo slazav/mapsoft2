@@ -122,7 +122,7 @@ GObjTrk::on_set_opt(const Opt & opt){
 
   bool closed = trk.opts.get<double>("closed", false);
 
-  // Track color. Take value from the track, overryde by
+  // Track color. Take value from the track, override by
   // value from trk_draw_color option if it exists.
   // Color from track is always non-transparent, but
   // option can set a transparent color.

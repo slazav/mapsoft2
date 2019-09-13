@@ -11,24 +11,6 @@
 Supported track options:
   thickness, closed, color
 
-
-Options:
-
---trk_draw_mode normal
-  --trk_draw_color  color
-  --trk_draw_dots   0
-  --trk_draw_arrows 0
-
---trk_draw_mode speed
-  --trk_draw_min 0
-  --trk_draw_max 10
-  --trk_draw_grad BCGYRM
-
---trk_draw_mode height
-  --trk_draw_min -200
-  --trk_draw_max 8000
-  --trk_draw_grad BCGYRM
-
 */
 
 /********************************************************************/
