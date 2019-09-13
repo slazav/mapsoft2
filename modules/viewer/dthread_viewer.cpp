@@ -1,7 +1,7 @@
 #include "dthread_viewer.h"
 #include "cairo/cairo_wrapper.h"
 
-#define TILE_SIZE 256
+#define TILE_SIZE (256)
 
 DThreadViewer::DThreadViewer(GObj * pl) :
     SimpleViewer(pl),
@@ -94,7 +94,7 @@ DThreadViewer::updater(){
 
     // cleanup queue
     iRect scr = iRect(get_origin().x, get_origin().y,  get_width(), get_height());
-    iRect tiles_to_keep = ceil(dRect(scr)/TILE_SIZE);
+    iRect tiles_to_keep = ceil(dRect(scr)/(double)TILE_SIZE);
 
     updater_mutex->lock();
     std::set<iPoint>::iterator qit=tiles_todo.begin(), qit1;
@@ -153,7 +153,7 @@ void DThreadViewer::draw(const CairoWrapper & crw, const iRect & r){
 
   if (is_waiting()) return;
   if (r.empty()) {redraw(); return;}
-  iRect tiles = ceil(dRect(r + get_origin())/TILE_SIZE);
+  iRect tiles = ceil(dRect(r + get_origin())/(double)TILE_SIZE);
   iPoint key;
 
   updater_mutex->lock();
