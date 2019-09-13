@@ -41,6 +41,7 @@ main(){
       assert(im1.height() == 0);
       assert(im1.type() == IMAGE_UNKNOWN);
       assert(im1.is_empty());
+      assert(!im1);
 
       Image im2(100,100, IMAGE_32ARGB);
 
@@ -52,6 +53,7 @@ main(){
       assert(im2.height() == 100);
       assert(im2.type() == IMAGE_32ARGB);
       assert(!im2.is_empty());
+      assert(im2);
     }
 
     {

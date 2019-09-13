@@ -74,6 +74,7 @@ class Image {
     unsigned char *data() const {return data_.get();}
 
     bool is_empty() const {return w==0 || h==0;}
+    operator bool() const{ return w!=0 && h!=0; }
 
     // get data size
     size_t dsize() const {
