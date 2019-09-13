@@ -29,7 +29,7 @@ public:
   const static int FILL_ALL  = 2; // object fills in the whole image with opaque colors
   const static iRect MAX_RANGE;
 
-  GObj(ConvBase & c): cnv(c), range(MAX_RANGE) { }
+  GObj(ConvBase & c): cnv(c), range(MAX_RANGE), stop_drawing(false) { }
 
   /** Draw on an <img> with <origin> shift.
    \return one of:
