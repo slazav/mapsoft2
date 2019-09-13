@@ -5,16 +5,16 @@ GObjTestGrid::GObjTestGrid(ConvBase & c, const int delay_):
    GObj(c), delay(delay_){}
 
 int
-GObjTestGrid::draw(const CairoWrapper & cr, const iPoint &origin){
+GObjTestGrid::draw(const CairoWrapper & cr, const dRect &box){
 
   Image img = cr.get_image();
   if (img.is_empty()) return GObj::FILL_NONE;
 
-  for (int j=0; j<img.height(); j++){
-    for (int i=0; i<img.width(); i++){
+  for (int j=0; j<box.h; j++){
+    for (int i=0; i<box.w; i++){
       img.set32(i,j,0xFF<<24);
 
-      int x=origin.x+i, y=origin.y+j;
+      int x=box.x+i, y=box.y+j;
       for (int n=256; n>1; n/=2){
         if ((x%n==0) || (y%n==0)){
           n--;
