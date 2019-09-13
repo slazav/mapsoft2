@@ -148,7 +148,7 @@ GObjWpts::adjust_text_pos() {
     for (auto j:v){
       if (j>=i) continue;
       dRect bj = tmpls[j].text_box + tmpls[j].text_pt;
-      if (intersect(bi,bj).empty()) continue;
+      if (!intersect(bi,bj)) continue;
       else i0=j;
     }
     if (i0==-1) continue;
