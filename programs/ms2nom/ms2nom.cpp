@@ -91,7 +91,7 @@ main(int argc, char **argv){
       nom_scale_t sc;
       dRect r1 = nom_to_range(argv[2], sc, ex);
       dRect r2 = str_to_type<dRect>(argv[3]);
-      return intersect(r1,r2).empty();
+      return !intersect(r1,r2);
     }
 
     usage();
