@@ -56,7 +56,7 @@ GeoHashStorage::get_hash(const std::string & hash0, bool exact){
 
 void
 GeoHashStorage::del(const int id, const dRect & range){
-  if (range.empty()) return;
+  if (!range) return;
   std::set<std::string> hashes =
     GEOHASH_encode4(GEOHASH_convert_box(range,bbox), HASHLEN);
   for (auto const & h:hashes) {

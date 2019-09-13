@@ -242,7 +242,7 @@ GEOHASH_adjacent(const std::string & hash, int dir) {
 // encode a box for geohash calculations
 dRect
 GEOHASH_convert_box(const dRect & box, const dRect & bbox){
-  if (bbox.empty() || box.empty()) return box;
+  if (!bbox || !box) return box;
   double x = 360.0/bbox.w*(box.x - bbox.x) - 180.0;
   double w = 360.0/bbox.w*box.w;
   double y = 180.0/bbox.h*(box.y - bbox.y) - 90.0;

@@ -112,7 +112,7 @@ template <typename T>
 bool
 rect_in_polygon(const Rect<T> & R, const Line<T> & L, const bool borders = true){
 
-  if (R.empty()) return false;
+  if (!R) return false;
 
   std::vector<double> cr;
   PolyTester<T> lth(L, true, borders), ltv(L,false, borders);

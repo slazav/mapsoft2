@@ -140,7 +140,7 @@ void DThreadViewer::on_done_signal(){
 
 void DThreadViewer::draw(const CairoWrapper & crw, const iRect & r){
 
-  if (r.empty()) {redraw(); return;}
+  if (!r) {redraw(); return;}
   iRect tiles = ceil(dRect(r + get_origin())/(double)TILE_SIZE);
   iPoint key;
 

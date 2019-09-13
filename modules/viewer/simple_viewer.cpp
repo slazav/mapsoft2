@@ -93,7 +93,7 @@ SimpleViewer::rescale(const double k, const iPoint & cnt){
 
 void
 SimpleViewer::draw(const CairoWrapper & crw, const iRect & r){
-  if (r.empty()) {redraw(); return;}
+  if (!r) {redraw(); return;}
   signal_busy_.emit();
 
   // some objects want to draw on an image, without using

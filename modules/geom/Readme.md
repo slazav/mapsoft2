@@ -89,8 +89,8 @@ coordinates are involved.
 
 - Other operations:
   - `r1.swap(r2)` -- swap rectangles.
-  - `r.empty()` -- check if rectangle is empty. same as `!(bool)r`.
-  - `r.zsize()` -- check if rectangle has zero size (w==0 or h==0, but not empty).
+  - `r.is_empty()` -- check if rectangle is empty. same as `!(bool)r`.
+  - `r.is_zsize()` -- check if rectangle has zero size (w==0 or h==0, but not empty).
   - `r.tcl(), r.trc(), r.brc(), r.blc(), r.cnt()` -- top-left, top-right,
     bottom-left, bottom-left corners and central point.
   - `dRect(r)` -- cast to double- or integer-coordinate rectangle.

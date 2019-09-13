@@ -61,10 +61,10 @@ struct Rect {
   }
 
   /// Test if rectangle is empty
-  bool empty() const { return e; }
+  bool is_empty() const { return e; }
 
   /// Test if rectangle has zero size (but not empty)
-  bool zsize() const { return (w==0 || h==0) && !e; }
+  bool is_zsize() const { return (w==0 || h==0) && !e; }
 
   /******************************************************************/
   // corners

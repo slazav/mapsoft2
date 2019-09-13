@@ -20,8 +20,8 @@ void assert_nom(const std::string & name, const dRect & res, nom_scale_t sc0,
     }
   }
 
-  if (res.empty()){
-    if (r.empty()) return;
+  if (res.is_empty()){
+    if (r.is_empty()) return;
     std::cerr << "Error: " <<  name << " -> " << r << " != empty\n";
     assert(false);
   }

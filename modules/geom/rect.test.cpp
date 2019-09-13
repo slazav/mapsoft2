@@ -68,22 +68,22 @@ main(){
 
   // constructors, empty, zsize, ==, !=
   iRect r1;
-  assert (r1.empty());
+  assert (r1.is_empty());
   assert (!r1);
-  assert (!r1.zsize());
+  assert (!r1.is_zsize());
 
   iRect r2(iPoint(0,0), iPoint(1,0));
-  assert (!r2.empty());
+  assert (!r2.is_empty());
   assert (r2);
-  assert (r2.zsize());
+  assert (r2.is_zsize());
 
   assert (iRect(0,0,0,0) != iRect());
   assert (iRect(iPoint(),iPoint()) == iRect(0,0,0,0));
 
   iRect r3(iPoint(0,0), iPoint(1,2));
-  assert (!r3.empty());
+  assert (!r3.is_empty());
   assert (r3);
-  assert (!r3.zsize());
+  assert (!r3.is_zsize());
 
   assert (iRect(iPoint(1,2),iPoint(3,4)) == iRect(1,2,2,2));
   assert (iRect(iPoint(3,4),iPoint(1,2)) == iRect(1,2,2,2));
@@ -96,8 +96,8 @@ main(){
 
   // swap
   r1.swap(r2);
-  assert(r2.empty());
-  assert(!r1.empty());
+  assert(r2.is_empty());
+  assert(!r1.is_empty());
 
   // corners
   r1=iRect(1,2,3,4);
