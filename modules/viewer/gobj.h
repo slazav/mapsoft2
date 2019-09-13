@@ -48,7 +48,7 @@ public:
   virtual void rescale(double k) {
     stop_drawing = true;
     auto lock = get_lock();
-    cnv.rescale_src(k);
+    cnv.rescale_src(1.0/k);
     on_rescale(k);
     stop_drawing = false;
   }
