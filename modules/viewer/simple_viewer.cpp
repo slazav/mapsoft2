@@ -11,12 +11,19 @@ SimpleViewer::SimpleViewer(GObj * o) :
     sc(1.0),
     on_drag(false),
     waiting(0) {
+
+  // which events we want to recieve
   set_events (
     Gdk::BUTTON_PRESS_MASK |
     Gdk::BUTTON_RELEASE_MASK |
     Gdk::SCROLL_MASK |
     Gdk::POINTER_MOTION_MASK |
     Gdk::POINTER_MOTION_HINT_MASK );
+
+  // connect signal from the object
+  obj->signal_redraw_me().connect(
+    sigc::mem_fun(this, &SimpleViewer::redraw));
+
 }
 
 /***********************************************************/
@@ -58,10 +65,18 @@ SimpleViewer::set_origin (iPoint p) {
 /***********************************************************/
 
 void
-SimpleViewer::redraw (void){
+SimpleViewer::redraw (const iRect & range){
   if (is_waiting()) return;
   auto win = get_window();
-  if (win) win->invalidate(false);
+  if (win){
+    if (range) {
+      Gdk::Rectangle r(range.x, range.y, range.w, range.h);
+      win->invalidate_rect(r, false);
+    }
+    else {
+      win->invalidate(false);
+    }
+  }
 }
 
 void

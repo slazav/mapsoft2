@@ -52,9 +52,14 @@ public:
   virtual bool get_xloop() const {return false;};
   virtual bool get_yloop() const {return false;}
 
-//  sigc::signal<void, iRect> & signal_redraw_me()  {return signal_redraw_me_;}
-//private:
-//  sigc::signal<void, iRect> signal_redraw_me_;
+  // signal_redraw_me should be emitted when data was changed and the
+  // object has to be redrawn. Normally it is attached to Viewer::redraw
+  // method.
+  sigc::signal<void, iRect> & signal_redraw_me()  {return signal_redraw_me_;}
+
+private:
+  sigc::signal<void, iRect> signal_redraw_me_;
+
 protected:
   virtual void on_change_cnv() {}
   virtual void on_rescale(double k) {}

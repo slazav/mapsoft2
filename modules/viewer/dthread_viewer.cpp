@@ -30,14 +30,13 @@ DThreadViewer::~DThreadViewer(){
 }
 
 void
-DThreadViewer::redraw (void){
+DThreadViewer::redraw(const iRect & range){
   if (is_waiting()) return;
   updater_mutex->lock();
   stop_drawing=true;
   tiles_cache.clear();
   updater_mutex->unlock();
-  auto win = get_window();
-  if (win) win->invalidate(false);
+  SimpleViewer::redraw(range);
 }
 
 void

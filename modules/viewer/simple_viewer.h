@@ -55,7 +55,9 @@ class SimpleViewer : public Gtk::DrawingArea {
     virtual iRect range() const {
       return obj?obj->bbox():GObj::MAX_RANGE;}
 
-    virtual void redraw();
+    // Redraw the whole window or a rectangle in it
+    virtual void redraw (const iRect & range = iRect());
+
     void start_waiting(){ waiting++;}
     void stop_waiting(){ if (waiting>0) waiting--; if (waiting==0) redraw();}
     bool is_waiting() const { return waiting; }
@@ -71,7 +73,6 @@ class SimpleViewer : public Gtk::DrawingArea {
 
     // Redraw part of the screen (will be overriden in DThreadViewer).
     virtual void draw(const CairoWrapper & crw, const iRect & r);
-
 
     virtual bool on_button_press_event (GdkEventButton * event);
     virtual bool on_button_release_event (GdkEventButton * event);

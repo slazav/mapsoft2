@@ -22,9 +22,9 @@ class DThreadViewer : public SimpleViewer {
     void on_done_signal();
     void draw(const CairoWrapper & crw, const iRect & r);
 
-    void redraw (void);
-    void rescale(const double k, const iPoint & cnt);
-    void rescale(const double k){
+    void redraw (const iRect & range = iRect()) override;
+    void rescale(const double k, const iPoint & cnt) override;
+    void rescale(const double k) override{
       rescale(k,iPoint(get_width(), get_height())/2);
     }
 
