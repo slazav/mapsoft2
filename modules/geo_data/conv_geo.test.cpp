@@ -213,23 +213,35 @@ main(){
                         "[2371.2,3007.6],[1260.7,3008.9],[150.9,3009.3],[159.1,386.8]]]");
        m.proj = "+datum=WGS84 +proj=tmerc +lon_0=39 +x_0=500000";
        ConvMap cnv1(m, "SU(39)");
-       dPoint p1(1333, 867);
-       dPoint p2(7321000, 6209000);
+       dPoint p1(1333, 867, 1100);
+       dPoint p2(7321000, 6209000, 1100);
        cnv1.frw(p1);
-       assert(dist2d(p1,p2) < 15); // 15m accuracy (~2px)
+       assert(dist(p1,p2) < 15); // 15m accuracy (~2px)
 
        ConvMap cnv2(m, "+ellps=krass +towgs84=28,-130,-95 +proj=latlong");
-       dPoint p3(159,386);
-       dPoint p4(36.00,56.00);
+       dPoint p3(159,386, 2500);
+       dPoint p4(36.00,56.00, 2500);
        cnv2.bck(p4);
-       assert(dist2d(p3,p4) < 1); // 1px accuracy
+       assert(dist(p3,p4) < 1); // 1px accuracy
 
        assert(m.bbox_ref_img() == dRect("[151,386,2220,2624]"));
 
        dRect r = m.bbox_ref_wgs();
-       assert(dist2d(r.tlc(), dPoint(35.998051,55.833276)) < 1e-6);
+       assert(dist(r.tlc(), dPoint(35.998051,55.833276)) < 1e-6);
        assert(abs(r.w - 1/4.0) < 1e-4);
        assert(abs(r.h - 1/6.0) < 1e-4);
+
+       cnv2.rescale_src(2);
+       p4 = dPoint(36.00,56.00, 2500/2);
+       cnv2.bck(p4);
+       assert(dist(p3/2,p4) < 1);
+
+       cnv2.rescale_src(0.5);
+       cnv2.rescale_dst(2);
+       p4 = dPoint(36.00/2,56.00/2, 2500);
+       cnv2.bck(p4);
+       assert(dist(p3,p4) < 1);
+
     }
 
   }
