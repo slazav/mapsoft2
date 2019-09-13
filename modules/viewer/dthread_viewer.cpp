@@ -11,7 +11,6 @@ DThreadViewer::DThreadViewer(GObj * pl) :
   done_signal.connect(sigc::mem_fun(*this, &DThreadViewer::on_done_signal));
 
   updater_mutex = new(Glib::Mutex);
-  draw_mutex = new(Glib::Mutex);
   updater_cond = new(Glib::Cond);
   updater_thread =
     Glib::Thread::create(sigc::mem_fun(*this, &DThreadViewer::updater), true);
@@ -25,29 +24,17 @@ DThreadViewer::~DThreadViewer(){
   updater_mutex->unlock();
   updater_thread->join(); // waiting for our thread to exit
   delete(updater_mutex);
-  delete(draw_mutex);
   delete(updater_cond);
 }
 
 void
 DThreadViewer::redraw(const iRect & range){
-  if (is_waiting()) return;
   updater_mutex->lock();
   stop_drawing=true;
   tiles_cache.clear();
   updater_mutex->unlock();
   SimpleViewer::redraw(range);
 }
-
-void
-DThreadViewer::rescale(const double k, const iPoint & cnt){
-  start_waiting();
-  draw_mutex->lock();
-  SimpleViewer::rescale(k, cnt);
-  draw_mutex->unlock();
-  stop_waiting();
-}
-
 
 iRect
 DThreadViewer::tile_to_rect(const iPoint & key) const{
@@ -72,12 +59,11 @@ DThreadViewer::updater(){
       crw->set_color(get_bgcolor());
       crw->paint();
 
-      GObj * o = get_obj();
+      auto * o = get_obj();
       if (o){
-        draw_mutex->lock();
+        o->get_lock();
         o->draw(crw, tile_to_rect(key).tlc());
         crw.get_surface()->flush();
-        draw_mutex->unlock();
       }
 
       updater_mutex->lock();
@@ -150,7 +136,6 @@ void DThreadViewer::on_done_signal(){
 
 void DThreadViewer::draw(const CairoWrapper & crw, const iRect & r){
 
-  if (is_waiting()) return;
   if (r.empty()) {redraw(); return;}
   iRect tiles = ceil(dRect(r + get_origin())/(double)TILE_SIZE);
   iPoint key;

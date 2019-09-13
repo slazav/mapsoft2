@@ -9,8 +9,7 @@ SimpleViewer::SimpleViewer(GObj * o) :
     origin(iPoint(0,0)),
     bgcolor(0xFF000000),
     sc(1.0),
-    on_drag(false),
-    waiting(0) {
+    on_drag(false) {
 
   // which events we want to recieve
   set_events (
@@ -66,7 +65,6 @@ SimpleViewer::set_origin (iPoint p) {
 
 void
 SimpleViewer::redraw (const iRect & range){
-  if (is_waiting()) return;
   auto win = get_window();
   if (win){
     if (range) {
@@ -83,20 +81,18 @@ void
 SimpleViewer::rescale(const double k, const iPoint & cnt){
   if (!obj) return;
   signal_on_rescale_.emit(k);
-  start_waiting();
   obj->rescale(k);
   iPoint wsize(get_width(), get_height());
   iPoint wcenter = get_origin() + cnt;
   wcenter=iPoint(wcenter.x * k, wcenter.y * k);
   set_origin(wcenter - cnt);
-  stop_waiting();
+  redraw();
 }
 
 /***********************************************************/
 
 void
 SimpleViewer::draw(const CairoWrapper & crw, const iRect & r){
-  if (is_waiting()) return;
   if (r.empty()) {redraw(); return;}
   signal_busy_.emit();
 

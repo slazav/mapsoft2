@@ -58,10 +58,6 @@ class SimpleViewer : public Gtk::DrawingArea {
     // Redraw the whole window or a rectangle in it
     virtual void redraw (const iRect & range = iRect());
 
-    void start_waiting(){ waiting++;}
-    void stop_waiting(){ if (waiting>0) waiting--; if (waiting==0) redraw();}
-    bool is_waiting() const { return waiting; }
-
     virtual void rescale(const double k, const iPoint & cnt);
     virtual void rescale(const double k){
       rescale(k,iPoint(get_width(), get_height())/2);

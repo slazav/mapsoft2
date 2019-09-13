@@ -23,10 +23,6 @@ class DThreadViewer : public SimpleViewer {
     void draw(const CairoWrapper & crw, const iRect & r);
 
     void redraw (const iRect & range = iRect()) override;
-    void rescale(const double k, const iPoint & cnt) override;
-    void rescale(const double k) override{
-      rescale(k,iPoint(get_width(), get_height())/2);
-    }
 
   private:
     // Rectangle of cached tiles if larger then that of visible tiles by
@@ -42,7 +38,6 @@ class DThreadViewer : public SimpleViewer {
 
     Glib::Thread           *updater_thread;
     Glib::Mutex            *updater_mutex;
-    Glib::Mutex            *draw_mutex;
     Glib::Cond             *updater_cond;
     Glib::Dispatcher        done_signal;
 

@@ -46,14 +46,20 @@ public:
 
   // change scale
   virtual void rescale(double k) {
+    stop_drawing = true;
+    auto lock = get_lock();
     cnv.rescale_src(k);
     on_rescale(k);
+    stop_drawing = false;
   }
 
   // change cnv
   virtual void set_cnv(const ConvBase & c) {
+    stop_drawing = true;
+    auto lock = get_lock();
     cnv = c;
     on_change_cnv();
+    stop_drawing = false;
   }
 
   virtual bool get_xloop() const {return false;};
@@ -73,13 +79,17 @@ private:
   Glib::Mutex draw_mutex;
 
 
-protected:
+public:
   virtual void on_change_cnv() {}
   virtual void on_rescale(double k) {}
 
   // If GObj is used from a DThreadViewer then the draw() method
   // is called from a sepereate thread. In this case all modifications
-  // of data used in draw() should be locked (including on_change_cnv, on_rescale).
+  // of data used in draw() should be locked.
+  // - DThreadViewer locks draw() operation,
+  // - Gobj locks rescale() and set_cnv() operations.
+  // - everything else sould be locked inside the object implementation.
+  //
   // Method get_lock() returns the lock object.
   Glib::Mutex::Lock get_lock() {
     return Glib::Mutex::Lock(draw_mutex);
