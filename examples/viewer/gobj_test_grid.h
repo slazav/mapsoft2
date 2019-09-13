@@ -8,7 +8,7 @@ class GObjTestGrid: public GObj{
   int delay;
 public:
   GObjTestGrid(ConvBase & c, const int delay = 0);
-  virtual int draw(const CairoWrapper & cr, const iPoint &origin) override;
+  virtual int draw(const CairoWrapper & cr, const dRect &box) override;
 };
 
 

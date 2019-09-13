@@ -6,7 +6,7 @@ GObjTestTile::GObjTestTile(ConvBase & c, const bool slow_):
   GObj(c), slow(slow_){}
 
 int
-GObjTestTile::draw(const CairoWrapper & cr, const iPoint &origin){
+GObjTestTile::draw(const CairoWrapper & cr, const dRect &box){
 
   Image img = cr.get_image();
   if (img.is_empty()) return GObj::FILL_NONE;
