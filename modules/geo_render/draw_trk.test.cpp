@@ -9,6 +9,7 @@
 #include "geo_data/conv_geo.h"
 #include "geo_data/geo_io.h"
 #include "viewer/dthread_viewer.h"
+//#include "viewer/gobj_multi.h"
 
 #include "draw_trk.h"
 #include "draw_wpts.h"
@@ -91,10 +92,14 @@ main(int argc, char **argv){
     if (fname == "view"){
       opts.put("wpt_adj_brd", 0);
 
-      if (data.wpts.size()<1) throw Err() << "no waypoint lists to show";
       Gtk::Main     kit(argc, argv);
       Gtk::Window   win;
-      GObjWpts      pl(cnv, *data.wpts.begin(), opts);
+
+//      if (data.wpts.size()<1) throw Err() << "no waypoint lists to show";
+//      GObjWpts      pl(cnv, *data.wpts.begin(), opts);
+
+      if (data.trks.size()<1) throw Err() << "no tracks to show";
+      GObjTrk pl(cnv, *data.trks.begin(), opts);
 
       DThreadViewer viewer(&pl);
       viewer.set_bgcolor(0x809090);
