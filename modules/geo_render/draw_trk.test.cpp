@@ -1,6 +1,7 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
 #include <cassert>
+#include <memory>
 #include "cairo/cairo_wrapper.h"
 #include "mapsoft_data/mapsoft_data.h"
 #include "getopt/getopt.h"
@@ -9,7 +10,7 @@
 #include "geo_data/conv_geo.h"
 #include "geo_data/geo_io.h"
 #include "viewer/dthread_viewer.h"
-//#include "viewer/gobj_multi.h"
+#include "viewer/gobj_multi.h"
 
 #include "gobj_trk.h"
 #include "gobj_wpts.h"
@@ -89,19 +90,37 @@ main(int argc, char **argv){
     GeoMap map = geo_mkref(opts);
     ConvMap cnv(map);
 
-    if (fname == "view"){
+    bool viewer = (fname == "view"); // viewer mode?
+
+    // in the viewer we don't want to fit waypoints inside tiles
+    if (viewer) opts.put("wpt_adj_brd", 0);
+
+    // construct GObjMulti with all the objects we want to draw:
+    GObjMulti obj(cnv);
+    std::vector<std::unique_ptr<GObjTrk> >  tobjs;
+    std::vector<std::unique_ptr<GObjWpts> > wobjs;
+
+    for (auto & t:data.trks){
+      tobjs.push_back(
+        std::unique_ptr<GObjTrk>(new GObjTrk(cnv, t, opts)));
+      obj.add(1, tobjs.rbegin()->get());
+    }
+
+    for (auto & w:data.wpts){
+      wobjs.push_back(
+        std::unique_ptr<GObjWpts>(new GObjWpts(cnv, w, opts)));
+      obj.add(2, wobjs.rbegin()->get());
+    }
+
+    // TODO: maps, grids
+
+    if (viewer){
       opts.put("wpt_adj_brd", 0);
 
       Gtk::Main     kit(argc, argv);
       Gtk::Window   win;
 
-//      if (data.wpts.size()<1) throw Err() << "no waypoint lists to show";
-//      GObjWpts      pl(cnv, *data.wpts.begin(), opts);
-
-      if (data.trks.size()<1) throw Err() << "no tracks to show";
-      GObjTrk pl(cnv, *data.trks.begin(), opts);
-
-      DThreadViewer viewer(&pl);
+      DThreadViewer viewer(&obj);
       viewer.set_bgcolor(0x809090);
 
       win.add(viewer);
@@ -123,17 +142,13 @@ main(int argc, char **argv){
 
     dPoint origin(0,0);
 
-    // draw tracks
-    for (auto & t:data.trks)
-      draw_trk(cr, origin, cnv, t, opts);
+    // draw tracks and waypoints
+    obj.draw(cr, origin);
 
     // draw grid
     if (opts.get("grid", 0))
       draw_pulk_grid(cr, origin, cnv, opts);
 
-    // draw waypoints
-    for (auto & w:data.wpts)
-      draw_wpts(cr, origin, cnv, w, opts);
 
     // if format is png write file
     if (file_ext_check(fname, ".png"))
