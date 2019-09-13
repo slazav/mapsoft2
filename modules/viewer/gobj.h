@@ -58,7 +58,7 @@ public:
     stop_drawing = true;
     auto lock = get_lock();
     cnv = c;
-    on_change_cnv();
+    on_set_cnv();
     stop_drawing = false;
   }
 
@@ -78,9 +78,13 @@ private:
   // Mutex for locking multi-thread operations.
   Glib::Mutex draw_mutex;
 
-
 public:
-  virtual void on_change_cnv() {}
+
+  // Can be redefined in the Object implementation to
+  // modify data after changing cnv.
+  // If cnv is used directly in the draw() method then
+  // there is no need to use these methods.
+  virtual void on_set_cnv() {}
   virtual void on_rescale(double k) {}
 
   // If GObj is used from a DThreadViewer then the draw() method

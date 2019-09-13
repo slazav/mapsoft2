@@ -41,8 +41,8 @@ draw_wpts(CairoWrapper & cr, const iPoint & origin,
 
 GObjWpts::GObjWpts(ConvBase & cnv, GeoWptList & wpts, const Opt & opt):
            GObj(cnv), wpts(wpts){
-  on_change_opt(opt);
-  on_change_cnv();
+  on_set_opt(opt);
+  on_set_cnv();
 }
 
 int
@@ -191,7 +191,7 @@ GObjWpts::adjust_text_brd(const dRect & rng){
 /**********************************************************/
 
 void
-GObjWpts::on_change_opt(const Opt & opt){
+GObjWpts::on_set_opt(const Opt & opt){
 
   stop_drawing = true;
   auto lock = get_lock();
@@ -226,7 +226,7 @@ GObjWpts::on_change_opt(const Opt & opt){
 }
 
 void
-GObjWpts::on_change_cnv(){
+GObjWpts::on_set_cnv(){
   // recalculate coordinates, update range
 
   if (wpts.size()!=tmpls.size())

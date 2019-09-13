@@ -61,7 +61,7 @@ public:
   /************************************************/
   // These functions modify drawing templates, but
   // do not have any locking. They should be called
-  // only from locked functions (on_change_opt, on_change_cnv, on_rescale)
+  // only from locked functions (on_set_opt, on_set_cnv, on_rescale)
 
   // Update template coordinates for a waypoint template (including bbox!).
   void update_pt_crd(WptDrawTmpl & t);
@@ -88,10 +88,10 @@ public:
   // They have proper multi-thread locking.
 
   // update parameters form options.
-  void on_change_opt(const Opt & opt);
+  void on_set_opt(const Opt & opt);
 
   // update point coordinates
-  void on_change_cnv() override;
+  void on_set_cnv() override;
 
   // rescale point coordinates, update range
   void on_rescale(double k) override;
