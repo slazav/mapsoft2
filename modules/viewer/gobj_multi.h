@@ -3,6 +3,7 @@
 
 #include <map>
 #include <vector>
+#include <memory>
 #include "gobj.h"
 
 // Combine multiple GObj into one
@@ -12,7 +13,7 @@ private:
 
   // add additional information to GObj
   struct GObjData {
-    GObj * obj;
+    std::shared_ptr<GObj> obj;
     bool on; // on/off
     sigc::connection redraw_conn;
   };
@@ -25,7 +26,7 @@ public:
 
 
   // add new object
-  void add(int depth, GObj * o){
+  void add(int depth, std::shared_ptr<GObj> o){
     if (!o) return;
 
     stop_drawing = true;
@@ -43,14 +44,14 @@ public:
   }
 
   // find an object
-  std::multimap<int, GObjData>::iterator find(GObj * o) {
+  std::multimap<int, GObjData>::iterator find(std::shared_ptr<GObj> o) {
     for (auto i = data.begin(); i!=data.end(); ++i)
       if (i->second.obj == o) return i;
     return data.end();
   }
 
   // delete an object
-  void del(GObj * o){
+  void del(std::shared_ptr<GObj> o){
     if (!o) return;
 
     stop_drawing = true;

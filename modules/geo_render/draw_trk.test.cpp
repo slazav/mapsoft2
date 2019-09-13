@@ -1,7 +1,6 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
 #include <cassert>
-#include <memory>
 #include "cairo/cairo_wrapper.h"
 #include "mapsoft_data/mapsoft_data.h"
 #include "getopt/getopt.h"
@@ -97,20 +96,12 @@ main(int argc, char **argv){
 
     // construct GObjMulti with all the objects we want to draw:
     GObjMulti obj(cnv);
-    std::vector<std::unique_ptr<GObjTrk> >  tobjs;
-    std::vector<std::unique_ptr<GObjWpts> > wobjs;
 
-    for (auto & t:data.trks){
-      tobjs.push_back(
-        std::unique_ptr<GObjTrk>(new GObjTrk(cnv, t, opts)));
-      obj.add(1, tobjs.rbegin()->get());
-    }
+    for (auto & t:data.trks)
+      obj.add(1, std::shared_ptr<GObj>(new GObjTrk(cnv, t, opts)));
 
-    for (auto & w:data.wpts){
-      wobjs.push_back(
-        std::unique_ptr<GObjWpts>(new GObjWpts(cnv, w, opts)));
-      obj.add(2, wobjs.rbegin()->get());
-    }
+    for (auto & w:data.wpts)
+      obj.add(2, std::shared_ptr<GObj>(new GObjWpts(cnv, w, opts)));
 
     // TODO: maps, grids
 
