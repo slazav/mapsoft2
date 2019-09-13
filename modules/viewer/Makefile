@@ -1,4 +1,4 @@
-MOD_HEADERS  := rubber.h gobj.h\
+MOD_HEADERS  := rubber.h gobj.h gobj_multi.h\
                 simple_viewer.h dthread_viewer.h\
                 gobj_solid_fill.h
 
