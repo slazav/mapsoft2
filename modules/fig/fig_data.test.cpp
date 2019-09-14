@@ -97,7 +97,7 @@ main(){
       assert(o.area_fill==-1);
       assert(o.style_val==0);
       assert(o.direction==1);
-      assert(abs(o.angle-0.2618)<1e-6);
+      assert(fabs(o.angle-0.2618)<1e-6);
       assert(o.radius_x==1260);
       assert(o.radius_y==405);
       assert(o.start_x==8765);
