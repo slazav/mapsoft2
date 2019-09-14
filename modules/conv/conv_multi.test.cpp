@@ -8,14 +8,17 @@ int
 main(){
   try{
 
-    ConvBase cnv1, cnv2, cnv3;
-    ConvMulti cnv(&cnv1,&cnv2, true, false);
-    cnv.push_front(&cnv3, true);
+    std::shared_ptr<ConvBase> cnv1(new ConvBase());
+    std::shared_ptr<ConvBase> cnv2(new ConvBase());
+    std::shared_ptr<ConvBase> cnv3(new ConvBase());
+
+    ConvMulti cnv(cnv1, cnv2, true, false);
+    cnv.push_front(cnv3, true);
 
     // cnv3(frw) -> cnv1(frw) -> cnv2(bck)
-    cnv3.rescale_src(2);
-    cnv1.rescale_src(10);
-    cnv2.rescale_src(10);
+    cnv3->rescale_src(2);
+    cnv1->rescale_src(10);
+    cnv2->rescale_src(10);
     cnv.rescale_src(2);
     cnv.rescale_dst(0.5);
     // 2*(2*10/10)*0.5

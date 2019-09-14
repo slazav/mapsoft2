@@ -101,17 +101,19 @@ ConvGeo::is_dst_deg() const {
 
 /**********************************************************/
 
-ConvMap::ConvMap(const GeoMap & m, const std::string & dst):
-      map2dst(m.proj, dst) {
+ConvMap::ConvMap(const GeoMap & m, const std::string & dst) {
+
+  std::shared_ptr<ConvAff2D> img2map(new ConvAff2D());
+  std::shared_ptr<ConvBase>  map2dst(new ConvGeo(m.proj, dst));
 
   // convert refpoints to map projection
   ConvGeo map2wgs(m.proj);
   std::map<dPoint,dPoint> refpts = m.ref;
   for (auto & pp:refpts) map2wgs.bck(pp.second);
-  img2map.reset(refpts);
+  img2map->reset(refpts);
 
-  push_back(&img2map); // image -> map proj
-  push_back(&map2dst); // map proj -> dst
+  push_back(img2map); // image -> map proj
+  push_back(map2dst); // map proj -> dst
 }
 
 

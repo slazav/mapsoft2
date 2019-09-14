@@ -68,9 +68,6 @@ public:
   /// libproj parameter string.
   ConvMap(const GeoMap & m, const std::string & dst = "WGS");
 
-private:
-  ConvAff2D img2map;
-  ConvGeo map2dst;
 };
 
 
