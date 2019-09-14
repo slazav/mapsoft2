@@ -41,6 +41,16 @@ main(){
 
    //some test with non-trivial conversion is needed
 
+   // simplify()
+
+    assert(cnv.size() == 3);
+
+    assert(cnv.simplify(dRect(0,0,10,10), 5) == true);
+    cnv.frw(p);  assert(dist(p, dPoint(20,20)) < 1e-6);
+    cnv.bck(p);  assert(dist(p, dPoint(10,10)) < 1e-6);
+
+    assert(cnv.size() == 1);
+
   }
   catch (Err e) {
     std::cerr << "Error: " << e.str() << "\n";

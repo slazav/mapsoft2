@@ -50,9 +50,11 @@ Composite point transformation, child of ConvBase.
 Methods (&cnv is a pointer to a ConvBase class or its child, frw is
 a boolean flag for direction of the transformation `true` means forward):
 - `ConvMulti()` -- empty (trivial transformation),
-- `ConvMulti(&cnv1, &cnv2, frw1, frw2)` -- combine two transformations,
-- `push_front(&cnv, frw)` -- add a transformation to the beginning of the list,
-- `push_back(&cnv, frw)`  -- add a transformation to the end of the list.
+- `ConvMulti(&cnv1, &cnv2, frw1, frw2)` -- Combine two transformations.
+- `push_front(&cnv, frw)` -- Add a transformation to the beginning of the list.
+- `push_back(&cnv, frw)`  -- Add a transformation to the end of the list.
+- `simplify(box, N, err)` -- Try to substitude all transformation by a single ConvAff.
+- `size()` -- Return number of transformations.
 
 -----------------
 ## ConvAff2D class
