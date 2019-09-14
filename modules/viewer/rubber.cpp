@@ -75,14 +75,14 @@ Rubber::on_draw(Cairo::RefPtr<Cairo::Context> const & cr_){
          cr->line_to(p2);
          break;
        case RUBBFL_ELL:
-         w=abs(p2.x-p1.x);
-         h=abs(p2.y-p1.y);
+         w=fabs(p2.x-p1.x);
+         h=fabs(p2.y-p1.y);
          x=(p2.x+p1.x)/2;
          y=(p2.y+p1.y)/2;
          goto circles;
        case RUBBFL_ELLC:
-         w=2*abs(p2.x-p1.x);
-         h=2*abs(p2.y-p1.y);
+         w=2*fabs(p2.x-p1.x);
+         h=2*fabs(p2.y-p1.y);
          x=p1.x;
          y=p1.y;
          goto circles;
