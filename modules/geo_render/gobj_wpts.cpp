@@ -57,10 +57,7 @@ GObjWpts::draw(const CairoWrapper & cr, const dRect & draw_range) {
 
   for (auto const & wt:tmpls){
 
-    if (stop_drawing){
-      cr->restore();
-      return GObj::FILL_NONE;
-    }
+    if (stop_drawing) return GObj::FILL_NONE;
 
     if (!intersect(draw_range, wt.bbox)) continue;
 
@@ -208,7 +205,6 @@ GObjWpts::on_set_opt(const Opt & opt){
 
   CairoWrapper cr;
   cr.set_surface_img(1000,1000);
-  cr->save();
   cr->set_fc_font(wt0.color, wt0.text_font.c_str(), wt0.text_size);
 
   for (auto & w:wpts){
@@ -217,7 +213,6 @@ GObjWpts::on_set_opt(const Opt & opt){
     update_pt_name(cr, wt); // update name
     tmpls.push_back(wt);
   }
-  cr->restore();
 
   stop_drawing = false;
 }

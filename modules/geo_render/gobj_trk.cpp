@@ -63,10 +63,7 @@ GObjTrk::draw(const CairoWrapper & cr, const dRect & draw_range){
   cr->set_line_width(linewidth);
   for (int i = 0; i<segments.size(); ++i){
 
-    if (stop_drawing){
-      cr->restore();
-      return GObj::FILL_NONE;
-    }
+    if (stop_drawing) return GObj::FILL_NONE;
 
     dPoint p1 = segments[i].p1;
     dPoint p2 = segments[i].p2;
