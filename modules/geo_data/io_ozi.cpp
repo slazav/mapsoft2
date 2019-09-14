@@ -584,8 +584,8 @@ void write_ozi_map (const string &fname, const GeoMap & m, const Opt & opts){
       int yd = abs(int(pp.y));
       double xm = fabs(pp.x*60) - xd*60;
       double ym = fabs(pp.y*60) - yd*60;
-      if (abs(xm-60)<1e-5) {xm=0; xd--;}
-      if (abs(ym-60)<1e-5) {ym=0; yd--;}
+      if (fabs(xm-60)<1e-5) {xm=0; xd--;}
+      if (fabs(ym-60)<1e-5) {ym=0; yd--;}
       f << fixed << setprecision(6)
         << setw(4) << yd << ','
         << setw(6) << ym << ','
