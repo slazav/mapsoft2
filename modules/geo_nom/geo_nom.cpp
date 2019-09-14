@@ -304,7 +304,7 @@ pt_to_nom(dPoint p, const nom_scale_t sc, const bool single){
     if ((p.x <-180) || (p.x>180) || (p.y<-90) || (p.y>90))
       throw Err() << "pt_to_nom: bad coordinates: " << p;
 
-    char A = 'a' + (int)floor(abs(p.y)/4);
+    char A = 'a' + (int)floor(fabs(p.y)/4);
     int  B = 31 +  (int)floor(p.x/6);
 
     bool south = p.y<0;
