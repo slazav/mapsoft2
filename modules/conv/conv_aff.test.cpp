@@ -22,6 +22,9 @@ main(){
     ref[ps2]=pd2;
     ref[ps3]=pd3;
     ConvAff2D cnv1(ref);
+    // for 3 points conversion error is 0
+    assert(cnv1.get_src_err() < 1e-15);
+    assert(cnv1.get_dst_err() < 1e-15);
 
     dPoint p;
     p=ps1; cnv1.frw(p);
@@ -34,15 +37,15 @@ main(){
 
     // convert angles  a -> a-30deg
     {
-      assert(abs(cnv1.frw_ang(dPoint(1,1), 0, 1) + a) <1e-6 );
-      assert(abs(cnv1.bck_ang(dPoint(1,1), 0, 1) - a) <1e-6 );
-      assert(abs(cnv1.frw_ang(dPoint(1,1), -a, 1) + 2*a) <1e-6 );
-      assert(abs(cnv1.bck_ang(dPoint(1,1), +a, 1) - 2*a) <1e-6 );
+      assert(fabs(cnv1.frw_ang(dPoint(1,1), 0, 1) + a) <1e-6 );
+      assert(fabs(cnv1.bck_ang(dPoint(1,1), 0, 1) - a) <1e-6 );
+      assert(fabs(cnv1.frw_ang(dPoint(1,1), -a, 1) + 2*a) <1e-6 );
+      assert(fabs(cnv1.bck_ang(dPoint(1,1), +a, 1) - 2*a) <1e-6 );
 
-      assert(abs(cnv1.frw_angd(dPoint(1,1), 0, 1) + 30) <1e-6 );
-      assert(abs(cnv1.bck_angd(dPoint(1,1), 0, 1) - 30) <1e-6 );
-      assert(abs(cnv1.frw_angd(dPoint(1,1), -30, 1) + 60) <1e-6 );
-      assert(abs(cnv1.bck_angd(dPoint(1,1), +30, 1) - 60) <1e-6 );
+      assert(fabs(cnv1.frw_angd(dPoint(1,1), 0, 1) + 30) <1e-6 );
+      assert(fabs(cnv1.bck_angd(dPoint(1,1), 0, 1) - 30) <1e-6 );
+      assert(fabs(cnv1.frw_angd(dPoint(1,1), -30, 1) + 60) <1e-6 );
+      assert(fabs(cnv1.bck_angd(dPoint(1,1), +30, 1) - 60) <1e-6 );
 
     }
 
@@ -90,8 +93,6 @@ main(){
 
     }
 
-
-
     // can't build conversion from two points:
     try {
       ref.erase(ps1);
@@ -99,6 +100,61 @@ main(){
     }
     catch(Err e) {
       assert(e.str() == "ConvAff2D: can't calculate conversion matrix.");
+    }
+
+    // error test
+    {
+      // make NxN point array in 1x1 square
+      // conversion: rotation by `ang` around `cnt`, scaling by `sc`.
+      int N = 10;
+      dLine pts1, pts2;
+      std::map<dPoint, dPoint> ptmap;
+
+      double ang=30*M_PI/180;
+      double sc=5.6;
+      dPoint cnt(0.2,0.2);
+
+      dPoint dp(0.1,0);
+      for (int i=0; i<N; ++i) for (int j=0; j<N; ++j){
+         dPoint p1(1.0*i/N, 1.0*j/N);
+         dPoint p2 = rotate2d(p1, cnt, ang) * sc;
+         pts1.push_back(p1);
+         pts2.push_back(p2);
+
+         // modify first point:
+         if (i==0 && j==0) p1+=dp;
+         ptmap.emplace(p1,p2);
+      }
+
+      ConvAff2D cnv(ptmap);
+      // src error is roughly len2d(dp)/N (less then it)
+      double e1 = len2d(dp)/N;
+      assert(cnv.get_src_err() < e1);
+      assert(e1 - cnv.get_src_err() < 0.1*e1);
+
+      // src error is sc times more
+      double e2 = e1*sc;
+      assert(cnv.get_dst_err() < e2);
+      assert(e2 - cnv.get_dst_err() < 0.1*e2);
+
+      e1 = cnv.get_src_err();
+      e2 = cnv.get_dst_err();
+
+      cnv.rescale_src(2);
+      assert(fabs(cnv.get_src_err() - e1/2) < 1e-10);
+      assert(fabs(cnv.get_dst_err() - e2) < 1e-10);
+
+      cnv.rescale_dst(3);
+      assert(fabs(cnv.get_src_err() - e1/2) < 1e-10);
+      assert(fabs(cnv.get_dst_err() - e2*3) < 1e-10);
+
+      // just in case check conversion
+      dPoint p1(0.345,0.443);
+      dPoint p2(p1);
+      cnv.frw(p2);
+      dPoint p2c = rotate2d(p1*2, cnt, ang)*sc*3;
+      assert(dist2d(p2,p2c) < 0.05);
+
     }
 
 

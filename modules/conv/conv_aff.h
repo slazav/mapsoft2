@@ -13,6 +13,8 @@ class ConvAff2D : public ConvBase {
   std::vector<double> k_frw; ///< transformation parameters (6 numbers)
   std::vector<double> k_bck; ///< parameters of inverse transformation
   void bck_recalc(); ///< recalculate k_bck matrix
+  double src_err_x, src_err_y; //< errors in source coordinates.
+  double dst_err_x, dst_err_y; //< errors in destination coordinates.
 
 public:
   /// constructor - trivial transformation
@@ -61,6 +63,12 @@ public:
 
   /// scale before the transformation
   void rescale_dst(const double s){ rescale_dst(s,s);}
+
+  double get_src_err() const {
+    return sqrt(pow(src_err_x,2)+pow(src_err_y,2));}
+
+  double get_dst_err() const {
+    return sqrt(pow(dst_err_x,2)+pow(dst_err_y,2));}
 
 };
 

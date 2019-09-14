@@ -48,6 +48,7 @@ ConvAff2D::reset(){
   for (int i=0; i<6; i++) k_frw[i]=k_bck[i]=0;
   k_frw[0] = k_bck[0] = 1.0;
   k_frw[4] = k_bck[4] = 1.0;
+  src_err_x = src_err_y = dst_err_x = dst_err_y = 0;
 }
 
 void
@@ -80,12 +81,11 @@ To find least square fit we should solve these equations:
   double a[6*7];
   for (int i=0; i<6*7; i++) a[i]=0;
 
-  std::map<dPoint, dPoint>::const_iterator pp;
-  for (pp=ref.begin(); pp!=ref.end(); pp++){
-    double x  = pp->first.x;
-    double y  = pp->first.y;
-    double xc = pp->second.x;
-    double yc = pp->second.y;
+  for (auto const & pp:ref){
+    double x  = pp.first.x;
+    double y  = pp.first.y;
+    double xc = pp.second.x;
+    double yc = pp.second.y;
 
     A7(0,0)+=x*x; A7(3,3)+=x*x;
     A7(1,0)+=x*y; A7(4,3)+=x*y;
@@ -105,6 +105,21 @@ To find least square fit we should solve these equations:
   k_bck.resize(6);
   for (int i=0; i<6; i++) k_frw[i] = A7(6,i);
   bck_recalc();
+
+  // calculate errors
+  src_err_x = src_err_y = dst_err_x = dst_err_y = 0;
+  for (auto const & pp:ref){
+    dPoint p1(pp.second); bck(p1);
+    dPoint p2(pp.first);  frw(p2);
+    src_err_x += pow(p1.x - pp.first.x,2);
+    src_err_y += pow(p1.y - pp.first.y,2);
+    dst_err_x += pow(p2.x - pp.second.x,2);
+    dst_err_y += pow(p2.y - pp.second.y,2);
+  }
+  src_err_x = sqrt(src_err_x/ref.size());
+  src_err_y = sqrt(src_err_y/ref.size());
+  dst_err_x = sqrt(dst_err_x/ref.size());
+  dst_err_y = sqrt(dst_err_y/ref.size());
 }
 
 void
@@ -123,6 +138,8 @@ ConvAff2D::shift_dst(const dPoint & p){
 
 void
 ConvAff2D::rescale_src(const double kx, const double ky){
+  src_err_x/=kx;
+  src_err_y/=ky;
   k_frw[0]*=kx; k_frw[3]*=kx;
   k_frw[1]*=ky; k_frw[4]*=ky;
   bck_recalc();
@@ -130,6 +147,8 @@ ConvAff2D::rescale_src(const double kx, const double ky){
 
 void
 ConvAff2D::rescale_dst(const double kx, const double ky){
+  dst_err_x*=kx;
+  dst_err_y*=ky;
   for (int i=0; i<3; i++) k_frw[i]*=kx;
   for (int i=3; i<6; i++) k_frw[i]*=ky;
   bck_recalc();

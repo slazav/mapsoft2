@@ -3,7 +3,9 @@
 
 Trivial point transformation with two factors for scaling before
 and after the transformation.. Children can redefine frw_pt() and bck_pt()
-methods to build more complicated transformations.
+methods to build more complicated transformations. Scaling factors
+are applied in following way: `dst = f(src*k_src)*k_dst`,
+`src = f^(-1)(dst/k_dst)/k_src`
 
 Note that in some cases forward and backward conversions are different
 (accuracy is always calculated in source units).
@@ -68,4 +70,5 @@ Methods (map is a std::map(dPoint,dPoint)):
  - `shift_dst(p)` -- shift by vector `p` after the transformation,
  - `rescale_src(kx,ky)` -- rescale `x` and `y` before thetransformation,
  - `rescale_dst(kx,ky)` -- rescale `x` and `y` after thetransformation,
-
+ - `get_src_err()` -- get error in source coordinates
+ - `get_dst_err()` -- get error in destination coordinates
