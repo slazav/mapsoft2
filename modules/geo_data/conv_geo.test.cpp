@@ -228,8 +228,8 @@ main(){
 
        dRect r = m.bbox_ref_wgs();
        assert(dist(r.tlc(), dPoint(35.998051,55.833276)) < 1e-6);
-       assert(abs(r.w - 1/4.0) < 1e-4);
-       assert(abs(r.h - 1/6.0) < 1e-4);
+       assert(fabs(r.w - 1/4.0) < 1e-4);
+       assert(fabs(r.h - 1/6.0) < 1e-4);
 
        cnv2.rescale_src(2);
        p4 = dPoint(36.00,56.00, 2500/2);
