@@ -133,7 +133,7 @@ ConvBase::bck_angd(dPoint p, double a, double dx) const{
 
 dPoint
 ConvBase::scales(const dRect & box) const{
-  if (box.is_empty() || box.is_zsize())
+  if (box.is_zsize())
     throw Err() << "ConvBase::scales: zero-size box";
   dPoint p0 = box.tlc();
   dPoint p1 = p0 + dPoint(box.w,0);
