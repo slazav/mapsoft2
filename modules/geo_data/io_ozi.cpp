@@ -10,6 +10,7 @@
 #include "time_fmt/time_fmt.h"
 #include "iconv/iconv.h"
 #include "geom/poly_tools.h"
+#include "filename/filename.h"
 
 #include "conv_geo.h"
 #include "geo_data.h"
@@ -160,6 +161,8 @@ void read_ozi (const string &fname, GeoData & data, const Opt & opts){
   bool vv = opts.get("verbose", false);
   if (vv) cerr << "Reading OziExplorer file " << fname << endl;
 
+  std::string prefix = file_get_prefix(fname);
+
   ifstream f(fname);
   if (!f.good()) throw Err()
       << "Can't read data from OziExplorer file: " << fname;
@@ -265,9 +268,10 @@ void read_ozi (const string &fname, GeoData & data, const Opt & opts){
     getline(f,s1); crop_nl(s1);
     m.name = cnv(s1);
 
-    // file name: no charset conversion!
+    // file name: no charset conversion! Add prefix if path is not absolute
     getline(f,s1); crop_nl(s1);
-    m.image = s1;
+    if (s1.size()>0 && s1[0]!='/') m.image = prefix + s1;
+    else m.image = s1;
 
     // 1 TIFF scale factor or Map Code  -- ignore
     getline(f,s1);
