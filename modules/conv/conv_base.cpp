@@ -130,18 +130,22 @@ ConvBase::bck_angd(dPoint p, double a, double dx) const{
   return 180.0/M_PI * bck_ang(p, M_PI/180.0*a, dx);
 }
 
+
+dPoint
+ConvBase::scales(const dRect & box) const{
+  if (box.is_empty() || box.is_zsize())
+    throw Err() << "ConvBase::scales: zero-size box";
+  dPoint p0 = box.tlc();
+  dPoint p1 = p0 + dPoint(box.w,0);
+  dPoint p2 = p0 + dPoint(0,box.h);
+  frw(p0), frw(p1), frw(p2);
+  return dPoint(dist2d(p0,p1)/box.w, dist2d(p0,p2)/box.h);
+}
+
 /*
 
 dPoint
-ConvBase::units_frw(dPoint p) const{
-  dPoint p1 = p + dPoint(1,0);
-  dPoint p2 = p + dPoint(0,1);
-  frw(p), frw(p1), frw(p2);
-  return dPoint(dist(p1,p), dist(p2,p));
-}
-
-dPoint
-ConvBase::units_bck(dPoint p) const{
+ConvBase::bck_scales(dPoint p) const{
   dPoint p1 = p + dPoint(1,0);
   dPoint p2 = p + dPoint(0,1);
   bck(p), bck(p1), bck(p2);

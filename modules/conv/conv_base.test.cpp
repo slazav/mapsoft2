@@ -1,6 +1,7 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
 #include <cassert>
+#include "err/assert_err.h"
 #include "conv_base.h"
 
 class MyConv : public ConvBase {
@@ -123,6 +124,16 @@ main(){
       assert (cnv.bck_acc(dRect(0,0,100,20),0.005) == dRect(0,0,10,10));
     }
 
+    { //scales
+      ConvBase cnv0;
+      cnv0.rescale_src(2);
+      cnv0.rescale_dst(3);
+      assert_err(cnv0.scales(dRect()),
+        "ConvBase::scales: zero-size box");
+      assert_err(cnv0.scales(dRect(1,2,0,0)),
+        "ConvBase::scales: zero-size box");
+      assert(dist2d(cnv0.scales(dRect(0,0,5,5)), dPoint(6,6)) < 1e-15);
+    }
 
   }
   catch (Err e) {

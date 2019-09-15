@@ -40,7 +40,18 @@ Note that in some cases forward and backward conversions are different
   and after conversions. If childs do not do the scaling they should redefine
   this.
 
-- TODO: convert angles, convert scales
+- `virtual double frw_ang(dPoint p, double a, double dx) const`
+- `virtual double bck_ang(dPoint p, double a, double dx) const` --
+  Convert angle (radians, ccw from y=const) at point p.
+
+- `virtual double frw_angd(dPoint p, double a, double dx) const`
+  `virtual double bck_angd(dPoint p, double a, double dx) const` --
+  Convert angle (degrees, ccw from y=const) at point p.
+
+- `dPoint scales(const dRect & box) const;` --
+  Linear scales, destination units per source units in x and y direction.
+  box is given in source coordinates.
+
 
 -----------------
 ## ConvMulti class

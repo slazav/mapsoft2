@@ -80,14 +80,17 @@ struct ConvBase{
   virtual dRect bck_acc(const dRect & R, double acc = 0.5) const {
     return bck_acc(rect_to_line(R), acc).bbox(); }
 
-  /// Convert angle from y=const line at point p.
-  /// Radians.
+  /// Convert angle (radians, ccw from y=const) at point p.
   virtual double frw_ang(dPoint p, double a, double dx) const;
   virtual double bck_ang(dPoint p, double a, double dx) const;
 
-  /// Degrees.
+  /// Convert angle (degrees, ccw from y=const) at point p.
   virtual double frw_angd(dPoint p, double a, double dx) const;
   virtual double bck_angd(dPoint p, double a, double dx) const;
+
+  /// Linear scales, destination units per source units in x and y direction.
+  /// box is given in source coordinates.
+  dPoint scales(const dRect & box) const;
 
 /*
 
