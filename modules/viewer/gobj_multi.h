@@ -29,6 +29,8 @@ public:
   void add(int depth, std::shared_ptr<GObj> o){
     if (!o) return;
 
+    o->set_cnv(cnv);
+
     stop_drawing = true;
     auto lock = get_lock();
 
@@ -79,7 +81,7 @@ public:
 
   // rescale
   void on_rescale(double k) override{
-    for (auto const & p:data) p.second.obj->rescale(k);
+    for (auto const & p:data) p.second.obj->on_rescale(k);
   }
 
   // set cnv
