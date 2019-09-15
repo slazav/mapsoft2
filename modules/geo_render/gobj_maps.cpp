@@ -47,14 +47,14 @@ GObjMaps::draw(const CairoWrapper & cr, const dRect & draw_range) {
 
   if (stop_drawing) return GObj::FILL_NONE;
 
-  if (!intersect(draw_range, range)) return GObj::FILL_NONE;
+  if (intersect(draw_range, range).is_zsize()) return GObj::FILL_NONE;
 
   for (auto const & d:data){
 
     if (stop_drawing) return GObj::FILL_NONE;
 
     dRect range_dst = intersect(draw_range, d.bbox);
-    if (!range_dst) continue;
+    if (range_dst.is_zsize()) continue;
 
     range_dst.to_ceil();
     iRect key = range_dst;

@@ -40,7 +40,7 @@ GObjWpts::draw(const CairoWrapper & cr, const dRect & draw_range) {
 
   if (stop_drawing) return GObj::FILL_NONE;
 
-  if (!intersect(draw_range, range)) return GObj::FILL_NONE;
+  if (intersect(draw_range, range).is_zsize()) return GObj::FILL_NONE;
 
   if (do_adj_brd) adjust_text_brd(draw_range);
 
@@ -48,7 +48,7 @@ GObjWpts::draw(const CairoWrapper & cr, const dRect & draw_range) {
 
     if (stop_drawing) return GObj::FILL_NONE;
 
-    if (!intersect(draw_range, wt.bbox)) continue;
+    if (intersect(draw_range, wt.bbox).is_zsize()) continue;
 
     cr->set_line_width(wt.linewidth);
 

@@ -38,7 +38,7 @@ int
 GObjTrk::draw(const CairoWrapper & cr, const dRect & draw_range){
 
   if (stop_drawing) return GObj::FILL_NONE;
-  if (!intersect(draw_range, range)) return GObj::FILL_NONE;
+  if (intersect(draw_range, range).is_zsize()) return GObj::FILL_NONE;
 
   int arr_w = linewidth * 2.0;
   int dot_w = linewidth * 0.5;
@@ -55,7 +55,7 @@ GObjTrk::draw(const CairoWrapper & cr, const dRect & draw_range){
     dPoint p2 = segments[i].p2;
     dRect r(p1,p2);
     r.expand(arr_w + dot_w + linewidth);
-    if (!intersect(draw_range, r)) continue;
+    if (intersect(draw_range, r).is_zsize()) continue;
 
     cr->set_color_a(segments[i].color);
 
