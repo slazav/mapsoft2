@@ -73,34 +73,16 @@ main(int argc, char **argv){
     MapsoftData data;
     for (auto const &f:files) mapsoft_read(f, data, opts);
 
-    // make reference
-    GeoMap map;
-    if (!opts.exists("mkref")){
-
-      if (data.maps.size()>0 && data.maps.begin()->size()>0){
-        map = *(data.maps.begin()->begin());
-      }
-
-      else {
-        opts.put("mkref", "proj");
-        dRect bbox;
-        for (auto const & t:data.trks) bbox.expand(t.bbox());
-        for (auto const & w:data.wpts) bbox.expand(w.bbox());
-        opts.put("coords_wgs", bbox);
-        //opts.put("coords_wgs", data.bbox());
-        map = geo_mkref(opts);
-      }
-    }
-    else map = geo_mkref(opts);
-
     // get output file name
     std::string fname = opts.get("out", "");
     if (fname == "") throw Err() << "No output file specified (use -o option)";
+    bool viewer = (fname == "view"); // viewer mode?
+
+    // make reference
+    GeoMap map = geo_mkref(data, opts);
 
     // create conversion map -> WGS84
     std::shared_ptr<ConvMap> cnv(new ConvMap(map));
-
-    bool viewer = (fname == "view"); // viewer mode?
 
     // in the viewer we don't want to fit waypoints inside tiles
     if (viewer) opts.put("wpt_adj_brd", 0);
