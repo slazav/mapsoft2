@@ -2,12 +2,12 @@
 ## ConvBase class
 
 Trivial point transformation with two factors for scaling before
-and after the transformation.. Children can redefine frw_pt() and bck_pt()
+and after the transformation. Children can redefine frw_pt() and bck_pt()
 methods to build more complicated transformations. Scaling factors
-are applied in following way: `dst = f(src*k_src)*k_dst`,
-`src = f^(-1)(dst/k_dst)/k_src`
+are applied only to x and y coordinates in a following way:
+`dst = f(src*k_src)*k_dst`, `src = f^(-1)(dst/k_dst)/k_src`
 
-Note that in some cases forward and backward conversions are different
+Note that in some cases forward and backward conversions are non-symmetric
 (accuracy is always calculated in source units).
 
 - `ConvBase()` -- Constructor.
@@ -58,15 +58,16 @@ Note that in some cases forward and backward conversions are different
 
 Composite point transformation, child of ConvBase.
 
-Methods (&cnv is a pointer to a ConvBase class or its child, frw is
-a boolean flag for direction of the transformation `true` means forward):
+Methods (cnv here has type std::shared_ptr<const ConvBase>, frw is
+a boolean flag for direction of the transformation, `true` means forward):
 - `ConvMulti()` -- empty (trivial transformation),
-- `ConvMulti(&cnv1, &cnv2, frw1, frw2)` -- Combine two transformations.
-- `push_front(&cnv, frw)` -- Add a transformation to the beginning of the list.
-- `push_back(&cnv, frw)`  -- Add a transformation to the end of the list.
+- `ConvMulti(cnv1, cnv2, frw1, frw2)` -- Combine two transformations.
+- `push_front(cnv, frw)` -- Add a transformation to the beginning of the list.
+- `push_back(cnv, frw)`  -- Add a transformation to the end of the list.
 - `simplify(box, N, err)` -- Try to substitude all transformation by a single ConvAff.
 - `size()` -- Return number of transformations.
 - `reset()` -- Reset to the trivial transformation.
+
 -----------------
 ## ConvAff2D class
 
