@@ -73,21 +73,31 @@ main(int argc, char **argv){
     MapsoftData data;
     for (auto const &f:files) mapsoft_read(f, data, opts);
 
-    // set some defaults:
-    if (!opts.exists("mkref")) opts.put("mkref", "proj");
-    if (!opts.exists("coords") && !opts.exists("coords_wgs")){
-       dRect bbox;
-       for (auto const & t:data.trks) bbox.expand(t.bbox());
-       for (auto const & w:data.wpts) bbox.expand(w.bbox());
-       opts.put("coords_wgs", bbox);
-      //opts.put("coords_wgs", data.bbox());
+    // make reference
+    GeoMap map;
+    if (!opts.exists("mkref")){
+
+      if (data.maps.size()>0 && data.maps.begin()->size()>0){
+        map = *(data.maps.begin()->begin());
+      }
+
+      else {
+        opts.put("mkref", "proj");
+        dRect bbox;
+        for (auto const & t:data.trks) bbox.expand(t.bbox());
+        for (auto const & w:data.wpts) bbox.expand(w.bbox());
+        opts.put("coords_wgs", bbox);
+        //opts.put("coords_wgs", data.bbox());
+        map = geo_mkref(opts);
+      }
     }
+    else map = geo_mkref(opts);
+
     // get output file name
     std::string fname = opts.get("out", "");
     if (fname == "") throw Err() << "No output file specified (use -o option)";
 
-    // create map reference
-    GeoMap map = geo_mkref(opts);
+    // create conversion map -> WGS84
     std::shared_ptr<ConvMap> cnv(new ConvMap(map));
 
     bool viewer = (fname == "view"); // viewer mode?
