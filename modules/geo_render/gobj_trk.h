@@ -5,6 +5,7 @@
 #include "conv/conv_base.h"
 #include "geo_data/geo_data.h"
 #include "opt/opt.h"
+#include "viewer/gobj.h"
 
 /*
 
@@ -21,14 +22,6 @@ void ms2opt_add_drawtrk(ext_option_list & opts);
 
 /********************************************************************/
 
-void
-draw_trk(CairoWrapper & cr, const dRect & box,
-         std::shared_ptr<ConvBase> cnv, GeoTrk & trk,
-         const Opt & opt);
-
-#include "viewer/gobj.h"
-
-/************************************************/
 class GObjTrk : public GObj {
 private:
 

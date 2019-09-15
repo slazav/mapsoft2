@@ -8,6 +8,7 @@
 #include "cache/cache.h"
 #include "image/image_cache.h"
 #include "opt/opt.h"
+#include "viewer/gobj.h"
 
 /********************************************************************/
 #include "getopt/getopt.h"
@@ -17,14 +18,6 @@ void ms2opt_add_drawmap(ext_option_list & opts);
 
 /********************************************************************/
 
-void
-draw_maps(CairoWrapper & cr, const iPoint & origin,
-         std::shared_ptr<ConvBase> cnv, GeoMapList & wpts,
-         const Opt & opt);
-
-#include "viewer/gobj.h"
-
-/************************************************/
 class GObjMaps : public GObj {
 private:
 

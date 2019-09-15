@@ -28,20 +28,7 @@ ms2opt_add_drawmap(ext_option_list & opts){
 */
 }
 
-
-/********************************************************************/
-
-void
-draw_maps(CairoWrapper & cr, const dRect & box,
-         std::shared_ptr<ConvBase> cnv, GeoMapList & maps,
-         const Opt & opt){
-
-  GObjMaps gobj(cnv, maps, opt);
-  gobj.draw(cr, box);
-}
-
 /**********************************************************/
-
 
 GObjMaps::GObjMaps(std::shared_ptr<ConvBase> cnv,
                    GeoMapList & maps, const Opt & opt):

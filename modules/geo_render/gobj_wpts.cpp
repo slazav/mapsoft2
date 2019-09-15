@@ -29,17 +29,6 @@ ms2opt_add_drawwpt(ext_option_list & opts){
 
 /********************************************************************/
 
-void
-draw_wpts(CairoWrapper & cr, const dRect & box,
-         std::shared_ptr<ConvBase> cnv, GeoWptList & wpts,
-         const Opt & opt){
-
-  GObjWpts gobj(cnv, wpts, opt);
-  gobj.draw(cr, box);
-}
-
-/**********************************************************/
-
 GObjWpts::GObjWpts(std::shared_ptr<ConvBase> cnv,
                    GeoWptList & wpts, const Opt & opt):
      wpts(wpts), GObj(cnv){

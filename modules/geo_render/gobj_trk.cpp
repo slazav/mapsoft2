@@ -25,18 +25,6 @@ ms2opt_add_drawtrk(ext_option_list & opts){
   opts.insert(opts.end(), add.begin(), add.end());
 }
 
-
-/********************************************************************/
-
-void
-draw_trk(CairoWrapper & cr, const dRect & box,
-         std::shared_ptr<ConvBase> cnv, GeoTrk & trk,
-         const Opt & opt){
-
-  GObjTrk gobj(cnv, trk, opt);
-  gobj.draw(cr, box);
-}
-
 /********************************************************************/
 
 GObjTrk::GObjTrk(std::shared_ptr<ConvBase> cnv,
