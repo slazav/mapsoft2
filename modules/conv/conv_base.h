@@ -20,10 +20,10 @@ struct ConvBase{
   ConvBase(double sc=1.0): sc_dst(1.0), sc_src(1.0){}
 
   // forward point conversion (can be redefined)
-  virtual void frw_pt(dPoint & p) const {p*=sc_src*sc_dst;}
+  virtual void frw_pt(dPoint & p) const {p.x*=sc_src*sc_dst; p.y*=sc_src*sc_dst;}
 
   // backward point conversion (can be redefined)
-  virtual void bck_pt(dPoint & p) const {p/=sc_src*sc_dst;}
+  virtual void bck_pt(dPoint & p) const {p.x/=sc_src*sc_dst; p.y/=sc_src*sc_dst;}
 
 
   /// Forward point transformation.
@@ -115,6 +115,7 @@ struct ConvBase{
   /// Childs can use this parameter in frw/bck or redefine rescale_dst()
   virtual void rescale_dst(const double s) { sc_dst*=s; }
 
+protected:
   double sc_src, sc_dst;
 };
 
