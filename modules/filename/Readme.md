@@ -18,9 +18,15 @@ std::string file_ext_repl(const std::string &fname, const char *ext);
 
 * Extract directory names from a filename, a list which can be used to
  make/delete all dirs:
-
 ```c++
 std::vector<std::string> file_get_dirs(const std::string &fname);
 ```
 
 Example: d1/d2/d3/../d4/f -> d1/d2/d3/../d4, d1/d2/d3, d1/d2, d1
+
+* Extract directory prefix from a filename:
+```c++
+std::string file_get_prefix(const std::string &fname);
+```
+Example: d1/d2/d3/../d4/f.ext -> d1/d2/d3/../d4/
+

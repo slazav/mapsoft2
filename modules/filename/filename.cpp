@@ -37,3 +37,9 @@ file_get_dirs(const std::string &fname){
   };
   return ret;
 }
+
+std::string
+file_get_prefix(const std::string &fname){
+  int i = fname.rfind('/');
+  return i<0? "" : std::string(fname.begin(), fname.begin()+i+1);
+}

@@ -37,6 +37,24 @@ int main() {
     assert(ff.size() == 2);
     assert(ff[0] == "/dir1/dir2");
     assert(ff[1] == "/dir1");
+
+    ff = file_get_dirs("a.b");
+    assert(ff.size() == 0);
+
+    ff = file_get_dirs("/a.b");
+    assert(ff.size() == 0);
+
+    ff = file_get_dirs("./a.b");
+    assert(ff.size() == 0);
+
+    // file_get_prefix
+    assert(file_get_prefix("") == "");
+    assert(file_get_prefix("aaa") == "");
+    assert(file_get_prefix("/aaa") == "/");
+    assert(file_get_prefix("/abc/def/aaa") == "/abc/def/");
+    assert(file_get_prefix("/abc//aaa.bbb") == "/abc//");
+    assert(file_get_prefix("/abc/./aaa.ccc") == "/abc/./");
+    assert(file_get_prefix("abc/.aaa.ccc") == "abc/");
 }
 
 ///\endcond

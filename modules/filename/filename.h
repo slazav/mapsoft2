@@ -21,4 +21,8 @@ std::string file_ext_repl(const std::string &fname, const char *ext);
 */
 std::vector<std::string> file_get_dirs(const std::string &fname);
 
+/* Extract directory prefix from a filename */
+std::string file_get_prefix(const std::string &fname);
+
+
 #endif
