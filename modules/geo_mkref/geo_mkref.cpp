@@ -145,7 +145,7 @@ geo_mkref(const Opt & o){
         tile_range = o.get("tiles", iRect());
       }
 
-      if (tile_range.is_empty() || tile_range.is_zsize())
+      if (tile_range.is_zsize())
         throw Err() << "geo_mkref: empty tile range: " << o.get("tiles", string());
 
     }
@@ -187,7 +187,7 @@ geo_mkref(const Opt & o){
     }
 
     // here tile_range should be set to non-zero rectangle
-    if (tile_range.is_empty() || tile_range.is_zsize())
+    if (tile_range.is_zsize())
       throw Err() << "geo_mkref: empty tile range, use coords or tiles opotions";
 
     // z-index should be set here
@@ -306,7 +306,7 @@ geo_mkref(const Opt & o){
     }
 
     // check if range is set
-    if (range.is_empty() || range.is_zsize())
+    if (range.is_zsize())
       throw Err() << "geo_mkref: empty coordinate range";
 
     // expand range to closiest integers
