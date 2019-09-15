@@ -46,6 +46,8 @@ private:
   Cache<iRect, Image> tiles;
   std::vector<MapData> data;
 
+  bool smooth;
+
 public:
   // constructor
   GObjMaps(std::shared_ptr<ConvBase> cnv,
