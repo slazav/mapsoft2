@@ -62,6 +62,9 @@ Rubber::on_motion (GdkEventMotion * event) {
 /// functions for drawing and erasing rubber
 void
 Rubber::on_draw(Cairo::RefPtr<Cairo::Context> const & cr_){
+  if (rubber.empty()) return;
+  viewer->get_pointer(mouse_pos.x, mouse_pos.y);
+
   CairoWrapper cr(cr_);
 
   for (auto & s:rubber){
