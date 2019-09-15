@@ -140,6 +140,7 @@ GObjMaps::on_rescale(double k){
     d.brd*=k;
     d.bbox*=k;
     d.scale/=k;
+    if (d.simp) d.cnv.rescale_src(1.0/k);
     // scale for image loading
     d.cnv.rescale_dst(d.load_sc);
     d.load_sc = floor(0.5*d.scale + 0.05);
