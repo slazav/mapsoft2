@@ -70,7 +70,7 @@ main(){
   iRect r1;
   assert (r1.is_empty());
   assert (!r1);
-  assert (!r1.is_zsize());
+  assert (r1.is_zsize());
 
   iRect r2(iPoint(0,0), iPoint(1,0));
   assert (!r2.is_empty());
