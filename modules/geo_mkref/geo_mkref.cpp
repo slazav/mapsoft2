@@ -352,3 +352,31 @@ geo_mkref(const Opt & o){
   /***************************************/
   throw Err() << "geo_mkref: unknown reference type: " << reftype;
 }
+
+// try to get some information from GeoData if there is
+// no "mkref" option.
+GeoMap geo_mkref(const GeoData & data, const Opt & o){
+
+  // If "mkref" option exists build reference using options
+  if (o.exists("mkref")) return geo_mkref(o);
+
+  // If there is at list one map - use its reference.
+  // This map will have the best quality.
+  if (data.maps.size()>0 && data.maps.begin()->size()>0)
+    return *(data.maps.begin()->begin());
+
+  // Here we should have something smart: smaller scales
+  // for large areas, different projections, etc.
+  Opt opts(o);
+  opts.put("mkref", "proj");
+
+  // data bounding box
+  dRect bbox;
+  for (auto const & t:data.trks) bbox.expand(t.bbox());
+  for (auto const & w:data.wpts) bbox.expand(w.bbox());
+  opts.put("coords_wgs", bbox);
+  //opts.put("coords_wgs", data.bbox());
+
+  return geo_mkref(opts);
+}
+

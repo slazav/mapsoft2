@@ -81,4 +81,8 @@ void ms2opt_add_mkref(ext_option_list & opts);
 
 GeoMap geo_mkref(const Opt & o);
 
+// try to get some information from GeoData if there is
+// no mkref option
+GeoMap geo_mkref(const GeoData & data, const Opt & o);
+
 #endif
