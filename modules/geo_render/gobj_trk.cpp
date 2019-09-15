@@ -34,18 +34,16 @@ draw_trk(CairoWrapper & cr, const dRect & box,
          const Opt & opt){
 
   GObjTrk gobj(cnv, trk, opt);
-  cr->translate(box.tlc());
   gobj.draw(cr, box);
 }
 
 /********************************************************************/
 
-GObjTrk::GObjTrk(std::shared_ptr<ConvBase> cnv, GeoTrk & trk_, const Opt & opt):
-  GObj(cnv), trk(trk_){
+GObjTrk::GObjTrk(std::shared_ptr<ConvBase> cnv,
+                 GeoTrk & trk_, const Opt & opt): trk(trk_), GObj(cnv){
 
   segments.resize(trk.size());
   on_set_opt(opt);
-  on_set_cnv();
 }
 
 int
@@ -189,7 +187,7 @@ GObjTrk::on_set_cnv(){
 
   for (int i=0; i<trk.size(); i++){
     dPoint pt(trk[i]);
-    cnv->bck(pt);
+    if (cnv) cnv->bck(pt);
     segments[i].p1 = pt;
     segments[i>0? i-1: trk.size()-1].p2 = pt;
   }

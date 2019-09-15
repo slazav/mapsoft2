@@ -13,6 +13,7 @@
 
 #include "gobj_trk.h"
 #include "gobj_wpts.h"
+#include "gobj_maps.h"
 #include "draw_pulk_grid.h"
 
 using namespace std;
@@ -97,20 +98,23 @@ main(int argc, char **argv){
     // construct GObjMulti with all the objects we want to draw:
     GObjMulti obj(cnv);
 
+    for (auto & m:data.maps)
+      obj.add(1, std::shared_ptr<GObj>(new GObjMaps(cnv, m, opts)));
+
     for (auto & t:data.trks)
-      obj.add(1, std::shared_ptr<GObj>(new GObjTrk(cnv, t, opts)));
+      obj.add(2, std::shared_ptr<GObj>(new GObjTrk(cnv, t, opts)));
 
     for (auto & w:data.wpts)
-      obj.add(2, std::shared_ptr<GObj>(new GObjWpts(cnv, w, opts)));
+      obj.add(3, std::shared_ptr<GObj>(new GObjWpts(cnv, w, opts)));
 
-    // TODO: maps, grids
+
+    // TODO: grids
 
     if (viewer){
       opts.put("wpt_adj_brd", 0);
 
       Gtk::Main     kit(argc, argv);
       Gtk::Window   win;
-
       DThreadViewer viewer(&obj);
       viewer.set_bgcolor(0x809090);
 

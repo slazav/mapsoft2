@@ -42,9 +42,8 @@ draw_wpts(CairoWrapper & cr, const dRect & box,
 
 GObjWpts::GObjWpts(std::shared_ptr<ConvBase> cnv,
                    GeoWptList & wpts, const Opt & opt):
-           GObj(cnv), wpts(wpts){
+     wpts(wpts), GObj(cnv){
   on_set_opt(opt);
-  on_set_cnv();
 }
 
 int
@@ -100,7 +99,7 @@ GObjWpts::draw(const CairoWrapper & cr, const dRect & draw_range) {
 void
 GObjWpts::update_pt_crd(WptDrawTmpl & wt){
   dPoint pt(*wt.src);
-  cnv->bck(pt);
+  if (cnv) cnv->bck(pt);
   wt.x = pt.x; wt.y = pt.y;
   wt.text_pt = (dPoint)wt;
   wt.text_pt.y -= wt.text_size + wpt_text_pad + wpt_bar_length;
@@ -221,7 +220,6 @@ GObjWpts::on_set_opt(const Opt & opt){
 void
 GObjWpts::on_set_cnv(){
   // recalculate coordinates, update range
-
   if (wpts.size()!=tmpls.size())
     throw Err() << "GObjWpts: templates are not syncronized with data";
 
@@ -236,7 +234,6 @@ GObjWpts::on_set_cnv(){
 void
 GObjWpts::on_rescale(double k){
   // rescale coordinates, update range
-
   for (auto & wt:tmpls){
     wt.x*=k; wt.y*=k;
     wt.text_pt = wt;

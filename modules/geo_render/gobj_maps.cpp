@@ -1,0 +1,160 @@
+#include <vector>
+#include <cmath>
+
+#include "geohash/storage.h"
+#include "geom/line.h"
+#include "geo_data/conv_geo.h"
+
+#include "gobj_maps.h"
+
+using namespace std;
+
+void
+ms2opt_add_drawmap(ext_option_list & opts){
+/*
+  int m = MS2OPT_DRAWMAP;
+  ext_option_list add = {
+  {"wpt_text_font",   1,0,m, "waypoint font (default: \"serif\")"},
+  {"wpt_text_size",   1,0,m, "waypoint font size, pixels (default: 10)"},
+  {"wpt_text_pad",    1,0,m, "waypoint text padding, pixels (default: 2)"},
+  {"wpt_draw_size",   1,0,m, "waypoint dot radius, pixels (default: 3)"},
+  {"wpt_line_width",  1,0,m, "waypoint line width), (default: 1)"},
+  {"wpt_color",       1,0,m, "waypoint color (default: 0xFF000000)"},
+  {"wpt_bgcolor",     1,0,m, "waypoint background color (default: 0xFFFFFFFF)"},
+  {"wpt_adj",         1,0,m, "adjust waypoint flag positions to prevent collisions (default: 1)"},
+  {"wpt_adj_brd",     1,0,m, "adjust waypoint flag positions to prevent boundary collisions (default: 0)"},
+  };
+  opts.insert(opts.end(), add.begin(), add.end());
+*/
+}
+
+
+/********************************************************************/
+
+void
+draw_maps(CairoWrapper & cr, const dRect & box,
+         std::shared_ptr<ConvBase> cnv, GeoMapList & maps,
+         const Opt & opt){
+
+  GObjMaps gobj(cnv, maps, opt);
+  gobj.draw(cr, box);
+}
+
+/**********************************************************/
+
+
+GObjMaps::GObjMaps(std::shared_ptr<ConvBase> cnv,
+                   GeoMapList & maps, const Opt & opt):
+    GObj(cnv), maps(maps), img_cache(10), tiles(128) {
+
+  for (auto const & m:maps){
+    MapData d;
+    d.src = &m;
+    data.push_back(d);
+  }
+}
+
+int
+GObjMaps::draw(const CairoWrapper & cr, const dRect & draw_range) {
+
+  if (stop_drawing) return GObj::FILL_NONE;
+
+  if (!intersect(draw_range, range)) return GObj::FILL_NONE;
+
+  for (auto const & d:data){
+
+    if (stop_drawing) return GObj::FILL_NONE;
+
+    dRect range_dst = intersect(draw_range, d.bbox);
+    if (!range_dst) continue;
+
+    range_dst.to_ceil();
+    iRect key = range_dst;
+
+    if (!tiles.contains(key)) {
+      Image image_src = img_cache.get(d.src->image, d.load_sc);
+      Image image_dst = Image(range_dst.w, range_dst.h, IMAGE_32ARGB);
+
+      // render image
+      for (int yd=0; yd<image_dst.height(); ++yd){
+        if (stop_drawing) return GObj::FILL_NONE;
+        for (int xd=0; xd<image_dst.width(); ++xd){
+          dPoint p(xd,yd);
+          p += range_dst.tlc();
+          d.cnv.frw(p);
+          int xs=rint(p.x), ys=rint(p.y);
+
+          int color;
+          if (xs<0 || xs>=image_src.width() ||
+              ys<0 || ys>=image_src.height())
+            color = 0;
+          else
+            color = image_src.get_argb(xs, ys);
+          image_dst.set32(xd, yd, color);
+        }
+      }
+      tiles.add(key, image_dst);
+    }
+
+    // border
+    cr->reset_clip();
+    if (d.brd.size()>0){
+      cr->mkpath(d.brd);
+      cr->clip();
+    }
+
+    cr->set_source(image_to_surface(tiles.get(key)),
+      range_dst.x, range_dst.y);
+    cr->paint();
+  }
+  return GObj::FILL_PART;
+}
+
+/**********************************************************/
+
+void
+GObjMaps::on_set_cnv(){
+  for (auto & d:data){
+
+    // conversion viewer->map
+    d.cnv.reset();
+    if (cnv) d.cnv.push_back(cnv, true); // viewer -> WGS
+    d.cnv.push_back(
+      std::shared_ptr<ConvMap>(new ConvMap(*d.src)),
+      false);
+
+    // border in viewer coordinates
+    d.brd = d.cnv.bck_acc(d.src->border);
+
+    // map bbox in viewer coordinates
+    d.bbox = d.cnv.bck_acc(d.src->bbox());
+    range.expand(d.bbox);
+
+    // simplify the conversion if possible
+    d.simp = d.cnv.simplify(d.bbox, 5, 0.5);
+
+    // calculate map scale (map pixels per viewer pixel)
+    dPoint sc = d.cnv.scales(d.bbox);
+    d.scale = std::max(sc.x, sc.y);
+
+    // scale for image loading
+    d.load_sc = floor(0.5/d.scale + 0.05);
+    if (d.load_sc <=0) d.load_sc = 1;
+  }
+  tiles.clear();
+}
+
+void
+GObjMaps::on_rescale(double k){
+  for (auto & d:data){
+    d.brd*=k;
+    d.bbox*=k;
+    d.scale*=k;
+    // scale for image loading
+    d.cnv.rescale_dst(d.load_sc);
+    d.load_sc = floor(0.5/d.scale + 0.05);
+    if (d.load_sc <=0) d.load_sc = 1;
+    d.cnv.rescale_dst(1.0/d.load_sc);
+  }
+  tiles.clear();
+}

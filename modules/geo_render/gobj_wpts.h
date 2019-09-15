@@ -52,7 +52,8 @@ private:
 
 public:
   // constructor
-  GObjWpts(std::shared_ptr<ConvBase> cnv, GeoWptList & wpts, const Opt & opt);
+  GObjWpts(std::shared_ptr<ConvBase> cnv,
+           GeoWptList & wpts, const Opt & opt);
 
   /************************************************/
   // drawing waypoints on the image

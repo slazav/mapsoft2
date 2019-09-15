@@ -49,7 +49,8 @@ private:
 
 public:
   // constructor
-  GObjTrk(std::shared_ptr<ConvBase> cnv, GeoTrk & trk, const Opt & opt);
+  GObjTrk(std::shared_ptr<ConvBase> cnv,
+          GeoTrk & trk, const Opt & opt);
 
   // drawing waypoints on the image
   int draw(const CairoWrapper & cr, const dRect & draw_range) override;
