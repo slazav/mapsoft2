@@ -79,7 +79,7 @@ clean:
 
 make_deps:
 	@echo "## Building dependencies: [$(MDEPS)]"
-	@for i in $(MDEPS); do $(MAKE) -C $(MODDIR)/$$i make_nodeps; done
+	@sh -e -c 'for i in $(MDEPS); do $(MAKE) -C $(MODDIR)/$$i make_nodeps; done'
 	@echo "## Finish building dependencies"
 
 ######################################################
