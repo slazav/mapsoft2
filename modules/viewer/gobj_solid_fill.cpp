@@ -1,6 +1,6 @@
 #include "gobj_solid_fill.h"
 
-GObjSolidFill::GObjSolidFill(ConvBase & cnv, const int c):
+GObjSolidFill::GObjSolidFill(std::shared_ptr<ConvBase> cnv, const int c):
      GObj(cnv), color(c) { }
 
 int

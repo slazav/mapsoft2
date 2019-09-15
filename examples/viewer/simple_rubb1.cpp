@@ -8,8 +8,7 @@ int main(int argc, char **argv){
 
     Gtk::Main     kit (argc, argv);
     Gtk::Window   win;
-    ConvBase      cnv;
-    GObjTestTile  p1(cnv);
+    GObjTestTile  p1;
 
     SimpleViewer viewer(&p1);
     Rubber rubber(&viewer);

@@ -8,8 +8,7 @@ int main(int argc, char **argv){
 
     Gtk::Main     kit (argc, argv);
     Gtk::Window   win;
-    ConvBase      cnv;
-    GObjTestTile  pl2(cnv, true);
+    GObjTestTile  pl2(true);
 
     DThreadViewer viewer(&pl2);
 

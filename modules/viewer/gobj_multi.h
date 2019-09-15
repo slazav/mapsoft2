@@ -22,7 +22,7 @@ private:
 
 public:
 
-  GObjMulti(ConvBase & c): GObj(c){}
+  GObjMulti(std::shared_ptr<ConvBase> c): GObj(c){}
 
 
   // add new object

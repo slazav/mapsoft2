@@ -2,7 +2,7 @@
 #include "err/err.h"
 #include <unistd.h> // usleep
 
-GObjTestTile::GObjTestTile(ConvBase & c, const bool slow_):
+GObjTestTile::GObjTestTile(const bool slow_, std::shared_ptr<ConvBase> c):
   GObj(c), slow(slow_){}
 
 int

@@ -9,8 +9,7 @@ int main(int argc, char **argv){
 
     Gtk::Main     kit (argc, argv);
     Gtk::Window   win;
-    ConvBase      cnv;
-    GObjTestGrid  p1(cnv);
+    GObjTestGrid  p1;
 
     SimpleViewer viewer(&p1);
     Rubber rubber(&viewer);

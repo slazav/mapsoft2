@@ -31,7 +31,7 @@ ms2opt_add_drawwpt(ext_option_list & opts){
 
 void
 draw_wpts(CairoWrapper & cr, const dRect & box,
-         ConvBase & cnv, GeoWptList & wpts,
+         std::shared_ptr<ConvBase> cnv, GeoWptList & wpts,
          const Opt & opt){
 
   GObjWpts gobj(cnv, wpts, opt);
@@ -40,7 +40,8 @@ draw_wpts(CairoWrapper & cr, const dRect & box,
 
 /**********************************************************/
 
-GObjWpts::GObjWpts(ConvBase & cnv, GeoWptList & wpts, const Opt & opt):
+GObjWpts::GObjWpts(std::shared_ptr<ConvBase> cnv,
+                   GeoWptList & wpts, const Opt & opt):
            GObj(cnv), wpts(wpts){
   on_set_opt(opt);
   on_set_cnv();
@@ -99,7 +100,7 @@ GObjWpts::draw(const CairoWrapper & cr, const dRect & draw_range) {
 void
 GObjWpts::update_pt_crd(WptDrawTmpl & wt){
   dPoint pt(*wt.src);
-  cnv.bck(pt);
+  cnv->bck(pt);
   wt.x = pt.x; wt.y = pt.y;
   wt.text_pt = (dPoint)wt;
   wt.text_pt.y -= wt.text_size + wpt_text_pad + wpt_bar_length;

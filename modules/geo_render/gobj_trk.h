@@ -23,7 +23,7 @@ void ms2opt_add_drawtrk(ext_option_list & opts);
 
 void
 draw_trk(CairoWrapper & cr, const dRect & box,
-         ConvBase & cnv, GeoTrk & trk,
+         std::shared_ptr<ConvBase> cnv, GeoTrk & trk,
          const Opt & opt);
 
 #include "viewer/gobj.h"
@@ -49,7 +49,7 @@ private:
 
 public:
   // constructor
-  GObjTrk(ConvBase & cnv, GeoTrk & trk, const Opt & opt);
+  GObjTrk(std::shared_ptr<ConvBase> cnv, GeoTrk & trk, const Opt & opt);
 
   // drawing waypoints on the image
   int draw(const CairoWrapper & cr, const dRect & draw_range) override;

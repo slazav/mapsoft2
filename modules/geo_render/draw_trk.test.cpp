@@ -87,7 +87,7 @@ main(int argc, char **argv){
 
     // create map reference
     GeoMap map = geo_mkref(opts);
-    ConvMap cnv(map);
+    std::shared_ptr<ConvMap> cnv(new ConvMap(map));
 
     bool viewer = (fname == "view"); // viewer mode?
 

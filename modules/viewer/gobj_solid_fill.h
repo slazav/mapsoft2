@@ -9,7 +9,7 @@ class GObjSolidFill: public GObj{
   int color;
 
 public:
-  GObjSolidFill(ConvBase & cnv, const int c=0xFF000000);
+  GObjSolidFill(std::shared_ptr<ConvBase> cnv, const int c=0xFF000000);
   int draw(const CairoWrapper & cr, const dRect & draw_range) override;
 };
 

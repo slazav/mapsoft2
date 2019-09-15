@@ -30,7 +30,7 @@ ms2opt_add_drawtrk(ext_option_list & opts){
 
 void
 draw_trk(CairoWrapper & cr, const dRect & box,
-         ConvBase & cnv, GeoTrk & trk,
+         std::shared_ptr<ConvBase> cnv, GeoTrk & trk,
          const Opt & opt){
 
   GObjTrk gobj(cnv, trk, opt);
@@ -40,7 +40,7 @@ draw_trk(CairoWrapper & cr, const dRect & box,
 
 /********************************************************************/
 
-GObjTrk::GObjTrk(ConvBase & cnv, GeoTrk & trk_, const Opt & opt):
+GObjTrk::GObjTrk(std::shared_ptr<ConvBase> cnv, GeoTrk & trk_, const Opt & opt):
   GObj(cnv), trk(trk_){
 
   segments.resize(trk.size());
@@ -189,7 +189,7 @@ GObjTrk::on_set_cnv(){
 
   for (int i=0; i<trk.size(); i++){
     dPoint pt(trk[i]);
-    cnv.bck(pt);
+    cnv->bck(pt);
     segments[i].p1 = pt;
     segments[i>0? i-1: trk.size()-1].p2 = pt;
   }

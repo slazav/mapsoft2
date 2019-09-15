@@ -6,6 +6,7 @@
 #include "conv/conv_base.h"
 #include <sigc++/sigc++.h>
 #include <glibmm.h> // Mutex, Lock
+#include <memory> // shared_ptr
 
 ///\addtogroup gred
 ///@{
@@ -21,7 +22,7 @@ should not be done during drawing).
 */
 class GObj{
 public:
-  ConvBase & cnv; //< coversion from viewer coordinates to object
+  std::shared_ptr<ConvBase> cnv; //< coversion from viewer coordinates to object
   dRect range;
 
   const static int FILL_NONE = 0; // object draws nothing
@@ -29,7 +30,8 @@ public:
   const static int FILL_ALL  = 2; // object fills in the whole image with opaque colors
   const static iRect MAX_RANGE;
 
-  GObj(ConvBase & c): cnv(c), range(MAX_RANGE), stop_drawing(false) { }
+  GObj(std::shared_ptr<ConvBase> c):
+    cnv(c), range(MAX_RANGE), stop_drawing(false) { }
 
   /** Draw with CairoWrapper.
    \return one of:
@@ -49,13 +51,13 @@ public:
   virtual void rescale(double k) {
     stop_drawing = true;
     auto lock = get_lock();
-    cnv.rescale_src(1.0/k);
+    cnv->rescale_src(1.0/k);
     on_rescale(k);
     stop_drawing = false;
   }
 
   // change cnv
-  virtual void set_cnv(const ConvBase & c) {
+  virtual void set_cnv(std::shared_ptr<ConvBase> c) {
     stop_drawing = true;
     auto lock = get_lock();
     cnv = c;

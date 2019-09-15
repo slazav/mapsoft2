@@ -16,7 +16,7 @@ void ms2opt_add_drawwpt(ext_option_list & opts);
 
 void
 draw_wpts(CairoWrapper & cr, const dRect & box,
-         ConvBase & cnv, GeoWptList & wpts,
+         std::shared_ptr<ConvBase> cnv, GeoWptList & wpts,
          const Opt & opt);
 
 #include "viewer/gobj.h"
@@ -52,7 +52,7 @@ private:
 
 public:
   // constructor
-  GObjWpts(ConvBase & cnv, GeoWptList & wpts, const Opt & opt);
+  GObjWpts(std::shared_ptr<ConvBase> cnv, GeoWptList & wpts, const Opt & opt);
 
   /************************************************/
   // drawing waypoints on the image
