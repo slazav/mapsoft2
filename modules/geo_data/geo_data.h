@@ -218,21 +218,28 @@ struct GeoMap{
   // bbox of reference points in image coordinates
   dRect bbox_ref_img() const{
     dRect r;
-    for (auto pp:ref) r.expand(pp.first);
+    for (auto const & pp:ref) r.expand(pp.first);
     return r;
   }
 
   // bbox of reference points in wgs84 latlong
   dRect bbox_ref_wgs() const{
     dRect r;
-    for (auto pp:ref) r.expand(pp.second);
+    for (auto const & pp:ref) r.expand(pp.second);
     return r;
   }
 
   /******************************************************************/
 
-//  /// Get x-y range in lon-lat coords (using border, ref, proj).
-//  dRect bbox() const;
+  /// bbox of the map (image, border, refpoints).
+  /// Could be wrong if actual size of image differs from image_size.
+  dRect bbox() const {
+    dRect r(dPoint(), image_size);
+    for (auto const & pp:ref) r.expand(pp.first);
+    for (auto const & l:border)
+      for (auto const & p:l) r.expand(p);
+    return r;
+  }
 };
 
 /********************************************************************/
