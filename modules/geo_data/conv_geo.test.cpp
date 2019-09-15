@@ -238,7 +238,7 @@ main(){
 
        cnv2.rescale_src(0.5);
        cnv2.rescale_dst(2);
-       p4 = dPoint(36.00/2,56.00/2, 2500);
+       p4 = dPoint(36.00*2,56.00*2, 2500);
        cnv2.bck(p4);
        assert(dist(p3,p4) < 1);
 
