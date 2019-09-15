@@ -30,6 +30,12 @@ public:
     dirs.push_back(frw2);
   }
 
+  // reset to trivial conversion
+  void reset(){
+    cnvs.clear();
+    dirs.clear();
+  }
+
   /// add a conversion in front of the list
   void push_front(const std::shared_ptr<ConvBase> & cnv, bool frw=true){
     cnvs.push_front(cnv);

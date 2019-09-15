@@ -11,6 +11,8 @@
 //  - return true if substitution was none, false otherwise.
 bool
 ConvMulti::simplify(const dRect & src_box, int N, double E) {
+  if (size() == 0) return false;
+
   if (N<2 || N>1000) throw Err() <<
     "ConvMulti::simplify: wrong number of points: " << N;
   dLine pts_src;

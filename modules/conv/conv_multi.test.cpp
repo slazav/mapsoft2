@@ -50,6 +50,10 @@ main(){
     cnv.bck(p);  assert(dist(p, dPoint(10,10)) < 1e-6);
 
     assert(cnv.size() == 1);
+    cnv.reset();
+    assert(cnv.size() == 0);
+    assert(cnv.simplify(dRect(0,0,10,10), 5) == false);
+    assert(cnv.size() == 0);
 
   }
   catch (Err e) {

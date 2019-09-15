@@ -66,7 +66,7 @@ a boolean flag for direction of the transformation `true` means forward):
 - `push_back(&cnv, frw)`  -- Add a transformation to the end of the list.
 - `simplify(box, N, err)` -- Try to substitude all transformation by a single ConvAff.
 - `size()` -- Return number of transformations.
-
+- `reset()` -- Reset to the trivial transformation.
 -----------------
 ## ConvAff2D class
 
