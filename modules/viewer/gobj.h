@@ -97,6 +97,7 @@ public:
     stop_drawing = false;
     signal_redraw_me_.emit(dRect());
   }
+  std::shared_ptr<ConvBase> get_cnv() const {return cnv;}
 
   // change options
   virtual void set_opt(std::shared_ptr<Opt> o) {
@@ -107,6 +108,7 @@ public:
     stop_drawing = false;
     signal_redraw_me_.emit(dRect());
   }
+  std::shared_ptr<Opt> get_opt() const {return opt;}
 
   // This methods show to the caller if picture should be
   // repeated periodically in x or y direction
