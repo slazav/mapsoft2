@@ -6,7 +6,7 @@ MOD_SOURCES  :=  rubber.cpp gobj.cpp\
                 simple_viewer.cpp dthread_viewer.cpp\
                 action_manager.cpp\
 
-SIMPLE_TESTS := gobj
+SIMPLE_TESTS := gobj gobj_multi
 
 PKG_CONFIG := 'gtkmm-3.0 gthread-2.0'
 

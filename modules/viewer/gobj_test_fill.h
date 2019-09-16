@@ -1,15 +1,15 @@
-#ifndef GOBJ_SOLID_FILL_H
-#define GOBJ_SOLID_FILL_H
+#ifndef GOBJ_TEST_FILL_H
+#define GOBJ_TEST_FILL_H
 
 #include "gobj.h"
 
 // An example of GObj: fill imeage with a solid color.
 
-class GObjSolidFill: public GObj{
+class GObjFill: public GObj{
   int color;
 
 public:
-  GObjSolidFill(
+  GObjFill(
     std::shared_ptr<ConvBase> cnv,
     const int c=0xFF000000): GObj(cnv), color(c) { }
 

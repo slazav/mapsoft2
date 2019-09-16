@@ -81,12 +81,11 @@ void
 SimpleViewer::rescale(const double k, const iPoint & cnt){
   if (!obj) return;
   signal_on_rescale_.emit(k);
-  obj->rescale(k);
   iPoint wsize(get_width(), get_height());
   iPoint wcenter = get_origin() + cnt;
   wcenter=iPoint(wcenter.x * k, wcenter.y * k);
   set_origin(wcenter - cnt);
-  redraw();
+  obj->rescale(k); // redraw_me signal should be emitted by object;
 }
 
 /***********************************************************/

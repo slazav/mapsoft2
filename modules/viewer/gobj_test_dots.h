@@ -1,5 +1,5 @@
-#ifndef GOBJ_SOLID_FILL_H
-#define GOBJ_SOLID_FILL_H
+#ifndef GOBJ_TEST_DOTS_H
+#define GOBJ_TEST_DOTS_H
 #include "gobj.h"
 
 // An axample of GObj: draw 10x10 grid of dots

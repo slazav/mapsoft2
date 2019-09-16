@@ -16,9 +16,31 @@
 /**
 An object which know how to draw itself using Cairo::Context.
 
-Important: draw() method may be called from a separate thread
-(if DThreadViewer is used). A locking maybe needed (data modification
-should not be done during drawing).
+- Object has its own coordinate system. It should use `cnv` to convert it
+  to viewer coordinates (cnv.frw transforms viewer coordinates to object
+  coordinates). For the `draw` method the caller should provide
+  `draw_range` in viewer coordinates and translate Cairo::Context to
+  viewer coordinate origin.
+- There is no need to save/restore Cairo::Context in GObj,
+  it should be done by caller if needed.
+- There is no need to set clip to `draw_range`, it should be done
+  by coller if needed.
+- `draw` method can be run in a separate thread. To prevent collisions
+  use get_lock() method. Method `draw` should be locked by multy-thread
+  caller, methods `on_rescale` and `on_set_cnv` are locked in GObj class,
+  other functions which modify data should be locked in GObj implementations.
+- Usually, `draw` method does not modify data, and read-only access
+  from other functions can be done without locking.
+  If `draw` method modifies data, read-only functions should be locked as well.
+- `stop_drawing` flag is set when current drawing should be aborted.
+  Method `draw` can check this flag and stop drawing as soon as possible.
+  If one wants to modify data and update everything, following steps are
+  needed:
+  - set stop_drawing flag
+  - get lock object with `get_lock`
+  - modify data
+  - unset stop_drawing flag
+  - emit signal_redraw_me()
 */
 class GObj{
 public:
@@ -39,8 +61,6 @@ public:
    - GObj::FILL_PART  -- something has been drawn
    - GObj::FILL_ALL   -- all image has been covered with a non-dransparent drawing
    NOTE:
-    - There is no need to save/restore Cairo::Context in GObj,
-      it is done in Viewer.
   */
   virtual int draw(const CairoWrapper & cr, const dRect & draw_range) = 0;
 
@@ -54,6 +74,7 @@ public:
     cnv->rescale_src(1.0/k);
     on_rescale(k);
     stop_drawing = false;
+    signal_redraw_me_.emit(dRect());
   }
 
   // change cnv
@@ -63,8 +84,11 @@ public:
     cnv = c;
     on_set_cnv();
     stop_drawing = false;
+    signal_redraw_me_.emit(dRect());
   }
 
+  // This methods show to the caller if picture should be
+  // repeated periodically in x or y direction
   virtual bool get_xloop() const {return false;};
   virtual bool get_yloop() const {return false;}
 
@@ -86,7 +110,7 @@ public:
   // Can be redefined in the Object implementation to
   // modify data after changing cnv.
   // If cnv is used directly in the draw() method then
-  // there is no need to use these methods.
+  // there is no need to do it.
   virtual void on_set_cnv() {}
   virtual void on_rescale(double k) {}
 
