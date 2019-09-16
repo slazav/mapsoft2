@@ -37,12 +37,13 @@ public:
     GObjData D;
     D.obj = o;
     D.on = true;
-
     auto & sig = signal_redraw_me();
     D.redraw_conn = o->signal_redraw_me().connect(
       sigc::mem_fun (&sig, &sigc::signal<void, iRect>::emit));
-
     data.emplace(depth, D);
+
+    stop_drawing = false;
+    signal_redraw_me().emit(iRect());
   }
 
   // find an object
@@ -63,6 +64,21 @@ public:
     if (it==data.end()) return;
     it->second.redraw_conn.disconnect();
     data.erase(it);
+
+    stop_drawing = false;
+    signal_redraw_me().emit(iRect());
+  }
+
+  // delete all objects
+  void clear(){
+    stop_drawing = true;
+    auto lock = get_lock();
+
+    for (auto & o:data) o.second.redraw_conn.disconnect();
+    data.clear();
+
+    stop_drawing = false;
+    signal_redraw_me().emit(iRect());
   }
 
   // draw all objects
