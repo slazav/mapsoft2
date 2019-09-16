@@ -9,6 +9,6 @@ PROGRAMS := simple_tiles simple_grid\
             simple_rubb1 simple_rubb2 action1 action2 action3\
             all_viewers two_rubbers dthread_rubb1
 
-MODDIR   := ../../modules
+MODDIR   := ../../../modules
 include $(MODDIR)/Makefile.inc
 
