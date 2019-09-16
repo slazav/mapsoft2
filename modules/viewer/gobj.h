@@ -30,7 +30,7 @@ public:
   const static int FILL_ALL  = 2; // object fills in the whole image with opaque colors
   const static iRect MAX_RANGE;
 
-  GObj(std::shared_ptr<ConvBase> c):
+  GObj(std::shared_ptr<ConvBase> c = std::shared_ptr<ConvBase>(new ConvBase)):
     cnv(c), range(MAX_RANGE), stop_drawing(false) { }
 
   /** Draw with CairoWrapper.

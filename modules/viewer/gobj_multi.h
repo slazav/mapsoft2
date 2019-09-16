@@ -22,13 +22,13 @@ private:
 
 public:
 
-  GObjMulti(std::shared_ptr<ConvBase> c): GObj(c){}
+  GObjMulti(std::shared_ptr<ConvBase> c =
+              std::shared_ptr<ConvBase>(new ConvBase)): GObj(c){}
 
 
   // add new object
   void add(int depth, std::shared_ptr<GObj> o){
     if (!o) return;
-
     o->set_cnv(cnv);
 
     stop_drawing = true;
