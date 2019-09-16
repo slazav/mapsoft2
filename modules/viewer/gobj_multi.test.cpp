@@ -21,13 +21,14 @@ main(){
 
     // make objects
     std::shared_ptr<ConvBase> cnv(new ConvBase);
-    std::shared_ptr<GObj> o1(new GObjFill(cnv, col1));
-    std::shared_ptr<GObj> o2(new GObjDots(cnv, col2));
-    std::shared_ptr<GObj> o3(new GObjDots(cnv, col1));
+    std::shared_ptr<GObj> o1(new GObjFill(col1));
+    std::shared_ptr<GObj> o2(new GObjDots(col2));
+    std::shared_ptr<GObj> o3(new GObjDots(col1));
 
     /************************************************/
     // combine both objects
-    GObjMulti o(cnv);
+    GObjMulti o;
+    o.set_cnv(cnv);
     o.signal_redraw_me().connect(sigc::ptr_fun(inc_redraw_counter));
     assert(redraw_counter == 0);
 
@@ -129,7 +130,6 @@ main(){
     dPoint pt(10,10);
     cnv->frw(pt);
     assert(dist2d(pt, dPoint(1,1)) < 1e-6);
-
 
   }
   catch (Err E){

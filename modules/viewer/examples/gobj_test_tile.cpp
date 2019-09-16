@@ -2,8 +2,7 @@
 #include "err/err.h"
 #include <unistd.h> // usleep
 
-GObjTestTile::GObjTestTile(const bool slow_, std::shared_ptr<ConvBase> c):
-  GObj(c), slow(slow_){}
+GObjTestTile::GObjTestTile(const bool slow_): slow(slow_){}
 
 int
 GObjTestTile::draw(const CairoWrapper & cr, const dRect &box){

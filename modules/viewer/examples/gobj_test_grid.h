@@ -7,10 +7,7 @@
 class GObjTestGrid: public GObj{
   int delay;
 public:
-  GObjTestGrid(
-    const int delay = 0,
-    std::shared_ptr<ConvBase> c = std::shared_ptr<ConvBase>(new ConvBase)
-  );
+  GObjTestGrid(const int delay = 0);
   virtual int draw(const CairoWrapper & cr, const dRect &box) override;
 };
 

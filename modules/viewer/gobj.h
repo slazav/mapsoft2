@@ -2,6 +2,7 @@
 #define GRED_GOBJ_H
 
 #include "geom/rect.h"
+#include "opt/opt.h"
 #include "cairo/cairo_wrapper.h"
 #include "conv/conv_base.h"
 #include <sigc++/sigc++.h>
@@ -43,17 +44,27 @@ An object which know how to draw itself using Cairo::Context.
   - emit signal_redraw_me()
 */
 class GObj{
-public:
-  std::shared_ptr<ConvBase> cnv; //< coversion from viewer coordinates to object
+protected:
+  // reference to drawing options
+  std::shared_ptr<Opt> opt;
+
+  // refernce to coordinate transformation:
+  // viewer coordinates -> object coordinates.
+  std::shared_ptr<ConvBase> cnv;
+
+  // Object coordinate range
   dRect range;
+public:
 
   const static int FILL_NONE = 0; // object draws nothing
   const static int FILL_PART = 1; // object draws some points
   const static int FILL_ALL  = 2; // object fills in the whole image with opaque colors
   const static iRect MAX_RANGE;
 
-  GObj(std::shared_ptr<ConvBase> c = std::shared_ptr<ConvBase>(new ConvBase)):
-    cnv(c), range(MAX_RANGE), stop_drawing(false) { }
+  GObj():
+    cnv(std::shared_ptr<ConvBase>(new ConvBase)),
+    opt(std::shared_ptr<Opt>(new Opt)),
+    range(MAX_RANGE), stop_drawing(false) { }
 
   /** Draw with CairoWrapper.
    \return one of:
@@ -87,6 +98,16 @@ public:
     signal_redraw_me_.emit(dRect());
   }
 
+  // change options
+  virtual void set_opt(std::shared_ptr<Opt> o) {
+    stop_drawing = true;
+    auto lock = get_lock();
+    opt = o;
+    on_set_opt();
+    stop_drawing = false;
+    signal_redraw_me_.emit(dRect());
+  }
+
   // This methods show to the caller if picture should be
   // repeated periodically in x or y direction
   virtual bool get_xloop() const {return false;};
@@ -111,6 +132,7 @@ public:
   // modify data after changing cnv.
   // If cnv is used directly in the draw() method then
   // there is no need to do it.
+  virtual void on_set_opt() {}
   virtual void on_set_cnv() {}
   virtual void on_rescale(double k) {}
 

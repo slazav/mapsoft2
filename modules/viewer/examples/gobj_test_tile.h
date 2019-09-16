@@ -6,10 +6,7 @@
 class GObjTestTile: public GObj{
   bool slow;
 public:
-  GObjTestTile(
-    const bool slow_ = false,
-    std::shared_ptr<ConvBase> c = std::shared_ptr<ConvBase>(new ConvBase)
-  );
+  GObjTestTile(const bool slow_ = false);
   virtual int draw(const CairoWrapper & cr, const dRect &box) override;
 };
 
