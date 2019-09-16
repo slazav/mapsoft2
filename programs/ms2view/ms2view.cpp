@@ -75,13 +75,13 @@ main(int argc, char **argv){
     GObjMulti obj(cnv);
 
     for (auto & m:data.maps)
-      obj.add(1, std::shared_ptr<GObj>(new GObjMaps(cnv, m, opts)));
+      obj.add(3, std::shared_ptr<GObj>(new GObjMaps(cnv, m, opts)));
 
     for (auto & t:data.trks)
       obj.add(2, std::shared_ptr<GObj>(new GObjTrk(cnv, t, opts)));
 
     for (auto & w:data.wpts)
-      obj.add(3, std::shared_ptr<GObj>(new GObjWpts(cnv, w, opts)));
+      obj.add(1, std::shared_ptr<GObj>(new GObjWpts(cnv, w, opts)));
 
 
     Gtk::Main     kit(argc, argv);
