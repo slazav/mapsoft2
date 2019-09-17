@@ -43,8 +43,7 @@ private:
 
 public:
   // constructor
-  GObjMaps(std::shared_ptr<ConvBase> cnv,
-           GeoMapList & maps, const Opt & opt);
+  GObjMaps(GeoMapList & maps);
 
   /************************************************/
   // drawing waypoints on the image

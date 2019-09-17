@@ -18,20 +18,20 @@ void ms2opt_add_drawwpt(ext_option_list & opts);
 class GObjWpts : public GObj {
 private:
 
+  double text_size, size, linewidth;
+  int color, bgcolor;
+  std::string text_font;
+
   // Waypoint template for fast drawing: coorinates are converted,
   // text box is placed correctly, all parameters are set...
   struct WptDrawTmpl : dPoint{
-    double text_size, size, linewidth;
     dPoint text_pt;
     dRect  text_box; // relative to text_pt!
     dRect  bbox;
-    int color, bgcolor;
-    std::string text_font;
     std::string name;
     GeoWpt * src;
   };
 
-  WptDrawTmpl wt0;    // default waypoint template
   int wpt_bar_length; // default bar length
   int wpt_text_pad;
   bool do_adj_pos;    // adjust text positions to avoid collisions
@@ -45,8 +45,7 @@ private:
 
 public:
   // constructor
-  GObjWpts(std::shared_ptr<ConvBase> cnv,
-           GeoWptList & wpts, const Opt & opt);
+  GObjWpts(GeoWptList & wpts);
 
   /************************************************/
   // drawing waypoints on the image
@@ -82,7 +81,7 @@ public:
   // They have proper multi-thread locking.
 
   // update parameters form options.
-  void on_set_opt(const Opt & opt);
+  void on_set_opt() override;
 
   // update point coordinates
   void on_set_cnv() override;

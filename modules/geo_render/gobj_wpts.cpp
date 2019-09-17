@@ -29,10 +29,12 @@ ms2opt_add_drawwpt(ext_option_list & opts){
 
 /********************************************************************/
 
-GObjWpts::GObjWpts(std::shared_ptr<ConvBase> cnv,
-                   GeoWptList & wpts, const Opt & opt):
-     wpts(wpts), GObj(cnv){
-  on_set_opt(opt);
+GObjWpts::GObjWpts(GeoWptList & wpts): wpts(wpts) {
+  for (auto & w:wpts){
+    WptDrawTmpl wt;
+    wt.src = &w;
+    tmpls.push_back(wt);
+  }
 }
 
 int
@@ -50,29 +52,29 @@ GObjWpts::draw(const CairoWrapper & cr, const dRect & draw_range) {
 
     if (intersect(draw_range, wt.bbox).is_zsize()) continue;
 
-    cr->set_line_width(wt.linewidth);
+    cr->set_line_width(linewidth);
 
     // circle
-    cr->circle(wt, wt.size);
+    cr->circle(wt, size);
 
     // flag bar
     cr->move_to(wt);
     cr->line_to(wt.text_pt);
 
-    cr->set_color(wt.color);
+    cr->set_color(color);
     cr->stroke();
 
     // flag
     cr->rectangle(wt.text_pt+wt.text_box);
-    cr->set_color(wt.bgcolor);
+    cr->set_color(bgcolor);
     cr->fill_preserve();
 
-    cr->set_color(wt.color);
+    cr->set_color(color);
     cr->stroke();
 
     // text
     cr->move_to(wt.text_pt);
-    cr->set_fc_font(wt.color, wt.text_font.c_str(), wt.text_size);
+    cr->set_fc_font(color, text_font.c_str(), text_size);
     cr->show_text(wt.name);
 
     // bbox
@@ -91,14 +93,14 @@ GObjWpts::update_pt_crd(WptDrawTmpl & wt){
   if (cnv) cnv->bck(pt);
   wt.x = pt.x; wt.y = pt.y;
   wt.text_pt = (dPoint)wt;
-  wt.text_pt.y -= wt.text_size + wpt_text_pad + wpt_bar_length;
+  wt.text_pt.y -= text_size + wpt_text_pad + wpt_bar_length;
   update_pt_bbox(wt);
 }
 
 void
 GObjWpts::update_pt_bbox(WptDrawTmpl & wt){
   wt.bbox = dRect(dPoint(wt), dPoint(wt));
-  wt.bbox.expand(wt.size + wt.linewidth);
+  wt.bbox.expand(size + linewidth);
   wt.bbox.expand(wt.text_pt + wt.text_box);
   wt.bbox.to_ceil();
 }
@@ -174,36 +176,25 @@ GObjWpts::adjust_text_brd(const dRect & rng){
 /**********************************************************/
 
 void
-GObjWpts::on_set_opt(const Opt & opt){
+GObjWpts::on_set_opt(){
+  text_font = opt->get("wpt_text_font",  "serif");
+  text_size = opt->get("wpt_text_size",  10);
+  size      = opt->get("wpt_draw_size",  3);
+  linewidth = opt->get("wpt_line_width", 1);
+  color     = opt->get("wpt_color",      0xFF000000);
+  bgcolor   = opt->get("wpt_bgcolor",    0xFFFFFFFF);
 
-  stop_drawing = true;
-  auto lock = get_lock();
+  do_adj_pos = opt->get("wpt_adj", 1);
+  do_adj_brd = opt->get("wpt_adj_brd", 0);
 
-  wt0.text_font = opt.get("wpt_text_font",  "serif");
-  wt0.text_size = opt.get("wpt_text_size",  10);
-  wt0.size      = opt.get("wpt_draw_size",  3);
-  wt0.linewidth = opt.get("wpt_line_width", 1);
-  wt0.color     = opt.get("wpt_color",      0xFF000000);
-  wt0.bgcolor   = opt.get("wpt_bgcolor",    0xFFFFFFFF);
-
-  do_adj_pos = opt.get("wpt_adj", 1);
-  do_adj_brd = opt.get("wpt_adj_brd", 0);
-
-  wpt_text_pad  = opt.get("wpt_text_pad",   2);
+  wpt_text_pad  = opt->get("wpt_text_pad",   2);
   wpt_bar_length = 10; // default bar length
 
   CairoWrapper cr;
   cr.set_surface_img(1000,1000);
-  cr->set_fc_font(wt0.color, wt0.text_font.c_str(), wt0.text_size);
+  cr->set_fc_font(color, text_font.c_str(), text_size);
 
-  for (auto & w:wpts){
-    WptDrawTmpl wt(wt0);
-    wt.src = &w;
-    update_pt_name(cr, wt); // update name
-    tmpls.push_back(wt);
-  }
-
-  stop_drawing = false;
+  for (auto & wt:tmpls) update_pt_name(cr, wt); // update name
 }
 
 void
@@ -216,8 +207,6 @@ GObjWpts::on_set_cnv(){
 
   if (do_adj_pos) adjust_text_pos();
   update_range();
-
-  stop_drawing = false;
 }
 
 void
@@ -226,12 +215,10 @@ GObjWpts::on_rescale(double k){
   for (auto & wt:tmpls){
     wt.x*=k; wt.y*=k;
     wt.text_pt = wt;
-    wt.text_pt.y -= wt.text_size + wpt_text_pad + wpt_bar_length;
+    wt.text_pt.y -= text_size + wpt_text_pad + wpt_bar_length;
     update_pt_bbox(wt);
   }
   if (do_adj_pos) adjust_text_pos();
   update_range();
-
-  stop_drawing = false;
 }
 

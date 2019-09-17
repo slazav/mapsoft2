@@ -1,8 +1,7 @@
 #include "gobj_test_grid.h"
 #include <unistd.h> // usleep
 
-GObjTestGrid::GObjTestGrid(const int delay_, std::shared_ptr<ConvBase> c):
-   GObj(c), delay(delay_){}
+GObjTestGrid::GObjTestGrid(const int delay_): delay(delay_){}
 
 int
 GObjTestGrid::draw(const CairoWrapper & cr, const dRect &box){

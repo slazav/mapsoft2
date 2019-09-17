@@ -23,6 +23,8 @@ SimpleViewer::SimpleViewer(GObj * o) :
   obj->signal_redraw_me().connect(
     sigc::mem_fun(this, &SimpleViewer::redraw));
 
+  // suppress default themed drawing of the widget's background
+  set_app_paintable();
 }
 
 /***********************************************************/
@@ -65,16 +67,8 @@ SimpleViewer::set_origin (iPoint p) {
 
 void
 SimpleViewer::redraw (const iRect & range){
-  auto win = get_window();
-  if (win){
-    if (range) {
-      Gdk::Rectangle r(range.x, range.y, range.w, range.h);
-      win->invalidate_rect(r, false);
-    }
-    else {
-      win->invalidate(false);
-    }
-  }
+  if (range) queue_draw_area(range.x, range.y, range.w, range.h);
+  else queue_draw();
 }
 
 void
@@ -100,6 +94,7 @@ SimpleViewer::draw(const CairoWrapper & crw, const iRect & r){
   // and then transfer information back. Not very good-looking solution.
 
   // TODO: remove such objects, remove extra CairoWrapper
+  // add correct clipping for original context.
 
   CairoWrapper crw1;
   crw1.set_surface_img(r.w, r.h);

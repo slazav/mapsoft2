@@ -72,39 +72,36 @@ main(int argc, char **argv){
     // read geodata
     MapsoftData data;
     for (auto const &f:files) mapsoft_read(f, data, opts);
+    std::shared_ptr<Opt> optsp(new Opt(opts));
 
     // get output file name
     std::string fname = opts.get("out", "");
     if (fname == "") throw Err() << "No output file specified (use -o option)";
     bool viewer = (fname == "view"); // viewer mode?
 
-    // make reference
+    // make reference and conversion map -> WGS84
     GeoMap map = geo_mkref(data, opts);
-
-    // create conversion map -> WGS84
     std::shared_ptr<ConvMap> cnv(new ConvMap(map));
 
     // in the viewer we don't want to fit waypoints inside tiles
-    if (viewer) opts.put("wpt_adj_brd", 0);
+    if (viewer) optsp->put("wpt_adj_brd", 0);
 
     // construct GObjMulti with all the objects we want to draw:
-    GObjMulti obj(cnv);
-
+    GObjMulti obj;
+    obj.set_opt(optsp);
+    obj.set_cnv(cnv);
     for (auto & m:data.maps)
-      obj.add(1, std::shared_ptr<GObj>(new GObjMaps(cnv, m, opts)));
+      obj.add(3, std::shared_ptr<GObj>(new GObjMaps(m)));
 
     for (auto & t:data.trks)
-      obj.add(2, std::shared_ptr<GObj>(new GObjTrk(cnv, t, opts)));
+      obj.add(2, std::shared_ptr<GObj>(new GObjTrk(t)));
 
     for (auto & w:data.wpts)
-      obj.add(3, std::shared_ptr<GObj>(new GObjWpts(cnv, w, opts)));
-
+      obj.add(1, std::shared_ptr<GObj>(new GObjWpts(w)));
 
     // TODO: grids
 
     if (viewer){
-      opts.put("wpt_adj_brd", 0);
-
       Gtk::Main     kit(argc, argv);
       Gtk::Window   win;
       DThreadViewer viewer(&obj);

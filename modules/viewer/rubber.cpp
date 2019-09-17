@@ -122,10 +122,7 @@ Rubber::on_draw(Cairo::RefPtr<Cairo::Context> const & cr_){
 }
 
 void
-Rubber::redraw() {
-  auto win = viewer->get_window();
-  if (win) win->invalidate(true);
-}
+Rubber::redraw() { viewer->queue_draw(); }
 
 /// add segment to a rubber
 void

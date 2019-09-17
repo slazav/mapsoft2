@@ -27,11 +27,8 @@ ms2opt_add_drawtrk(ext_option_list & opts){
 
 /********************************************************************/
 
-GObjTrk::GObjTrk(std::shared_ptr<ConvBase> cnv,
-                 GeoTrk & trk_, const Opt & opt): trk(trk_), GObj(cnv){
-
+GObjTrk::GObjTrk(GeoTrk & trk_): trk(trk_){
   segments.resize(trk.size());
-  on_set_opt(opt);
 }
 
 int
@@ -96,9 +93,9 @@ GObjTrk::update_range(){
 /***************/
 
 void
-GObjTrk::on_set_opt(const Opt & opt){
+GObjTrk::on_set_opt(){
   linewidth = trk.opts.get<double>("thickness", 1);
-  linewidth = opt.get<double>("trk_draw_th", linewidth);
+  linewidth = opt->get<double>("trk_draw_th", linewidth);
 
   bool closed = trk.opts.get<double>("closed", false);
 
@@ -108,29 +105,29 @@ GObjTrk::on_set_opt(const Opt & opt){
   // option can set a transparent color.
   int  color  = trk.opts.get<int>("color", 0xFFFF000);
   color |= 0xFF000000;
-  color       = opt.get("trk_draw_color", color);
+  color       = opt->get("trk_draw_color", color);
 
   // track drawing mode (normal, speed, height)
-  string trk_mode = opt.get<string>("trk_draw_mode", "normal");
+  string trk_mode = opt->get<string>("trk_draw_mode", "normal");
 
   Rainbow RB(0,1);
   if (trk_mode == "normal"){
-    draw_dots   = opt.get("trk_draw_dots", 1);
-    draw_arrows = opt.get("trk_draw_arrows", 1);
+    draw_dots   = opt->get("trk_draw_dots", 1);
+    draw_arrows = opt->get("trk_draw_arrows", 1);
   }
   else if (trk_mode == "speed"){
-    draw_dots   = opt.get("trk_draw_dots", 0);
-    draw_arrows = opt.get("trk_draw_arrows", 0);
-    RB = Rainbow(opt.get<double>("trk_draw_min", 0),
-                 opt.get<double>("trk_draw_max", 10),
-                 opt.get<string>("trk_draw_grad", "BCGYRM").c_str());
+    draw_dots   = opt->get("trk_draw_dots", 0);
+    draw_arrows = opt->get("trk_draw_arrows", 0);
+    RB = Rainbow(opt->get<double>("trk_draw_min", 0),
+                 opt->get<double>("trk_draw_max", 10),
+                 opt->get<string>("trk_draw_grad", "BCGYRM").c_str());
   }
   else if (trk_mode == "height"){
-    draw_dots   = opt.get("trk_draw_dots", 0);
-    draw_arrows = opt.get("trk_draw_arrows", 0);
-    RB = Rainbow(opt.get<double>("trk_draw_min", -200),
-                 opt.get<double>("trk_draw_max", 8000),
-                 opt.get<string>("trk_draw_grad", "BCGYRM").c_str());
+    draw_dots   = opt->get("trk_draw_dots", 0);
+    draw_arrows = opt->get("trk_draw_arrows", 0);
+    RB = Rainbow(opt->get<double>("trk_draw_min", -200),
+                 opt->get<double>("trk_draw_max", 8000),
+                 opt->get<string>("trk_draw_grad", "BCGYRM").c_str());
   }
 
 

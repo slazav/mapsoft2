@@ -42,8 +42,7 @@ private:
 
 public:
   // constructor
-  GObjTrk(std::shared_ptr<ConvBase> cnv,
-          GeoTrk & trk, const Opt & opt);
+  GObjTrk(GeoTrk & trk);
 
   // drawing waypoints on the image
   int draw(const CairoWrapper & cr, const dRect & draw_range) override;
@@ -57,7 +56,7 @@ public:
   // rescale point coordinates, update range
   void on_rescale(double k) override;
 
-  void on_set_opt(const Opt & opt);
+  void on_set_opt() override;
 
 };
 

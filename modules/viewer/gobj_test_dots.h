@@ -8,10 +8,7 @@ class GObjDots: public GObj{
   int color;
 
 public:
-  GObjDots(
-      std::shared_ptr<ConvBase> cnv = std::shared_ptr<ConvBase>(new ConvBase),
-      const int c=0xFF000000
-    ): GObj(cnv), color(c) { }
+  GObjDots(const int c=0xFF000000): color(c) { }
 
   int draw(const CairoWrapper & cr, const dRect & draw_range) override {
     if (color>>24 == 0) return GObj::FILL_NONE;

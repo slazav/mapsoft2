@@ -30,10 +30,8 @@ ms2opt_add_drawmap(ext_option_list & opts){
 
 /**********************************************************/
 
-GObjMaps::GObjMaps(std::shared_ptr<ConvBase> cnv,
-                   GeoMapList & maps, const Opt & opt):
-    GObj(cnv), maps(maps), img_cache(10), tiles(128),
-    smooth(true) {
+GObjMaps::GObjMaps(GeoMapList & maps):
+    maps(maps), img_cache(10), tiles(128), smooth(true) {
 
   for (auto const & m:maps){
     MapData d;
