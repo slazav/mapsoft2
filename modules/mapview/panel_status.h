@@ -19,8 +19,8 @@ public:
     busy_icon->set_size_request(20,16);
     pack_start(*busy_icon, false, true, 0);
     pack_start(*statusbar, true, true, 0);
-    statusbar->set_spacing(0);
-    set_spacing(0);
+    // see https://discourse.gnome.org/t/migrating-to-gtkmm3-css-statusbar/1806
+    statusbar->set_property("margin", 0);
   }
   // put message on the statusbar
   void message(const std::string & msg){

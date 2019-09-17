@@ -1,7 +1,14 @@
+/*
+This style is tested with Adwaita, HighContrast, win32 themes
+*/
+
+
 /* Remove extra spaces */
 * {
   padding: 0px;
   margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
 }
 
 /* narrow notebook with borders between tab labels */
@@ -10,6 +17,8 @@
   border-style: solid;
   border-right-width: 1px;
   font-weight: normal;
+  background-color: transparent;
+  padding: 1px 3px 3px;
 }
 
 /* paned separator minimum size */
@@ -17,10 +26,8 @@
   min-width: 4px;
 }
 
-/* statusbar border */
-#status statusbar {
-  border-width: 1;
-  border-style: groove;
-  margin: 0px; padding: 0px;
-  font-weight: normal;
+/* border above status line */
+#status {
+  border-top-width: 1px;
+  border-top-style: groove;
 }
