@@ -284,9 +284,7 @@ Mapview::set_cnv(const std::shared_ptr<ConvBase> & c){
 void
 Mapview::goto_wgs(dPoint p){
   if (!haveref) return;
-std::cerr << p;
   gobj.get_cnv()->bck(p);
-std::cerr << " > " << p << "\n";
   viewer.set_center(p);
 }
 
