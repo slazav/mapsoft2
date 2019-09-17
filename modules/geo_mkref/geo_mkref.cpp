@@ -60,7 +60,7 @@ geo_mkref(const Opt & o){
     // map name
     map.name = o.get("name",string());
     if (map.name == "")
-      throw "geo_mkref: nomenclature name should be set (name option)";
+      throw Err() << "geo_mkref: nomenclature name should be set (name option)";
 
     // Map range (in pulkovo coordinates)
     nom_scale_t sc;

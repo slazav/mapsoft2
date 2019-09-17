@@ -92,7 +92,8 @@ class Cache {
 #endif
 
       if (storage.size() <= free_ind) {
-          if (storage.size() != free_ind) throw "Cache: broken cache object";
+          if (storage.size() != free_ind)
+            throw Err() << "Cache: broken cache object";
           storage.push_back (std::make_pair (key, value));
       } else {
           storage[free_ind] = std::make_pair (key, value);
