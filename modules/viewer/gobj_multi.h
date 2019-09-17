@@ -168,14 +168,14 @@ public:
   void on_set_cnv() override{
     // Note that `on_set_cnv` is called instead on `set_cnv`.
     // Same effects as in on_rescale().
-    for (auto const & p:data) p.second.obj->on_set_cnv();
+    for (auto const & p:data) p.second.obj->set_cnv(cnv);
   }
 
   // Set options
   void on_set_opt() override{
     // Note that `on_set_opt` is called instead on `set_opt`.
     // Same effects as in on_rescale().
-    for (auto const & p:data) p.second.obj->on_set_opt();
+    for (auto const & p:data) p.second.obj->set_opt(opt);
   }
 
 };
