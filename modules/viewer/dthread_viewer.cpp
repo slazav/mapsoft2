@@ -147,26 +147,32 @@ void DThreadViewer::draw(const CairoWrapper & crw, const iRect & r){
   if (tiles_todo.empty()) signal_busy().emit();
   updater_mutex->unlock();
 
-  crw->save();
   for (key.y = tiles.y; key.y<tiles.y+tiles.h; key.y++){
     for (key.x = tiles.x; key.x<tiles.x+tiles.w; key.x++){
 
+      // region to paint in widget coordinates
       iRect rect = tile_to_rect(key) - get_origin();
-      crw->rectangle(rect);
-      crw->reset_clip();
-      crw->clip(); // set clip region
 
       // draw the tile from cache
       if (tiles_cache.count(key)>0){
         crw->set_source(
           tiles_cache.find(key)->second.get_surface(),
           rect.x, rect.y);
+        crw->paint();
       }
-      else { // no tile in cache
-        // background painting
-        crw->set_color(get_bgcolor());
 
-        // put this tile in todo queue
+      else { // no tile in cache
+        // Background painting.
+        // Context should be saved/restored to keep original
+        // clipping range and clipped additionaly to the tile extents.
+        crw->save();
+        crw->rectangle(rect);
+        crw->clip(); // set clip region
+        crw->set_color(get_bgcolor());
+        crw->paint();
+        crw->restore();
+
+        // Put this tile in todo queue.
         if (tiles_todo.count(key)==0){
           updater_mutex->lock();
           tiles_todo.insert(key);
@@ -174,11 +180,8 @@ void DThreadViewer::draw(const CairoWrapper & crw, const iRect & r){
           updater_mutex->unlock();
         }
       }
-
-      crw->paint();
     }
   }
-  crw->restore();
 
   updater_mutex->lock();
   if (tiles_todo.empty()) signal_idle().emit();

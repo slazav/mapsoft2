@@ -92,6 +92,7 @@ SimpleViewer::draw(const CairoWrapper & crw, const iRect & r){
   // and then transfer information back. Not very good-looking solution.
 
   // TODO: remove such objects, remove extra CairoWrapper
+  // add correct clipping for original context.
 
   CairoWrapper crw1;
   crw1.set_surface_img(r.w, r.h);
