@@ -23,6 +23,8 @@ SimpleViewer::SimpleViewer(GObj * o) :
   obj->signal_redraw_me().connect(
     sigc::mem_fun(this, &SimpleViewer::redraw));
 
+  // suppress default themed drawing of the widget's background
+  set_app_paintable();
 }
 
 /***********************************************************/
