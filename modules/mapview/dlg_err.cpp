@@ -5,6 +5,7 @@ DlgErr::DlgErr():
                         Gtk::MESSAGE_WARNING, Gtk::BUTTONS_CLOSE){
   signal_response().connect(
       sigc::hide(sigc::mem_fun(this, &DlgErr::hide)));
+  set_position(Gtk::WIN_POS_CENTER_ON_PARENT);
 }
 
 void

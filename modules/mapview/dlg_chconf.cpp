@@ -15,6 +15,7 @@ DlgChConf::call(const sigc::slot<void> & slot){
   conn.disconnect();
   current_slot=slot;
   signal_ok_.connect(slot);
+  set_position(Gtk::WIN_POS_CENTER_ON_PARENT);
   show_all();
 }
 

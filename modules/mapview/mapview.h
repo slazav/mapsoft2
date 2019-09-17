@@ -11,7 +11,7 @@
 #include "viewer/gobj_multi.h"
 #include "geo_data/geo_io.h"
 #include "geom/rect.h"
-//#include "actions/action_manager.h"
+#include "action_manager.h"
 #include "dlg_chconf.h"
 #include "dlg_err.h"
 
@@ -43,7 +43,7 @@ public:
 //    PanelVMAP panel_vmap;
 //    PanelMISC panel_misc;
     PanelStatus spanel; // status bar
-//    ActionManager action_manager; // menus and action handling
+    ActionManager amanager; // menus and action handling
 
 
     DlgChConf dlg_chconf; // exit confirmation

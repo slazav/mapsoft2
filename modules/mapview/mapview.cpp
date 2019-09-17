@@ -11,9 +11,9 @@ Mapview::Mapview(const std::shared_ptr<Opt> & o) :
     opts(o),
     panel_wpts(new PanelWpts),
     panel_trks(new PanelTrks),
-    panel_maps(new PanelMaps)
+    panel_maps(new PanelMaps),
 //    panel_vmap(this),
-//    action_manager(this)
+    amanager(this)
 {
 
     /// window initialization
@@ -25,8 +25,8 @@ Mapview::Mapview(const std::shared_ptr<Opt> & o) :
     signal_key_press_event().connect (
       sigc::mem_fun (&viewer, &DThreadViewer::on_key_press));
 
-//    // mapview wants to know about data change only to set a star in
-//    // the window title.
+    // mapview wants to know about data change only to set a star in
+    // the window title.
     panel_wpts->signal_data_changed().connect(
       sigc::bind(sigc::mem_fun(this, &Mapview::set_changed), true));
     panel_trks->signal_data_changed().connect(
@@ -93,7 +93,7 @@ Mapview::Mapview(const std::shared_ptr<Opt> & o) :
 
     /// Build main vbox: menu + main pand + statusbar
     Gtk::VBox * vbox = manage(new Gtk::VBox);
-//    vbox->pack_start(*action_manager.get_main_menu(), false, true, 0);
+    vbox->pack_start(*amanager.get_main_menu(), false, true, 0);
     vbox->pack_start(*paned, true, true, 0);
 
     vbox->set_spacing(0);
