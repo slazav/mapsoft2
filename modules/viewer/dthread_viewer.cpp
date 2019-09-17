@@ -125,10 +125,8 @@ void DThreadViewer::on_done_signal(){
     iPoint key=tiles_done.front();
 
     if (tiles_cache.count(key)){
-      auto win = get_window();
       iPoint pt = key*TILE_SIZE-get_origin();
-      if (win) win->invalidate_rect(
-        {pt.x,pt.y, TILE_SIZE, TILE_SIZE}, true);
+      queue_draw_area(pt.x,pt.y, TILE_SIZE, TILE_SIZE);
     }
 
     updater_mutex->lock();

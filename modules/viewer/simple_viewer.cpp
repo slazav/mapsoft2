@@ -65,16 +65,8 @@ SimpleViewer::set_origin (iPoint p) {
 
 void
 SimpleViewer::redraw (const iRect & range){
-  auto win = get_window();
-  if (win){
-    if (range) {
-      Gdk::Rectangle r(range.x, range.y, range.w, range.h);
-      win->invalidate_rect(r, false);
-    }
-    else {
-      win->invalidate(false);
-    }
-  }
+  if (range) queue_draw_area(range.x, range.y, range.w, range.h);
+  else queue_draw();
 }
 
 void
