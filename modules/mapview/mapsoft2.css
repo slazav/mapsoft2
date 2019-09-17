@@ -1,0 +1,26 @@
+/* Remove extra spaces */
+* {
+  padding: 0px;
+  margin: 0px;
+}
+
+/* narrow notebook with borders between tab labels */
+#panels header tab label{
+  padding: 0px 2px;
+  border-style: solid;
+  border-right-width: 1px;
+  font-weight: normal;
+}
+
+/* paned separator minimum size */
+#main_paned separator {
+  min-width: 4px;
+}
+
+/* statusbar border */
+#status statusbar {
+  border-width: 1;
+  border-style: groove;
+  margin: 0px; padding: 0px;
+  font-weight: normal;
+}
