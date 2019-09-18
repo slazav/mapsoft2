@@ -362,8 +362,11 @@ GeoMap geo_mkref(const GeoData & data, const Opt & o){
 
   // If there is at list one map - use its reference.
   // This map will have the best quality.
-  if (data.maps.size()>0 && data.maps.begin()->size()>0)
-    return *(data.maps.begin()->begin());
+  if (data.maps.size()>0 && data.maps.begin()->size()>0){
+    GeoMap map = *(data.maps.begin()->begin());
+    map.update_size();
+    return map;
+  }
 
   // Here we should have something smart: smaller scales
   // for large areas, different projections, etc.
