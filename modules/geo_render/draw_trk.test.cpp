@@ -1,20 +1,12 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
-#include <cassert>
-#include "cairo/cairo_wrapper.h"
 #include "mapsoft_data/mapsoft_data.h"
 #include "getopt/getopt.h"
-#include "filename/filename.h"
-#include "geo_mkref/geo_mkref.h"
-#include "geo_data/conv_geo.h"
 #include "geo_data/geo_io.h"
-#include "viewer/dthread_viewer.h"
-#include "viewer/gobj_multi.h"
 
-#include "gobj_trk.h"
-#include "gobj_wpts.h"
-#include "gobj_maps.h"
 #include "draw_pulk_grid.h"
+
+#include "write_geoimg.h"
 
 using namespace std;
 
@@ -55,11 +47,6 @@ main(int argc, char **argv){
     ms2opt_add_out(options);
     ms2opt_add_geo_i(options);
     ms2opt_add_geo_io(options);
-    ms2opt_add_ozimap_o(options);
-    ms2opt_add_mkref(options);
-    ms2opt_add_drawtrk(options);
-    ms2opt_add_drawwpt(options);
-    ms2opt_add_drawgrd(options);
 
     if (argc<2) usage();
 
@@ -76,75 +63,11 @@ main(int argc, char **argv){
 
     // get output file name
     std::string fname = opts.get("out", "");
-    if (fname == "") throw Err() << "No output file specified (use -o option)";
-    bool viewer = (fname == "view"); // viewer mode?
+    if (fname == "")
+      throw Err() << "No output file specified (use -o option)";
 
-    // make reference and conversion map -> WGS84
-    GeoMap map = geo_mkref(data, opts);
-    std::shared_ptr<ConvMap> cnv(new ConvMap(map));
-
-    // in the viewer we don't want to fit waypoints inside tiles
-    if (viewer) optsp->put("wpt_adj_brd", 0);
-
-    // construct GObjMulti with all the objects we want to draw:
-    GObjMulti obj;
-    obj.set_opt(optsp);
-    obj.set_cnv(cnv);
-    for (auto & m:data.maps)
-      obj.add(3, std::shared_ptr<GObj>(new GObjMaps(m)));
-
-    for (auto & t:data.trks)
-      obj.add(2, std::shared_ptr<GObj>(new GObjTrk(t)));
-
-    for (auto & w:data.wpts)
-      obj.add(1, std::shared_ptr<GObj>(new GObjWpts(w)));
-
-    // TODO: grids
-
-    if (viewer){
-      Gtk::Main     kit(argc, argv);
-      Gtk::Window   win;
-      DThreadViewer viewer(&obj);
-      viewer.set_bgcolor(0x809090);
-
-      win.add(viewer);
-      win.set_default_size(640,480);
-      win.show_all();
-
-      kit.run(win);
-      return 0;
-    }
-
-
-    // setup cairo context
-    CairoWrapper cr;
-    if      (file_ext_check(fname, ".pdf")) cr.set_surface_pdf(fname.c_str(), map.image_size.x,map.image_size.y);
-    else if (file_ext_check(fname, ".ps"))  cr.set_surface_ps(fname.c_str(), map.image_size.x,map.image_size.y);
-    else if (file_ext_check(fname, ".svg")) cr.set_surface_svg(fname.c_str(), map.image_size.x,map.image_size.y);
-    else if (file_ext_check(fname, ".png")) cr.set_surface_img(Image(map.image_size.x,map.image_size.y,IMAGE_32ARGB));
-    else throw Err() << "Unknown output format, use .pdf, .ps, .svg, .png extension";
-
-    dPoint origin(0,0);
-
-    // draw tracks and waypoints
-    dRect box = map.border.bbox();
-    if (!box) box = dRect(dPoint(), (dPoint)map.image_size);
-
-    obj.draw(cr, box);
-
-    // draw grid
-    if (opts.get("grid", 0))
-      draw_pulk_grid(cr, origin, cnv, opts);
-
-
-    // if format is png write file
-    if (file_ext_check(fname, ".png"))
-      cr->save_png(fname.c_str());
-
-    if (opts.exists("map")){
-      map.image = fname;
-      write_ozi_map(opts.get("map","").c_str(), map, opts);
-    }
+    if (!write_geoimg(fname, data, opts))
+      throw Err() << "write_geoimg: unknown output format";
 
   }
   catch (Err e) {
