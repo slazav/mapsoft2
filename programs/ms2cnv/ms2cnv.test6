@@ -60,8 +60,8 @@ assert_diff test_data/ozi3b.map tmp.map
 ### zip + verbose
 
 assert "$P test_data/ozi.zip -o tmp.map" "" 0
-
-assert_diff test_data/ozi1a.map tmp.map
+sed '3d' -i tmp.map
+assert_diff test_data/ozi4a.map tmp.map
 assert_diff test_data/ozi1a.wpt tmp.wpt
 assert_diff test_data/ozi1a.plt tmp.plt
 
@@ -76,6 +76,7 @@ Writing waypoints to OziExplorer file: tmp.wpt
 Writing track to OziExplorer file: tmp.plt
 Writing map to OziExplorer file tmp.map" 0
 
-assert_diff test_data/ozi1a.map tmp.map
+sed '3d' -i tmp.map
+assert_diff test_data/ozi4a.map tmp.map
 assert_diff test_data/ozi1a.wpt tmp.wpt
 assert_diff test_data/ozi1a.plt tmp.plt
