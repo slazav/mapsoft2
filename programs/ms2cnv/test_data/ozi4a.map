@@ -1,21 +1,20 @@
 OziExplorer Map Data File Version 2.2
-N-37-001-À Ñûקוגמ 19xx ד.
-test_data/E:\.0\0\N-37-001-A_19xx_19xx_Ñûקוגמ.jpg
+MO-006-007-png
 1 ,Map Code,
-Pulkovo 1942 (1),WGS 84,   0.0000,   0.0000,WGS 84
+Pulkovo 1942 (2),,   0.0000,   0.0000,WGS 84
 Reserved 1
 Reserved 2
 Magnetic Variation,,,E
 Map Projection,Transverse Mercator,PolyCal,No,AutoCalOnly,No,BSBUseWPX,No
-Point01,xy,   65,   66,in, deg,  56,  0.0000,N,  36,  0.0000,E, grid,   ,           ,           ,N
-Point02,xy, 3771,   66,in, deg,  56,  0.0000,N,  36, 15.0000,E, grid,   ,           ,           ,N
-Point03,xy, 3760, 4498,in, deg,  55, 50.0000,N,  36, 15.0000,E, grid,   ,           ,           ,N
-Point04,xy,   37, 4499,in, deg,  55, 50.0000,N,  36,  0.0000,E, grid,   ,           ,           ,N
-Point05,xy, 1909, 2282,in, deg,  55, 55.0000,N,  36,  7.5000,E, grid,   ,           ,           ,N
-Point06,xy, 1912,   66,ex, deg,  56,  0.0000,N,  36,  7.5000,E, grid,   ,           ,           ,N
-Point07,xy,   51, 2284,in, deg,  55, 55.0000,N,  36,  0.0000,E, grid,   ,           ,           ,N
-Point08,xy, 3763, 2289,in, deg,  55, 55.0000,N,  36, 15.0000,E, grid,   ,           ,           ,N
-Point09,xy, 1869, 4499,ex, deg,  55, 50.0000,N,  36,  7.5000,E, grid,   ,           ,           ,N
+Point01,xy,  294,  294,in, deg,  56,58.600855,N,  36,55.475532,E, grid,   ,           ,           ,N
+Point02,xy,  294, 3126,in, deg,  56,45.670400,N,  36,55.673535,E, grid,   ,           ,           ,N
+Point03,xy, 3598,  294,in, deg,  56,58.677061,N,  37,23.102021,E, grid,   ,           ,           ,N
+Point04,xy, 3598, 3126,in, deg,  56,45.745985,N,  37,23.141584,E, grid,   ,           ,           ,N
+Point05,xy,     ,     ,in, deg,    ,        ,N,    ,        ,W, grid,   ,           ,           ,N
+Point06,xy,     ,     ,in, deg,    ,        ,N,    ,        ,W, grid,   ,           ,           ,N
+Point07,xy,     ,     ,in, deg,    ,        ,N,    ,        ,W, grid,   ,           ,           ,N
+Point08,xy,     ,     ,in, deg,    ,        ,N,    ,        ,W, grid,   ,           ,           ,N
+Point09,xy,     ,     ,in, deg,    ,        ,N,    ,        ,W, grid,   ,           ,           ,N
 Point10,xy,     ,     ,in, deg,    ,        ,N,    ,        ,W, grid,   ,           ,           ,N
 Point11,xy,     ,     ,in, deg,    ,        ,N,    ,        ,W, grid,   ,           ,           ,N
 Point12,xy,     ,     ,in, deg,    ,        ,N,    ,        ,W, grid,   ,           ,           ,N
@@ -37,22 +36,20 @@ Point27,xy,     ,     ,in, deg,    ,        ,N,    ,        ,W, grid,   ,       
 Point28,xy,     ,     ,in, deg,    ,        ,N,    ,        ,W, grid,   ,           ,           ,N
 Point29,xy,     ,     ,in, deg,    ,        ,N,    ,        ,W, grid,   ,           ,           ,N
 Point30,xy,     ,     ,in, deg,    ,        ,N,    ,        ,W, grid,   ,           ,           ,N
-Projection Setup,     0.000000000,    39.000000000,     1.000000000,      7500000.00,            0.00,,,,,
+Projection Setup,,37.500000000,,38991.00,-6289575.00
 Map Feature = MF ; Map Comment = MC     These follow if they exist
 Track File = TF      These follow if they exist
 Moving Map Parameters = MM?    These follow if they exist
 MM0,Yes
 MMPNUM,4
-MMPXY,1,64,66
-MMPXY,2,3771,66
-MMPXY,3,3759,4498
-MMPXY,4,37,4499
-MMPLL,1,  35.999938,  56.000007
-MMPLL,2,  36.250026,  56.000063
-MMPLL,3,  36.249994,  55.833409
-MMPLL,4,  35.999970,  55.833327
-MM1B,4.205714
-Other Grid Setup
-GRGRID,Yes,1 Km,No,16711680,255,1 Km,0,16777215,8,0,Yes,Yes,No,x
+MMPXY,1,0,0
+MMPXY,2,3834,0
+MMPXY,3,3834,3314
+MMPXY,4,0,3314
+MMPLL,1, 36.883253,  56.998858
+MMPLL,2, 37.417874,  57.000350
+MMPLL,3, 37.418425,  56.748152
+MMPLL,4, 36.887391,  56.746673
+MM1B,8.465480
 MOP,Map Open Position,0,0
-IWH,Map Image Width/Height,3809,4550
+IWH,Map Image Width/Height,3894,3363
