@@ -4,6 +4,7 @@
 #include <vector>
 #include "getopt/getopt.h"
 #include "geo_data/geo_io.h"
+#include "geo_render/write_geoimg.h"
 #include <cstring>
 
 using namespace std;
@@ -54,8 +55,14 @@ main(int argc, char *argv[]){
     // write output file if needed
     std::string ofile = O.get("out", "");
     if (ofile != ""){
-      if (!write_geo(ofile, data, O))
-        throw Err() << "Can't determine output format for file: " << ofile;
+
+      // write geodata
+      if (write_geo(ofile, data, O)) return 0;
+
+      // render image file
+      if (write_geoimg(ofile, data, O)) return 0;
+
+      throw Err() << "Can't determine output format for file: " << ofile;
     }
 
     return 0;
