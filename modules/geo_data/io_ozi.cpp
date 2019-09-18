@@ -381,7 +381,7 @@ void read_ozi (const string &fname, GeoData & data, const Opt & opts){
         m.image_size.y = atoi(v[3].c_str());
       }
     }
-    m.border.push_back(brd);
+    if (!brd.is_empty()) m.border.push_back(brd);
     ml.push_back(m);
     ml.name = m.name;
     data.maps.push_back(ml);
