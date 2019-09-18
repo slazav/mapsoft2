@@ -36,18 +36,19 @@ endif
 SHARED_LIB_SO := $(patsubst %, %.so, $(SHARED_LIB))
 
 ######################################################
-# Dependency search for ALL_SOURCES
+# Dependency search for ALL_SOURCES + MOD_HEADERS
 
-ALL_SOURCES += $(MOD_SOURCES) $(MOD_HEADERS)
-ALL_SOURCES += $(patsubst %,%.test.cpp, $(SIMPLE_TESTS))
-ALL_SOURCES += $(patsubst %,%.test.cpp, $(SCRIPT_TESTS))
-ALL_SOURCES += $(patsubst %,%.cpp, $(PROGRAMS))
+ALL_SRC := $(MOD_SOURCES)
+ALL_SRC += $(patsubst %,%.test.cpp, $(SIMPLE_TESTS))
+ALL_SRC += $(patsubst %,%.test.cpp, $(SCRIPT_TESTS))
+ALL_SRC += $(patsubst %,%.cpp, $(PROGRAMS))
+ALL_SRCHDR := $(ALL_SRC) $(MOD_HEADERS)
 
 # Build h-file dependencies (using get_deps script)
-$(shell $(MODDIR)/get_deps -H $(MODDIR) $(MOD_NAME) > Makefile.deps)
+$(shell $(MODDIR)/get_deps -H $(MODDIR) $(ALL_SRC) >> Makefile.deps)
 
 # List of modules which should be rebuilt (in correct order).
-MDEPS := $(shell $(MODDIR)/get_deps -M $(MODDIR) $(ALL_SOURCES))
+MDEPS := $(shell $(MODDIR)/get_deps -M $(MODDIR) $(ALL_SRCHDR))
 
 # a-files (should be in opposite order then MDEPS)
 ADEPS := $(shell for i in $(MDEPS); do echo $(MODDIR)/$$i/$${i\#*/}.a; done | tac)
@@ -55,7 +56,7 @@ ADEPS := $(shell for i in $(MDEPS); do echo $(MODDIR)/$$i/$${i\#*/}.a; done | ta
 ######################################################
 # Building flags
 
-ALL_PKG_CONFIG :=  $(PKG_CONFIG) $(shell $(MODDIR)/get_deps -L $(MODDIR) $(ALL_SOURCES))
+ALL_PKG_CONFIG :=  $(PKG_CONFIG) $(shell $(MODDIR)/get_deps -L $(MODDIR) $(ALL_SRCHDR))
 
 override CXXFLAGS += $(shell [ "$(ALL_PKG_CONFIG)" == " " ] ||\
                       PKG_CONFIG_PATH=$(MODDIR)/pc pkg-config --cflags '$(ALL_PKG_CONFIG)')
