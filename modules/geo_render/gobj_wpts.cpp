@@ -17,11 +17,13 @@ ms2opt_add_drawwpt(ext_option_list & opts){
   {"wpt_text_size",   1,0,m, "waypoint font size, pixels (default: 10)"},
   {"wpt_text_pad",    1,0,m, "waypoint text padding, pixels (default: 2)"},
   {"wpt_draw_size",   1,0,m, "waypoint dot radius, pixels (default: 3)"},
-  {"wpt_line_width",  1,0,m, "waypoint line width), (default: 1)"},
+  {"wpt_line_width",  1,0,m, "waypoint line width, (default: 1)"},
+  {"wpt_stick_len",   1,0,m, "length of waypoint flag stick (default: 10)"},
   {"wpt_color",       1,0,m, "waypoint color (default: 0xFF000000)"},
   {"wpt_bgcolor",     1,0,m, "waypoint background color (default: 0xFFFFFFFF)"},
   {"wpt_adj",         1,0,m, "adjust waypoint flag positions to prevent collisions (default: 1)"},
   {"wpt_adj_brd",     1,0,m, "adjust waypoint flag positions to prevent boundary collisions (default: 0)"},
+  {"wpt_skip_far",    1,0,m, "skip points if their labels can not be placed close enough (default: 5*wpt_stick_len)"},
   };
   opts.insert(opts.end(), add.begin(), add.end());
 }
@@ -46,29 +48,45 @@ GObjWpts::draw(const CairoWrapper & cr, const dRect & draw_range) {
 
   if (do_adj_brd) adjust_text_brd(draw_range);
 
+  // use single line width for drawing
+  cr->set_line_width(linewidth);
+  cr->set_color(color);
+
+  // first pass: flag sticks
   for (auto const & wt:tmpls){
-
     if (stop_drawing) return GObj::FILL_NONE;
-
     if (intersect(draw_range, wt.bbox).is_zsize()) continue;
-
-    cr->set_line_width(linewidth);
-
-    // circle
-    cr->circle(wt, size);
-
-    // flag bar
     cr->move_to(wt);
     cr->line_to(wt.text_pt);
+    cr->stroke();
+  }
 
+  // second pass: dots
+  for (auto const & wt:tmpls){
+    if (stop_drawing) return GObj::FILL_NONE;
+    if (intersect(draw_range, wt.bbox).is_zsize()) continue;
+    // circle
+    cr->circle(wt, size);
+    cr->set_color(bgcolor);
+    cr->fill_preserve();
     cr->set_color(color);
     cr->stroke();
+  }
 
-    // flag
+  // third pass: flags
+  for (auto const & wt:tmpls){
+    if (stop_drawing) return GObj::FILL_NONE;
+    if (intersect(draw_range, wt.bbox).is_zsize()) continue;
+    if (wt.style == Skip) continue;
+
+    if (wt.style == Multi){
+      cr->rectangle(wt.text_pt+wt.text_box+dPoint(2,2));
+      cr->set_color(color);
+      cr->stroke();
+    }
     cr->rectangle(wt.text_pt+wt.text_box);
     cr->set_color(bgcolor);
     cr->fill_preserve();
-
     cr->set_color(color);
     cr->stroke();
 
@@ -77,11 +95,12 @@ GObjWpts::draw(const CairoWrapper & cr, const dRect & draw_range) {
     cr->set_fc_font(color, text_font.c_str(), text_size);
     cr->show_text(wt.name);
 
-    // bbox
+    // debugging: draw waypoint bbox
+    //cr->set_color(0xFFFF0000);
     //cr->rectangle(wt.bbox);
     //cr->stroke();
-
   }
+
   return GObj::FILL_PART;
 }
 
@@ -93,7 +112,7 @@ GObjWpts::update_pt_crd(WptDrawTmpl & wt){
   if (cnv) cnv->bck(pt);
   wt.x = pt.x; wt.y = pt.y;
   wt.text_pt = (dPoint)wt;
-  wt.text_pt.y -= text_size + wpt_text_pad + wpt_bar_length;
+  wt.text_pt.y -= text_size + text_pad + stick_len;
   update_pt_bbox(wt);
 }
 
@@ -110,7 +129,7 @@ GObjWpts::update_pt_name(const CairoWrapper & cr, WptDrawTmpl & wt){
   wt.name = wt.src->name;
   cr->move_to(0,0);
   wt.text_box = cr->get_text_extents(wt.name);
-  wt.text_box.expand(wpt_text_pad);
+  wt.text_box.expand(text_pad);
 }
 
 void
@@ -129,6 +148,7 @@ GObjWpts::adjust_text_pos() {
   // for each box
   for (int i=0; i<tmpls.size(); ++i){
     dRect bi = tmpls[i].text_box + tmpls[i].text_pt;
+    tmpls[i].style = Normal; // all points are Normal in the beginning
     db.put(i, bi);
     std::set<int> v = db.get(bi);
     // find box with smaller number which may touch this one
@@ -140,14 +160,55 @@ GObjWpts::adjust_text_pos() {
       else i0=j;
     }
     if (i0==-1) continue;
-    // delete old position drom the db
+
+    // delete old position from the db
     db.del(i, bi);
+
+    // new text position
+    dPoint new_pt = tmpls[i0].text_pt
+       + dPoint(5, tmpls[i0].text_box.h + 2);
+
+    // distances between point and text
+    double dist0 = dist2d(tmpls[i0], tmpls[i0].text_pt);
+    double dist1 = dist2d(tmpls[i], new_pt);
+    double dist01 = dist2d(tmpls[i0], new_pt);
+    double dist10 = dist2d(tmpls[i], tmpls[i0].text_pt);
+
+    // should we swap flags?
+    if (std::max(dist0,dist1) > std::max(dist01,dist10) &&
+        dist01 <= skip_dist){
+
+      dRect bi0 = tmpls[i0].text_box + tmpls[i0].text_pt;
+      // swap positions
+      tmpls[i].text_pt = tmpls[i0].text_pt;
+      tmpls[i0].text_pt = new_pt;
+
+      // update bboxes
+      update_pt_bbox(tmpls[i0]);
+      update_pt_bbox(tmpls[i]);
+      // delete old i and i0 position from the db
+      db.del(i, bi);
+      db.del(i0, bi0);
+      // put new i0 position to the database
+      db.put(i0, tmpls[i0].text_box + tmpls[i0].text_pt);
+
+      i = i0-1; // return back to i0
+      continue;
+    }
+
+    // if it is too far
+    if (dist1 > skip_dist){
+      tmpls[i0].style = Multi;
+      tmpls[i].style  = Skip;
+      tmpls[i].text_pt = tmpls[i0].text_pt;
+      continue;
+    }
+
     // adjust box position
-    tmpls[i].text_pt = tmpls[i0].text_pt
-                     + dPoint(10, tmpls[i0].text_box.h + 2);
+    tmpls[i].text_pt = new_pt;
     // update bbox
     update_pt_bbox(tmpls[i]);
-    // put new position in the tmplsbase
+    // put new position in the database
     db.put(i, tmpls[i].text_box + tmpls[i].text_pt);
     i--;
   }
@@ -187,8 +248,9 @@ GObjWpts::on_set_opt(){
   do_adj_pos = opt->get("wpt_adj", 1);
   do_adj_brd = opt->get("wpt_adj_brd", 0);
 
-  wpt_text_pad  = opt->get("wpt_text_pad",   2);
-  wpt_bar_length = 10; // default bar length
+  text_pad  = opt->get("wpt_text_pad",  2);
+  stick_len = opt->get("wpt_stick_len",  10);
+  skip_dist = opt->get("wpt_skip_dist", stick_len*10);
 
   CairoWrapper cr;
   cr.set_surface_img(1000,1000);
@@ -215,7 +277,7 @@ GObjWpts::on_rescale(double k){
   for (auto & wt:tmpls){
     wt.x*=k; wt.y*=k;
     wt.text_pt = wt;
-    wt.text_pt.y -= text_size + wpt_text_pad + wpt_bar_length;
+    wt.text_pt.y -= text_size + text_pad + stick_len;
     update_pt_bbox(wt);
   }
   if (do_adj_pos) adjust_text_pos();

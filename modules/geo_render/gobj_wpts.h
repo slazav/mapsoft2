@@ -22,6 +22,8 @@ private:
   int color, bgcolor;
   std::string text_font;
 
+  enum DrawStyleType {Normal, Multi, Skip};
+
   // Waypoint template for fast drawing: coorinates are converted,
   // text box is placed correctly, all parameters are set...
   struct WptDrawTmpl : dPoint{
@@ -30,10 +32,14 @@ private:
     dRect  bbox;
     std::string name;
     GeoWpt * src;
+    DrawStyleType style;
+    WptDrawTmpl(): src(NULL), style(Normal) {};
   };
 
-  int wpt_bar_length; // default bar length
-  int wpt_text_pad;
+  int skip_dist;      // skip point if its label has to be drawn
+                      // too far (distance in points).
+  int stick_len;      // default flag stick length
+  int text_pad;
   bool do_adj_pos;    // adjust text positions to avoid collisions
   bool do_adj_brd;    // adjust text positions fit into picture
 
