@@ -1,6 +1,6 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
-#include "mapsoft_data/mapsoft_data.h"
+#include "geo_data/geo_io.h"
 #include "getopt/getopt.h"
 #include "geo_data/geo_io.h"
 
@@ -57,8 +57,8 @@ main(int argc, char **argv){
     if (opts.exists("pod")) usage(true);
 
     // read geodata
-    MapsoftData data;
-    for (auto const &f:files) mapsoft_read(f, data, opts);
+    GeoData data;
+    for (auto const &f:files) read_geo(f, data, opts);
     std::shared_ptr<Opt> optsp(new Opt(opts));
 
     // get output file name
