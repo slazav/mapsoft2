@@ -2,7 +2,7 @@
 
 ## KML input/output
 
-P=${1:-./ms2cnv}
+P=${1:-./ms2conv}
 . ../test_lib.sh
 
 # read and do nothing
