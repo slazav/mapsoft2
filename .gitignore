@@ -1,3 +1,7 @@
 *.[oa]
 *.os
 *.so
+*.deps
+*.test
+*.passed
+*.tmp
