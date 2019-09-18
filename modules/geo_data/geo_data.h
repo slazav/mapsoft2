@@ -8,6 +8,7 @@
 #include "geom/multiline.h"
 #include "geom/rect.h"
 #include "opt/opt.h"
+#include "image/image_io.h"
 
 ///\addtogroup libmapsoft
 ///@{
@@ -234,12 +235,23 @@ struct GeoMap{
   /// bbox of the map (image, border, refpoints).
   /// Could be wrong if actual size of image differs from image_size.
   dRect bbox() const {
-    dRect r(dPoint(), image_size);
+    // if image_size is non-zero then return it
+    if (len2d(image_size)>0) return dRect(dPoint(), image_size);
+
+    // if not - use ref and border extents:
+    dRect r;
     for (auto const & pp:ref) r.expand(pp.first);
     for (auto const & l:border)
       for (auto const & p:l) r.expand(p);
     return r;
   }
+
+  /******************************************************************/
+  // update image_size (and check that file is readable)
+  void update_size() {
+    image_size = ::image_size(image);
+  }
+
 };
 
 /********************************************************************/

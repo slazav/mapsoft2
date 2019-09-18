@@ -110,6 +110,12 @@ main(){
         "[2,3] [41,51]"
         "[3,4] [52,62]"
         "[4,5] [63,73]");
+      assert((iRect)m1.bbox() == iRect(1,2,3,3));
+
+      m1.border = dMultiLine("[[-1,-1],[10,0],[10,1]]");
+      assert((iRect)m1.bbox() == iRect(-1,-1,11,6));
+      m1.image_size = dPoint(5,5);
+      assert((iRect)m1.bbox() == iRect(0,0,5,5));
 
     }
 
