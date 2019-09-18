@@ -72,7 +72,7 @@ main(int argc, char **argv){
       dRect r2;
       if (G) r2=T.gtile_to_range(tile.x,tile.y,tile.z);
       else   r2=T.tile_to_range(tile.x,tile.y,tile.z);
-      return intersect(r1,r2).empty();
+      return intersect(r1,r2).is_zsize();
     }
     usage();
     return 1;
