@@ -88,7 +88,7 @@ GObjMaps::draw(const CairoWrapper & cr, const dRect & draw_range) {
 
     // border
     cr->reset_clip();
-    if (d.brd.size()>0){
+    if (!d.brd.is_empty()){
       cr->mkpath(d.brd);
       cr->clip();
     }
