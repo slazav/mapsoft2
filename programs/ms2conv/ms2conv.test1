@@ -3,7 +3,7 @@
 # General interface and option tests
 # See also getopt module tests
 
-P=${1:-./ms2cnv}
+P=${1:-./ms2conv}
 
 . ../test_lib.sh
 
