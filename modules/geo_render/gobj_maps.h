@@ -33,6 +33,7 @@ private:
     double load_sc; // scale for image loading
     dMultiLine brd; // map border (in viewer coordinates)
     dRect bbox;     // map bbox (in viewer coordinates)
+    dRect src_bbox; // map original bbox (it may take some time to get it)
     const GeoMap * src;   // pointer to the map
   };
   ImageCache img_cache;

@@ -33,8 +33,10 @@ ms2opt_add_drawmap(ext_option_list & opts){
 GObjMaps::GObjMaps(GeoMapList & maps):
     maps(maps), img_cache(10), tiles(128), smooth(true) {
 
-  for (auto const & m:maps){
+  for (auto & m:maps){
     MapData d;
+    m.update_size();
+    d.src_bbox = m.bbox();
     d.src = &m;
     data.push_back(d);
   }
@@ -102,6 +104,8 @@ GObjMaps::draw(const CairoWrapper & cr, const dRect & draw_range) {
 
 void
 GObjMaps::on_set_cnv(){
+
+  range = dRect();
   for (auto & d:data){
 
     // conversion viewer->map
@@ -115,7 +119,7 @@ GObjMaps::on_set_cnv(){
     d.brd = d.cnv.bck_acc(d.src->border);
 
     // map bbox in viewer coordinates
-    d.bbox = d.cnv.bck_acc(d.src->bbox());
+    d.bbox = d.cnv.bck_acc(d.src_bbox);
     range.expand(d.bbox);
 
     // simplify the conversion if possible
@@ -145,5 +149,6 @@ GObjMaps::on_rescale(double k){
     if (d.load_sc <=0) d.load_sc = 1;
     d.cnv.rescale_dst(1.0/d.load_sc);
   }
+  range*=k;
   tiles.clear();
 }
