@@ -43,17 +43,11 @@ ALL_SOURCES += $(patsubst %,%.test.cpp, $(SIMPLE_TESTS))
 ALL_SOURCES += $(patsubst %,%.test.cpp, $(SCRIPT_TESTS))
 ALL_SOURCES += $(patsubst %,%.cpp, $(PROGRAMS))
 
-# Extract #include statements from MOD_SOURCES and MOD_HEADERS:
-HDEPS := $(shell cat $(ALL_SOURCES) |\
-          sed -rne 's|^\#include +"([^/]*/[^/]*)".*|$(MODDIR)/\1|p;\
-                    s|^\#include +"([^/]*)".*|\1|p'\
-          | sort -u)
+# Build h-file dependencies (using get_deps script)
+$(shell $(MODDIR)/get_deps -H $(MODDIR) $(MOD_NAME) > Makefile.deps)
 
 # List of modules which should be rebuilt (in correct order).
-# Here an extenal script is used (get_deps). It is also possble
-# to build the list similarly to HDEPS and then visit all modules
-# recursively, but then one module can be visited many times.
-MDEPS := $(shell $(MODDIR)/get_deps $(MODDIR) $(ALL_SOURCES))
+MDEPS := $(shell $(MODDIR)/get_deps -M $(MODDIR) $(ALL_SOURCES))
 
 # a-files (should be in opposite order then MDEPS)
 ADEPS := $(shell for i in $(MDEPS); do echo $(MODDIR)/$$i/$${i\#*/}.a; done | tac)
@@ -82,6 +76,8 @@ make_deps:
 	@sh -e -c 'for i in $(MDEPS); do $(MAKE) -C $(MODDIR)/$$i make_nodeps; done'
 	@echo "## Finish building dependencies"
 
+-include Makefile.deps
+
 ######################################################
 # Building rules for tests
 SIMPLE_TEST_PROGS := $(patsubst %, %.test, $(SIMPLE_TESTS))
@@ -97,7 +93,7 @@ $(SCRIPT_TEST_RES): TEST_CMD = ./$<.script && > $<.passed
 TEST_OBJECTS := $(patsubst %,%.test.o, $(SIMPLE_TESTS) $(SCRIPT_TESTS))
 $(SIMPLE_TEST_PROGS) $(SCRIPT_TEST_PROGS):     CC:=$(CXX)
 $(SIMPLE_TEST_PROGS) $(SCRIPT_TEST_PROGS):     %: %.o $(MOD_OBJECTS) $(ADEPS)
-$(TEST_OBJECTS): %.o: %.cpp $(MOD_HEADERS) $(HDEPS)
+$(TEST_OBJECTS): %.o: %.cpp
 
 %.test.passed: %.test $(TEST_DEP)
 	@echo "## Running test: $<"
@@ -111,13 +107,12 @@ make_tests: $(SIMPLE_TEST_RES) $(SCRIPT_TEST_RES)
 PROG_OBJECTS := $(patsubst %,%.o, $(PROGRAMS))
 $(PROGRAMS):     CC:=$(CXX)
 $(PROGRAMS):     %: %.o $(MOD_OBJECTS) $(ADEPS)
-$(PROG_OBJECTS): %.o: %.cpp $(MOD_HEADERS) $(HDEPS)
+$(PROG_OBJECTS): %.o: %.cpp
 
 $(SHARED_LIB_SO):   %.so: $(MOD_OBJECTS) $(ADEPS)
 	$(CXX) -shared $(LDFLAGS) $+ $(LDLIBS) -o $@
 ######################################################
 # Building rules for module static library
-$(MOD_OBJECTS): $(MOD_HEADERS) $(HDEPS)
 
 $(MOD_STATIC): $(MOD_OBJECTS)
 	ar crs $@ $+
@@ -129,7 +124,6 @@ print_info:
 	@echo "MOD_STATIC:   $(MOD_STATIC)"
 	@echo "MOD_SOURCES:  $(MOD_SOURCES)"
 	@echo "MOD_HEADERS:  $(MOD_HEADERS)"
-	@echo "HDEPS:        $(HDEPS)"
 	@echo "MDEPS:        $(MDEPS)"
 	@echo "ADEPS:        $(ADEPS)"
 	@echo "LDLIBS:       $(LDLIBS)"
