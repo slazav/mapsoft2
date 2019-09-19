@@ -21,21 +21,25 @@ ext_option_list options = {
 
 void usage(bool pod=false, ostream & S = cout){
   string head = pod? "\n=head1 ":"\n";
-  const char * prog = "draw_trk";
-  S << prog << " -- draw_trk test program\n"
+  const char * prog = "ms2view";
+  S << prog << " -- viewer for geodata and raster maps\n"
     << head << "Usage:\n"
     << prog << "  [<options>] <input files>\n"
     << "\n";
   S << head << "General options:\n";
   print_options(options, MS2OPT_STD, S, pod);
+  S << head << "Options for reading geodata:\n";
+  print_options(options, MS2OPT_GEO_I | MS2OPT_GEO_IO, S, pod);
   S << head << "Options for making map reference:\n";
   print_options(options, MS2OPT_MKREF, S, pod);
   S << head << "Options for drawing tracks:\n";
   print_options(options, MS2OPT_DRAWTRK, S, pod);
   S << head << "Options for drawing waypoints:\n";
   print_options(options, MS2OPT_DRAWWPT, S, pod);
-  S << head << "Options for drawing map grid:\n";
-  print_options(options, MS2OPT_GEO_I | MS2OPT_GEO_IO, S, pod);
+//  S << head << "Options for drawing maps:\n";
+//  print_options(options, MS2OPT_DRAWMAP, S, pod);
+//  S << head << "Options for drawing grid:\n";
+//  print_options(options, MS2OPT_DRAWGRD, S, pod);
   throw Err();
 }
 
@@ -48,6 +52,8 @@ main(int argc, char **argv){
     ms2opt_add_mkref(options);
     ms2opt_add_drawtrk(options);
     ms2opt_add_drawwpt(options);
+//    ms2opt_add_drawmap(options);
+//    ms2opt_add_drawgrd(options);
 
     std::vector<std::string> files;
     Opt opts = parse_options_all(&argc, &argv, options, ~0, files);
