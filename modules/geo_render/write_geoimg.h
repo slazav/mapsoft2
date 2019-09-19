@@ -7,7 +7,7 @@
 #include "getopt/getopt.h"
 
 // add options for saving images and map files (including --map)
-void ms2opt_add_writegeoimg(ext_option_list & opts);
+void ms2opt_add_geoimg(ext_option_list & opts);
 
 // Write geodata to a raster file. Return 0 if file was successfully saved,
 // 1 if output format can not be determined, throw Err on other errors.

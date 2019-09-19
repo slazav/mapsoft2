@@ -12,7 +12,8 @@
 
 
 void
-ms2opt_add_writegeoimg(ext_option_list & opts){
+ms2opt_add_geoimg(ext_option_list & opts){
+  ms2opt_add_mkref(opts);
   ms2opt_add_drawwpt(opts);
   ms2opt_add_drawtrk(opts);
   ms2opt_add_drawmap(opts);
@@ -20,7 +21,7 @@ ms2opt_add_writegeoimg(ext_option_list & opts){
   ms2opt_add_ozimap_o(opts);
 
   ext_option_list add = {
-  {"map",  1,'m', MS2OPT_GEO_O, "write map file in OziExprorer format"},
+  {"map",  1,'m', MS2OPT_STD, "write map file in OziExprorer format"},
   };
   opts.insert(opts.end(), add.begin(), add.end());
 }

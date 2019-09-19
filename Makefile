@@ -6,14 +6,20 @@ PROGRAMS := ms2conv ms2mkref ms2nom ms2tiles ms2view ms2xyz
 #################################
 ## define paths
 
-bindir  ?= /usr/bin
+bindir ?= /usr/bin
+mandir ?= /usr/share/man
+man1dir ?= $(mandir)/man1
+man5dir ?= $(mandir)/man5
+
 
 #################################
 ## Build rules
 
-all: $(PROGRAMS)
+all: $(PROGRAMS) man
 ms2%:
 	make -C programs/$@
+man:
+	make -C programs/man
 
 #################################
 ## Install rules
@@ -21,4 +27,6 @@ ms2%:
 install:
 	for i in $(PROGRAMS); do\
 	  install -D -m755 programs/$$i/$$i $(bindir)/$$i;\
+	  install -D -m644 programs/man/$$i.1 $(man1dir)/$$i.1;\
 	done
+	install -D -m644 programs/man/mapsoft2.5 $(man5dir)/mapsoft2.5

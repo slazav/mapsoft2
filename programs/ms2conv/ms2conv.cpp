@@ -14,18 +14,30 @@ ext_option_list options;
 void usage(bool pod=false, ostream & S = cout){
   string head = pod? "\n=head1 ":"\n";
   const char * prog = "ms2cnv";
-  S << prog << " -- mapsoft2 godata converter\n"
+  S << prog << " -- mapsoft2 converter for geodata and raster maps\n"
     << head << "Usage:\n"
     << prog << "  <options> <input files> -o <output file>\n"
   ;
   S << head << "General options:\n";
   print_options(options, MS2OPT_STD, S, pod);
+  print_options(options, MS2OPT_OUT, S, pod);
   S << head << "Geodata input options:\n";
   print_options(options, MS2OPT_GEO_I, S, pod);
   S << head << "Geodata input and output options:\n";
   print_options(options, MS2OPT_GEO_IO, S, pod);
   S << head << "Geodata output options:\n";
-  print_options(options, MS2OPT_OUT | MS2OPT_GEO_O, S, pod);
+  print_options(options, MS2OPT_GEO_O, S, pod);
+  S << head << "Options for making map reference:\n";
+  print_options(options, MS2OPT_MKREF, S, pod);
+  S << head << "Options for drawing tracks:\n";
+  print_options(options, MS2OPT_DRAWTRK, S, pod);
+  S << head << "Options for drawing waypoints:\n";
+  print_options(options, MS2OPT_DRAWWPT, S, pod);
+//  S << head << "Options for drawing maps:\n";
+//  print_options(options, MS2OPT_DRAWMAP, S, pod);
+//  S << head << "Options for drawing grid:\n";
+//  print_options(options, MS2OPT_DRAWGRD, S, pod);
+
   throw Err();
 }
 
@@ -38,6 +50,7 @@ main(int argc, char *argv[]){
     ms2opt_add_geo_i(options);
     ms2opt_add_geo_o(options);
     ms2opt_add_geo_io(options);
+    ms2opt_add_geoimg(options);
 
     if (argc<2) usage();
     vector<string> infiles;

@@ -22,7 +22,7 @@ ext_option_list options = {
 void usage(bool pod=false, ostream & S = cout){
   string head = pod? "\n=head1 ":"\n";
   const char * prog = "ms2view";
-  S << prog << " -- viewer for geodata and raster maps\n"
+  S << prog << " -- mapsoft2 viewer for geodata and raster maps\n"
     << head << "Usage:\n"
     << prog << "  [<options>] <input files>\n"
     << "\n";
@@ -50,10 +50,10 @@ main(int argc, char **argv){
     ms2opt_add_geo_i(options);
     ms2opt_add_geo_io(options);
     ms2opt_add_mkref(options);
-    ms2opt_add_drawtrk(options);
     ms2opt_add_drawwpt(options);
-//    ms2opt_add_drawmap(options);
-//    ms2opt_add_drawgrd(options);
+    ms2opt_add_drawtrk(options);
+    ms2opt_add_drawmap(options);
+//  ms2opt_add_drawgrd(options);
 
     std::vector<std::string> files;
     Opt opts = parse_options_all(&argc, &argv, options, ~0, files);
