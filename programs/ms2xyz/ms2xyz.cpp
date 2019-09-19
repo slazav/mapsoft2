@@ -12,11 +12,11 @@
 
 using namespace std;
 ext_option_list options = {
-  {"tshift", 1, 0,  MS2OPT_STD, "time shift, hours"},
-  {"tfmt",   1,'t', MS2OPT_STD, "time format string for %T field (default: \"%F %T\")"},
-  {"fmt",    1,'f', MS2OPT_STD, "format string (default: \"%x %y %z %T %D %S\")"},
-  {"win",    1,'w', MS2OPT_STD, "window for speed calculation, sec (default: 120)"},
-  {"break",  1,'b', MS2OPT_STD, "place to break calculation and put empty line "
+  {"tshift", 1, 0,  MS2OPT_NONSTD, "time shift, hours"},
+  {"tfmt",   1,'t', MS2OPT_NONSTD, "time format string for %T field (default: \"%F %T\")"},
+  {"fmt",    1,'f', MS2OPT_NONSTD, "format string (default: \"%x %y %z %T %D %S\")"},
+  {"win",    1,'w', MS2OPT_NONSTD, "window for speed calculation, sec (default: 120)"},
+  {"break",  1,'b', MS2OPT_NONSTD, "place to break calculation and put empty line "
                        "(none | day | track, default: none)"}
 };
 
@@ -26,7 +26,7 @@ void usage(bool pod=false, std::ostream & S = std::cout){
   S << fname << " -- writing track in a text form\n"
              << "Usage: " << fname << " <options> <input files>\n";
   S << head << "General options:\n";
-  print_options(options, MS2OPT_STD | MS2OPT_OUT, S, pod);
+  print_options(options, MS2OPT_NONSTD | MS2OPT_STD | MS2OPT_OUT, S, pod);
   S << "If output file is not specified the data is printed to stdout.\n";
 
   S << head << "Geodata input options:\n";

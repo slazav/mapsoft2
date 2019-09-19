@@ -16,7 +16,7 @@
 using namespace std;
 
 ext_option_list options = {
-//  {"grid", 0,0, MS2OPT_DRAWGRD, "draw grid"},
+//  {"grid", 0,0, MS2OPT_NONSTD, "draw grid"},
 };
 
 void usage(bool pod=false, ostream & S = cout){
