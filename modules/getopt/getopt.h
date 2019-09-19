@@ -31,15 +31,17 @@ typedef std::vector<ext_option> ext_option_list;
 /********************************************************************/
 
 // define some masks for mapsoft2 options
-#define MS2OPT_STD     1<<0  // standard options (--verbose, --help, --pod)
-#define MS2OPT_OUT     1<<1  // output option (-o)
-#define MS2OPT_GEO_I   1<<2  // geodata input-only options (see modules/geo_data)
-#define MS2OPT_GEO_O   1<<3  // geodata output-only options (see modules/geo_data)
-#define MS2OPT_GEO_IO  1<<4  // geodata output and output options (see modules/geo_data)
-#define MS2OPT_MKREF   1<<5  // making map reference (see modules/geo_ref)
-#define MS2OPT_DRAWTRK 1<<6  // drawing tracks (see modules/geo_render/draw_trk)
-#define MS2OPT_DRAWWPT 1<<7  // drawing waypoints (see modules/geo_render/draw_wpt)
-#define MS2OPT_DRAWGRD 1<<8  // drawing map grids (see modules/geo_render/draw_grid)
+#define MS2OPT_NONSTD  1<<0  // non-standard program-specific options
+#define MS2OPT_STD     1<<1  // standard options (--verbose, --help, --pod)
+#define MS2OPT_OUT     1<<2  // output option (-o)
+#define MS2OPT_GEO_I   1<<3  // geodata input-only options (see modules/geo_data)
+#define MS2OPT_GEO_O   1<<4  // geodata output-only options (see modules/geo_data)
+#define MS2OPT_GEO_IO  1<<5  // geodata output and output options (see modules/geo_data)
+#define MS2OPT_MKREF   1<<6  // making map reference (see modules/geo_ref)
+#define MS2OPT_DRAWTRK 1<<7  // drawing tracks (see modules/geo_render/gobj_trk)
+#define MS2OPT_DRAWWPT 1<<8  // drawing waypoints (see modules/geo_render/gobj_wpt)
+#define MS2OPT_DRAWMAP 1<<9  // drawing maps (see modules/geo_render/gobj_map)
+#define MS2OPT_DRAWGRD 1<<10 // drawing map grids (see modules/geo_render/draw_grid)
 
 // add MS2OPT_STD options
 void ms2opt_add_std(ext_option_list & opts);
