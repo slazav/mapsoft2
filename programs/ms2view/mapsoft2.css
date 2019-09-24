@@ -1,0 +1,76 @@
+/*
+This style is tested with Adwaita, HighContrast, win32 themes
+
+Structure of ms2view window.
+
+- window
+- box (#main_vbox)
+  - menubar (#MenuBar)
+    - #MenuFile
+    - #MenuView
+  - paned (#main_paned)
+    - (#viewer)
+    - separator
+    - notebook (#panels)
+      - header
+        - tabs
+          - tab
+            - label
+          - tab
+          ...
+      - scrolledwindow
+        - treeview (#WPTS)
+        - scrollbar
+          - slider
+      - scrolledwindow
+        - treeview (#TRKS)
+        - scrollbar
+      - scrolledwindow
+        - treeview (#MAPS)
+        - scrollbar
+  - box (#status)
+    - image
+    - statusbar
+
+(names with # are widget unique names).
+*/
+
+
+/* narrow menu */
+menuitem {
+  padding: 2px 4px;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+}
+
+/* narrow notebook with borders between tab labels */
+#panels header {
+  margin: 0px;
+  padding: 0px;
+}
+#panels header *{
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+}
+#panels header tab label{
+  padding: 0px 2px;
+  border-style: solid;
+  border-right-width: 1px;
+  font-weight: normal;
+  background-color: transparent;
+  padding: 1px 3px 3px;
+}
+
+/* paned separator minimum size */
+#main_paned separator {
+  min-width: 4px;
+}
+
+/* border above status line */
+#status {
+  border-top-width: 1px;
+  border-top-style: groove;
+}
