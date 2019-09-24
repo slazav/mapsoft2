@@ -35,33 +35,14 @@ endif
 
 SHARED_LIB_SO := $(patsubst %, %.so, $(SHARED_LIB))
 
-######################################################
-# Dependency search for ALL_SOURCES + MOD_HEADERS
-
-ALL_SRC := $(MOD_SOURCES)
-ALL_SRC += $(patsubst %,%.test.cpp, $(SIMPLE_TESTS))
-ALL_SRC += $(patsubst %,%.test.cpp, $(SCRIPT_TESTS))
-ALL_SRC += $(patsubst %,%.cpp, $(PROGRAMS))
-ALL_SRCHDR := $(ALL_SRC) $(MOD_HEADERS)
-
-# Build h-file dependencies (using get_deps script)
-$(shell $(MODDIR)/get_deps -H $(MODDIR) $(ALL_SRC) > Makefile.deps)
-
-# List of modules which should be rebuilt (in correct order).
-MDEPS := $(shell $(MODDIR)/get_deps -M $(MODDIR) $(ALL_SRCHDR))
-
-# a-files (should be in opposite order then MDEPS)
-ADEPS := $(shell for i in $(MDEPS); do echo $(MODDIR)/$$i/$${i\#*/}.a; done | tac)
 
 ######################################################
 # Building flags
 
-ALL_PKG_CONFIG :=  $(PKG_CONFIG) $(shell $(MODDIR)/get_deps -L $(MODDIR) $(ALL_SRCHDR))
-
-override CXXFLAGS += $(shell [ "$(ALL_PKG_CONFIG)" == " " ] ||\
-                      PKG_CONFIG_PATH=$(MODDIR)/pc pkg-config --cflags '$(ALL_PKG_CONFIG)')
-override LDLIBS   += $(shell [ "$(ALL_PKG_CONFIG)" == " " ] ||\
-                      PKG_CONFIG_PATH=$(MODDIR)/pc pkg-config --libs '$(ALL_PKG_CONFIG)')
+override CXXFLAGS += $(shell [ "$(LDEPS)" == " " ] ||\
+                      PKG_CONFIG_PATH=$(MODDIR)/pc pkg-config --cflags '$(LDEPS)')
+override LDLIBS   += $(shell [ "$(LDEPS)" == " " ] ||\
+                      PKG_CONFIG_PATH=$(MODDIR)/pc pkg-config --libs '$(LDEPS)')
 override CXXFLAGS += -std=gnu++11 -Werror=return-type -O2 -fPIC
 override CXXFLAGS += -I$(MODDIR)
 
@@ -72,12 +53,15 @@ make_nodeps: $(MOD_STATIC) $(PROGRAMS) $(SHARED_LIB_SO) make_tests
 clean:
 	rm -f *.o *.a *.so *.test *.passed $(PROGRAMS)
 
+# Build dependency file (using get_deps script) and include it.
+$(shell $(MODDIR)/get_deps $(MODDIR) . > Makefile.deps)
+-include Makefile.deps
+
 make_deps:
 	@echo "## Building dependencies: [$(MDEPS)]"
 	@sh -e -c 'for i in $(MDEPS); do $(MAKE) -C $(MODDIR)/$$i make_nodeps; done'
 	@echo "## Finish building dependencies"
 
--include Makefile.deps
 
 ######################################################
 # Building rules for tests
@@ -119,7 +103,7 @@ $(MOD_STATIC): $(MOD_OBJECTS)
 	ar crs $@ $+
 
 ######################################################
-print_info:
+info:
 	@echo "###########################"
 	@echo "## Module <<$(MOD_NAME)>>"
 	@echo "MOD_STATIC:   $(MOD_STATIC)"
@@ -127,6 +111,8 @@ print_info:
 	@echo "MOD_HEADERS:  $(MOD_HEADERS)"
 	@echo "MDEPS:        $(MDEPS)"
 	@echo "ADEPS:        $(ADEPS)"
-	@echo "LDLIBS:       $(LDLIBS)"
+	@echo "LDEPS:        $(LDEPS)"
 	@echo "SIMPLE_TESTS: $(SIMPLE_TESTS)"
 	@echo "SCRIPT_TESTS: $(SCRIPT_TESTS)"
+	@echo "LDLIBS:       $(LDLIBS)"
+	@echo "CXXFLAGS:     $(CXXFLAGS)"
