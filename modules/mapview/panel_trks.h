@@ -9,7 +9,7 @@
 class PanelTrks : public Panel<GObjTrk, GeoTrk> {
 public:
 
-    PanelTrks () {}
+    PanelTrks () { set_name("TRKS"); }
 
     void add(const std::shared_ptr<GeoTrk> & trk) override;
 

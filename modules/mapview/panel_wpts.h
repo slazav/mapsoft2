@@ -8,7 +8,7 @@
 
 class PanelWpts : public Panel<GObjWpts, GeoWptList> {
 public:
-    PanelWpts() {}
+    PanelWpts() { set_name("WPTS"); }
 
     void add(const std::shared_ptr<GeoWptList> & wpts) override;
 

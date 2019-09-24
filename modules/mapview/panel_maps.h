@@ -8,7 +8,7 @@
 
 class PanelMaps : public Panel<GObjMaps, GeoMapList> {
 public:
-  PanelMaps(){}
+  PanelMaps(){ set_name("MAPS"); }
 
   void add(const std::shared_ptr<GeoMapList> & maps) override;
 

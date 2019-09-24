@@ -6,8 +6,9 @@ PROGRAMS := ms2conv ms2mkref ms2nom ms2tiles ms2view ms2xyz
 #################################
 ## define paths
 
-bindir ?= /usr/bin
-mandir ?= /usr/share/man
+bindir  ?= /usr/bin
+datadir ?= /usr/share
+mandir  ?= /usr/share/man
 man1dir ?= $(mandir)/man1
 man5dir ?= $(mandir)/man5
 
@@ -30,3 +31,4 @@ install:
 	  install -D -m644 programs/man/$$i.1 $(man1dir)/$$i.1;\
 	done
 	install -D -m644 programs/man/mapsoft2.5 $(man5dir)/mapsoft2.5
+	install -D -m644 programs/ms2view/mapsoft2.css $(datadir)/mapsoft2/mapsoft2.css
