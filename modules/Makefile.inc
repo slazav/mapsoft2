@@ -45,7 +45,7 @@ ALL_SRC += $(patsubst %,%.cpp, $(PROGRAMS))
 ALL_SRCHDR := $(ALL_SRC) $(MOD_HEADERS)
 
 # Build h-file dependencies (using get_deps script)
-$(shell $(MODDIR)/get_deps -H $(MODDIR) $(ALL_SRC) >> Makefile.deps)
+$(shell $(MODDIR)/get_deps -H $(MODDIR) $(ALL_SRC) > Makefile.deps)
 
 # List of modules which should be rebuilt (in correct order).
 MDEPS := $(shell $(MODDIR)/get_deps -M $(MODDIR) $(ALL_SRCHDR))
