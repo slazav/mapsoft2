@@ -2,12 +2,12 @@
 
 =item B<<  --in_fmt <arg> >>
 
-Geodata input format (json, gu, gpx, kml, kmz, ozi, zip).
+Explicitly set geodata input format (json, gu, gpx, kml, kmz, ozi, zip).
 By default format is determined by file extension.
 
 =item B<<  --out_fmt <arg> >>
 
-Geodata output format (json, gu, gpx, kml, kmz, ozi, zip).
+Explicitly set geodata output format (json, gu, gpx, kml, kmz, ozi, zip).
 By default format is determined by file extension.
 
 =item B<<  --gu_enc <arg> >>
