@@ -7,7 +7,17 @@ ms2conv -- mapsoft2 converter for geodata and raster maps
 
 	ms2conv <options> <input files> -o <output file>
 
+=head1 GENERAL OPTIONS
+
 include(`opt_general.m4')
+
+=over 1
+
+=item B<<  -o, --out <arg> >>
+
+output file
+
+=back
 
 
 =head1 READING AND WRITING GEODATA
@@ -15,18 +25,38 @@ include(`opt_general.m4')
 See B<GEODATA FORMATS> section in B<mapsoft2(5)> for supported formats
 and related options.
 
+=head1 RENDERING IMAGES
 
-=head1 SETTING UP MAP REFERENCE FOR RASTER IMAGES
+B<ms2conv> can produce images with raster maps, tracks and waypoints.
+Supported formats: B<jpeg, png, gif, tiff, ps, pdf, svg>. Format is
+selected by output file extension or by B<--out_fmt> option. Option
+B<--map> can be used to save map reference for the image (at the moment
+only OziExplorer map format is supported).
+
+=head2 Options for saving images
+
+include(`opt_image.m4')
+
+=over 2
+
+=item B<<  --bgcolor <arg> >>
+
+Image background color (default 0xFFFFFFFF).
+
+=item B<<  -m, --map <arg> >>
+
+Write map file in OziExprorer format. See section I<READING AND WRITING GEODATA>
+for options controlling OziExprorer map file saving.
+
+=back
+
+=head2 Settung up map reference for images
 
 include(`opt_mkref.m4')
 
 
-See B<SETTING UP A MAP REFERENCE> section in B<mapsoft2(5)> for
-related options.
-
 =head1 DRAWING OPTIONS FOR RASTER IMAGES
 
-See B<RENDERING GEODATA> and B<RASTER IMAGE FORMATS>
-sections in B<mapsoft2(5)> for related options.
+include(`opt_render.m4')
 
 include(`foot.m4')

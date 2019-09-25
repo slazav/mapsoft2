@@ -8,6 +8,8 @@ ms2view -- mapsoft2 viewer for geodata and raster maps
 	ms2view <options> <input files>
 
 
+=head1 GENERAL OPTIONS
+
 include(`opt_general.m4')
 
 
@@ -23,8 +25,7 @@ include(`opt_mkref.m4')
 
 =head1 DRAWING OPTIONS
 
-See B<RENDERING GEODATA> section in B<mapsoft2(5)> for related options.
-
+include(`opt_render.m4')
 
 =head1 CUSTOMIZING VIEWER INTERFACE WITH CSS STYLES
 

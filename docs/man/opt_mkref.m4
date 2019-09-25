@@ -78,5 +78,4 @@ Map scale (for B<proj> maps), projection units per map cm (B<proj> maps).
 Default value is 0.01 degree/cm for degree projections, 1000m/cm for
 metric projections.
 
-
 =back

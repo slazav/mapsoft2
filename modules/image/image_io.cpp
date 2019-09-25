@@ -14,13 +14,12 @@
 void ms2opt_add_image(ext_option_list & opts){
   int m = MS2OPT_IMAGE;
   ext_option_list add = {
-    {"tiff_format",   1,0, m, "when writing tiff, convert image to one of following forms: "
-                              "argb, rgb, grey, pal (default depends on the image)"},
-    {"tiff_minwhite", 1,0, m, "if writing greyscale tiff, invert colors (dafault: 0)"},
-    {"jpeg_quality",  1,0, m, "set jpeg quality (default 95)"
-                              "values: center, meanpix (default), meancol"},
-    {"png_format",    1,0, m, "when writing png, convert image to one of following forms: "
-                              "argb, rgb, grey, agrey, pal (default depends on the image)"},
+    {"tiff_format",   1,0, m, "When writing TIFF, convert image to one of following forms: "
+                              "argb, rgb, grey, pal (default depends on the image)."},
+    {"tiff_minwhite", 1,0, m, "When writing greyscale TIFF, invert colors (default: 0)."},
+    {"jpeg_quality",  1,0, m, "Set JPEG quality (default 95)."},
+    {"png_format",    1,0, m, "When writing PNG, convert image to one of following forms: "
+                              "argb, rgb, grey, agrey, pal (default depends on the image)."},
   };
   opts.insert(opts.end(), add.begin(), add.end());
   ms2opt_add_image_cmap(opts);

@@ -15,10 +15,16 @@
 <ul id="index">
   <li><a href="#NAME">NAME</a></li>
   <li><a href="#USAGE">USAGE</a></li>
-  <li><a href="#GENERAL-OPTIONS">GENERAL OPTIONS:</a></li>
+  <li><a href="#GENERAL-OPTIONS">GENERAL OPTIONS</a></li>
   <li><a href="#READING-GEODATA">READING GEODATA</a></li>
   <li><a href="#SETTING-UP-MAP-REFERENCE-FOR-THE-VIEWER">SETTING UP MAP REFERENCE FOR THE VIEWER</a></li>
-  <li><a href="#DRAWING-OPTIONS">DRAWING OPTIONS</a></li>
+  <li><a href="#DRAWING-OPTIONS">DRAWING OPTIONS</a>
+    <ul>
+      <li><a href="#Options-for-drawing-tracks">Options for drawing tracks:</a></li>
+      <li><a href="#Options-for-drawing-waypoints">Options for drawing waypoints:</a></li>
+      <li><a href="#Options-for-drawing-maps">Options for drawing maps:</a></li>
+    </ul>
+  </li>
   <li><a href="#CUSTOMIZING-VIEWER-INTERFACE-WITH-CSS-STYLES">CUSTOMIZING VIEWER INTERFACE WITH CSS STYLES</a></li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
@@ -32,7 +38,7 @@
 
 <pre><code>        ms2view &lt;options&gt; &lt;input files&gt;</code></pre>
 
-<h1 id="GENERAL-OPTIONS">GENERAL OPTIONS:</h1>
+<h1 id="GENERAL-OPTIONS">GENERAL OPTIONS</h1>
 
 <dl>
 
@@ -166,7 +172,167 @@
 
 <h1 id="DRAWING-OPTIONS">DRAWING OPTIONS</h1>
 
-<p>See <b>RENDERING GEODATA</b> section in <b>mapsoft2(5)</b> for related options.</p>
+<h2 id="Options-for-drawing-tracks">Options for drawing tracks:</h2>
+
+<dl>
+
+<dt id="trk_draw_mode-arg"><b>--trk_draw_mode &lt;arg&gt;</b></dt>
+<dd>
+
+<p>track drawing mode (normal, speed, height)</p>
+
+</dd>
+<dt id="trk_draw_th-arg"><b>--trk_draw_th &lt;arg&gt;</b></dt>
+<dd>
+
+<p>line thickness, overrides track setting</p>
+
+</dd>
+<dt id="trk_draw_color-arg"><b>--trk_draw_color &lt;arg&gt;</b></dt>
+<dd>
+
+<p>color (for normal drawing mode), overrides track color</p>
+
+</dd>
+<dt id="trk_draw_dots-arg"><b>--trk_draw_dots &lt;arg&gt;</b></dt>
+<dd>
+
+<p>draw dots (for normal drawing mode), default: 1</p>
+
+</dd>
+<dt id="trk_draw_arrows-arg"><b>--trk_draw_arrows &lt;arg&gt;</b></dt>
+<dd>
+
+<p>draw arrows (for normal drawing mode), default: 0</p>
+
+</dd>
+<dt id="trk_draw_min-arg"><b>--trk_draw_min &lt;arg&gt;</b></dt>
+<dd>
+
+<p>min value (km/h for speed mode, m for height mode)</p>
+
+</dd>
+<dt id="trk_draw_max-arg"><b>--trk_draw_max &lt;arg&gt;</b></dt>
+<dd>
+
+<p>max value (km/h for speed mode, m for height mode)</p>
+
+</dd>
+<dt id="trk_draw_grad-arg"><b>--trk_draw_grad &lt;arg&gt;</b></dt>
+<dd>
+
+<p>color gradient (for speed or height modes), default: BCGYRM</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-drawing-waypoints">Options for drawing waypoints:</h2>
+
+<dl>
+
+<dt id="wpt_text_font-arg"><b>--wpt_text_font &lt;arg&gt;</b></dt>
+<dd>
+
+<p>waypoint font (default: &quot;serif&quot;)</p>
+
+</dd>
+<dt id="wpt_text_size-arg"><b>--wpt_text_size &lt;arg&gt;</b></dt>
+<dd>
+
+<p>waypoint font size, pixels (default: 10)</p>
+
+</dd>
+<dt id="wpt_text_pad-arg"><b>--wpt_text_pad &lt;arg&gt;</b></dt>
+<dd>
+
+<p>waypoint text padding, pixels (default: 2)</p>
+
+</dd>
+<dt id="wpt_draw_size-arg"><b>--wpt_draw_size &lt;arg&gt;</b></dt>
+<dd>
+
+<p>waypoint dot radius, pixels (default: 3)</p>
+
+</dd>
+<dt id="wpt_line_width-arg"><b>--wpt_line_width &lt;arg&gt;</b></dt>
+<dd>
+
+<p>waypoint line width, (default: 1)</p>
+
+</dd>
+<dt id="wpt_stick_len-arg"><b>--wpt_stick_len &lt;arg&gt;</b></dt>
+<dd>
+
+<p>length of waypoint flag stick (default: 10)</p>
+
+</dd>
+<dt id="wpt_color-arg"><b>--wpt_color &lt;arg&gt;</b></dt>
+<dd>
+
+<p>waypoint color (default: 0xFF000000)</p>
+
+</dd>
+<dt id="wpt_bgcolor-arg"><b>--wpt_bgcolor &lt;arg&gt;</b></dt>
+<dd>
+
+<p>waypoint background color (default: 0xFFFFFFFF)</p>
+
+</dd>
+<dt id="wpt_adj-arg"><b>--wpt_adj &lt;arg&gt;</b></dt>
+<dd>
+
+<p>adjust waypoint flag positions to prevent collisions (default: 1)</p>
+
+</dd>
+<dt id="wpt_adj_brd-arg"><b>--wpt_adj_brd &lt;arg&gt;</b></dt>
+<dd>
+
+<p>adjust waypoint flag positions to prevent boundary collisions (default: 0)</p>
+
+</dd>
+<dt id="wpt_skip_far-arg"><b>--wpt_skip_far &lt;arg&gt;</b></dt>
+<dd>
+
+<p>skip points if their labels can not be placed close enough (default: 5*wpt_stick_len)</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-drawing-maps">Options for drawing maps:</h2>
+
+<dl>
+
+<dt id="map_smooth-arg"><b>--map_smooth &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Smooth map drawing (interpolation for small scales, averaging for large ones), default 0</p>
+
+</dd>
+<dt id="map_clip_brd-arg"><b>--map_clip_brd &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Clip map to its border (default 1)</p>
+
+</dd>
+<dt id="map_draw_refs-arg"><b>--map_draw_refs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Draw map reference points (ARGB color, default 0)</p>
+
+</dd>
+<dt id="map_draw_brd-arg"><b>--map_draw_brd &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Draw map border (ARGB color, default 0)</p>
+
+</dd>
+<dt id="map_fade-arg"><b>--map_fade &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Fade the map (0..100, default is 0, no fading)</p>
+
+</dd>
+</dl>
 
 <h1 id="CUSTOMIZING-VIEWER-INTERFACE-WITH-CSS-STYLES">CUSTOMIZING VIEWER INTERFACE WITH CSS STYLES</h1>
 
