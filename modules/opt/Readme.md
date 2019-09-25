@@ -50,6 +50,9 @@ Opt o("{\"k1\":\"v1\", \"k2\":\"v2\"}");
 -----------------
 ## Changelog:
 
+2019.09.25 V.Zavjalov 1.6:
+- allow reading large hex numbers (0xFFFFFFFF) as signed integer
+
 2019.09.02 V.Zavjalov 1.5.1:
 - More descriptive error message
 

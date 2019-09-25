@@ -13,7 +13,9 @@ int str_to_type<int>(const std::string & s){
     char c; ss>>c;
     if (val!=0 || c!='x')
       throw Err() << "can't parse value: " << s;
-    ss >> std::hex >> val;
+    unsigned int uval;
+    ss >> std::hex >> uval;
+    val = (int)uval;
   }
   if (ss.fail() || !ss.eof())
     throw Err() << "can't parse value: " << s;

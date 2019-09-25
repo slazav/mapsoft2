@@ -8,6 +8,7 @@
 int
 main(){
 try{
+
   Opt O1;
   O1.put("int", 123);
   assert ( O1.get<int>("int") == 123 );
@@ -131,6 +132,12 @@ try{
   assert(O4.get("k1", std::string()) == "v1");
   assert(O4.get("k2", std::string()) == "v2");
   assert(O4.get("k3", 0) == 100);
+
+  O1.put("hex", "0xFFFFFFFF"); // unsigned int -> int
+  assert(O1.get("hex",0) == 0xFFFFFFFF);
+
+  O1.put("hex", "0xFFFFFFFFF"); // to long
+  assert_err(O1.get("hex",0), "can't parse value: 0xFFFFFFFFF");
 
 //  assert(O1.get("h1", 0.0) == 255);
 //  assert(O1.get("h2", 0.0) == 254);
