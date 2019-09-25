@@ -30,7 +30,7 @@ assert "$P -o tmp.map --mkref google_tile --image 9410_4633_14.png\
 assert_diff test_data/9410_4633_14.map tmp.map
 
 # 2x2 km map, Gauss-Kruger projection, 1:100'000, 300dpi
-assert "$P -o tmp.map --mkref proj --proj SU(99)\
+assert "$P -o tmp.map --mkref proj --proj SU99\
   --coords [17552000,5624000,12000,6000]\
   --dpi 200 --scale 1000 --image 12x6+17552+5624k.png" "" 0
 assert_diff test_data/12x6+17552+5624k.map tmp.map
