@@ -6,6 +6,7 @@ ms2mkref -- creating a map reference
 
 	ms2mkref <options>
 
+=head1 GENERAL OPTIONS
 
 include(`opt_general.m4')
 

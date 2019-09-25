@@ -15,10 +15,21 @@
 <ul id="index">
   <li><a href="#NAME">NAME</a></li>
   <li><a href="#USAGE">USAGE</a></li>
-  <li><a href="#GENERAL-OPTIONS">GENERAL OPTIONS:</a></li>
+  <li><a href="#GENERAL-OPTIONS">GENERAL OPTIONS</a></li>
   <li><a href="#READING-AND-WRITING-GEODATA">READING AND WRITING GEODATA</a></li>
-  <li><a href="#SETTING-UP-MAP-REFERENCE-FOR-RASTER-IMAGES">SETTING UP MAP REFERENCE FOR RASTER IMAGES</a></li>
-  <li><a href="#DRAWING-OPTIONS-FOR-RASTER-IMAGES">DRAWING OPTIONS FOR RASTER IMAGES</a></li>
+  <li><a href="#RENDERING-IMAGES">RENDERING IMAGES</a>
+    <ul>
+      <li><a href="#Options-for-saving-images">Options for saving images</a></li>
+      <li><a href="#Settung-up-map-reference-for-images">Settung up map reference for images</a></li>
+    </ul>
+  </li>
+  <li><a href="#DRAWING-OPTIONS-FOR-RASTER-IMAGES">DRAWING OPTIONS FOR RASTER IMAGES</a>
+    <ul>
+      <li><a href="#Options-for-drawing-tracks">Options for drawing tracks:</a></li>
+      <li><a href="#Options-for-drawing-waypoints">Options for drawing waypoints:</a></li>
+      <li><a href="#Options-for-drawing-maps">Options for drawing maps:</a></li>
+    </ul>
+  </li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
 </ul>
@@ -31,7 +42,7 @@
 
 <pre><code>        ms2conv &lt;options&gt; &lt;input files&gt; -o &lt;output file&gt;</code></pre>
 
-<h1 id="GENERAL-OPTIONS">GENERAL OPTIONS:</h1>
+<h1 id="GENERAL-OPTIONS">GENERAL OPTIONS</h1>
 
 <dl>
 
@@ -55,11 +66,101 @@
 </dd>
 </dl>
 
+<dl>
+
+<dt id="o---out-arg"><b>-o, --out &lt;arg&gt;</b></dt>
+<dd>
+
+<p>output file</p>
+
+</dd>
+</dl>
+
 <h1 id="READING-AND-WRITING-GEODATA">READING AND WRITING GEODATA</h1>
 
 <p>See <b>GEODATA FORMATS</b> section in <b>mapsoft2(5)</b> for supported formats and related options.</p>
 
-<h1 id="SETTING-UP-MAP-REFERENCE-FOR-RASTER-IMAGES">SETTING UP MAP REFERENCE FOR RASTER IMAGES</h1>
+<h1 id="RENDERING-IMAGES">RENDERING IMAGES</h1>
+
+<p><b>ms2conv</b> can produce images with raster maps, tracks and waypoints. Supported formats: <b>jpeg, png, gif, tiff, ps, pdf, svg</b>. Format is selected by output file extension or by <b>--out_fmt</b> option. Option <b>--map</b> can be used to save map reference for the image (at the moment only OziExplorer map format is supported).</p>
+
+<h2 id="Options-for-saving-images">Options for saving images</h2>
+
+<dl>
+
+<dt id="tiff_format-arg"><b>--tiff_format &lt;arg&gt;</b></dt>
+<dd>
+
+<p>When writing tiff, convert image to one of following forms: argb, rgb, grey, pal (default depends on the image).</p>
+
+</dd>
+<dt id="tiff_minwhite-arg"><b>--tiff_minwhite &lt;arg&gt;</b></dt>
+<dd>
+
+<p>When writing greyscale tiff, invert colors (dafault: 0).</p>
+
+</dd>
+<dt id="jpeg_quality-arg"><b>--jpeg_quality &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set jpeg quality (default 95).</p>
+
+</dd>
+<dt id="png_format-arg"><b>--png_format &lt;arg&gt;</b></dt>
+<dd>
+
+<p>When writing png, convert image to one of following forms: argb, rgb, grey, agrey, pal (default depends on the image).</p>
+
+</dd>
+<dt id="cmap_colors-arg"><b>--cmap_colors &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Colormap size for reducing image colors (2..256, default 256). Image colors are reduced when saving to GIF, to PNG with <b>--png_format=pal</b>, to TIFF with <b>--tiff_format=pal</b></p>
+
+</dd>
+<dt id="cmap_alpha-arg"><b>--cmap_alpha &lt;arg&gt;</b></dt>
+<dd>
+
+<p>What to do with alpha channel. Values: <b>none</b> (default) -- remove it, <b>full</b> -- treat it equally with other channels, <b>gif</b> -- keep only one fully-transparent color if needed. When saving GIF file (which supports only fully transparent color) <b>full</b> works in the same way as <b>gif</b>.</p>
+
+</dd>
+<dt id="cmap_dim_method-arg"><b>--cmap_dim_method &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Analog of pnmcolormap -spreadbrightness|-spreadluminosity. When a box in the color space is measured, color dimensions can be treated equally or with luminosity factors. Values: norm (default) or lumin.</p>
+
+</dd>
+<dt id="cmap_rep_method-arg"><b>--cmap_rep_method &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Analog of pnmcolormap -center|-meanpixel|-meancolor. When a box in the color space is chosen, it can be represented by its geometrical center, or by averaging pixels or colors in it. Values: center, meanpix (default), meancol.</p>
+
+</dd>
+<dt id="cmap_split_method-arg"><b>--cmap_split_method &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Analog of pnmcolormap -splitpix|-splitcol|-splitdim. How to choose a box in the color space for splitting: by its maximum dimension, maximum number of pixels or colors in it. Values: maxdim (default), maxpix, maxcol.</p>
+
+</dd>
+</dl>
+
+<dl>
+
+<dt id="bgcolor-arg"><b>--bgcolor &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Image background color (default 0xFFFFFFFF).</p>
+
+</dd>
+<dt id="m---map-arg"><b>-m, --map &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Write map file in OziExprorer format. See section <i>READING AND WRITING GEODATA</i> for options controlling OziExprorer map file saving.</p>
+
+</dd>
+</dl>
+
+<h2 id="Settung-up-map-reference-for-images">Settung up map reference for images</h2>
 
 <p>Map reference is set similarly in <code>ms2view</code>, <code>ms2conv</code>, and <code>ms2mkref</code> programs. If <b>--mkref</b> option exists then projection is created from options. If not then <code>ms2view</code> and <code>ms2conv</code> get projection of the first map to be shown or set to some default value. Following options can be used:</p>
 
@@ -163,11 +264,169 @@
 </dd>
 </dl>
 
-<p>See <b>SETTING UP A MAP REFERENCE</b> section in <b>mapsoft2(5)</b> for related options.</p>
-
 <h1 id="DRAWING-OPTIONS-FOR-RASTER-IMAGES">DRAWING OPTIONS FOR RASTER IMAGES</h1>
 
-<p>See <b>RENDERING GEODATA</b> and <b>RASTER IMAGE FORMATS</b> sections in <b>mapsoft2(5)</b> for related options.</p>
+<h2 id="Options-for-drawing-tracks">Options for drawing tracks:</h2>
+
+<dl>
+
+<dt id="trk_draw_mode-arg"><b>--trk_draw_mode &lt;arg&gt;</b></dt>
+<dd>
+
+<p>track drawing mode (normal, speed, height)</p>
+
+</dd>
+<dt id="trk_draw_th-arg"><b>--trk_draw_th &lt;arg&gt;</b></dt>
+<dd>
+
+<p>line thickness, overrides track setting</p>
+
+</dd>
+<dt id="trk_draw_color-arg"><b>--trk_draw_color &lt;arg&gt;</b></dt>
+<dd>
+
+<p>color (for normal drawing mode), overrides track color</p>
+
+</dd>
+<dt id="trk_draw_dots-arg"><b>--trk_draw_dots &lt;arg&gt;</b></dt>
+<dd>
+
+<p>draw dots (for normal drawing mode), default: 1</p>
+
+</dd>
+<dt id="trk_draw_arrows-arg"><b>--trk_draw_arrows &lt;arg&gt;</b></dt>
+<dd>
+
+<p>draw arrows (for normal drawing mode), default: 0</p>
+
+</dd>
+<dt id="trk_draw_min-arg"><b>--trk_draw_min &lt;arg&gt;</b></dt>
+<dd>
+
+<p>min value (km/h for speed mode, m for height mode)</p>
+
+</dd>
+<dt id="trk_draw_max-arg"><b>--trk_draw_max &lt;arg&gt;</b></dt>
+<dd>
+
+<p>max value (km/h for speed mode, m for height mode)</p>
+
+</dd>
+<dt id="trk_draw_grad-arg"><b>--trk_draw_grad &lt;arg&gt;</b></dt>
+<dd>
+
+<p>color gradient (for speed or height modes), default: BCGYRM</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-drawing-waypoints">Options for drawing waypoints:</h2>
+
+<dl>
+
+<dt id="wpt_text_font-arg"><b>--wpt_text_font &lt;arg&gt;</b></dt>
+<dd>
+
+<p>waypoint font (default: &quot;serif&quot;)</p>
+
+</dd>
+<dt id="wpt_text_size-arg"><b>--wpt_text_size &lt;arg&gt;</b></dt>
+<dd>
+
+<p>waypoint font size, pixels (default: 10)</p>
+
+</dd>
+<dt id="wpt_text_pad-arg"><b>--wpt_text_pad &lt;arg&gt;</b></dt>
+<dd>
+
+<p>waypoint text padding, pixels (default: 2)</p>
+
+</dd>
+<dt id="wpt_draw_size-arg"><b>--wpt_draw_size &lt;arg&gt;</b></dt>
+<dd>
+
+<p>waypoint dot radius, pixels (default: 3)</p>
+
+</dd>
+<dt id="wpt_line_width-arg"><b>--wpt_line_width &lt;arg&gt;</b></dt>
+<dd>
+
+<p>waypoint line width, (default: 1)</p>
+
+</dd>
+<dt id="wpt_stick_len-arg"><b>--wpt_stick_len &lt;arg&gt;</b></dt>
+<dd>
+
+<p>length of waypoint flag stick (default: 10)</p>
+
+</dd>
+<dt id="wpt_color-arg"><b>--wpt_color &lt;arg&gt;</b></dt>
+<dd>
+
+<p>waypoint color (default: 0xFF000000)</p>
+
+</dd>
+<dt id="wpt_bgcolor-arg"><b>--wpt_bgcolor &lt;arg&gt;</b></dt>
+<dd>
+
+<p>waypoint background color (default: 0xFFFFFFFF)</p>
+
+</dd>
+<dt id="wpt_adj-arg"><b>--wpt_adj &lt;arg&gt;</b></dt>
+<dd>
+
+<p>adjust waypoint flag positions to prevent collisions (default: 1)</p>
+
+</dd>
+<dt id="wpt_adj_brd-arg"><b>--wpt_adj_brd &lt;arg&gt;</b></dt>
+<dd>
+
+<p>adjust waypoint flag positions to prevent boundary collisions (default: 0)</p>
+
+</dd>
+<dt id="wpt_skip_far-arg"><b>--wpt_skip_far &lt;arg&gt;</b></dt>
+<dd>
+
+<p>skip points if their labels can not be placed close enough (default: 5*wpt_stick_len)</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-drawing-maps">Options for drawing maps:</h2>
+
+<dl>
+
+<dt id="map_smooth-arg"><b>--map_smooth &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Smooth map drawing (interpolation for small scales, averaging for large ones), default 0</p>
+
+</dd>
+<dt id="map_clip_brd-arg"><b>--map_clip_brd &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Clip map to its border (default 1)</p>
+
+</dd>
+<dt id="map_draw_refs-arg"><b>--map_draw_refs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Draw map reference points (ARGB color, default 0)</p>
+
+</dd>
+<dt id="map_draw_brd-arg"><b>--map_draw_brd &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Draw map border (ARGB color, default 0)</p>
+
+</dd>
+<dt id="map_fade-arg"><b>--map_fade &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Fade the map (0..100, default is 0, no fading)</p>
+
+</dd>
+</dl>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 

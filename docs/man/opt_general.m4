@@ -1,6 +1,4 @@
-=head1 GENERAL OPTIONS:
-
-=over 1
+=over 2
 
 =item B<< -h, --help >>
 
