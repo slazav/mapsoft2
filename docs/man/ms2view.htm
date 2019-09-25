@@ -64,7 +64,27 @@
 
 <h1 id="READING-GEODATA">READING GEODATA</h1>
 
-<p>See <b>GEODATA FORMATS</b> section in <code>mapsoft2(5)</code> for supported formats and related options.</p>
+<dl>
+
+<dt id="in_fmt-arg"><b>--in_fmt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip). By default format is determined by file extension.</p>
+
+</dd>
+<dt id="gu_enc-arg"><b>--gu_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Garmin Utils format charset (default KOI8-R).</p>
+
+</dd>
+<dt id="ozi_enc-arg"><b>--ozi_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>OziExplorer format charset (default Windows-1251).</p>
+
+</dd>
+</dl>
 
 <h1 id="SETTING-UP-MAP-REFERENCE-FOR-THE-VIEWER">SETTING UP MAP REFERENCE FOR THE VIEWER</h1>
 
@@ -72,7 +92,7 @@
 
 <dl>
 
-<dt id="mref-type"><b>--mref &lt;type&gt;</b></dt>
+<dt id="mkref-type"><b>--mkref &lt;type&gt;</b></dt>
 <dd>
 
 <p>Choose map type. Possible values are: <b>nom</b> -- a Soviet nomenclature map, <b>proj</b> -- a rectangular area in some coordinates, <b>google_tile</b> and <b>tms_tile</b> -- a single google/TMS tile or rectangular area with multiple tiles.</p>

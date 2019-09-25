@@ -4,6 +4,10 @@ h1 {
   color: #000080;
 }
 
+h2 {
+  font-size: large;
+}
+
 p {
   margin: 0px;
   padding: 0px;
