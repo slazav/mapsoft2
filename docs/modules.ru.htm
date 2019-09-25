@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>mapsoft2 documentation</title>
+  <meta name="keywords" content="mapsof2">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body bgcolor="#FFFFFF">
+
+
+
+<div align=right>
+Язык:
+<b>RU</b>
+<a href="modules.htm">EN</a>
+</div>
+
+<a href="index.ru.htm">На главную...</a>
+
+
+<h2>
+  Библиотека исходного кода Mapsoft2
+</h2>
+
+
+<p>
+Исходный код Mapsoft2 организован в виде набора отдельных
+"модулей", каждый из которых может содержать код, документацию, тесты,
+программы и т.п. Некоторые из этих модулей стабильны и используются мной
+в разных проектах, другие могут быть экспериментальными, нестабильными
+или бесполезными. Модули могут зависеть друг от друга. Сборочная система
+(использующая make) позволяет собирать программы и библиотеки используя
+только необходимые модули, а также переносить модули между различными
+проектами.
+
+<h3>Сборочная система</h3>
+
+<p>
+Сборочая система сделана на основе GNU make. Модули расположены в
+директории <tt>modules</tt>. Программы, библиотеки и модули, которые  не
+используются другими модулями, могут быть расположены в любом месте (см.,
+например, директории <tt>examples</tt> и <tt>programs</tt>). Каждый
+модуль содержит <tt>Makefile</tt> где описаны его компоненты и включен
+файл <tt>Makefile.inc</tt> из директории <tt>modules</tt>. Для построения
+дерева зависимостей используется отдельный скрипт
+<tt>modules/get_deps</tt>. Для правильного поиска зависимостей
+подключение заголовочного файла <tt>file.h</tt> из модуля <tt>name</tt>
+надо записывать в виде <tt>#include "name/file.h"</tt>, а локальных
+заголовочных файлов - в виде <tt>#include "file.h"</tt>.
+
+
+<p>
+В <tt>Makefile</tt> модуля могут быть определены следующие переменные:
+
+<ul>
+
+<li><tt>MODDIR</tt> -- Директория, в которой расположены модули, по умолчанию: <tt>".."</tt>.
+
+<li><tt>MOD_HEADERS</tt> -- Cписок заголовочных файлов модуля (<tt>*.h</tt>).
+
+<li><tt>MOD_SOURCES</tt> -- Список файлов с исходным кодом (<tt>*.cpp</tt>).
+
+<li><tt>PROGRAMS</tt> -- Список программ, которые надо собрать. Для каждой программы <tt>&lt;name&gt;</tt> должен
+существовать файл с исходным кодом <tt>&lt;name&gt;.cpp</tt>
+
+<li><tt>SHARED_LIB</tt> -- Разделяемые библиотеки, которые надо собрать (собираются все исходники
+<tt>MOD_SOURCES</tt> из этого модуля и всех модулей, от которых он
+зависит).
+
+<li><tt>SIMPLE_TESTS</tt> -- Программы, возвращающие 0 или 1, которые
+надо собрать и запустить. Для каждой программы <tt>&lt;name&gt;</tt> должен существовать
+файл с исходным кодом <tt>&lt;name&gt;.test.cpp</tt>.
+
+<li><tt>SCRIPT_TESTS</tt> -- Программы с тестовыми скриптами. Для каждой программы <tt>&lt;name&gt;</tt> должен
+существовать файл с исходным кодом <tt>&lt;name&gt;.test.cpp</tt> и скрипт
+<tt>&lt;name&gt;.test.script</tt>. Программа будет собрана, после сборки будет запущен
+тестовый скрипт.
+
+<li><tt>OTHER_TESTS</tt> -- Программы или скрипты, которые должны быть запущены после окончания сборки.
+
+<li><tt>PKG_CONFIG   -- Внешние библиотеки используемые в этом модуле (подключаются с помощью <a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a>).
+Локальные файлы для pkg-config можно положить в директорию <tt>$(MODDIR)/pc/</tt>.
+</ul>
+
+
+
+<h3>Модули</h3>
+
+<table border=0 cellpadding=1>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/cache">cache</a></b></td><td> Кэш объектов с автоматическим удалением (в зависимости от количества
+объектов или их суммарного размера).</td></tr>
+
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/cairo">cairo</a></b></td><td> Обертка для libcairo</td></tr>
+
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/conv">conv</a></b></td><td> Преобразования геометрических объектов.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/err">err</a></b></td><td> Простой класс для генерации исключений с текстовыми сообщениями.
+Используется во многих моих проектах.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/fig">fig</a></b></td><td> Чтение и запись FIG-файлов. Fig - это древний векторный графический
+формат, который я использую, в частности, для рисования карт.</td></tr>
+
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/fig_opt">fig_opt</a></b></td><td> Расширение формата FIG для хранения данных в комментариях объектов.</td></tr>
+
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/filename">filename</a></b></td><td> Функции для работы с именами файлов.</td></tr>
+
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_data">geo_data</a></b></td><td> Классы для работы с геоданными. Чтение и запись (форматы GPX,
+KML, KMZ, OziExplorer). Расстояния между точками на поверхности Земли
+(формула Гаверсинуса). Геодезические преобразования (обертка для
+библиотеки <a href="https://proj4.org/">libproj</a>).</td></tr>
+<br><a href="https://github.com/slazav/mapsoft2/blob/master/modules/geo_data/Formats.md">https://github.com/slazav/mapsoft2/blob/master/modules/geo_data/Formats.md</a>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_mkref">geo_mkref</a></b></td><td> Изготовление
+привязок карт.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_nom">geo_nom</a></b></td><td> Функции для работы с именами советских номенклатурных карт.</td></tr>
+
+<tr><td valign=top><img src="img/unusable.png" alt="unusable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_render">geo_render</a></b></td><td> Рисование геоданных, сеток, векторных карт на растровых картинках.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_tiles">geo_tiles</a></b></td><td> Функции для работы с тайлами TMS/Google.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geohash">geohash</a></b></td><td> Библиотека <a href="https://en.wikipedia.org/wiki/Geohash">Geohash</a> и простое хранилище данных с гео-индексацией.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geom">geom</a></b></td><td> Геометрические объекты: классы Point, Line, Multiline и Rect. Множество
+полузных функция для работы с ними. Класс LineWalker.</td></tr>
+
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geom_tools">geom_tools</a></b></td><td> Дополнительные функции для работы с геометрическими объектами.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/getopt">getopt</a></b></td><td> Обертка getopt для изготовления сложных интерфейсов командной строки.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/iconv">iconv</a></b></td><td> Преобразование кодировок, обертка <a href="https://www.gnu.org/software/libiconv/">libiconv</a>.</td></tr>
+
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/image">image</a></b></td><td> Двухмерный массив данных для хранения растровых изображений. Чтение и
+запись растровых изображений (PNG, TIFF, JPEG, GIF), квантизация цветов и
+другие операции.</td></tr>
+<br><a href="https://github.com/slazav/mapsoft2/blob/master/modules/image/Readme.md">https://github.com/slazav/mapsoft2/blob/master/modules/image/Readme.md</a>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/iofilter">iofilter</a></b></td><td> Перенаправление <tt>std::stream</tt> через внешнюю программу.</td></tr>
+
+<tr><td valign=top><img src="img/unusable.png" alt="unusable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mapdb">mapdb</a></b></td><td> Локальное хранилище векторных карт с быстрым доступом и гео-индексацией на основе BerkleyDB.</td></tr>
+
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mapsoft_data">mapsoft_data</a></b></td><td> Глобальная структура данных mapsoft и функции чтения/записи. Должна
+работать со всеми поддерживаемыми форматами.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mp">mp</a></b></td><td> Чтение и запись MP-файлов. MP -- это формат векторных карт, используемый для
+компиляции карт для Garmin GPS.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/opt">opt</a></b></td><td> Контейнер <tt>map&lt;string,string&gt;<tt> с функциями для записи и
+чтения различных типов данных. Широко используется в <tt>mapsoft</tt>.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/rainbow">rainbow</a></b></td><td> Преобразовать вещественное число в цвет в соответствии с некоторым
+заданным градиентом. Полезная библиотека, которую я использую в разных
+местах.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/read_words">read_words</a></b></td><td> Прочитать строчку из <tt>std::istream</tt> и разбить ее на слова,
+разделенные пробелами. Понимает комментарии, кавычки, escape-символ \.
+Похоже на чтение строки параметров в shell.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/shape">shape</a></b></td><td> Чтение и запись SHAPE-файлов, обертка для <a href="http://shapelib.maptools.org/">shapelib</a>.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/time_fmt">time_fmt</a></b></td><td> Функции для чтения и записи времени в различных форматах.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/tmpdir">tmpdir</a></b></td><td> Класс для работы со временной директорией и zip-файлами. Можно создать
+временную директорию, положить туда файлы, и зазиповать их, можно
+раззиповать файлы во временную динекторию. Директория будет удалена при
+уничтожении объекта. Использует библиотеку <a href="https://libzip.org/">libzip</a>.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/viewer">viewer</a></b></td><td> Вьюер (GTK) для объектов, которые умеют рисовать растровые изображения.
+"Резиновые линии" и "действия" для изготовления интерактивных интерфейсов
+(например, рисование и редактирование геометрических объектов). Примеры
+использования находятся в директории <tt>examples/viewer/</tt>.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/vmap">vmap</a></b></td><td> Чтение и запись VMAP, старого формата mapsoft для векторных карт.</td></tr>
+
+</table>
+
+</ul></body>
+</html>

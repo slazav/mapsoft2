@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>mapsoft2 documentation</title>
+  <meta name="keywords" content="mapsof2">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+</head>
+<body bgcolor="#FFFFFF">
+
+
+
+<div align=right>
+Language:
+<a href="mapdb.ru.htm">RU</a>
+<b>EN</b>
+</div>
+
+<a href="index.htm">Main page...</a>
+
+
+<h2>
+  MapDB file format
+</h2>
+
+
+<p>MapDB is a mapsoft2 native format for vector maps. Internaly it
+is a folder with a few BerkleyDB databases:
+
+<ul>
+<li> mapinfo.db -- map information
+<li> objects.db -- object data
+<li> geohash.db -- spatial index data
+<li> labels.db  -- label data
+</ul>
+
+<p>In many cases a RIFF-style packing of data is used: 4-byte tag
+("crds", "name", etc.), 4-byte data size (in bytes), data.
+
+<h2>mapinfo.db</h2>
+
+<p>Database with 4-byte integer key for keeping general
+map information. Following keys are supported:
+
+<ul>
+
+<li>0. MapDB version, integer in a string form. Currently "0".
+
+<li>1. Map name (string).
+
+<li>2. Map border. Multi-segment line (dMultiLine object) packed
+in the RIFF-style form with "crds" tag for each segment. Each segment
+contains pairs of coordinates (lon1,lat1, lon2,lat2,...).
+Coordinates are in WGS84 degrees multiplied by 1e7 and rounded to the
+nearest signed 4-byte integer. The map border can be set by user and have any
+value or be empty.
+
+</ul>
+
+<h2>objects.db</h2>
+
+<p>Object information. Key - object ID, value - a structure
+with following fields:
+
+<ul>
+
+<li>flags: A 32-bit integer. First 22 bits are not used; bits 23-24
+are used for to keep object directon (0-not specified, 1-forward,
+2-backward); bits 25-32 (last byte) are reserved for object classification (supported values:
+0-point, 1-line, 2-polygon).
+
+<li>type: A 32-bit integer, object type.
+</ul>
+
+<p> Other fields are optional, they are packed in the RIFF-like
+form in arbitrary order
+
+<ul>
+<li>Object angle (used for points) represented as 4-byte
+integer value in 1/1000 degrees units. Packed with "angl" tag.
+
+<li>Object direction (used for lines) represented as
+4-byte integer: 1-forward, 2-backward, 0 or missing - unspecified. Packed
+with "dir " tag.
+
+<li>Object name (to be shown on the map),
+string packed with "name" tag.
+
+<li>Object comment, string packed with "comm" tag.
+
+<li>Object tags, arbitrary number of strings packed with
+"tags" tag.
+
+<li>Coordinates. A multisegment line encoded in the same way as the
+border field in mapinfo.db with "crds" tags. When coordinates are changing
+the geohash database should be also updated.
+
+</ul>
+
+<h2>geohash.db</h2>
+
+<p>Database with <a href="https://en.wikipedia.org/wiki/Geohash">Geohash</a> keys and object id values used for
+spatial indexing. Data should be syncronized with coords.db database.
+
+
+<h2>labels.db</h2>
+
+<p>Database for object labels. Key - object ID (duplication is allowed),
+value - a label structure with following fields:
+
+<ul>
+<li>...
+</ul>
+
+
+
+</body>
+</html>
