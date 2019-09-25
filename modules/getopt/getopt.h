@@ -42,6 +42,7 @@ typedef std::vector<ext_option> ext_option_list;
 #define MS2OPT_DRAWWPT 1<<8  // drawing waypoints (see modules/geo_render/gobj_wpt)
 #define MS2OPT_DRAWMAP 1<<9  // drawing maps (see modules/geo_render/gobj_map)
 #define MS2OPT_DRAWGRD 1<<10 // drawing map grids (see modules/geo_render/draw_grid)
+#define MS2OPT_IMAGE   1<<11 // image options (see modules/image/image_io)
 
 // add MS2OPT_STD options
 void ms2opt_add_std(ext_option_list & opts);

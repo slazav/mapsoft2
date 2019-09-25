@@ -6,6 +6,10 @@
 #include "geom/point.h"
 #include "image.h"
 
+// add MS2OPT_IMAGE options
+#include "getopt/getopt.h"
+void ms2opt_add_image(ext_option_list & opts);
+
 // get image size
 iPoint image_size(const std::string & file, const Opt & opt = Opt());
 

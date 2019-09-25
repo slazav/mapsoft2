@@ -7,6 +7,10 @@
 #include "geom/line.h"
 #include "opt/opt.h"
 
+// add MS2OPT_IMAGE options
+#include "getopt/getopt.h"
+void ms2opt_add_image_cmap(ext_option_list & opts);
+
 // Create a colormap.
 // Based on pnmcolormap.c from netpbm package.
 std::vector<uint32_t> image_colormap(const Image & img, const Opt & opt = Opt());

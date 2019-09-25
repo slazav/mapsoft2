@@ -37,7 +37,10 @@ void usage(bool pod=false, ostream & S = cout){
   print_options(options, MS2OPT_DRAWMAP, S, pod);
 //  S << head << "Options for drawing grid:\n";
 //  print_options(options, MS2OPT_DRAWGRD, S, pod);
+  S << head << "Options for saving images:\n";
+  print_options(options, MS2OPT_IMAGE, S, pod);
   S << "\n";
+
   throw Err();
 }
 

@@ -18,6 +18,7 @@ ms2opt_add_geoimg(ext_option_list & opts){
   ms2opt_add_drawtrk(opts);
   ms2opt_add_drawmap(opts);
 //  ms2opt_add_drawgrd(opts);
+  ms2opt_add_image(opts);
   ms2opt_add_ozimap_o(opts);
 
   ext_option_list add = {
