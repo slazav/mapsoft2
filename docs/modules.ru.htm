@@ -37,12 +37,13 @@
 <h3>Сборочная система</h3>
 
 <p>
+
 Сборочая система сделана на основе GNU make. Модули расположены в
 директории <tt>modules</tt>. Программы, библиотеки и модули, которые  не
 используются другими модулями, могут быть расположены в любом месте (см.,
-например, директории <tt>examples</tt> и <tt>programs</tt>). Каждый
-модуль содержит <tt>Makefile</tt> где описаны его компоненты и включен
-файл <tt>Makefile.inc</tt> из директории <tt>modules</tt>. Для построения
+например, директорию <tt>programs</tt>). Каждый модуль содержит
+<tt>Makefile</tt> где описаны его компоненты и включен файл
+<tt>Makefile.inc</tt> из директории <tt>modules</tt>. Для построения
 дерева зависимостей используется отдельный скрипт
 <tt>modules/get_deps</tt>. Для правильного поиска зависимостей
 подключение заголовочного файла <tt>file.h</tt> из модуля <tt>name</tt>
@@ -50,8 +51,7 @@
 заголовочных файлов - в виде <tt>#include "file.h"</tt>.
 
 
-<p>
-В <tt>Makefile</tt> модуля могут быть определены следующие переменные:
+<p>В <tt>Makefile</tt> модуля могут быть определены следующие переменные:
 
 <ul>
 
@@ -92,9 +92,9 @@
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/cache">cache</a></b></td><td> Кэш объектов с автоматическим удалением (в зависимости от количества
 объектов или их суммарного размера).</td></tr>
 
-<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/cairo">cairo</a></b></td><td> Обертка для libcairo</td></tr>
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/cairo">cairo</a></b></td><td> Обертка для <a href="https://www.cairographics.org/.</td></tr>
 
-<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/conv">conv</a></b></td><td> Преобразования геометрических объектов.</td></tr>
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/conv">conv</a></b></td><td> Преобразования координат геометрических объектов.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/err">err</a></b></td><td> Простой класс для генерации исключений с текстовыми сообщениями.
 Используется во многих моих проектах.</td></tr>
@@ -104,10 +104,10 @@
 
 <tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/fig_opt">fig_opt</a></b></td><td> Расширение формата FIG для хранения данных в комментариях объектов.</td></tr>
 
-<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/filename">filename</a></b></td><td> Функции для работы с именами файлов.</td></tr>
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/filename">filename</a></b></td><td> Функции для работы с именами файлов.</td></tr>
 
-<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_data">geo_data</a></b></td><td> Классы для работы с геоданными. Чтение и запись (форматы GPX,
-KML, KMZ, OziExplorer). Расстояния между точками на поверхности Земли
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_data">geo_data</a></b></td><td> Классы для работы с геоданными. Чтение и запись (форматы GPX,
+KML, KMZ, GeoJson, OziExplorer). Расстояния между точками на поверхности Земли
 (формула Гаверсинуса). Геодезические преобразования (обертка для
 библиотеки <a href="https://proj4.org/">libproj</a>).</td></tr>
 <br><a href="https://github.com/slazav/mapsoft2/blob/master/modules/geo_data/Formats.md">https://github.com/slazav/mapsoft2/blob/master/modules/geo_data/Formats.md</a>
@@ -117,7 +117,7 @@ KML, KMZ, OziExplorer). Расстояния между точками на по
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_nom">geo_nom</a></b></td><td> Функции для работы с именами советских номенклатурных карт.</td></tr>
 
-<tr><td valign=top><img src="img/unusable.png" alt="unusable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_render">geo_render</a></b></td><td> Рисование геоданных, сеток, векторных карт на растровых картинках.</td></tr>
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_render">geo_render</a></b></td><td> Рисование геоданных, сеток, векторных карт на растровых картинках.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_tiles">geo_tiles</a></b></td><td> Функции для работы с тайлами TMS/Google.</td></tr>
 
@@ -143,6 +143,8 @@ KML, KMZ, OziExplorer). Расстояния между точками на по
 
 <tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mapsoft_data">mapsoft_data</a></b></td><td> Глобальная структура данных mapsoft и функции чтения/записи. Должна
 работать со всеми поддерживаемыми форматами.</td></tr>
+
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mapview">mapview</a></b></td><td> Окно вьюера геоданных и карт. Для использования в программе ms2view.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mp">mp</a></b></td><td> Чтение и запись MP-файлов. MP -- это формат векторных карт, используемый для
 компиляции карт для Garmin GPS.</td></tr>
@@ -176,5 +178,6 @@ KML, KMZ, OziExplorer). Расстояния между точками на по
 
 </table>
 
-</ul></body>
+</ul>
+</body>
 </html>

@@ -14,6 +14,7 @@ $(MAN1) $(MAN5) $(HTML): foot.m4
 
 %.htm: %.m4
 	m4 $< | pod2html --title $* --css manpages.css > $@
+	rm -f pod2htmd.tmp
 
 clean:
 	rm -f *.{1,5} *.htm

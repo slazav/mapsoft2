@@ -81,13 +81,13 @@ be easily transferred to another project.',
 
 <ul>
 
-define(_PROG_,`<b><tt>$1</tt></b>')
+define(_PROG_,`<b><a href="man/$1.htm"><tt>$1</tt></a></b>')
 
-<li>UNSTABLE _PROG_(ms2cnv) -- ENRU(`Analog of old mapsoft_convert
-program for working with geodata and raster maps (raster maps are not
-supported yet).', `Аналог старой программы mapsoft_convert для работы с
-геоданными и растровыми картами (растровые карты пока не
-поддерживаются).')
+<li>STABLE _PROG_(ms2conv) -- ENRU(`Converter for geodata and raster maps
+.', `Преобразования геоданных и растровых карт.')
+
+<li>STABLE _PROG_(ms2view) -- ENRU(`Viewer for geodata and raster maps.',
+`Вьюер для геоданных и растровых карт.')
 
 <li>STABLE _PROG_(ms2nom) -- ENRU(`Program for soviet nomenclature map
 calculations. Coordinates of a map sheet, adjacent sheets, sheets
@@ -105,7 +105,7 @@ text tables. Time, distance, velocity calculations, adjustable format.',
 `Программа для вывода треков в виде текстовой таблицы. Вычисления времен,
 расстояний, скоростей, настраиваемый формат.')
 
-<li>UNSTABLE _PROG_(ms2ref) -- ENRU(`Program for making map references.
+<li>STABLE _PROG_(ms2ref) -- ENRU(`Program for making map references.
 Only OziExplorer map output is supported now.',
 `Программа для изготовления привязок карт. Пока поддерживается только
 вывод в формат OziExplorer.')

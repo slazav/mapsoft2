@@ -35,11 +35,10 @@ different projects.
 
 <h3>Building system</h3>
 
-<p>
-The building system is based on GNU make. All modules are located in
-<tt>modules</tt> directory. Programs, libraries and modules which are not
-intended to be used by other modules can be located anywhere (see
-<tt>examples</tt> and <tt>programs</tt> directories). Each module has a
+<p> The building system is based on GNU make. All modules are
+located in <tt>modules</tt> directory. Programs, libraries and modules
+which are not intended to be used by other modules can be located
+anywhere (see <tt>programs</tt> directory). Each module has a
 <tt>Makefile</tt> there a few variables are set to declare module
 components and <tt>Makefile.inc</tt> from the <tt>modules</tt> directory
 is included. For building dependency tree a separate script is used:
@@ -49,8 +48,7 @@ written as <tt>#include "name/file.h"</tt>. Including local header file
 should be written as <tt>#include "file.h"</tt>.
 
 
-<p>
-In the module <tt>Makefile</tt> following variables can be defined:
+<p>In <tt>Makefile</tt> of a module following variables can be defined:
 
 <ul>
 
@@ -61,7 +59,7 @@ In the module <tt>Makefile</tt> following variables can be defined:
 <li><tt>MOD_SOURCES</tt> -- List of module sources (<tt>*.cpp</tt>).
 
 <li><tt>PROGRAMS</tt> -- Programs to be build. For each program <tt>&lt;name&gt;</tt> a
-source file <tt>&lt;name&gt;.cpp</tt> should exist
+source file <tt>&lt;name&gt;.cpp</tt> should exist.
 
 <li><tt>SHARED_LIB</tt> -- Shared library to build (all MOD_SOURCES of this module and
 all its dependencies are linked together).
@@ -88,9 +86,9 @@ files can be put in <tt>$(MODDIR)/pc/</tt>.
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/cache">cache</a></b></td><td> Cache of arbitrary objects with automatic cleaning (based on object
 number or their size).</td></tr>
 
-<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/cairo">cairo</a></b></td><td> Wrapper for libcairo.</td></tr>
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/cairo">cairo</a></b></td><td> Wrapper for <a href="https://www.cairographics.org/.</td></tr>
 
-<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/conv">conv</a></b></td><td> Conversions for geometric objects.</td></tr>
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/conv">conv</a></b></td><td> Coordinate conversions for geometric objects.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/err">err</a></b></td><td> Simple class for throwing errors with human-readable descriptions.
 Used in many of my projects.</td></tr>
@@ -100,10 +98,10 @@ which I also use for drawing maps.</td></tr>
 
 <tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/fig_opt">fig_opt</a></b></td><td> Extension for FIG format for keeping data in object comments.</td></tr>
 
-<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/filename">filename</a></b></td><td> Functions for working with filenames.</td></tr>
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/filename">filename</a></b></td><td> Functions for working with filenames.</td></tr>
 
-<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_data">geo_data</a></b></td><td> Classes for geodata handling. Functions for reading and writing geodata
-(GPX, KML, KMZ, OziExplorer formats). Great-circle distance (Haversine
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_data">geo_data</a></b></td><td> Classes for geodata handling. Functions for reading and writing geodata
+(GPX, KML, KMZ, GeoJson, OziExplorer formats). Great-circle distance (Haversine
 formula). Geo-conversions (<a href="https://proj4.org/">libproj</a> wrapper). </td></tr>
 <br><a href="https://github.com/slazav/mapsoft2/blob/master/modules/geo_data/Formats.md">https://github.com/slazav/mapsoft2/blob/master/modules/geo_data/Formats.md</a>
 
@@ -111,7 +109,7 @@ formula). Geo-conversions (<a href="https://proj4.org/">libproj</a> wrapper). </
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_nom">geo_nom</a></b></td><td> Functions for working with Soviet nomenclature map names.</td></tr>
 
-<tr><td valign=top><img src="img/unusable.png" alt="unusable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_render">geo_render</a></b></td><td> Rendering geodata, map grids, vector maps...</td></tr>
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_render">geo_render</a></b></td><td> Rendering geodata, map grids, vector maps...</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_tiles">geo_tiles</a></b></td><td> Functions for working with TMS/Google tiles.</td></tr>
 
@@ -136,6 +134,8 @@ working with them. LineWalker class.</td></tr>
 
 <tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mapsoft_data">mapsoft_data</a></b></td><td> Mapsoft global data structure and read/write function. Should work with
 all supported formats.</td></tr>
+
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mapview">mapview</a></b></td><td> Viewer for maps and geodata. For use in ms2view program.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mp">mp</a></b></td><td> Reading and writing of MP files. MP is a vector map format used for
 compiling Garmin GPS maps.</td></tr>
@@ -163,11 +163,12 @@ destructor. Uses <a href="https://libzip.org/">libzip</a> library.</td></tr>
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/viewer">viewer</a></b></td><td> GTK-based viewer for objects which can draw on a raster
 image. "Rubber lines" and "actions" for making interactive interfaces
 (for example, drawing and editing geometric forms). Examples can be found
-in <tt>examples/viewer/</tt> folder.</td></tr>
+in <tt>viewer/examples</tt> folder.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/vmap">vmap</a></b></td><td> Reading and writing of VMAP, old mapsoft format for vector maps.</td></tr>
 
 </table>
 
-</ul></body>
+</ul>
+</body>
 </html>
