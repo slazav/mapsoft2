@@ -13,4 +13,12 @@ include(`opt_general.m4')
 
 include(`opt_mkref.m4')
 
+=over 1
+
+=item B<--image>
+
+Set image file name in the map.
+
+=back
+
 include(`foot.m4')
