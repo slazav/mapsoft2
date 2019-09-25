@@ -24,14 +24,13 @@ private:
   // Original data. It may be edited through the GObj interface.
   GeoMapList & maps;
 
-  Opt opt;
-
   struct MapData{
     ConvMulti cnv;  // conversion from viewer coordinates to the map coordinates
     bool   simp;    // true if conversion was simplified (then manual rescaling is needed)
     double scale;   // map scale (map pixels / viewer pixels)
     double load_sc; // scale for image loading
     dMultiLine brd; // map border (in viewer coordinates)
+    dLine refs;     // map refpoints (in viewer coordinates)
     dRect bbox;     // map bbox (in viewer coordinates)
     dRect src_bbox; // map original bbox (it may take some time to get it)
     const GeoMap * src;   // pointer to the map
@@ -40,7 +39,11 @@ private:
   Cache<iRect, Image> tiles;
   std::vector<MapData> data;
 
-  bool smooth;
+  bool smooth;   // smooth map drawing
+  bool clip_brd; // clip map to its border
+  int  draw_brd; // draw map border (color)
+  int  draw_refs;// draw map reference points (color)
+  int  fade;     // map fade level 0..100
 
 public:
   // constructor
@@ -53,6 +56,9 @@ public:
   /************************************************/
   // These functions update drawing templates.
   // They have proper multi-thread locking.
+
+  // update information from options
+  void on_set_opt() override;
 
   // update point coordinates
   void on_set_cnv() override;

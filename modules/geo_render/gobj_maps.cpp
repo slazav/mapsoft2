@@ -11,27 +11,22 @@ using namespace std;
 
 void
 ms2opt_add_drawmap(ext_option_list & opts){
-/*
   int m = MS2OPT_DRAWMAP;
   ext_option_list add = {
-  {"wpt_text_font",   1,0,m, "waypoint font (default: \"serif\")"},
-  {"wpt_text_size",   1,0,m, "waypoint font size, pixels (default: 10)"},
-  {"wpt_text_pad",    1,0,m, "waypoint text padding, pixels (default: 2)"},
-  {"wpt_draw_size",   1,0,m, "waypoint dot radius, pixels (default: 3)"},
-  {"wpt_line_width",  1,0,m, "waypoint line width), (default: 1)"},
-  {"wpt_color",       1,0,m, "waypoint color (default: 0xFF000000)"},
-  {"wpt_bgcolor",     1,0,m, "waypoint background color (default: 0xFFFFFFFF)"},
-  {"wpt_adj",         1,0,m, "adjust waypoint flag positions to prevent collisions (default: 1)"},
-  {"wpt_adj_brd",     1,0,m, "adjust waypoint flag positions to prevent boundary collisions (default: 0)"},
+  {"map_smooth",      1,0,m, "Smooth map drawing (interpolation for small scales, averaging for large ones), default 0"},
+  {"map_clip_brd",    1,0,m, "Clip map to its border (default 1)"},
+  {"map_draw_refs",   1,0,m, "Draw map reference points (ARGB color, default 0)"},
+  {"map_draw_brd",    1,0,m, "Draw map border (ARGB color, default 0)"},
+  {"map_fade",        1,0,m, "Fade the map (0..100, default is 0, no fading)"},
   };
   opts.insert(opts.end(), add.begin(), add.end());
-*/
 }
 
 /**********************************************************/
 
 GObjMaps::GObjMaps(GeoMapList & maps):
-    maps(maps), img_cache(10), tiles(128), smooth(true) {
+    maps(maps), img_cache(10), tiles(128),
+    smooth(false), clip_brd(true), draw_refs(0), draw_brd(0), fade(0) {
 
   for (auto & m:maps){
     MapData d;
@@ -87,20 +82,54 @@ GObjMaps::draw(const CairoWrapper & cr, const dRect & draw_range) {
     }
 
     // border
-    cr->reset_clip();
-    if (!d.brd.is_empty()){
-      cr->mkpath(d.brd);
-      cr->clip();
+    if (clip_brd){
+      cr->reset_clip();
+      if (!d.brd.is_empty()){
+        cr->mkpath(d.brd);
+        cr->clip();
+      }
     }
 
     cr->set_source(image_to_surface(tiles.get(key)),
       range_dst.x, range_dst.y);
     cr->paint();
+
+    if (fade){
+      cr->set_source_rgba(1.0, 1.0, 1.0, fade/100.0);
+      cr->paint();
+    }
+
+    if (draw_brd){
+      cr->reset_clip();
+      cr->set_color_a(draw_brd);
+      cr->mkpath(d.brd);
+      cr->stroke();
+    }
+
+    if (draw_refs){
+      cr->reset_clip();
+      cr->set_color_a(draw_refs);
+      for (auto const & p:d.refs)
+        cr->circle(p, 2);
+      cr->stroke();
+    }
+
   }
   return GObj::FILL_PART;
 }
 
 /**********************************************************/
+
+void
+GObjMaps::on_set_opt(){
+  smooth    = opt->get("map_smooth",   false);
+  clip_brd  = opt->get("map_clip_brd", true);
+  draw_refs = opt->get<int>("map_draw_refs", 0);
+  draw_brd  = opt->get<int>("map_draw_brd",  0);
+  fade      = opt->get("map_fade",     0);
+  if (fade<0 || fade>100) throw Err() <<
+    "GObjMap: map_fade option value should be between 0 and 100";
+}
 
 void
 GObjMaps::on_set_cnv(){
@@ -117,6 +146,12 @@ GObjMaps::on_set_cnv(){
 
     // border in viewer coordinates
     d.brd = d.cnv.bck_acc(d.src->border);
+
+    // reference points in viewer coordinates
+    d.refs = dLine();
+    for (auto const & r:d.src->ref)
+      d.refs.push_back(r.first);
+    d.cnv.bck(d.refs);
 
     // map bbox in viewer coordinates
     d.bbox = d.cnv.bck_acc(d.src_bbox);
@@ -140,6 +175,7 @@ void
 GObjMaps::on_rescale(double k){
   for (auto & d:data){
     d.brd*=k;
+    d.refs*=k;
     d.bbox*=k;
     d.scale/=k;
     if (d.simp) d.cnv.rescale_src(1.0/k);

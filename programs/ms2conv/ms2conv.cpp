@@ -33,11 +33,11 @@ void usage(bool pod=false, ostream & S = cout){
   print_options(options, MS2OPT_DRAWTRK, S, pod);
   S << head << "Options for drawing waypoints:\n";
   print_options(options, MS2OPT_DRAWWPT, S, pod);
-//  S << head << "Options for drawing maps:\n";
-//  print_options(options, MS2OPT_DRAWMAP, S, pod);
+  S << head << "Options for drawing maps:\n";
+  print_options(options, MS2OPT_DRAWMAP, S, pod);
 //  S << head << "Options for drawing grid:\n";
 //  print_options(options, MS2OPT_DRAWGRD, S, pod);
-
+  S << "\n";
   throw Err();
 }
 
