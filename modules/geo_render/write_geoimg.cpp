@@ -22,7 +22,8 @@ ms2opt_add_geoimg(ext_option_list & opts){
   ms2opt_add_ozimap_o(opts);
 
   ext_option_list add = {
-  {"map",  1,'m', MS2OPT_STD, "write map file in OziExprorer format"},
+  {"bgcolor",  1,0,   MS2OPT_IMAGE, "image background color (default 0xFFFFFFFF)"},
+  {"map",      1,'m', MS2OPT_IMAGE, "write map file in OziExprorer format"},
   };
   opts.insert(opts.end(), add.begin(), add.end());
 }
@@ -61,9 +62,14 @@ write_geoimg(const std::string & fname, GeoData & data, const Opt & opts){
   else if (fmt == "svg") cr.set_surface_svg(fname.c_str(), w,h);
   else if (fmt == "png" || fmt=="jpg" || fmt=="tif" || fmt=="gif"){
     img = Image(w,h,IMAGE_32ARGB);
+    img.fill32(0);
     cr.set_surface_img(img);
   }
   else return false;
+
+  // fill the image with bgcolor
+  cr->set_color_a(opts.get<int>("bgcolor", 0xFFFFFFFF));
+  cr->paint();
 
   // construct GObjMulti with all the objects we want to draw:
   GObjMulti obj;
