@@ -211,7 +211,7 @@ image_save_gif(const Image & im, const std::string & file, const Opt & opt){
   std::vector<uint32_t> colors = image_colormap(im, opt1);
   Image im8 = image_remap(im, colors, opt1);
 
-  if (im8.cmap.size()<2 || im8.cmap.size()>2562) throw Err() <<
+  if (im8.cmap.size()<2 || im8.cmap.size()>256) throw Err() <<
     "image_save_gif: bad size of image colormap" << im8.cmap.size();
 
   // find fully transparent color
