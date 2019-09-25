@@ -27,6 +27,7 @@ int crdx2lon0(const double X);
 // Example: 7800000 -> 800000
 double crdx2nonpref(const double X);
 
+// To be removed!
 std::string GEO_PROJ_SU(double lon);
 
 /********************************************************************/

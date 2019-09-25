@@ -46,8 +46,5 @@ crdx2nonpref(const double X){
 string
 GEO_PROJ_SU(double lon){
   int lon0 = lon2lon0(lon);
-  int pref = (lon0<0 ? 60:0) + (lon0-3)/6 + 1;
-  return "+ellps=krass +towgs84=+28,-130,-95 +proj=tmerc"
-         " +lon_0=" + type_to_str(lon0) +
-         " +x_0=" + type_to_str(pref) + "500000";
+  return "SU" + type_to_str((int)lon2lon0(lon));
 }

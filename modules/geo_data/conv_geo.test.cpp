@@ -8,6 +8,35 @@
 int
 main(){
   try{
+
+    assert(expand_proj_aliases("WGS") ==
+      "+datum=WGS84 +proj=lonlat");
+
+    assert(expand_proj_aliases("WEB") ==
+      "+proj=webmerc +datum=WGS84");
+
+    assert(expand_proj_aliases("FI") ==
+      "+proj=tmerc +lon0=27 +ellps=intl "
+      "+towgs84=-90.7,-106.1,-119.2,4.09,0.218,-1.05,1.37");
+
+    assert(expand_proj_aliases("CH") ==
+      "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 "
+      "+x_0=600000 +y_0=200000 +ellps=bessel "
+      "+towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs");
+
+    assert(expand_proj_aliases("SU-3") ==
+      "+ellps=krass +towgs84=+28,-130,-95 "
+      "+proj=tmerc +lon_0=-3 +x_0=60500000");
+
+    assert(expand_proj_aliases("SU3") ==
+      "+ellps=krass +towgs84=+28,-130,-95 "
+      "+proj=tmerc +lon_0=3 +x_0=1500000");
+
+    assert(expand_proj_aliases("SU0") ==
+      "+ellps=krass +towgs84=+28,-130,-95 "
+      "+proj=tmerc +lon_0=3 +x_0=1500000");
+
+
     std::string proj_wgs = "WGS";
     std::string proj_krass = "SU27";
 
