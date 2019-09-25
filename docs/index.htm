@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>mapsoft2 documentation</title>
+  <meta name="keywords" content="mapsof2">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+</head>
+<body bgcolor="#FFFFFF">
+
+
+
+<div align=right>
+Language:
+<a href="index.ru.htm">RU</a>
+<b>EN</b>
+</div>
+
+
+<h2>Mapsoft2</h2>
+
+
+<p>
+
+A collection of tools and libraries for working with maps and geo-data.
+
+<!--#################################################################-->
+<h2>About</h2>
+
+
+We started writing programs for handling GPS-data and maps since
+first GPS-receivers appeared in our hiking group at 1997-1998. First it
+was tools for downloading tracks, putting them on a map, editing, and
+uploading back to GPS. When we started creating our own maps: hiking maps
+of Moscow region and some mountain regions:
+
+<ul>
+
+<li><a href="https://nakarte.me/#m=7/55.61249/37.65564&l=O/Z">Maps of Moscow region at nakarte.me</a>
+<li><a href="http://slazav.mccme.ru/maps/podm_txt.htm">About Moscow region maps (RU)</a>
+<li><a href="https://nakarte.me/#m=2/20.13847/57.48047&l=O/Q">Mountain maps at nakarte.me</a>
+</ul>
+
+<p>
+
+All programs for working with geodata, raster and vector maps, SRTM-data,
+etc, have been collected to <a href="https://github.com/ushakov/mapsoft">mapsoft</a> project.
+
+<p><b>Mapsoft-2</b> is an attempt to rewrite these programs fixing some
+fundamental problems and improving the code.
+<h2>Source code</h2>
+
+<p><a href="https://github.com/slazav/mapsoft2">https://github.com/slazav/mapsoft2</a>
+
+<!--#################################################################-->
+<h2>Source code library</h2>
+
+ Mapsoft consists of many different pieces of code: simple and sophisticated,
+stable and experimental, good and bad. Some of this pieces are also used
+in other projects, not related to maps. I found very useful to make a
+"source code library" which consists of separate "modules" (something
+like <a href="https://www.gnu.org/software/gnulib/">gnulib</a>). Each module has its own documentation, tests, and it can
+be easily transferred to another project.
+<br><a href="modules.htm"><b>Read more...</b></a>
+
+
+<!--#################################################################-->
+<h2>Programs</h2>
+
+<ul>
+
+
+
+<li><img src="img/unstable.png" alt="unstable">&nbsp; <b><tt>ms2cnv</tt></b> -- Analog of old mapsoft_convert
+program for working with geodata and raster maps (raster maps are not
+supported yet).
+
+<li><img src="img/stable.png" alt="stable">&nbsp; <b><tt>ms2nom</tt></b> -- Program for soviet nomenclature map
+calculations. Coordinates of a map sheet, adjacent sheets, sheets
+covering a given region, etc.
+
+<li><img src="img/stable.png" alt="stable">&nbsp; <b><tt>ms2tiles</tt></b> -- Program for TMS/Google tile
+calculations. Coordinates of a tile, tiles covering a given region,
+etc.
+
+<li><img src="img/stable.png" alt="stable">&nbsp; <b><tt>ms2xyz</tt></b> -- Program for writing tracks as
+text tables. Time, distance, velocity calculations, adjustable format.
+
+<li><img src="img/unstable.png" alt="unstable">&nbsp; <b><tt>ms2ref</tt></b> -- Program for making map references.
+Only OziExplorer map output is supported now.
+
+<li><img src="img/unusable.png" alt="unusable">&nbsp; <b><tt>ms2vmap</tt></b> -- Program for working with vector
+maps.
+
+</ul>
+
+<p>Here <img src="img/stable.png" alt="stable">&nbsp; - more or less stable programs, <img src="img/unstable.png" alt="unstable">&nbsp; - unstable
+programs, interface will be changed, <img src="img/unusable.png" alt="unusable">&nbsp; - unusable programs.
+
+<!--#################################################################-->
+<h2>Supported file formats</h2>
+
+<ul>
+<li>Geodata: OziExplorer, GPX, KML, GarminUtils, GeoJSON.
+<li>Raster images: JPEG, PNG, TIFF, GIF.
+<li>FIG     - vector graphics format
+<li>MP      - "Polish" format for vector maps
+<li>VMAP    - mapsoft1 format for vector maps
+<li>SHP+DBF - format for vector map data
+<li><a href="mapdb.htm">MapDB</a> --
+Mapsoft2 native format for vector maps.</a>
+</ul>
+
+<!--#################################################################-->
+<div align=right>Vladislav Zavjalov, slazav at altlinux dot org</div>
+</body>
+</html>
