@@ -9,7 +9,7 @@ int
 main(){
   try{
     std::string proj_wgs = "WGS";
-    std::string proj_krass = "SU(27)";
+    std::string proj_krass = "SU27";
 
     ConvGeo cnv1(proj_wgs,proj_wgs, false);   // wgs -> wgs, 3D
     ConvGeo cnv2(proj_krass);                 // krass -> wgs, 2D
@@ -115,7 +115,7 @@ main(){
 
     // adding coordinate prefix does not change result
     {
-      std::string proj1 = "SU(99)";
+      std::string proj1 = "SU99";
       std::string proj2 = "+ellps=krass +towgs84=+28,-130,-95 +proj=tmerc"
                           " +lon_0=99 +x_0=500000";
 ;
@@ -189,7 +189,7 @@ main(){
     // bad coordinates (with datum conversion)
     {
       std::string proj_wgs = "WGS";
-      std::string proj_krass = "SU(27)";
+      std::string proj_krass = "SU27";
 
       ConvGeo cnv1(proj_wgs, proj_krass);
       dPoint p1(25.651054, 160.976941);
@@ -212,7 +212,7 @@ main(){
        m.border = dMultiLine("[[[159.1,386.8],[1264.1,386.4],[2369.9,385.3],"
                         "[2371.2,3007.6],[1260.7,3008.9],[150.9,3009.3],[159.1,386.8]]]");
        m.proj = "+datum=WGS84 +proj=tmerc +lon_0=39 +x_0=500000";
-       ConvMap cnv1(m, "SU(39)");
+       ConvMap cnv1(m, "SU39");
        dPoint p1(1333, 867, 1100);
        dPoint p2(7321000, 6209000, 1100);
        cnv1.frw(p1);

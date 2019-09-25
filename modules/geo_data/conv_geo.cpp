@@ -23,10 +23,9 @@ std::string expand_proj_aliases(const std::string & pars){
       " +ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0"\
       " +units=m +no_defs";
 
-  if (pars.length()>5 &&
-      pars.substr(0,3) == "SU(" &&
-      pars.substr(pars.length()-1,1) == ")"){
-    int lon = str_to_type<int>(pars.substr(3,pars.length()-4));
+  if (pars.length()>2 &&
+      pars.substr(0,2) == "SU"){
+    int lon = str_to_type<int>(pars.substr(2,pars.length()-2));
     int lon0 = lon2lon0(lon);
     int pref = (lon0<0 ? 60:0) + (lon0-3)/6 + 1;
     return "+ellps=krass +towgs84=+28,-130,-95 +proj=tmerc"

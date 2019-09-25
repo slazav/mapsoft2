@@ -22,7 +22,7 @@ A few aliases are supported:
  WEB -- web mercator
  FI  -- transverse mercator projection for Finnish maps
  CH  -- transverse mercator projection for Swiss maps
- SU(N) -- transverse mercator projection for Soviet maps
+ SU<N> -- transverse mercator projection for Soviet maps
           (N is central meridian: 3, 9, 15, etc.)
 
 Additional parameter 2d switches altitude conversions
@@ -30,7 +30,7 @@ Additional parameter 2d switches altitude conversions
 
 */
 
-// expand proj aliases (such as "WGS", "WEB", "FI", "SU(39)")
+// expand proj aliases (such as "WGS", "WEB", "FI", "SU39")
 std::string expand_proj_aliases(const std::string & pars);
 
 
