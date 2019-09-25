@@ -1,13 +1,15 @@
 SRC1 := ms2conv ms2view ms2nom ms2tiles ms2xyz ms2mkref
 SRC5 := mapsoft2
 
+INC  := foot.m4 opt_general.m4 opt_mkref.m4 opt_render.m4 opt_image.m4 opt_geodata.m4
+
 MAN1 := $(patsubst %, %.1,   $(SRC1))
 MAN5 := $(patsubst %, %.5,   $(SRC5))
 HTML := $(patsubst %, %.htm, $(SRC1) $(SRC5))
 
 all: $(MAN1) $(MAN5) $(HTML)
 
-$(MAN1) $(MAN5) $(HTML): foot.m4 opt_general.m4 opt_mkref.m4
+$(MAN1) $(MAN5) $(HTML): $(INC)
 
 %.1 %.5: %.m4
 	m4 $< | pod2man -n $* -c mapsoft2 -r mapsoft2 > $@

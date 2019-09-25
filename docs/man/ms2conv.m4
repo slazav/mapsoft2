@@ -22,8 +22,7 @@ output file
 
 =head1 READING AND WRITING GEODATA
 
-See B<GEODATA FORMATS> section in B<mapsoft2(5)> for supported formats
-and related options.
+include(`opt_geodata.m4')
 
 =head1 RENDERING IMAGES
 
@@ -50,12 +49,9 @@ for options controlling OziExprorer map file saving.
 
 =back
 
-=head2 Settung up map reference for images
+=head2 Setting up map reference for images
 
 include(`opt_mkref.m4')
-
-
-=head1 DRAWING OPTIONS FOR RASTER IMAGES
 
 include(`opt_render.m4')
 

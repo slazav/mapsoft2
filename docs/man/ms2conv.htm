@@ -20,11 +20,7 @@
   <li><a href="#RENDERING-IMAGES">RENDERING IMAGES</a>
     <ul>
       <li><a href="#Options-for-saving-images">Options for saving images</a></li>
-      <li><a href="#Settung-up-map-reference-for-images">Settung up map reference for images</a></li>
-    </ul>
-  </li>
-  <li><a href="#DRAWING-OPTIONS-FOR-RASTER-IMAGES">DRAWING OPTIONS FOR RASTER IMAGES</a>
-    <ul>
+      <li><a href="#Setting-up-map-reference-for-images">Setting up map reference for images</a></li>
       <li><a href="#Options-for-drawing-tracks">Options for drawing tracks:</a></li>
       <li><a href="#Options-for-drawing-waypoints">Options for drawing waypoints:</a></li>
       <li><a href="#Options-for-drawing-maps">Options for drawing maps:</a></li>
@@ -78,7 +74,99 @@
 
 <h1 id="READING-AND-WRITING-GEODATA">READING AND WRITING GEODATA</h1>
 
-<p>See <b>GEODATA FORMATS</b> section in <b>mapsoft2(5)</b> for supported formats and related options.</p>
+<dl>
+
+<dt id="in_fmt-arg"><b>--in_fmt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip). By default format is determined by file extension.</p>
+
+</dd>
+<dt id="out_fmt-arg"><b>--out_fmt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Geodata output format (json, gu, gpx, kml, kmz, ozi, zip). By default format is determined by file extension.</p>
+
+</dd>
+<dt id="gu_enc-arg"><b>--gu_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Garmin Utils format charset (default KOI8-R).</p>
+
+</dd>
+<dt id="ozi_enc-arg"><b>--ozi_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>OziExplorer format charset (default Windows-1251).</p>
+
+</dd>
+<dt id="xml_compr-arg"><b>--xml_compr &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Compress xml output (GPX and KML formats), default 0.</p>
+
+</dd>
+<dt id="xml_indent-arg"><b>--xml_indent &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Use XML indentation (GPX and KML formats), default 1.</p>
+
+</dd>
+<dt id="xml_ind_str-arg"><b>--xml_ind_str &lt;arg&gt;</b></dt>
+<dd>
+
+<p>XML indentation string (GPX and KML formats), default &#39; &#39;.</p>
+
+</dd>
+<dt id="xml_qchar-arg"><b>--xml_qchar &lt;arg&gt;</b></dt>
+<dd>
+
+<p>XML quoting character (GPX and KML formats), default &#39;&#39;&#39;.</p>
+
+</dd>
+<dt id="gpx_write_rte-arg"><b>--gpx_write_rte &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Write waypoint lists as routes (GPX format), default 0.</p>
+
+</dd>
+<dt id="json_sort_keys-arg"><b>--json_sort_keys &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Sort json objects by keys (GeoJSON format), default 1.</p>
+
+</dd>
+<dt id="json_compact-arg"><b>--json_compact &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Write compact json (GeoJSON format), default 0.</p>
+
+</dd>
+<dt id="json_indent-arg"><b>--json_indent &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Use json indentation (GeoJSON format), default 1.</p>
+
+</dd>
+<dt id="geo_skip_zt-arg"><b>--geo_skip_zt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Skip altitude and time information when writing GeoJSON, default 0.</p>
+
+</dd>
+<dt id="ozi_map_grid-arg"><b>--ozi_map_grid &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Write map reference points in grid coordinates (OziExplorer format), default 0.</p>
+
+</dd>
+<dt id="ozi_map_wgs-arg"><b>--ozi_map_wgs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Always use wgs84 datum for map coordinates (OziExplorer format), default 0. By default map coordinates are written in map datum if it is supported.</p>
+
+</dd>
+</dl>
 
 <h1 id="RENDERING-IMAGES">RENDERING IMAGES</h1>
 
@@ -160,13 +248,13 @@
 </dd>
 </dl>
 
-<h2 id="Settung-up-map-reference-for-images">Settung up map reference for images</h2>
+<h2 id="Setting-up-map-reference-for-images">Setting up map reference for images</h2>
 
 <p>Map reference is set similarly in <code>ms2view</code>, <code>ms2conv</code>, and <code>ms2mkref</code> programs. If <b>--mkref</b> option exists then projection is created from options. If not then <code>ms2view</code> and <code>ms2conv</code> get projection of the first map to be shown or set to some default value. Following options can be used:</p>
 
 <dl>
 
-<dt id="mref-type"><b>--mref &lt;type&gt;</b></dt>
+<dt id="mkref-type"><b>--mkref &lt;type&gt;</b></dt>
 <dd>
 
 <p>Choose map type. Possible values are: <b>nom</b> -- a Soviet nomenclature map, <b>proj</b> -- a rectangular area in some coordinates, <b>google_tile</b> and <b>tms_tile</b> -- a single google/TMS tile or rectangular area with multiple tiles.</p>
@@ -263,8 +351,6 @@
 
 </dd>
 </dl>
-
-<h1 id="DRAWING-OPTIONS-FOR-RASTER-IMAGES">DRAWING OPTIONS FOR RASTER IMAGES</h1>
 
 <h2 id="Options-for-drawing-tracks">Options for drawing tracks:</h2>
 

@@ -6,7 +6,7 @@ be used:
 
 =over 2
 
-=item B<< --mref <type> >>
+=item B<< --mkref <type> >>
 
 Choose map type. Possible values are: B<nom> -- a
 Soviet nomenclature map, B<proj> -- a rectangular area in some

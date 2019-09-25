@@ -15,8 +15,22 @@ include(`opt_general.m4')
 
 =head1 READING GEODATA
 
-See B<GEODATA FORMATS> section in C<mapsoft2(5)> for supported formats
-and related options.
+=over 2
+
+=item B<<  --in_fmt <arg> >>
+
+Geodata input format (json, gu, gpx, kml, kmz, ozi, zip).
+By default format is determined by file extension.
+
+=item B<<  --gu_enc <arg> >>
+
+Garmin Utils format charset (default KOI8-R).
+
+=item B<<  --ozi_enc <arg> >>
+
+OziExplorer format charset (default Windows-1251).
+
+=back
 
 =head1 SETTING UP MAP REFERENCE FOR THE VIEWER
 
