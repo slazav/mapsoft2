@@ -9,7 +9,6 @@ Create map reference from options.
 
 Following map fields are set:
   map.name -- map name
-  map.image -- map name (from --image option)
   map.proj -- map projection (string of libproj parameters)
   map.image_dpi -- map resolution, dots per inch
   map.image_size -- map image size (in pixels)

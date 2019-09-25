@@ -9,7 +9,9 @@
 
 using namespace std;
 
-ext_option_list options;
+ext_option_list options = {
+  {"image",         1,0,MS2OPT_NONSTD, "set image file name in the map"}
+};
 
 void usage(bool pod=false, ostream & S = cout){
   string head = pod? "\n=head1 ":"\n";
@@ -23,6 +25,7 @@ void usage(bool pod=false, ostream & S = cout){
   print_options(options, MS2OPT_OUT, S, pod);
   S << head << "Making reference:\n";
   print_options(options, MS2OPT_MKREF, S, pod);
+  print_options(options, MS2OPT_NONSTD, S, pod);
   S << head << "Output options (OziExplorer map format):\n";
   print_options(options, MS2OPT_GEO_O, S, pod);
   throw Err();
@@ -48,6 +51,7 @@ main(int argc, char *argv[]){
 
     // create map reference
     GeoMap map = geo_mkref(O);
+    map.image = O.get("image", "");
 
     // write output file if needed
     std::string ofile = O.get("out", "");
