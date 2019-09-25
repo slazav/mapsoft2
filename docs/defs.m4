@@ -33,7 +33,7 @@ define(_MAPSOFT1_, `<a href="https://github.com/ushakov/mapsoft">mapsoft</a>')
 define(_PKGCONFIG_, `<a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a>')
 define(_LIBZIP_, `<a href="https://libzip.org/">libzip</a>')
 define(_LIBPROJ_, `<a href="https://proj4.org/">libproj</a>')
-define(_LIBCAIRO_, `<a href="https://www.cairographics.org/')
+define(_LIBCAIRO_, `<a href="https://www.cairographics.org/">libcairo</a>')
 define(_GEOHASH_, `<a href="https://en.wikipedia.org/wiki/Geohash">Geohash</a>')
 define(_SHAPELIB_, `<a href="http://shapelib.maptools.org/">shapelib</a>')
 
