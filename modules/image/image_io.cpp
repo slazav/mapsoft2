@@ -14,6 +14,8 @@
 void ms2opt_add_image(ext_option_list & opts){
   int m = MS2OPT_IMAGE;
   ext_option_list add = {
+    {"img_in_fmt",    1,0, m, "Explicitely set image format: jpeg, png, gif, tiff"},
+    {"img_out_fmt",   1,0, m, "Explicitely set image format: jpeg, png, gif, tiff"},
     {"tiff_format",   1,0, m, "When writing TIFF, convert image to one of following forms: "
                               "argb, rgb, grey, pal (default depends on the image)."},
     {"tiff_minwhite", 1,0, m, "When writing greyscale TIFF, invert colors (default: 0)."},

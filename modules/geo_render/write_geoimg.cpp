@@ -22,6 +22,7 @@ ms2opt_add_geoimg(ext_option_list & opts){
   ms2opt_add_ozimap_o(opts);
 
   ext_option_list add = {
+  {"out_fmt",  1,0,   MS2OPT_IMAGE, "image output format: pdf, ps, svg, png, jpeg, tiff, gif"},
   {"bgcolor",  1,0,   MS2OPT_IMAGE, "image background color (default 0xFFFFFFFF)"},
   {"map",      1,'m', MS2OPT_IMAGE, "write map file in OziExprorer format"},
   };
@@ -36,10 +37,10 @@ write_geoimg(const std::string & fname, GeoData & data, const Opt & opts){
   else if (file_ext_check(fname, ".ps"))   fmt="ps";
   else if (file_ext_check(fname, ".svg"))  fmt="svg";
   else if (file_ext_check(fname, ".png"))  fmt="png";
-  else if (file_ext_check(fname, ".jpg"))  fmt="jpg";
-  else if (file_ext_check(fname, ".jpeg")) fmt="jpg";
-  else if (file_ext_check(fname, ".tif"))  fmt="tif";
-  else if (file_ext_check(fname, ".tiff")) fmt="tif";
+  else if (file_ext_check(fname, ".jpg"))  fmt="jpeg";
+  else if (file_ext_check(fname, ".jpeg")) fmt="jpeg";
+  else if (file_ext_check(fname, ".tif"))  fmt="tiff";
+  else if (file_ext_check(fname, ".tiff")) fmt="tiff";
   else if (file_ext_check(fname, ".gif"))  fmt="gif";
 
   if (opts.get("out_fmt","") != "") fmt = opts.get("out_fmt", "");
@@ -60,7 +61,7 @@ write_geoimg(const std::string & fname, GeoData & data, const Opt & opts){
   if      (fmt == "pdf") cr.set_surface_pdf(fname.c_str(), w,h);
   else if (fmt == "ps")  cr.set_surface_ps(fname.c_str(), w,h);
   else if (fmt == "svg") cr.set_surface_svg(fname.c_str(), w,h);
-  else if (fmt == "png" || fmt=="jpg" || fmt=="tif" || fmt=="gif"){
+  else if (fmt == "png" || fmt=="jpeg" || fmt=="tiff" || fmt=="gif"){
     img = Image(w,h,IMAGE_32ARGB);
     img.fill32(0);
     cr.set_surface_img(img);
@@ -94,8 +95,11 @@ write_geoimg(const std::string & fname, GeoData & data, const Opt & opts){
 //    draw_pulk_grid(cr, origin, cnv, opts);
 
   // write raster formats
-  if (fmt == "png" || fmt=="jpg" || fmt=="tif" || fmt=="gif")
-    image_save(img, fname, opts);
+  if (fmt == "png" || fmt=="jpeg" || fmt=="tiff" || fmt=="gif"){
+    Opt o(opts);
+    o.put("img_out_fmt", fmt);
+    image_save(img, fname, o);
+  }
 
   // write map file
   if (opts.exists("map")){
