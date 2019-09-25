@@ -1,7 +1,17 @@
 =head1 GENERAL OPTIONS:
 
-B<<  -h, --help >> -- show help message
+=over 1
 
-B<<  --pod >> -- show help message as POD template
+=item B<< -h, --help >>
 
-B<<  -v, --verbose >> -- be verbose
+Show help message.
+
+=item B<< --pod >>
+
+Show help message as POD template.
+
+=item B<< -v, --verbose >> 
+
+Be verbose.
+
+=back
