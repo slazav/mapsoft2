@@ -21,12 +21,8 @@ void usage(bool pod=false, ostream & S = cout){
   S << head << "General options:\n";
   print_options(options, MS2OPT_STD, S, pod);
   print_options(options, MS2OPT_OUT, S, pod);
-  S << head << "Geodata input options:\n";
-  print_options(options, MS2OPT_GEO_I, S, pod);
-  S << head << "Geodata input and output options:\n";
-  print_options(options, MS2OPT_GEO_IO, S, pod);
-  S << head << "Geodata output options:\n";
-  print_options(options, MS2OPT_GEO_O, S, pod);
+  S << head << "Geodata input/output options:\n";
+  print_options(options, MS2OPT_GEO_I | MS2OPT_GEO_IO | MS2OPT_GEO_O, S, pod);
   S << head << "Options for making map reference:\n";
   print_options(options, MS2OPT_MKREF, S, pod);
   S << head << "Options for drawing tracks:\n";
