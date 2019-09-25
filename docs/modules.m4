@@ -23,35 +23,33 @@ different projects.
 
 <h3>ENRU(`Building system',`Сборочная система')</h3>
 
-<p>ENRU(`
-The building system is based on GNU make. All modules are located in
-<tt>modules</tt> directory. Programs, libraries and modules which are not
-intended to be used by other modules can be located anywhere (see
-<tt>examples</tt> and <tt>programs</tt> directories). Each module has a
+<p>ENRU(` The building system is based on GNU make. All modules are
+located in <tt>modules</tt> directory. Programs, libraries and modules
+which are not intended to be used by other modules can be located
+anywhere (see <tt>programs</tt> directory). Each module has a
 <tt>Makefile</tt> there a few variables are set to declare module
 components and <tt>Makefile.inc</tt> from the <tt>modules</tt> directory
 is included. For building dependency tree a separate script is used:
 <tt>modules/get_deps</tt>. For correct dependency search including a
 header file <tt>file.h</tt> from a module <tt>name</tt> should be always
 written as <tt>#include "name/file.h"</tt>. Including local header file
-should be written as <tt>#include "file.h"</tt>.
-',`
+should be written as <tt>#include "file.h"</tt>.',`
+
 Сборочая система сделана на основе GNU make. Модули расположены в
 директории <tt>modules</tt>. Программы, библиотеки и модули, которые  не
 используются другими модулями, могут быть расположены в любом месте (см.,
-например, директории <tt>examples</tt> и <tt>programs</tt>). Каждый
-модуль содержит <tt>Makefile</tt> где описаны его компоненты и включен
-файл <tt>Makefile.inc</tt> из директории <tt>modules</tt>. Для построения
+например, директорию <tt>programs</tt>). Каждый модуль содержит
+<tt>Makefile</tt> где описаны его компоненты и включен файл
+<tt>Makefile.inc</tt> из директории <tt>modules</tt>. Для построения
 дерева зависимостей используется отдельный скрипт
 <tt>modules/get_deps</tt>. Для правильного поиска зависимостей
 подключение заголовочного файла <tt>file.h</tt> из модуля <tt>name</tt>
 надо записывать в виде <tt>#include "name/file.h"</tt>, а локальных
-заголовочных файлов - в виде <tt>#include "file.h"</tt>.
-')
+заголовочных файлов - в виде <tt>#include "file.h"</tt>.')
 
 define(NAME, `<tt>&lt;name&gt;$1</tt>')dnl
-<p>
-ENRU(`In the module <tt>Makefile</tt> following variables can be defined:',
+
+<p>ENRU(`In <tt>Makefile</tt> of a module following variables can be defined:',
 `В <tt>Makefile</tt> модуля могут быть определены следующие переменные:')
 
 <ul>
@@ -70,7 +68,7 @@ ENRU(`In the module <tt>Makefile</tt> following variables can be defined:',
 
 <li><tt>PROGRAMS</tt> -- ENRU(
 `Programs to be build. For each program NAME() a
-source file NAME(.cpp) should exist',
+source file NAME(.cpp) should exist.',
 `Список программ, которые надо собрать. Для каждой программы NAME() должен
 существовать файл с исходным кодом NAME(.cpp)')
 
@@ -120,11 +118,11 @@ number or their size).',
 объектов или их суммарного размера).')
 
 _MODTAB_(cairo, UNSTABLE,
-`Wrapper for libcairo.', `Обертка для libcairo')
+`Wrapper for _LIBCAIRO_.', `Обертка для _LIBCAIRO_.')
 
-_MODTAB_(conv, UNSTABLE,
-`Conversions for geometric objects.',
-`Преобразования геометрических объектов.')
+_MODTAB_(conv, STABLE,
+`Coordinate conversions for geometric objects.',
+`Преобразования координат геометрических объектов.')
 
 _MODTAB_(err, STABLE,
 `Simple class for throwing errors with human-readable descriptions.
@@ -142,16 +140,16 @@ _MODTAB_(fig_opt, UNSTABLE,
 `Extension for FIG format for keeping data in object comments.',
 `Расширение формата FIG для хранения данных в комментариях объектов.')
 
-_MODTAB_(filename, UNSTABLE,
+_MODTAB_(filename, STABLE,
 `Functions for working with filenames.',
 `Функции для работы с именами файлов.')
 
-_MODTAB_(geo_data, UNSTABLE,
+_MODTAB_(geo_data, STABLE,
 `Classes for geodata handling. Functions for reading and writing geodata
-(GPX, KML, KMZ, OziExplorer formats). Great-circle distance (Haversine
+(GPX, KML, KMZ, GeoJson, OziExplorer formats). Great-circle distance (Haversine
 formula). Geo-conversions (_LIBPROJ_ wrapper). ',
 `Классы для работы с геоданными. Чтение и запись (форматы GPX,
-KML, KMZ, OziExplorer). Расстояния между точками на поверхности Земли
+KML, KMZ, GeoJson, OziExplorer). Расстояния между точками на поверхности Земли
 (формула Гаверсинуса). Геодезические преобразования (обертка для
 библиотеки _LIBPROJ_).')
 <br>WWW(`https://github.com/slazav/mapsoft2/blob/master/modules/geo_data/Formats.md',
@@ -165,7 +163,7 @@ _MODTAB_(geo_nom, STABLE,
 `Functions for working with Soviet nomenclature map names.',
 `Функции для работы с именами советских номенклатурных карт.')
 
-_MODTAB_(geo_render, UNUSABLE,
+_MODTAB_(geo_render, UNSTABLE,
 `Rendering geodata, map grids, vector maps...',
 `Рисование геоданных, сеток, векторных карт на растровых картинках.')
 
@@ -219,6 +217,10 @@ all supported formats.',
 `Глобальная структура данных mapsoft и функции чтения/записи. Должна
 работать со всеми поддерживаемыми форматами.')
 
+_MODTAB_(mapview, UNSTABLE,
+`Viewer for maps and geodata. For use in ms2view program.',
+`Окно вьюера геоданных и карт. Для использования в программе ms2view.')
+
 _MODTAB_(mp, STABLE,
 `Reading and writing of MP files. MP is a vector map format used for
 compiling Garmin GPS maps.',
@@ -269,7 +271,7 @@ _MODTAB_(viewer, STABLE,
 `GTK-based viewer for objects which can draw on a raster
 image. "Rubber lines" and "actions" for making interactive interfaces
 (for example, drawing and editing geometric forms). Examples can be found
-in <tt>examples/viewer/</tt> folder.',
+in <tt>viewer/examples</tt> folder.',
 `Вьюер (GTK) для объектов, которые умеют рисовать растровые изображения.
 "Резиновые линии" и "действия" для изготовления интерактивных интерфейсов
 (например, рисование и редактирование геометрических объектов). Примеры

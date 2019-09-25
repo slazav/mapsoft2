@@ -111,11 +111,13 @@ the geohash database should be also updated.',
 
 <h2>ENRU(`geohash.db',`База данных geohash.db')</h2>
 
-<p>ENRU(`Database with _GEOHASH_ keys and object id values used for
-spatial indexing. Data should be syncronized with coords.db database.',
-`База данных для геоиндексации: ключ - строка
-_GEOHASH_, значение - ID объекта. Данные должны быть синхронизованы с
-базой данных coords.db.')
+<p>ENRU(`Database with _GEOHASH_ keys and values containing object id and
+type. Used for spatial indexing. Data should be syncronized with
+coordinates in objects.db database.',
+
+`База данных для геоиндексации: ключ - строка _GEOHASH_, значение - ID и тип
+объекта. Данные должны быть синхронизованы с координатами в базе данных
+objects.db.')
 
 
 <h2>ENRU(`labels.db',`База данных labels.db')</h2>
