@@ -12,25 +12,9 @@ ms2view -- mapsoft2 viewer for geodata and raster maps
 
 include(`opt_general.m4')
 
-
 =head1 READING GEODATA
 
-=over 2
-
-=item B<<  --in_fmt <arg> >>
-
-Geodata input format (json, gu, gpx, kml, kmz, ozi, zip).
-By default format is determined by file extension.
-
-=item B<<  --gu_enc <arg> >>
-
-Garmin Utils format charset (default KOI8-R).
-
-=item B<<  --ozi_enc <arg> >>
-
-OziExplorer format charset (default Windows-1251).
-
-=back
+include(`opt_geo_in.m4')
 
 =head1 SETTING UP MAP REFERENCE FOR THE VIEWER
 

@@ -10,30 +10,40 @@ ms2xyz -- writing track in a text form
 
 =head1 GENERAL OPTIONS:
 
-B<<  --tshift <arg> >> -- time shift, hours
+include(`opt_general.m4')
 
-B<<  -t, --tfmt <arg> >> -- time format string for %T field (default: "%F %T")
+=over 2
 
-B<<  -f, --fmt <arg> >> -- format string (default: "%x %y %z %T %D %S")
+=item B<<  --tshift <arg> >>
 
-B<<  -w, --win <arg> >> -- window for speed calculation, sec (default: 120)
+Time shift, hours.
 
-B<<  -b, --break <arg> >> -- place to break calculation and put empty line (none | day | track, default: none)
+=item B<<  -t, --tfmt <arg> >>
 
-B<<  -h, --help >> -- show help message
+Time format string for %T field (default: "%F %T").
 
-B<<  --pod >> -- show help message as POD template
+=item B<<  -f, --fmt <arg> >>
 
-B<<  -v, --verbose >> -- be verbose
+Format string (default: "%x %y %z %T %D %S").
 
-B<<  -o, --out <arg> >> -- output file
+=item B<<  -w, --win <arg> >>
 
-If output file is not specified the data is printed to C<stdout>.
+Window for speed calculation, sec (default: 120).
+
+=item B<<  -b, --break <arg> >>
+
+Place to break calculation and put empty line (none | day | track, default: none).
+
+=item B<<  -o, --out <arg> >>
+
+Output file. If output file is not specified the data is printed to C<stdout>.
+
+=back
+
 
 =head1 READING GEODATA
 
-See B<GEODATA FORMATS> section in B<mapsoft2(5)> for supported formats
-and related options.
+include(`opt_geo_in.m4')
 
 =head1 FORMAT
 

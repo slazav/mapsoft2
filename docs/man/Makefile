@@ -1,4 +1,4 @@
-SRC1 := ms2conv ms2view ms2nom ms2tiles ms2xyz ms2mkref
+SRC1 := ms2conv ms2view ms2nom ms2tiles ms2xyz ms2mkref ms2vmap
 SRC5 := mapsoft2
 
 INC  := foot.m4 opt_general.m4 opt_mkref.m4 opt_render.m4 opt_image.m4 opt_geodata.m4
