@@ -9,11 +9,8 @@ ms2mkref -- creating a map reference
 
 include(`opt_general.m4')
 
-
 =head1 SETTING UP MAP REFERENCE
 
-See B<SETTING UP A MAP REFERENCE> section in B<mapsoft2(5)> for
-related options.
-
+include(`opt_mkref.m4')
 
 include(`foot.m4')

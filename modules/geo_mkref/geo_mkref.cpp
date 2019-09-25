@@ -28,7 +28,7 @@ ms2opt_add_mkref(ext_option_list & opts){
   {"bottom_margin", 1,0,m, "override bottom margin value (\"nom\" and \"proj\" references)"},
   {"zindex",        1,0,m, "tile zindex (\"*_tile\" references)"},
   {"tiles",         1,0,m, "tile or tile range (\"*_tile\" references)"},
-  {"coords",        1,0,m, "figure in projection coordinates to be covered by the map (\"proj\" references)"},
+  {"coords",        1,0,m, "figure in projection coordinates (rectangle or lines) to be covered by the map (\"proj\" references)"},
   {"border",        1,0,m, "map border in projection coordinates (\"proj\" references)"},
   {"coords_wgs",    1,0,m, "figure in wgs84 coordinates to be covered by the map (\"*_tile\" or \"proj\" references)"},
   {"border_wgs",    1,0,m, "map border in wgs84 coordinates (\"*_tile\" or \"proj\" references)"},

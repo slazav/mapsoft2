@@ -15,7 +15,10 @@ include(`opt_general.m4')
 See B<GEODATA FORMATS> section in B<mapsoft2(5)> for supported formats
 and related options.
 
+
 =head1 SETTING UP MAP REFERENCE FOR RASTER IMAGES
+
+include(`opt_mkref.m4')
 
 
 See B<SETTING UP A MAP REFERENCE> section in B<mapsoft2(5)> for

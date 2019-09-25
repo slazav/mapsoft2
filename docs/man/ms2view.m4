@@ -13,17 +13,18 @@ include(`opt_general.m4')
 
 =head1 READING GEODATA
 
-See B<GEODATA FORMATS> section in B<mapsoft2(5)> for supported formats
+See B<GEODATA FORMATS> section in C<mapsoft2(5)> for supported formats
 and related options.
 
-=head1 SETTING UP MAP PROJECTION
+=head1 SETTING UP MAP REFERENCE FOR THE VIEWER
 
-See B<SETTING UP A MAP REFERENCE> section in B<mapsoft2(5)> for
-related options.
+include(`opt_mkref.m4')
+
 
 =head1 DRAWING OPTIONS
 
 See B<RENDERING GEODATA> section in B<mapsoft2(5)> for related options.
+
 
 =head1 CUSTOMIZING VIEWER INTERFACE WITH CSS STYLES
 

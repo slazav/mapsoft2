@@ -7,7 +7,7 @@ HTML := $(patsubst %, %.htm, $(SRC1) $(SRC5))
 
 all: $(MAN1) $(MAN5) $(HTML)
 
-$(MAN1) $(MAN5) $(HTML): foot.m4
+$(MAN1) $(MAN5) $(HTML): foot.m4 opt_general.m4 opt_mkref.m4
 
 %.1 %.5: %.m4
 	m4 $< | pod2man -n $* -c mapsoft2 -r mapsoft2 > $@

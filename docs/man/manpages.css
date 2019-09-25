@@ -1,6 +1,12 @@
 h1 {
+  margin-top: 20px;
   font-size: large;
   color: #000080;
+}
+
+p {
+  margin: 0px;
+  padding: 0px;
 }
 
 #index {

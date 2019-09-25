@@ -31,15 +31,131 @@
 
 <h1 id="GENERAL-OPTIONS">GENERAL OPTIONS:</h1>
 
-<p><b>-h, --help</b> -- show help message</p>
+<dl>
 
-<p><b>--pod</b> -- show help message as POD template</p>
+<dt id="h---help"><b>-h, --help</b></dt>
+<dd>
 
-<p><b>-v, --verbose</b> -- be verbose</p>
+<p>Show help message.</p>
+
+</dd>
+<dt id="pod"><b>--pod</b></dt>
+<dd>
+
+<p>Show help message as POD template.</p>
+
+</dd>
+<dt id="v---verbose"><b>-v, --verbose</b></dt>
+<dd>
+
+<p>Be verbose.</p>
+
+</dd>
+</dl>
 
 <h1 id="SETTING-UP-MAP-REFERENCE">SETTING UP MAP REFERENCE</h1>
 
-<p>See <b>SETTING UP A MAP REFERENCE</b> section in <b>mapsoft2(5)</b> for related options.</p>
+<p>Map reference is set similarly in <code>ms2view</code>, <code>ms2conv</code>, and <code>ms2mkref</code> programs. If <b>--mkref</b> option exists then projection is created from options. If not then <code>ms2view</code> and <code>ms2conv</code> get projection of the first map to be shown or set to some default value. Following options can be used:</p>
+
+<dl>
+
+<dt id="mref-type"><b>--mref &lt;type&gt;</b></dt>
+<dd>
+
+<p>Choose map type. Possible values are: <b>nom</b> -- a Soviet nomenclature map, <b>proj</b> -- a rectangular area in some coordinates, <b>google_tile</b> and <b>tms_tile</b> -- a single google/TMS tile or rectangular area with multiple tiles.</p>
+
+</dd>
+<dt id="name-string"><b>--name &lt;string&gt;</b></dt>
+<dd>
+
+<p>Set map name.</p>
+
+</dd>
+<dt id="dpi-value"><b>--dpi &lt;value&gt;</b></dt>
+<dd>
+
+<p>Map resolution, pixels per inch (<b>nom</b> and <b>proj</b> maps)</p>
+
+</dd>
+<dt id="mag-value"><b>--mag &lt;value&gt;</b></dt>
+<dd>
+
+<p>Map magnification (<b>nom</b> maps).</p>
+
+</dd>
+<dt id="margins-value"><b>--margins &lt;value&gt;</b></dt>
+<dd>
+
+<p>Map margins, pixels (<b>nom</b> and <b>proj</b> maps).</p>
+
+</dd>
+<dt id="top_margin-value"><b>--top_margin &lt;value&gt;</b></dt>
+<dd>
+
+</dd>
+<dt id="left_margin-value"><b>--left_margin &lt;value&gt;</b></dt>
+<dd>
+
+</dd>
+<dt id="right_margin-value"><b>--right_margin &lt;value&gt;</b></dt>
+<dd>
+
+</dd>
+<dt id="bottom_margin-value"><b>--bottom_margin &lt;value&gt;</b></dt>
+<dd>
+
+<p>Override top/left/right/bottom margin values (<b>nom</b> and <b>proj</b> maps).</p>
+
+</dd>
+<dt id="zindex-value"><b>--zindex &lt;value&gt;</b></dt>
+<dd>
+
+<p>Tile zindex (<b>google_tile</b> and <b>tms_tile</b> maps).</p>
+
+</dd>
+<dt id="tiles-value"><b>--tiles &lt;value&gt;</b></dt>
+<dd>
+
+<p>Tile or tile range (<b>google_tile</b> and <b>tms_tile</b> maps)</p>
+
+</dd>
+<dt id="coords-value"><b>--coords &lt;value&gt;</b></dt>
+<dd>
+
+<p>Figure in projection coordinates (rectangle or line) to be covered by the map (<b>proj</b> maps). Figure can be a rectangle written as <code>[x,y,w,h]</code>, or a line, <code>[[x1,y1],[x2,y2], ...]</code>, or a multi-segment line, <code>[&lt;line&gt;, &lt;line&gt;, ...]</code>.</p>
+
+</dd>
+<dt id="border-value"><b>--border &lt;value&gt;</b></dt>
+<dd>
+
+<p>Map border in projection coordinates (<b>proj</b> maps), a line or a multi-segment line.</p>
+
+</dd>
+<dt id="coords_wgs-value"><b>--coords_wgs &lt;value&gt;</b></dt>
+<dd>
+
+<p>Figure in wgs84 coordinates to be covered by the map (<b>google_tile</b>, <b>tms_tile</b>, or <b>proj</b> maps).</p>
+
+</dd>
+<dt id="border_wgs-value"><b>--border_wgs &lt;value&gt;</b></dt>
+<dd>
+
+<p>Map border in wgs84 coordinates (<b>google_tile</b>, <b>tms_tile</b>, or <b>proj</b> maps).</p>
+
+</dd>
+<dt id="proj-value"><b>--proj &lt;value&gt;</b></dt>
+<dd>
+
+<p>Projection setting (for <b>proj</b> maps), <b>libproj</b> parameter string (e.g. <i>+datum=WGS84 +proj=lonlat</i>) or mapsoft2 alias (<b>WGS</b>, <b>WEB</b>, <b>FI</b>, <b>CH</b>, <b>SU39</b>, etc.). Default is <b>WGS</b>.</p>
+
+</dd>
+<dt id="scale-value"><b>--scale &lt;value&gt;</b></dt>
+<dd>
+
+<p>Map scale (for <b>proj</b> maps), projection units per map cm (<b>proj</b> maps). Default value is 0.01 degree/cm for degree projections, 1000m/cm for metric projections.</p>
+
+</dd>
+</dl>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 
