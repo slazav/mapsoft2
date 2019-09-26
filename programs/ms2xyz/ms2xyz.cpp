@@ -14,18 +14,20 @@ using namespace std;
 GetOptSet options;
 
 void usage(bool pod=false, std::ostream & S = std::cout){
-  std::string head = pod? "\n=head1 ":"\n";
   const char * fname = "ms2xyz";
   S << fname << " -- writing track in a text form\n"
              << "Usage: " << fname << " <options> <input files>\n";
-  S << head << "General options:\n";
-  print_options(options, MS2OPT_NONSTD | MS2OPT_STD | MS2OPT_OUT, S, pod);
+
+  print_header(S, pod, 1, "General options:");
+  print_options(S, pod, options, MS2OPT_NONSTD | MS2OPT_STD | MS2OPT_OUT);
+
   S << "If output file is not specified the data is printed to stdout.\n";
 
-  S << head << "Geodata input options:\n";
-  print_options(options, MS2OPT_GEO_I | MS2OPT_GEO_IO, S, pod);
-  S << head << "Format:\n"
-       << "  %% -- % sign\n"
+  print_header(S, pod, 1, "Geodata input options:");
+  print_options(S, pod, options, MS2OPT_GEO_I | MS2OPT_GEO_IO);
+
+  print_header(S, pod, 1, "Format:");
+  S    << "  %% -- % sign\n"
        << "  %x -- wgs lon\n"
        << "  %y -- wgs lat\n"
        << "  %z -- altitude, m\n"

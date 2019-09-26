@@ -110,8 +110,12 @@ parse_options_all(int *argc, char ***argv,
 
 /** Print options in help/pod format.
 Mask is applied to the group element of the ext_option structure.*/
-void print_options(const GetOptSet & ext_options,
-                   int mask, std::ostream & s, bool pod=false);
+void print_options(std::ostream & s, bool pod,
+                   const GetOptSet & ext_options, int mask);
+
+/** Print header in help/pod format. */
+void print_header(std::ostream & s, bool pod,
+                  int level, const std::string & text);
 
 ///@}
 ///@}

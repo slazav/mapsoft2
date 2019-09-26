@@ -13,26 +13,25 @@ using namespace std;
 GetOptSet options;
 
 void usage(bool pod=false, ostream & S = cout){
-  string head = pod? "\n=head1 ":"\n";
   const char * prog = "draw_trk";
-  S << prog << " -- draw_trk test program\n"
-    << head << "Usage:\n"
-    << prog << "  [<options>] <input files>\n"
+  S << prog << " -- draw_trk test program\n";
+  print_header(S, pod, 1, "Usage:");
+  S << prog << "  [<options>] <input files>\n"
     << "\n";
-  S << head << "General options:\n";
-  print_options(options, MS2OPT_STD, S, pod);
-  S << head << "Options for making map reference:\n";
-  print_options(options, MS2OPT_MKREF, S, pod);
-  S << head << "Options for drawing tracks:\n";
-  print_options(options, MS2OPT_DRAWTRK, S, pod);
-  S << head << "Options for drawing waypoints:\n";
-  print_options(options, MS2OPT_DRAWWPT, S, pod);
-  S << head << "Options for drawing map grid:\n";
-  print_options(options, MS2OPT_DRAWGRD, S, pod);
-  S << head << "Options for reading geodata:\n";
-  print_options(options, MS2OPT_GEO_I | MS2OPT_GEO_IO, S, pod);
-  S << head << "Options for writing map in OziExplorer format:\n";
-  print_options(options, MS2OPT_GEO_O, S, pod);
+  print_header(S, pod, 1, "General options:");
+  print_options(S, pod, options, MS2OPT_STD);
+  print_header(S, pod, 1, "Options for making map reference:");
+  print_options(S, pod, options, MS2OPT_MKREF);
+  print_header(S, pod, 1, "Options for drawing tracks:");
+  print_options(S, pod, options, MS2OPT_DRAWTRK);
+  print_header(S, pod, 1, "Options for drawing waypoints:");
+  print_options(S, pod, options, MS2OPT_DRAWWPT);
+  print_header(S, pod, 1, "Options for drawing map grid:");
+  print_options(S, pod, options, MS2OPT_DRAWGRD);
+  print_header(S, pod, 1, "Options for reading geodata:");
+  print_options(S, pod, options, MS2OPT_GEO_I | MS2OPT_GEO_IO);
+  print_header(S, pod, 1, "Options for writing map in OziExplorer format:");
+  print_options(S, pod, options, MS2OPT_GEO_O);
   throw Err();
 }
 

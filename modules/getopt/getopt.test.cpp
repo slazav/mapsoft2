@@ -22,11 +22,10 @@ GetOptSet options;
 
 void
 usage(bool pod=false){
-  string head = pod? "\n=head1 ":"\n";
   const char * prog = "getopt.test";
-  cerr << prog << " -- example of mapsoft-style getopt\n"
-     << head << "Usage:\n"
-     << prog << " [<general_options>|<global_input_options>]\\\n"
+  cerr << prog << " -- example of mapsoft-style getopt\n";
+  print_header(cerr, pod, 1, "Usage:");
+  cerr << prog << " [<general_options>|<global_input_options>]\\\n"
      << "         <input_file_1> [<input_options_1>]     \\\n"
      << "         <input_file_2> [<input_options_2>] ... \\\n"
      << "         (--out|-o) <output_file> [<output_options>]\n"
@@ -36,14 +35,14 @@ usage(bool pod=false){
      << "Then all data should be processed and written to the\n"
      << "output file according with output options.\n"
   ;
-  cerr << head << "General options:\n";
-  print_options(options, MS2OPT_STD, cerr, pod);
-  cerr << head << "Input options:\n";
-  print_options(options, OPT_INP, cerr, pod);
-  cerr << head << "Common options (can be used as input and output options):\n";
-  print_options(options, OPT_CMN, cerr, pod);
-  cerr << head << "Output options:\n";
-  print_options(options, OPT_OUT, cerr, pod);
+  print_header(cerr, pod, 1, "General options:");
+  print_options(cerr, pod, options, MS2OPT_STD);
+  print_header(cerr, pod, 1, "Input options:");
+  print_options(cerr, pod, options, OPT_INP);
+  print_header(cerr, pod, 1, "Common options (can be used as input and output options):");
+  print_options(cerr, pod, options, OPT_CMN);
+  print_header(cerr, pod, 1, "Output options:");
+  print_options(cerr, pod, options, OPT_OUT);
   throw Err();
 }
 

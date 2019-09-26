@@ -138,11 +138,13 @@ parse_options_all(int *argc, char ***argv,
 
 /**********************************************/
 void
-print_options(const GetOptSet & ext_options,
-              int mask, std::ostream & s, bool pod){
+print_options(std::ostream & s, bool pod,
+              const GetOptSet & ext_options, int mask){
   const int option_width = 25;
   const int indent_width = option_width+4;
   const int text_width = 77-indent_width;
+
+  if (pod) s << "\n=over 2\n";
 
   for (auto const & opt:ext_options){
     if ((opt.group & mask) == 0) continue;
@@ -174,8 +176,19 @@ print_options(const GetOptSet & ext_options,
       s << opt.desc.substr(opt.desc.size()-ii, ii) << "\n";
     }
     else {
-      s << "\nB<< " << oname.str() << " >> -- " << opt.desc << "\n";
+      s << "\n=item B<< " << oname.str() << " >>\n\n"
+        << opt.desc << "\n";
     }
   }
+  if (pod) s << "\n=back\n";
 }
 
+void
+print_header(std::ostream & s, bool pod,
+             int level, const std::string & text){
+  if (pod)
+    s << "\n=head" << level << " " << text << "\n";
+  else
+    s << text << "\n";
+
+}
