@@ -11,14 +11,7 @@
 #include "time_fmt/time_fmt.h"
 
 using namespace std;
-ext_option_list options = {
-  {"tshift", 1, 0,  MS2OPT_NONSTD, "time shift, hours"},
-  {"tfmt",   1,'t', MS2OPT_NONSTD, "time format string for %T field (default: \"%F %T\")"},
-  {"fmt",    1,'f', MS2OPT_NONSTD, "format string (default: \"%x %y %z %T %D %S\")"},
-  {"win",    1,'w', MS2OPT_NONSTD, "window for speed calculation, sec (default: 120)"},
-  {"break",  1,'b', MS2OPT_NONSTD, "place to break calculation and put empty line "
-                       "(none | day | track, default: none)"}
-};
+GetOptSet options;
 
 void usage(bool pod=false, std::ostream & S = std::cout){
   std::string head = pod? "\n=head1 ":"\n";
@@ -58,6 +51,15 @@ void usage(bool pod=false, std::ostream & S = std::cout){
 int
 main (int argc, char **argv) {
   try {
+
+    int m = MS2OPT_NONSTD;
+    options.add("tshift", 1, 0,  m, "time shift, hours");
+    options.add("tfmt",   1,'t', m, "time format string for %T field (default: \"%F %T\")");
+    options.add("fmt",    1,'f', m, "format string (default: \"%x %y %z %T %D %S\")");
+    options.add("win",    1,'w', m, "window for speed calculation, sec (default: 120)");
+    options.add("break",  1,'b', m, "place to break calculation and put empty line "
+                                    "(none | day | track, default: none)");
+
     ms2opt_add_std(options);
     ms2opt_add_out(options);
     ms2opt_add_geo_i(options);

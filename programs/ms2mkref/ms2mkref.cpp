@@ -9,9 +9,7 @@
 
 using namespace std;
 
-ext_option_list options = {
-  {"image",         1,0,MS2OPT_NONSTD, "set image file name in the map"}
-};
+GetOptSet options;
 
 void usage(bool pod=false, ostream & S = cout){
   string head = pod? "\n=head1 ":"\n";
@@ -35,6 +33,9 @@ void usage(bool pod=false, ostream & S = cout){
 int
 main(int argc, char *argv[]){
   try{
+
+    options.add("image", 1,0,MS2OPT_NONSTD, "set image file name in the map");
+
     ms2opt_add_std(options);
     ms2opt_add_out(options);
     ms2opt_add_mkref(options);

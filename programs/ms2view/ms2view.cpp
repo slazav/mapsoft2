@@ -15,9 +15,7 @@
 
 using namespace std;
 
-ext_option_list options = {
-//  {"grid", 0,0, MS2OPT_NONSTD, "draw grid"},
-};
+GetOptSet options;
 
 void usage(bool pod=false, ostream & S = cout){
   string head = pod? "\n=head1 ":"\n";
@@ -47,6 +45,9 @@ void usage(bool pod=false, ostream & S = cout){
 int
 main(int argc, char **argv){
   try {
+
+    //options.add("grid", 0,0, MS2OPT_NONSTD, "draw grid");
+
     ms2opt_add_std(options);
     ms2opt_add_geo_i(options);
     ms2opt_add_geo_io(options);
