@@ -12,28 +12,26 @@ using namespace std;
 GetOptSet options;
 
 void usage(bool pod=false, ostream & S = cout){
-  const char * prog = "ms2cnv";
-  S << prog << " -- mapsoft2 converter for geodata and raster maps\n";
-  print_header(S, pod, 1, "Usage:");
-  S << prog << "  <options> <input files> -o <output file>\n";
-  print_header(S, pod, 1, "General options:");
-  print_options(S, pod, options, MS2OPT_STD | MS2OPT_OUT);
-  print_header(S, pod, 1, "Geodata input/output options:");
-  print_options(S, pod, options, MS2OPT_GEO_I | MS2OPT_GEO_IO | MS2OPT_GEO_O);
-  print_header(S, pod, 1, "Rendering images");
-  print_header(S, pod, 2, "Options for saving images:");
-  print_options(S, pod, options, MS2OPT_IMAGE);
-  print_header(S, pod, 2, "Options for making map reference:");
-  print_options(S, pod, options, MS2OPT_MKREF);
-  print_header(S, pod, 2, "Options for drawing tracks:");
-  print_options(S, pod, options, MS2OPT_DRAWTRK);
-  print_header(S, pod, 2, "Options for drawing waypoints:");
-  print_options(S, pod, options, MS2OPT_DRAWWPT);
-  print_header(S, pod, 2, "Options for drawing maps:");
-  print_options(S, pod, options, MS2OPT_DRAWMAP);
-//  print_header( S, pod, "Options for drawing grid:");
-//  print_options(S, pod, options, MS2OPT_DRAWGRD);
-  S << "\n";
+  HelpPrinter pr(S, pod, options, "ms2cnv");
+  pr.name("mapsoft2 converter for geodata and raster maps");
+  pr.usage("<options> <input files> -o <output file>");
+  pr.head(1, "General options");
+  pr.opts(MS2OPT_STD | MS2OPT_OUT);
+  pr.head(1, "Geodata input/output options");
+  pr.opts(MS2OPT_GEO_I | MS2OPT_GEO_IO | MS2OPT_GEO_O);
+  pr.head(1, "Rendering images");
+  pr.head(2, "Options for making map reference");
+  pr.opts(MS2OPT_MKREF);
+  pr.head(2, "Options for drawing tracks");
+  pr.opts(MS2OPT_DRAWTRK);
+  pr.head(2, "Options for drawing waypoints");
+  pr.opts(MS2OPT_DRAWWPT);
+  pr.head(2, "Options for drawing maps");
+  pr.opts(MS2OPT_DRAWMAP);
+//  pr.head(2, "Options for drawing grid");
+//  pr.opts(MS2OPT_DRAWGRD);
+  pr.head(2, "Options for saving images");
+  pr.opts(MS2OPT_IMAGE);
 
   throw Err();
 }

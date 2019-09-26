@@ -12,19 +12,16 @@ using namespace std;
 GetOptSet options;
 
 void usage(bool pod=false, ostream & S = cout){
-  const char * prog = "ms2mkref";
-  S << prog << " -- creating a map reference\n";
-  print_header(S, pod, 1, "Usage:");
-  S << prog << "  <options>\n";
-  ;
-  print_header(S, pod, 1, "General options:");
-  print_options(S, pod, options, MS2OPT_STD);
-  print_options(S, pod, options, MS2OPT_OUT);
-  print_header(S, pod, 1, "Making reference:");
-  print_options(S, pod, options, MS2OPT_MKREF);
-  print_options(S, pod, options, MS2OPT_NONSTD);
-  print_header(S, pod, 1, "Output options (OziExplorer map format):");
-  print_options(S, pod, options, MS2OPT_GEO_O);
+  HelpPrinter pr(S, pod, options, "ms2mkref");
+  pr.name("creating a map reference");
+  pr.usage("<options>");
+  pr.head(1,"General options:");
+  pr.opts(MS2OPT_STD);
+  pr.opts(MS2OPT_OUT);
+  pr.head(1,"Making reference:");
+  pr.opts(MS2OPT_MKREF);
+  pr.head(1,"Output options (OziExplorer map format):");
+  pr.opts(MS2OPT_GEO_O);
   throw Err();
 }
 
@@ -33,7 +30,7 @@ int
 main(int argc, char *argv[]){
   try{
 
-    options.add("image", 1,0,MS2OPT_NONSTD, "set image file name in the map");
+    options.add("image", 1,0,MS2OPT_MKREF, "set image file name in the map");
 
     ms2opt_add_std(options);
     ms2opt_add_out(options);
