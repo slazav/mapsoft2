@@ -13,10 +13,7 @@
 #define OPT_G   1  // general options (-v, -h)
 #define OPT_A   2  // action options (mixed for all actions)
 
-ext_option_list options = {
-  {"help",                  0,'h', OPT_G|OPT_A, "show help message"},
-  {"pod",                   0, 0,  OPT_G|OPT_A, "show this message as POD template"},
-};
+GetOptSet options;
 
 void usage(bool pod=false, std::ostream & S = std::cout){
   std::string head = pod? "\n=head1 ":"\n";
@@ -42,6 +39,9 @@ void usage(bool pod=false, std::ostream & S = std::cout){
 int
 main(int argc, char *argv[]){
   try{
+
+  options.add("help", 0,'h', OPT_G|OPT_A, "show help message");
+  options.add("pod",  0, 0,  OPT_G|OPT_A, "show this message as POD template");
 
     // general options
     Opt GO = parse_options(&argc, &argv, options, OPT_G, NULL);

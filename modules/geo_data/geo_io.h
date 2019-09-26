@@ -11,19 +11,19 @@
 #include "getopt/getopt.h"
 
 // add MS2OPT_GEO_I options
-void ms2opt_add_geo_i(ext_option_list & opts);
+void ms2opt_add_geo_i(GetOptSet & opts);
 
 // add MS2OPT_GEO_IO options
-void ms2opt_add_geo_io(ext_option_list & opts);
+void ms2opt_add_geo_io(GetOptSet & opts);
 
 // add MS2OPT_GEO_O options
-void ms2opt_add_geo_o(ext_option_list & opts);
-void ms2opt_add_ozimap_o(ext_option_list & opts);
+void ms2opt_add_geo_o(GetOptSet & opts);
+void ms2opt_add_ozimap_o(GetOptSet & opts);
 
 /********************************************************************/
 
-// append option information to ext_option_list
-void geo_io_ms2opts(ext_option_list & list);
+// append option information to GetOptSet
+//void geo_io_ms2opts(GetOptSet & list);
 
 // Detect file format (by file extension and --fmt option) and read/write data.
 // Return false if format is unknown.

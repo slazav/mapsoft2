@@ -12,16 +12,13 @@ using namespace std;
 Cache<int, ConvGeo> draw_pulk_grid_convs(10); // lon0 -> Conv
 
 void
-ms2opt_add_drawgrd(ext_option_list & opts){
+ms2opt_add_drawgrd(GetOptSet & opts){
   int m = MS2OPT_DRAWGRD;
-  ext_option_list add = {
-  {"grid_draw_color", 1,0,m, "grid color (default 0x80000000)"},
-  {"grid_draw_thick", 1,0,m, "grid line thickness (default 1)"},
-  {"grid_text_color", 1,0,m, "grid text color (default 0xff000000)"},
-  {"grid_text_font",  1,0,m, "grid text color (default \"serif:bold\")"},
-  {"grid_text_size",  1,0,m, "grid text size, pixels (default 15)"},
-  };
-  opts.insert(opts.end(), add.begin(), add.end());
+  opts.add("grid_draw_color", 1,0,m, "grid color (default 0x80000000)");
+  opts.add("grid_draw_thick", 1,0,m, "grid line thickness (default 1)");
+  opts.add("grid_text_color", 1,0,m, "grid text color (default 0xff000000)");
+  opts.add("grid_text_font",  1,0,m, "grid text color (default \"serif:bold\")");
+  opts.add("grid_text_size",  1,0,m, "grid text size, pixels (default 15)");
 }
 
 /********************************************************************/

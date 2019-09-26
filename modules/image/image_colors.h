@@ -9,7 +9,7 @@
 
 // add MS2OPT_IMAGE options
 #include "getopt/getopt.h"
-void ms2opt_add_image_cmap(ext_option_list & opts);
+void ms2opt_add_image_cmap(GetOptSet & opts);
 
 // Create a colormap.
 // Based on pnmcolormap.c from netpbm package.

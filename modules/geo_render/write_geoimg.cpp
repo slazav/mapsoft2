@@ -12,7 +12,7 @@
 
 
 void
-ms2opt_add_geoimg(ext_option_list & opts){
+ms2opt_add_geoimg(GetOptSet & opts){
   ms2opt_add_mkref(opts);
   ms2opt_add_drawwpt(opts);
   ms2opt_add_drawtrk(opts);
@@ -21,12 +21,12 @@ ms2opt_add_geoimg(ext_option_list & opts){
   ms2opt_add_image(opts);
   ms2opt_add_ozimap_o(opts);
 
-  ext_option_list add = {
-  {"out_fmt",  1,0,   MS2OPT_IMAGE, "image output format: pdf, ps, svg, png, jpeg, tiff, gif"},
-  {"bgcolor",  1,0,   MS2OPT_IMAGE, "image background color (default 0xFFFFFFFF)"},
-  {"map",      1,'m', MS2OPT_IMAGE, "write map file in OziExprorer format"},
-  };
-  opts.insert(opts.end(), add.begin(), add.end());
+  int m = MS2OPT_IMAGE;
+  opts.remove("img_in_fmt");
+  opts.remove("img_out_fmt");
+  opts.add("out_fmt",  1,0,   m, "image output format: pdf, ps, svg, png, jpeg, tiff, gif");
+  opts.add("bgcolor",  1,0,   m, "image background color (default 0xFFFFFFFF)");
+  opts.add("map",      1,'m', m, "write map file in OziExprorer format");
 }
 
 bool

@@ -9,7 +9,7 @@
 
 using namespace std;
 
-ext_option_list options;
+GetOptSet options;
 
 void usage(bool pod=false, ostream & S = cout){
   string head = pod? "\n=head1 ":"\n";
@@ -50,6 +50,9 @@ main(int argc, char *argv[]){
     ms2opt_add_geo_o(options);
     ms2opt_add_geo_io(options);
     ms2opt_add_geoimg(options);
+    options.replace("out_fmt", 1, 0, MS2OPT_OUT,
+      "Output format, geodata (json, gu, gpx, kml, kmz, ozi, zip) "
+      "or image (jpeg, png, gif, tiff, ps, pdf, svg)");
 
     if (argc<2) usage();
     vector<string> infiles;

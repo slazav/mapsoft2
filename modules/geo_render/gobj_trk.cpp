@@ -10,19 +10,16 @@
 using namespace std;
 
 void
-ms2opt_add_drawtrk(ext_option_list & opts){
+ms2opt_add_drawtrk(GetOptSet & opts){
   int m = MS2OPT_DRAWTRK;
-  ext_option_list add = {
-  {"trk_draw_mode",   1,0,m, "track drawing mode (normal, speed, height)"},
-  {"trk_draw_th",     1,0,m, "line thickness, overrides track setting"},
-  {"trk_draw_color",  1,0,m, "color (for normal drawing mode), overrides track color"},
-  {"trk_draw_dots",   1,0,m, "draw dots (for normal drawing mode), default: 1"},
-  {"trk_draw_arrows", 1,0,m, "draw arrows (for normal drawing mode), default: 0"},
-  {"trk_draw_min",    1,0,m, "min value (km/h for speed mode, m for height mode)"},
-  {"trk_draw_max",    1,0,m, "max value (km/h for speed mode, m for height mode)"},
-  {"trk_draw_grad",   1,0,m, "color gradient (for speed or height modes), default: BCGYRM"},
-  };
-  opts.insert(opts.end(), add.begin(), add.end());
+  opts.add("trk_draw_mode",   1,0,m, "track drawing mode (normal, speed, height)");
+  opts.add("trk_draw_th",     1,0,m, "line thickness, overrides track setting");
+  opts.add("trk_draw_color",  1,0,m, "color (for normal drawing mode), overrides track color");
+  opts.add("trk_draw_dots",   1,0,m, "draw dots (for normal drawing mode), default: 1");
+  opts.add("trk_draw_arrows", 1,0,m, "draw arrows (for normal drawing mode), default: 0");
+  opts.add("trk_draw_min",    1,0,m, "min value (km/h for speed mode, m for height mode)");
+  opts.add("trk_draw_max",    1,0,m, "max value (km/h for speed mode, m for height mode)");
+  opts.add("trk_draw_grad",   1,0,m, "color gradient (for speed or height modes), default: BCGYRM");
 }
 
 /********************************************************************/

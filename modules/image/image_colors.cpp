@@ -11,20 +11,21 @@ enum methodForRep {REP_CENTER_BOX, REP_AVERAGE_COLORS, REP_AVERAGE_PIXELS};
 enum methodForSplit {SPLIT_MAX_PIXELS, SPLIT_MAX_DIM, SPLIT_MAX_COLORS};
 
 /**********************************************************/
-void ms2opt_add_image_cmap(ext_option_list & opts){
+void ms2opt_add_image_cmap(GetOptSet & opts){
   int m = MS2OPT_IMAGE;
-  ext_option_list add = {
-    {"cmap_colors",       1,0, m, "Colormap size for reducing image colors (2..256)."},
-    {"cmap_dim_method",   1,0, m, "Analog of pnmcolormap -spreadbrightness|-spreadluminosity, "
-                                  "values: norm (default) or lumin."},
-    {"cmap_rep_method",   1,0, m, "Analog of pnmcolormap -center|-meancolor|-meanpixel, "
-                                  "values: center, meanpix (default), meancol."},
-    {"cmap_split_method", 1,0, m, "Analog of pnmcolormap -splitpix|-splitcol|-splitdim, "
-                                  "values: maxdim (default), maxpix, maxcol."},
-    {"cmap_alpha",        1,0, m, "Alpha channel: none (default), full, gif."},
-  };
-  opts.insert(opts.end(), add.begin(), add.end());
-
+  opts.add("cmap_colors", 1,0, m,
+    "Colormap size for reducing image colors (2..256).");
+  opts.add("cmap_dim_method", 1,0, m,
+    "Analog of pnmcolormap -spreadbrightness|-spreadluminosity, "
+    "values: norm (default) or lumin.");
+  opts.add("cmap_rep_method", 1,0, m,
+    "Analog of pnmcolormap -center|-meancolor|-meanpixel, "
+    "values: center, meanpix (default), meancol.");
+  opts.add("cmap_split_method", 1,0, m,
+    "Analog of pnmcolormap -splitpix|-splitcol|-splitdim, "
+    "values: maxdim (default), maxpix, maxcol.");
+  opts.add("cmap_alpha", 1,0, m,
+    "Alpha channel: none (default), full, gif.");
 }
 
 /**********************************************************/

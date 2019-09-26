@@ -17,14 +17,7 @@
 using namespace std;
 
 // non-standard options
-ext_option_list options = {
-  {"inp1",  1,'I', OPT_INP, "input option with argument"},
-  {"inp2",  0,'J', OPT_INP, "input option w/o argument"},
-  {"cmn1",  1,'C', OPT_CMN, "common option with argument"},
-  {"cmn2",  0,'D', OPT_CMN, "common option w/o argument"},
-  {"out1",  1,'O', OPT_OUT, "output option with argument"},
-  {"out2",  0,'P', OPT_OUT, "output option w/o argument"},
-};
+GetOptSet options;
 
 
 void
@@ -58,6 +51,13 @@ usage(bool pod=false){
 int
 main(int argc, char *argv[]){
   try{
+
+    options.add("inp1",  1,'I', OPT_INP, "input option with argument");
+    options.add("inp2",  0,'J', OPT_INP, "input option w/o argument");
+    options.add("cmn1",  1,'C', OPT_CMN, "common option with argument");
+    options.add("cmn2",  0,'D', OPT_CMN, "common option w/o argument");
+    options.add("out1",  1,'O', OPT_OUT, "output option with argument");
+    options.add("out2",  0,'P', OPT_OUT, "output option w/o argument");
 
     // standard options: MS2OPT_STD, MS2OPT_OUT
     ms2opt_add_std(options);

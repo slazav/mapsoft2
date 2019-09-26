@@ -10,11 +10,7 @@
 
 using namespace std;
 
-ext_option_list options = {
-  {"grid", 0,0, MS2OPT_DRAWGRD, "draw grid"},
-  {"map",  1,'m', MS2OPT_GEO_O, "write map file in OziExprorer format"},
-  {"map",  1,'m', MS2OPT_GEO_O, "output file, or \"view\""},
-};
+GetOptSet options;
 
 void usage(bool pod=false, ostream & S = cout){
   string head = pod? "\n=head1 ":"\n";
@@ -43,6 +39,11 @@ void usage(bool pod=false, ostream & S = cout){
 int
 main(int argc, char **argv){
   try {
+
+    options.add("grid", 0,0, MS2OPT_DRAWGRD, "draw grid");
+    options.add("map",  1,'m', MS2OPT_GEO_O, "write map file in OziExprorer format");
+    options.add("map",  1,'m', MS2OPT_GEO_O, "output file, or \"view\"");
+
     ms2opt_add_std(options);
     ms2opt_add_out(options);
     ms2opt_add_geo_i(options);

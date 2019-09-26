@@ -11,7 +11,7 @@
 #include "getopt/getopt.h"
 
 // add MS2OPT_DRAWWPT options
-void ms2opt_add_drawwpt(ext_option_list & opts);
+void ms2opt_add_drawwpt(GetOptSet & opts);
 
 /********************************************************************/
 

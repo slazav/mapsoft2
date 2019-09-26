@@ -13,29 +13,26 @@
 using namespace std;
 
 void
-ms2opt_add_mkref(ext_option_list & opts){
+ms2opt_add_mkref(GetOptSet & opts){
   int m = MS2OPT_MKREF;
-  ext_option_list add = {
-  {"mkref",         1,0,m, "map reference type (nom, google_tile, tms_tile, proj)"},
-  {"name",          1,0,m, "map name (\"nom\" references)"},
-  {"dpi",           1,0,m, "map resolution, pixels per inch (\"nom\" and \"proj\" references)"},
-  {"mag",           1,0,m, "map magnification (\"nom\" references)"},
-  {"margins",       1,0,m, "map margins, pixels (\"nom\" and \"proj\" references)"},
-  {"top_margin",    1,0,m, "override top margin value (\"nom\" and \"proj\" references)"},
-  {"left_margin",   1,0,m, "override left margin value (\"nom\" and \"proj\" references)"},
-  {"right_margin",  1,0,m, "override right margin value (\"nom\" and \"proj\" references)"},
-  {"bottom_margin", 1,0,m, "override bottom margin value (\"nom\" and \"proj\" references)"},
-  {"zindex",        1,0,m, "tile zindex (\"*_tile\" references)"},
-  {"tiles",         1,0,m, "tile or tile range (\"*_tile\" references)"},
-  {"coords",        1,0,m, "figure in projection coordinates (rectangle or lines) to be covered by the map (\"proj\" references)"},
-  {"border",        1,0,m, "map border in projection coordinates (\"proj\" references)"},
-  {"coords_wgs",    1,0,m, "figure in wgs84 coordinates to be covered by the map (\"*_tile\" or \"proj\" references)"},
-  {"border_wgs",    1,0,m, "map border in wgs84 coordinates (\"*_tile\" or \"proj\" references)"},
-  {"proj",          1,0,m, "projection setting, \"proj\" parameter string (e.g. \"+datum=WGS84 +proj=lonlat\")"
-                           " or mapsoft2 alias (\"WGS\", \"WEB\", \"FI\", \"CH\", \"SU39\", etc.)"},
-  {"scale",         1,0,m, "map scale, projection units per map cm (\"proj\" references)"},
-  };
-  opts.insert(opts.end(), add.begin(), add.end());
+  opts.add("mkref",         1,0,m, "map reference type (nom, google_tile, tms_tile, proj)");
+  opts.add("name",          1,0,m, "map name (\"nom\" references)");
+  opts.add("dpi",           1,0,m, "map resolution, pixels per inch (\"nom\" and \"proj\" references)");
+  opts.add("mag",           1,0,m, "map magnification (\"nom\" references)");
+  opts.add("margins",       1,0,m, "map margins, pixels (\"nom\" and \"proj\" references)");
+  opts.add("top_margin",    1,0,m, "override top margin value (\"nom\" and \"proj\" references)");
+  opts.add("left_margin",   1,0,m, "override left margin value (\"nom\" and \"proj\" references)");
+  opts.add("right_margin",  1,0,m, "override right margin value (\"nom\" and \"proj\" references)");
+  opts.add("bottom_margin", 1,0,m, "override bottom margin value (\"nom\" and \"proj\" references)");
+  opts.add("zindex",        1,0,m, "tile zindex (\"*_tile\" references)");
+  opts.add("tiles",         1,0,m, "tile or tile range (\"*_tile\" references)");
+  opts.add("coords",        1,0,m, "figure in projection coordinates (rectangle or lines) to be covered by the map (\"proj\" references)");
+  opts.add("border",        1,0,m, "map border in projection coordinates (\"proj\" references)");
+  opts.add("coords_wgs",    1,0,m, "figure in wgs84 coordinates to be covered by the map (\"*_tile\" or \"proj\" references)");
+  opts.add("border_wgs",    1,0,m, "map border in wgs84 coordinates (\"*_tile\" or \"proj\" references)");
+  opts.add("proj",          1,0,m, "projection setting, \"proj\" parameter string (e.g. \"+datum=WGS84 +proj=lonlat\")"
+                                   " or mapsoft2 alias (\"WGS\", \"WEB\", \"FI\", \"CH\", \"SU39\", etc.)");
+  opts.add("scale",         1,0,m, "map scale, projection units per map cm (\"proj\" references)");
 }
 
 

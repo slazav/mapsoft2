@@ -9,23 +9,20 @@
 using namespace std;
 
 void
-ms2opt_add_drawwpt(ext_option_list & opts){
+ms2opt_add_drawwpt(GetOptSet & opts){
 
   int m = MS2OPT_DRAWWPT;
-  ext_option_list add = {
-  {"wpt_text_font",   1,0,m, "waypoint font (default: \"serif\")"},
-  {"wpt_text_size",   1,0,m, "waypoint font size, pixels (default: 10)"},
-  {"wpt_text_pad",    1,0,m, "waypoint text padding, pixels (default: 2)"},
-  {"wpt_draw_size",   1,0,m, "waypoint dot radius, pixels (default: 3)"},
-  {"wpt_line_width",  1,0,m, "waypoint line width, (default: 1)"},
-  {"wpt_stick_len",   1,0,m, "length of waypoint flag stick (default: 10)"},
-  {"wpt_color",       1,0,m, "waypoint color (default: 0xFF000000)"},
-  {"wpt_bgcolor",     1,0,m, "waypoint background color (default: 0xFFFFFFFF)"},
-  {"wpt_adj",         1,0,m, "adjust waypoint flag positions to prevent collisions (default: 1)"},
-  {"wpt_adj_brd",     1,0,m, "adjust waypoint flag positions to prevent boundary collisions (default: 0)"},
-  {"wpt_skip_far",    1,0,m, "skip points if their labels can not be placed close enough (default: 5*wpt_stick_len)"},
-  };
-  opts.insert(opts.end(), add.begin(), add.end());
+  opts.add("wpt_text_font",   1,0,m, "waypoint font (default: \"serif\")");
+  opts.add("wpt_text_size",   1,0,m, "waypoint font size, pixels (default: 10)");
+  opts.add("wpt_text_pad",    1,0,m, "waypoint text padding, pixels (default: 2)");
+  opts.add("wpt_draw_size",   1,0,m, "waypoint dot radius, pixels (default: 3)");
+  opts.add("wpt_line_width",  1,0,m, "waypoint line width, (default: 1)");
+  opts.add("wpt_stick_len",   1,0,m, "length of waypoint flag stick (default: 10)");
+  opts.add("wpt_color",       1,0,m, "waypoint color (default: 0xFF000000)");
+  opts.add("wpt_bgcolor",     1,0,m, "waypoint background color (default: 0xFFFFFFFF)");
+  opts.add("wpt_adj",         1,0,m, "adjust waypoint flag positions to prevent collisions (default: 1)");
+  opts.add("wpt_adj_brd",     1,0,m, "adjust waypoint flag positions to prevent boundary collisions (default: 0)");
+  opts.add("wpt_skip_far",    1,0,m, "skip points if their labels can not be placed close enough (default: 5*wpt_stick_len)");
 }
 
 

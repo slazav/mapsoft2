@@ -10,21 +10,16 @@ using namespace std;
 /**********************************************/
 
 void
-ms2opt_add_std(ext_option_list & opts){
-  ext_option_list add = {
-    {"help",    0,'h', MS2OPT_STD, "show help message"},
-    {"pod",     0, 0 , MS2OPT_STD, "show help message as POD template"},
-    {"verbose", 0,'v', MS2OPT_STD, "be verbose\n"}
-  };
-  opts.insert(opts.end(), add.begin(), add.end());
+ms2opt_add_std(GetOptSet & opts){
+  int m = MS2OPT_STD;
+  opts.add("help",    0,'h', m, "show help message");
+  opts.add("pod",     0, 0 , m, "show help message as POD template");
+  opts.add("verbose", 0,'v', m, "be verbose\n");
 }
 
 void
-ms2opt_add_out(ext_option_list & opts){
-  ext_option_list add = {
-    {"out", 1, 'o', MS2OPT_OUT, "output file"}
-  };
-  opts.insert(opts.end(), add.begin(), add.end());
+ms2opt_add_out(GetOptSet & opts){
+  opts.add("out", 1, 'o', MS2OPT_OUT, "output file");
 }
 
 /**********************************************/
@@ -96,7 +91,7 @@ parse_options(int * argc, char ***argv,
 /**********************************************/
 Opt
 parse_options(int *argc, char ***argv,
-              const ext_option_list & ext_options,
+              const GetOptSet & ext_options,
               int mask,
               const char * last_opt) {
 
@@ -129,7 +124,7 @@ parse_options(int *argc, char ***argv,
 
 Opt
 parse_options_all(int *argc, char ***argv,
-              const ext_option_list & ext_options,
+              const GetOptSet & ext_options,
               int mask, vector<string> & non_opts){
 
   Opt O = parse_options(argc, argv, ext_options, mask);
@@ -143,7 +138,7 @@ parse_options_all(int *argc, char ***argv,
 
 /**********************************************/
 void
-print_options(const ext_option_list & ext_options,
+print_options(const GetOptSet & ext_options,
               int mask, std::ostream & s, bool pod){
   const int option_width = 25;
   const int indent_width = option_width+4;
