@@ -108,14 +108,39 @@ parse_options_all(int *argc, char ***argv,
               const GetOptSet & ext_options,
               int mask, std::vector<std::string> & non_opts);
 
-/** Print options in help/pod format.
-Mask is applied to the group element of the ext_option structure.*/
-void print_options(std::ostream & s, bool pod,
-                   const GetOptSet & ext_options, int mask);
+/********************************************************************/
+// Class for formatting help messages and man pages
+class HelpPrinter{
+private:
+  std::ostream & s;
+  std::string name_;
+  bool pod;
+  const GetOptSet & opts_;
+  unsigned int printed; // mask for printed options
+  bool usage_head; // has usage header been already printed?
 
-/** Print header in help/pod format. */
-void print_header(std::ostream & s, bool pod,
-                  int level, const std::string & text);
+public:
+  HelpPrinter(std::ostream & s, bool pod, const GetOptSet & opts,
+              const std::string & name);
+
+  // print name section
+  void name(const std::string & descr);
+
+  // print usage line (header is printed before the first one)
+  void usage(const std::string & text);
+
+  // print a group of options
+  void opts(unsigned int mask);
+
+  // print header
+  void head(int level, const std::string & text);
+
+  // print a paragraph of text
+  void par(const std::string & text);
+
+  // finish printing, check if all options have been printed
+  ~HelpPrinter();
+};
 
 ///@}
 ///@}

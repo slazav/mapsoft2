@@ -18,25 +18,24 @@ using namespace std;
 GetOptSet options;
 
 void usage(bool pod=false, ostream & S = cout){
-  const char * prog = "ms2view";
-  S << prog << " -- mapsoft2 viewer for geodata and raster maps\n";
-  print_header(S, pod, 1, "Usage:");
-  S << prog << "  [<options>] <input files>\n"
-    << "\n";
-  print_header(S, pod, 1, "General options:");
-  print_options(S, pod, options, MS2OPT_STD);
-  print_header(S, pod, 1, "Options for reading geodata:");
-  print_options(S, pod, options, MS2OPT_GEO_I | MS2OPT_GEO_IO);
-  print_header(S, pod, 1, "Options for making map reference:");
-  print_options(S, pod, options, MS2OPT_MKREF);
-  print_header(S, pod, 1, "Options for drawing tracks:");
-  print_options(S, pod, options, MS2OPT_DRAWTRK);
-  print_header(S, pod, 1, "Options for drawing waypoints:");
-  print_options(S, pod, options, MS2OPT_DRAWWPT);
-  print_header(S, pod, 1, "Options for drawing maps:");
-  print_options(S, pod, options, MS2OPT_DRAWMAP);
-//  S << head << "Options for drawing grid:");
-//  print_options(S, pod, options, MS2OPT_DRAWGRD);
+  HelpPrinter pr(S, pod, options, "ms2view");
+
+  pr.name("mapsoft2 viewer for geodata and raster maps");
+  pr.usage("[<options>] <input files>");
+  pr.head(1, "General options:");
+  pr.opts(MS2OPT_STD);
+  pr.head(1, "Options for reading geodata:");
+  pr.opts(MS2OPT_GEO_I | MS2OPT_GEO_IO);
+  pr.head(1, "Options for making map reference:");
+  pr.opts(MS2OPT_MKREF);
+  pr.head(1, "Options for drawing tracks:");
+  pr.opts(MS2OPT_DRAWTRK);
+  pr.head(1, "Options for drawing waypoints:");
+  pr.opts(MS2OPT_DRAWWPT);
+  pr.head(1, "Options for drawing maps:");
+  pr.opts(MS2OPT_DRAWMAP);
+//  pr.head(1, "Options for drawing grid:");
+//  pr.opts(MS2OPT_DRAWGRD);
   S << "\n";
   throw Err();
 }

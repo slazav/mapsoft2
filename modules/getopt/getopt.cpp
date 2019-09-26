@@ -1,6 +1,7 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
 #include <getopt.h>
 #include "getopt.h"
 #include "err/err.h"
@@ -137,16 +138,45 @@ parse_options_all(int *argc, char ***argv,
 }
 
 /**********************************************/
+
+HelpPrinter::HelpPrinter(
+    std::ostream & s, bool pod, const GetOptSet & opts,
+    const std::string & name):
+    s(s), pod(pod), opts_(opts), name_(name),
+    printed(0), usage_head(false) {
+}
+
 void
-print_options(std::ostream & s, bool pod,
-              const GetOptSet & ext_options, int mask){
+HelpPrinter::name(const std::string & descr){
+  if (pod)
+    s << "=head1 NAME\n\n"
+      << name_ << " -- " << descr << "\n\n";
+  else
+    s << name_ << " -- " << descr << "\n";
+}
+
+void
+HelpPrinter::usage(const std::string & text){
+  if (pod){
+    if (!usage_head) s << "=head1 SYNOPSIS\n\n";
+    s << "\t" << name_ << " " << text << "\n\n";
+  }
+  else {
+    if (!usage_head) s << "Usage:\n";
+    s << "\t" << name_ << " " << text << "\n";
+  }
+  usage_head = true;
+}
+
+void
+HelpPrinter::opts(unsigned int mask){
   const int option_width = 25;
   const int indent_width = option_width+4;
   const int text_width = 77-indent_width;
 
   if (pod) s << "\n=over 2\n";
 
-  for (auto const & opt:ext_options){
+  for (auto const & opt:opts_){
     if ((opt.group & mask) == 0) continue;
 
     ostringstream oname;
@@ -181,14 +211,38 @@ print_options(std::ostream & s, bool pod,
     }
   }
   if (pod) s << "\n=back\n";
+
+  // Check if we printed these options before, then add them to
+  // printed var.
+  if (printed & mask) throw Err() <<
+    "HelpPrinter: duplicated options in the help message";
+  printed|=mask;
 }
 
 void
-print_header(std::ostream & s, bool pod,
-             int level, const std::string & text){
-  if (pod)
-    s << "\n=head" << level << " " << text << "\n";
-  else
-    s << text << "\n";
+HelpPrinter::head(int level, const std::string & text){
 
+  if (pod){
+    std::string t(text);
+    if (level==1) std::transform(t.begin(),t.end(),t.begin(), ::toupper);
+    s << "\n=head" << level << " " << t << "\n";
+  }
+  else {
+    s << "\n" << text << "\n";
+  }
+}
+
+void
+HelpPrinter::par(const std::string & text){
+  s << text << "\n";
+}
+
+
+HelpPrinter::~HelpPrinter(){
+  // check if we have printed all options
+  unsigned int all=0;
+  for (auto const & o:opts_) all |= o.group;
+  if (all != printed)
+    s << "\nWARNING: not all options have been printed: "
+      << std::hex << (all^printed) << "\n";
 }
