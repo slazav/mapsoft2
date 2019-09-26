@@ -14,18 +14,29 @@ enum methodForSplit {SPLIT_MAX_PIXELS, SPLIT_MAX_DIM, SPLIT_MAX_COLORS};
 void ms2opt_add_image_cmap(GetOptSet & opts){
   int m = MS2OPT_IMAGE;
   opts.add("cmap_colors", 1,0, m,
-    "Colormap size for reducing image colors (2..256).");
-  opts.add("cmap_dim_method", 1,0, m,
-    "Analog of pnmcolormap -spreadbrightness|-spreadluminosity, "
-    "values: norm (default) or lumin.");
-  opts.add("cmap_rep_method", 1,0, m,
-    "Analog of pnmcolormap -center|-meancolor|-meanpixel, "
-    "values: center, meanpix (default), meancol.");
-  opts.add("cmap_split_method", 1,0, m,
-    "Analog of pnmcolormap -splitpix|-splitcol|-splitdim, "
-    "values: maxdim (default), maxpix, maxcol.");
+    "Colormap size for reducing image colors (2..256). "
+    "mage colors are reduced when saving to GIF, to PNG "
+    "with --png_format=pal, to TIFF with --tiff_format=pal");
   opts.add("cmap_alpha", 1,0, m,
-    "Alpha channel: none (default), full, gif.");
+    "Alpha channel: none (default) -- remove it; full -- treat it "
+    "equally with other channels; gif -- keep only fully-transparent "
+    "color, if needed. When saving GIF file (which supports only fully "
+    "transparent color) \"full\" works in the same way as \"gif\".");
+  opts.add("cmap_dim_method", 1,0, m,
+    "Analog of pnmcolormap options -spreadbrightness and -spreadluminosity. "
+    "When a box in the color space is measured, color dimensions can be "
+    "treated equally or with luminosity factors. "
+    "Values: norm (default) or lumin.");
+  opts.add("cmap_rep_method", 1,0, m,
+    "Analog of pnmcolormap options -center, -meancolor, and -meanpixel. "
+    "When a box in the color space is chosen, it can be represented by "
+    "its geometrical center, or by averaging pixels or colors in it. "
+    "Values: center, meanpix (default), meancol.");
+  opts.add("cmap_split_method", 1,0, m,
+    "Analog of pnmcolormap options -splitpix, -splitcol, -splitdim. "
+    "How to choose a box in the color space for splitting: by its "
+    "maximum dimension, maximum number of pixels or colors in it. "
+    "Values: maxdim (default), maxpix, maxcol.");
 }
 
 /**********************************************************/

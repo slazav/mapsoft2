@@ -12,11 +12,17 @@ using namespace std;
 void
 ms2opt_add_drawmap(GetOptSet & opts){
   int m = MS2OPT_DRAWMAP;
-  opts.add("map_smooth",      1,0,m, "Smooth map drawing (interpolation for small scales, averaging for large ones), default 0");
-  opts.add("map_clip_brd",    1,0,m, "Clip map to its border (default 1)");
-  opts.add("map_draw_refs",   1,0,m, "Draw map reference points (ARGB color, default 0)");
-  opts.add("map_draw_brd",    1,0,m, "Draw map border (ARGB color, default 0)");
-  opts.add("map_fade",        1,0,m, "Fade the map (0..100, default is 0, no fading)");
+  opts.add("map_smooth", 1,0,m,
+    "Smooth map drawing (interpolation for small scales, "
+    "averaging for large ones), default 0.");
+  opts.add("map_clip_brd", 1,0,m,
+    "Clip map to its border (default 1).");
+  opts.add("map_draw_refs", 1,0,m,
+    "Draw map reference points (ARGB color, default 0).");
+  opts.add("map_draw_brd", 1,0,m,
+    "Draw map border (ARGB color, default 0).");
+  opts.add("map_fade", 1,0,m,
+    "Fade the map (0..100, default is 0, no fading).");
 }
 
 /**********************************************************/

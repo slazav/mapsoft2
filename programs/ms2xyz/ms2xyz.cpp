@@ -19,34 +19,59 @@ void usage(bool pod=false, std::ostream & S = std::cout){
   pr.name("writing track in a text form");
   pr.usage("<options> <input files>");
 
-  pr.head(1, "General options:");
+  pr.head(1, "General options");
   pr.opts(MS2OPT_NONSTD | MS2OPT_STD | MS2OPT_OUT);
 
-  S << "If output file is not specified the data is printed to stdout.\n";
+  pr.par("If output file is not specified the data is printed to stdout.");
 
-  pr.head(1, "Geodata input options:");
+  pr.head(1, "Geodata input options");
   pr.opts(MS2OPT_GEO_I | MS2OPT_GEO_IO);
 
-  pr.head(1, "Format:");
-  S    << "  %% -- % sign\n"
-       << "  %x -- wgs lon\n"
-       << "  %y -- wgs lat\n"
-       << "  %z -- altitude, m\n"
+  pr.head(1, "Format");
+  pr.par(
+   "  %% -- % sign\n"
+   "  %x -- wgs lon\n"
+   "  %y -- wgs lat\n"
+   "  %z -- altitude, m\n"
 
-       << "  %t -- time (seconds since 1970-01-01 00:00:00 UTC)\n"
-       << "  %T -- date and time in ISO 8601 form (<yyyy-mm-dd>T<HH:MM:SS.FFF>Z)\n"
-       << "  %u -- time from the previous point, s\n"
+   "  %t -- time (seconds since 1970-01-01 00:00:00 UTC)\n"
+   "  %T -- date and time in ISO 8601 form (<yyyy-mm-dd>T<HH:MM:SS.FFF>Z)\n"
+   "  %u -- time from the previous point, s\n"
 
-       << "  %d -- % distance from part beginning, km\n"
-       << "  %D -- % distance from data beginning, km\n"
-       << "  %e -- % distance from the previous point, m\n"
+   "  %d -- % distance from part beginning, km\n"
+   "  %D -- % distance from data beginning, km\n"
+   "  %e -- % distance from the previous point, m\n"
 
-       << "  %S -- % speed, km/h\n"
+   "  %S -- % speed, km/h\n"
 
-       << "  %n -- %  point number from part beginning\n"
-       << "  %N -- %  point number from data beginning\n"
-       << "  %p -- %  part number\n"
-  ;
+   "  %n -- %  point number from part beginning\n"
+   "  %N -- %  point number from data beginning\n"
+   "  %p -- %  part number\n"
+  );
+
+  // see modules/time_fmt
+  pr.head(1, "Time format");
+  pr.par(
+   "  %% -- a literal %\n"
+   "  %n -- a newline\n"
+   "  %t -- a tab\n"
+
+   "  %Y -- year\n"
+   "  %y -- last two digits of year (00..99)\n"
+   "  %m -- month (01..12)\n"
+   "  %d -- day of month (e.g., 01)\n"
+   "  %H -- hour (00..23)\n"
+   "  %M -- minute (00..59)\n"
+   "  %S -- second (00..60)\n"
+   "  %F -- same as %Y-%m-%d\n"
+   "  %T -- same as %H:%M:%S\n"
+
+   "  %a -- abbreviated weekday name (e.g., Sun)\n"
+   "  %b -- abbreviated month name (e.g., Jan)\n"
+
+   "  %s -- seconds since 1970-01-01 00:00:00 UTC\n"
+   "  %f -- fractional part of a second it it is non-zero (non-standard)\n"
+  );
   throw Err();
 }
 
@@ -56,12 +81,17 @@ main (int argc, char **argv) {
   try {
 
     int m = MS2OPT_NONSTD;
-    options.add("tshift", 1, 0,  m, "time shift, hours");
-    options.add("tfmt",   1,'t', m, "time format string for %T field (default: \"%F %T\")");
-    options.add("fmt",    1,'f', m, "format string (default: \"%x %y %z %T %D %S\")");
-    options.add("win",    1,'w', m, "window for speed calculation, sec (default: 120)");
-    options.add("break",  1,'b', m, "place to break calculation and put empty line "
-                                    "(none | day | track, default: none)");
+    options.add("tshift", 1,0,m,
+      "Time shift, hours.");
+    options.add("tfmt",   1,'t', m,
+      "Time format string for %T field (default: \"%F %T\")");
+    options.add("fmt", 1,'f', m,
+      "Format string (default: \"%x %y %z %T %D %S\")");
+    options.add("win", 1,'w', m,
+      "Window for speed calculation, sec (default: 120)");
+    options.add("break", 1,'b', m,
+      "Place to break calculation and put empty line "
+      "(none | day | track, default: none)");
 
     ms2opt_add_std(options);
     ms2opt_add_out(options);

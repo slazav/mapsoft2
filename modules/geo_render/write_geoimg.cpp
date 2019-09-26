@@ -24,9 +24,9 @@ ms2opt_add_geoimg(GetOptSet & opts){
   int m = MS2OPT_IMAGE;
   opts.remove("img_in_fmt");
   opts.remove("img_out_fmt");
-  opts.add("out_fmt",  1,0,   m, "image output format: pdf, ps, svg, png, jpeg, tiff, gif");
-  opts.add("bgcolor",  1,0,   m, "image background color (default 0xFFFFFFFF)");
-  opts.add("map",      1,'m', m, "write map file in OziExprorer format");
+  opts.add("out_fmt",  1,0,   m, "Image output format: pdf, ps, svg, png, jpeg, tiff, gif.");
+  opts.add("bgcolor",  1,0,   m, "Image background color (default 0xFFFFFFFF).");
+  opts.add("map",      1,'m', m, "Write map file in OziExprorer format.");
 }
 
 bool

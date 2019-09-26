@@ -13,14 +13,14 @@ using namespace std;
 void
 ms2opt_add_std(GetOptSet & opts){
   int m = MS2OPT_STD;
-  opts.add("help",    0,'h', m, "show help message");
-  opts.add("pod",     0, 0 , m, "show help message as POD template");
-  opts.add("verbose", 0,'v', m, "be verbose\n");
+  opts.add("help",    0,'h', m, "Show help message.");
+  opts.add("pod",     0, 0 , m, "Show help message as POD template.");
+  opts.add("verbose", 0,'v', m, "Be verbose.\n");
 }
 
 void
 ms2opt_add_out(GetOptSet & opts){
-  opts.add("out", 1, 'o', MS2OPT_OUT, "output file");
+  opts.add("out", 1, 'o', MS2OPT_OUT, "Output file.");
 }
 
 /**********************************************/
@@ -174,7 +174,7 @@ HelpPrinter::opts(unsigned int mask){
   const int indent_width = option_width+4;
   const int text_width = 77-indent_width;
 
-  if (pod) s << "\n=over 2\n";
+  if (pod) s << "=over 2\n\n";
 
   for (auto const & opt:opts_){
     if ((opt.group & mask) == 0) continue;
@@ -206,11 +206,11 @@ HelpPrinter::opts(unsigned int mask){
       s << opt.desc.substr(opt.desc.size()-ii, ii) << "\n";
     }
     else {
-      s << "\n=item B<< " << oname.str() << " >>\n\n"
-        << opt.desc << "\n";
+      s << "=item B<< " << oname.str() << " >>\n\n"
+        << opt.desc << "\n\n";
     }
   }
-  if (pod) s << "\n=back\n";
+  if (pod) s << "=back\n\n";
 
   // Check if we printed these options before, then add them to
   // printed var.
@@ -225,16 +225,16 @@ HelpPrinter::head(int level, const std::string & text){
   if (pod){
     std::string t(text);
     if (level==1) std::transform(t.begin(),t.end(),t.begin(), ::toupper);
-    s << "\n=head" << level << " " << t << "\n";
+    s << "=head" << level << " " << t << "\n\n";
   }
   else {
-    s << "\n" << text << "\n";
+    s << "\n" << text << "\n\n";
   }
 }
 
 void
 HelpPrinter::par(const std::string & text){
-  s << text << "\n";
+  s << text << "\n\n";
 }
 
 

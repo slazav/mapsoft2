@@ -15,24 +15,54 @@ using namespace std;
 void
 ms2opt_add_mkref(GetOptSet & opts){
   int m = MS2OPT_MKREF;
-  opts.add("mkref",         1,0,m, "map reference type (nom, google_tile, tms_tile, proj)");
-  opts.add("name",          1,0,m, "map name (\"nom\" references)");
-  opts.add("dpi",           1,0,m, "map resolution, pixels per inch (\"nom\" and \"proj\" references)");
-  opts.add("mag",           1,0,m, "map magnification (\"nom\" references)");
-  opts.add("margins",       1,0,m, "map margins, pixels (\"nom\" and \"proj\" references)");
-  opts.add("top_margin",    1,0,m, "override top margin value (\"nom\" and \"proj\" references)");
-  opts.add("left_margin",   1,0,m, "override left margin value (\"nom\" and \"proj\" references)");
-  opts.add("right_margin",  1,0,m, "override right margin value (\"nom\" and \"proj\" references)");
-  opts.add("bottom_margin", 1,0,m, "override bottom margin value (\"nom\" and \"proj\" references)");
-  opts.add("zindex",        1,0,m, "tile zindex (\"*_tile\" references)");
-  opts.add("tiles",         1,0,m, "tile or tile range (\"*_tile\" references)");
-  opts.add("coords",        1,0,m, "figure in projection coordinates (rectangle or lines) to be covered by the map (\"proj\" references)");
-  opts.add("border",        1,0,m, "map border in projection coordinates (\"proj\" references)");
-  opts.add("coords_wgs",    1,0,m, "figure in wgs84 coordinates to be covered by the map (\"*_tile\" or \"proj\" references)");
-  opts.add("border_wgs",    1,0,m, "map border in wgs84 coordinates (\"*_tile\" or \"proj\" references)");
-  opts.add("proj",          1,0,m, "projection setting, \"proj\" parameter string (e.g. \"+datum=WGS84 +proj=lonlat\")"
-                                   " or mapsoft2 alias (\"WGS\", \"WEB\", \"FI\", \"CH\", \"SU39\", etc.)");
-  opts.add("scale",         1,0,m, "map scale, projection units per map cm (\"proj\" references)");
+  opts.add("mkref", 1,0,m,
+    "Choose map type (nom, google_tile, tms_tile, proj)");
+  opts.add("name", 1,0,m,
+    "Set map name. For \"nom\" maps it should contain a "
+    "valid Soviet nomenclature name.");
+  opts.add("dpi", 1,0,m,
+    "Map resolution, pixels per inch (\"nom\" and \"proj\" maps)");
+  opts.add("mag", 1,0,m,
+    "Map magnification (\"nom\" maps)");
+  opts.add("margins",  1,0,m,
+    "Map margins, pixels (\"nom\" and \"proj\" maps).");
+  opts.add("top_margin", 1,0,m,
+    "Override top margin value (\"nom\" and \"proj\" maps).");
+  opts.add("left_margin", 1,0,m,
+    "Override left margin value (\"nom\" and \"proj\" maps).");
+  opts.add("right_margin", 1,0,m,
+    "Override right margin value (\"nom\" and \"proj\" maps).");
+  opts.add("bottom_margin", 1,0,m,
+    "Override bottom margin value (\"nom\" and \"proj\" maps).");
+  opts.add("zindex", 1,0,m,
+    "Tile zindex (\"*_tile\" maps). Can be skipped if tile argument "
+    "has the form [x,y,z]");
+  opts.add("tiles", 1,0,m,
+    "Tile or tile range (\"*_tile\" maps), [x,y], [x,y,z], or [x,y,w,h]");
+  opts.add("coords", 1,0,m,
+    "Figure in projection coordinates (rectangle or lines) to "
+    "be covered by the map (\"proj\" maps). "
+    "Figure can be a rectangle written as [x,y,w,h], or a line, "
+    "[[x1,y1],[x2,y2], ...], or a multi-segment line, "
+    "[<line>, <line>, ...].");
+  opts.add("border", 1,0,m,
+    "Map border in projection coordinates (\"proj\" maps), "
+    "a line or a multi-segment line.");
+  opts.add("coords_wgs", 1,0,m,
+    "Figure in wgs84 coordinates to be covered by the map "
+    "(\"*_tile\" or \"proj\" maps), a rectangle, a line, or a multi-segment line.");
+  opts.add("border_wgs", 1,0,m,
+    "Map border in wgs84 coordinates (\"*_tile\" or \"proj\" maps), "
+    "a line or a multi-segment line.");
+  opts.add("proj", 1,0,m,
+    "Projection setting, \"libproj\" parameter string "
+    "(e.g. \"+datum=WGS84 +proj=lonlat\") "
+    "or mapsoft2 alias (\"WGS\", \"WEB\", \"FI\", \"CH\", \"SU39\", etc.)."
+    "Default is WGS.");
+  opts.add("scale", 1,0,m,
+    "Map scale, projection units per map cm (\"proj\" maps). "
+    "Default value is 0.01 degree/cm for degree projections, "
+    "1000m/cm for metric projections.");
 }
 
 

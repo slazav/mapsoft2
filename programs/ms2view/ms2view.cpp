@@ -22,19 +22,19 @@ void usage(bool pod=false, ostream & S = cout){
 
   pr.name("mapsoft2 viewer for geodata and raster maps");
   pr.usage("[<options>] <input files>");
-  pr.head(1, "General options:");
+  pr.head(1, "General options");
   pr.opts(MS2OPT_STD);
-  pr.head(1, "Options for reading geodata:");
+  pr.head(1, "Options for reading geodata");
   pr.opts(MS2OPT_GEO_I | MS2OPT_GEO_IO);
-  pr.head(1, "Options for making map reference:");
+  pr.head(1, "Options for making map reference");
   pr.opts(MS2OPT_MKREF);
-  pr.head(1, "Options for drawing tracks:");
+  pr.head(1, "Options for drawing tracks");
   pr.opts(MS2OPT_DRAWTRK);
-  pr.head(1, "Options for drawing waypoints:");
+  pr.head(1, "Options for drawing waypoints");
   pr.opts(MS2OPT_DRAWWPT);
-  pr.head(1, "Options for drawing maps:");
+  pr.head(1, "Options for drawing maps");
   pr.opts(MS2OPT_DRAWMAP);
-//  pr.head(1, "Options for drawing grid:");
+//  pr.head(1, "Options for drawing grid");
 //  pr.opts(MS2OPT_DRAWGRD);
   S << "\n";
   throw Err();
