@@ -12,20 +12,19 @@ using namespace std;
 GetOptSet options;
 
 void usage(bool pod=false, ostream & S = cout){
-  string head = pod? "\n=head1 ":"\n";
   const char * prog = "ms2mkref";
-  S << prog << " -- creating a map reference\n"
-    << head << "Usage: "
-    << prog << "  <options>\n"
+  S << prog << " -- creating a map reference\n";
+  print_header(S, pod, 1, "Usage:");
+  S << prog << "  <options>\n";
   ;
-  S << head << "General options:\n";
-  print_options(options, MS2OPT_STD, S, pod);
-  print_options(options, MS2OPT_OUT, S, pod);
-  S << head << "Making reference:\n";
-  print_options(options, MS2OPT_MKREF, S, pod);
-  print_options(options, MS2OPT_NONSTD, S, pod);
-  S << head << "Output options (OziExplorer map format):\n";
-  print_options(options, MS2OPT_GEO_O, S, pod);
+  print_header(S, pod, 1, "General options:");
+  print_options(S, pod, options, MS2OPT_STD);
+  print_options(S, pod, options, MS2OPT_OUT);
+  print_header(S, pod, 1, "Making reference:");
+  print_options(S, pod, options, MS2OPT_MKREF);
+  print_options(S, pod, options, MS2OPT_NONSTD);
+  print_header(S, pod, 1, "Output options (OziExplorer map format):");
+  print_options(S, pod, options, MS2OPT_GEO_O);
   throw Err();
 }
 

@@ -16,18 +16,17 @@
 GetOptSet options;
 
 void usage(bool pod=false, std::ostream & S = std::cout){
-  std::string head = pod? "\n=head1 ":"\n";
   const char * prog = "ms2vmap";
-  S << prog << " -- working with vector maps\n"
-    << head << "Usage:\n"
-    << prog << " <vmap> (-h|--help|--pod)\n"
+  S << prog << " -- working with vector maps\n";
+  print_header(S, pod, 1, "Usage:");
+  S << prog << " <vmap> (-h|--help|--pod)\n"
     << prog << " <vmap> <action> (-h|--help|--pod)\n"
     << prog << " <vmap> <action> [<action arguments and options>]\n"
   ;
-  S << head << "General options:\n";
-  print_options(options, OPT_G, S, pod);
-  S << head << "Actions:\n"
-    << " * import_mp <name> <options> -- import MP file to the map\n"
+  print_header(S, pod, 1, "General options:");
+  print_options(S, pod, options, OPT_G);
+  print_header(S, pod, 1, "Actions:");
+  S << " * import_mp <name> <options> -- import MP file to the map\n"
     << " * export_mp <name> <options> -- export the map to MP file\n"
     << " * import_vmap <name> <options> -- import VMAP1 file to the map\n"
     << " * export_vmap <name> <options> -- export the map to VMAP1 file\n"
