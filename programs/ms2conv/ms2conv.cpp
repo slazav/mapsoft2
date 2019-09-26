@@ -15,11 +15,32 @@ void usage(bool pod=false, ostream & S = cout){
   HelpPrinter pr(S, pod, options, "ms2cnv");
   pr.name("mapsoft2 converter for geodata and raster maps");
   pr.usage("<options> <input files> -o <output file>");
+  pr.head(1, "Description");
+
+  pr.par(
+    "ms2conv reads geodata from files (OziExplorer, GPX, KML, GeoJSON, "
+    "GarminUtils, ZIP formats are supported). Then it applies filters and "
+    "saves data to the output file.");
+
   pr.head(1, "General options");
   pr.opts(MS2OPT_STD | MS2OPT_OUT);
   pr.head(1, "Geodata input/output options");
   pr.opts(MS2OPT_GEO_I | MS2OPT_GEO_IO | MS2OPT_GEO_O);
   pr.head(1, "Rendering images");
+
+  pr.par(
+    "ms2conv can produce images with raster maps, tracks and "
+    "waypoints. Supported formats: jpeg, png, gif, tiff, ps, pdf, svg. "
+    "Format is selected by output file extension or by --out_fmt option. "
+    "Option --map can be used to save map reference for the image (at the "
+    "moment only OziExplorer map format is supported).");
+
+  pr.par(
+    "When rendering images the reference should be specified. If --mkref "
+    "option exists then it is created from options. If not, then "
+    "reference of the first map is used, or it is set to some "
+    "default value.");
+
   pr.head(2, "Options for making map reference");
   pr.opts(MS2OPT_MKREF);
   pr.head(2, "Options for drawing tracks");
