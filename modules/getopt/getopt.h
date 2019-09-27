@@ -82,6 +82,7 @@ public:
 #define MS2OPT_DRAWMAP 1<<9  // drawing maps (see modules/geo_render/gobj_map)
 #define MS2OPT_DRAWGRD 1<<10 // drawing map grids (see modules/geo_render/draw_grid)
 #define MS2OPT_IMAGE   1<<11 // image options (see modules/image/image_io)
+#define MS2OPT_GEOFLT  1<<12 // geo filters (see modules/geo_data/filters)
 
 // add MS2OPT_STD options
 void ms2opt_add_std(GetOptSet & opts);

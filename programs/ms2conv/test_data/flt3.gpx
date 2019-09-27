@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<gpx version='1.1' creator='mapsoft-2'>
+  <trk>
+    <name>ACTIVE LOG                         </name>
+    <trkseg>
+      <trkpt lat='58.8211400' lon='42.6270600'/>
+      <trkpt lat='58.8213000' lon='42.6272800'/>
+      <trkpt lat='58.8216900' lon='42.6277900'/>
+    </trkseg>
+    <trkseg>
+      <trkpt lat='58.8219800' lon='42.6281100'/>
+      <trkpt lat='58.8220300' lon='42.6281600'/>
+      <trkpt lat='58.8220500' lon='42.6281700'/>
+      <trkpt lat='58.8221000' lon='42.6282600'/>
+    </trkseg>
+    <trkseg>
+      <trkpt lat='58.8223600' lon='42.6285500'/>
+      <trkpt lat='58.8227300' lon='42.6290300'/>
+      <trkpt lat='58.8230300' lon='42.6293900'/>
+      <trkpt lat='58.8233500' lon='42.6298100'/>
+    </trkseg>
+  </trk>
+</gpx>

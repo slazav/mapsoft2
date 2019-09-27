@@ -4,6 +4,7 @@
 #include <vector>
 #include "getopt/getopt.h"
 #include "geo_data/geo_io.h"
+#include "geo_data/filters.h"
 #include "geo_render/write_geoimg.h"
 #include <cstring>
 
@@ -26,6 +27,8 @@ void usage(bool pod=false, ostream & S = cout){
   pr.opts(MS2OPT_STD | MS2OPT_OUT);
   pr.head(1, "Geodata input/output options");
   pr.opts(MS2OPT_GEO_I | MS2OPT_GEO_IO | MS2OPT_GEO_O);
+  pr.head(1, "Geodata filtering options");
+  pr.opts(MS2OPT_GEOFLT);
   pr.head(1, "Rendering images");
 
   pr.par(
@@ -66,6 +69,7 @@ main(int argc, char *argv[]){
     ms2opt_add_geo_i(options);
     ms2opt_add_geo_o(options);
     ms2opt_add_geo_io(options);
+    ms2opt_add_geoflt(options);
     ms2opt_add_geoimg(options);
     options.replace("out_fmt", 1, 0, MS2OPT_OUT,
       "Output format, geodata (json, gu, gpx, kml, kmz, ozi, zip) "
@@ -81,6 +85,7 @@ main(int argc, char *argv[]){
     GeoData data;
     for (auto const & f:infiles) read_geo(f, data, O);
 
+    geo_filters(data, O);
 
     // write output file if needed
     std::string ofile = O.get("out", "");
