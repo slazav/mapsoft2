@@ -62,6 +62,9 @@ main(int argc, char **argv){
     if (opts.exists("help")) usage();
     if (opts.exists("pod")) usage(true);
 
+    // fix scrollbar problem
+    setenv("GDK_CORE_DEVICE_EVENTS", "1", 1);
+
     Gtk::Main kit(argc, argv);
     Mapview mapview(optsp);
     mapview.add_files(files);
