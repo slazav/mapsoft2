@@ -14,7 +14,9 @@
 
 <ul id="index">
   <li><a href="#NAME">NAME</a></li>
-  <li><a href="#NOT-DOCUMENTATION-YET">NOT DOCUMENTATION YET</a></li>
+  <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
+  <li><a href="#GENERAL-OPTIONS">GENERAL OPTIONS:</a></li>
+  <li><a href="#ACTIONS">ACTIONS:</a></li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
 </ul>
@@ -23,7 +25,40 @@
 
 <p>ms2vmap -- working with vector maps</p>
 
-<h1 id="NOT-DOCUMENTATION-YET">NOT DOCUMENTATION YET</h1>
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
+
+<pre><code>        ms2vmap &lt;vmap&gt; (-h|--help|--pod)
+
+        ms2vmap &lt;vmap&gt; &lt;action&gt; (-h|--help|--pod)
+
+        ms2vmap &lt;vmap&gt; &lt;action&gt; [&lt;action arguments and options&gt;]</code></pre>
+
+<h1 id="GENERAL-OPTIONS">GENERAL OPTIONS:</h1>
+
+<dl>
+
+<dt id="h---help"><b>-h, --help</b></dt>
+<dd>
+
+<p>show help message</p>
+
+</dd>
+<dt id="pod"><b>--pod</b></dt>
+<dd>
+
+<p>show this message as POD template</p>
+
+</dd>
+</dl>
+
+<h1 id="ACTIONS">ACTIONS:</h1>
+
+<pre><code> * import_mp &lt;name&gt; &lt;options&gt; -- import MP file to the map
+ * export_mp &lt;name&gt; &lt;options&gt; -- export the map to MP file
+ * import_vmap &lt;name&gt; &lt;options&gt; -- import VMAP1 file to the map
+ * export_vmap &lt;name&gt; &lt;options&gt; -- export the map to VMAP1 file</code></pre>
+
+<p>WARNING: not all options have been printed: 2</p>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 

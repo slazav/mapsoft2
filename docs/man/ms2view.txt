@@ -1,30 +1,3 @@
-=head1 NAME
-
-ms2view -- mapsoft2 viewer for geodata and raster maps
-
-
-=head1 USAGE
-
-	ms2view <options> <input files>
-
-
-=head1 GENERAL OPTIONS
-
-include(`opt_general.m4')
-
-=head1 READING GEODATA
-
-include(`opt_geo_in.m4')
-
-=head1 SETTING UP MAP REFERENCE FOR THE VIEWER
-
-include(`opt_mkref.m4')
-
-
-=head1 DRAWING OPTIONS
-
-include(`opt_render.m4')
-
 =head1 CUSTOMIZING VIEWER INTERFACE WITH CSS STYLES
 
 Structure of B<ms2view> window is simple: a viewer, a main menu, a
@@ -48,5 +21,3 @@ documentation or GTK theme sources:
 =item * L<https://github.com/GNOME/gtk/blob/master/gtk/theme/Adwaita/>
 
 =back
-
-include(`foot.m4')
