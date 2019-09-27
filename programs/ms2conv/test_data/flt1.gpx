@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<gpx version='1.1' creator='mapsoft-2'>
+  <wpt lat='59.0841800' lon='42.2817500'>
+    <ele>135.94</ele>
+    <time>2010-02-24T10:26:01.233Z</time>
+    <name>AVTOST</name>
+    <cmt>23-FEB-10 16:15:59</cmt>
+  </wpt>
+  <wpt lat='58.8939700' lon='42.6971600'>
+    <ele>157.89</ele>
+    <time>2010-02-24T10:26:01.233Z</time>
+    <name>OBED1</name>
+    <cmt>21-FEB-10 13:57:02</cmt>
+  </wpt>
+  <wpt lat='59.1307200' lon='42.7555800'>
+    <ele>253.90</ele>
+    <time>2010-02-24T10:26:01.233Z</time>
+    <name>OBED2</name>
+    <cmt>22-FEB-10 12:25:40</cmt>
+  </wpt>
+  <wpt lat='59.1050800' lon='42.3503500'>
+    <ele>166.12</ele>
+    <time>2010-02-24T10:26:01.233Z</time>
+    <name>OBED3</name>
+    <cmt>23-FEB-10 13:22:25</cmt>
+  </wpt>
+  <wpt lat='59.1248330' lon='42.4381840'>
+    <ele>-236.83</ele>
+    <time>2010-02-24T10:37:04.198Z</time>
+    <name>OBHOD-Y</name>
+  </wpt>
+  <wpt lat='59.1262330' lon='42.4435520'>
+    <ele>-236.83</ele>
+    <time>2010-02-24T10:37:34.014Z</time>
+    <name>OBHOD-X</name>
+  </wpt>
+  <wpt lat='59.1652800' lon='42.5766800'>
+    <ele>203.91</ele>
+    <time>2010-02-22T15:50:18.003Z</time>
+    <name>POLE-X</name>
+    <cmt>TP - 24.02.2010 10:40:50</cmt>
+  </wpt>
+  <wpt lat='59.1731120' lon='42.6194040'>
+    <ele>-236.83</ele>
+    <time>2010-02-24T10:41:36.841Z</time>
+    <name>NOCH2</name>
+  </wpt>
+  <wpt lat='59.0731900' lon='42.7920490'>
+    <ele>-236.83</ele>
+    <time>2010-02-24T10:50:43.762Z</time>
+    <name>DOR-X</name>
+  </wpt>
+  <wpt lat='59.0528230' lon='42.8064970'>
+    <ele>-236.83</ele>
+    <time>2010-02-24T10:51:04.947Z</time>
+    <name>DOR-Y</name>
+  </wpt>
+  <wpt lat='59.0369080' lon='42.8010260'>
+    <ele>-236.83</ele>
+    <time>2010-02-24T10:52:03.561Z</time>
+    <name>NOCH1</name>
+  </wpt>
+</gpx>
