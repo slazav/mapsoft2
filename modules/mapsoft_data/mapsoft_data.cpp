@@ -25,18 +25,11 @@ mapsoft_read(const string &fname, MapsoftData & data, const Opt & opt){
     return;
   }
 
-  if (read_geo(fname, data, opt)) return;
-
-  throw Err() << "Can't determine input format for file: " << fname;
-  return;
+  read_geo(fname, data, opt);
 }
 
 void
 mapsoft_write(const string & fname, const MapsoftData & data, const Opt & opt){
-
-  if (write_geo(fname, data, opt)) return;
-
-  throw Err() << "Can't determine output format for file: " << fname;
-  return;
+  write_geo(fname, data, opt);
 }
 

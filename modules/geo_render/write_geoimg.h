@@ -12,6 +12,6 @@ void ms2opt_add_geoimg(GetOptSet & opts);
 // Write geodata to a raster file. Return 0 if file was successfully saved,
 // 1 if output format can not be determined, throw Err on other errors.
 // Interface is similat to `write_geo` in modules/geo_data
-bool write_geoimg(const std::string & ofile, GeoData & data, const Opt & opt);
+void write_geoimg(const std::string & ofile, GeoData & data, const Opt & opt);
 
 #endif

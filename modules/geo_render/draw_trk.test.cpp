@@ -64,8 +64,7 @@ main(int argc, char **argv){
     if (fname == "")
       throw Err() << "No output file specified (use -o option)";
 
-    if (!write_geoimg(fname, data, opts))
-      throw Err() << "write_geoimg: unknown output format";
+    write_geoimg(fname, data, opts);
 
   }
   catch (Err e) {

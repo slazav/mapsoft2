@@ -152,12 +152,16 @@ Mapview::add_data(const GeoData & data, bool scroll) {
 
   set_changed();
 
-  // If there is no reference yet, make one.
+  // If there is no reference yet, try to make one.
   // Use data and options.
+  // If reference can not be created do nothing.
   if (!haveref){
-    GeoMap map = geo_mkref(data, *opts.get());
-    set_cnv(std::shared_ptr<ConvMap>(new ConvMap(map)));
-    scroll=true;
+    try {
+      GeoMap map = geo_mkref(data, *opts.get());
+      set_cnv(std::shared_ptr<ConvMap>(new ConvMap(map)));
+      scroll=true;
+    }
+    catch (Err e) {}
   }
 
   if (scroll){
@@ -200,13 +204,9 @@ Mapview::add_files(const std::vector<std::string> & files) {
   GeoData data;
 //  viewer.start_waiting();
   for (auto const & f:files){
-//    spanel.message("Load " + *i);
-    try {
-      read_geo(f, data, *opts.get());
-    }
-    catch (Err e) {
-      dlg_err.call(e);
-    }
+    spanel.message("Load file: " + f);
+    try { read_geo(f, data, *opts.get()); }
+    catch(Err e) { dlg_err.call(e); }
   }
   add_data(data, true);
 //  viewer.stop_waiting();
@@ -221,9 +221,9 @@ Mapview::load_project(const std::string & file, bool force) {
     return;
   }
   GeoData data;
-  try {read_geo(file, data);}
-  catch (Err e) {dlg_err.call(e);}
-  spanel.message("Open new project:" + file);
+  try { read_geo(file, data, *opts.get()); }
+  catch(Err e) { dlg_err.call(e); }
+  spanel.message("Open new project: " + file);
 
 //  viewer.start_waiting();
   clear_data();

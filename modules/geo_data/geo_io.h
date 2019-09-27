@@ -27,8 +27,8 @@ void ms2opt_add_ozimap_o(GetOptSet & opts);
 
 // Detect file format (by file extension and --fmt option) and read/write data.
 // Return false if format is unknown.
-bool read_geo (const std::string &filename, GeoData & data, const Opt & opt = Opt());
-bool write_geo (const std::string &filename, const GeoData & data, const Opt & opt = Opt());
+void read_geo (const std::string &filename, GeoData & data, const Opt & opt = Opt());
+void write_geo (const std::string &filename, const GeoData & data, const Opt & opt = Opt());
 
 
 // GPX format

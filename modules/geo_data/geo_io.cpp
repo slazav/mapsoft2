@@ -45,7 +45,7 @@ ms2opt_add_ozimap_o(GetOptSet & opts){
 }
 
 /**********************************************************/
-bool
+void
 read_geo (const string &fname, GeoData & data, const Opt & opt){
   string fmt;
   if      (file_ext_check(fname, ".json")) fmt="json";
@@ -63,25 +63,25 @@ read_geo (const string &fname, GeoData & data, const Opt & opt){
   // JSON format
   if (fmt == "json"){
     read_json(fname, (GeoData &) data, opt);
-    return true;
+    return;
   }
 
   // Garmin Utils format
   if (fmt == "gu"){
     read_gu(fname, (GeoData &) data, opt);
-    return true;
+    return;
   }
 
   // GPX format
   if (fmt == "gpx"){
     read_gpx(fname, (GeoData &) data, opt);
-    return true;
+    return;
   }
 
   // KML format
   if (fmt == "kml"){
     read_kml(fname, (GeoData &) data, opt);
-    return true;
+    return;
   }
 
   // KMZ format
@@ -93,13 +93,13 @@ read_geo (const string &fname, GeoData & data, const Opt & opt){
       if (*paths[i].rbegin() == '/') continue;
       read_kml(paths[i], (GeoData &) data, opt);
     }
-    return true;
+    return;
   }
 
   // OxiExplorer format
   if (fmt == "ozi"){
     read_ozi(fname, (GeoData &) data, opt);
-    return true;
+    return;
   }
 
   // ZIP format
@@ -111,13 +111,13 @@ read_geo (const string &fname, GeoData & data, const Opt & opt){
       if (*p.rbegin() == '/') continue;
       read_geo(p, data, opt);
     }
-    return true;
+    return;
   }
 
-  return false;
+  throw Err() << "Can't determine input format for file: " << fname;
 }
 
-bool
+void
 write_geo (const string &fname, const GeoData & data, const Opt & opt){
 
   string fmt;
@@ -135,25 +135,25 @@ write_geo (const string &fname, const GeoData & data, const Opt & opt){
   // JSON format
   if (fmt == "json"){
     write_json(fname, (GeoData &) data, opt);
-    return true;
+    return;
   }
 
   // Garmin Utils format
   if (fmt == "gu"){
     write_gu(fname, (GeoData &) data, opt);
-    return true;
+    return;
   }
 
   // GPX format
   if (fmt == "gpx"){
     write_gpx(fname, (GeoData &) data, opt);
-    return true;
+    return;
   }
 
   // KML format
   if (fmt == "kml"){
     write_kml(fname, (GeoData &) data, opt);
-    return true;
+    return;
   }
 
   // KMZ format
@@ -162,7 +162,7 @@ write_geo (const string &fname, const GeoData & data, const Opt & opt){
     string fpath = tmpdir.add(file_ext_repl(fname, ".kml").c_str());
     write_kml(fpath, data, opt);
     tmpdir.zip(fname);
-    return true;
+    return;
   }
 
   // OZI format (multiple files)
@@ -223,9 +223,8 @@ write_geo (const string &fname, const GeoData & data, const Opt & opt){
         files.push_back(f.str());
       }
     }
-    return true;
+    return;
   }
-
-  return false;
+  throw Err() << "Can't determine output format for file: " << fname;
 }
 

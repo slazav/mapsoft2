@@ -105,9 +105,7 @@ main (int argc, char **argv) {
     if (O.exists("pod"))  usage(true);
 
     GeoData data;
-    for (auto const & f:infiles)
-      if (!read_geo(f, data, O))
-        throw Err() << "Can't determine input format for file: " << f;
+    for (auto const & f:infiles) read_geo(f, data, O);
 
     double tshift = O.get<double>("tshift", 0);
     string tfmt   = O.get<string>("tfmt", "%F %T");

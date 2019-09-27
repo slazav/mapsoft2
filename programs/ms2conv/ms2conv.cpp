@@ -79,25 +79,28 @@ main(int argc, char *argv[]){
     bool verb = O.exists("verbose");
 
     GeoData data;
-    for (auto const & f:infiles)
-      if (!read_geo(f, data, O))
-        throw Err() << "Can't determine input format for file: " << f;
+    for (auto const & f:infiles) read_geo(f, data, O);
 
 
     // write output file if needed
     std::string ofile = O.get("out", "");
-    if (ofile != ""){
+    if (ofile == "") return 0;
 
-      // write geodata
-      if (write_geo(ofile, data, O)) return 0;
-
-      // render image file
-      if (write_geoimg(ofile, data, O)) return 0;
-
-      throw Err() << "Can't determine output format for file: " << ofile;
+    // write geodata
+    try {
+      write_geo(ofile, data, O);
+      return 0;
     }
+    catch(Err e) {}
 
-    return 0;
+    // render image file
+    try {
+      write_geoimg(ofile, data, O);
+      return 0;
+    }
+    catch(Err e) {}
+
+    throw Err() << "Can't determine output format for file: " << ofile;
   }
 
   catch(Err e){

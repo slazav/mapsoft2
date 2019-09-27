@@ -29,7 +29,7 @@ ms2opt_add_geoimg(GetOptSet & opts){
   opts.add("map",      1,'m', m, "Write map file in OziExprorer format.");
 }
 
-bool
+void
 write_geoimg(const std::string & fname, GeoData & data, const Opt & opts){
 
   std::string fmt;
@@ -66,7 +66,8 @@ write_geoimg(const std::string & fname, GeoData & data, const Opt & opts){
     img.fill32(0);
     cr.set_surface_img(img);
   }
-  else return false;
+  else
+    throw Err() << "write_geoimg: unknown output format";
 
   // fill the image with bgcolor
   cr->set_color_a(opts.get<int>("bgcolor", 0xFFFFFFFF));
@@ -106,6 +107,5 @@ write_geoimg(const std::string & fname, GeoData & data, const Opt & opts){
     map.image = fname;
     write_ozi_map(opts.get("map","").c_str(), map, opts);
   }
-  return true;
 }
 
