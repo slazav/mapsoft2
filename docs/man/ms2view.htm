@@ -14,17 +14,13 @@
 
 <ul id="index">
   <li><a href="#NAME">NAME</a></li>
-  <li><a href="#USAGE">USAGE</a></li>
+  <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
   <li><a href="#GENERAL-OPTIONS">GENERAL OPTIONS</a></li>
-  <li><a href="#READING-GEODATA">READING GEODATA</a></li>
-  <li><a href="#SETTING-UP-MAP-REFERENCE-FOR-THE-VIEWER">SETTING UP MAP REFERENCE FOR THE VIEWER</a></li>
-  <li><a href="#DRAWING-OPTIONS">DRAWING OPTIONS</a>
-    <ul>
-      <li><a href="#Options-for-drawing-tracks">Options for drawing tracks:</a></li>
-      <li><a href="#Options-for-drawing-waypoints">Options for drawing waypoints:</a></li>
-      <li><a href="#Options-for-drawing-maps">Options for drawing maps:</a></li>
-    </ul>
-  </li>
+  <li><a href="#OPTIONS-FOR-READING-GEODATA">OPTIONS FOR READING GEODATA</a></li>
+  <li><a href="#OPTIONS-FOR-MAKING-MAP-REFERENCE">OPTIONS FOR MAKING MAP REFERENCE</a></li>
+  <li><a href="#OPTIONS-FOR-DRAWING-TRACKS">OPTIONS FOR DRAWING TRACKS</a></li>
+  <li><a href="#OPTIONS-FOR-DRAWING-WAYPOINTS">OPTIONS FOR DRAWING WAYPOINTS</a></li>
+  <li><a href="#OPTIONS-FOR-DRAWING-MAPS">OPTIONS FOR DRAWING MAPS</a></li>
   <li><a href="#CUSTOMIZING-VIEWER-INTERFACE-WITH-CSS-STYLES">CUSTOMIZING VIEWER INTERFACE WITH CSS STYLES</a></li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
@@ -34,9 +30,9 @@
 
 <p>ms2view -- mapsoft2 viewer for geodata and raster maps</p>
 
-<h1 id="USAGE">USAGE</h1>
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code>        ms2view &lt;options&gt; &lt;input files&gt;</code></pre>
+<pre><code>        ms2view [&lt;options&gt;] &lt;input files&gt;</code></pre>
 
 <h1 id="GENERAL-OPTIONS">GENERAL OPTIONS</h1>
 
@@ -62,14 +58,14 @@
 </dd>
 </dl>
 
-<h1 id="READING-GEODATA">READING GEODATA</h1>
+<h1 id="OPTIONS-FOR-READING-GEODATA">OPTIONS FOR READING GEODATA</h1>
 
 <dl>
 
 <dt id="in_fmt-arg"><b>--in_fmt &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip). By default format is determined by file extension.</p>
+<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip).</p>
 
 </dd>
 <dt id="gu_enc-arg"><b>--gu_enc &lt;arg&gt;</b></dt>
@@ -86,270 +82,272 @@
 </dd>
 </dl>
 
-<h1 id="SETTING-UP-MAP-REFERENCE-FOR-THE-VIEWER">SETTING UP MAP REFERENCE FOR THE VIEWER</h1>
-
-<p>Map reference is set similarly in <code>ms2view</code>, <code>ms2conv</code>, and <code>ms2mkref</code> programs. If <b>--mkref</b> option exists then projection is created from options. If not then <code>ms2view</code> and <code>ms2conv</code> get projection of the first map to be shown or set to some default value. Following options can be used:</p>
+<h1 id="OPTIONS-FOR-MAKING-MAP-REFERENCE">OPTIONS FOR MAKING MAP REFERENCE</h1>
 
 <dl>
 
-<dt id="mkref-type"><b>--mkref &lt;type&gt;</b></dt>
+<dt id="mkref-arg"><b>--mkref &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Choose map type. Possible values are: <b>nom</b> -- a Soviet nomenclature map, <b>proj</b> -- a rectangular area in some coordinates, <b>google_tile</b> and <b>tms_tile</b> -- a single google/TMS tile or rectangular area with multiple tiles.</p>
+<p>Choose map type (nom, google_tile, tms_tile, proj)</p>
 
 </dd>
-<dt id="name-string"><b>--name &lt;string&gt;</b></dt>
+<dt id="name-arg"><b>--name &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Set map name.</p>
+<p>Set map name. For &quot;nom&quot; maps it should contain a valid Soviet nomenclature name.</p>
 
 </dd>
-<dt id="dpi-value"><b>--dpi &lt;value&gt;</b></dt>
+<dt id="dpi-arg"><b>--dpi &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Map resolution, pixels per inch (<b>nom</b> and <b>proj</b> maps)</p>
+<p>Map resolution, pixels per inch (&quot;nom&quot; and &quot;proj&quot; maps)</p>
 
 </dd>
-<dt id="mag-value"><b>--mag &lt;value&gt;</b></dt>
+<dt id="mag-arg"><b>--mag &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Map magnification (<b>nom</b> maps).</p>
+<p>Map magnification (&quot;nom&quot; maps)</p>
 
 </dd>
-<dt id="margins-value"><b>--margins &lt;value&gt;</b></dt>
+<dt id="margins-arg"><b>--margins &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Map margins, pixels (<b>nom</b> and <b>proj</b> maps).</p>
+<p>Map margins, pixels (&quot;nom&quot; and &quot;proj&quot; maps).</p>
 
 </dd>
-<dt id="top_margin-value"><b>--top_margin &lt;value&gt;</b></dt>
+<dt id="top_margin-arg"><b>--top_margin &lt;arg&gt;</b></dt>
 <dd>
+
+<p>Override top margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
 
 </dd>
-<dt id="left_margin-value"><b>--left_margin &lt;value&gt;</b></dt>
+<dt id="left_margin-arg"><b>--left_margin &lt;arg&gt;</b></dt>
 <dd>
+
+<p>Override left margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
 
 </dd>
-<dt id="right_margin-value"><b>--right_margin &lt;value&gt;</b></dt>
+<dt id="right_margin-arg"><b>--right_margin &lt;arg&gt;</b></dt>
 <dd>
+
+<p>Override right margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
 
 </dd>
-<dt id="bottom_margin-value"><b>--bottom_margin &lt;value&gt;</b></dt>
+<dt id="bottom_margin-arg"><b>--bottom_margin &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Override top/left/right/bottom margin values (<b>nom</b> and <b>proj</b> maps).</p>
+<p>Override bottom margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
 
 </dd>
-<dt id="zindex-value"><b>--zindex &lt;value&gt;</b></dt>
+<dt id="zindex-arg"><b>--zindex &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Tile zindex (<b>google_tile</b> and <b>tms_tile</b> maps).</p>
+<p>Tile zindex (&quot;*_tile&quot; maps). Can be skipped if tile argument has the form [x,y,z]</p>
 
 </dd>
-<dt id="tiles-value"><b>--tiles &lt;value&gt;</b></dt>
+<dt id="tiles-arg"><b>--tiles &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Tile or tile range (<b>google_tile</b> and <b>tms_tile</b> maps)</p>
+<p>Tile or tile range (&quot;*_tile&quot; maps), [x,y], [x,y,z], or [x,y,w,h]</p>
 
 </dd>
-<dt id="coords-value"><b>--coords &lt;value&gt;</b></dt>
+<dt id="coords-arg"><b>--coords &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Figure in projection coordinates (rectangle or line) to be covered by the map (<b>proj</b> maps). Figure can be a rectangle written as <code>[x,y,w,h]</code>, or a line, <code>[[x1,y1],[x2,y2], ...]</code>, or a multi-segment line, <code>[&lt;line&gt;, &lt;line&gt;, ...]</code>.</p>
+<p>Figure in projection coordinates (rectangle or lines) to be covered by the map (&quot;proj&quot; maps). Figure can be a rectangle written as [x,y,w,h], or a line, [[x1,y1],[x2,y2], ...], or a multi-segment line, [&lt;line&gt;, &lt;line&gt;, ...].</p>
 
 </dd>
-<dt id="border-value"><b>--border &lt;value&gt;</b></dt>
+<dt id="border-arg"><b>--border &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Map border in projection coordinates (<b>proj</b> maps), a line or a multi-segment line.</p>
+<p>Map border in projection coordinates (&quot;proj&quot; maps), a line or a multi-segment line.</p>
 
 </dd>
-<dt id="coords_wgs-value"><b>--coords_wgs &lt;value&gt;</b></dt>
+<dt id="coords_wgs-arg"><b>--coords_wgs &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Figure in wgs84 coordinates to be covered by the map (<b>google_tile</b>, <b>tms_tile</b>, or <b>proj</b> maps).</p>
+<p>Figure in wgs84 coordinates to be covered by the map (&quot;*_tile&quot; or &quot;proj&quot; maps), a rectangle, a line, or a multi-segment line.</p>
 
 </dd>
-<dt id="border_wgs-value"><b>--border_wgs &lt;value&gt;</b></dt>
+<dt id="border_wgs-arg"><b>--border_wgs &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Map border in wgs84 coordinates (<b>google_tile</b>, <b>tms_tile</b>, or <b>proj</b> maps).</p>
+<p>Map border in wgs84 coordinates (&quot;*_tile&quot; or &quot;proj&quot; maps), a line or a multi-segment line.</p>
 
 </dd>
-<dt id="proj-value"><b>--proj &lt;value&gt;</b></dt>
+<dt id="proj-arg"><b>--proj &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Projection setting (for <b>proj</b> maps), <b>libproj</b> parameter string (e.g. <i>+datum=WGS84 +proj=lonlat</i>) or mapsoft2 alias (<b>WGS</b>, <b>WEB</b>, <b>FI</b>, <b>CH</b>, <b>SU39</b>, etc.). Default is <b>WGS</b>.</p>
+<p>Projection setting, &quot;libproj&quot; parameter string (e.g. &quot;+datum=WGS84 +proj=lonlat&quot;) or mapsoft2 alias (&quot;WGS&quot;, &quot;WEB&quot;, &quot;FI&quot;, &quot;CH&quot;, &quot;SU39&quot;, etc.).Default is WGS.</p>
 
 </dd>
-<dt id="scale-value"><b>--scale &lt;value&gt;</b></dt>
+<dt id="scale-arg"><b>--scale &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Map scale (for <b>proj</b> maps), projection units per map cm (<b>proj</b> maps). Default value is 0.01 degree/cm for degree projections, 1000m/cm for metric projections.</p>
+<p>Map scale, projection units per map cm (&quot;proj&quot; maps). Default value is 0.01 degree/cm for degree projections, 1000m/cm for metric projections.</p>
 
 </dd>
 </dl>
 
-<h1 id="DRAWING-OPTIONS">DRAWING OPTIONS</h1>
-
-<h2 id="Options-for-drawing-tracks">Options for drawing tracks:</h2>
+<h1 id="OPTIONS-FOR-DRAWING-TRACKS">OPTIONS FOR DRAWING TRACKS</h1>
 
 <dl>
 
 <dt id="trk_draw_mode-arg"><b>--trk_draw_mode &lt;arg&gt;</b></dt>
 <dd>
 
-<p>track drawing mode (normal, speed, height)</p>
+<p>Track drawing mode (normal, speed, height).</p>
 
 </dd>
 <dt id="trk_draw_th-arg"><b>--trk_draw_th &lt;arg&gt;</b></dt>
 <dd>
 
-<p>line thickness, overrides track setting</p>
+<p>Line thickness, overrides track setting.</p>
 
 </dd>
 <dt id="trk_draw_color-arg"><b>--trk_draw_color &lt;arg&gt;</b></dt>
 <dd>
 
-<p>color (for normal drawing mode), overrides track color</p>
+<p>Color (for normal drawing mode), overrides track color.</p>
 
 </dd>
 <dt id="trk_draw_dots-arg"><b>--trk_draw_dots &lt;arg&gt;</b></dt>
 <dd>
 
-<p>draw dots (for normal drawing mode), default: 1</p>
+<p>Draw dots (for normal drawing mode), default: 1.</p>
 
 </dd>
 <dt id="trk_draw_arrows-arg"><b>--trk_draw_arrows &lt;arg&gt;</b></dt>
 <dd>
 
-<p>draw arrows (for normal drawing mode), default: 0</p>
+<p>Draw arrows (for normal drawing mode), default: 0.</p>
 
 </dd>
 <dt id="trk_draw_min-arg"><b>--trk_draw_min &lt;arg&gt;</b></dt>
 <dd>
 
-<p>min value (km/h for speed mode, m for height mode)</p>
+<p>Min value (km/h for speed mode, m for height mode).</p>
 
 </dd>
 <dt id="trk_draw_max-arg"><b>--trk_draw_max &lt;arg&gt;</b></dt>
 <dd>
 
-<p>max value (km/h for speed mode, m for height mode)</p>
+<p>Max value (km/h for speed mode, m for height mode).</p>
 
 </dd>
 <dt id="trk_draw_grad-arg"><b>--trk_draw_grad &lt;arg&gt;</b></dt>
 <dd>
 
-<p>color gradient (for speed or height modes), default: BCGYRM</p>
+<p>Color gradient (for speed or height modes), default: BCGYRM.</p>
 
 </dd>
 </dl>
 
-<h2 id="Options-for-drawing-waypoints">Options for drawing waypoints:</h2>
+<h1 id="OPTIONS-FOR-DRAWING-WAYPOINTS">OPTIONS FOR DRAWING WAYPOINTS</h1>
 
 <dl>
 
 <dt id="wpt_text_font-arg"><b>--wpt_text_font &lt;arg&gt;</b></dt>
 <dd>
 
-<p>waypoint font (default: &quot;serif&quot;)</p>
+<p>Waypoint font (default: &quot;serif&quot;).</p>
 
 </dd>
 <dt id="wpt_text_size-arg"><b>--wpt_text_size &lt;arg&gt;</b></dt>
 <dd>
 
-<p>waypoint font size, pixels (default: 10)</p>
+<p>Waypoint font size, pixels (default: 10).</p>
 
 </dd>
 <dt id="wpt_text_pad-arg"><b>--wpt_text_pad &lt;arg&gt;</b></dt>
 <dd>
 
-<p>waypoint text padding, pixels (default: 2)</p>
+<p>Waypoint text padding, pixels (default: 2).</p>
 
 </dd>
 <dt id="wpt_draw_size-arg"><b>--wpt_draw_size &lt;arg&gt;</b></dt>
 <dd>
 
-<p>waypoint dot radius, pixels (default: 3)</p>
+<p>Waypoint dot radius, pixels (default: 3).</p>
 
 </dd>
 <dt id="wpt_line_width-arg"><b>--wpt_line_width &lt;arg&gt;</b></dt>
 <dd>
 
-<p>waypoint line width, (default: 1)</p>
+<p>Waypoint line width, (default: 1).</p>
 
 </dd>
 <dt id="wpt_stick_len-arg"><b>--wpt_stick_len &lt;arg&gt;</b></dt>
 <dd>
 
-<p>length of waypoint flag stick (default: 10)</p>
+<p>Length of waypoint flag stick (default: 10).</p>
 
 </dd>
 <dt id="wpt_color-arg"><b>--wpt_color &lt;arg&gt;</b></dt>
 <dd>
 
-<p>waypoint color (default: 0xFF000000)</p>
+<p>Waypoint color (default: 0xFF000000).</p>
 
 </dd>
 <dt id="wpt_bgcolor-arg"><b>--wpt_bgcolor &lt;arg&gt;</b></dt>
 <dd>
 
-<p>waypoint background color (default: 0xFFFFFFFF)</p>
+<p>Waypoint background color (default: 0xFFFFFFFF).</p>
 
 </dd>
 <dt id="wpt_adj-arg"><b>--wpt_adj &lt;arg&gt;</b></dt>
 <dd>
 
-<p>adjust waypoint flag positions to prevent collisions (default: 1)</p>
+<p>Adjust waypoint flag positions to prevent mutual collisions (default: 1).</p>
 
 </dd>
 <dt id="wpt_adj_brd-arg"><b>--wpt_adj_brd &lt;arg&gt;</b></dt>
 <dd>
 
-<p>adjust waypoint flag positions to prevent boundary collisions (default: 0)</p>
+<p>Adjust waypoint flag positions to prevent boundary collisions (default: 0).</p>
 
 </dd>
 <dt id="wpt_skip_far-arg"><b>--wpt_skip_far &lt;arg&gt;</b></dt>
 <dd>
 
-<p>skip points if their labels can not be placed close enough (default: 5*wpt_stick_len)</p>
+<p>Skip points if their labels can not be placed close enough (default: 5*wpt_stick_len).</p>
 
 </dd>
 </dl>
 
-<h2 id="Options-for-drawing-maps">Options for drawing maps:</h2>
+<h1 id="OPTIONS-FOR-DRAWING-MAPS">OPTIONS FOR DRAWING MAPS</h1>
 
 <dl>
 
 <dt id="map_smooth-arg"><b>--map_smooth &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Smooth map drawing (interpolation for small scales, averaging for large ones), default 0</p>
+<p>Smooth map drawing (interpolation for small scales, averaging for large ones), default 0.</p>
 
 </dd>
 <dt id="map_clip_brd-arg"><b>--map_clip_brd &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Clip map to its border (default 1)</p>
+<p>Clip map to its border (default 1).</p>
 
 </dd>
 <dt id="map_draw_refs-arg"><b>--map_draw_refs &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Draw map reference points (ARGB color, default 0)</p>
+<p>Draw map reference points (ARGB color, default 0).</p>
 
 </dd>
 <dt id="map_draw_brd-arg"><b>--map_draw_brd &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Draw map border (ARGB color, default 0)</p>
+<p>Draw map border (ARGB color, default 0).</p>
 
 </dd>
 <dt id="map_fade-arg"><b>--map_fade &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Fade the map (0..100, default is 0, no fading)</p>
+<p>Fade the map (0..100, default is 0, no fading).</p>
 
 </dd>
 </dl>

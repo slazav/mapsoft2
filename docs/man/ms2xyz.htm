@@ -14,10 +14,11 @@
 
 <ul id="index">
   <li><a href="#NAME">NAME</a></li>
-  <li><a href="#USAGE">USAGE</a></li>
-  <li><a href="#GENERAL-OPTIONS">GENERAL OPTIONS:</a></li>
-  <li><a href="#READING-GEODATA">READING GEODATA</a></li>
+  <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
+  <li><a href="#GENERAL-OPTIONS">GENERAL OPTIONS</a></li>
+  <li><a href="#GEODATA-INPUT-OPTIONS">GEODATA INPUT OPTIONS</a></li>
   <li><a href="#FORMAT">FORMAT</a></li>
+  <li><a href="#TIME-FORMAT">TIME FORMAT</a></li>
   <li><a href="#EXAMPLES">EXAMPLES</a></li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
@@ -27,14 +28,44 @@
 
 <p>ms2xyz -- writing track in a text form</p>
 
-<h1 id="USAGE">USAGE</h1>
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code>        ms2view &lt;options&gt; &lt;input files&gt;</code></pre>
+<pre><code>        ms2xyz &lt;options&gt; &lt;input files&gt;</code></pre>
 
-<h1 id="GENERAL-OPTIONS">GENERAL OPTIONS:</h1>
+<h1 id="GENERAL-OPTIONS">GENERAL OPTIONS</h1>
 
 <dl>
 
+<dt id="tshift-arg"><b>--tshift &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Time shift, hours.</p>
+
+</dd>
+<dt id="t---tfmt-arg"><b>-t, --tfmt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Time format string for %T field (default: &quot;%F %T&quot;)</p>
+
+</dd>
+<dt id="f---fmt-arg"><b>-f, --fmt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Format string (default: &quot;%x %y %z %T %D %S&quot;)</p>
+
+</dd>
+<dt id="w---win-arg"><b>-w, --win &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Window for speed calculation, sec (default: 120)</p>
+
+</dd>
+<dt id="b---break-arg"><b>-b, --break &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Place to break calculation and put empty line (none | day | track, default: none)</p>
+
+</dd>
 <dt id="h---help"><b>-h, --help</b></dt>
 <dd>
 
@@ -53,56 +84,24 @@
 <p>Be verbose.</p>
 
 </dd>
-</dl>
-
-<dl>
-
-<dt id="tshift-arg"><b>--tshift &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Time shift, hours.</p>
-
-</dd>
-<dt id="t---tfmt-arg"><b>-t, --tfmt &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Time format string for %T field (default: &quot;%F %T&quot;).</p>
-
-</dd>
-<dt id="f---fmt-arg"><b>-f, --fmt &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Format string (default: &quot;%x %y %z %T %D %S&quot;).</p>
-
-</dd>
-<dt id="w---win-arg"><b>-w, --win &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Window for speed calculation, sec (default: 120).</p>
-
-</dd>
-<dt id="b---break-arg"><b>-b, --break &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Place to break calculation and put empty line (none | day | track, default: none).</p>
-
-</dd>
 <dt id="o---out-arg"><b>-o, --out &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Output file. If output file is not specified the data is printed to <code>stdout</code>.</p>
+<p>Output file.</p>
 
 </dd>
 </dl>
 
-<h1 id="READING-GEODATA">READING GEODATA</h1>
+<p>If output file is not specified the data is printed to stdout.</p>
+
+<h1 id="GEODATA-INPUT-OPTIONS">GEODATA INPUT OPTIONS</h1>
 
 <dl>
 
 <dt id="in_fmt-arg"><b>--in_fmt &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip). By default format is determined by file extension.</p>
+<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip).</p>
 
 </dd>
 <dt id="gu_enc-arg"><b>--gu_enc &lt;arg&gt;</b></dt>
@@ -121,20 +120,39 @@
 
 <h1 id="FORMAT">FORMAT</h1>
 
-<pre><code>        %% -- % sign
-        %x -- wgs lon
-        %y -- wgs lat
-        %z -- altitude, m
-        %t -- time (seconds since 1970-01-01 00:00:00 UTC)
-        %T -- date and time in ISO 8601 form (&lt;yyyy-mm-dd&gt;T&lt;HH:MM:SS.FFF&gt;Z)
-        %u -- time from the previous point, s
-        %d -- % distance from part beginning, km
-        %D -- % distance from data beginning, km
-        %e -- % distance from the previous point, m
-        %S -- % speed, km/h
-        %n -- %  point number from part beginning
-        %N -- %  point number from data beginning
-        %p -- %  part number</code></pre>
+<pre><code>  %% -- % sign
+  %x -- wgs lon
+  %y -- wgs lat
+  %z -- altitude, m
+  %t -- time (seconds since 1970-01-01 00:00:00 UTC)
+  %T -- date and time in ISO 8601 form (&lt;yyyy-mm-dd&gt;T&lt;HH:MM:SS.FFF&gt;Z)
+  %u -- time from the previous point, s
+  %d -- % distance from part beginning, km
+  %D -- % distance from data beginning, km
+  %e -- % distance from the previous point, m
+  %S -- % speed, km/h
+  %n -- %  point number from part beginning
+  %N -- %  point number from data beginning
+  %p -- %  part number</code></pre>
+
+<h1 id="TIME-FORMAT">TIME FORMAT</h1>
+
+<pre><code>  %% -- a literal %
+  %n -- a newline
+  %t -- a tab
+  %Y -- year
+  %y -- last two digits of year (00..99)
+  %m -- month (01..12)
+  %d -- day of month (e.g., 01)
+  %H -- hour (00..23)
+  %M -- minute (00..59)
+  %S -- second (00..60)
+  %F -- same as %Y-%m-%d
+  %T -- same as %H:%M:%S
+  %a -- abbreviated weekday name (e.g., Sun)
+  %b -- abbreviated month name (e.g., Jan)
+  %s -- seconds since 1970-01-01 00:00:00 UTC
+  %f -- fractional part of a second it it is non-zero (non-standard)</code></pre>
 
 <h1 id="EXAMPLES">EXAMPLES</h1>
 

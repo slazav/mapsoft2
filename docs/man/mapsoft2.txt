@@ -11,22 +11,3 @@ mapsoft2 -- tools for working with maps and geodata
 	ms2tiles -- TMS/Google tile calculations
 	ms2xyz -- writing track in a text form
 	ms2mkref -- creating a map reference
-
-=head1 GEODATA FORMATS
-
-...
-
-=head1 RASTER IMAGE FORMATS
-
-...
-
-=head1 SETTING UP A MAP REFERENCE
-
-...
-
-=head1 RENDERING GEODATA
-
-...
-
-
-include(`foot.m4')

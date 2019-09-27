@@ -14,9 +14,10 @@
 
 <ul id="index">
   <li><a href="#NAME">NAME</a></li>
-  <li><a href="#USAGE">USAGE</a></li>
+  <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
   <li><a href="#GENERAL-OPTIONS">GENERAL OPTIONS</a></li>
-  <li><a href="#SETTING-UP-MAP-REFERENCE">SETTING UP MAP REFERENCE</a></li>
+  <li><a href="#MAKING-REFERENCE">MAKING REFERENCE</a></li>
+  <li><a href="#OUTPUT-OPTIONS-OZIEXPLORER-MAP-FORMAT">OUTPUT OPTIONS (OZIEXPLORER MAP FORMAT)</a></li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
 </ul>
@@ -25,7 +26,7 @@
 
 <p>ms2mkref -- creating a map reference</p>
 
-<h1 id="USAGE">USAGE</h1>
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
 
 <pre><code>        ms2mkref &lt;options&gt;</code></pre>
 
@@ -53,116 +54,144 @@
 </dd>
 </dl>
 
-<h1 id="SETTING-UP-MAP-REFERENCE">SETTING UP MAP REFERENCE</h1>
-
-<p>Map reference is set similarly in <code>ms2view</code>, <code>ms2conv</code>, and <code>ms2mkref</code> programs. If <b>--mkref</b> option exists then projection is created from options. If not then <code>ms2view</code> and <code>ms2conv</code> get projection of the first map to be shown or set to some default value. Following options can be used:</p>
-
 <dl>
 
-<dt id="mkref-type"><b>--mkref &lt;type&gt;</b></dt>
+<dt id="o---out-arg"><b>-o, --out &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Choose map type. Possible values are: <b>nom</b> -- a Soviet nomenclature map, <b>proj</b> -- a rectangular area in some coordinates, <b>google_tile</b> and <b>tms_tile</b> -- a single google/TMS tile or rectangular area with multiple tiles.</p>
-
-</dd>
-<dt id="name-string"><b>--name &lt;string&gt;</b></dt>
-<dd>
-
-<p>Set map name.</p>
-
-</dd>
-<dt id="dpi-value"><b>--dpi &lt;value&gt;</b></dt>
-<dd>
-
-<p>Map resolution, pixels per inch (<b>nom</b> and <b>proj</b> maps)</p>
-
-</dd>
-<dt id="mag-value"><b>--mag &lt;value&gt;</b></dt>
-<dd>
-
-<p>Map magnification (<b>nom</b> maps).</p>
-
-</dd>
-<dt id="margins-value"><b>--margins &lt;value&gt;</b></dt>
-<dd>
-
-<p>Map margins, pixels (<b>nom</b> and <b>proj</b> maps).</p>
-
-</dd>
-<dt id="top_margin-value"><b>--top_margin &lt;value&gt;</b></dt>
-<dd>
-
-</dd>
-<dt id="left_margin-value"><b>--left_margin &lt;value&gt;</b></dt>
-<dd>
-
-</dd>
-<dt id="right_margin-value"><b>--right_margin &lt;value&gt;</b></dt>
-<dd>
-
-</dd>
-<dt id="bottom_margin-value"><b>--bottom_margin &lt;value&gt;</b></dt>
-<dd>
-
-<p>Override top/left/right/bottom margin values (<b>nom</b> and <b>proj</b> maps).</p>
-
-</dd>
-<dt id="zindex-value"><b>--zindex &lt;value&gt;</b></dt>
-<dd>
-
-<p>Tile zindex (<b>google_tile</b> and <b>tms_tile</b> maps).</p>
-
-</dd>
-<dt id="tiles-value"><b>--tiles &lt;value&gt;</b></dt>
-<dd>
-
-<p>Tile or tile range (<b>google_tile</b> and <b>tms_tile</b> maps)</p>
-
-</dd>
-<dt id="coords-value"><b>--coords &lt;value&gt;</b></dt>
-<dd>
-
-<p>Figure in projection coordinates (rectangle or line) to be covered by the map (<b>proj</b> maps). Figure can be a rectangle written as <code>[x,y,w,h]</code>, or a line, <code>[[x1,y1],[x2,y2], ...]</code>, or a multi-segment line, <code>[&lt;line&gt;, &lt;line&gt;, ...]</code>.</p>
-
-</dd>
-<dt id="border-value"><b>--border &lt;value&gt;</b></dt>
-<dd>
-
-<p>Map border in projection coordinates (<b>proj</b> maps), a line or a multi-segment line.</p>
-
-</dd>
-<dt id="coords_wgs-value"><b>--coords_wgs &lt;value&gt;</b></dt>
-<dd>
-
-<p>Figure in wgs84 coordinates to be covered by the map (<b>google_tile</b>, <b>tms_tile</b>, or <b>proj</b> maps).</p>
-
-</dd>
-<dt id="border_wgs-value"><b>--border_wgs &lt;value&gt;</b></dt>
-<dd>
-
-<p>Map border in wgs84 coordinates (<b>google_tile</b>, <b>tms_tile</b>, or <b>proj</b> maps).</p>
-
-</dd>
-<dt id="proj-value"><b>--proj &lt;value&gt;</b></dt>
-<dd>
-
-<p>Projection setting (for <b>proj</b> maps), <b>libproj</b> parameter string (e.g. <i>+datum=WGS84 +proj=lonlat</i>) or mapsoft2 alias (<b>WGS</b>, <b>WEB</b>, <b>FI</b>, <b>CH</b>, <b>SU39</b>, etc.). Default is <b>WGS</b>.</p>
-
-</dd>
-<dt id="scale-value"><b>--scale &lt;value&gt;</b></dt>
-<dd>
-
-<p>Map scale (for <b>proj</b> maps), projection units per map cm (<b>proj</b> maps). Default value is 0.01 degree/cm for degree projections, 1000m/cm for metric projections.</p>
+<p>Output file.</p>
 
 </dd>
 </dl>
 
+<h1 id="MAKING-REFERENCE">MAKING REFERENCE</h1>
+
 <dl>
 
-<dt id="image"><b>--image</b></dt>
+<dt id="image-arg"><b>--image &lt;arg&gt;</b></dt>
 <dd>
 
 <p>Set image file name in the map.</p>
+
+</dd>
+<dt id="mkref-arg"><b>--mkref &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Choose map type (nom, google_tile, tms_tile, proj)</p>
+
+</dd>
+<dt id="name-arg"><b>--name &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set map name. For &quot;nom&quot; maps it should contain a valid Soviet nomenclature name.</p>
+
+</dd>
+<dt id="dpi-arg"><b>--dpi &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map resolution, pixels per inch (&quot;nom&quot; and &quot;proj&quot; maps)</p>
+
+</dd>
+<dt id="mag-arg"><b>--mag &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map magnification (&quot;nom&quot; maps)</p>
+
+</dd>
+<dt id="margins-arg"><b>--margins &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map margins, pixels (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="top_margin-arg"><b>--top_margin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override top margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="left_margin-arg"><b>--left_margin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override left margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="right_margin-arg"><b>--right_margin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override right margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="bottom_margin-arg"><b>--bottom_margin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override bottom margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="zindex-arg"><b>--zindex &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Tile zindex (&quot;*_tile&quot; maps). Can be skipped if tile argument has the form [x,y,z]</p>
+
+</dd>
+<dt id="tiles-arg"><b>--tiles &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Tile or tile range (&quot;*_tile&quot; maps), [x,y], [x,y,z], or [x,y,w,h]</p>
+
+</dd>
+<dt id="coords-arg"><b>--coords &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Figure in projection coordinates (rectangle or lines) to be covered by the map (&quot;proj&quot; maps). Figure can be a rectangle written as [x,y,w,h], or a line, [[x1,y1],[x2,y2], ...], or a multi-segment line, [&lt;line&gt;, &lt;line&gt;, ...].</p>
+
+</dd>
+<dt id="border-arg"><b>--border &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map border in projection coordinates (&quot;proj&quot; maps), a line or a multi-segment line.</p>
+
+</dd>
+<dt id="coords_wgs-arg"><b>--coords_wgs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Figure in wgs84 coordinates to be covered by the map (&quot;*_tile&quot; or &quot;proj&quot; maps), a rectangle, a line, or a multi-segment line.</p>
+
+</dd>
+<dt id="border_wgs-arg"><b>--border_wgs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map border in wgs84 coordinates (&quot;*_tile&quot; or &quot;proj&quot; maps), a line or a multi-segment line.</p>
+
+</dd>
+<dt id="proj-arg"><b>--proj &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Projection setting, &quot;libproj&quot; parameter string (e.g. &quot;+datum=WGS84 +proj=lonlat&quot;) or mapsoft2 alias (&quot;WGS&quot;, &quot;WEB&quot;, &quot;FI&quot;, &quot;CH&quot;, &quot;SU39&quot;, etc.).Default is WGS.</p>
+
+</dd>
+<dt id="scale-arg"><b>--scale &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map scale, projection units per map cm (&quot;proj&quot; maps). Default value is 0.01 degree/cm for degree projections, 1000m/cm for metric projections.</p>
+
+</dd>
+</dl>
+
+<h1 id="OUTPUT-OPTIONS-OZIEXPLORER-MAP-FORMAT">OUTPUT OPTIONS (OZIEXPLORER MAP FORMAT)</h1>
+
+<dl>
+
+<dt id="ozi_map_grid-arg"><b>--ozi_map_grid &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Write map reference points in grid coordinates (OziExplorer format), default 0</p>
+
+</dd>
+<dt id="ozi_map_wgs-arg"><b>--ozi_map_wgs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Always use wgs84 datum for map coordinates (OziExplorer format), default 0</p>
 
 </dd>
 </dl>

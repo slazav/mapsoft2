@@ -30,5 +30,5 @@ install:
 	  install -D -m755 programs/$$i/$$i $(bindir)/$$i;\
 	  install -D -m644 docs/man/$$i.1 $(man1dir)/$$i.1;\
 	done
-#	install -D -m644 docs/man/mapsoft2.5 $(man5dir)/mapsoft2.5
+	install -D -m644 docs/man/mapsoft2.5 $(man5dir)/mapsoft2.5
 	install -D -m644 programs/ms2view/mapsoft2.css $(datadir)/mapsoft2/mapsoft2.css
