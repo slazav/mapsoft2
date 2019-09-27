@@ -18,42 +18,56 @@ class New : public ActionMode{
 };
 
 /**********************************************************/
-// Add new file
-/*
-class AddFile : public ActionMode, public Gtk::FileSelection{
-  public:
-    AddFile (Mapview * mapview) :
-           ActionMode(mapview), Gtk::FileSelection(get_name()){
+// Load new file
 
-      Glib::RefPtr<Gtk::FileFilter> filter(new Gtk::FileFilter);
-      filter->add_pattern("*.gu");
-      filter->add_pattern("*.gpx");
-      filter->add_pattern("*.plt");
-      filter->add_pattern("*.wpt");
-      filter->add_pattern("*.map");
-      filter->add_pattern("*.js");
-//      set_filter(filter);
+class LoadFile : public ActionMode, public Gtk::FileChooserDialog{
+  std::string folder; // current folder
+  public:
+    LoadFile (Mapview * mapview) :
+           ActionMode(mapview),
+           Gtk::FileChooserDialog(get_name()),
+           folder("./"){
+
+      auto fg = Gtk::FileFilter::create();
+      fg->add_pattern("*.gu");
+      fg->add_pattern("*.gpx");
+      fg->add_pattern("*.kml");
+      fg->add_pattern("*.kmz");
+      fg->add_pattern("*.plt");
+      fg->add_pattern("*.wpt");
+      fg->add_pattern("*.map");
+      fg->add_pattern("*.js");
+      fg->add_pattern("*.zip");
+      fg->set_name("Geodata");
+      add_filter(fg);
+
+      auto fa = Gtk::FileFilter::create();
+      fa->add_pattern("*");
+      fa->set_name("All files");
+      add_filter(fa);
 
       set_select_multiple();
-      get_ok_button()->signal_clicked().connect(
-          sigc::mem_fun (this, &AddFile::on_ok));
-      get_cancel_button()->signal_clicked().connect(
-          sigc::mem_fun(this, &Gtk::Window::hide));
+      add_button("_Cancel", GTK_RESPONSE_CANCEL);
+      add_button("_Open",   GTK_RESPONSE_ACCEPT);
+
+      set_transient_for(*mapview);
+      set_position(Gtk::WIN_POS_CENTER_ON_PARENT);
     }
 
     std::string get_name() { return "Load File"; }
     Gtk::StockID get_stockid() { return Gtk::Stock::ADD; }
-    Gtk::AccelKey get_acckey() { return Gtk::AccelKey("<control>a"); }
+    Gtk::AccelKey get_acckey() { return Gtk::AccelKey("<control>l"); }
     bool is_radio() { return false; }
 
-    void activate() { show(); }
-
-    void on_ok(){
-      mapview->add_files(get_selections());
+    void activate() {
+      set_current_folder(folder);
+      if (run() == GTK_RESPONSE_ACCEPT){
+         mapview->add_files(get_filenames());
+         folder = get_current_folder();
+      }
       hide();
     }
 };
-*/
 
 /**********************************************************/
 // Quite the program

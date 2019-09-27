@@ -97,8 +97,8 @@ ActionManager::ActionManager (Mapview * mapview_):
     /* Main menu */
 
     ADD_ACT(New,             "File")
+    ADD_ACT(LoadFile,         "File")
 //    ADD_ACT(Open,            "File")
-//    ADD_ACT(AddFile,         "File")
 //    ADD_ACT(Download,        "File")
 
 //    AddSep("File");
