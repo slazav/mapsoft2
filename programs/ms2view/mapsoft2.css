@@ -74,3 +74,25 @@ menuitem {
   border-top-width: 1px;
   border-top-style: groove;
 }
+
+/** File chooser dialog **/
+
+/* more condensed Recent/Home/etc. list */
+dialog filechooser list * {
+  margin: 1px 0px;
+  min-height: 0px;
+  min-width: 0px;
+}
+
+/* smaller folder stack */
+dialog filechooser stack *,
+dialog actionbar button{
+  padding: 1px 2px;
+  min-height: 0px;
+  min-width: 0px;
+}
+
+dialog buttonbox *{
+  min-height: 0px;
+  min-width: 0px;
+}
