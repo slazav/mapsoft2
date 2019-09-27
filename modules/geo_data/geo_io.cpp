@@ -32,7 +32,6 @@ ms2opt_add_geo_o(GetOptSet & opts){
   opts.add("json_sort_keys", 1, 0, m, "Sort json objects by keys (GeoJSON format), default 1.");
   opts.add("json_compact",   1, 0, m, "Write compact json (GeoJSON format), default 0.");
   opts.add("json_indent",    1, 0, m, "Use json indentation (GeoJSON format), default 1.");
-  opts.add("geo_skip_zt",    1, 0, m, "Skip altitude and time information when writing GeoJSON, default 0.");
 
   ms2opt_add_ozimap_o(opts);
 }

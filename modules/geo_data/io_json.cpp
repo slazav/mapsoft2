@@ -27,7 +27,6 @@ write_json (const string &fname, const GeoData & data, const Opt & opts){
   if (v) cerr << "Writing GeoJSON file: " << fname << endl;
 
   json_t *features = json_array();
-  bool skip_zt = opts.get("geo_skip_zt", false);
 
   // tracks
   // Each track is a feature with MultiLineString objects.
@@ -47,7 +46,7 @@ write_json (const string &fname, const GeoData & data, const Opt & opts){
       json_t *j_pt = json_array();
       json_array_append_new(j_pt, json_real(tp.x));
       json_array_append_new(j_pt, json_real(tp.y));
-      if (!skip_zt && (tp.t!=0 || tp.have_alt())) {
+      if (tp.t!=0 || tp.have_alt()) {
         json_array_append_new(j_pt, tp.have_alt()? json_real(tp.z) : json_null());
         if (tp.t!=0) json_array_append_new(j_pt, json_integer(tp.t));
       }
@@ -90,7 +89,7 @@ write_json (const string &fname, const GeoData & data, const Opt & opts){
       json_t *j_pt = json_array();
       json_array_append_new(j_pt, json_real(wp.x));
       json_array_append_new(j_pt, json_real(wp.y));
-      if (!skip_zt && (wp.t!=0 || wp.have_alt())) {
+      if (wp.t!=0 || wp.have_alt()) {
         json_array_append_new(j_pt, wp.have_alt()? json_real(wp.z) : json_null());
         if (wp.t!=0) json_array_append_new(j_pt, json_integer(wp.t));
       }
