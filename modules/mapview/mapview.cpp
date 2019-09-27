@@ -122,9 +122,9 @@ Mapview::Mapview(const std::shared_ptr<Opt> & o) :
 
 void
 Mapview::set_changed(const bool c){
-  changed=c;
-  set_title(std::string("ms2view: ")
-    + (c?"*":"") + project_fname);
+//  changed=c;
+//  set_title(std::string("ms2view: ")
+//    + (c?"*":"") + project_fname);
 }
 
 void
