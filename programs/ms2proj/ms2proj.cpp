@@ -15,6 +15,25 @@ void usage(bool pod=false, ostream & S = cout){
   pr.name("mapsoft2 coordinate converter (libproj wrapper)");
   pr.usage("<options> <forms to convert>");
   pr.head(1, "Description");
+  pr.par(
+    "This is a command-line interface to mapsoft2 coordinate conversions. "
+    "You can specify source and destination coordinate systems using "
+    "libproj parameter strings or mapsoft aliases and convert points, "
+    "lines, multisegment lines, rectangles. When converting lines "
+    "additional points may appear if converted segments are not liner "
+    "in the destination coordinate system. Accuracy of such transformation "
+    "can be set using --acc parameter. Use --acc 0 to do point-to-point "
+    "conversion of lines. A rectangle is transformed as a line, "
+    "and bounding box of the result is returned. Conversions of angles and "
+    "scales is supported by mapsoft2 library, but not by this program yet."
+  );
+  pr.par(
+    "Ponts are written as JSON arrays of two of three numbers: [x,y] or "
+    "[x,y,z]. Altitude (z-coordinate) is converted if --alt option is used. "
+    "Lines are written as JSON arrays of points: [[x1,y1],[x2,y2],...]. "
+    "Multisegments lines are JSON arrays of lines. Rectangle is a JSON array "
+    "with four numbers: [x,y,w,h]."
+  );
   pr.head(1, "Options");
   pr.opts(MS2OPT_NONSTD);
   pr.opts(MS2OPT_STD);
@@ -36,7 +55,7 @@ main(int argc, char *argv[]){
       "Default: \"WGS\"");
     options.add("to", 1, 't', m, "Destination coordinate system.");
 
-    options.add("back", 0, 'b', m, "Do destination -> source conversion.");
+    options.add("back", 0, 'b', m, "Do inverse conversion, destination -> source.");
     options.add("alt",  0, 'z', m, "Convert altitude (by default it is not converted).");
     options.add("acc",  1, 'a', m, "Convertion accuracy for lines and "
                                    "rectangles in source units, (default: 1.0).");
