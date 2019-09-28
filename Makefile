@@ -1,4 +1,4 @@
-PROGRAMS := ms2conv ms2mkref ms2nom ms2tiles ms2view ms2xyz
+PROGRAMS := ms2conv ms2mkref ms2nom ms2tiles ms2view ms2xyz ms2proj
 # ms2proj  -- to be written
 # ms2vmap -- not usable yet
 # ms2fig  -- to be written
