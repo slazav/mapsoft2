@@ -94,7 +94,7 @@ void ms2opt_add_out(GetOptSet & opts);
 
 /**
 Main getopt wrapper. Parse cmdline options up to the first non-option
-argument or to last_opt. Use ext_options structure. Mask is applied to
+argument or to last_opt. Uses GetOptSet structure. Mask is applied to
 the group element of the ext_option structure to select some subset of
 options. All options are returned as Opt object. */
 Opt parse_options(int *argc, char ***argv,

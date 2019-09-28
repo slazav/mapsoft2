@@ -10,13 +10,16 @@ program [<general_options>|<global_input_options>]\
 ```
 (example can be found in `getopt.test.cpp`)
 
-Structure `ext_option` is used as an extention of a structure from
-`getopt_long (3)`. It contains option description and group number which
-is used for selecting a few sets of options from a single list.
+Structure `GetOptEl` is used as an extention `getopt_long (3)`
+structure. It contains option description and group number which is used
+for selecting a few sets of options from a single list.
+Class `GetOptSet` is a container for options.
 
-`print_options()` can be used for printing option list (with
-descriptions) in text or in pod format (pod then can be used for
-generating man pages).
+`parse_options()` can be used to parse a set of options until the
+first non-option element.
 
 `parse_options_all()` can be used in simple tools to collect all options
 and non-option arguments from a command line.
+
+`HelpPrinter` is a class for formatting help messages. It can also write
+`pod` format which can be converted to `html` or `man`.
