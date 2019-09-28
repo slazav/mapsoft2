@@ -12,8 +12,8 @@ using namespace std;
 
 GetOptSet options;
 
-void usage(bool pod=false, ostream & S = cout){
-  HelpPrinter pr(S, pod, options, "ms2cnv");
+void usage(bool pod=false){
+  HelpPrinter pr(pod, options, "ms2cnv");
   pr.name("mapsoft2 converter for geodata and raster maps");
   pr.usage("<options> <input files> -o <output file>");
   pr.head(1, "Description");

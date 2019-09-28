@@ -17,8 +17,8 @@ using namespace std;
 
 GetOptSet options;
 
-void usage(bool pod=false, ostream & S = cout){
-  HelpPrinter pr(S, pod, options, "ms2view");
+void usage(bool pod=false){
+  HelpPrinter pr(pod, options, "ms2view");
 
   pr.name("mapsoft2 viewer for geodata and raster maps");
   pr.usage("[<options>] <input files>");
@@ -36,7 +36,6 @@ void usage(bool pod=false, ostream & S = cout){
   pr.opts(MS2OPT_DRAWMAP);
 //  pr.head(1, "Options for drawing grid");
 //  pr.opts(MS2OPT_DRAWGRD);
-  S << "\n";
   throw Err();
 }
 
