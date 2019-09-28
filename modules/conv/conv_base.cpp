@@ -4,6 +4,13 @@ dLine
 ConvBase::frw_acc(const dLine & l, double acc) const {
   dLine ret;
   if (l.size()==0) return ret;
+
+  if (acc<=0){
+    ret = l;
+    frw(ret);
+    return ret;
+  }
+
   dPoint P1 = l[0], P1a =P1;
   frw(P1a); ret.push_back(P1a); // add first point
   dPoint P2, P2a;
@@ -54,6 +61,13 @@ ConvBase::bck_acc(const dLine & l, double acc) const {
 
   dLine ret;
   if (l.size()==0) return ret;
+
+  if (acc<=0){
+    ret = l;
+    bck(ret);
+    return ret;
+  }
+
   dPoint P1 = l[0], P1a =P1;
   bck(P1a); ret.push_back(P1a); // add first point
   dPoint P2, P2a;

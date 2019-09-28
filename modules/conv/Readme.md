@@ -24,16 +24,19 @@ Note that in some cases forward and backward conversions are non-symmetric
 - `dLine bck_acc(const dLine & l, double acc) const` --
   Convert a line. Each segment can be divided to provide
   accuracy `<acc>` in source units (both for `frw_acc` and `bck_acc`).
+  If acc<=0 then point-to-point conversion is used.
 
 - `dMultiLine frw_acc(const dMultiLine & l, double acc) const`
 - `dMultiLine bck_acc(const dMultiLine & l, double acc) const` --
   Convert a MultiLine. Each sub-line is converted by frw_acc/bck_acc.
   Accuracy `<acc>` is in source units (both for `frw_acc` and `bck_acc`).
+  If acc<=0 then point-to-point conversion is used.
 
 - `dRect frw_acc(const dRect & R, double acc) const`,
 - `dRect bck_acc(const dRect & R, double acc) const` --
   Convert a rectagle and return bounding box of resulting figure.
   Accuracy `<acc>` is measured in source units (both for frw_acc and bck_acc).
+  If acc<=0 then point-to-point conversion is used.
 
 - `void rescale_src(const double s)`
 - `void rescale_dst(const double s)` -- change scale factors applied before

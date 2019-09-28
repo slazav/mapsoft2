@@ -51,12 +51,14 @@ struct ConvBase{
 
   /// Convert a line. Each segment can be divided to provide
   /// accuracy <acc> in source units.
+  /// If acc<=0 then point-to-point conversion is used.
   virtual dLine frw_acc(const dLine & l, double acc = 0.5) const;
 
   /// Convert a line. Each segment can be divided to provide
   /// accuracy <acc> in source units.
-  // Note that bck_acc and frw_acc are not symmetric
-  // because accuracy is always calculated on the src side.
+  /// If acc<=0 then point-to-point conversion is used.
+  /// Note that bck_acc and frw_acc are not symmetric
+  /// because accuracy is always calculated on the src side.
   virtual dLine bck_acc(const dLine & l, double acc = 0.5) const;
 
   /// Convert a MultiLine. Each segment of each line
