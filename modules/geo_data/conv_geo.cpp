@@ -23,6 +23,10 @@ std::string expand_proj_aliases(const std::string & pars){
       " +ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0"\
       " +units=m +no_defs";
 
+  if (pars == "SU_LL") // Soviet datum (lon-lat)
+    return "+ellps=krass +towgs84=+28,-130,-95 +proj=lonlat";
+
+  // SU<N> -- Soviet coordinate system with central meridian N
   if (pars.length()>2 &&
       pars.substr(0,2) == "SU"){
     int lon = str_to_type<int>(pars.substr(2,pars.length()-2));
@@ -32,6 +36,7 @@ std::string expand_proj_aliases(const std::string & pars){
            " +lon_0=" + type_to_str(lon0) +
            " +x_0=" + type_to_str(pref) + "500000";
   }
+
 
   return pars;
 }

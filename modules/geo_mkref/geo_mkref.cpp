@@ -93,7 +93,7 @@ geo_mkref(const Opt & o){
     // map projection (use a bit shifted longitude to calculate boundary lon0)
     map.proj = "SU" + type_to_str(lon2lon0(R.x + 1e-6));
 
-    string proj_pulk = "+ellps=krass +towgs84=+28,-130,-95 +proj=lonlat";
+    string proj_pulk = "SU_LL";
     // conversion map_projection -> pulkovo
     ConvGeo cnv1(map.proj, proj_pulk);
     // conversion pulkovo -> wgs84

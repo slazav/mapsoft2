@@ -139,7 +139,7 @@ filter_nom_brd(GeoData & data, const Opt & opt){
       double lat2 = lat1 + r.h;
 
       // Map -> Pulkovo lat-lon
-      ConvMap cnv(m, "+ellps=krass +towgs84=+28,-130,-95 +proj=lonlat");
+      ConvMap cnv(m, "SU_LL");
 
       dLine brd;
       brd.push_back(dPoint(lon1,lat2));

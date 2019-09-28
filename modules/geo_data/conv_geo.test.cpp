@@ -247,7 +247,7 @@ main(){
        cnv1.frw(p1);
        assert(dist(p1,p2) < 15); // 15m accuracy (~2px)
 
-       ConvMap cnv2(m, "+ellps=krass +towgs84=28,-130,-95 +proj=latlong");
+       ConvMap cnv2(m, "SU_LL");
        dPoint p3(159,386, 2500);
        dPoint p4(36.00,56.00, 2500);
        cnv2.bck(p4);
