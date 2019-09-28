@@ -1,0 +1,114 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>ms2proj</title>
+<link rel="stylesheet" href="manpages.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body>
+
+
+
+<ul id="index">
+  <li><a href="#NAME">NAME</a></li>
+  <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
+  <li><a href="#DESCRIPTION">DESCRIPTION</a></li>
+  <li><a href="#OPTIONS">OPTIONS</a></li>
+  <li><a href="#AUTHOR">AUTHOR</a></li>
+  <li><a href="#SEE-ALSO">SEE ALSO</a></li>
+</ul>
+
+<h1 id="NAME">NAME</h1>
+
+<p>ms2proj -- mapsoft2 coordinate converter (libproj wrapper)</p>
+
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
+
+<pre><code>        ms2proj &lt;options&gt; &lt;forms to convert&gt;</code></pre>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<p>This is a command-line interface to mapsoft2 coordinate conversions. You can specify source and destination coordinate systems using libproj parameter strings or mapsoft aliases and convert points, lines, multisegment lines, rectangles. When converting lines additional points may appear if converted segments are not liner in the destination coordinate system. Accuracy of such transformation can be set using --acc parameter. Use --acc 0 to do point-to-point conversion of lines. A rectangle is transformed as a line, and bounding box of the result is returned. Conversions of angles and scales is supported by mapsoft2 library, but not by this program yet.</p>
+
+<p>Ponts are written as JSON arrays of two of three numbers: [x,y] or [x,y,z]. Altitude (z-coordinate) is converted if --alt option is used. Lines are written as JSON arrays of points: [[x1,y1],[x2,y2],...]. Multisegments lines are JSON arrays of lines. Rectangle is a JSON array with four numbers: [x,y,w,h].</p>
+
+<h1 id="OPTIONS">OPTIONS</h1>
+
+<dl>
+
+<dt id="f---from-arg"><b>-f, --from &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Source coordinate system, &quot;libproj&quot; parameter string (e.g. &quot;+datum=WGS84 +proj=lonlat&quot;) or mapsoft2 alias (&quot;WGS&quot;, &quot;WEB&quot;, &quot;FI&quot;, &quot;CH&quot;, &quot;SU39&quot;, etc.). Default: &quot;WGS&quot;</p>
+
+</dd>
+<dt id="t---to-arg"><b>-t, --to &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Destination coordinate system.</p>
+
+</dd>
+<dt id="b---back"><b>-b, --back</b></dt>
+<dd>
+
+<p>Do inverse conversion, destination -&gt; source.</p>
+
+</dd>
+<dt id="z---alt"><b>-z, --alt</b></dt>
+<dd>
+
+<p>Convert altitude (by default it is not converted).</p>
+
+</dd>
+<dt id="a---acc-arg"><b>-a, --acc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Convertion accuracy for lines and rectangles in source units, (default: 1.0).</p>
+
+</dd>
+</dl>
+
+<dl>
+
+<dt id="h---help"><b>-h, --help</b></dt>
+<dd>
+
+<p>Show help message.</p>
+
+</dd>
+<dt id="pod"><b>--pod</b></dt>
+<dd>
+
+<p>Show help message as POD template.</p>
+
+</dd>
+</dl>
+
+<h1 id="AUTHOR">AUTHOR</h1>
+
+<p>Vladislav Zavjalov &lt;slazav@altlinux.org&gt;</p>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<ul>
+
+<li><p><a href="http://slazav.github.io/mapsoft2">Mapsoft2 documentation (ru, en)</a></p>
+
+</li>
+<li><p><a href="http://github.com/slazav/mapsoft2">Mapsoft2 source code, bugtracker</a></p>
+
+</li>
+<li><p><a href="http://github.com/ushakov/mapsoft">Old Mapsoft project</a></p>
+
+</li>
+</ul>
+
+
+</body>
+
+</html>
+
+
