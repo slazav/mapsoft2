@@ -18,6 +18,7 @@
   <li><a href="#DESCRIPTION">DESCRIPTION</a></li>
   <li><a href="#GENERAL-OPTIONS">GENERAL OPTIONS</a></li>
   <li><a href="#GEODATA-INPUT-OUTPUT-OPTIONS">GEODATA INPUT/OUTPUT OPTIONS</a></li>
+  <li><a href="#GEODATA-FILTERING-OPTIONS">GEODATA FILTERING OPTIONS</a></li>
   <li><a href="#RENDERING-IMAGES">RENDERING IMAGES</a>
     <ul>
       <li><a href="#Options-for-making-map-reference">Options for making map reference</a></li>
@@ -137,12 +138,6 @@
 <p>Use json indentation (GeoJSON format), default 1.</p>
 
 </dd>
-<dt id="geo_skip_zt-arg"><b>--geo_skip_zt &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Skip altitude and time information when writing GeoJSON, default 0.</p>
-
-</dd>
 <dt id="ozi_map_grid-arg"><b>--ozi_map_grid &lt;arg&gt;</b></dt>
 <dd>
 
@@ -165,6 +160,30 @@
 <dd>
 
 <p>OziExplorer format charset (default Windows-1251).</p>
+
+</dd>
+</dl>
+
+<h1 id="GEODATA-FILTERING-OPTIONS">GEODATA FILTERING OPTIONS</h1>
+
+<dl>
+
+<dt id="skip-arg"><b>--skip &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Skip part of geodata. Argument is a string which letters show what to skip: W - waypoints, T - tracks, M - maps, t - time, z - altitude, b - map borders.</p>
+
+</dd>
+<dt id="join"><b>--join</b></dt>
+<dd>
+
+<p>Join all waypoint lists, tracks, map lists.</p>
+
+</dd>
+<dt id="nom_brd"><b>--nom_brd</b></dt>
+<dd>
+
+<p>Set map border for a Soviet nomenclature map (the map should have a valid name)</p>
 
 </dd>
 </dl>

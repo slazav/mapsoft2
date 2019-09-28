@@ -110,6 +110,9 @@ Only OziExplorer map output is supported now.',
 `Программа для изготовления привязок карт. Пока поддерживается только
 вывод в формат OziExplorer.')
 
+<li>STABLE _PROG_(ms2proj) -- ENRU(`Coordinate converter.
+`Преобразование координат.')
+
 <li>UNUSABLE _PROG_(ms2vmap) -- ENRU(`Program for working with vector
 maps.', `Программа для работы с векторными картами.')
 
