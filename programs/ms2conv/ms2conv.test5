@@ -38,6 +38,3 @@ assert "$P test_data/json1a.json -o tmp --out_fmt json"  "" 0
 assert "$P tmp --in_fmt json -o tmp --out_fmt json"  "" 0
 assert_diff test_data/json1a.json tmp
 
-# skip_zt
-assert "$P test_data/json1.json -o tmp.json --json_indent 1 --geo_skip_zt 1" "" 0
-assert_diff test_data/json1b.json tmp.json
