@@ -10,8 +10,8 @@ using namespace std;
 
 GetOptSet options;
 
-void usage(bool pod=false, ostream & S = cout){
-  HelpPrinter pr(S, pod, options, "ms2proj");
+void usage(bool pod=false){
+  HelpPrinter pr(pod, options, "ms2proj");
   pr.name("mapsoft2 coordinate converter (libproj wrapper)");
   pr.usage("<options> <forms to convert>");
   pr.head(1, "Description");

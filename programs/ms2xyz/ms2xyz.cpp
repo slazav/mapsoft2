@@ -13,8 +13,8 @@
 using namespace std;
 GetOptSet options;
 
-void usage(bool pod=false, std::ostream & S = std::cout){
-  HelpPrinter pr(S, pod, options, "ms2xyz");
+void usage(bool pod=false){
+  HelpPrinter pr(pod, options, "ms2xyz");
 
   pr.name("writing track in a text form");
   pr.usage("<options> <input files>");

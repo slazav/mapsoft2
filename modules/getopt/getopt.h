@@ -119,16 +119,21 @@ private:
   const GetOptSet & opts_;
   unsigned int printed; // mask for printed options
   bool usage_head; // has usage header been already printed?
+  int width;
 
 public:
-  HelpPrinter(std::ostream & s, bool pod, const GetOptSet & opts,
+  HelpPrinter(bool pod, const GetOptSet & opts,
               const std::string & name);
+
+  // set text width (for option formatting)
+  void set_width(int w) {width = w;}
 
   // print name section
   void name(const std::string & descr);
 
   // print usage line (header is printed before the first one)
   void usage(const std::string & text);
+
 
   // print a group of options
   void opts(unsigned int mask);
@@ -141,6 +146,10 @@ public:
 
   // finish printing, check if all options have been printed
   ~HelpPrinter();
+
+private:
+  // format text
+  void format(int i0, int i1, const std::string & text);
 };
 
 ///@}

@@ -15,8 +15,8 @@
 
 GetOptSet options;
 
-void usage(bool pod=false, std::ostream & S = std::cout){
-  HelpPrinter pr(S, pod, options, "ms2vmap");
+void usage(bool pod=false){
+  HelpPrinter pr(pod, options, "ms2vmap");
 
   pr.name("working with vector maps");
   pr.usage("<vmap> (-h|--help|--pod)");
@@ -26,11 +26,12 @@ void usage(bool pod=false, std::ostream & S = std::cout){
   pr.head(1, "General options:");
   pr.opts(OPT_G);
   pr.head(1, "Actions:");
-  S << " * import_mp <name> <options> -- import MP file to the map\n"
-    << " * export_mp <name> <options> -- export the map to MP file\n"
-    << " * import_vmap <name> <options> -- import VMAP1 file to the map\n"
-    << " * export_vmap <name> <options> -- export the map to VMAP1 file\n"
-  ;
+  pr.par(
+    " * import_mp <name> <options> -- import MP file to the map\n"
+    " * export_mp <name> <options> -- export the map to MP file\n"
+    " * import_vmap <name> <options> -- import VMAP1 file to the map\n"
+    " * export_vmap <name> <options> -- export the map to VMAP1 file\n"
+  );
 
   throw Err();
 }

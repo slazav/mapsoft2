@@ -22,7 +22,7 @@ GetOptSet options;
 
 void
 usage(bool pod=false){
-  HelpPrinter pr(cerr, pod, options, "getopt.test");
+  HelpPrinter pr(pod, options, "getopt.test");
 
   const char * prog = "getopt.test";
   pr.name("example of mapsoft-style getopt");

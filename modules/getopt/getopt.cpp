@@ -6,6 +6,7 @@
 #include "getopt.h"
 #include "err/err.h"
 
+
 using namespace std;
 
 /**********************************************/
@@ -139,11 +140,19 @@ parse_options_all(int *argc, char ***argv,
 
 /**********************************************/
 
+#include <sys/ioctl.h> // For ioctl, TIOCGWINSZ
+#include <unistd.h> // For STDOUT_FILENO
+
 HelpPrinter::HelpPrinter(
-    std::ostream & s, bool pod, const GetOptSet & opts,
+    bool pod, const GetOptSet & opts,
     const std::string & name):
-    s(s), pod(pod), opts_(opts), name_(name),
-    printed(0), usage_head(false) {
+    s(std::cout),
+    pod(pod), opts_(opts), name_(name),
+    printed(0), usage_head(false), width(80) {
+
+  struct winsize size;
+  ioctl(STDOUT_FILENO,TIOCGWINSZ,&size);
+  width = size.ws_col;
 }
 
 void
@@ -170,9 +179,6 @@ HelpPrinter::usage(const std::string & text){
 
 void
 HelpPrinter::opts(unsigned int mask){
-  const int option_width = 25;
-  const int indent_width = option_width+4;
-  const int text_width = 77-indent_width;
 
   if (pod) s << "=over 2\n\n";
 
@@ -189,21 +195,12 @@ HelpPrinter::opts(unsigned int mask){
     if (opt.has_arg == 2) oname << " [<arg>]";
 
     if (!pod){
-      s << setw(option_width) << oname.str() << " -- ";
-
-      int lsp=0;
-      int ii=0;
-      for (int i=0; i<opt.desc.size(); i++,ii++){
-        if ((opt.desc[i]==' ') || (opt.desc[i]=='\n')) lsp=i+1;
-        if ((ii>=text_width) || (opt.desc[i]=='\n')){
-          if (lsp <= i-ii) lsp = i;
-          if (ii!=i) s << string(indent_width, ' ');
-          s << opt.desc.substr(i-ii, lsp-i+ii-1) << endl;
-          ii=i-lsp;
-        }
-      }
-      if (ii!=opt.desc.size()) s << string(indent_width, ' ');
-      s << opt.desc.substr(opt.desc.size()-ii, ii) << "\n";
+//      const int option_width = 25;
+//      s << setw(option_width) << oname.str() << " -- ";
+//      format(0, option_width+4, opt.desc);
+      s << oname.str() << "\n";
+      format(8, 8, opt.desc);
+      s << "\n";
     }
     else {
       s << "=item B<< " << oname.str() << " >>\n\n"
@@ -234,7 +231,10 @@ HelpPrinter::head(int level, const std::string & text){
 
 void
 HelpPrinter::par(const std::string & text){
-  s << text << "\n\n";
+  if (pod)
+    s << text << "\n\n";
+  else
+    format(0,0,text);
 }
 
 
@@ -245,4 +245,23 @@ HelpPrinter::~HelpPrinter(){
   if (all != printed)
     s << "\nWARNING: not all options have been printed: "
       << std::hex << (all^printed) << "\n";
+}
+
+void
+HelpPrinter::format(int ind0, int ind1, const std::string & text){
+  int lsp=0;
+  int ii=0;
+  const int text_width = width-ind1;
+  s << string(ind0, ' ');
+  for (int i=0; i<text.size(); i++,ii++){
+    if ((text[i]==' ') || (text[i]=='\n')) lsp=i+1;
+    if ((ii>=text_width) || (text[i]=='\n')){
+      if (lsp <= i-ii) lsp = i;
+      if (ii!=i) s << string(ind1, ' ');
+      s << text.substr(i-ii, lsp-i+ii-1) << endl;
+      ii=i-lsp;
+    }
+  }
+  if (ii!=text.size()) s << string(ind1, ' ');
+  s << text.substr(text.size()-ii, ii) << "\n";
 }

@@ -11,8 +11,8 @@ using namespace std;
 
 GetOptSet options;
 
-void usage(bool pod=false, ostream & S = cout){
-  HelpPrinter pr(S, pod, options, "ms2mkref");
+void usage(bool pod=false){
+  HelpPrinter pr(pod, options, "ms2mkref");
   pr.name("creating a map reference");
   pr.usage("<options>");
   pr.head(1,"General options");

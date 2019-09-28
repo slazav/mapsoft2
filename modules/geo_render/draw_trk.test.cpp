@@ -12,8 +12,8 @@ using namespace std;
 
 GetOptSet options;
 
-void usage(bool pod=false, ostream & S = cout){
-  HelpPrinter pr(S, pod, options, "draw_trk");
+void usage(bool pod=false){
+  HelpPrinter pr(pod, options, "draw_trk");
   pr.name("draw_trk test program");
   pr.usage("[<options>] <input files>");
   pr.head(1, "General options:");
