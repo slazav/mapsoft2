@@ -88,4 +88,3 @@ Test if map touches a coordinate range:
 	$ ms2nom -t n37 "[26,52,1,1]"; echo $?
 	1
 
-include(`foot.m4')

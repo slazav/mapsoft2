@@ -14,8 +14,8 @@
 
 <ul id="index">
   <li><a href="#NAME">NAME</a></li>
-  <li><a href="#USAGE">USAGE</a></li>
-  <li><a href="#DESCRIPTION">DESCRIPTION</a></li>
+  <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
+  <li><a href="#OPTIONS">OPTIONS</a></li>
   <li><a href="#EXAMPLES">EXAMPLES</a></li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
@@ -25,52 +25,96 @@
 
 <p>ms2tiles -- TMS/Google tile calculations</p>
 
-<h1 id="USAGE">USAGE</h1>
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code>        ms2tiles [-G] -p &lt;point&gt; &lt;z&gt; -- tiles at the point
-        ms2tiles [-G] -r &lt;range&gt; &lt;z&gt; -- tiles covering the range
-        ms2tiles [-G] -n &lt;tile-point&gt; -- tile range
-        ms2tiles [-G] -c &lt;tile-point&gt; -- tile center
-        ms2tiles [-G] -t &lt;tile-point&gt; &lt;range&gt;  -- check if the tile touches the range</code></pre>
+<pre><code>        ms2tiles &lt;options&gt;</code></pre>
 
-<p>Order of options is important.</p>
+<h1 id="OPTIONS">OPTIONS</h1>
 
-<h1 id="DESCRIPTION">DESCRIPTION</h1>
+<dl>
 
-<p>By default the program works with TMS tiles. Use -G option for google tiles.</p>
+<dt id="z---zindex-arg"><b>-z, --zindex &lt;arg&gt;</b></dt>
+<dd>
 
-<p>Parameters &lt;point&gt; and &lt;range&gt; are JSON arrays of WGS84 coordinates: [&lt;lon&gt;,&lt;lat&gt;], and [&lt;lon&gt;,&lt;lat&gt;,&lt;width&gt;,&lt;height&gt;]. Parameter &lt;tile-point&gt; is JSON array of three integers: [&lt;x&gt;,&lt;y&gt;,&lt;z&gt;]</p>
+<p>Set tile z-index.</p>
+
+</dd>
+<dt id="r---range-arg"><b>-r, --range &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Show tile range which covers a given figure. Figure is a point, rectangle or line in WGS84 coordinates.</p>
+
+</dd>
+<dt id="t---tiles-arg"><b>-t, --tiles &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Show coordinate range for a given tile or files.</p>
+
+</dd>
+<dt id="G---google"><b>-G, --google</b></dt>
+<dd>
+
+<p>Use Google tiles instead of TMS.</p>
+
+</dd>
+<dt id="c---center"><b>-c, --center</b></dt>
+<dd>
+
+<p>Instead of printing a coordinate range print its central point.</p>
+
+</dd>
+</dl>
+
+<dl>
+
+<dt id="h---help"><b>-h, --help</b></dt>
+<dd>
+
+<p>Show help message.</p>
+
+</dd>
+<dt id="pod"><b>--pod</b></dt>
+<dd>
+
+<p>Show help message as POD template.</p>
+
+</dd>
+</dl>
+
+<p>Value of --tiles option can be a tile &quot;[x,y]&quot; or a tile range &quot;[x,y,w,h]&quot;. Value of --range option is a point &quot;[lon,lat]&quot;, or rectangle &quot;[&lt;lon&gt;,&lt;lat&gt;,&lt;width&gt;,&lt;height&gt;]&quot;, or line &quot;[[lon1,lat1],[lon1,lat1],...]&quot;.</p>
+
+<p>If both --range and --tiles options are given program returns with exit code 0 or 1 depending on whether the coordinate range intersects with the tile range.</p>
+
+<p>By default the program works with TMS tiles. Use --google option for google tiles.</p>
 
 <h1 id="EXAMPLES">EXAMPLES</h1>
 
 <p>A point with coordinates lon=69.1, lat=36.1 is located on the TMS tile with z=13, x=5668, y=4977:</p>
 
-<pre><code>        $ ms2tiles -G -p &quot;[69.1,36.1]&quot; 13
-        [5668,4977]</code></pre>
+<pre><code>        $ ms2tiles -z 13 -r &quot;[69.1,36.1]&quot;
+        [5668,4977,1,1]</code></pre>
 
 <p>A coordinate range 1x1 degree starting at lon=69, lat=36 is covered by 23x29 Google tiles with z=13, starting with tile x=5666, y=3188:</p>
 
-<pre><code>        $ ms2tiles -G -r &quot;[69,36,1,1]&quot; 13
+<pre><code>        $ ms2tiles -G -z 13 -r &quot;[69,36,1,1]&quot;
         [5666,3188,23,29]</code></pre>
 
 <p>Finding a coordinate range for a TMS tile x=5666, y=4975, z=13</p>
 
-<pre><code>        $ ms2tiles -n &quot;[5666,4975,13]&quot;
+<pre><code>        $ ms2tiles -z 13 -t &quot;[5666,4975]&quot;
         [68.9941406,35.9957854,0.0439453125,0.0355463899]</code></pre>
 
 <p>Finding center of a tile:</p>
 
-<pre><code>        $ ms2tiles -c &quot;[5666,4975,13]&quot;
+<pre><code>        $ ms2tiles -z 13 -c -t &quot;[5666,4975]&quot;
         [69.0161133,36.0135586]</code></pre>
 
 <p>Checking if a tile touches a coordinate range:</p>
 
-<pre><code>        $ ms2tiles -t &quot;[5666,4975,13]&quot; &quot;[69,36,1,1]&quot;; echo $?
+<pre><code>        $ ms2tiles -z 13 -t &quot;[5666,4975]&quot; -r &quot;[69,36,1,1]&quot;; echo $?
         0
-        $ ms2tiles -t &quot;[5666,4975,13]&quot; &quot;[59,36,1,1]&quot;; echo $?
+        $ ms2tiles -z 13 -t &quot;[5666,4975]&quot; -r &quot;[59,36,1,1]&quot;; echo $?
         1</code></pre>
-
-<p>include(`foot.m4&#39;)</p>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 
