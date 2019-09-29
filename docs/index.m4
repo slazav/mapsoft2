@@ -51,9 +51,23 @@ fundamental problems and improving the code.',
 `<b>Mapsoft-2</b> -- это попытка аккуратно переписать эти программы,
 исправляя разные ошибки, заложенные в архитектуре, и улучшая код.')dnl
 
-<h2>ENRU(`Source code', `Исходный код')</h2>
+<h2>ENRU(`Links', `Ссылки')</h2>
 
-<p><a href="https://github.com/slazav/mapsoft2">https://github.com/slazav/mapsoft2</a>
+<ul>
+
+<li><a href="https://github.com/slazav/mapsoft2">
+ENRU(`Source code, bug tracker (github).', `Исходный код, баг-треккер (github).')
+</a>
+
+<li><a href="https://groups.google.com/forum/#!forum/mapsoft2">
+ENRU(`Discussions (google group).', `Обсуждения (гугл-группа).')
+</a>
+
+<li><a href="https://github.com/ushakov/mapsoft">
+ENRU(`Old mapsoft code (github).',`Старый исходный код (mapsoft)')
+</a>
+
+</ul>
 
 <!--#################################################################-->
 <h2>ENRU(`Source code library', `Библиотека исходного кода')</h2>
@@ -110,7 +124,7 @@ Only OziExplorer map output is supported now.',
 `Программа для изготовления привязок карт. Пока поддерживается только
 вывод в формат OziExplorer.')
 
-<li>STABLE _PROG_(ms2proj) -- ENRU(`Coordinate converter.
+<li>STABLE _PROG_(ms2proj) -- ENRU(`Coordinate converter.',
 `Преобразование координат.')
 
 <li>UNUSABLE _PROG_(ms2vmap) -- ENRU(`Program for working with vector
@@ -138,6 +152,7 @@ programs, interface will be changed, UNUSABLE - unusable programs.',`
 ENRU(`Mapsoft2 native format for vector maps.',
 `Формат mapsoft2 для хранения векторных карт.')</a>
 </ul>
+
 
 <!--#################################################################-->
 <div align=right>Vladislav Zavjalov, slazav at altlinux dot org</div>
