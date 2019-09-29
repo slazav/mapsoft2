@@ -275,4 +275,10 @@ Class for walking alone a line (2D).
 * `void remove_holes(MultiLine<T> & L)` -- Remove holes in a multi-segment
   polygon using shortest cuts.
 
+* `figure_line(string)` -- Read a figure from the string and represent it as a MultiLine.
+  The figure can be Point, Line/Multiline, Rect.
+
+* `figure_bbox(string)` -- Read a figure from the string and get its bounding box.
+  The figure can be Point, Line/Multiline, Rect.
+
 

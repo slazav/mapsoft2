@@ -1,6 +1,7 @@
 ///\cond HIDDEN (do not show this in Doxyden)
 
 #include <cassert>
+#include "err/assert_err.h"
 #include "poly_tools.h"
 #include "opt/opt.h"
 
@@ -121,6 +122,36 @@ main(){
       remove_holes(ml);
       assert(ml == dMultiLine("[[]]"));
     }
+
+     // figure_line, figure_bbox
+    {
+      assert(figure_line<int>("[1,2]")     == iMultiLine("[[1,2]]")); // Point
+      assert(figure_line<int>("[1,2,3]")   == iMultiLine("[[1,2,3]]")); // Point
+      assert(figure_line<int>("[1,2,3,4]") == iMultiLine("[[1,2],[4,2],[4,6],[1,6],[1,2]]")); // Rect
+      assert(figure_line<int>("[1,2,0,0]") == iMultiLine("[[1,2],[1,2],[1,2],[1,2],[1,2]]")); // zero-size Rect
+      assert(figure_line<int>("[[1,2],[3,4]]") == iMultiLine("[[1,2],[3,4]]")); // Line
+      assert(figure_line<int>("[[[1,2],[3,4]],[]]") == iMultiLine("[[[1,2],[3,4]],[]]")); // MultiLine
+      assert(figure_line<int>("") == iMultiLine());
+      assert(figure_line<int>("[]") == iMultiLine()); // empty Line/Multiline
+      assert(figure_line<int>("[[]]") == iMultiLine("[[]]")); // MultiLine with one empty segment
+
+      assert_err(figure_line<int>("aaa"), "can't read figure: aaa"); // Rect
+
+
+      assert(figure_bbox<int>("[1,2]")     == iRect(1,2,0,0)); // Point
+      assert(figure_bbox<int>("[1,2,3]")   == iRect(1,2,0,0)); // Point (z ignored)
+      assert(figure_bbox<int>("[1,2,3,4]") == iRect(1,2,3,4)); // Rect
+      assert(figure_bbox<int>("[1,2,0,0]") == iRect(1,2,0,0)); // Rect
+      assert(figure_bbox<int>("[[1,2],[3,4]]") == iRect(1,2,2,2)); // Line
+      assert(figure_bbox<int>("[[[1,2],[3,4]],[]]") == iRect(1,2,2,2)); // MultiLine
+      assert(figure_bbox<int>("") == iRect());
+      assert(figure_bbox<int>("[]") == iRect()); // empty Line
+      assert(figure_bbox<int>("[[]]") == iRect()); // empty MultiLine
+
+      assert_err(figure_bbox<int>("aaa"), "can't read figure: aaa"); // Rect
+
+    }
+
 
   }
   catch (Err e) {

@@ -225,4 +225,44 @@ void remove_holes(MultiLine<T> & L){
   }
 }
 
+/// Read a figure from the string and get its bounding box.
+/// The figure can be Point, Line/Multiline, Rect
+template <typename T>
+MultiLine<T> figure_line(const::std::string &str) {
+  MultiLine<T> ret;
+  if (str=="") return ret;
+
+  // try point
+  try {
+    Line<T> l;
+    l.push_back(Point<T>(str));
+    ret.push_back(l);
+    return ret;
+  }
+  catch (Err e){}
+
+  // try Rect
+  try {
+    ret.push_back(rect_to_line(Rect<T>(str), true));
+    return ret;
+  }
+  catch (Err e){}
+
+  // try Line/Multiline
+  try {
+    MultiLine<T> ml(str);
+    return ml;
+  }
+  catch (Err e){}
+  throw Err() << "can't read figure: " << str;
+}
+
+/// Read a figure from the string and get its bounding box.
+/// The figure can be Point, Line/Multiline, Rect
+template <typename T>
+Rect<T> figure_bbox(const::std::string &str) {
+  return figure_line<T>(str).bbox();
+}
+
+
 #endif
