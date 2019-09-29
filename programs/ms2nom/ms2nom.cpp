@@ -1,41 +1,45 @@
 #include <cstring>
 #include "geo_nom/geo_nom.h"
+#include "getopt/getopt.h"
 
 using namespace std;
 
-void usage(){
-  cout << "\n"
-    "ms2nom -- Soviet nomenclature map calculations\n"
-    "\n"
-    "usage: ms2nom [-E] -p <point> <scale> -- maps at the point\n"
-    "       ms2nom [-E] -r <range> <scale> -- maps at the range\n"
-    "       ms2nom [-E] -n <name> -- map range\n"
-    "       ms2nom [-E] -c <name> -- map center\n"
-    "       ms2nom [-E] -s <name> x_shift y_shift -- adjacent map\n"
-    "       ms2nom [-E] -S <name> <scale> -- maps of different scale\n"
-    "       ms2nom [-E] -t <name> <range>  -- check if the map touches the range\n"
-    "Order of options is important.\n"
-    "\n"
-    "Option -E turns on 'extended mode': single sheets (like Q10-001) are allowed\n"
-    "on input and always returned on output; for a single sheet suffix '.<N>x<M>' is\n"
-    "allowed to multiply the range (like n49-001.3x2).\n"
-    "\n"
-    "At the moment combination of -E and -s options with such a\n"
-    "\"multiplyed\" name returns non-multiplied adjecent sheets. This is not\n"
-    "very useful and maybe changed later.\n"
-    "\n"
-    "Soviet nomenclature maps are drawn in Krassovsky-1942 datum\n"
-    "(+ellps=krass +towgs84=28,-130,-95).\n"
-    "\n"
-    "Supported scales: 1:1000000, 1:500000, 1:200000, 1:100000, 1:50000.\n"
+void usage(bool pod=false){
+  GetOptSet options;
+
+  HelpPrinter pr(pod, options, "ms2nom");
+  pr.name("Soviet nomenclature map calculations");
+  pr.usage("[-E] -p <point> <scale> -- maps at the point");
+  pr.usage("[-E] -r <range> <scale> -- maps at the range");
+  pr.usage("[-E] -n <name> -- map range");
+  pr.usage("[-E] -c <name> -- map center");
+  pr.usage("[-E] -s <name> x_shift y_shift -- adjacent map");
+  pr.usage("[-E] -S <name> <scale> -- maps of different scale");
+  pr.usage("[-E] -t <name> <range>  -- check if the map touches the range");
+  pr.par("Order of options is important.");
+  pr.par(
+    "Option -E turns on 'extended mode': single sheets (like Q10-001) are allowed "
+    "on input and always returned on output; for a single sheet suffix '.<N>x<M>' is "
+    "allowed to multiply the range (like n49-001.3x2)."
+  );
+  pr.par(
+    "At the moment combination of -E and -s options with such a "
+    "\"multiplyed\" name returns non-multiplied adjecent sheets. This is not "
+    "very useful and maybe changed later."
+  );
+  pr.par(
+    "Soviet nomenclature maps are drawn in Krassovsky-1942 datum "
+    "(+ellps=krass +towgs84=28,-130,-95)."
+  );
+  pr.par(
+    "Supported scales: 1:1000000, 1:500000, 1:200000, 1:100000, 1:50000."
     "Scale can be written in following forms:\n"
     "* 1:1000000, 1:1'000'000, 1000000, 1M, 10km/cm\n"
     "* 1:500000, 1:500'000, 500000, 500k, 5km/cm\n"
     "* 1:200000, 1:200'000, 200000, 100k, 1km/cm\n"
     "* 1:100000, 1:100'000, 100000, 100k, 1km/cm\n"
     "* 1:50000, 1:50'000, 50000, 50k, 500m/cm\n"
-    "\n"
-  ;
+  );
 }
 
 int
