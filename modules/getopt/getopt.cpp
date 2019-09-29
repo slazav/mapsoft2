@@ -153,6 +153,7 @@ HelpPrinter::HelpPrinter(
   struct winsize size;
   ioctl(STDOUT_FILENO,TIOCGWINSZ,&size);
   width = size.ws_col;
+  if (width<1) width=80;
 }
 
 void
