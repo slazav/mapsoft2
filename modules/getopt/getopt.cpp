@@ -231,10 +231,13 @@ HelpPrinter::head(int level, const std::string & text){
 
 void
 HelpPrinter::par(const std::string & text){
-  if (pod)
+  if (pod){
     s << text << "\n\n";
-  else
+  }
+  else{
     format(0,0,text);
+    s << "\n";
+  }
 }
 
 
