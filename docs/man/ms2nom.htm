@@ -14,8 +14,9 @@
 
 <ul id="index">
   <li><a href="#NAME">NAME</a></li>
-  <li><a href="#USAGE">USAGE</a></li>
-  <li><a href="#DESCRIPTION">DESCRIPTION</a></li>
+  <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
+  <li><a href="#OPTIONS">OPTIONS</a></li>
+  <li><a href="#NAME1">NAME</a></li>
   <li><a href="#EXAMPLES">EXAMPLES</a></li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
@@ -25,59 +26,100 @@
 
 <p>ms2nom -- Soviet nomenclature map calculations</p>
 
-<h1 id="USAGE">USAGE</h1>
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code>        ms2nom [-E] -p &lt;point&gt; &lt;scale&gt; -- maps at the point
-        ms2nom [-E] -r &lt;range&gt; &lt;scale&gt; -- maps at the range
-        ms2nom [-E] -n &lt;name&gt; -- map range
-        ms2nom [-E] -c &lt;name&gt; -- map center
+<pre><code>        ms2nom &lt;options&gt;
+
         ms2nom [-E] -s &lt;name&gt; x_shift y_shift -- adjacent map
+
         ms2nom [-E] -S &lt;name&gt; &lt;scale&gt; -- maps of different scale
+
         ms2nom [-E] -t &lt;name&gt; &lt;range&gt;  -- check if the map touches the range</code></pre>
 
 <p>Order of options is important.</p>
 
-<h1 id="DESCRIPTION">DESCRIPTION</h1>
+<h1 id="OPTIONS">OPTIONS</h1>
 
-<p>Program <code>ms2nom</code> does some calculations with standard Soviet nomenclature map names.</p>
+<dl>
 
-<p>Option <code>-E</code> turns on <i>extended mode</i>: single sheets (like <code>Q10-001</code>) are allowed on input and always returned on output; for a single sheet suffix <code>.&lt;N&gt;x&lt;M&gt;</code> is allowed to multiply the range (like <code>n49-001.3x2</code>).</p>
+<dt id="r---range-arg"><b>-r, --range &lt;arg&gt;</b></dt>
+<dd>
 
-<p>At the moment combination of <code>-E</code> and <code>-s</code> options with such a &quot;multiplyed&quot; name returns non-multiplied adjecent sheets. This is not very useful and maybe changed later.</p>
+<p>Show maps which cover a given figure. Figure is a point, rectangle or line in WGS84 coordinates. Option --scale should be set.</p>
 
-<p>Soviet nomenclature maps are drawn in Krassovsky-1942 datum <code>(+ellps=krass +towgs84=28,-130,-95)</code>. The program does not do any coordinate conversions.</p>
+</dd>
+<dt id="s---scale-arg"><b>-s, --scale &lt;arg&gt;</b></dt>
+<dd>
 
-<p>Supported scales are: <code>1:1000000, 1:500000, 1:200000, 1:100000, 1:50000</code>. Scale can be written in following forms:</p>
+<p>Set map scale. Scale should be set when --range option is used. If used with --name option then name will be converted to a new scale instead of printing the range.</p>
 
-<ul>
+</dd>
+<dt id="n---name-arg"><b>-n, --name &lt;arg&gt;</b></dt>
+<dd>
 
-<li><p>1:1000000, 1:1&#39;000&#39;000, 1000000, 1M, 10km/cm</p>
+<p>Show coordinate range for a given map.</p>
 
-</li>
-<li><p>1:500000, 1:500&#39;000, 500000, 500k, 5km/cm</p>
+</dd>
+<dt id="E---ext"><b>-E, --ext</b></dt>
+<dd>
 
-</li>
-<li><p>1:200000, 1:200&#39;000, 200000, 100k, 1km/cm</p>
+<p>Use &#39;extended mode&#39;: single sheets (like Q10-001) are allowed on input and always returned on output; for a single sheet suffix &#39;.&lt;N&gt;x&lt;M&gt;&#39; is allowed to multiply the range (like n49-001.3x2).</p>
 
-</li>
-<li><p>1:100000, 1:100&#39;000, 100000, 100k, 1km/cm</p>
+</dd>
+<dt id="c---center"><b>-c, --center</b></dt>
+<dd>
 
-</li>
-<li><p>1:50000, 1:50&#39;000, 50000, 50k, 500m/cm</p>
+<p>Instead of printing a coordinate range print its central point.</p>
 
-</li>
-</ul>
+</dd>
+<dt id="S---shift-arg"><b>-S, --shift &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Shift a map. Should be used with --name option. Not compatable with --range option. Argument is an array of two integer numbers [dx,dy].</p>
+
+</dd>
+</dl>
+
+<dl>
+
+<dt id="h---help"><b>-h, --help</b></dt>
+<dd>
+
+<p>Show help message.</p>
+
+</dd>
+<dt id="pod"><b>--pod</b></dt>
+<dd>
+
+<p>Show help message as POD template.</p>
+
+</dd>
+</dl>
+
+<p>Program &quot;ms2nom&quot; does some calculations with standard Soviet nomenclature map names.</p>
+
+<p>Option -E turns on &#39;extended mode&#39;: single sheets (like Q10-001) are allowed on input and always returned on output; for a single sheet suffix &#39;.&lt;N&gt;x&lt;M&gt;&#39; is allowed to multiply the range (like n49-001.3x2).</p>
+
+<p>If both --range and --name options are given program returns with exit code 0 or 1 depending on whether the coordinate range intersects with the tile range.</p>
+
+<p>At the moment combination of -E and -S options with such a &quot;multiplied&quot; name returns non-multiplied adjecent sheets. This is not very useful and maybe changed later.</p>
+
+<p>Soviet nomenclature maps are drawn in Krassovsky-1942 datum (+ellps=krass +towgs84=28,-130,-95).</p>
+
+<p>Supported scales: 1:1000000, 1:500000, 1:200000, 1:100000, 1:50000.Scale can be written in following forms: * 1:1000000, 1:1&#39;000&#39;000, 1000000, 1M, 10km/cm * 1:500000, 1:500&#39;000, 500000, 500k, 5km/cm * 1:200000, 1:200&#39;000, 200000, 100k, 1km/cm * 1:100000, 1:100&#39;000, 100000, 100k, 1km/cm * 1:50000, 1:50&#39;000, 50000, 50k, 500m/cm</p>
+
+<h1 id="NAME1">NAME</h1>
 
 <h1 id="EXAMPLES">EXAMPLES</h1>
 
 <p>Which 1:100000 map is covering a point lon=69, lat=36:</p>
 
-<pre><code>        $ ms2nom -p &quot;[69,36]&quot; 1:100000
+<pre><code>        $ ms2nom -r &quot;[69,36]&quot; -s 1:100000
         j42-139</code></pre>
 
 <p>Which 1:100000 maps are touching range lon=36.0-36.5, lat=70.0-70.5:</p>
 
-<pre><code>        $ ms2nom -r &quot;[36,70,0.5,0.5]&quot; 1:100000
+<pre><code>        $ ms2nom -r &quot;[36,70,0.5,0.5]&quot; -s 1:100000
         r37-049,050
         r37-061,062</code></pre>
 
@@ -86,21 +128,23 @@
 <pre><code>        $ ms2nom -n j42-1
         [66,38,3,2]
 
-        $ ms2nom -c j42-1
+        $ ms2nom -n j42-1 -c
         [67.5,39]</code></pre>
 
 <p>Right neighbour of j42-112-2 map:</p>
 
-<pre><code>        $ ms2nom -s j42-112-2 1 0
+<pre><code>        $ ms2nom -n j42-112-2 --shift [1,0]
         j42-113-1</code></pre>
 
-<p>List of 1:50&#39;000 maps for p42-111,112 map: $ ms2nom -S p42-111,112 50k p42-111-1,2 p42-111-3,4 p42-112-1,2 p42-112-3,4</p>
+<p>List of 1:50&#39;000 maps for p42-111,112 map: $ ms2nom -n p42-111,112 -s 50k p42-111-1,2 p42-111-3,4 p42-112-1,2 p42-112-3,4</p>
+
+<p>Opposite: $ ms2nom -n p42-111-3,4 -s 100k p42-111,112</p>
 
 <p>Test if map touches a coordinate range:</p>
 
-<pre><code>        $ ms2nom -t n37 &quot;[36,52,1,1]&quot;; echo $?
+<pre><code>        $ ms2nom -n n37 -r &quot;[36,52,1,1]&quot;; echo $?
         0
-        $ ms2nom -t n37 &quot;[26,52,1,1]&quot;; echo $?
+        $ ms2nom -n n37 -r &quot;[26,52,1,1]&quot;; echo $?
         1</code></pre>
 
 <h1 id="AUTHOR">AUTHOR</h1>
