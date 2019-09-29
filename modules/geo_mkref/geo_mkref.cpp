@@ -6,6 +6,7 @@
 #include "geo_nom/geo_nom.h"
 #include "geo_data/geo_utils.h"
 #include "geom/multiline.h"
+#include "geom/poly_tools.h"
 #include "err/err.h"
 
 #include "geo_mkref.h"
@@ -175,39 +176,9 @@ geo_mkref(const Opt & o){
     }
 
     if (o.exists("coords_wgs")){
-
-      // try coordinate point
-      try {
-        dPoint p = o.get("coords_wgs", dPoint());
-        iPoint t;
-        if (G) t = tcalc.pt_to_gtile(p, z);
-        else   t = tcalc.pt_to_tile(p, z);
-        tile_range = iRect(t, t+iPoint(1,1));
-        goto coord_end;
-      }
-      catch (Err e){}
-
-      // try coordinate range
-      try {
-        dRect r = o.get("coords_wgs", dRect());
-        if (G) tile_range = tcalc.range_to_gtiles(r, z);
-        else   tile_range = tcalc.range_to_tiles(r, z);
-        goto coord_end;
-      }
-
-      // try line
-      catch (Err e){}
-      try {
-        dMultiLine brd = o.get("coords_wgs", dMultiLine());
-        if (G) tile_range = tcalc.range_to_gtiles(brd.bbox(), z);
-        else   tile_range = tcalc.range_to_tiles(brd.bbox(), z);
-        goto coord_end;
-      }
-      catch (Err e){}
-
-      throw Err() << "geo_mkref: can't parse coords option: " << o.get("coords", string());
-
-      coord_end:;
+      dRect r = figure_bbox<double>(o.get("coords_wgs",""));
+      if (G) tile_range = tcalc.range_to_gtiles(r, z);
+      else   tile_range = tcalc.range_to_tiles(r, z);
     }
 
     // here tile_range should be set to non-zero rectangle
@@ -291,43 +262,12 @@ geo_mkref(const Opt & o){
     o.check_conflict(confl);
 
 
-    if (o.exists("coords")){
-      // try coordinate range
-      try {
-        range = o.get("coords", dRect())/k;
-        goto coord_end_r1;
-      }
-      catch (Err e){
-      }
-      // try line
-      try {
-        dMultiLine brd = o.get("coords", dMultiLine())/k;
-        range = brd.bbox();
-        goto coord_end_r1;
-      }
-      catch (Err e){}
-      throw Err() << "geo_mkref: can't parse coords option: " << o.get("coords", string());
-      coord_end_r1:;
-    }
+    if (o.exists("coords"))
+      range = figure_bbox<double>(o.get("coords",""))/k;
 
-    if (o.exists("coords_wgs")){
-      // try coordinate range
-      try {
-        dRect R = o.get("coords_wgs", dRect());
-        range = cnv.bck_acc(R);
-        goto coord_end_r2;
-      }
-      catch (Err e){
-      }
-      // try line
-      try {
-        range = cnv.bck_acc(o.get("coords_wgs", dMultiLine())).bbox();
-        goto coord_end_r2;
-      }
-      catch (Err e){}
-      throw Err() << "geo_mkref: can't parse coords option: " << o.get("coords", string());
-      coord_end_r2:;
-    }
+    if (o.exists("coords_wgs"))
+        range = cnv.bck_acc(
+          figure_line<double>(o.get("coords_wgs",""))).bbox();
 
     // check if range is set
     if (range.is_zsize())
