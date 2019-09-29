@@ -61,8 +61,11 @@ public:
 
   // remove option if it exists
   void remove(const std::string & name){
-    for (auto i=begin(); i!=end(); ++i)
-      if (i->name == name) erase(i);
+    auto i=begin();
+    while (i!=end()){
+      if (i->name == name) i=erase(i);
+      else ++i;
+    }
   }
 
 };
