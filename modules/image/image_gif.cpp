@@ -179,7 +179,7 @@ image_load_gif(const std::string & file, const double scale){
   }
   catch (Err e){
 #if GIFV == 500
-    int code
+    int code;
     if (gif) DGifCloseFile(gif, &code);
 #else
     if (gif) DGifCloseFile(gif);
@@ -266,7 +266,7 @@ image_save_gif(const Image & im, const std::string & file, const Opt & opt){
 #if GIFV == 500
     int code;
     if (gif) EGifCloseFile(gif, &code);
-    if (cmap) GifFreeMapObject(cmap);
+    if (gif_cmap) GifFreeMapObject(gif_cmap);
 #else
     if (gif) EGifCloseFile(gif);
     if (gif_cmap) FreeMapObject(gif_cmap);
