@@ -6,4 +6,5 @@ MOD_SOURCES  := geo_data.cpp geo_io.cpp conv_geo.cpp geo_utils.cpp\
 SIMPLE_TESTS := geo_data ozi conv_geo geo_utils
 PKG_CONFIG = 'libxml-2.0 proj'
 
+CXXFLAGS += -DACCEPT_USE_OF_DEPRECATED_PROJ_API_H
 include ../Makefile.inc
