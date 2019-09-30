@@ -11,13 +11,14 @@ void usage(bool pod=false){
 
   HelpPrinter pr(pod, options, "ms2nom");
   pr.name("Soviet nomenclature map calculations");
-  pr.usage("<options>");
 
-  pr.usage("[-E] -s <name> x_shift y_shift -- adjacent map");
-  pr.usage("[-E] -S <name> <scale> -- maps of different scale");
-  pr.usage("[-E] -t <name> <range>  -- check if the map touches the range");
-  pr.par("Order of options is important.");
-
+  pr.usage("[-E] -r <point> -s <scale> -- map at the point");
+  pr.usage("[-E] -r <range> -s <scale> -- maps at the range");
+  pr.usage("[-E] -n <name> -- map range");
+  pr.usage("[-E] -c -n <name> -- map center");
+  pr.usage("[-E] -n <name> --shift [x_shift,y_shift] -- adjacent map");
+  pr.usage("[-E] -n <name> -s <scale> -- convert map to a different scale");
+  pr.usage("[-E] -n <name> -r <range>  -- check if the map touches the range");
 
   pr.head(1, "Options");
   pr.opts(MS2OPT_NONSTD);
@@ -28,7 +29,7 @@ void usage(bool pod=false){
    "nomenclature map names.");
 
   pr.par(
-    "Option -E turns on 'extended mode': single sheets (like Q10-001) are allowed "
+    "Option --ext turns on 'extended mode': single sheets (like Q10-001) are allowed "
     "on input and always returned on output; for a single sheet suffix '.<N>x<M>' is "
     "allowed to multiply the range (like n49-001.3x2).");
 
@@ -38,7 +39,7 @@ void usage(bool pod=false){
     "on whether the coordinate range intersects with the tile range.");
 
   pr.par(
-    "At the moment combination of -E and -S options with such a "
+    "At the moment combination of --ext and --shift options with such a "
     "\"multiplied\" name returns non-multiplied adjecent sheets. This is not "
     "very useful and maybe changed later.");
 
