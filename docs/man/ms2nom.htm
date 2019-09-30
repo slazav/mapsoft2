@@ -28,15 +28,19 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code>        ms2nom &lt;options&gt;
+<pre><code>        ms2nom [-E] -r &lt;point&gt; -s &lt;scale&gt; -- map at the point
 
-        ms2nom [-E] -s &lt;name&gt; x_shift y_shift -- adjacent map
+        ms2nom [-E] -r &lt;range&gt; -s &lt;scale&gt; -- maps at the range
 
-        ms2nom [-E] -S &lt;name&gt; &lt;scale&gt; -- maps of different scale
+        ms2nom [-E] -n &lt;name&gt; -- map range
 
-        ms2nom [-E] -t &lt;name&gt; &lt;range&gt;  -- check if the map touches the range</code></pre>
+        ms2nom [-E] -c -n &lt;name&gt; -- map center
 
-<p>Order of options is important.</p>
+        ms2nom [-E] -n &lt;name&gt; --shift [x_shift,y_shift] -- adjacent map
+
+        ms2nom [-E] -n &lt;name&gt; -s &lt;scale&gt; -- convert map to a different scale
+
+        ms2nom [-E] -n &lt;name&gt; -r &lt;range&gt;  -- check if the map touches the range</code></pre>
 
 <h1 id="OPTIONS">OPTIONS</h1>
 
@@ -98,11 +102,11 @@
 
 <p>Program &quot;ms2nom&quot; does some calculations with standard Soviet nomenclature map names.</p>
 
-<p>Option -E turns on &#39;extended mode&#39;: single sheets (like Q10-001) are allowed on input and always returned on output; for a single sheet suffix &#39;.&lt;N&gt;x&lt;M&gt;&#39; is allowed to multiply the range (like n49-001.3x2).</p>
+<p>Option --ext turns on &#39;extended mode&#39;: single sheets (like Q10-001) are allowed on input and always returned on output; for a single sheet suffix &#39;.&lt;N&gt;x&lt;M&gt;&#39; is allowed to multiply the range (like n49-001.3x2).</p>
 
 <p>If both --range and --name options are given program returns with exit code 0 or 1 depending on whether the coordinate range intersects with the tile range.</p>
 
-<p>At the moment combination of -E and -S options with such a &quot;multiplied&quot; name returns non-multiplied adjecent sheets. This is not very useful and maybe changed later.</p>
+<p>At the moment combination of --ext and --shift options with such a &quot;multiplied&quot; name returns non-multiplied adjecent sheets. This is not very useful and maybe changed later.</p>
 
 <p>Soviet nomenclature maps are drawn in Krassovsky-1942 datum (+ellps=krass +towgs84=28,-130,-95).</p>
 
