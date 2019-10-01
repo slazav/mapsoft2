@@ -51,7 +51,7 @@ main(){
       cw->stroke_preserve();
       cw->set_color(0xFF00FF);
       cw->fill();
-      cw->save_png("tmp1.png");
+//      cw->save_png("tmp1.png");
     }
     {
       CairoWrapper cw;
@@ -77,7 +77,7 @@ main(){
       cw->set_fig_font(0xFF0000FF, 18, 10, 150);
       cw->text("Test/Тест", dPoint(150,100), 0, 2,0);
 
-      cw->save_png("tmp2.png");
+//      cw->save_png("tmp2.png");
     }
 
     {
@@ -125,7 +125,7 @@ main(){
         cw->text(text, dPoint(10,100+10*i),0);
       }
 
-      cw->save_png("tmp3.png");
+//      cw->save_png("tmp3.png");
     }
 
   }
