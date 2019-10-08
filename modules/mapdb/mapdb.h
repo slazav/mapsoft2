@@ -143,6 +143,9 @@ public:
   /// If the object does not exist throw an error.
   void del(uint32_t id);
 
+  /// Find objects with given type and range
+  std::set<int> find(MapDBObjClass cl, int type, const dRect & range);
+
 
   ///////////////
   /* Import/export */

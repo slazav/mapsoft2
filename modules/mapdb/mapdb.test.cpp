@@ -154,7 +154,7 @@ main(){
       o1.comm = "object comment\nsecond line";
       o1.tags.insert("object source\nsecond line");
 
-      // put object
+      // add/get object
       uint32_t id = m.add(o1);
       assert(id == 0);
       assert(o1 == m.get(id));
@@ -170,6 +170,16 @@ main(){
       try {m.get(id); assert(false);} catch (Err e) {
         assert(e.str() == "MapDB::get: no such object: 0");
       }
+
+      // find
+      id = m.add(o1);
+      assert(o1 == m.get(id));
+      assert(m.find(o1.cl, o1.type+1, dRect("[1,1,1,1]")).size() == 0);
+      assert(m.find(MAPDB_POINT, o1.type, dRect("[1,1,1,1]")).size() == 0);
+      assert(m.find(o1.cl, o1.type, dRect("[10,1,1,1]")).size() == 0);
+      std::set<int> ii = m.find(o1.cl, o1.type, dRect("[1,1,1,1]"));
+      assert(ii.size()==1);
+
 
     }
     if (system("rm -rf tmp.db")!=0) throw Err() << "Can't delete tmp.db";
