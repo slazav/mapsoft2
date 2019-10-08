@@ -8,11 +8,11 @@ P=${1:-./ms2vmap}
 
 rm -rf tmp.db
 
-assert "$P tmp.db import_vmap" "Error: import_vmap: file name expected" 1
-assert "$P tmp.db import_vmap missing.vmap" "Error: can't read VMAP file" 1
+assert "$P import_vmap tmp.db" "Error: import_vmap: two arguments expected: map name, file name" 1
+assert "$P import_vmap tmp.db missing.vmap" "Error: can't read VMAP file" 1
 
-assert "$P tmp.db import_vmap test_data/n37-016.vmap" "" 0
-assert "$P tmp.db export_vmap tmp.vmap" "" 0
+assert "$P import_vmap tmp.db test_data/n37-016.vmap" "" 0
+assert "$P export_vmap tmp.db tmp.vmap" "" 0
 assert_diff test_data/n37-016a.vmap tmp.vmap
 
 #assert "$P tmp export_mp tmp.mp --cnv_pt '[0x900,0x815]' --cnv_line '[]'" "" 0
