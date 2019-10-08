@@ -5,68 +5,76 @@
 #include <cassert>
 #include <iostream>
 #include <string>
+#include <memory>
 
 #include "err/err.h"
 #include "getopt/getopt.h"
+
 #include "actions.h"
 
-#define OPT_G   1  // general options (-v, -h)
-#define OPT_A   2  // action options (mixed for all actions)
-
+using namespace std;
 GetOptSet options;
 
+// all actions
+std::vector<std::shared_ptr<MapAction> > actions = {
+  std::shared_ptr<MapAction>(new MapActionImportMP),
+  std::shared_ptr<MapAction>(new MapActionExportMP),
+  std::shared_ptr<MapAction>(new MapActionImportVMAP),
+  std::shared_ptr<MapAction>(new MapActionExportVMAP),
+  std::shared_ptr<MapAction>(new MapActionRender),
+};
+
+
+/**********************************************************/
 void usage(bool pod=false){
   HelpPrinter pr(pod, options, "ms2vmap");
 
   pr.name("working with vector maps");
-  pr.usage("<vmap> (-h|--help|--pod)");
-  pr.usage("<vmap> <action> (-h|--help|--pod)");
-  pr.usage("<vmap> <action> [<action arguments and options>]");
+  pr.usage("(-h|--help|--pod)");
+  pr.usage("<action> (-h|--help)");
+  pr.usage("<action> [<action arguments and options>]");
 
   pr.head(1, "General options:");
-  pr.opts(OPT_G);
+  pr.opts(MS2OPT_STD);
   pr.head(1, "Actions:");
-  pr.par(
-    " * import_mp <name> <options> -- import MP file to the map\n"
-    " * export_mp <name> <options> -- export the map to MP file\n"
-    " * import_vmap <name> <options> -- import VMAP1 file to the map\n"
-    " * export_vmap <name> <options> -- export the map to VMAP1 file\n"
-  );
+
+  // print list of actions
+  for (auto const & a: actions){
+    pr.usage(a->get_name() + " <arguments> -- " + a->get_descr());
+  }
+
+  // print halp message for each action:
+  if (pod){
+    for (auto const & a: actions) a->help(pod);
+  }
 
   throw Err();
 }
+/**********************************************************/
 
 int
 main(int argc, char *argv[]){
   try{
 
-  options.add("help", 0,'h', OPT_G|OPT_A, "show help message");
-  options.add("pod",  0, 0,  OPT_G|OPT_A, "show this message as POD template");
+    ms2opt_add_std(options);
+    options.remove("verbose");
 
-    // general options
-    Opt GO = parse_options(&argc, &argv, options, OPT_G, NULL);
-    if (GO.exists("help")) usage();
-    if (GO.exists("pod"))  usage(true);
+    // general options -- up to first non-option argument
+    Opt O = parse_options(&argc, &argv, options, MS2OPT_STD, NULL);
+    if (O.exists("help")) usage();
+    if (O.exists("pod"))  usage(true);
+    if (argc<1) usage();
 
-    if (argc<2) usage();
-    const char *mapname = argv[0];
-    std::string action(argv[1]);
-    argc-=1; argv+=1; // now argv points to the action name!
+    // run the action
+    for (auto const & a: actions){
+      if (a->get_name() == argv[0]) {a->run(&argc, &argv); return 0;}
+    }
 
-    // action arguments and options
-    std::vector<std::string> AA;
-    Opt AO = parse_options_all(&argc, &argv, options, OPT_A, AA);
-
-    if (action == "import_mp"){ action_import_mp(mapname, AA, AO); return 0; }
-    if (action == "export_mp"){ action_export_mp(mapname, AA, AO); return 0; }
-    if (action == "import_vmap"){ action_import_vmap(mapname, AA, AO); return 0; }
-    if (action == "export_vmap"){ action_export_vmap(mapname, AA, AO); return 0; }
-
-    throw Err() << "ms2vmap: unknown action: " << action;
+    throw Err() << "ms2vmap: unknown action: " << argv[0];
 
   }
   catch (Err e) {
-    if (e.str()!="") std::cerr << "Error: " << e.str() << "\n";
+    if (e.str()!="") cerr << "Error: " << e.str() << "\n";
     return 1;
   }
   return 0;
