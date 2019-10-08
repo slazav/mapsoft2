@@ -38,7 +38,7 @@ typedef enum{
 
 struct MapDBObj: public dMultiLine {
   MapDBObjClass   cl;      // object class: MAPDB_POINT, MAPDB_LINE, MAPDB_POLYGON
-  int             type;    // = MP type
+  uint16_t        type;    // = MP type
   MapDBObjDir     dir;     // object direction: MAPDB_DIR_NO, MAPDB_DIR_FRW, MAPDB_DIR_BCK
   float           angle;   // object angle, deg
   std::string     name;    // object name (to be printed on map labels)

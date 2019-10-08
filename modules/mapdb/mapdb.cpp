@@ -23,10 +23,9 @@ string
 MapDBObj::pack() const {
   ostringstream s;
 
-  // two integer numbers: flags, type:
-  int32_t v;
-  v = (int32_t)cl;   s.write((char *)&v, sizeof(int32_t));
-  v = (int32_t)type; s.write((char *)&v, sizeof(int32_t));
+  // two integer numbers: flags, type are packed in a single 32-bit integer:
+  uint32_t v = (cl << 16) | type;
+  s.write((char *)&v, sizeof(uint32_t));
 
   // optional angle (integer value, 1/1000 degrees)
   if (angle!=0) string_pack<int32_t>(s, "angl", (int32_t)(angle*1000));
@@ -57,15 +56,14 @@ MapDBObj::unpack(const std::string & str) {
 
   istringstream s(str);
 
-  // class
-  int32_t v;
+  // type + class
+  uint32_t v;
   s.read((char*)&v, sizeof(int32_t));
-  if (v<0 || v>2) throw Err() << "MapDBObj::unpack: bad class value: " << v;
-  cl = (MapDBObjClass)v;
 
-  // type
-  s.read((char*)&v, sizeof(int32_t));
-  type = v;
+  type = v & 0xFFFF;
+  v >>= 16;
+  if (v<0 || v>2) throw Err() << "MapDBObj::unpack: bad class value: " << v;
+  cl   = (MapDBObjClass)v;
 
   // other fields
   while (1){
@@ -87,8 +85,8 @@ MapDB::MapDB(std::string name, bool create):
     mapinfo(name + "/mapinfo.db", NULL, create, false),
     objects(name + "/objects.db", NULL, create, false),
     labels(name  + "/labels.db",  NULL, create, true),
-    geohash(name + "/geohash.db", NULL, create
-){
+    geohash(name + "/geohash.db", NULL, create){
+
   // get map version
   uint32_t key = 0;
   std::string vstr = mapinfo.get(key);
@@ -166,6 +164,7 @@ uint32_t
 MapDB::add(const MapDBObj & o){
   // get last id + 1
   uint32_t id;
+  uint32_t ct = (o.cl << 16) | o.type;
   objects.get_last(id);
   if (id == 0xFFFFFFFF) id=0;
   else id++;
@@ -177,7 +176,7 @@ MapDB::add(const MapDBObj & o){
   objects.put(id, o.pack());
 
   // write geohash
-  geohash.put(id, o.type, o.bbox());
+  geohash.put(id, ct, o.bbox());
 
   return id;
 }
@@ -191,15 +190,17 @@ MapDB::put(uint32_t id, const MapDBObj & o){
 
   MapDBObj o1;
   o1.unpack(str);
+  uint32_t ct1 = (o1.cl << 16) | o1.type;
+  uint32_t ct  = (o.cl  << 16) | o.type;
 
-  // Delete heohashes
-  geohash.del(id, o1.type, o1.bbox());
+  // Delete geohashes
+  geohash.del(id, ct1, o1.bbox());
 
   // write new object
   objects.put(id, o.pack());
 
   // write geohash
-  geohash.put(id, o.type, o.bbox());
+  geohash.put(id, ct, o.bbox());
 
 }
 
@@ -224,9 +225,10 @@ MapDB::del(uint32_t id){
 
   MapDBObj o;
   o.unpack(str);
+  uint32_t ct  = (o.cl  << 16) | o.type;
 
   // Delete heohashes
-  geohash.del(id, o.type, o.bbox());
+  geohash.del(id, ct, o.bbox());
 
   // Delete the object
   objects.del(id);
