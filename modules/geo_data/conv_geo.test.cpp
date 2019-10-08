@@ -207,9 +207,10 @@ main(){
       dPoint p1(25.651054, 160.976941);
       assert_err(cnv1.frw(p1), "Can't convert coordinates: latitude or longitude exceeded limits");
 
+      // too large y
       p1 = dPoint(426963,16763676);
       cnv1.bck(p1);
-      assert(p1 == dPoint(27,90)); // strange PROJ feature
+      // assert(p1 == dPoint(27,90)); // strange PROJ feature (different in proj 5.0 and 6.2)
 
       p1 = dPoint(nan(""), 60.976941);
       assert_err(cnv1.frw(p1), "Can't convert coordinates: non-numeric result");
