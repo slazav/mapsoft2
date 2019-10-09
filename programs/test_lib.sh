@@ -31,3 +31,10 @@ function assert_diff(){
     rm -f "$f_res"
   fi
 }
+
+# remove time and cairo version from pdf file
+function fix_pdf(){
+  sed -i 's/CreationDate (D:[^)]\+)/CreationDate ()/
+          s/Producer (.\+)/Producer ()/' $@
+}
+
