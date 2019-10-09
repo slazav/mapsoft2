@@ -52,7 +52,6 @@ write_geoimg(const std::string & fname, GeoData & data, const Opt & opts){
   else if (file_ext_check(fname, ".gif"))  fmt="gif";
 
   if (opts.get("out_fmt","") != "") fmt = opts.get("out_fmt", "");
-
   // make reference and conversion map -> WGS84
   GeoMap map = geo_mkref(data, opts);
   std::shared_ptr<ConvMap> cnv(new ConvMap(map));
@@ -86,7 +85,7 @@ write_geoimg(const std::string & fname, GeoData & data, const Opt & opts){
     cr.set_surface_img(img);
   }
   else
-    throw Err() << "write_geoimg: unknown output format";
+    throw Err(-2) << "Can't determine output format for file: " << fname;
 
   // fill the image with bgcolor
   cr->set_color_a(opts.get<int>("bgcolor", 0xFFFFFFFF));

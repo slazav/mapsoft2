@@ -113,7 +113,7 @@ read_geo (const string &fname, GeoData & data, const Opt & opt){
     return;
   }
 
-  throw Err() << "Can't determine input format for file: " << fname;
+  throw Err(-2) << "Can't determine input format for file: " << fname;
 }
 
 void
@@ -224,6 +224,6 @@ write_geo (const string &fname, const GeoData & data, const Opt & opt){
     }
     return;
   }
-  throw Err() << "Can't determine output format for file: " << fname;
+  throw Err(-2) << "Can't determine output format for file: " << fname;
 }
 
