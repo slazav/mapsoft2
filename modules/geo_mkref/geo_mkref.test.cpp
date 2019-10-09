@@ -25,9 +25,8 @@ main(){
       assert(map.proj == "SU39");
       assert(map.image_dpi == 200);
       assert(map.image_size == iPoint(2583,3020));
-      assert(type_to_str(map.border) ==
-            "[[[0.351908879,2921.09993],[1238.55916,2972.44913],[2476.86091,3019.3302],"
-            "[2582.39403,98.0292246],[1354.65253,51.3640527],[127.007511,0.251437578]]]");
+      assert(type_to_str(rint(map.border)) ==
+            "[[[0,2921],[1239,2972],[2477,3019],[2582,98],[1355,51],[127,0]]]");
       std::ostringstream ss;
       for (auto & r:map.ref) ss << r.first << " " << r.second;
       assert(ss.str() ==
@@ -45,9 +44,8 @@ main(){
       assert(map.proj == "SU39");
       assert(map.image_dpi == 100);
       assert(map.image_size == iPoint(1492,1810));
-      assert(type_to_str(map.border) ==
-          "[[[100.175954,1660.54996],[719.27958,1686.22457],[1338.43045,1709.6651],"
-          "[1391.19701,249.014612],[777.326265,225.682026],[163.503755,200.125719]]]");
+      assert(type_to_str(rint(map.border)) ==
+          "[[[100,1661],[719,1686],[1338,1710],[1391,249],[777,226],[164,200]]]");
       std::ostringstream ss;
       for (auto & r:map.ref) ss << r.first << " " << r.second;
       assert(ss.str() ==
@@ -69,9 +67,9 @@ main(){
       assert(map.proj == "SU99");
       assert(map.image_dpi == 50);
       assert(map.image_size == iPoint(732,775));
-      assert(type_to_str(map.border) ==
-          "[[[33.0508163,762.471297],[376.006149,754.874646],[718.951483,746.108754],"
-          "[699.002452,16.1578047],[358.551855,24.9002931],[18.0908163,32.4766734]]]");
+      assert(type_to_str(rint(map.border)) ==
+          "[[[33,762],[376,755],[719,746],[699,16],[359,25],[18,32]]]");
+
       std::ostringstream ss;
       for (auto & r:map.ref) ss << r.first << " " << r.second;
       assert(ss.str() ==
