@@ -62,7 +62,6 @@ GObjMaps::draw(const CairoWrapper & cr, const dRect & draw_range) {
       Image image_dst = Image(range_dst.w, range_dst.h, IMAGE_32ARGB);
 
       double avr = d.scale/d.load_sc/2;
-
       // render image
       for (int yd=0; yd<image_dst.height(); ++yd){
         if (stop_drawing) return GObj::FILL_NONE;
@@ -165,10 +164,10 @@ GObjMaps::on_set_cnv(){
 
     // calculate map scale (map pixels per viewer pixel)
     dPoint sc = d.cnv.scales(d.bbox);
-    d.scale = 1.0/std::max(sc.x, sc.y);
+    d.scale = std::max(sc.x, sc.y);
 
     // scale for image loading
-    d.load_sc = floor(0.5*d.scale + 0.05);
+    d.load_sc = floor(1.0*d.scale);
     if (d.load_sc <=0) d.load_sc = 1;
   }
   tiles.clear();
@@ -184,7 +183,7 @@ GObjMaps::on_rescale(double k){
     if (d.simp) d.cnv.rescale_src(1.0/k);
     // scale for image loading
     d.cnv.rescale_dst(d.load_sc);
-    d.load_sc = floor(0.5*d.scale + 0.05);
+    d.load_sc = floor(1.0*d.scale);
     if (d.load_sc <=0) d.load_sc = 1;
     d.cnv.rescale_dst(1.0/d.load_sc);
   }
