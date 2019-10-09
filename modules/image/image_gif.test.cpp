@@ -39,61 +39,61 @@ main(){
     { // IMAGE_32ARGB
       Image img = img32;
       image_save_gif(img, "test_gif/img_32_def.gif");
-      assert(image_size_gif("test_gif/img_32_def.gif") == iPoint(256,128));
+      assert_eq(image_size_gif("test_gif/img_32_def.gif"), iPoint(256,128));
 
       Image I = image_load_gif("test_gif/img_32_def.gif", 1);
-      assert(I.type() == IMAGE_8PAL);
-      assert(I.width() == 256);
-      assert(I.height() == 128);
-      assert(I.get_argb(0,0)     == 0xff0a0000);
-      assert(I.get_argb(127,127) == 0xfff6f600);
-      assert(I.get_argb(128,0)   == 0x00000000);
-      assert(I.get_argb(255,127) == 0xfff50000);
-      assert(I.get_argb(64,64)   == 0xFF848600);
-      assert(I.get_argb(192,64)  == 0xFF830000);
+      assert_eq(I.type(), IMAGE_8PAL);
+      assert_eq(I.width(), 256);
+      assert_eq(I.height(), 128);
+      assert_eq(I.get_argb(0,0), 0xff0a0000);
+      assert_eq(I.get_argb(127,127), 0xfff6f600);
+      assert_eq(I.get_argb(128,0), 0x00000000);
+      assert_eq(I.get_argb(255,127), 0xfff50000);
+      assert_eq(I.get_argb(64,64), 0xFF848600);
+      assert_eq(I.get_argb(192,64), 0xFF830000);
       Opt o;
 
       o.put("cmap_colors", 120);
       o.put("cmap_alpha", "none");
       image_save_gif(img, "test_gif/img_32_120n.gif", o);
       I = image_load_gif("test_gif/img_32_120n.gif", 1);
-      assert(I.type() == IMAGE_8PAL);
-      assert(I.width() == 256);
-      assert(I.height() == 128);
-      assert(I.get_argb(0,0)     == 0xff0a0000);
-      assert(I.get_argb(127,127) == 0xfff6f600);
-      assert(I.get_argb(128,0)   == 0xffffffff);
-      assert(I.get_argb(255,127) == 0xfff50000);
-      assert(I.get_argb(64,64)   == 0xFF8C7600);
-      assert(I.get_argb(192,64)  == 0xFF8B0000);
+      assert_eq(I.type(), IMAGE_8PAL);
+      assert_eq(I.width(), 256);
+      assert_eq(I.height(), 128);
+      assert_eq(I.get_argb(0,0), 0xff0a0000);
+      assert_eq(I.get_argb(127,127), 0xfff6f600);
+      assert_eq(I.get_argb(128,0), 0xffffffff);
+      assert_eq(I.get_argb(255,127), 0xfff50000);
+      assert_eq(I.get_argb(64,64), 0xFF8C7600);
+      assert_eq(I.get_argb(192,64), 0xFF8B0000);
 
       o.put("cmap_colors", 120);
       o.put("cmap_alpha", "full"); // same as default, same as gif
       image_save_gif(img, "test_gif/img_32_120f.gif", o);
       I = image_load_gif("test_gif/img_32_120f.gif", 1);
-      assert(I.type() == IMAGE_8PAL);
-      assert(I.width() == 256);
-      assert(I.height() == 128);
-      assert(I.get_argb(0,0)     == 0xff0a0000);
-      assert(I.get_argb(127,127) == 0xfff6f600);
-      assert(I.get_argb(128,0)   == 0x00000000);
-      assert(I.get_argb(255,127) == 0xfff50000);
-      assert(I.get_argb(64,64)   == 0xFF8C7600);
-      assert(I.get_argb(192,64)  == 0xFF8B0000);
+      assert_eq(I.type(), IMAGE_8PAL);
+      assert_eq(I.width(), 256);
+      assert_eq(I.height(), 128);
+      assert_eq(I.get_argb(0,0), 0xff0a0000);
+      assert_eq(I.get_argb(127,127), 0xfff6f600);
+      assert_eq(I.get_argb(128,0), 0x00000000);
+      assert_eq(I.get_argb(255,127), 0xfff50000);
+      assert_eq(I.get_argb(64,64), 0xFF8C7600);
+      assert_eq(I.get_argb(192,64), 0xFF8B0000);
 
       o.put("cmap_colors", 120);
       o.put("cmap_alpha", "gif");
       image_save_gif(img, "test_gif/img_32_120g.gif", o);
       I = image_load_gif("test_gif/img_32_120g.gif", 1);
-      assert(I.type() == IMAGE_8PAL);
-      assert(I.width() == 256);
-      assert(I.height() == 128);
-      assert(I.get_argb(0,0)     == 0xff0A0000);
-      assert(I.get_argb(127,127) == 0xfff6f600);
-      assert(I.get_argb(128,0)   == 0x00000000);
-      assert(I.get_argb(255,127) == 0xfff50000);
-      assert(I.get_argb(64,64)   == 0xFF8C7600);
-      assert(I.get_argb(192,64)  == 0xFF8B0000);
+      assert_eq(I.type(), IMAGE_8PAL);
+      assert_eq(I.width(), 256);
+      assert_eq(I.height(), 128);
+      assert_eq(I.get_argb(0,0), 0xff0A0000);
+      assert_eq(I.get_argb(127,127), 0xfff6f600);
+      assert_eq(I.get_argb(128,0), 0x00000000);
+      assert_eq(I.get_argb(255,127), 0xfff50000);
+      assert_eq(I.get_argb(64,64), 0xFF8C7600);
+      assert_eq(I.get_argb(192,64), 0xFF8B0000);
     }
 
     /*********************************************/
@@ -106,15 +106,15 @@ main(){
       }
       image_save_gif(img, "test_gif/img_24_def.gif");
       Image I = image_load_gif("test_gif/img_24_def.gif", 1);
-      assert(I.type() == IMAGE_8PAL);
-      assert(I.width() == 256);
-      assert(I.height() == 128);
-      assert(I.get_argb(0,0)     == 0xff0a0000);
-      assert(I.get_argb(127,127) == 0xfff6f600);
-      assert(I.get_argb(128,0)   == 0xFFFFFFFF);
-      assert(I.get_argb(255,127) == 0xfff50000);
-      assert(I.get_argb(64,64)   == 0xFF848600);
-      assert(I.get_argb(192,64)  == 0xFF830000);
+      assert_eq(I.type(), IMAGE_8PAL);
+      assert_eq(I.width(), 256);
+      assert_eq(I.height(), 128);
+      assert_eq(I.get_argb(0,0), 0xff0a0000);
+      assert_eq(I.get_argb(127,127), 0xfff6f600);
+      assert_eq(I.get_argb(128,0), 0xFFFFFFFF);
+      assert_eq(I.get_argb(255,127), 0xfff50000);
+      assert_eq(I.get_argb(64,64), 0xFF848600);
+      assert_eq(I.get_argb(192,64), 0xFF830000);
     }
 
     /*********************************************/
@@ -129,15 +129,15 @@ main(){
 
       image_save_gif(img, "test_gif/img_16_def.gif");
       Image I = image_load_gif("test_gif/img_16_def.gif", 1);
-      assert(I.type() == IMAGE_8PAL);
-      assert(I.width() == 256);
-      assert(I.height() == 128);
-      assert(I.get_argb(0,0)     == 0xFF000000);
-      assert(I.get_argb(127,127) == 0xFFe0e0e0);
-      assert(I.get_argb(128,0)   == 0xFFFFFFFF);
-      assert(I.get_argb(255,127) == 0xFF4b4b4b);
-      assert(I.get_argb(64,64)   == 0xFF717171);
-      assert(I.get_argb(192,64)  == 0xFF262626);
+      assert_eq(I.type(), IMAGE_8PAL);
+      assert_eq(I.width(), 256);
+      assert_eq(I.height(), 128);
+      assert_eq(I.get_argb(0,0), 0xFF000000);
+      assert_eq(I.get_argb(127,127), 0xFFe0e0e0);
+      assert_eq(I.get_argb(128,0), 0xFFFFFFFF);
+      assert_eq(I.get_argb(255,127), 0xFF4b4b4b);
+      assert_eq(I.get_argb(64,64), 0xFF717171);
+      assert_eq(I.get_argb(192,64), 0xFF262626);
 
     }
 
@@ -154,15 +154,15 @@ main(){
 
       image_save_gif(img, "test_gif/img_8_def.gif");
       Image I = image_load_gif("test_gif/img_8_def.gif", 1);
-      assert(I.type() == IMAGE_8PAL);
-      assert(I.width() == 256);
-      assert(I.height() == 128);
-      assert(I.get_argb(0,0)     == 0xFF000000);
-      assert(I.get_argb(127,127) == 0xFFE1E1E1);
-      assert(I.get_argb(128,0)   == 0xFFFFFFFF);
-      assert(I.get_argb(255,127) == 0xFF4C4C4C);
-      assert(I.get_argb(64,64)   == 0xFF717171);
-      assert(I.get_argb(192,64)  == 0xFF262626);
+      assert_eq(I.type(), IMAGE_8PAL);
+      assert_eq(I.width(), 256);
+      assert_eq(I.height(), 128);
+      assert_eq(I.get_argb(0,0), 0xFF000000);
+      assert_eq(I.get_argb(127,127), 0xFFE1E1E1);
+      assert_eq(I.get_argb(128,0), 0xFFFFFFFF);
+      assert_eq(I.get_argb(255,127), 0xFF4C4C4C);
+      assert_eq(I.get_argb(64,64), 0xFF717171);
+      assert_eq(I.get_argb(192,64), 0xFF262626);
     }
 
 
@@ -171,15 +171,15 @@ main(){
       Image img = image_remap(img32, colors);
       image_save_gif(img, "test_gif/img_8p_def.gif");
       Image I = image_load_gif("test_gif/img_8p_def.gif", 1);
-      assert(I.type() == IMAGE_8PAL);
-      assert(I.width() == 256);
-      assert(I.height() == 128);
-      assert(I.get_argb(0,0)     == 0xff0a0000);
-      assert(I.get_argb(127,127) == 0xfff6f600);
-      assert(I.get_argb(128,0)   == 0xffffffff);
-      assert(I.get_argb(255,127) == 0xfff50000);
-      assert(I.get_argb(64,64)   == 0xff848600);
-      assert(I.get_argb(192,64)  == 0xff830000);
+      assert_eq(I.type(), IMAGE_8PAL);
+      assert_eq(I.width(), 256);
+      assert_eq(I.height(), 128);
+      assert_eq(I.get_argb(0,0), 0xff0a0000);
+      assert_eq(I.get_argb(127,127), 0xfff6f600);
+      assert_eq(I.get_argb(128,0), 0xffffffff);
+      assert_eq(I.get_argb(255,127), 0xfff50000);
+      assert_eq(I.get_argb(64,64), 0xff848600);
+      assert_eq(I.get_argb(192,64), 0xff830000);
     }
 
 
@@ -192,17 +192,17 @@ main(){
       }
       image_save_gif(img, "test_gif/img_1_def.gif");
       Image I = image_load_gif("test_gif/img_1_def.gif", 1);
-      assert(I.type() == IMAGE_8PAL);
-      assert(I.width() == 256);
-      assert(I.height() == 128);
-      assert(img.get1(0,0)     == 0);
-      assert(img.get1(15,45)   == 0);
-      assert(img.get1(43,123)  == 1);
-      assert(img.get1(203,27)  == 0);
-      assert(I.get_argb(0,0)     == 0xFF000000);
-      assert(I.get_argb(15,45)   == 0xFF000000);
-      assert(I.get_argb(43,123)  == 0xFFFFFFFF);
-      assert(I.get_argb(203,27)  == 0xFF000000);
+      assert_eq(I.type(), IMAGE_8PAL);
+      assert_eq(I.width(), 256);
+      assert_eq(I.height(), 128);
+      assert_eq(img.get1(0,0), 0);
+      assert_eq(img.get1(15,45), 0);
+      assert_eq(img.get1(43,123), 1);
+      assert_eq(img.get1(203,27), 0);
+      assert_eq(I.get_argb(0,0), 0xFF000000);
+      assert_eq(I.get_argb(15,45), 0xFF000000);
+      assert_eq(I.get_argb(43,123), 0xFFFFFFFF);
+      assert_eq(I.get_argb(203,27), 0xFF000000);
     }
 
     { //scale tests
@@ -210,16 +210,16 @@ main(){
       iPoint pt(101,32);
       for (double sc=1; sc<10; sc+=0.8){
         Image I1 = image_load_gif("test_gif/img_32_def.gif", sc);
-        assert(I1.width() == floor((I0.width()-1)/sc+1));
-        assert(I1.height() == floor((I0.height()-1)/sc+1));
+        assert_eq(I1.width(), floor((I0.width()-1)/sc+1));
+        assert_eq(I1.height(), floor((I0.height()-1)/sc+1));
         iPoint pt1 = (dPoint)pt/sc;
-        assert(I1.get_rgb(pt1.x, pt1.y) == I0.get_rgb(rint(pt1.x*sc), rint(pt1.y*sc)));
+        assert_eq(I1.get_rgb(pt1.x, pt1.y), I0.get_rgb(rint(pt1.x*sc), rint(pt1.y*sc)));
 
         pt = iPoint(I0.width()-1, I0.height()-1);
         pt1 = (dPoint)pt/sc;
         assert(pt1.x < I1.width());
         assert(pt1.y < I1.height());
-        assert(I1.get_rgb(pt1.x, pt1.y) == I0.get_rgb(rint(pt1.x*sc), rint(pt1.y*sc)));
+        assert_eq(I1.get_rgb(pt1.x, pt1.y), I0.get_rgb(rint(pt1.x*sc), rint(pt1.y*sc)));
       }
       assert_err(image_load_gif("test_gif/img_32_def.gif", 0),
         "image_load_gif: wrong scale: 0");

@@ -3,7 +3,7 @@
 #include <cassert>
 #include <unistd.h>
 #include <iostream>
-#include "err/err.h"
+#include "err/assert_err.h"
 #include "storage.h"
 
 int
@@ -24,54 +24,54 @@ main(){
 
       std::set<int> v1 = db.get(dRect(-0.01,-0.01, 1.12,1.12));
       //for (auto i:v1) std::cerr << "> " << i << "\n";
-      assert(v1.size()==5);
-      assert(v1.count(1)==1);
-      assert(v1.count(2)==1);
-      assert(v1.count(3)==1);
-      assert(v1.count(4)==1);
-      assert(v1.count(9)==1);
+      assert_eq(v1.size(),5);
+      assert_eq(v1.count(1),1);
+      assert_eq(v1.count(2),1);
+      assert_eq(v1.count(3),1);
+      assert_eq(v1.count(4),1);
+      assert_eq(v1.count(9),1);
 
       v1 = db.get(dRect(36,57, 0.001,0.001));
       //for (auto i:v1) std::cerr << "> " << i << "\n";
-      assert(v1.size()==3);
-      assert(v1.count(5)==1);
-      assert(v1.count(6)==1);
-      assert(v1.count(9)==1);
+      assert_eq(v1.size(),3);
+      assert_eq(v1.count(5),1);
+      assert_eq(v1.count(6),1);
+      assert_eq(v1.count(9),1);
 
 
       v1 = db.get(dRect(-180,-90, 360,180));
       //for (auto i:v1) std::cerr << "> " << i << "\n";
-      assert(v1.size()==9);
+      assert_eq(v1.size(),9);
 
       // set_bbox
       db.set_bbox(dRect(-1800,-900, 3600, 1800)); // x10
       v1 = db.get(dRect(360,570, 0.01,0.01));
       //for (auto i:v1) std::cerr << "> " << i << "\n";
-      assert(v1.size()==3);
-      assert(v1.count(5)==1);
-      assert(v1.count(6)==1);
-      assert(v1.count(9)==1);
+      assert_eq(v1.size(),3);
+      assert_eq(v1.count(5),1);
+      assert_eq(v1.count(6),1);
+      assert_eq(v1.count(9),1);
 
       v1 = db.get(dRect(-1800,-900, 3600,1800));
       //for (auto i:v1) std::cerr << "> " << i << "\n";
-      assert(v1.size()==9);
+      assert_eq(v1.size(),9);
 
       // set_bbox
       db.set_bbox(dRect()); // reset
       v1 = db.get(dRect(36,57, 0.001,0.001));
       //for (auto i:v1) std::cerr << "> " << i << "\n";
-      assert(v1.size()==3);
-      assert(v1.count(5)==1);
-      assert(v1.count(6)==1);
-      assert(v1.count(9)==1);
+      assert_eq(v1.size(),3);
+      assert_eq(v1.count(5),1);
+      assert_eq(v1.count(6),1);
+      assert_eq(v1.count(9),1);
 
       // del
       db.del(6, dRect(36,57, 0.11,0.11));
       v1 = db.get(dRect(36,57, 0.001,0.001));
       //for (auto i:v1) std::cerr << "> " << i << "\n";
-      assert(v1.size()==2);
-      assert(v1.count(5)==1);
-      assert(v1.count(9)==1);
+      assert_eq(v1.size(),2);
+      assert_eq(v1.count(5),1);
+      assert_eq(v1.count(9),1);
 
   }
   catch (Err e) {

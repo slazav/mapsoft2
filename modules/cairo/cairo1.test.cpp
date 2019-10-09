@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include "cairo_wrapper.h"
+#include "err/assert_err.h"
 
 int
 main(){
@@ -12,16 +13,16 @@ main(){
       Image img(150,100, IMAGE_32ARGB);
       cw.set_surface_img(img);
 
-      assert(cw.width() == 150);
-      assert(cw.height() == 100);
-      assert(cw.bbox() == dRect(0,0,150,100));
+      assert_eq(cw.width(), 150);
+      assert_eq(cw.height(), 100);
+      assert_eq(cw.bbox(), dRect(0,0,150,100));
       cw->set_color_a(0xF0FF0000); // red color
       cw->cap_round(); // 1-point line is only visible with round or butt cap
       cw->mkpath(dLine("[[80,50]]"));
       cw->set_line_width(3);
       cw->stroke();
-      assert(img.get32(80,50) == 0xF0F00000); // scaled color!
-      assert(img.get32(80,60) == 0x00000000);
+      assert_eq(img.get32(80,50), 0xF0F00000); // scaled color!
+      assert_eq(img.get32(80,60), 0x00000000);
 
     }
 
@@ -29,9 +30,9 @@ main(){
       CairoWrapper cw;
       cw.set_surface_pdf("tmp1.pdf", 150,100);
 
-      assert(cw.width() == 150);
-      assert(cw.height() == 100);
-      assert(cw.bbox() == dRect(0,0,150,100));
+      assert_eq(cw.width(), 150);
+      assert_eq(cw.height(), 100);
+      assert_eq(cw.bbox(), dRect(0,0,150,100));
       cw->set_color(0xFF0000); // red color
       cw->mkpath(dLine("[[10,50],[130,10],[80,90]]"), 0);
       cw->fill_preserve();
@@ -56,9 +57,9 @@ main(){
     {
       CairoWrapper cw;
       cw.set_surface_pdf("tmp2.pdf", 150,100);
-      assert(cw.width() == 150);
-      assert(cw.height() == 100);
-      assert(cw.bbox() == dRect(0,0,150,100));
+      assert_eq(cw.width(), 150);
+      assert_eq(cw.height(), 100);
+      assert_eq(cw.bbox(), dRect(0,0,150,100));
 
       cw->set_color(0xFFFF00);
       cw->paint();
@@ -83,9 +84,9 @@ main(){
     {
       CairoWrapper cw;
       cw.set_surface_pdf("tmp3.pdf", 150,200);
-      assert(cw.width() == 150);
-      assert(cw.height() == 200);
-      assert(cw.bbox() == dRect(0,0,150,200));
+      assert_eq(cw.width(), 150);
+      assert_eq(cw.height(), 200);
+      assert_eq(cw.bbox(), dRect(0,0,150,200));
 
       cw->set_color(0xFFFFFF);
       cw->paint();

@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include "sizecache.h"
-#include "err/err.h"
+#include "err/assert_err.h"
 
 using namespace std;
 
@@ -29,22 +29,22 @@ int main() {
     // create a cache with size 250
     SizeCache<int, Int> cache(250);
 
-    assert(cache.count()==0);
-    assert(cache.size_total()==250);
-    assert(cache.size_used()==0);
+    assert_eq(cache.count(),0);
+    assert_eq(cache.size_total(),250);
+    assert_eq(cache.size_used(),0);
 
     // put elements: i->i^2, i=0..9
     // (only last 4 will be in the cache)
     for (int i = 0; i < 10; ++i) cache.add(i, Int(i*i));
 
-    for (int i =  0; i <  6; ++i) assert(cache.contains(i) == false);
-    for (int i =  6; i < 10; ++i) assert(cache.contains(i) == true);
+    for (int i =  0; i <  6; ++i) assert_eq(cache.contains(i), false);
+    for (int i =  6; i < 10; ++i) assert_eq(cache.contains(i), true);
     for (int i =  6; i < 10; ++i) assert(cache.get(i) == Int(i*i));
-    for (int i = 10; i < 15; ++i) assert(cache.contains(i) == false);
+    for (int i = 10; i < 15; ++i) assert_eq(cache.contains(i), false);
 
-    assert(cache.count()==4);
-    assert(cache.size_total()==250);
-    assert(cache.size_used()==230); // 6^2+7^2+8^2+9^2
+    assert_eq(cache.count(),4);
+    assert_eq(cache.size_total(),250);
+    assert_eq(cache.size_used(),230); // 6^2+7^2+8^2+9^2
 
     // remove elements 6 and 9 using iterators
     SizeCache<int, Int>::iterator it = cache.begin();
@@ -52,24 +52,24 @@ int main() {
       if (it->first % 3 == 0) it = cache.erase(it);
       else ++it;
     }
-    assert(cache.contains(6) == false);
-    assert(cache.contains(9) == false);
+    assert_eq(cache.contains(6), false);
+    assert_eq(cache.contains(9), false);
 
     // remove element 7 using the key
     cache.erase(7);
-    assert(cache.contains(7) == false);
+    assert_eq(cache.contains(7), false);
 
-    assert(cache.count()==1);
-    assert(cache.size_total()==250);
-    assert(cache.size_used()==64);
+    assert_eq(cache.count(),1);
+    assert_eq(cache.size_total(),250);
+    assert_eq(cache.size_used(),64);
 
     // clear the cache
     cache.clear();
-    for (int i =  0; i < 15; ++i) assert(cache.contains(i) == false);
+    for (int i =  0; i < 15; ++i) assert_eq(cache.contains(i), false);
 
-    assert(cache.count()==0);
-    assert(cache.size_total()==250);
-    assert(cache.size_used()==0);
+    assert_eq(cache.count(),0);
+    assert_eq(cache.size_total(),250);
+    assert_eq(cache.size_used(),0);
 
   }
   catch (Err e) {

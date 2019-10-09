@@ -19,7 +19,7 @@ Fig test_objs(const std::string & in, std::string out = "<in>", int fig_header =
     std:: cerr << "OUT: [" << out << "]\n";
     std:: cerr << "RET: [" << s2.str() << "]\n";
   }
-  assert(s2.str() == out);
+  assert_eq(s2.str(), out);
   return w;
 }
 
@@ -29,25 +29,25 @@ main(){
   try {
 
     // static members
-    assert(Fig::colors.size() == 33);
-    assert(Fig::colors.find(-1)->second == 0);
-    assert(Fig::colors.find(0)->second == 0);
-    assert(Fig::colors.find(1)->second == 0x0000ff);
-    assert(Fig::colors.find(10)->second == 0x0000d0);
-    assert(Fig::colors.find(31)->second == 0xffd700);
+    assert_eq(Fig::colors.size(), 33);
+    assert_eq(Fig::colors.find(-1)->second, 0);
+    assert_eq(Fig::colors.find(0)->second, 0);
+    assert_eq(Fig::colors.find(1)->second, 0x0000ff);
+    assert_eq(Fig::colors.find(10)->second, 0x0000d0);
+    assert_eq(Fig::colors.find(31)->second, 0xffd700);
 
-    assert(Fig::psfonts.size() == 36);
-    assert(Fig::psfonts.find(-1)->second == "Default");
-    assert(Fig::psfonts.find(0)->second  == "Times-Roman");
-    assert(Fig::psfonts.find(34)->second == "ZapfDingbats");
+    assert_eq(Fig::psfonts.size(), 36);
+    assert_eq(Fig::psfonts.find(-1)->second, "Default");
+    assert_eq(Fig::psfonts.find(0)->second, "Times-Roman");
+    assert_eq(Fig::psfonts.find(34)->second, "ZapfDingbats");
 
-    assert(Fig::texfonts.size() == 6);
-    assert(Fig::texfonts.find(0)->second == "Default");
-    assert(Fig::texfonts.find(1)->second  == "Roman");
-    assert(Fig::texfonts.find(5)->second == "Typewriter");
+    assert_eq(Fig::texfonts.size(), 6);
+    assert_eq(Fig::texfonts.find(0)->second, "Default");
+    assert_eq(Fig::texfonts.find(1)->second, "Roman");
+    assert_eq(Fig::texfonts.find(5)->second, "Typewriter");
 
-    assert(Fig::cm2fig == 1200.0 / 1.05 / 2.54);
-    assert(Fig::fig2cm == 1.0 / Fig::cm2fig);
+    assert_eq(Fig::cm2fig, 1200.0 / 1.05 / 2.54);
+    assert_eq(Fig::fig2cm, 1.0 / Fig::cm2fig);
 
     // constructing objects from a header string -- ellipse
     {
@@ -55,27 +55,27 @@ main(){
       read_figobj_header(o, "1 3 0 2 0 7 50 -1 -1 0.000 1 0.0000 7380 5310 664 664 7380 5310 7695 4725");
       assert(o.is_ellipse());
       assert(o.is_closed());
-      assert(o.size()==1); // center
-      assert(o[0].x==7380);
-      assert(o[0].y==5310);
+      assert_eq(o.size(),1); // center
+      assert_eq(o[0].x,7380);
+      assert_eq(o[0].y,5310);
 
-      assert(o.sub_type==3);
-      assert(o.line_style==0);
-      assert(o.thickness==2);
-      assert(o.pen_color==0);
-      assert(o.fill_color==7);
-      assert(o.depth==50);
-      assert(o.pen_style==-1);
-      assert(o.area_fill==-1);
-      assert(o.style_val==0);
-      assert(o.direction==1);
-      assert(o.angle==0);
-      assert(o.radius_x==664);
-      assert(o.radius_y==664);
-      assert(o.start_x==7380);
-      assert(o.start_y==5310);
-      assert(o.end_x==7695);
-      assert(o.end_y==4725);
+      assert_eq(o.sub_type,3);
+      assert_eq(o.line_style,0);
+      assert_eq(o.thickness,2);
+      assert_eq(o.pen_color,0);
+      assert_eq(o.fill_color,7);
+      assert_eq(o.depth,50);
+      assert_eq(o.pen_style,-1);
+      assert_eq(o.area_fill,-1);
+      assert_eq(o.style_val,0);
+      assert_eq(o.direction,1);
+      assert_eq(o.angle,0);
+      assert_eq(o.radius_x,664);
+      assert_eq(o.radius_y,664);
+      assert_eq(o.start_x,7380);
+      assert_eq(o.start_y,5310);
+      assert_eq(o.end_x,7695);
+      assert_eq(o.end_y,4725);
     }
 
     {
@@ -83,27 +83,27 @@ main(){
       read_figobj_header(o, "1 2 0 1 0 7 50 -1 -1 0.000 1 0.2618 9877 3375 1260 405 8765 4092 10990 2658");
       assert(o.is_ellipse());
       assert(o.is_closed());
-      assert(o.size()==1); // center
-      assert(o[0].x==9877);
-      assert(o[0].y==3375);
+      assert_eq(o.size(),1); // center
+      assert_eq(o[0].x,9877);
+      assert_eq(o[0].y,3375);
 
-      assert(o.sub_type==2);
-      assert(o.line_style==0);
-      assert(o.thickness==1);
-      assert(o.pen_color==0);
-      assert(o.fill_color==7);
-      assert(o.depth==50);
-      assert(o.pen_style==-1);
-      assert(o.area_fill==-1);
-      assert(o.style_val==0);
-      assert(o.direction==1);
+      assert_eq(o.sub_type,2);
+      assert_eq(o.line_style,0);
+      assert_eq(o.thickness,1);
+      assert_eq(o.pen_color,0);
+      assert_eq(o.fill_color,7);
+      assert_eq(o.depth,50);
+      assert_eq(o.pen_style,-1);
+      assert_eq(o.area_fill,-1);
+      assert_eq(o.style_val,0);
+      assert_eq(o.direction,1);
       assert(fabs(o.angle-0.2618)<1e-6);
-      assert(o.radius_x==1260);
-      assert(o.radius_y==405);
-      assert(o.start_x==8765);
-      assert(o.start_y==4092);
-      assert(o.end_x==10990);
-      assert(o.end_y==2658);
+      assert_eq(o.radius_x,1260);
+      assert_eq(o.radius_y,405);
+      assert_eq(o.start_x,8765);
+      assert_eq(o.start_y,4092);
+      assert_eq(o.end_x,10990);
+      assert_eq(o.end_y,2658);
     }
 
     {
@@ -134,22 +134,22 @@ main(){
       int size = read_figobj_header(o, "2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 4");
       assert(o.is_polyline());
       assert(!o.is_closed());
-      assert(size==4);
+      assert_eq(size,4);
 
-      assert(o.sub_type==1);
-      assert(o.line_style==0);
-      assert(o.thickness==1);
-      assert(o.pen_color==0);
-      assert(o.fill_color==7);
-      assert(o.depth==50);
-      assert(o.pen_style==-1);
-      assert(o.area_fill==-1);
-      assert(o.style_val==0);
-      assert(o.join_style==0);
-      assert(o.cap_style==0);
-      assert(o.radius==-1);
-      assert(o.forward_arrow==0);
-      assert(o.backward_arrow==0);
+      assert_eq(o.sub_type,1);
+      assert_eq(o.line_style,0);
+      assert_eq(o.thickness,1);
+      assert_eq(o.pen_color,0);
+      assert_eq(o.fill_color,7);
+      assert_eq(o.depth,50);
+      assert_eq(o.pen_style,-1);
+      assert_eq(o.area_fill,-1);
+      assert_eq(o.style_val,0);
+      assert_eq(o.join_style,0);
+      assert_eq(o.cap_style,0);
+      assert_eq(o.radius,-1);
+      assert_eq(o.forward_arrow,0);
+      assert_eq(o.backward_arrow,0);
     }
 
     {
@@ -174,20 +174,20 @@ main(){
       int size = read_figobj_header(o, "3 0 0 1 0 7 50 -1 -1 0.000 0 0 0 4");
       assert(o.is_spline());
       assert(!o.is_closed());
-      assert(size==4);
+      assert_eq(size,4);
 
-      assert(o.sub_type==0);
-      assert(o.line_style==0);
-      assert(o.thickness==1);
-      assert(o.pen_color==0);
-      assert(o.fill_color==7);
-      assert(o.depth==50);
-      assert(o.pen_style==-1);
-      assert(o.area_fill==-1);
-      assert(o.style_val==0);
-      assert(o.cap_style==0);
-      assert(o.forward_arrow==0);
-      assert(o.backward_arrow==0);
+      assert_eq(o.sub_type,0);
+      assert_eq(o.line_style,0);
+      assert_eq(o.thickness,1);
+      assert_eq(o.pen_color,0);
+      assert_eq(o.fill_color,7);
+      assert_eq(o.depth,50);
+      assert_eq(o.pen_style,-1);
+      assert_eq(o.area_fill,-1);
+      assert_eq(o.style_val,0);
+      assert_eq(o.cap_style,0);
+      assert_eq(o.forward_arrow,0);
+      assert_eq(o.backward_arrow,0);
     }
 
     {
@@ -214,21 +214,21 @@ main(){
       read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 text\\001");
       assert(o.is_text());
       assert(!o.is_closed());
-      assert(o.size()==1);
-      assert(o[0].x==-1575);
-      assert(o[0].y==6840);
+      assert_eq(o.size(),1);
+      assert_eq(o[0].x,-1575);
+      assert_eq(o[0].y,6840);
 
-      assert(o.sub_type==0);
-      assert(o.pen_color==0);
-      assert(o.depth==50);
-      assert(o.pen_style==-1);
-      assert(o.font==0);
-      assert(o.font_size==12);
-      assert(o.angle==0.0);
-      assert(o.font_flags==4);
-      assert(o.height==210);
-      assert(o.length==300);
-      assert(o.text=="text");
+      assert_eq(o.sub_type,0);
+      assert_eq(o.pen_color,0);
+      assert_eq(o.depth,50);
+      assert_eq(o.pen_style,-1);
+      assert_eq(o.font,0);
+      assert_eq(o.font_size,12);
+      assert_eq(o.angle,0.0);
+      assert_eq(o.font_flags,4);
+      assert_eq(o.height,210);
+      assert_eq(o.length,300);
+      assert_eq(o.text,"text");
 
     }
 
@@ -249,21 +249,21 @@ main(){
       FigObj o;
       int m;
       m = read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 text\\001");
-      assert(o.text == "text");
+      assert_eq(o.text, "text");
 
       m = read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 te\\xt\\001");
-      assert(o.text == "text");
+      assert_eq(o.text, "text");
 
       m = read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 te\\170t\\001");
-      assert(o.text == "text");
+      assert_eq(o.text, "text");
 
       m = read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 te\\170t\\001aaa");
-      assert(o.text == "text");
-      assert(m == 0);
+      assert_eq(o.text, "text");
+      assert_eq(m, 0);
 
       m = read_figobj_header(o, "4 0 0 50 -1 0 12 0.0000 4 210 300 -1575 6840 text");
-      assert(o.text == "text");
-      assert(m == 1);
+      assert_eq(o.text, "text");
+      assert_eq(m, 1);
     }
 
     // constructing objects from a header string -- arc
@@ -272,29 +272,29 @@ main(){
       read_figobj_header(o, "5 1 0 1 0 7 50 -1 -1 0.000 0 0 0 0 3915.000 7477.500 3420 7380 3870 6975 4410 7380\n");
       assert(o.is_arc());
       assert(!o.is_closed());
-      assert(o.size()==3);
-      assert(o[0].x==3420);
-      assert(o[0].y==7380);
-      assert(o[1].x==3870);
-      assert(o[1].y==6975);
-      assert(o[2].x==4410);
-      assert(o[2].y==7380);
+      assert_eq(o.size(),3);
+      assert_eq(o[0].x,3420);
+      assert_eq(o[0].y,7380);
+      assert_eq(o[1].x,3870);
+      assert_eq(o[1].y,6975);
+      assert_eq(o[2].x,4410);
+      assert_eq(o[2].y,7380);
 
-      assert(o.sub_type==1);
-      assert(o.line_style==0);
-      assert(o.thickness==1);
-      assert(o.pen_color==0);
-      assert(o.fill_color==7);
-      assert(o.depth==50);
-      assert(o.pen_style==-1);
-      assert(o.area_fill==-1);
-      assert(o.style_val==0);
-      assert(o.cap_style==0);
-      assert(o.direction==0);
-      assert(o.forward_arrow==0);
-      assert(o.backward_arrow==0);
-      assert(o.center_x==3915.000);
-      assert(o.center_y==7477.500);
+      assert_eq(o.sub_type,1);
+      assert_eq(o.line_style,0);
+      assert_eq(o.thickness,1);
+      assert_eq(o.pen_color,0);
+      assert_eq(o.fill_color,7);
+      assert_eq(o.depth,50);
+      assert_eq(o.pen_style,-1);
+      assert_eq(o.area_fill,-1);
+      assert_eq(o.style_val,0);
+      assert_eq(o.cap_style,0);
+      assert_eq(o.direction,0);
+      assert_eq(o.forward_arrow,0);
+      assert_eq(o.backward_arrow,0);
+      assert_eq(o.center_x,3915.000);
+      assert_eq(o.center_y,7477.500);
     }
 
     {
@@ -322,11 +322,11 @@ main(){
       read_figobj_header(o, "6");
       assert(o.is_compound());
       assert(!o.is_closed());
-      assert(o.size()==2);
-      assert(o[0].x==0);
-      assert(o[0].y==0);
-      assert(o[1].x==0);
-      assert(o[1].y==0);
+      assert_eq(o.size(),2);
+      assert_eq(o[0].x,0);
+      assert_eq(o[0].y,0);
+      assert_eq(o[1].x,0);
+      assert_eq(o[1].y,0);
     }
 
     {
@@ -334,11 +334,11 @@ main(){
       read_figobj_header(o, "6 1 2 3 4");
       assert(o.is_compound());
       assert(!o.is_closed());
-      assert(o.size()==2);
-      assert(o[0].x==1);
-      assert(o[0].y==2);
-      assert(o[1].x==3);
-      assert(o[1].y==4);
+      assert_eq(o.size(),2);
+      assert_eq(o[0].x,1);
+      assert_eq(o[0].y,2);
+      assert_eq(o[1].x,3);
+      assert_eq(o[1].y,4);
     }
 
     {
@@ -361,7 +361,7 @@ main(){
       read_figobj_header(o, "-6");
       assert(o.is_compound_end());
       assert(!o.is_closed());
-      assert(o.size()==0);
+      assert_eq(o.size(),0);
     }
 
     {
@@ -428,7 +428,7 @@ main(){
     "2 1 0 1 1 11 50 -1 -1 0.000 0 0 -1 0 0 4\n"
     "\t315 1440 810 945 1800 1215 3330 675\n");
 
-      assert(w.size()==2);
+      assert_eq(w.size(),2);
       FigObj o1 = *w.begin();
       FigObj o2 = *(w.rbegin());
       assert(o1.pen_color = 0x7a8d00);
@@ -469,7 +469,7 @@ main(){
     "\t0.000 -0.500 -0.600 -0.500 1.000\n"
     "4 0 0 50 -1 0 12 0.0000 4 210 150 -1575 6840 text\\001\n"
     );
-    assert(w.size() == 11);
+    assert_eq(w.size(), 11);
     }
 
     // text -> 7 bit
@@ -531,10 +531,10 @@ main(){
     "\t0 0 1.00 60.00 120.00\n"
     "\t315 1440 810 945 1800 1215 3330 675\n"
     , 1);
-    assert(w.comment.size() == 6);
-    assert(w.comment[0] == "comm1\\\\120\\120");
-    assert(w.size() == 2);
-    assert(w.begin()->text == "text\\120Pы");
+    assert_eq(w.comment.size(), 6);
+    assert_eq(w.comment[0], "comm1\\\\120\\120");
+    assert_eq(w.size(), 2);
+    assert_eq(w.begin()->text, "text\\120Pы");
     }
 
     {
@@ -559,15 +559,15 @@ main(){
     "\t315 1440 810 945 1800 1215 3330 675\n"
     "4 0 0 50 -1 0 12 0.0000 4 210 150 -1575 6840 �����\\001\n",
     "<in>", 1);
-    assert(w.size() == 2);
-    assert(w.comment.size()==2);
-    assert(w.comment[0]=="коммент1");
-    assert(w.comment[1]=="\\ключ1=значение1");
-    assert(w.begin()->comment.size() ==2);
-    assert(w.begin()->comment[0]=="коммент2");
-    assert(w.begin()->comment[1]=="\\ключ2=значение2");
+    assert_eq(w.size(), 2);
+    assert_eq(w.comment.size(),2);
+    assert_eq(w.comment[0],"коммент1");
+    assert_eq(w.comment[1],"\\ключ1=значение1");
+    assert_eq(w.begin()->comment.size(),2);
+    assert_eq(w.begin()->comment[0],"коммент2");
+    assert_eq(w.begin()->comment[1],"\\ключ2=значение2");
     assert(w.rbegin()->is_text());
-    assert(w.rbegin()->text == "текст");
+    assert_eq(w.rbegin()->text, "текст");
     }
 
   }

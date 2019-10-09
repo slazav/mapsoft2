@@ -15,41 +15,41 @@ main(){
   iMultiLine ml2;
   ml2.push_back(l1);
   ml2.push_back(l2);
-  assert(ml1.size() == 0);
-  assert(ml2.size() == 2);
+  assert_eq(ml1.size(), 0);
+  assert_eq(ml2.size(), 2);
 
-  assert(ml2 == iMultiLine("[[[0,1],[2,3]],[[4,5],[6,7]]]"));
-  assert(ml1 == iMultiLine("[]"));
+  assert_eq(ml2, iMultiLine("[[[0,1],[2,3]],[[4,5],[6,7]]]"));
+  assert_eq(ml1, iMultiLine("[]"));
 
-  assert(-ml2 == -iMultiLine("[[[0,1],[2,3]],[[4,5],[6,7]]]"));
-  assert(-ml2 ==  iMultiLine("[[[0,-1],[-2,-3]],[[-4,-5],[-6,-7]]]"));
+  assert_eq(-ml2, -iMultiLine("[[[0,1],[2,3]],[[4,5],[6,7]]]"));
+  assert_eq(-ml2,  iMultiLine("[[[0,-1],[-2,-3]],[[-4,-5],[-6,-7]]]"));
 
   // reading single-segment multiline:
-  assert(iMultiLine("[[1,1],[2,2]]") == iMultiLine("[[[1,1],[2,2]]]"));
+  assert_eq(iMultiLine("[[1,1],[2,2]]"), iMultiLine("[[[1,1],[2,2]]]"));
   assert(iMultiLine("[[]]") != iMultiLine("[]")); // exception
 
   // +,-,*,/
   iPoint p(1,2);
-  assert((ml2+p) == iMultiLine("[[[1,3],[3,5]],[[5,7],[7,9]]]"));
-  assert((ml2-p) == iMultiLine("[[[-1,-1],[1,1]],[[3,3],[5,5]]]"));
-  assert((ml2*2) == iMultiLine("[[[0,2],[4,6]],[[8,10],[12,14]]]"));
-  assert((ml2/2) == iMultiLine("[[[0,0],[1,1]],[[2,2],[3,3]]]"));
+  assert_eq((ml2+p), iMultiLine("[[[1,3],[3,5]],[[5,7],[7,9]]]"));
+  assert_eq((ml2-p), iMultiLine("[[[-1,-1],[1,1]],[[3,3],[5,5]]]"));
+  assert_eq((ml2*2), iMultiLine("[[[0,2],[4,6]],[[8,10],[12,14]]]"));
+  assert_eq((ml2/2), iMultiLine("[[[0,0],[1,1]],[[2,2],[3,3]]]"));
 
-  assert((ml2+=p) == iMultiLine("[[[1,3],[3,5]],[[5,7],[7,9]]]"));
-  assert((ml2-=p) == iMultiLine("[[[0,1],[2,3]],[[4,5],[6,7]]]"));
-  assert((ml2*=2) == iMultiLine("[[[0,2],[4,6]],[[8,10],[12,14]]]"));
-  assert((ml2/=2) == iMultiLine("[[[0,1],[2,3]],[[4,5],[6,7]]]"));
+  assert_eq((ml2+=p), iMultiLine("[[[1,3],[3,5]],[[5,7],[7,9]]]"));
+  assert_eq((ml2-=p), iMultiLine("[[[0,1],[2,3]],[[4,5],[6,7]]]"));
+  assert_eq((ml2*=2), iMultiLine("[[[0,2],[4,6]],[[8,10],[12,14]]]"));
+  assert_eq((ml2/=2), iMultiLine("[[[0,1],[2,3]],[[4,5],[6,7]]]"));
 
   // <=>
-  assert(ml1 == iMultiLine());
+  assert_eq(ml1, iMultiLine());
   ml1=ml2; // Multilines are equal
-  assert(  ml1==ml2);
+  assert_eq(  ml1,ml2);
   assert(!(ml1!=ml2));
   assert(ml1 >= ml2);
   assert(ml1 <= ml2);
   assert(!(ml1 > ml2));
   assert(!(ml1 < ml2));
-  assert(  ml1.operator==(ml2));
+  assert(ml1.operator==(ml2));
   assert(!(ml1.operator!=(ml2)));
   assert(ml1.operator>=(ml2));
   assert(ml1.operator<=(ml2));
@@ -79,29 +79,29 @@ main(){
   ml1.clear();
   ml2.push_back(l1);
   ml2.push_back(l2);
-  assert(ml1.length() == 0);
-  assert(ml2.length() == l1.length()+l2.length());
-  assert(length(ml2) == l1.length()+l2.length());
+  assert_eq(ml1.length(), 0);
+  assert_eq(ml2.length(), l1.length()+l2.length());
+  assert_eq(length(ml2), l1.length()+l2.length());
 
-  assert(ml1.bbox() == iRect());
-  assert(ml2.bbox() == expand(l1.bbox(),l2.bbox()));
-  assert(bbox(ml2) == ml2.bbox());
+  assert_eq(ml1.bbox(), iRect());
+  assert_eq(ml2.bbox(), expand(l1.bbox(),l2.bbox()));
+  assert_eq(bbox(ml2), ml2.bbox());
 
-  assert(dMultiLine("[]").is_empty() == true);
-  assert(dMultiLine("[[],[]]").is_empty() == true);
-  assert(dMultiLine("[[],[[1,2]]]").is_empty() == false);
-  assert(dMultiLine("[[[1,2]]]").is_empty() == false);
+  assert_eq(dMultiLine("[]").is_empty(), true);
+  assert_eq(dMultiLine("[[],[]]").is_empty(), true);
+  assert_eq(dMultiLine("[[],[[1,2]]]").is_empty(), false);
+  assert_eq(dMultiLine("[[[1,2]]]").is_empty(), false);
 
   {
      dMultiLine ml1("[ [[0,0,0], [1,2,2]], [[0,0,0], [1,2,-2], [2,0,0]] ]");
-     assert(ml1.length() == 9);
+     assert_eq(ml1.length(), 9);
 
      dMultiLine ml2("[ [[0,0,0], [3,4,2]], [[0,0,0], [3,4,-2], [6,0,0]] ]");
-     assert(ml2.length2d() == 15);
+     assert_eq(ml2.length2d(), 15);
   }
 
-  assert(rint(dMultiLine("[[[1.1,1.8],[3.9,1.1]],[]]")) == dMultiLine("[[[1,2],[4,1]],[]]"));
-  assert(flatten(iMultiLine("[[[1,8,9],[1,2,3]],[]]")) == iMultiLine("[[[1,8],[1,2]],[]]"));
+  assert_eq(rint(dMultiLine("[[[1.1,1.8],[3.9,1.1]],[]]")), dMultiLine("[[[1,2],[4,1]],[]]"));
+  assert_eq(flatten(iMultiLine("[[[1,8,9],[1,2,3]],[]]")), iMultiLine("[[[1,8],[1,2]],[]]"));
 
   // rotate2d
   { 
@@ -112,14 +112,14 @@ main(){
 
     double a=30*M_PI/180.0;
     l=l0;
-    assert(rotate2d(l,c1,a) == lr1);
-    assert(rotate2d(l,c2,a) == lr2);
-    assert(l==l0);
+    assert_eq(rotate2d(l,c1,a), lr1);
+    assert_eq(rotate2d(l,c2,a), lr2);
+    assert_eq(l,l0);
     l.rotate2d(c1,a);
-    assert(l==lr1);
+    assert_eq(l,lr1);
     l=l0;
     l.rotate2d(c2,a);
-    assert(l==lr2);
+    assert_eq(l,lr2);
   }
 
   // flatten, rint, floor, ceil, abs
@@ -132,45 +132,45 @@ main(){
     dMultiLine la("[[[0.1,2.8,3.1],[0.1,3.9,4.6]], [], [[0,0]]]");
 
     l=l0;
-    assert(flatten(l) == lz);
-    assert(l==l0);
+    assert_eq(flatten(l), lz);
+    assert_eq(l,l0);
     l.flatten();
-    assert(l==lz);
+    assert_eq(l,lz);
 
     l=l0;
-    assert(rint(l) == li);
-    assert(l==l0);
+    assert_eq(rint(l), li);
+    assert_eq(l,l0);
     l.to_rint();
-    assert(l==li);
+    assert_eq(l,li);
 
     l=l0;
-    assert(floor(l) == lf);
-    assert(l==l0);
+    assert_eq(floor(l), lf);
+    assert_eq(l,l0);
     l.to_floor();
-    assert(l==lf);
+    assert_eq(l,lf);
 
     l=l0;
-    assert(ceil(l) == lc);
-    assert(l==l0);
+    assert_eq(ceil(l), lc);
+    assert_eq(l,l0);
     l.to_ceil();
-    assert(l==lc);
+    assert_eq(l,lc);
 
     l=l0;
-    assert(abs(l) == la);
-    assert(l==l0);
+    assert_eq(abs(l), la);
+    assert_eq(l,l0);
     l.to_abs();
-    assert(l==la);
+    assert_eq(l,la);
 
   }
 
   // open/close
   {
     dMultiLine l("[[[1,2],[2,3],[4,5]],[[1,1]],[],[[1,1],[2,2]]]");
-    assert(open(l) == l);
-    assert(close(l) == dMultiLine("[[[1,2],[2,3],[4,5],[1,2]],[[1,1]],[],[[1,1],[2,2],[1,1]]]"));
-    assert(close(close(l)) == close(l));
-    assert(open(close(l)) == l);
-    assert(close(open(l)) == close(l));
+    assert_eq(open(l), l);
+    assert_eq(close(l), dMultiLine("[[[1,2],[2,3],[4,5],[1,2]],[[1,1]],[],[[1,1],[2,2],[1,1]]]"));
+    assert_eq(close(close(l)), close(l));
+    assert_eq(open(close(l)), l);
+    assert_eq(close(open(l)), close(l));
   }
 
   // flip_x, flip_y
@@ -178,21 +178,21 @@ main(){
     iMultiLine l1("[[[1,1],[2,2]],[[1,1],[2,2]]]");
     iMultiLine ly("[[[1,9],[2,8]],[[1,9],[2,8]]]");
     iMultiLine lx("[[[9,1],[8,2]],[[9,1],[8,2]]]");
-    assert(flip_y(l1,10) == ly);
-    assert(flip_x(l1,10) == lx);
-    assert(flip_y(flip_y(l1,10),10) == l1);
-    assert(flip_x(flip_x(l1,10),10) == l1);
+    assert_eq(flip_y(l1,10), ly);
+    assert_eq(flip_x(l1,10), lx);
+    assert_eq(flip_y(flip_y(l1,10),10), l1);
+    assert_eq(flip_x(flip_x(l1,10),10), l1);
     l1.flip_x(10);
-    assert(l1 == lx);
+    assert_eq(l1, lx);
     l1.flip_x(10);
     l1.flip_y(10);
-    assert(l1 == ly);
+    assert_eq(l1, ly);
   }
 
   // dist
-  assert(dist(
+  assert_eq(dist(
     dMultiLine("[ [[0,0],[1,1],[2,2]], [[1,1]], [] ]"),
-    dMultiLine("[ [[0,0],[1,1],[2,2]], [[1,1]], [] ]")) == 0);
+    dMultiLine("[ [[0,0],[1,1],[2,2]], [[1,1]], [] ]")), 0);
   assert(dist(
     dMultiLine("[]"),
     dMultiLine("[]")) == 0);
@@ -210,24 +210,24 @@ main(){
     dMultiLine("[ [[0,0],[1,1],[2,2]], [[1,5]], []]")) == 5);
 
   // iLine <-> dLine casting
-  assert(dMultiLine(str_to_type<iMultiLine>("[[[0,0],[2,0],[2,2]],[]]")) ==
+  assert_eq(dMultiLine(str_to_type<iMultiLine>("[[[0,0],[2,0],[2,2]],[]]")),
                     str_to_type<dMultiLine>("[[[0,0],[2,0],[2,2]],[]]"));
-  assert(iMultiLine(str_to_type<dMultiLine>("[[[0.8,0.2],[2.1,0.2],[2.2,2.9]],[]]")) ==
+  assert_eq(iMultiLine(str_to_type<dMultiLine>("[[[0.8,0.2],[2.1,0.2],[2.2,2.9]],[]]")),
                     str_to_type<iMultiLine>("[[[0,0],[2,0],[2,2]],[]]"));
 
   // input/output
-  assert(type_to_str(str_to_type<iMultiLine>("[[[0,0],[2,0],[2,2]],[]]")) ==
+  assert_eq(type_to_str(str_to_type<iMultiLine>("[[[0,0],[2,0],[2,2]],[]]")),
          "[[[0,0],[2,0],[2,2]],[]]");
 
-  assert(type_to_str(str_to_type<iMultiLine>("[[[0,0],[2,0],[2,2]],[]] ")) ==
+  assert_eq(type_to_str(str_to_type<iMultiLine>("[[[0,0],[2,0],[2,2]],[]] ")),
          "[[[0,0],[2,0],[2,2]],[]]");
 
-  assert(type_to_str(str_to_type<iMultiLine>("[]")) ==
+  assert_eq(type_to_str(str_to_type<iMultiLine>("[]")),
          "[]");
 
-  assert(type_to_str(str_to_type<iMultiLine>("[[]]")) ==
+  assert_eq(type_to_str(str_to_type<iMultiLine>("[[]]")),
          "[[]]");
-  assert(type_to_str(str_to_type<iMultiLine>("[[],[]]")) ==
+  assert_eq(type_to_str(str_to_type<iMultiLine>("[[],[]]")),
          "[[],[]]");
 
   assert_err(

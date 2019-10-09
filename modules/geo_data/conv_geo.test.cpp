@@ -9,30 +9,30 @@ int
 main(){
   try{
 
-    assert(expand_proj_aliases("WGS") ==
+    assert_eq(expand_proj_aliases("WGS"),
       "+datum=WGS84 +proj=lonlat");
 
-    assert(expand_proj_aliases("WEB") ==
+    assert_eq(expand_proj_aliases("WEB"),
       "+proj=webmerc +datum=WGS84");
 
-    assert(expand_proj_aliases("FI") ==
+    assert_eq(expand_proj_aliases("FI"),
       "+proj=tmerc +lon_0=27 +x_0=3500000 +ellps=intl "
       "+towgs84=-90.7,-106.1,-119.2,4.09,0.218,-1.05,1.37");
 
-    assert(expand_proj_aliases("CH") ==
+    assert_eq(expand_proj_aliases("CH"),
       "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 "
       "+x_0=600000 +y_0=200000 +ellps=bessel "
       "+towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs");
 
-    assert(expand_proj_aliases("SU-3") ==
+    assert_eq(expand_proj_aliases("SU-3"),
       "+ellps=krass +towgs84=+28,-130,-95 "
       "+proj=tmerc +lon_0=-3 +x_0=60500000");
 
-    assert(expand_proj_aliases("SU3") ==
+    assert_eq(expand_proj_aliases("SU3"),
       "+ellps=krass +towgs84=+28,-130,-95 "
       "+proj=tmerc +lon_0=3 +x_0=1500000");
 
-    assert(expand_proj_aliases("SU0") ==
+    assert_eq(expand_proj_aliases("SU0"),
       "+ellps=krass +towgs84=+28,-130,-95 "
       "+proj=tmerc +lon_0=3 +x_0=1500000");
 
@@ -44,21 +44,21 @@ main(){
     ConvGeo cnv2(proj_krass);                 // krass -> wgs, 2D
     ConvGeo cnv3(proj_wgs, proj_krass, true); // wgs -> krass, 2D
 
-    assert(cnv1.is_src_deg() == true);
-    assert(cnv1.is_dst_deg() == true);
-    assert(cnv2.is_src_deg() == false);
-    assert(cnv2.is_dst_deg() == true);
-    assert(cnv3.is_src_deg() == true);
-    assert(cnv3.is_dst_deg() == false);
+    assert_eq(cnv1.is_src_deg(), true);
+    assert_eq(cnv1.is_dst_deg(), true);
+    assert_eq(cnv2.is_src_deg(), false);
+    assert_eq(cnv2.is_dst_deg(), true);
+    assert_eq(cnv3.is_src_deg(), true);
+    assert_eq(cnv3.is_dst_deg(), false);
 
-    assert(cnv1.get_2d() == false);
-    assert(cnv2.get_2d() == true);
-    assert(cnv3.get_2d() == true);
+    assert_eq(cnv1.get_2d(), false);
+    assert_eq(cnv2.get_2d(), true);
+    assert_eq(cnv3.get_2d(), true);
 
     cnv3.set_2d(false);
-    assert(cnv3.get_2d() == false);
+    assert_eq(cnv3.get_2d(), false);
     cnv3.set_2d();
-    assert(cnv3.get_2d() == true);
+    assert_eq(cnv3.get_2d(), true);
 
     dPoint p1(25.651054, 60.976941, 0);
     dPoint p1a(5427091, 6763808, -11);
@@ -68,21 +68,21 @@ main(){
     // trivial
     dPoint p2(p1);
     cnv1.frw(p2);
-    assert(p1==p2);
+    assert_eq(p1,p2);
     cnv1.bck(p2);
-    assert(p1==p2);
+    assert_eq(p1,p2);
 
 
     // wgs -> pulkovo -> wgs
     cnv2.set_2d(false);
     cnv3.set_2d(false);
     cnv2.bck(p2);
-    assert(iPoint(p2) == p1a);
+    assert_eq(iPoint(p2), p1a);
     cnv2.frw(p2);
     assert(dist(p1,p2) < 2e-7);
 
     cnv3.frw(p2);
-    assert(iPoint(p2) == p1a);
+    assert_eq(iPoint(p2), p1a);
     cnv3.bck(p2);
     assert(dist(p1,p2) < 2e-7);
 
@@ -91,12 +91,12 @@ main(){
     cnv3.set_2d();
     p2 = p1;
     cnv2.bck(p2);
-    assert(iPoint(p2) == p1z);
+    assert_eq(iPoint(p2), p1z);
     cnv2.frw(p2);
     assert(dist(p1,p2) < 2e-7);
 
     cnv3.frw(p2);
-    assert(iPoint(p2) == p1z);
+    assert_eq(iPoint(p2), p1z);
     cnv3.bck(p2);
     assert(dist(p1,p2) < 2e-7);
 
@@ -120,7 +120,7 @@ main(){
     iLine l1a;
     for (int i=0; i<3; i++) {l1.push_back(p1); l1a.push_back(p1a);}
     cnv3.frw(l1);
-    assert(iLine(l1) == l1a);
+    assert_eq(iLine(l1), l1a);
 
     // rescale_dst (only x,y is affected!)
     cnv3.rescale_dst(2);
@@ -156,7 +156,7 @@ main(){
       cnv1.bck(p1);
       cnv2.bck(p2);
       p2.x += 17000000;
-      assert(p1 == p2);
+      assert_eq(p1, p2);
     }
 
     // no datum
@@ -210,7 +210,7 @@ main(){
       // too large y
       p1 = dPoint(426963,16763676);
       cnv1.bck(p1);
-      // assert(p1 == dPoint(27,90)); // strange PROJ feature (different in proj 5.0 and 6.2)
+      // assert_eq(p1, dPoint(27,90)); // strange PROJ feature (different in proj 5.0 and 6.2)
 
       p1 = dPoint(nan(""), 60.976941);
       assert_err(cnv1.frw(p1), "Can't convert coordinates: non-numeric result");
@@ -254,7 +254,7 @@ main(){
        cnv2.bck(p4);
        assert(dist(p3,p4) < 1); // 1px accuracy
 
-       assert(m.bbox_ref_img() == dRect("[151,386,2220,2624]"));
+       assert_eq(m.bbox_ref_img(), dRect("[151,386,2220,2624]"));
 
        dRect r = m.bbox_ref_wgs();
        assert(dist(r.tlc(), dPoint(35.998051,55.833276)) < 1e-6);

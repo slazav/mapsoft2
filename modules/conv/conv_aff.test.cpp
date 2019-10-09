@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include "conv_aff.h"
+#include "err/assert_err.h"
 
 int
 main(){
@@ -88,8 +89,8 @@ main(){
 
       // reset()
       cnv1.reset();
-      p = dPoint(2,8); cnv1.frw(p); assert(p == dPoint(2,8));
-      p = dPoint(2,8); cnv1.bck(p); assert(p == dPoint(2,8));
+      p = dPoint(2,8); cnv1.frw(p); assert_eq(p, dPoint(2,8));
+      p = dPoint(2,8); cnv1.bck(p); assert_eq(p, dPoint(2,8));
 
     }
 
@@ -99,7 +100,7 @@ main(){
       ConvAff2D cnv2(ref);
     }
     catch(Err e) {
-      assert(e.str() == "ConvAff2D: can't calculate conversion matrix.");
+      assert_eq(e.str(), "ConvAff2D: can't calculate conversion matrix.");
     }
 
     // error test

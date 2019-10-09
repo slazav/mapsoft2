@@ -10,9 +10,30 @@
 // assert_err macro
 
 #define assert_err(cmd,ret)\
-  try{ cmd; assert(false); } catch (Err e) {\
-    if (e.str()!=(ret)) std::cerr << "[" << e.str()<< "] != [" << (ret) << "]\n";\
-    assert(e.str()==(ret));}
+  {try{\
+    cmd;\
+    throw Err(-9999)\
+      << "assert_err: " << __FILE__ << ":" << __LINE__ << ": error is not thrown:\n"\
+      << "expected error: [" << (ret)<< "]\n";\
+  } catch (Err e) {\
+    if (e.code()==-9999) throw e;\
+    if (e.str()!=(ret)){\
+      throw Err()\
+        << "assert_err: " << __FILE__ << ":" << __LINE__ << ": wrong error message:\n"\
+        << "expected error: " << (ret) << "\n"\
+        << "actual error:   " << e.str()<< "\n";\
+    }\
+  }}
+
+#define assert_eq(v1,v2)\
+  {if ((v1) != (v2)){\
+    throw Err()\
+      << "assert_eq: " << __FILE__ << ":" << __LINE__ << ": arguments are not equal:\n"\
+      << "v1: " << #v1  << "\n"\
+      << "    " << (v1) << "\n"\
+      << "v2: " << #v2  << "\n"\
+      << "    " << (v2) << "\n";\
+  }}
 
 ///@}
 #endif

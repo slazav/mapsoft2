@@ -38,23 +38,23 @@ main(){
 
     image_save(img, "test_data/img.tmp.png");
     img1 = image_load("test_data/img.tmp.png");
-    assert(image_size("test_data/img.tmp.png") == img.size());
-    assert(img1.size() == img.size());
+    assert_eq(image_size("test_data/img.tmp.png"), img.size());
+    assert_eq(img1.size(), img.size());
 
     image_save(img, "test_data/img.tmp.jpg");
     img1 = image_load("test_data/img.tmp.jpg");
-    assert(image_size("test_data/img.tmp.jpg") == img.size());
-    assert(img1.size() == img.size());
+    assert_eq(image_size("test_data/img.tmp.jpg"), img.size());
+    assert_eq(img1.size(), img.size());
 
     image_save(img, "test_data/img.tmp.gif");
     img1 = image_load("test_data/img.tmp.gif");
-    assert(image_size("test_data/img.tmp.gif") == img.size());
-    assert(img1.size() == img.size());
+    assert_eq(image_size("test_data/img.tmp.gif"), img.size());
+    assert_eq(img1.size(), img.size());
 
     image_save(img, "test_data/img.tmp.tiff");
     img1 = image_load("test_data/img.tmp.tiff", 2);
-    assert(image_size("test_data/img.tmp.tiff") == img.size());
-    assert(img1.size() == img.size()/2);
+    assert_eq(image_size("test_data/img.tmp.tiff"), img.size());
+    assert_eq(img1.size(), img.size()/2);
 
 
   }

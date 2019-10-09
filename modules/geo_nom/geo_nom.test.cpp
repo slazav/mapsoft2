@@ -64,40 +64,40 @@ main(){
   try {
   nom_scale_t sc;
 
-  assert(str_to_type<nom_scale_t>("1:1000000")   == SC_1M);
-  assert(str_to_type<nom_scale_t>("1:1'000'000") == SC_1M);
-  assert(str_to_type<nom_scale_t>("1000000") == SC_1M);
-  assert(str_to_type<nom_scale_t>("1M")      == SC_1M);
-  assert(str_to_type<nom_scale_t>("10km/cm") == SC_1M);
-  assert(str_to_type<nom_scale_t>("10km")    == SC_1M);
+  assert_eq(str_to_type<nom_scale_t>("1:1000000"), SC_1M);
+  assert_eq(str_to_type<nom_scale_t>("1:1'000'000"), SC_1M);
+  assert_eq(str_to_type<nom_scale_t>("1000000"), SC_1M);
+  assert_eq(str_to_type<nom_scale_t>("1M"), SC_1M);
+  assert_eq(str_to_type<nom_scale_t>("10km/cm"), SC_1M);
+  assert_eq(str_to_type<nom_scale_t>("10km"), SC_1M);
 
-  assert(str_to_type<nom_scale_t>("1:500000")   == SC_500k);
-  assert(str_to_type<nom_scale_t>("1:500'000") == SC_500k);
-  assert(str_to_type<nom_scale_t>("500000") == SC_500k);
-  assert(str_to_type<nom_scale_t>("500k")   == SC_500k);
-  assert(str_to_type<nom_scale_t>("5km/cm") == SC_500k);
-  assert(str_to_type<nom_scale_t>("5km")    == SC_500k);
+  assert_eq(str_to_type<nom_scale_t>("1:500000"), SC_500k);
+  assert_eq(str_to_type<nom_scale_t>("1:500'000"), SC_500k);
+  assert_eq(str_to_type<nom_scale_t>("500000"), SC_500k);
+  assert_eq(str_to_type<nom_scale_t>("500k"), SC_500k);
+  assert_eq(str_to_type<nom_scale_t>("5km/cm"), SC_500k);
+  assert_eq(str_to_type<nom_scale_t>("5km"), SC_500k);
 
-  assert(str_to_type<nom_scale_t>("1:200000")   == SC_200k);
-  assert(str_to_type<nom_scale_t>("1:200'000") == SC_200k);
-  assert(str_to_type<nom_scale_t>("200000") == SC_200k);
-  assert(str_to_type<nom_scale_t>("200k")   == SC_200k);
-  assert(str_to_type<nom_scale_t>("2km/cm") == SC_200k);
-  assert(str_to_type<nom_scale_t>("2km")    == SC_200k);
+  assert_eq(str_to_type<nom_scale_t>("1:200000"), SC_200k);
+  assert_eq(str_to_type<nom_scale_t>("1:200'000"), SC_200k);
+  assert_eq(str_to_type<nom_scale_t>("200000"), SC_200k);
+  assert_eq(str_to_type<nom_scale_t>("200k"), SC_200k);
+  assert_eq(str_to_type<nom_scale_t>("2km/cm"), SC_200k);
+  assert_eq(str_to_type<nom_scale_t>("2km"), SC_200k);
 
-  assert(str_to_type<nom_scale_t>("1:100000")   == SC_100k);
-  assert(str_to_type<nom_scale_t>("1:100'000") == SC_100k);
-  assert(str_to_type<nom_scale_t>("100000") == SC_100k);
-  assert(str_to_type<nom_scale_t>("100k")   == SC_100k);
-  assert(str_to_type<nom_scale_t>("1km/cm") == SC_100k);
-  assert(str_to_type<nom_scale_t>("1km")    == SC_100k);
+  assert_eq(str_to_type<nom_scale_t>("1:100000"), SC_100k);
+  assert_eq(str_to_type<nom_scale_t>("1:100'000"), SC_100k);
+  assert_eq(str_to_type<nom_scale_t>("100000"), SC_100k);
+  assert_eq(str_to_type<nom_scale_t>("100k"), SC_100k);
+  assert_eq(str_to_type<nom_scale_t>("1km/cm"), SC_100k);
+  assert_eq(str_to_type<nom_scale_t>("1km"), SC_100k);
 
-  assert(str_to_type<nom_scale_t>("1:50000")   == SC_50k);
-  assert(str_to_type<nom_scale_t>("1:50'000") == SC_50k);
-  assert(str_to_type<nom_scale_t>("50000") == SC_50k);
-  assert(str_to_type<nom_scale_t>("50k")   == SC_50k);
-  assert(str_to_type<nom_scale_t>("500m/cm") == SC_50k);
-  assert(str_to_type<nom_scale_t>("500m")    == SC_50k);
+  assert_eq(str_to_type<nom_scale_t>("1:50000"), SC_50k);
+  assert_eq(str_to_type<nom_scale_t>("1:50'000"), SC_50k);
+  assert_eq(str_to_type<nom_scale_t>("50000"), SC_50k);
+  assert_eq(str_to_type<nom_scale_t>("50k"), SC_50k);
+  assert_eq(str_to_type<nom_scale_t>("500m/cm"), SC_50k);
+  assert_eq(str_to_type<nom_scale_t>("500m"), SC_50k);
 
   assert_err(str_to_type<nom_scale_t>("a"),
     "can't parse nomenclature map scale: a");
@@ -105,11 +105,11 @@ main(){
   assert_err(str_to_type<nom_scale_t>("500m "),
     "can't parse value: 500m ");
 
-  assert(type_to_str<nom_scale_t>(SC_1M) == "1:1000000");
-  assert(type_to_str<nom_scale_t>(SC_500k) == "1:500000");
-  assert(type_to_str<nom_scale_t>(SC_200k) == "1:200000");
-  assert(type_to_str<nom_scale_t>(SC_100k) == "1:100000");
-  assert(type_to_str<nom_scale_t>(SC_50k) == "1:50000");
+  assert_eq(type_to_str<nom_scale_t>(SC_1M), "1:1000000");
+  assert_eq(type_to_str<nom_scale_t>(SC_500k), "1:500000");
+  assert_eq(type_to_str<nom_scale_t>(SC_200k), "1:200000");
+  assert_eq(type_to_str<nom_scale_t>(SC_100k), "1:100000");
+  assert_eq(type_to_str<nom_scale_t>(SC_50k), "1:50000");
 
 
   // 1:1'000'000
@@ -366,106 +366,106 @@ main(){
   assert_nom1("t37-025-3", 1);
   assert_nom1("t37-025-1", 1);
 
-  assert(pt_to_nom(dPoint(0,0), SC_100k) == "a31-133");
+  assert_eq(pt_to_nom(dPoint(0,0), SC_100k), "a31-133");
 
 
 
 
-  assert(nom_shift("j42-030", iPoint(2,0)) == "j42-032");
-  assert(nom_shift("j42-030", iPoint(0,3)) == "k42-138");
-  assert(nom_shift("j42-030", iPoint(-1,-1)) == "j42-041");
+  assert_eq(nom_shift("j42-030", iPoint(2,0)), "j42-032");
+  assert_eq(nom_shift("j42-030", iPoint(0,3)), "k42-138");
+  assert_eq(nom_shift("j42-030", iPoint(-1,-1)), "j42-041");
 
-  assert(nom_shift("p41-3,4", iPoint(2,0)) == "p43-3,4");
-  assert(nom_shift("p41-3,4", iPoint(0,-1)) == "o41-1");
-  assert(nom_shift("p41-3", iPoint(0,-1), 1) == "o41-1");
-  assert(nom_shift("p41-4", iPoint(0,-1), 1) == "o41-2");
+  assert_eq(nom_shift("p41-3,4", iPoint(2,0)), "p43-3,4");
+  assert_eq(nom_shift("p41-3,4", iPoint(0,-1)), "o41-1");
+  assert_eq(nom_shift("p41-3", iPoint(0,-1), 1), "o41-1");
+  assert_eq(nom_shift("p41-4", iPoint(0,-1), 1), "o41-2");
 
-  assert(nom_shift("t41,42,43,44", iPoint(0,-5), 1) == "o41");
-  assert(nom_shift("t41,42,43,44", iPoint(-1,-5), 1) == "o37");
-  assert(nom_shift("t42", iPoint(0,-5), 1) == "o42");
+  assert_eq(nom_shift("t41,42,43,44", iPoint(0,-5), 1), "o41");
+  assert_eq(nom_shift("t41,42,43,44", iPoint(-1,-5), 1), "o37");
+  assert_eq(nom_shift("t42", iPoint(0,-5), 1), "o42");
 
 // std::cerr << nom_to_range("n37-001", sc).tlc() << "\n";
 // std::cerr << pt_to_nom(nom_to_range("n37-001", sc).tlc(), sc) << "\n";
 
-//  assert(pt_to_nom(nom_to_range("n37-013", sc).tlc(), sc) == "n37-013");
+//  assert_eq(pt_to_nom(nom_to_range("n37-013", sc).tlc(), sc), "n37-013");
 
   std::set<std::string> names;
 
   names = range_to_nomlist(nom_to_range("j42-012", sc, 1), SC_100k);
-  assert(names.size() == 1);
-  assert(names.count("j42-012")==1);
+  assert_eq(names.size(), 1);
+  assert_eq(names.count("j42-012"),1);
 
   names = range_to_nomlist(nom_to_range("j42-012.2x3", sc, 1), SC_100k);
-  assert(names.size() == 6);
-  assert(names.count("j42-012")==1);
-  assert(names.count("j43-001")==1);
-  assert(names.count("k42-132")==1);
-  assert(names.count("k42-144")==1);
-  assert(names.count("k43-121")==1);
-  assert(names.count("k43-133")==1);
+  assert_eq(names.size(), 6);
+  assert_eq(names.count("j42-012"),1);
+  assert_eq(names.count("j43-001"),1);
+  assert_eq(names.count("k42-132"),1);
+  assert_eq(names.count("k42-144"),1);
+  assert_eq(names.count("k43-121"),1);
+  assert_eq(names.count("k43-133"),1);
 
   names = range_to_nomlist(dRect(71.80,39.9, 0.4,0.2), SC_100k);
-  assert(names.size() == 4);
-  assert(names.count("j42-012")==1);
-  assert(names.count("j43-001")==1);
-  assert(names.count("k42-144")==1);
-  assert(names.count("k43-133")==1);
+  assert_eq(names.size(), 4);
+  assert_eq(names.count("j42-012"),1);
+  assert_eq(names.count("j43-001"),1);
+  assert_eq(names.count("k42-144"),1);
+  assert_eq(names.count("k43-133"),1);
 
   names = range_to_nomlist(dRect(64,58, 10,20), SC_1M);
 //  for (auto const & i:names) std::cerr << i << "\n";
-  assert(names.size() == 12);
-  assert(names.count("o41")==1);
-  assert(names.count("o42")==1);
-  assert(names.count("o43")==1);
-  assert(names.count("p41,42")==1);
-  assert(names.count("p43,44")==1);
-  assert(names.count("q41,42")==1);
-  assert(names.count("q43,44")==1);
-  assert(names.count("r41,42")==1);
-  assert(names.count("r43,44")==1);
-  assert(names.count("s41,42")==1);
-  assert(names.count("s43,44")==1);
-  assert(names.count("t41,42,43,44")==1);
+  assert_eq(names.size(), 12);
+  assert_eq(names.count("o41"),1);
+  assert_eq(names.count("o42"),1);
+  assert_eq(names.count("o43"),1);
+  assert_eq(names.count("p41,42"),1);
+  assert_eq(names.count("p43,44"),1);
+  assert_eq(names.count("q41,42"),1);
+  assert_eq(names.count("q43,44"),1);
+  assert_eq(names.count("r41,42"),1);
+  assert_eq(names.count("r43,44"),1);
+  assert_eq(names.count("s41,42"),1);
+  assert_eq(names.count("s43,44"),1);
+  assert_eq(names.count("t41,42,43,44"),1);
 
   // same but with single=true
   names = range_to_nomlist(dRect(64,58, 10,20), SC_1M, true);
 //  for (auto const & i:names) std::cerr << i << "\n";
-  assert(names.size() == 18);
-  assert(names.count("o41")==1);
-  assert(names.count("o42")==1);
-  assert(names.count("o43")==1);
-  assert(names.count("p41")==1);
-  assert(names.count("p42")==1);
-  assert(names.count("p43")==1);
-  assert(names.count("q41")==1);
-  assert(names.count("q42")==1);
-  assert(names.count("q43")==1);
-  assert(names.count("r41")==1);
-  assert(names.count("r42")==1);
-  assert(names.count("r43")==1);
-  assert(names.count("s41")==1);
-  assert(names.count("s42")==1);
-  assert(names.count("s43")==1);
-  assert(names.count("t41")==1);
-  assert(names.count("t42")==1);
-  assert(names.count("t43")==1);
+  assert_eq(names.size(), 18);
+  assert_eq(names.count("o41"),1);
+  assert_eq(names.count("o42"),1);
+  assert_eq(names.count("o43"),1);
+  assert_eq(names.count("p41"),1);
+  assert_eq(names.count("p42"),1);
+  assert_eq(names.count("p43"),1);
+  assert_eq(names.count("q41"),1);
+  assert_eq(names.count("q42"),1);
+  assert_eq(names.count("q43"),1);
+  assert_eq(names.count("r41"),1);
+  assert_eq(names.count("r42"),1);
+  assert_eq(names.count("r43"),1);
+  assert_eq(names.count("s41"),1);
+  assert_eq(names.count("s42"),1);
+  assert_eq(names.count("s43"),1);
+  assert_eq(names.count("t41"),1);
+  assert_eq(names.count("t42"),1);
+  assert_eq(names.count("t43"),1);
 
   // same but opposit sign
   names = range_to_nomlist(dRect(-74,-78, 10,20), SC_1M);
 //  for (auto const & i:names) std::cerr << i << "\n";
-  assert(names.size() == 12);
-  assert(names.count("xo18")==1);
-  assert(names.count("xo19")==1);
-  assert(names.count("xo20")==1);
-  assert(names.count("xp17,18")==1);
-  assert(names.count("xp19,20")==1);
-  assert(names.count("xq17,18")==1);
-  assert(names.count("xq19,20")==1);
-  assert(names.count("xr17,18")==1);
-  assert(names.count("xr19,20")==1);
-  assert(names.count("xs17,18")==1);
-  assert(names.count("xs19,20")==1);
-  assert(names.count("xt17,18,19,20")==1);
+  assert_eq(names.size(), 12);
+  assert_eq(names.count("xo18"),1);
+  assert_eq(names.count("xo19"),1);
+  assert_eq(names.count("xo20"),1);
+  assert_eq(names.count("xp17,18"),1);
+  assert_eq(names.count("xp19,20"),1);
+  assert_eq(names.count("xq17,18"),1);
+  assert_eq(names.count("xq19,20"),1);
+  assert_eq(names.count("xr17,18"),1);
+  assert_eq(names.count("xr19,20"),1);
+  assert_eq(names.count("xs17,18"),1);
+  assert_eq(names.count("xs19,20"),1);
+  assert_eq(names.count("xt17,18,19,20"),1);
 
 
   }

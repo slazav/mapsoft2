@@ -11,14 +11,14 @@ main(){
 
     // convert from utf8 to koi8-r:
     IConv C1("UTF8", "KOI8-R");
-    assert( C1("п©я─п╦п╡п╣я┌!") == "привет!");
+    assert_eq( C1("п©я─п╦п╡п╣я┌!"), "привет!");
 
     // non-utf characters are not modified:
-    assert( C1("привет!") == "привет!");
+    assert_eq( C1("привет!"), "привет!");
 
     // trivial conversion:
     IConv C2;
-    assert( C2("п©я─п╦п╡п╣я┌!") == "п©я─п╦п╡п╣я┌!");
+    assert_eq( C2("п©я─п╦п╡п╣я┌!"), "п©я─п╦п╡п╣я┌!");
 
     // unknown charset:
     assert_err(IConv C3("UTF8", "AAA"),

@@ -4,7 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include <sstream>
-#include "err/err.h"
+#include "err/assert_err.h"
 #include "string_pack.h"
 
 // Packing and unpacking of VMapObj
@@ -33,10 +33,10 @@ main(){
       while (1){
         std::string tag = string_unpack_tag(s2);
         if (tag == "") break;
-        else if (tag == "str1") assert(string_unpack_str(s2) == "text1");
-        else if (tag == "str2") assert(string_unpack_str(s2) == "text2");
-        else if (tag == "crds") crds2.push_back(string_unpack_crds(s2));
-        else if (tag == "bbox") assert(string_unpack_bbox(s2) == bbox);
+        else if (tag == "str1") {assert_eq(string_unpack_str(s2), "text1");}
+        else if (tag == "str2") {assert_eq(string_unpack_str(s2), "text2");}
+        else if (tag == "crds") {crds2.push_back(string_unpack_crds(s2));}
+        else if (tag == "bbox") {assert_eq(string_unpack_bbox(s2), bbox);}
         else throw Err() << "Unknown tag: " << tag;
       }
       assert(dist(crds1,crds2)<1e-7);

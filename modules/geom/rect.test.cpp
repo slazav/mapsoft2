@@ -7,58 +7,58 @@
 
 void test_expand_v(const iRect & r0, const int v, const iRect & rr){
     iRect r(r0);
-    assert(expand(r0,v) == rr);
+    assert_eq(expand(r0,v), rr);
     r.expand(v);
-    assert(r == rr);
+    assert_eq(r, rr);
 }
 
 void test_expand_vv(const iRect & r0, const int v1, const int v2, const iRect & rr){
     iRect r(r0);
-    assert(expand(r0,v1,v2) == rr);
+    assert_eq(expand(r0,v1,v2), rr);
     r.expand(v1,v2);
-    assert(r == rr);
+    assert_eq(r, rr);
 }
 
 void test_expand_pt(const iRect & r0, const iPoint & p, const iRect & rr){
     iRect r(r0);
-    assert(expand(r0,p) == rr);
+    assert_eq(expand(r0,p), rr);
     r.expand(p);
-    assert(r == rr);
+    assert_eq(r, rr);
 }
 
 void test_expand_r(const iRect & r0, const iRect & r1, const iRect & rr){
     iRect r(r0);
-    assert(expand(r0,r1) == rr);
+    assert_eq(expand(r0,r1), rr);
     r.expand(r1);
-    assert(r == rr);
+    assert_eq(r, rr);
 }
 
 void test_intersect(const iRect & r0, const iRect & r1, const iRect & rr){
     iRect r(r0);
-    assert(intersect(r0,r1) == rr);
+    assert_eq(intersect(r0,r1), rr);
     r.intersect(r1);
-    assert(r == rr);
+    assert_eq(r, rr);
 }
 
 void test_rint(const dRect & r0, const iRect & rr){
     dRect r(r0);
-    assert(rint(r0) == rr);
+    assert_eq(rint(r0), rr);
     r.to_rint();
-    assert(r == rr);
+    assert_eq(r, rr);
 }
 
 void test_floor(const dRect & r0, const iRect & rr){
     dRect r(r0);
-    assert(floor(r0) == rr);
+    assert_eq(floor(r0), rr);
     r.to_floor();
-    assert(r == rr);
+    assert_eq(r, rr);
 }
 
 void test_ceil(const dRect & r0, const iRect & rr){
     dRect r(r0);
-    assert(ceil(r0) == rr);
+    assert_eq(ceil(r0), rr);
     r.to_ceil();
-    assert(r == rr);
+    assert_eq(r, rr);
 }
 
 
@@ -78,21 +78,21 @@ main(){
   assert (r2.is_zsize());
 
   assert (iRect(0,0,0,0) != iRect());
-  assert (iRect(iPoint(),iPoint()) == iRect(0,0,0,0));
+  assert_eq(iRect(iPoint(),iPoint()), iRect(0,0,0,0));
 
   iRect r3(iPoint(0,0), iPoint(1,2));
   assert (!r3.is_empty());
   assert (r3);
   assert (!r3.is_zsize());
 
-  assert (iRect(iPoint(1,2),iPoint(3,4)) == iRect(1,2,2,2));
-  assert (iRect(iPoint(3,4),iPoint(1,2)) == iRect(1,2,2,2));
-  assert (iRect(iPoint(3,2),iPoint(1,4)) == iRect(1,2,2,2));
-  assert (iRect(0,0,-1,-1) == iRect(-1,-1,1,1));
+  assert_eq(iRect(iPoint(1,2),iPoint(3,4)), iRect(1,2,2,2));
+  assert_eq(iRect(iPoint(3,4),iPoint(1,2)), iRect(1,2,2,2));
+  assert_eq(iRect(iPoint(3,2),iPoint(1,4)), iRect(1,2,2,2));
+  assert_eq(iRect(0,0,-1,-1), iRect(-1,-1,1,1));
 
-  assert (iRect(1,2,3,4) == iRect("[1,2,3,4]"));
-  assert (iRect(0,0,0,0) == iRect("[0,0,0,0]"));
-  assert (iRect() == iRect("[]"));
+  assert_eq(iRect(1,2,3,4), iRect("[1,2,3,4]"));
+  assert_eq(iRect(0,0,0,0), iRect("[0,0,0,0]"));
+  assert_eq(iRect(), iRect("[]"));
 
   // swap
   r1.swap(r2);
@@ -101,16 +101,16 @@ main(){
 
   // corners
   r1=iRect(1,2,3,4);
-  assert (r1.tlc() == iPoint(1,2));
-  assert (r1.trc() == iPoint(4,2));
-  assert (r1.blc() == iPoint(1,6));
-  assert (r1.cnt() == iPoint(2,4));
-  assert (dRect(r1).cnt() == dPoint(2.5,4));
+  assert_eq(r1.tlc(), iPoint(1,2));
+  assert_eq(r1.trc(), iPoint(4,2));
+  assert_eq(r1.blc(), iPoint(1,6));
+  assert_eq(r1.cnt(), iPoint(2,4));
+  assert_eq(dRect(r1).cnt(), dPoint(2.5,4));
 
-  assert (iRect(r1.tlc(),r1.brc()) == r1);
-  assert (iRect(r1.trc(),r1.blc()) == r1);
-  assert (iRect(r1.brc(),r1.tlc()) == r1);
-  assert (iRect(r1.blc(),r1.trc()) == r1);
+  assert_eq(iRect(r1.tlc(),r1.brc()), r1);
+  assert_eq(iRect(r1.trc(),r1.blc()), r1);
+  assert_eq(iRect(r1.brc(),r1.tlc()), r1);
+  assert_eq(iRect(r1.blc(),r1.trc()), r1);
 
   r1=iRect();
 
@@ -122,18 +122,18 @@ main(){
 
   // +,-,*,-
   r1=iRect(10,10, 20,20);
-  assert(r1+iPoint(2,2) == iRect(12,12,20,20));
-  assert(iPoint(2,2)+r1 == iRect(12,12,20,20));
-  assert(r1-iPoint(2,2) == iRect(8,8,20,20));
-  assert(r1/5 == iRect(2,2,4,4));
-  assert(r1*2 == iRect(20,20,40,40));
-  assert(2*r1 == iRect(20,20,40,40));
+  assert_eq(r1+iPoint(2,2), iRect(12,12,20,20));
+  assert_eq(iPoint(2,2)+r1, iRect(12,12,20,20));
+  assert_eq(r1-iPoint(2,2), iRect(8,8,20,20));
+  assert_eq(r1/5, iRect(2,2,4,4));
+  assert_eq(r1*2, iRect(20,20,40,40));
+  assert_eq(2*r1, iRect(20,20,40,40));
 
-  assert((r1+=iPoint(2,2)) == iRect(12,12,20,20));
-  assert((r1-=iPoint(2,2)) == iRect(10,10,20,20));
-  assert((r1/=5) == iRect(2,2,4,4));
-  assert((r1*=2) == iRect(4,4,8,8));
-  assert(-r1 == iRect(-12,-12,8,8));
+  assert_eq((r1+=iPoint(2,2)), iRect(12,12,20,20));
+  assert_eq((r1-=iPoint(2,2)), iRect(10,10,20,20));
+  assert_eq((r1/=5), iRect(2,2,4,4));
+  assert_eq((r1*=2), iRect(4,4,8,8));
+  assert_eq(-r1, iRect(-12,-12,8,8));
 
   r1=iRect();
   assert_err(r1+=iPoint(), "Empty rectangle in operator+");
@@ -150,14 +150,14 @@ main(){
   iRect r5(0,0,1,1);
   iRect r6(0,0,2,2);
 
-  assert(r1 == r1);
+  assert_eq(r1, r1);
   assert(r1 <= r1);
   assert(r1 >= r1);
   assert(!(r1 != r1));
   assert(!(r1 > r1));
   assert(!(r1 < r1));
 
-  assert(r2 == r2);
+  assert_eq(r2, r2);
   assert(r2 <= r2);
   assert(r2 >= r2);
   assert(!(r2 != r2));
@@ -177,10 +177,10 @@ main(){
   assert(r5 < r6);
 
   // cast to iRect, dRect
-  assert(dRect(iRect(5,6,7,8)) == dRect(5,6,7,8));
-  assert(dRect(iRect()) == dRect());
-  assert(iRect(dRect(5.8,6.8,7.2,8.8)) == iRect(5,6,7,8));
-  assert(iRect(dRect()) == iRect());
+  assert_eq(dRect(iRect(5,6,7,8)), dRect(5,6,7,8));
+  assert_eq(dRect(iRect()), dRect());
+  assert_eq(iRect(dRect(5.8,6.8,7.2,8.8)), iRect(5,6,7,8));
+  assert_eq(iRect(dRect()), iRect());
 
   {
     // rint, floor, ceil
@@ -266,8 +266,8 @@ main(){
      double d = hypot(dist(r1.tlc(),r2.tlc()), dist(r1.brc(),r2.brc()));
      assert(fabs(d-dist(r1,r2)) < 1e-6);
      assert(std::isinf(dist(r1,dRect())));
-     assert(dist(dRect(),dRect()) == 0);
-     assert(dist(r1,r1) == 0);
+     assert_eq(dist(dRect(),dRect()), 0);
+     assert_eq(dist(r1,r1), 0);
 
   }
 
@@ -275,26 +275,26 @@ main(){
 /*
   // tile_cover, tile_in
   {
-    assert(dRect(dPoint(1.1,2.1), dPoint(2.1,5.1)).tile_cover(2) == iRect(0,1,1,1));
-    assert(dRect(dPoint(1.1,2.1), dPoint(1.8,5.1)).tile_cover(2) == iRect(0,1,0,1));
-    assert(dRect(dPoint(1.1,2.1), dPoint(1.8,4)).tile_cover(2) == iRect(0,1,0,0));
-    assert(dRect(dPoint(1,2), dPoint(1.8,4)).tile_cover(2) == iRect(0,1,0,0));
+    assert_eq(dRect(dPoint(1.1,2.1), dPoint(2.1,5.1)).tile_cover(2), iRect(0,1,1,1));
+    assert_eq(dRect(dPoint(1.1,2.1), dPoint(1.8,5.1)).tile_cover(2), iRect(0,1,0,1));
+    assert_eq(dRect(dPoint(1.1,2.1), dPoint(1.8,4)).tile_cover(2), iRect(0,1,0,0));
+    assert_eq(dRect(dPoint(1,2), dPoint(1.8,4)).tile_cover(2), iRect(0,1,0,0));
   }
 */
 
    // input/output
   {
-    assert(type_to_str(dRect()) == "[]");
-    assert(type_to_str(dRect(0,0,0,0)) == "[0,0,0,0]");
-    assert(type_to_str(dRect(0,0,1,1)) == "[0,0,1,1]");
+    assert_eq(type_to_str(dRect()), "[]");
+    assert_eq(type_to_str(dRect(0,0,0,0)), "[0,0,0,0]");
+    assert_eq(type_to_str(dRect(0,0,1,1)), "[0,0,1,1]");
     assert(type_to_str(dRect(12345678,12345678,12345678,12345678))
             == "[12345678,12345678,12345678,12345678]"); // precision is set at least to 8
 
-    assert(str_to_type<dRect>("[]") == dRect());
-    assert(str_to_type<dRect>(" [ ] ") == dRect());
-    assert(str_to_type<dRect>("[0,0,0,0]") == dRect(0,0,0,0));
-    assert(str_to_type<dRect>(" [ 0 , 0 , 0 , 0 ] ") == dRect(0,0,0,0));
-    assert(str_to_type<dRect>(" [ 1e-10 , 1e5 , 0.1 , 1.23 ] ") == dRect(1e-10,1e5,0.1,1.23));
+    assert_eq(str_to_type<dRect>("[]"), dRect());
+    assert_eq(str_to_type<dRect>(" [ ] "), dRect());
+    assert_eq(str_to_type<dRect>("[0,0,0,0]"), dRect(0,0,0,0));
+    assert_eq(str_to_type<dRect>(" [ 0 , 0 , 0 , 0 ] "), dRect(0,0,0,0));
+    assert_eq(str_to_type<dRect>(" [ 1e-10 , 1e5 , 0.1 , 1.23 ] "), dRect(1e-10,1e5,0.1,1.23));
 
     assert_err(str_to_type<dRect>(" [ 0 , 1 "),
       "can't parse value:  [ 0 , 1 ");

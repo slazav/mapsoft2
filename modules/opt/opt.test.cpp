@@ -11,8 +11,8 @@ try{
 
   Opt O1;
   O1.put("int", 123);
-  assert ( O1.get<int>("int") == 123 );
-  assert ( O1.get<std::string>("int") == "123" );
+  assert_eq( O1.get<int>("int"), 123 );
+  assert_eq( O1.get<std::string>("int"), "123" );
 
   O1.put("int", "123a");
   assert_err(
@@ -22,16 +22,16 @@ try{
   assert_err(
     O1.get("d", 1.0), "can't parse value: 123.1 ");
 
-  assert(O1.exists("d") == true);
-  assert(O1.exists("e") == false);
-  assert(O1.find("d")->second == "123.1 ");
+  assert_eq(O1.exists("d"), true);
+  assert_eq(O1.exists("e"), false);
+  assert_eq(O1.find("d")->second, "123.1 ");
 
   O1.put<std::string>("d", "1 2 3 4 5");
-  assert(O1.get<std::string>("d", "1 2 3") == "1 2 3 4 5");
-  assert(O1.get<std::string>("x", "1 2 3") == "1 2 3");
+  assert_eq(O1.get<std::string>("d", "1 2 3"), "1 2 3 4 5");
+  assert_eq(O1.get<std::string>("x", "1 2 3"), "1 2 3");
 
-  assert(O1.get("d", "1 2 3") == "1 2 3 4 5");
-  assert(O1.get("x", "1 2 3") == "1 2 3");
+  assert_eq(O1.get("d", "1 2 3"), "1 2 3 4 5");
+  assert_eq(O1.get("x", "1 2 3"), "1 2 3");
 
 
   O1.put("d", "123.1 ");
@@ -67,7 +67,7 @@ try{
 
   std::ostringstream os;
   os << O1;
-  assert(os.str() == "{\"d\": \"123.1 \", \"int\": \"123a\","
+  assert_eq(os.str(), "{\"d\": \"123.1 \", \"int\": \"123a\","
                      " \"opts\": \"{\\\"d\\\": \\\"123.1 \\\", \\\"int\\\": \\\"123a\\\"}\"}");
 
   std::istringstream is(os.str());
@@ -77,17 +77,17 @@ try{
   is >> O2; // read O2 from is
   os.str(std::string()); // clear the stream
   os << O2;
-  assert(os.str() == "{\"d\": \"123.1 \", \"int\": \"123a\","
+  assert_eq(os.str(), "{\"d\": \"123.1 \", \"int\": \"123a\","
                      " \"opts\": \"{\\\"d\\\": \\\"123.1 \\\", \\\"int\\\": \\\"123a\\\"}\"}");
 
   os.str(std::string()); // clear the stream
   os << O2.get<Opt>("opts");
-  assert(os.str() == "{\"d\": \"123.1 \", \"int\": \"123a\"}");
+  assert_eq(os.str(), "{\"d\": \"123.1 \", \"int\": \"123a\"}");
 
   {
     std::istringstream is("{} ");
     is >> O1;
-    assert(O1.size() == 0);
+    assert_eq(O1.size(), 0);
   }
 
   // some error cases
@@ -113,34 +113,34 @@ try{
 
   O1.put("h1", "0xFF");
   O1.put_hex("h2", 254);
-  assert(O1.get("h1", std::string()) == "0xFF");
-  assert(O1.get("h2", std::string()) == "0xfe");
+  assert_eq(O1.get("h1", std::string()), "0xFF");
+  assert_eq(O1.get("h2", std::string()), "0xfe");
 
-  assert(O1.get("h1", 0) == 255);
-  assert(O1.get("h2", 0) == 254);
+  assert_eq(O1.get("h1", 0), 255);
+  assert_eq(O1.get("h2", 0), 254);
 
   Opt O3;
   O3.put("h1", 123);
   O3.put("h3", 124);
   O1.put(O3);
-  assert(O1.get<int>("h1") == 123);
-  assert(O1.get<int>("h2") == 254);
-  assert(O1.get<int>("h3") == 124);
-  assert(O1.get<int>("h4") == 0);
+  assert_eq(O1.get<int>("h1"), 123);
+  assert_eq(O1.get<int>("h2"), 254);
+  assert_eq(O1.get<int>("h3"), 124);
+  assert_eq(O1.get<int>("h4"), 0);
 
   Opt O4("{\"k1\":\"v1\", \"k2\":\"v2\", \"k3\":\"100\"}");
-  assert(O4.get("k1", std::string()) == "v1");
-  assert(O4.get("k2", std::string()) == "v2");
-  assert(O4.get("k3", 0) == 100);
+  assert_eq(O4.get("k1", std::string()), "v1");
+  assert_eq(O4.get("k2", std::string()), "v2");
+  assert_eq(O4.get("k3", 0), 100);
 
   O1.put("hex", "0xFFFFFFFF"); // unsigned int -> int
-  assert(O1.get("hex",0) == 0xFFFFFFFF);
+  assert_eq(O1.get("hex",0), 0xFFFFFFFF);
 
   O1.put("hex", "0xFFFFFFFFF"); // to long
   assert_err(O1.get("hex",0), "can't parse value: 0xFFFFFFFFF");
 
-//  assert(O1.get("h1", 0.0) == 255);
-//  assert(O1.get("h2", 0.0) == 254);
+//  assert_eq(O1.get("h1", 0.0), 255);
+//  assert_eq(O1.get("h2", 0.0), 254);
 
 }
 catch (Err e) {

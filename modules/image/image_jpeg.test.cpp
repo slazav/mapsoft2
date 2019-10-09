@@ -39,13 +39,13 @@ main(){
     { // IMAGE_32ARGB
       Image img = img32;
       image_save_jpeg(img, "test_jpeg/img_32_def.jpg");
-      assert(image_size_jpeg("test_jpeg/img_32_def.jpg") == iPoint(256,128));
+      assert_eq(image_size_jpeg("test_jpeg/img_32_def.jpg"), iPoint(256,128));
 
       Image I = image_load_jpeg("test_jpeg/img_32_def.jpg", 1);
       image_save_jpeg(I, "test_jpeg/img_32_def1.jpg");
-      assert(I.type() == IMAGE_24RGB);
-      assert(I.width() == 256);
-      assert(I.height() == 128);
+      assert_eq(I.type(), IMAGE_24RGB);
+      assert_eq(I.width(), 256);
+      assert_eq(I.height(), 128);
 
       // check far from edges (smaller jpeg artifacts)
       assert(color_dist(I.get_argb(10,10),   0xff141400) < 5);
@@ -82,9 +82,9 @@ main(){
       }
       image_save_jpeg(img, "test_jpeg/img_24_def.jpg");
       Image I = image_load_jpeg("test_jpeg/img_24_def.jpg", 1);
-      assert(I.type() == IMAGE_24RGB);
-      assert(I.width() == 256);
-      assert(I.height() == 128);
+      assert_eq(I.type(), IMAGE_24RGB);
+      assert_eq(I.width(), 256);
+      assert_eq(I.height(), 128);
       assert(color_dist(I.get_argb(10,10),   0xff141400) < 5);
       assert(color_dist(I.get_argb(117,117), 0xffeaea00) < 5);
       assert(color_dist(I.get_argb(138,10),  0xFF090000) < 5);
@@ -105,9 +105,9 @@ main(){
 
       image_save_jpeg(img, "test_jpeg/img_16_def.jpg");
       Image I = image_load_jpeg("test_jpeg/img_16_def.jpg", 1);
-      assert(I.type() == IMAGE_24RGB);
-      assert(I.width() == 256);
-      assert(I.height() == 128);
+      assert_eq(I.type(), IMAGE_24RGB);
+      assert_eq(I.width(), 256);
+      assert_eq(I.height(), 128);
       assert(color_dist(I.get_argb(10,10),   0xff111111) < 2);
       assert(color_dist(I.get_argb(117,117), 0xffcfcfcf) < 2);
       assert(color_dist(I.get_argb(138,10),  0xFF030303) < 2);
@@ -129,9 +129,9 @@ main(){
 
       image_save_jpeg(img, "test_jpeg/img_8_def.jpg");
       Image I = image_load_jpeg("test_jpeg/img_8_def.jpg", 1);
-      assert(I.type() == IMAGE_24RGB);
-      assert(I.width() == 256);
-      assert(I.height() == 128);
+      assert_eq(I.type(), IMAGE_24RGB);
+      assert_eq(I.width(), 256);
+      assert_eq(I.height(), 128);
       assert(color_dist(I.get_argb(10,10),   0xff111111) < 2);
       assert(color_dist(I.get_argb(117,117), 0xffcfcfcf) < 2);
       assert(color_dist(I.get_argb(138,10),  0xFF030303) < 2);
@@ -146,9 +146,9 @@ main(){
       Image img = image_remap(img32, colors);
       image_save_jpeg(img, "test_jpeg/img_8p_def.jpg");
       Image I = image_load_jpeg("test_jpeg/img_8p_def.jpg", 1);
-      assert(I.type() == IMAGE_24RGB);
-      assert(I.width() == 256);
-      assert(I.height() == 128);
+      assert_eq(I.type(), IMAGE_24RGB);
+      assert_eq(I.width(), 256);
+      assert_eq(I.height(), 128);
       assert(color_dist(I.get_argb(10,10),   0xff101801) < 2);
       assert(color_dist(I.get_argb(117,117), 0xffe6e600) < 2);
       assert(color_dist(I.get_argb(138,10),  0xFF0a0000) < 2);
@@ -166,17 +166,17 @@ main(){
       }
       image_save_jpeg(img, "test_jpeg/img_1_def.jpg");
       Image I = image_load_jpeg("test_jpeg/img_1_def.jpg", 1);
-      assert(I.type() == IMAGE_24RGB);
-      assert(I.width() == 256);
-      assert(I.height() == 128);
-      assert(img.get1(0,0)     == 0);
-      assert(img.get1(15,45)   == 0);
-      assert(img.get1(43,123)  == 1);
-      assert(img.get1(203,27)  == 0);
-      assert(I.get_argb(0,0)     == 0xFF000000);
-      assert(I.get_argb(15,45)   == 0xFF000000);
-      assert(I.get_argb(43,123)  == 0xFFFFFFFF);
-      assert(I.get_argb(203,27)  == 0xFF000000);
+      assert_eq(I.type(), IMAGE_24RGB);
+      assert_eq(I.width(), 256);
+      assert_eq(I.height(), 128);
+      assert_eq(img.get1(0,0), 0);
+      assert_eq(img.get1(15,45), 0);
+      assert_eq(img.get1(43,123), 1);
+      assert_eq(img.get1(203,27), 0);
+      assert_eq(I.get_argb(0,0), 0xFF000000);
+      assert_eq(I.get_argb(15,45), 0xFF000000);
+      assert_eq(I.get_argb(43,123), 0xFFFFFFFF);
+      assert_eq(I.get_argb(203,27), 0xFF000000);
     }
 
     { //scale tests
@@ -184,8 +184,8 @@ main(){
       iPoint pt(101,32);
       for (double sc=1; sc<10; sc+=0.8){
         Image I1 = image_load_jpeg("test_jpeg/img_32_def.jpg", sc);
-        assert(I1.width() == floor((I0.width()-1)/sc+1));
-        assert(I1.height() == floor((I0.height()-1)/sc+1));
+        assert_eq(I1.width(), floor((I0.width()-1)/sc+1));
+        assert_eq(I1.height(), floor((I0.height()-1)/sc+1));
         iPoint pt1 = (dPoint)pt/sc;
         assert(color_dist(I1.get_rgb(pt1.x, pt1.y),
                           I0.get_rgb(rint(pt1.x*sc), rint(pt1.y*sc))) < 10);

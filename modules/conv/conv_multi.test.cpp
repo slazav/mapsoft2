@@ -3,6 +3,7 @@
 #include <cassert>
 #include "conv_base.h"
 #include "conv_multi.h"
+#include "err/assert_err.h"
 
 int
 main(){
@@ -43,17 +44,17 @@ main(){
 
    // simplify()
 
-    assert(cnv.size() == 3);
+    assert_eq(cnv.size(), 3);
 
-    assert(cnv.simplify(dRect(0,0,10,10), 5) == true);
+    assert_eq(cnv.simplify(dRect(0,0,10,10), 5), true);
     cnv.frw(p);  assert(dist(p, dPoint(20,20)) < 1e-6);
     cnv.bck(p);  assert(dist(p, dPoint(10,10)) < 1e-6);
 
-    assert(cnv.size() == 1);
+    assert_eq(cnv.size(), 1);
     cnv.reset();
-    assert(cnv.size() == 0);
-    assert(cnv.simplify(dRect(0,0,10,10), 5) == false);
-    assert(cnv.size() == 0);
+    assert_eq(cnv.size(), 0);
+    assert_eq(cnv.simplify(dRect(0,0,10,10), 5), false);
+    assert_eq(cnv.size(), 0);
 
   }
   catch (Err e) {

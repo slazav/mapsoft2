@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <cassert>
 #include <iostream>
-#include "err/err.h"
+#include "err/assert_err.h"
 #include "db_simple.h"
 
 int
@@ -15,20 +15,20 @@ main(){
 
       DBSimple db("a.dbp", NULL, 1);
       uint32_t key=1;
-      assert(db.get(key) == "");
-      assert(key == 0xFFFFFFFF);
+      assert_eq(db.get(key), "");
+      assert_eq(key, 0xFFFFFFFF);
       key=1;
-      assert(db.get_range(key) == "");
-      assert(key == 0xFFFFFFFF);
+      assert_eq(db.get_range(key), "");
+      assert_eq(key, 0xFFFFFFFF);
       key=1;
-      assert(db.get_first(key) == "");
-      assert(key == 0xFFFFFFFF);
+      assert_eq(db.get_first(key), "");
+      assert_eq(key, 0xFFFFFFFF);
       key=1;
-      assert(db.get_next(key) == "");
-      assert(key == 0xFFFFFFFF);
+      assert_eq(db.get_next(key), "");
+      assert_eq(key, 0xFFFFFFFF);
       key=1;
-      assert(db.get_last(key) == "");
-      assert(key == 0xFFFFFFFF);
+      assert_eq(db.get_last(key), "");
+      assert_eq(key, 0xFFFFFFFF);
       key=1;
 
       db.put(1, "abc");
@@ -38,75 +38,75 @@ main(){
       db.put(128, "aaa");
       db.put(257, "bbb");
 
-      assert(db.exists(1) == true);
-      assert(db.exists(4) == false);
-      assert(db.exists(257) == true);
-      assert(db.exists(258) == false);
+      assert_eq(db.exists(1), true);
+      assert_eq(db.exists(4), false);
+      assert_eq(db.exists(257), true);
+      assert_eq(db.exists(258), false);
 
       key=525;
-      assert(db.get_range(key) == "");
-      assert(key == 0xFFFFFFFF);
+      assert_eq(db.get_range(key), "");
+      assert_eq(key, 0xFFFFFFFF);
 
       key=2;
-      assert(db.get_range(key) == "fgh");
-      assert(key == 2);
+      assert_eq(db.get_range(key), "fgh");
+      assert_eq(key, 2);
 
       key=525;
-      assert(db.get_last(key) == "bbb");
-      assert(key == 257);
+      assert_eq(db.get_last(key), "bbb");
+      assert_eq(key, 257);
 
       key=2;
-      assert(db.get_last(key) == "bbb");
-      assert(key == 257);
+      assert_eq(db.get_last(key), "bbb");
+      assert_eq(key, 257);
 
       key=525;
-      assert(db.get_first(key) == "abc");
-      assert(key == 1);
+      assert_eq(db.get_first(key), "abc");
+      assert_eq(key, 1);
 
       key=0;
-      assert(db.get_first(key) == "abc");
-      assert(key == 1);
+      assert_eq(db.get_first(key), "abc");
+      assert_eq(key, 1);
 
       key=0xFFFFFFFF;
-      assert(db.get_range(key) == "");
-      assert(key == 0xFFFFFFFF);
+      assert_eq(db.get_range(key), "");
+      assert_eq(key, 0xFFFFFFFF);
 
       key=0;
-      assert(db.get_range(key) == "abc");
-      assert(key == 1);
-      assert(db.get_range(key) == "abc");
-      assert(key == 1);
+      assert_eq(db.get_range(key), "abc");
+      assert_eq(key, 1);
+      assert_eq(db.get_range(key), "abc");
+      assert_eq(key, 1);
 
       key=2;
-      assert(db.get(key) == "fgh");
-      assert(key == 2);
+      assert_eq(db.get(key), "fgh");
+      assert_eq(key, 2);
 
-      assert(db.get_next(key) == "def");
-      assert(key == 3);
-      assert(db.get_next(key) == "aaa");
-      assert(key == 128);
-      assert(db.get_next(key) == "bbb");
-      assert(key == 257);
-      assert(db.get_prev(key) == "aaa");
-      assert(key == 128);
-      assert(db.get_prev(key) == "def");
-      assert(key == 3);
-      assert(db.get_prev(key) == "fgh");
-      assert(key == 2);
+      assert_eq(db.get_next(key), "def");
+      assert_eq(key, 3);
+      assert_eq(db.get_next(key), "aaa");
+      assert_eq(key, 128);
+      assert_eq(db.get_next(key), "bbb");
+      assert_eq(key, 257);
+      assert_eq(db.get_prev(key), "aaa");
+      assert_eq(key, 128);
+      assert_eq(db.get_prev(key), "def");
+      assert_eq(key, 3);
+      assert_eq(db.get_prev(key), "fgh");
+      assert_eq(key, 2);
 
-      assert(db.del(128) == 1);
-      assert(db.del(257) == 1);
-      assert(db.del(257) == 0);
+      assert_eq(db.del(128), 1);
+      assert_eq(db.del(257), 1);
+      assert_eq(db.del(257), 0);
       key=257;
-      assert(db.get(key) == "");
+      assert_eq(db.get(key), "");
 
     }
     {
       // open existing file
       DBSimple db("a.dbp", NULL, 0);
       uint32_t key = 2;
-      assert(db.get(key) == "fgh");
-      assert(db.get_next(key) == "def");
+      assert_eq(db.get(key), "fgh");
+      assert_eq(db.get_next(key), "def");
     }
     unlink("a.dbp");
 
@@ -120,17 +120,17 @@ main(){
 
       uint32_t key;
       key = 1;
-      assert(db1.get(key) == "abc1");      assert(key==1);
-      assert(db1.get_next(key) == "abc2"); assert(key==1);
-      assert(db1.get_next(key) == "cde1"); assert(key==2);
-      assert(db1.get_next(key) == "cde2"); assert(key==2);
+      assert_eq(db1.get(key), "abc1");      assert_eq(key,1);
+      assert_eq(db1.get_next(key), "abc2"); assert_eq(key,1);
+      assert_eq(db1.get_next(key), "cde1"); assert_eq(key,2);
+      assert_eq(db1.get_next(key), "cde2"); assert_eq(key,2);
 
-      assert(db1.get_range(key) == "cde1");
-      assert(db1.get_next(key) == "cde2"); assert(key==2);
+      assert_eq(db1.get_range(key), "cde1");
+      assert_eq(db1.get_next(key), "cde2"); assert_eq(key,2);
 
-      assert(db1.del(2) == 2);
-      assert(db1.del(2) == 0);
-      assert(db1.get(key) == "");
+      assert_eq(db1.del(2), 2);
+      assert_eq(db1.del(2), 0);
+      assert_eq(db1.get(key), "");
 
     }
     unlink("a.dbp");
@@ -148,12 +148,12 @@ main(){
 
       uint32_t key;
       key = 1;
-      assert(db1.get(key) == "abc");
-      assert(db1.get_next(key) == "cde");
+      assert_eq(db1.get(key), "abc");
+      assert_eq(db1.get_next(key), "cde");
 
       key = 1;
-      assert(db2.get(key) == "abc2");
-      assert(db2.get_next(key) == "cde2");
+      assert_eq(db2.get(key), "abc2");
+      assert_eq(db2.get_next(key), "cde2");
     }
     unlink("a.dbp");
 

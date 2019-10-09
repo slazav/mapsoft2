@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <cassert>
 
-#include "err/err.h"
+#include "err/assert_err.h"
 #include "iofilter.h"
 
 
@@ -19,14 +19,14 @@ main(){
 
     std::string l;
     std::getline(flt.stream(), l);
-    assert(l == "/* Test program! */");
+    assert_eq(l, "/* Test program! */");
   }
 
   {
     IFilter flt("echo abc");
     std::string l;
     std::getline(flt.stream(), l);
-    assert(l == "abc");
+    assert_eq(l, "abc");
   }
 
 
@@ -41,9 +41,9 @@ sleep(1);
     std::ifstream fi("test1.tmp");
     std::string l;
     std::getline(fi, l);
-    assert(l == "test2");
+    assert_eq(l, "test2");
     std::getline(fi, l);
-    assert(l == "test1");
+    assert_eq(l, "test1");
     unlink("test1.tmp");
   }
 
@@ -57,9 +57,9 @@ sleep(1);
     std::ifstream fi("test2.tmp");
     std::string l;
     std::getline(fi, l);
-    assert(l == "test2");
+    assert_eq(l, "test2");
     std::getline(fi, l);
-    assert(l == "test1");
+    assert_eq(l, "test1");
     unlink("test2.tmp");
   }
 

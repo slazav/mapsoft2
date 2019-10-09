@@ -18,9 +18,9 @@ main(){
 
     Image i3 = icache.get("test_data/test_fullc1.jpg");
 
-    assert(i1.size() == iPoint(320,240));
-    assert(i2.size() == iPoint(500,500));
-    assert(i1.data() == i3.data());
+    assert_eq(i1.size(), iPoint(320,240));
+    assert_eq(i2.size(), iPoint(500,500));
+    assert_eq(i1.data(), i3.data());
 
     assert_err(icache.get("test_data/missing.jpg"),
       "image_load_jpeg: can't open file: test_data/missing.jpg");
