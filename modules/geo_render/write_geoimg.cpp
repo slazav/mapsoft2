@@ -24,9 +24,17 @@ ms2opt_add_geoimg(GetOptSet & opts){
   int m = MS2OPT_IMAGE;
   opts.remove("img_in_fmt");
   opts.remove("img_out_fmt");
-  opts.add("out_fmt",  1,0,   m, "Image output format: pdf, ps, svg, png, jpeg, tiff, gif.");
-  opts.add("bgcolor",  1,0,   m, "Image background color (default 0xFFFFFFFF).");
-  opts.add("map",      1,'m', m, "Write map file in OziExprorer format.");
+  opts.add("out_fmt",    1,0,   m,
+    "Explicitely set image output format: pdf, ps, svg, png, jpeg, tiff, gif. "
+    "By default format is determined from the output file extension.");
+  opts.add("bgcolor",    1,0,   m,
+    "Image background color (default 0xFFFFFFFF).");
+  opts.add("map",        1,'m', m,
+    "Write map file in OziExprorer format (by default it is not written).");
+  opts.add("skip_image", 0,0, m,
+    "Do not write image file (can be used if only the map file is needed). "
+    "Option -o <file> option should be provided anyway, the filename "
+    "will be written to the map-file.");
 }
 
 void
@@ -48,6 +56,17 @@ write_geoimg(const std::string & fname, GeoData & data, const Opt & opts){
   // make reference and conversion map -> WGS84
   GeoMap map = geo_mkref(data, opts);
   std::shared_ptr<ConvMap> cnv(new ConvMap(map));
+
+  // write map file
+  if (opts.exists("map")){
+    map.image = fname;
+    write_ozi_map(opts.get("map","").c_str(), map, opts);
+  }
+
+  // exit if --skip_image option exists
+  if (opts.exists("skip_image")){
+    return;
+  }
 
   // find image dimensions
   dRect box = dRect(dPoint(), (dPoint)map.image_size);
@@ -102,10 +121,5 @@ write_geoimg(const std::string & fname, GeoData & data, const Opt & opts){
     image_save(img, fname, o);
   }
 
-  // write map file
-  if (opts.exists("map")){
-    map.image = fname;
-    write_ozi_map(opts.get("map","").c_str(), map, opts);
-  }
 }
 

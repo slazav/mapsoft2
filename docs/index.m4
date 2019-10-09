@@ -119,11 +119,6 @@ text tables. Time, distance, velocity calculations, adjustable format.',
 `Программа для вывода треков в виде текстовой таблицы. Вычисления времен,
 расстояний, скоростей, настраиваемый формат.')
 
-<li>STABLE _PROG_(ms2mkref) -- ENRU(`Program for making map references.
-Only OziExplorer map output is supported now.',
-`Программа для изготовления привязок карт. Пока поддерживается только
-вывод в формат OziExplorer.')
-
 <li>STABLE _PROG_(ms2proj) -- ENRU(`Coordinate converter.',
 `Преобразование координат.')
 
