@@ -5,7 +5,8 @@
 prog=${1:-./cairo1.test}
 
 assert $prog "" 0
-sed -i 's/CreationDate (D:[^)]\+)/CreationDate ()/' tmp{1,2,3}.pdf
+fix_pdf tmp{1,2,3}.pdf
+
 assert_diff test_data/cairo1.pdf tmp1.pdf
 assert_diff test_data/cairo2.pdf tmp2.pdf
 assert_diff test_data/cairo3.pdf tmp3.pdf
