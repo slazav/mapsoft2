@@ -3,34 +3,30 @@
 # General interface and option tests
 # See also getopt module tests
 
-P=${1:-./ms2mkref}
+P=${1:-./ms2conv}
 
 . ../test_lib.sh
 
 help_msg="$($P -h ||:)"
-assert "$P" "$help_msg" 1
-assert "$P --help" "$help_msg" 1
-assert "$P missing_file" "$help_msg" 1
-assert "$P -o " "Error: missing argument: -o" 1
-assert "$P --xxx " "Error: unknown option: --xxx" 1
-
-assert "$P -o map.map" "Error: geo_mkref: reference type (option ref) should be set" 1
+assert "$P -o map.jpg --map map.map --skip_image" "Error: geo_mkref: reference type (option ref) should be set" 1
 
 #################
 # see modules/geo_mkref for images for these maps
 
 # nomenclature map with margins
-assert "$P -o tmp.map --mkref nom --name m47-022 --dpi 50 --image m47-022.jpg\
+assert "$P -o m47-022.jpg --skip_image --map tmp.map\
+ --mkref nom --name m47-022 --dpi 50\
  --top_margin 16 --left_margin 18 --bottom_margin 12 --right_margin 13" "" 0
 assert_diff test_data/m47-022.map tmp.map
 
 # single google tile covering a given point
-assert "$P -o tmp.map --mkref google_tile --image 9410_4633_14.png\
-  --coords_wgs [26.77188,61.33552] --zindex 14" "" 0
+assert "$P -o 9410_4633_14.png --skip_image --map tmp.map\
+  --mkref google_tile --coords_wgs [26.77188,61.33552] --zindex 14" "" 0
 assert_diff test_data/9410_4633_14.map tmp.map
 
 # 2x2 km map, Gauss-Kruger projection, 1:100'000, 300dpi
-assert "$P -o tmp.map --mkref proj --proj SU99\
+assert "$P -o 12x6+17552+5624k.png --skip_image --map tmp.map\
+  --mkref proj --proj SU99\
   --coords [17552000,5624000,12000,6000]\
   --dpi 200 --scale 1000 --image 12x6+17552+5624k.png" "" 0
 assert_diff test_data/12x6+17552+5624k.map tmp.map

@@ -7,6 +7,7 @@ OTHER_TESTS :=\
   ms2conv.test5\
   ms2conv.test6\
   ms2conv.test7\
+  ms2conv.test_mkref
 
 MODDIR := ../../modules
 include $(MODDIR)/Makefile.inc
