@@ -67,8 +67,8 @@ main(){
 
 
      // write_fmt_time
-     time_t t1 = parse_utc_time("2018/08/05 12:58:31.01");
-     time_t t2 = parse_utc_time("2018/08/05 12:58:31");
+     int64_t t1 = parse_utc_time("2018/08/05 12:58:31.01");
+     int64_t t2 = parse_utc_time("2018/08/05 12:58:31");
      assert(write_fmt_time("%Y-%m-%d %H:%M:%S%f", t1) == "2018-08-05 12:58:31.010");
      assert(write_fmt_time("%Y-%m-%d %H:%M:%S%f", t2) == "2018-08-05 12:58:31");
      assert(write_fmt_time("%y", t1) == "18");

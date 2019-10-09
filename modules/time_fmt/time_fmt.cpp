@@ -7,7 +7,7 @@
 using namespace std;
 
 string
-write_fmt_time(const char *fmt, const time_t t){
+write_fmt_time(const char *fmt, const int64_t t){
   time_t s  = t/1000;
   time_t ms = t%1000;
   struct tm ts;
@@ -61,7 +61,7 @@ write_fmt_time(const char *fmt, const time_t t){
 }
 
 
-time_t
+int64_t
 parse_utc_time(const string & str){
   istringstream ss(str);
   char sep;
@@ -138,7 +138,7 @@ parse_utc_time(const string & str){
     if (ms<0  || ms>999)  throw 9;
     // mktime() converts _local_ time to unix seconds!
     ts.tm_isdst = 1;
-    time_t t0 = timegm(&ts);
+    int64_t t0 = timegm(&ts);
     if (t0 == -1) throw 10;
     return t0*1000 - sh_s*(sh_h*3600 + sh_m*60)*1000 + ms;
   }
@@ -149,14 +149,14 @@ parse_utc_time(const string & str){
 
 
 string
-write_ozi_time(const time_t t){
+write_ozi_time(const int64_t t){
   ostringstream str;
   str << fixed << setprecision(7)
       << (t/1000.0+2209161600.0)/3600.0/24.0;
   return str.str();
 }
 
-time_t
+int64_t
 parse_ozi_time(const string & str){
   istringstream ss(str);
   double t;
@@ -164,5 +164,5 @@ parse_ozi_time(const string & str){
   if (ss.fail() || !ss.eof())
     throw Err() << "Unsupported time format: \"" << str << "\"";
 
-  return time_t((t*3600.0*24.0 - 2209161600.0)*1000);
+  return int64_t((t*3600.0*24.0 - 2209161600.0)*1000);
 }

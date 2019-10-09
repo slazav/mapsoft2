@@ -35,7 +35,7 @@ Supported format sequences:
  %f  fractional part of a second it it is non-zero (non-standard)
 */
 
-std::string write_fmt_time(const char *fmt, const time_t t);
+std::string write_fmt_time(const char *fmt, const int64_t t);
 
 /// Convert UTC time to unix milliseconds (used in mapsoft).
 /// Time can be represented in different forms including ISO 8601 (used in GPX)
@@ -49,15 +49,15 @@ std::string write_fmt_time(const char *fmt, const time_t t);
 /// "2018-08-05 12:58:31.002Z"
 /// "2018-08-05 12:58:31.002+2:00"
 /// "2018-08-05 12:58:31.002-0:30"
-time_t parse_utc_time(const std::string & str);
+int64_t parse_utc_time(const std::string & str);
 
 /// Convert mapsoft time to Ozi format (fractional number of days since 12/30/1899 12:00AM GMT).
 /// Note that in Ozi time accuracy is 1e-7 * 3600*24 = 8.6 ms.
 /// Conversion to Ozi and then back will be accurate within this limit.
-std::string write_ozi_time(const time_t t);
+std::string write_ozi_time(const int64_t t);
 
 /// Convert Ozi time to mapsoft time.
-time_t parse_ozi_time(const std::string & str);
+int64_t parse_ozi_time(const std::string & str);
 
 ///@}
 ///@}
