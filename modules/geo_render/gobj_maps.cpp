@@ -22,7 +22,7 @@ ms2opt_add_drawmap(GetOptSet & opts){
   opts.add("map_draw_brd", 1,0,m,
     "Draw map border (ARGB color, default 0).");
   opts.add("map_fade", 1,0,m,
-    "Fade the map (0..100, default is 0, no fading).");
+    "Color to fade the map (default is 0, no fading).");
 }
 
 /**********************************************************/
@@ -97,7 +97,7 @@ GObjMaps::draw(const CairoWrapper & cr, const dRect & draw_range) {
     cr->paint();
 
     if (fade){
-      cr->set_source_rgba(1.0, 1.0, 1.0, fade/100.0);
+      cr->set_color_a(fade);
       cr->paint();
     }
 
@@ -129,8 +129,6 @@ GObjMaps::on_set_opt(){
   draw_refs = opt->get<int>("map_draw_refs", 0);
   draw_brd  = opt->get<int>("map_draw_brd",  0);
   fade      = opt->get("map_fade",     0);
-  if (fade<0 || fade>100) throw Err() <<
-    "GObjMap: map_fade option value should be between 0 and 100";
 }
 
 void

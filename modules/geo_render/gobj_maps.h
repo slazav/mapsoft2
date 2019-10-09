@@ -43,7 +43,7 @@ private:
   bool clip_brd; // clip map to its border
   int  draw_brd; // draw map border (color)
   int  draw_refs;// draw map reference points (color)
-  int  fade;     // map fade level 0..100
+  uint32_t fade; // map fade color
 
 public:
   // constructor
