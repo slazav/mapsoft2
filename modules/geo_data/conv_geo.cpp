@@ -13,9 +13,12 @@ std::string expand_proj_aliases(const std::string & pars){
   if (pars == "WEB") // web mercator
     return "+proj=webmerc +datum=WGS84";
 
-  if (pars == "FI") // Finnish maps
-    return "+proj=tmerc +lon0=27 +ellps=intl"
+  if (pars == "FI" || pars == "KKJ") // Finnish maps, KKJ (EPSG:2393?)
+    return "+proj=tmerc +lon_0=27 +x_0=3500000 +ellps=intl"
       " +towgs84=-90.7,-106.1,-119.2,4.09,0.218,-1.05,1.37";
+
+  if (pars == "ETRS-TM35FIN" || pars == "ETRS89") // Finnish maps (EPSG:3067?)
+    return "+proj=utm +zone=35 +ellps=GRS80 +units=m +no_defs";
 
   if (pars == "CH") // Swiss maps
     return "+proj=somerc +lat_0=46.95240555555556"\

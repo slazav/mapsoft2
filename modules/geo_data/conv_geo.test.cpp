@@ -16,7 +16,7 @@ main(){
       "+proj=webmerc +datum=WGS84");
 
     assert(expand_proj_aliases("FI") ==
-      "+proj=tmerc +lon0=27 +ellps=intl "
+      "+proj=tmerc +lon_0=27 +x_0=3500000 +ellps=intl "
       "+towgs84=-90.7,-106.1,-119.2,4.09,0.218,-1.05,1.37");
 
     assert(expand_proj_aliases("CH") ==
