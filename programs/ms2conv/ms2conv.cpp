@@ -96,14 +96,14 @@ main(int argc, char *argv[]){
       write_geo(ofile, data, O);
       return 0;
     }
-    catch(Err e) {}
+    catch(Err e) {if (e.code()!=-2) throw e;}
 
     // render image file
     try {
       write_geoimg(ofile, data, O);
       return 0;
     }
-    catch(Err e) {}
+    catch(Err e) {if (e.code()!=-2) throw e;}
 
     throw Err() << "Can't determine output format for file: " << ofile;
   }
