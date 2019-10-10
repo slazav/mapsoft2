@@ -4,6 +4,8 @@
 
 prog=${1:-./cairo1.test}
 
+[ -z "${SKIP_IMG_DIFFS:-}" ] || exit 0
+
 assert $prog "" 0
 fix_pdf tmp{1,2,3}.pdf
 
