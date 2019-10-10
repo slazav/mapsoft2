@@ -101,13 +101,15 @@ class Opt : public std::map<std::string,std::string>{
   /// Set option value for a given key.
   template<typename T>
   void put (const std::string & key, const T & val) {
-    (*this)[key] = type_to_str(val);
+    // imtermediate string is needed on
+    // some architectures if val == *this
+    std::string str = type_to_str(val);
+    (*this)[key] = str;
   }
 
   /// Add options from another Opt object, old values are replaced.
   void put (const Opt & opts) {
-    for (Opt::const_iterator i = opts.begin(); i!=opts.end(); i++)
-      (*this)[i->first] = i->second;
+    for (auto const & o: opts) (*this)[o.first] = o.second;
   }
 
 
