@@ -6,12 +6,13 @@
 #include <ctype.h>
 #include <cstring>
 #include <cassert>
+#include <cstdint>
 #include "geohash.h"
 
 #define MAX_HASH_LENGTH 22
 
 static const char BASE32_ENCODE_TABLE[33] = "0123456789bcdefghjkmnpqrstuvwxyz";
-static const char BASE32_DECODE_TABLE[44] = {
+static const int8_t BASE32_DECODE_TABLE[44] = {
     /* 0 */   0, /* 1 */   1, /* 2 */   2, /* 3 */   3, /* 4 */   4,
     /* 5 */   5, /* 6 */   6, /* 7 */   7, /* 8 */   8, /* 9 */   9,
     /* : */  -1, /* ; */  -1, /* < */  -1, /* = */  -1, /* > */  -1,
