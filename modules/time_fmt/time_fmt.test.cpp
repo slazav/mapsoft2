@@ -21,9 +21,9 @@ main(){
        "Unsupported time format: \"1970-01-01T00:00:00Z a\"");
 
      assert_eq(parse_utc_time("1970"), 0);
-     assert_eq(parse_utc_time("1971"), (long)365*3600*24*1000);
+     assert_eq(parse_utc_time("1971"), (int64_t)365*3600*24*1000);
      assert_eq(parse_utc_time("1970-01"), 0);
-     assert_eq(parse_utc_time("1970-02"), (long)31*3600*24*1000);
+     assert_eq(parse_utc_time("1970-02"), (int64_t)31*3600*24*1000);
      assert_eq(parse_utc_time("1970-01-01"), 0);
      assert_eq(parse_utc_time("1970-01-02"), 3600*24*1000);
 
