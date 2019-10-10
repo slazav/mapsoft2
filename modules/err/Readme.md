@@ -29,6 +29,10 @@ assert_err(<code>, <expected error>)
 ------------------
 ## Changelog:
 
+2019.10.10 V.Zavjalov 1.2:
+- Add assert_eq, assert_deq, and assert_feq macro
+- Print more information in assert_*
+
 2019.08.16 V.Zavjalov 1.1:
 - Add assert_err macro
 
