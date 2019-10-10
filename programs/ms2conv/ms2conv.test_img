@@ -14,6 +14,7 @@ P=${1:-./ms2conv}
 # -o tmp.pdf" "" 0
 #assert_diff test_data_mkref/m47-022.map tmp.map
 
+[ -z "${SKIP_IMG_DIFFS:-}" ] || exit 0
 
 # 6x6 km box
 assert "$P test_data_img/20100320wz.zip test_data_img/o37-122.map\
@@ -48,6 +49,5 @@ assert "$P test_data_img/20100320wz.zip test_data_img/o37-122.map\
 
 fix_pdf tmp.pdf
 assert_diff test_data_img/out3.pdf tmp.pdf
-
 
 #################
