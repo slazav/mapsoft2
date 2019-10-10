@@ -488,7 +488,13 @@ main(){
       assert_eq(I.get_argb(127,127), 0xFFEEEE00);
       assert_eq(I.get_argb(128,0), 0xFFFFFFFF);
       assert_eq(I.get_argb(255,127), 0xFFEC0000);
-      assert_eq(I.get_argb(64,64), 0xFF7C8600);
+
+      // Difference detween i586 and *64; see #39.
+      //  FF788B00 -- FF7C8600
+      //assert_eq(I.get_argb(64,64), 0xFF7C8600);
+
+      assert_feq(color_dist(I.get_argb(64,64), 0xFF7C8600), 0, 10);
+
       assert_eq(I.get_argb(192,64), 0xFF830000);
 
     }
