@@ -27,7 +27,7 @@ struct GeoWpt : dPoint {
   std::string name; ///< name
   std::string comm; ///< comment
   Opt opts;         ///< Waypoint options
-  time_t t;         ///< unix time (ms)
+  int64_t t;        ///< unix time (ms)
 
   /// constructors
   GeoWpt() {z=nan(""); t=0;}
@@ -68,13 +68,13 @@ struct GeoWptList : std::vector<GeoWpt>{
 ///       GeoWpt(dPoint p) constructor sets z=NaN  if p.z==0
 struct GeoTpt : dPoint {
   bool start; ///< start flag
-  time_t t;   ///< unix time (ms)
+  int64_t t;   ///< unix time (ms)
 
   /// constructor
   GeoTpt(): start(false), t(0) {z=nan("");}
   GeoTpt(const dPoint &p): dPoint(p), start(false), t(0) { if (p.z==0) clear_alt();}
   GeoTpt(const double x, const double y, const double z=nan(""),
-         const bool start = false, const time_t t=0):
+         const bool start = false, const int64_t t=0):
     dPoint(x,y,z), start(start), t(t) {}
 
   /// check if altitude is defined
