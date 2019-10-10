@@ -13,7 +13,10 @@ main(){
      assert_eq(write_fmt_time("%FT%T%fZ", 1533473911000), "2018-08-05T12:58:31Z");
      assert_eq(write_fmt_time("%FT%T%fZ", 1533473911001), "2018-08-05T12:58:31.001Z");
      assert_eq(write_fmt_time("%FT%T%fZ", 1533473911123), "2018-08-05T12:58:31.123Z");
-     assert_eq(write_fmt_time("%FT%T%fZ", 15334739110000), "2455-12-09T09:45:10Z");
+
+     // On i586 arch we have 2038-year problem. Valid time range is 1901...2038:
+     assert_eq(write_fmt_time("%FT%T%fZ", +(int64_t)0x7FFFFFFF*1000), "2038-01-19T03:14:07Z");
+     assert_eq(write_fmt_time("%FT%T%fZ", -(int64_t)0x7FFFFFFF*1000), "1901-12-13T20:45:53Z");
 
      assert_eq(parse_utc_time("2018/08/05	12:58:31.1"), 1533473911100);
 
@@ -31,7 +34,10 @@ main(){
      assert_eq(parse_utc_time("2018-08-05T12:58:31Z"), 1533473911000);
      assert_eq(parse_utc_time("2018-08-05T12:58:31.001Z"), 1533473911001);
      assert_eq(parse_utc_time("2018-08-05T12:58:31.123Z"), 1533473911123);
-     assert_eq(parse_utc_time("2455-12-09T09:45:10Z"), 15334739110000);
+     assert_eq(parse_utc_time("1901-12-13T20:45:53Z"), -(int64_t)0x7FFFFFFF*1000);
+     assert_eq(parse_utc_time("2038-01-19T03:14:07Z"), +(int64_t)0x7FFFFFFF*1000);
+
+     //assert_eq(parse_utc_time("2455-12-09T09:45:10Z"), 15334739110000); // only 64-bit arch
 
      assert_eq(parse_utc_time("2018/08/05T12:58:31"), 1533473911000);
      assert_eq(parse_utc_time("2018-08-05 12:58:31Z"), 1533473911000);
