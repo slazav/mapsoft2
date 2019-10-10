@@ -26,15 +26,17 @@ main(){
       assert_eq(map.proj, "SU39");
       assert_eq(map.image_dpi, 200);
       assert_eq(map.image_size, iPoint(2583,3020));
-      assert_eq(type_to_str(rint(map.border)),
-            "[[[0,2921],[1239,2972],[2477,3019],[2582,98],[1355,51],[127,0]]]");
-      std::ostringstream ss;
-      for (auto & r:map.ref) ss << r.first << " " << r.second;
-      assert_eq(ss.str(),
-        "[0,2922] [35.9980041,55.6665025]"
-        "[127,1] [35.9980557,55.9998604]"
-        "[2476,3020] [36.497906,55.6665348]"
-        "[2582,99] [36.4979852,55.9998413]");
+      assert_deq(map.border, dMultiLine(
+            "[[0.351908927,2921.09993],[1238.55916,2972.44913],"
+            "[2476.86091,3019.3302],[2582.39403,98.0292248],"
+            "[1354.65253,51.3640529],[127.007511,0.251437777]]"), 1e-3);
+      dLine l;
+      for (auto & r:map.ref) {l.push_back(r.first); l.push_back(r.second);}
+      assert_deq(l, dLine(
+        "[[0,2922],[35.9980041,55.6665025],"
+        "[127,1],[35.9980557,55.9998604],"
+        "[2476,3020],[36.497906,55.6665348],"
+        "[2582,99],[36.4979852,55.9998413]]"), 1e-6);
     }
 
     { // nomenclature map with margins
@@ -45,15 +47,18 @@ main(){
       assert_eq(map.proj, "SU39");
       assert_eq(map.image_dpi, 100);
       assert_eq(map.image_size, iPoint(1492,1810));
-      assert_eq(type_to_str(rint(map.border)),
-          "[[[100,1661],[719,1686],[1338,1710],[1391,249],[777,226],[164,200]]]");
-      std::ostringstream ss;
-      for (auto & r:map.ref) ss << r.first << " " << r.second;
-      assert_eq(ss.str(),
-        "[100,1661] [35.9980041,55.6665025]"
-        "[163,201] [35.9978612,55.9997415]"
-        "[1338,1710] [36.497906,55.6665348]"
-        "[1391,250] [36.4979926,55.9997274]");
+      assert_deq(map.border, dMultiLine(
+          "[[[100.175954,1660.54996],[719.27958,1686.22457],"
+          "[1338.43045,1709.6651],[1391.19701,249.014612],"
+          "[777.326265,225.682026],[163.503755,200.125719]]]"), 1e-3);
+
+      dLine l;
+      for (auto & r:map.ref) {l.push_back(r.first); l.push_back(r.second);}
+      assert_deq(l, dLine(
+        "[[100,1661],[35.9980041,55.6665025],"
+        "[163,201],[35.9978612,55.9997415],"
+        "[1338,1710],[36.497906,55.6665348],"
+        "[1391,250],[36.4979926,55.9997274]]"), 1e-6);
     }
 
     { // nomenclature map with margins -- write map for manual test
@@ -68,16 +73,17 @@ main(){
       assert_eq(map.proj, "SU99");
       assert_eq(map.image_dpi, 50);
       assert_eq(map.image_size, iPoint(732,775));
-      assert_eq(type_to_str(rint(map.border)),
-          "[[[33,762],[376,755],[719,746],[699,16],[359,25],[18,32]]]");
-
-      std::ostringstream ss;
-      for (auto & r:map.ref) ss << r.first << " " << r.second;
-      assert_eq(ss.str(),
-        "[18,33] [100.49987,51.6668599]"
-        "[33,763] [100.4999,51.3335156]"
-        "[699,17] [100.999943,51.6667138]"
-        "[718,747] [100.999251,51.3333618]");
+      assert_deq(map.border, dMultiLine(
+          "[[[33.0508163,762.471297],[376.006149,754.874646],"
+          "[718.951483,746.108754],[699.002452,16.1578048],"
+          "[358.551855,24.9002932],[18.0908163,32.4766734]]]"), 1e-3);
+      dLine l;
+      for (auto & r:map.ref) {l.push_back(r.first); l.push_back(r.second);}
+      assert_deq(l, dLine(
+        "[[18,33],[100.49987,51.6668599],"
+        "[33,763],[100.4999,51.3335156],"
+        "[699,17],[100.999943,51.6667138],"
+        "[718,747],[100.999251,51.3333618]]"), 1e-6);
       map.image = "m47-022.jpg";
       write_ozi_map("test_data/m47-022.map", map, Opt());
     }
@@ -94,13 +100,13 @@ main(){
       assert_eq(map.image_dpi, 300);
       assert_eq(map.image_size, iPoint(256,256));
       assert_eq(type_to_str(map.border), "[]");
-      std::ostringstream ss;
-      for (auto & r:map.ref) ss << r.first << " " << r.second;
-      assert_eq(ss.str(),
-        "[0,0] [-179.648438,-84.9901002]"
-        "[0,256] [-179.648438,-85.0207077]"
-        "[256,0] [-179.296875,-84.9901002]"
-        "[256,256] [-179.296875,-85.0207077]");
+      dLine l;
+      for (auto & r:map.ref) {l.push_back(r.first); l.push_back(r.second);}
+      assert_deq(l, dLine(
+        "[[0,0],[-179.648438,-84.9901002],"
+        "[0,256],[-179.648438,-85.0207077],"
+        "[256,0],[-179.296875,-84.9901002],"
+        "[256,256],[-179.296875,-85.0207077]]"), 1e-6);
     }
 
     { // 2x3 TMS tile range
@@ -110,13 +116,13 @@ main(){
       assert_eq(map.image_dpi, 300);
       assert_eq(map.image_size, iPoint(256*2,256*3));
       assert_eq(type_to_str(map.border), "[]");
-      std::ostringstream ss;
-      for (auto & r:map.ref) ss << r.first << " " << r.second;
-      assert_eq(ss.str(),
-        "[0,0] [-135,0]"
-        "[0,768] [-135,-79.1713346]"
-        "[512,0] [-45,0]"
-        "[512,768] [-45,-79.1713346]");
+      dLine l;
+      for (auto & r:map.ref) {l.push_back(r.first); l.push_back(r.second);}
+      assert_deq(l, dLine(
+        "[[0,0],[-135,0],"
+        "[0,768],[-135,-79.1713346],"
+        "[512,0],[-45,0],"
+        "[512,768],[-45,-79.1713346]]"), 1e-6);
     }
 
     { // single TMS tile covering a given point
@@ -126,13 +132,13 @@ main(){
       assert_eq(map.image_dpi, 300);
       assert_eq(map.image_size, iPoint(256,256));
       assert_eq(type_to_str(map.border), "[]");
-      std::ostringstream ss;
-      for (auto & r:map.ref) ss << r.first << " " << r.second;
-      assert_eq(ss.str(),
-        "[0,0] [45,40.9798981]"
-        "[0,256] [45,0]"
-        "[256,0] [90,40.9798981]"
-        "[256,256] [90,0]");
+      dLine l;
+      for (auto & r:map.ref) {l.push_back(r.first); l.push_back(r.second);}
+      assert_deq(l, dLine(
+        "[[0,0],[45,40.9798981],"
+        "[0,256],[45,0],"
+        "[256,0],[90,40.9798981],"
+        "[256,256],[90,0]]"), 1e-6);
     }
 
     { // single google tile covering a given point
@@ -142,13 +148,13 @@ main(){
       assert_eq(map.image_dpi, 300);
       assert_eq(map.image_size, iPoint(256,256));
       assert_eq(type_to_str(map.border), "[]");
-      std::ostringstream ss;
-      for (auto & r:map.ref) ss << r.first << " " << r.second;
-      assert_eq(ss.str(),
-        "[0,0] [45,40.9798981]"
-        "[0,256] [45,0]"
-        "[256,0] [90,40.9798981]"
-        "[256,256] [90,0]");
+      dLine l;
+      for (auto & r:map.ref) {l.push_back(r.first); l.push_back(r.second);}
+      assert_deq(l, dLine(
+        "[[0,0],[45,40.9798981],"
+        "[0,256],[45,0],"
+        "[256,0],[90,40.9798981],"
+        "[256,256],[90,0]]"), 1e-6);
     }
 
     { // tms tiles covering a triangular area.
@@ -161,18 +167,18 @@ main(){
       assert_eq(map.proj, "WEB");
       assert_eq(map.image_dpi, 300);
       assert_eq(map.image_size, iPoint(256*2,256*3));
-      assert_eq(type_to_str(map.border), 
+      assert_deq(map.border, dMultiLine(
         "[[[193.422222,250.866843],[216.177778,277.663273],[233.244444,297.713129],"
         "[258.844444,327.712532],[284.444444,357.622598],[261.688889,384.135334],"
         "[241.777778,407.277563],[224.355556,427.484296],[193.866667,462.751329],"
-        "[171,489.123493],[153.85,508.859246],[128.125,538.394019],[102.4,567.847206]]]");
-      std::ostringstream ss;
-      for (auto & r:map.ref) ss << r.first << " " << r.second;
-      assert_eq(ss.str(),
-        "[0,0] [61.875,34.3071439]"
-        "[0,768] [61.875,27.0591258]"
-        "[512,0] [67.5,34.3071439]"
-        "[512,768] [67.5,27.0591258]");
+        "[171,489.123493],[153.85,508.859246],[128.125,538.394019],[102.4,567.847206]]]"), 1e-3);
+      dLine l;
+      for (auto & r:map.ref) {l.push_back(r.first); l.push_back(r.second);}
+      assert_deq(l, dLine(
+        "[[0,0],[61.875,34.3071439],"
+        "[0,768],[61.875,27.0591258],"
+        "[512,0],[67.5,34.3071439],"
+        "[512,768],[67.5,27.0591258]]"), 1e-6);
     }
 
     { // single google tile covering a given point -- write map for manual test
@@ -185,13 +191,13 @@ main(){
       assert_eq(map.image_dpi, 300);
       assert_eq(map.image_size, iPoint(256,256));
       assert_eq(type_to_str(map.border), "[]");
-      std::ostringstream ss;
-      for (auto & r:map.ref) ss << r.first << " " << r.second;
-      assert_eq(ss.str(),
-        "[0,0] [26.7626953,61.3440784]"
-        "[0,256] [26.7626953,61.3335397]"
-        "[256,0] [26.784668,61.3440784]"
-        "[256,256] [26.784668,61.3335397]");
+      dLine l;
+      for (auto & r:map.ref) {l.push_back(r.first); l.push_back(r.second);}
+      assert_deq(l, dLine(
+        "[[0,0],[26.7626953,61.3440784],"
+        "[0,256],[26.7626953,61.3335397],"
+        "[256,0],[26.784668,61.3440784],"
+        "[256,256],[26.784668,61.3335397]]"), 1e-6);
       map.image = "9410_4633_14.png";
       write_ozi_map("test_data/9410_4633_14.map", map, Opt());
 
@@ -213,13 +219,13 @@ main(){
       assert_eq(map.image_dpi, 300);
       assert_eq(map.image_size, iPoint(237,237));
       assert_eq(type_to_str(map.border), "[]");
-      std::ostringstream ss;
-      for (auto & r:map.ref) ss << r.first << " " << r.second;
-      assert_eq(ss.str(),
-        "[0,0] [37.0107346,55.9959095]"
-        "[0,237] [37.0116594,55.9778984]"
-        "[237,0] [37.0428731,55.9964239]"
-        "[237,237] [37.043783,55.9784124]");
+      dLine l;
+      for (auto & r:map.ref) {l.push_back(r.first); l.push_back(r.second);}
+      assert_deq(l, dLine(
+        "[[0,0],[37.0107346,55.9959095],"
+        "[0,237],[37.0116594,55.9778984],"
+        "[237,0],[37.0428731,55.9964239],"
+        "[237,237],[37.043783,55.9784124]]"), 1e-6);
     }
 
     { // L-shaped map, Gauss-Kruger projection, 1:100'000, 300dpi
@@ -235,15 +241,15 @@ main(){
       assert_eq(map.proj, "SU39");
       assert_eq(map.image_dpi, 300);
       assert_eq(map.image_size, iPoint(473,473));
-      assert_eq(type_to_str(map.border),
-        "[[[0,473],[473,473],[473,0],[236,0],[236,236],[0,236]]]");
-      std::ostringstream ss;
-      for (auto & r:map.ref) ss << r.first << " " << r.second;
-      assert_eq(ss.str(),
-        "[0,0] [37.0098126,56.0138446]"
-        "[0,473] [37.0116594,55.9778984]"
-        "[473,0] [37.0739848,56.0148637]"
-        "[473,473] [37.0757721,55.978916]");
+      assert_deq(map.border, dMultiLine(
+        "[[[0,473],[473,473],[473,0],[236,0],[236,236],[0,236]]]"), 1e-3);
+      dLine l;
+      for (auto & r:map.ref) {l.push_back(r.first); l.push_back(r.second);}
+      assert_deq(l, dLine(
+        "[[0,0],[37.0098126,56.0138446],"
+        "[0,473],[37.0116594,55.9778984],"
+        "[473,0],[37.0739848,56.0148637],"
+        "[473,473],[37.0757721,55.978916]]"), 1e-6);
     }
 
 
@@ -260,16 +266,16 @@ main(){
       assert_eq(map.proj, "SU27");
       assert_eq(map.image_dpi, 300);
       assert_eq(type_to_str(map.border), "[]");
-      std::ostringstream ss;
-      for (auto & r:map.ref) ss << r.first << " " << r.second;
+      dLine l;
+      for (auto & r:map.ref) {l.push_back(r.first); l.push_back(r.second);}
+      assert_deq(l, dLine(
+        "[[0,0],[24.7995093,60.1773656],"
+        "[0,198],[24.7997608,60.1736068],"
+        "[195,0],[24.8069407,60.1774888],"
+        "[195,198],[24.8071913,60.1737299]]"), 1e-6);
 //std::cerr << "IMG: " << map.image_size << "\n";
 //std::cerr << "BRD: " << map.border << "\n";
-//std::cerr << "REF: " << ss.str() << "\n";
-      assert_eq(ss.str(),
-        "[0,0] [24.7995093,60.1773656]"
-        "[0,198] [24.7997608,60.1736068]"
-        "[195,0] [24.8069407,60.1774888]"
-        "[195,198] [24.8071913,60.1737299]");
+//std::cerr << "REF: " << l << "\n";
     }
 
     { // rectangular map defined by wgs border, Gauss-Kruger projection, 1:100'000, 300dpi
@@ -288,15 +294,15 @@ main(){
       assert_eq(map.proj, "SU27");
       assert_eq(map.image_dpi, 300);
       assert_eq(map.image_size, iPoint(199,214));
-      assert_eq(type_to_str(map.border),
-         "[[[45,203],[5,47],[156,16],[188,167]]]");
-      std::ostringstream ss;
-      for (auto & r:map.ref) ss << r.first << " " << r.second;
-      assert_eq(ss.str(),
-        "[0,0] [24.7995347,60.1775561]"
-        "[0,214] [24.7998066,60.1734935]"
-        "[199,0] [24.8071186,60.1776818]"
-        "[199,214] [24.8073895,60.1736192]");
+      assert_deq(map.border, dMultiLine(
+         "[[[45,203],[5,47],[156,16],[188,167]]]"), 1e-3);
+      dLine l;
+      for (auto & r:map.ref) {l.push_back(r.first); l.push_back(r.second);}
+      assert_deq(l, dLine(
+        "[[0,0],[24.7995347,60.1775561],"
+        "[0,214],[24.7998066,60.1734935],"
+        "[199,0],[24.8071186,60.1776818],"
+        "[199,214],[24.8073895,60.1736192]]"), 1e-6);
     }
 
     { // 2x2 km map, Gauss-Kruger projection, 1:100'000, 300dpi -- write map for manual test
@@ -312,13 +318,13 @@ main(){
       assert_eq(map.image_dpi, 200);
       assert_eq(map.image_size, iPoint(946,474));
       assert_eq(type_to_str(map.border), "[]");
-      std::ostringstream ss;
-      for (auto & r:map.ref) ss << r.first << " " << r.second;
-      assert_eq(ss.str(),
-        "[0,0] [99.7374411,50.7987634]"
-        "[0,474] [99.7365908,50.744654]"
-        "[946,0] [99.9078347,50.7975618]"
-        "[946,474] [99.9067879,50.7434547]");
+      dLine l;
+      for (auto & r:map.ref) {l.push_back(r.first); l.push_back(r.second);}
+      assert_deq(l, dLine(
+        "[[0,0],[99.7374411,50.7987634],"
+        "[0,474],[99.7365908,50.744654],"
+        "[946,0],[99.9078347,50.7975618],"
+        "[946,474],[99.9067879,50.7434547]]"), 1e-6);
       map.image = "12x6+17552+5624k.png";
       write_ozi_map("test_data/12x6+17552+5624k.map", map, Opt());
 
