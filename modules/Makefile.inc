@@ -35,33 +35,35 @@ endif
 
 SHARED_LIB_SO := $(patsubst %, %.so, $(SHARED_LIB))
 
+######################################################
+# Main building rules
+all: make_deps make_nodeps
+clean:
+	rm -f *.o *.a *.so *.test *.passed $(PROGRAMS)
+
+######################################################
+# Build and include dependency file (using get_deps script).
+$(shell $(MODDIR)/get_deps $(MODDIR) . > Makefile.deps)
+-include Makefile.deps
 
 ######################################################
 # Building flags
 
-override CXXFLAGS += $(shell [ "$(LDEPS)" == " " ] ||\
+override CXXFLAGS += $(shell [ "$(LDEPS)" == "" ] ||\
                       PKG_CONFIG_PATH=$(MODDIR)/pc pkg-config --cflags '$(LDEPS)')
-override LDLIBS   += $(shell [ "$(LDEPS)" == " " ] ||\
+override LDLIBS   += $(shell [ "$(LDEPS)" == "" ] ||\
                       PKG_CONFIG_PATH=$(MODDIR)/pc pkg-config --libs '$(LDEPS)')
 override CXXFLAGS += -std=gnu++11 -Werror=return-type -O2 -fPIC
 override CXXFLAGS += -I$(MODDIR)
 
 ######################################################
-# Building rules
-all: make_deps make_nodeps
-make_nodeps: $(MOD_STATIC) $(PROGRAMS) $(SHARED_LIB_SO) make_tests
-clean:
-	rm -f *.o *.a *.so *.test *.passed $(PROGRAMS)
-
-# Build dependency file (using get_deps script) and include it.
-$(shell $(MODDIR)/get_deps $(MODDIR) . > Makefile.deps)
--include Makefile.deps
-
+# make_deps/make_nodeps building rules:
 make_deps:
 	@echo "## Building dependencies: [$(MDEPS)]"
 	@sh -e -c 'for i in $(MDEPS); do $(MAKE) -C $(MODDIR)/$$i make_nodeps; done'
 	@echo "## Finish building dependencies"
 
+make_nodeps: $(MOD_STATIC) $(PROGRAMS) $(SHARED_LIB_SO) make_tests
 
 ######################################################
 # Building rules for tests
