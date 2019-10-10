@@ -132,45 +132,45 @@ main(){
     dMultiLine la("[[[0.1,2.8,3.1],[0.1,3.9,4.6]], [], [[0,0]]]");
 
     l=l0;
-    assert_eq(flatten(l), lz);
-    assert_eq(l,l0);
+    assert_deq(flatten(l), lz, 1e-6);
+    assert_deq(l,l0, 1e-6);
     l.flatten();
-    assert_eq(l,lz);
+    assert_deq(l,lz, 1e-6);
 
     l=l0;
-    assert_eq(rint(l), li);
-    assert_eq(l,l0);
+    assert_eq(rint(l), iMultiLine(li));
+    assert_deq(l,l0, 1e-6);
     l.to_rint();
-    assert_eq(l,li);
+    assert_deq(l,li, 1e-6);
 
     l=l0;
-    assert_eq(floor(l), lf);
-    assert_eq(l,l0);
+    assert_eq(floor(l), iMultiLine(lf));
+    assert_deq(l,l0, 1e-6);
     l.to_floor();
-    assert_eq(l,lf);
+    assert_deq(l,lf, 1e-6);
 
     l=l0;
-    assert_eq(ceil(l), lc);
-    assert_eq(l,l0);
+    assert_eq(ceil(l), iMultiLine(lc));
+    assert_deq(l,l0, 1e-6);
     l.to_ceil();
-    assert_eq(l,lc);
+    assert_deq(l,lc, 1e-6);
 
     l=l0;
-    assert_eq(abs(l), la);
-    assert_eq(l,l0);
+    assert_deq(abs(l), la, 1e-6);
+    assert_deq(l,l0, 1e-6);
     l.to_abs();
-    assert_eq(l,la);
+    assert_deq(l,la, 1e-6);
 
   }
 
   // open/close
   {
     dMultiLine l("[[[1,2],[2,3],[4,5]],[[1,1]],[],[[1,1],[2,2]]]");
-    assert_eq(open(l), l);
-    assert_eq(close(l), dMultiLine("[[[1,2],[2,3],[4,5],[1,2]],[[1,1]],[],[[1,1],[2,2],[1,1]]]"));
-    assert_eq(close(close(l)), close(l));
-    assert_eq(open(close(l)), l);
-    assert_eq(close(open(l)), close(l));
+    assert_deq(open(l), l, 1e-6);
+    assert_deq(close(l), dMultiLine("[[[1,2],[2,3],[4,5],[1,2]],[[1,1]],[],[[1,1],[2,2],[1,1]]]"), 1e-6);
+    assert_deq(close(close(l)), close(l), 1e-6);
+    assert_deq(open(close(l)), l, 1e-6);
+    assert_deq(close(open(l)), close(l), 1e-6);
   }
 
   // flip_x, flip_y

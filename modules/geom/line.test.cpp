@@ -141,19 +141,19 @@ main(){
     assert_deq(l,lz, 1e-6);
 
     l=l0;
-    assert_deq(rint(l), li, 1e-6);
+    assert_eq(rint(l), iLine(li));
     assert_deq(l,l0, 1e-6);
     l.to_rint();
     assert_deq(l,li, 1e-6);
 
     l=l0;
-    assert_deq(floor(l), lf, 1e-6);
+    assert_eq(floor(l), iLine(lf));
     assert_deq(l,l0, 1e-6);
     l.to_floor();
     assert_deq(l,lf, 1e-6);
 
     l=l0;
-    assert_deq(ceil(l), lc, 1e-6);
+    assert_eq(ceil(l), iLine(lc));
     assert_deq(l,l0, 1e-6);
     l.to_ceil();
     assert_deq(l,lc, 1e-6);
