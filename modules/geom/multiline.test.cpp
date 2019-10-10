@@ -80,8 +80,8 @@ main(){
   ml2.push_back(l1);
   ml2.push_back(l2);
   assert_eq(ml1.length(), 0);
-  assert_eq(ml2.length(), l1.length()+l2.length());
-  assert_eq(length(ml2), l1.length()+l2.length());
+  assert_feq(ml2.length(), l1.length() + l2.length(), 1e-4);
+  assert_feq(length(ml2), length(l1) + length(l2), 1e-4);
 
   assert_eq(ml1.bbox(), iRect());
   assert_eq(ml2.bbox(), expand(l1.bbox(),l2.bbox()));

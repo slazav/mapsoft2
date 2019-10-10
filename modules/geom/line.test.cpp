@@ -70,14 +70,14 @@ main(){
     // length
     l3 = str_to_type<iLine>("[[0,0,0],[1,2,2],[3,5,8]]");
     assert_eq(l3.size(), 3);
-    assert_eq(l3.length(), 10);
-    assert_eq(l3.length(), length(l3));
+    assert_feq(l3.length(), 10, 1e-6);
+    assert_feq(l3.length(), length(l3), 1e-6);
 
     // length2d
     l3 = str_to_type<iLine>("[[0,0,100],[3,4,1],[6,0,-23]]");
     assert_eq(l3.size(), 3);
-    assert_eq(l3.length2d(), 10);
-    assert_eq(l3.length2d(), length2d(l3));
+    assert_feq(l3.length2d(), 10, 1e-6);
+    assert_feq(l3.length2d(), length2d(l3), 1e-6);
 
     // bbox
     assert_eq(iLine().bbox(), iRect());
@@ -135,50 +135,50 @@ main(){
     dLine la("[[0.1,2.8,3.1],[0.1,3.9,4.6]]");
 
     l=l0;
-    assert_eq(flatten(l), lz);
-    assert_eq(l,l0);
+    assert_deq(flatten(l), lz, 1e-6);
+    assert_deq(l,l0, 1e-6);
     l.flatten();
-    assert_eq(l,lz);
+    assert_deq(l,lz, 1e-6);
 
     l=l0;
-    assert_eq(rint(l), li);
-    assert_eq(l,l0);
+    assert_deq(rint(l), li, 1e-6);
+    assert_deq(l,l0, 1e-6);
     l.to_rint();
-    assert_eq(l,li);
+    assert_deq(l,li, 1e-6);
 
     l=l0;
-    assert_eq(floor(l), lf);
-    assert_eq(l,l0);
+    assert_deq(floor(l), lf, 1e-6);
+    assert_deq(l,l0, 1e-6);
     l.to_floor();
-    assert_eq(l,lf);
+    assert_deq(l,lf, 1e-6);
 
     l=l0;
-    assert_eq(ceil(l), lc);
-    assert_eq(l,l0);
+    assert_deq(ceil(l), lc, 1e-6);
+    assert_deq(l,l0, 1e-6);
     l.to_ceil();
-    assert_eq(l,lc);
+    assert_deq(l,lc, 1e-6);
 
     l=l0;
-    assert_eq(abs(l), la);
-    assert_eq(l,l0);
+    assert_deq(abs(l), la, 1e-6);
+    assert_deq(l,l0, 1e-6);
     l.to_abs();
-    assert_eq(l,la);
+    assert_deq(l,la, 1e-6);
 
   }
 
   // open/close
   {
     dLine l("[[1,2],[2,3],[4,5]]");
-    assert_eq(open(l), l);
-    assert_eq(close(l), dLine("[[1,2],[2,3],[4,5],[1,2]]"));
-    assert_eq(close(close(l)), close(l));
-    assert_eq(open(close(l)), l);
-    assert_eq(close(open(l)), close(l));
+    assert_deq(open(l), l, 1e-6);
+    assert_deq(close(l), dLine("[[1,2],[2,3],[4,5],[1,2]]"), 1e-6);
+    assert_deq(close(close(l)), close(l), 1e-6);
+    assert_deq(open(close(l)), l, 1e-6);
+    assert_deq(close(open(l)), close(l), 1e-6);
 
-    assert_eq(open(dLine("[]")), dLine("[]"));
-    assert_eq(close(dLine("[]")), dLine("[]"));
-    assert_eq(open(dLine("[[1,1]]")), dLine("[[1,1]]"));
-    assert_eq(close(dLine("[[1,1]]")), dLine("[[1,1]]"));
+    assert_deq(open(dLine("[]")), dLine("[]"), 1e-6);
+    assert_deq(close(dLine("[]")), dLine("[]"), 1e-6);
+    assert_deq(open(dLine("[[1,1]]")), dLine("[[1,1]]"), 1e-6);
+    assert_deq(close(dLine("[[1,1]]")), dLine("[[1,1]]"), 1e-6);
   }
 
   // flip_x, flip_y
@@ -204,21 +204,21 @@ main(){
   assert_eq(rect_to_line(iRect(1,1,2,2), false), iLine("[[1,1],[3,1],[3,3],[1,3]]"));
 
   // dist
-  assert(dist(
+  assert_feq(dist(
     dLine("[[0,0],[1,1],[2,2]]"),
-    dLine("[[0,0],[1,1],[2,2]]")) == 0);
-  assert(dist(
+    dLine("[[0,0],[1,1],[2,2]]")), 0, 1e-6);
+  assert_feq(dist(
     dLine("[]"),
-    dLine("[]")) == 0);
+    dLine("[]")), 0, 1e-6);
   assert(dist(
     dLine("[[0,0],[1,1],[2,2]]"),
     dLine("[[0,0],[1,1]]")) == INFINITY);
   assert(dist(
     dLine("[[0,0],[1,1]]"),
     dLine("[[0,0],[1,1],[2,2]]")) == INFINITY);
-  assert(dist(
+  assert_feq(dist(
     dLine("[[0,0],[1,2],[2,2]]"),
-    dLine("[[0,0],[1,1],[2,2]]")) == 1);
+    dLine("[[0,0],[1,1],[2,2]]")), 1, 1e-6);
 
   // iLine <-> dLine casting
   assert_eq(dLine(str_to_type<iLine>("[[0,0,1],[2,0],[2,2]]")),

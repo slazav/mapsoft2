@@ -156,7 +156,7 @@ main(){
       cnv1.bck(p1);
       cnv2.bck(p2);
       p2.x += 17000000;
-      assert_eq(p1, p2);
+      assert(dist(p1, p2)<1e-2); // m
     }
 
     // no datum
@@ -254,12 +254,12 @@ main(){
        cnv2.bck(p4);
        assert(dist(p3,p4) < 1); // 1px accuracy
 
-       assert_eq(m.bbox_ref_img(), dRect("[151,386,2220,2624]"));
+       assert_eq(iRect(m.bbox_ref_img()), iRect("[151,386,2220,2624]"));
 
        dRect r = m.bbox_ref_wgs();
        assert(dist(r.tlc(), dPoint(35.998051,55.833276)) < 1e-6);
-       assert(fabs(r.w - 1/4.0) < 1e-4);
-       assert(fabs(r.h - 1/6.0) < 1e-4);
+       assert_feq(r.w, 1/4.0, 1e-4);
+       assert_feq(r.h, 1/6.0, 1e-4);
 
        cnv2.rescale_src(2);
        p4 = dPoint(36.00,56.00, 2500/2);

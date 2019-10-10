@@ -44,13 +44,13 @@ main(){
     assert((p1*=8) == iPoint(8,24,-8));
     assert((p1/=3) == iPoint(2,8,-2));
 
-    assert(dPoint(1,2,3) + dPoint(2,3,4) == dPoint(3,5,7));
-    assert(dPoint(3,4,5) - dPoint(1,-1,2) == dPoint(2,5,3));
-    assert(dPoint(3,4,1)*2 == dPoint(6,8,2));
-    assert(2.0*dPoint(3,4,1) == dPoint(6,8,2));
-    assert(dPoint(3,4,6)/2 == dPoint(1.5,2,3));
+    assert_deq(dPoint(1,2,3) + dPoint(2,3,4), dPoint(3,5,7), 1e-6);
+    assert_deq(dPoint(3,4,5) - dPoint(1,-1,2), dPoint(2,5,3), 1e-6);
+    assert_deq(dPoint(3,4,1)*2, dPoint(6,8,2), 1e-6);
+    assert_deq(2.0*dPoint(3,4,1), dPoint(6,8,2), 1e-6);
+    assert_deq(dPoint(3,4,6)/2, dPoint(1.5,2,3), 1e-6);
 
-    assert(-iPoint(1,2,5) == iPoint(-1,-2,-5));
+    assert_eq(-iPoint(1,2,5), iPoint(-1,-2,-5));
 
   }
 
@@ -74,21 +74,21 @@ main(){
     // mlen/len/norm
     iPoint p1(1,2,2);
     iPoint p2(10,0,0);
-    assert(p1.mlen() == 5);
-    assert(mlen(p1) == 5);
-    assert(p1.len() == 3);
-    assert(len(p1) == 3);
+    assert_feq(p1.mlen(), 5, 1e-6);
+    assert_feq(mlen(p1), 5, 1e-6);
+    assert_feq(p1.len(), 3, 1e-6);
+    assert_feq(len(p1), 3, 1e-6);
 
-    assert(p1.mlen2d() == 3);
-    assert(mlen2d(p1) == 3);
-    assert(p1.len2d() == sqrt(5));
-    assert(len2d(p1) == sqrt(5));
+    assert_feq(p1.mlen2d(), 3, 1e-6);
+    assert_feq(mlen2d(p1), 3, 1e-6);
+    assert_feq(p1.len2d(), sqrt(5), 1e-6);
+    assert_feq(len2d(p1), sqrt(5), 1e-6);
 
-    assert(norm(p2) == dPoint(1,0));
-    assert(p2 == dPoint(10,0,0));
+    assert_deq(norm(p2), dPoint(1,0), 1e-6);
+    assert_eq(p2, iPoint(10,0,0));
 
-    assert(norm2d(iPoint(10,0,5)) == dPoint(1,0));
-    assert(norm(iPoint(0,0,1.23)) == dPoint(0,0,1));
+    assert_deq(norm2d(iPoint(10,0,5)), dPoint(1,0), 1e-6);
+    assert_deq(norm(iPoint(0,0,1.23)), dPoint(0,0,1), 1e-6);
 
     assert_err(norm(dPoint(0,0,0)), "Point norm: zero length");
 
@@ -101,52 +101,52 @@ main(){
     dPoint dp, dp1(1.1,2.8,3.8), dp2(-0.1,-3.9,-4.6);
 
     dp = dp1;
-    assert(iPoint(rint(dp)) == iPoint(1,3,4));
-    assert(dp == dp1);
+    assert_deq(rint(dp), iPoint(1,3,4), 1e-6);
+    assert_deq(dp, dp1, 1e-6);
     dp.to_rint();
-    assert(dp == dPoint(1,3,4));
+    assert_deq(dp, dPoint(1,3,4), 1e-6);
 
     dp = dp1;
-    assert(iPoint(floor(dp)) == iPoint(1,2,3));
-    assert(dp == dp1);
+    assert_deq(floor(dp), iPoint(1,2,3), 1e-6);
+    assert_deq(dp, dp1, 1e-6);
     dp.to_floor();
-    assert(dp == dPoint(1,2,3));
+    assert_deq(dp, dPoint(1,2,3), 1e-6);
 
     dp = dp1;
-    assert(iPoint(ceil(dp)) == iPoint(2,3,4));
-    assert(dp == dp1);
+    assert_deq(ceil(dp), iPoint(2,3,4), 1e-6);
+    assert_deq(dp, dp1, 1e-6);
     dp.to_ceil();
-    assert(dp == dPoint(2,3,4));
+    assert_deq(dp, dPoint(2,3,4), 1e-6);
 
     dp = dp1;
-    assert(abs(dp) == dp1);
-    assert(dp1  == dp1);
+    assert_deq(abs(dp), dp1, 1e-6);
+    assert_deq(dp1, dp1, 1e-6);
     dp1.to_abs();
-    assert(dp1  == dp1);
+    assert_deq(dp1, dp1, 1e-6);
 
     dp = dp2;
-    assert(iPoint(rint(dp)) == iPoint(0,-4,-5));
-    assert(dp == dp2);
+    assert_deq(rint(dp), iPoint(0,-4,-5), 1e-6);
+    assert_deq(dp, dp2, 1e-6);
     dp.to_rint();
-    assert(dp == dPoint(0,-4,-5));
+    assert_deq(dp, dPoint(0,-4,-5), 1e-6);
 
     dp = dp2;
-    assert(iPoint(floor(dp)) == iPoint(-1,-4,-5));
-    assert(dp == dp2);
+    assert_deq(floor(dp), iPoint(-1,-4,-5), 1e-6);
+    assert_deq(dp, dp2, 1e-6);
     dp.to_floor();
-    assert(dp == dPoint(-1,-4,-5));
+    assert_deq(dp, dPoint(-1,-4,-5), 1e-6);
 
     dp = dp2;
-    assert(iPoint(ceil(dp)) == iPoint(0,-3,-4));
-    assert(dp == dp2);
+    assert_deq(ceil(dp), iPoint(0,-3,-4), 1e-6);
+    assert_deq(dp, dp2, 1e-6);
     dp.to_ceil();
-    assert(dp == dPoint(0,-3,-4));
+    assert_deq(dp, dPoint(0,-3,-4), 1e-6);
 
     dp = dp2;
-    assert(abs(dp) == -dp2);
-    assert(dp  == dp2);
+    assert_deq(abs(dp), -dp2, 1e-6);
+    assert_deq(dp, dp2, 1e-6);
     dp.to_abs();
-    assert(dp  == -dp2);
+    assert_deq(dp,-dp2, 1e-6);
   }
   // rotate
   {
@@ -154,13 +154,13 @@ main(){
     double a=30*M_PI/180.0;
 
     p=p0;
-    assert(rotate2d(p,c1, a) == pr1);
-    assert(p == p0);
-    assert(rotate2d(p,c2, a) == pr2);
-    assert(p == p0);
+    assert_deq(rotate2d(p,c1, a), pr1, 1e-6);
+    assert_deq(p, p0, 1e-6);
+    assert_deq(rotate2d(p,c2, a), pr2, 1e-6);
+    assert_deq(p, p0, 1e-6);
 
     p.rotate2d(c1,a);
-    assert(p == pr1);
+    assert_deq(p, pr1, 1e-6);
 
     p = p0;
     p.rotate2d(c2,a);
@@ -171,47 +171,47 @@ main(){
   {
     iPoint p1(1,2,2);
     iPoint p2(10,3,1);
-    assert(pscal(p1,p2) == 18);
-    assert(pscal(p1,p1) == 9);
-    assert(dist(p1,p1) == 0);
-    assert(dist(p1,iPoint(0,0)) == 3);
+    assert_feq(pscal(p1,p2), 18, 1e-6);
+    assert_feq(pscal(p1,p1), 9, 1e-6);
+    assert_feq(dist(p1,p1), 0, 1e-6);
+    assert_feq(dist(p1,iPoint(0,0)), 3, 1e-6);
 
-    assert(pscal2d(p1,p2) == 16);
-    assert(pscal2d(p1,p1) == 5);
-    assert(dist2d(p1,p1) == 0);
-    assert(dist2d(p1,iPoint(0,0)) == sqrt(5));
+    assert_feq(pscal2d(p1,p2), 16, 1e-6);
+    assert_feq(pscal2d(p1,p1), 5, 1e-6);
+    assert_feq(dist2d(p1,p1), 0, 1e-6);
+    assert_feq(dist2d(p1,iPoint(0,0)), sqrt(5), 1e-6);
   }
 
   // input/output, 2d points (also check that dPoint is printed with setprecision(9))
   {
-    assert(type_to_str(dPoint(0,0)) == "[0,0]");
-    assert(type_to_str(iPoint(1,3)) == "[1,3]");
-    assert(type_to_str(iPoint(1000000000,-1000000000)) == "[1000000000,-1000000000]");
-    assert(type_to_str(dPoint(1.23,3.45)) == "[1.23,3.45]");
-    assert(type_to_str(dPoint(-1.23,-3.45)) == "[-1.23,-3.45]");
-    assert(type_to_str(dPoint(-1.23e1,-3.45e-1)) == "[-12.3,-0.345]");
-    assert(type_to_str(dPoint(-1.23e5,-3.45e-5)) == "[-123000,-3.45e-05]");
-    assert(type_to_str(dPoint(-1.23e8,-3.45e-8)) == "[-123000000,-3.45e-08]");
-    assert(type_to_str(dPoint(-1.23e15,-3.45e-12)) == "[-1.23e+15,-3.45e-12]");
-    assert(type_to_str(dPoint(8000000,9000000)) == "[8000000,9000000]");
-    assert(type_to_str(dPoint(80000000,90000000)) == "[80000000,90000000]");
-    assert(type_to_str(dPoint(800000001,900000001)) == "[800000001,900000001]");
-    assert(type_to_str(dPoint(8000000001,9000000001)) == "[8e+09,9e+09]");
+    assert_eq(type_to_str(dPoint(0,0)), "[0,0]");
+    assert_eq(type_to_str(iPoint(1,3)), "[1,3]");
+    assert_eq(type_to_str(iPoint(1000000000,-1000000000)), "[1000000000,-1000000000]");
+    assert_eq(type_to_str(dPoint(1.23,3.45)), "[1.23,3.45]");
+    assert_eq(type_to_str(dPoint(-1.23,-3.45)), "[-1.23,-3.45]");
+    assert_eq(type_to_str(dPoint(-1.23e1,-3.45e-1)), "[-12.3,-0.345]");
+    assert_eq(type_to_str(dPoint(-1.23e5,-3.45e-5)), "[-123000,-3.45e-05]");
+    assert_eq(type_to_str(dPoint(-1.23e8,-3.45e-8)), "[-123000000,-3.45e-08]");
+    assert_eq(type_to_str(dPoint(-1.23e15,-3.45e-12)), "[-1.23e+15,-3.45e-12]");
+    assert_eq(type_to_str(dPoint(8000000,9000000)), "[8000000,9000000]");
+    assert_eq(type_to_str(dPoint(80000000,90000000)), "[80000000,90000000]");
+    assert_eq(type_to_str(dPoint(800000001,900000001)), "[800000001,900000001]");
+    assert_eq(type_to_str(dPoint(8000000001,9000000001)), "[8e+09,9e+09]");
 
-    assert(str_to_type<dPoint>("[0,0]") == dPoint(0,0));
-    assert(str_to_type<iPoint>("[1,3]") == iPoint(1,3));
-    assert(str_to_type<iPoint>("[1000000000,-1000000000]") == iPoint(1000000000,-1000000000));
-    assert(str_to_type<dPoint>("[1.23,3.45]") == dPoint(1.23,3.45));
-    assert(str_to_type<dPoint>("[-1.23,-3.45]") == dPoint(-1.23,-3.45));
-    assert(str_to_type<dPoint>("[-1.23e1,-3.45e-1]") == dPoint(-1.23e1,-3.45e-1));
-    assert(str_to_type<dPoint>("[-1.23e5,-3.45e-5]") == dPoint(-1.23e5,-3.45e-5));
-    assert(str_to_type<dPoint>("[-1.23e8,-3.45e-8]") == dPoint(-1.23e8,-3.45e-8));
-    assert(str_to_type<dPoint>("[-1.23e15,-3.45e-12]") == dPoint(-1.23e15,-3.45e-12));
-    assert(str_to_type<dPoint>("[8000000,9000000]") == dPoint(8000000,9000000));
-    assert(str_to_type<dPoint>("[80000000,90000000]") == dPoint(80000000,90000000));
-    assert(str_to_type<dPoint>("[800000001,900000001]") == dPoint(800000001,900000001));
+    assert_deq(str_to_type<dPoint>("[0,0]"), dPoint(0,0), 1e-6);
+    assert_deq(str_to_type<iPoint>("[1,3]"), iPoint(1,3), 1e-6);
+    assert_deq(str_to_type<iPoint>("[1000000000,-1000000000]"), iPoint(1000000000,-1000000000), 1e-6);
+    assert_deq(str_to_type<dPoint>("[1.23,3.45]"), dPoint(1.23,3.45), 1e-6);
+    assert_deq(str_to_type<dPoint>("[-1.23,-3.45]"), dPoint(-1.23,-3.45), 1e-6);
+    assert_deq(str_to_type<dPoint>("[-1.23e1,-3.45e-1]"), dPoint(-1.23e1,-3.45e-1), 1e-6);
+    assert_deq(str_to_type<dPoint>("[-1.23e5,-3.45e-5]"), dPoint(-1.23e5,-3.45e-5), 1e-6);
+    assert_deq(str_to_type<dPoint>("[-1.23e8,-3.45e-8]"), dPoint(-1.23e8,-3.45e-8), 1e-6);
+    assert_deq(str_to_type<dPoint>("[-1.23e15,-3.45e-12]"), dPoint(-1.23e15,-3.45e-12), 1e-6);
+    assert_deq(str_to_type<dPoint>("[8000000,9000000]"), dPoint(8000000,9000000), 1e-6);
+    assert_deq(str_to_type<dPoint>("[80000000,90000000]"), dPoint(80000000,90000000), 1e-6);
+    assert_deq(str_to_type<dPoint>("[800000001,900000001]"), dPoint(800000001,900000001), 1e-6);
 
-    assert(str_to_type<dPoint>(" [ 0 , 1 ] ") == dPoint(0,1));
+    assert_deq(str_to_type<dPoint>(" [ 0 , 1 ] "), dPoint(0,1), 1e-6);
 
     assert_err(str_to_type<dPoint>(" [ 0 , 1 "),
       "can't parse value:  [ 0 , 1 ");
@@ -228,35 +228,35 @@ main(){
 
   // input/output, 3d points (also check that dPoint is printed with setprecision(9))
   {
-    assert(type_to_str(dPoint(0,0,1)) == "[0,0,1]");
-    assert(type_to_str(iPoint(1,3,2)) == "[1,3,2]");
-    assert(type_to_str(iPoint(1000000000,-1000000000,-2000000000)) == "[1000000000,-1000000000,-2000000000]");
-    assert(type_to_str(dPoint(1.23,3.45,2.22)) == "[1.23,3.45,2.22]");
-    assert(type_to_str(dPoint(-1.23,-3.45,-2.22)) == "[-1.23,-3.45,-2.22]");
-    assert(type_to_str(dPoint(-1.23e1,-3.45e-1,-1.23e-1)) == "[-12.3,-0.345,-0.123]");
-    assert(type_to_str(dPoint(-1.23e5,-3.45e-5,-3.45e-5)) == "[-123000,-3.45e-05,-3.45e-05]");
-    assert(type_to_str(dPoint(-1.23e8,-3.45e-8,-3.45e-8)) == "[-123000000,-3.45e-08,-3.45e-08]");
-    assert(type_to_str(dPoint(-1.23e15,-3.45e-12,-3.45e-12)) == "[-1.23e+15,-3.45e-12,-3.45e-12]");
-    assert(type_to_str(dPoint(8000000,9000000,7000000)) == "[8000000,9000000,7000000]");
-    assert(type_to_str(dPoint(80000000,90000000,70000000)) == "[80000000,90000000,70000000]");
-    assert(type_to_str(dPoint(800000001,900000001,700000001)) == "[800000001,900000001,700000001]");
-    assert(type_to_str(dPoint(8000000001,9000000001,7000000001)) == "[8e+09,9e+09,7e+09]");
+    assert_eq(type_to_str(dPoint(0,0,1)), "[0,0,1]");
+    assert_eq(type_to_str(iPoint(1,3,2)), "[1,3,2]");
+    assert_eq(type_to_str(iPoint(1000000000,-1000000000,-2000000000)), "[1000000000,-1000000000,-2000000000]");
+    assert_eq(type_to_str(dPoint(1.23,3.45,2.22)), "[1.23,3.45,2.22]");
+    assert_eq(type_to_str(dPoint(-1.23,-3.45,-2.22)), "[-1.23,-3.45,-2.22]");
+    assert_eq(type_to_str(dPoint(-1.23e1,-3.45e-1,-1.23e-1)), "[-12.3,-0.345,-0.123]");
+    assert_eq(type_to_str(dPoint(-1.23e5,-3.45e-5,-3.45e-5)), "[-123000,-3.45e-05,-3.45e-05]");
+    assert_eq(type_to_str(dPoint(-1.23e8,-3.45e-8,-3.45e-8)), "[-123000000,-3.45e-08,-3.45e-08]");
+    assert_eq(type_to_str(dPoint(-1.23e15,-3.45e-12,-3.45e-12)), "[-1.23e+15,-3.45e-12,-3.45e-12]");
+    assert_eq(type_to_str(dPoint(8000000,9000000,7000000)), "[8000000,9000000,7000000]");
+    assert_eq(type_to_str(dPoint(80000000,90000000,70000000)), "[80000000,90000000,70000000]");
+    assert_eq(type_to_str(dPoint(800000001,900000001,700000001)), "[800000001,900000001,700000001]");
+    assert_eq(type_to_str(dPoint(8000000001,9000000001,7000000001)), "[8e+09,9e+09,7e+09]");
 
-    assert(str_to_type<dPoint>("[0,0,0]") == dPoint(0,0));
-    assert(str_to_type<dPoint>("[0,0,1]") == dPoint(0,0,1));
-    assert(str_to_type<iPoint>("[1,3,2]") == iPoint(1,3,2));
-    assert(str_to_type<iPoint>("[1000000000,-1000000000,-1000000000]") == iPoint(1000000000,-1000000000,-1000000000));
-    assert(str_to_type<dPoint>("[1.23,3.45,3.45]") == dPoint(1.23,3.45,3.45));
-    assert(str_to_type<dPoint>("[-1.23,-3.45,-3.45]") == dPoint(-1.23,-3.45,-3.45));
-    assert(str_to_type<dPoint>("[-1.23e1,-3.45e-1,-3.45e-1]") == dPoint(-1.23e1,-3.45e-1,-3.45e-1));
-    assert(str_to_type<dPoint>("[-1.23e5,-3.45e-5,-3.45e-5]") == dPoint(-1.23e5,-3.45e-5,-3.45e-5));
-    assert(str_to_type<dPoint>("[-1.23e8,-3.45e-8,-3.45e-8]") == dPoint(-1.23e8,-3.45e-8,-3.45e-8));
-    assert(str_to_type<dPoint>("[-1.23e15,-3.45e-12,-3.45e-12]") == dPoint(-1.23e15,-3.45e-12,-3.45e-12));
-    assert(str_to_type<dPoint>("[8000000,9000000,9000000]") == dPoint(8000000,9000000,9000000));
-    assert(str_to_type<dPoint>("[80000000,90000000,90000000]") == dPoint(80000000,90000000,90000000));
-    assert(str_to_type<dPoint>("[800000001,900000001,900000001]") == dPoint(800000001,900000001,900000001));
+    assert_deq(str_to_type<dPoint>("[0,0,0]"), dPoint(0,0), 1e-6);
+    assert_deq(str_to_type<dPoint>("[0,0,1]"), dPoint(0,0,1), 1e-6);
+    assert_deq(str_to_type<iPoint>("[1,3,2]"), iPoint(1,3,2), 1e-6);
+    assert_deq(str_to_type<iPoint>("[1000000000,-1000000000,-1000000000]"), iPoint(1000000000,-1000000000,-1000000000), 1e-6);
+    assert_deq(str_to_type<dPoint>("[1.23,3.45,3.45]"), dPoint(1.23,3.45,3.45), 1e-6);
+    assert_deq(str_to_type<dPoint>("[-1.23,-3.45,-3.45]"), dPoint(-1.23,-3.45,-3.45), 1e-6);
+    assert_deq(str_to_type<dPoint>("[-1.23e1,-3.45e-1,-3.45e-1]"), dPoint(-1.23e1,-3.45e-1,-3.45e-1), 1e-6);
+    assert_deq(str_to_type<dPoint>("[-1.23e5,-3.45e-5,-3.45e-5]"), dPoint(-1.23e5,-3.45e-5,-3.45e-5), 1e-6);
+    assert_deq(str_to_type<dPoint>("[-1.23e8,-3.45e-8,-3.45e-8]"), dPoint(-1.23e8,-3.45e-8,-3.45e-8), 1e-6);
+    assert_deq(str_to_type<dPoint>("[-1.23e15,-3.45e-12,-3.45e-12]"), dPoint(-1.23e15,-3.45e-12,-3.45e-12), 1e-6);
+    assert_deq(str_to_type<dPoint>("[8000000,9000000,9000000]"), dPoint(8000000,9000000,9000000), 1e-6);
+    assert_deq(str_to_type<dPoint>("[80000000,90000000,90000000]"), dPoint(80000000,90000000,90000000), 1e-6);
+    assert_deq(str_to_type<dPoint>("[800000001,900000001,900000001]"), dPoint(800000001,900000001,900000001), 1e-6);
 
-    assert(str_to_type<dPoint>(" [ 0 , 1 , 2 ] ") == dPoint(0,1,2));
+    assert_deq(str_to_type<dPoint>(" [ 0 , 1 , 2 ] "), dPoint(0,1,2), 1e-6);
 
     assert_err(str_to_type<dPoint>(" [ 0 , 1 ,1"),
       "can't parse value:  [ 0 , 1 ,1");
