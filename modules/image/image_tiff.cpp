@@ -6,12 +6,9 @@
 // custom error handler
 #include <cstdarg>
 void
-my_error_exit (const char* module, const char* fmt, const char *x, ...) {
+my_error_exit (const char* module, const char* fmt, va_list args) {
   char buf[1024];
-  va_list args;
-  va_start (args, x); // strange extra parameter???
   vsnprintf(buf, 1024, fmt, args);
-  va_end (args);
   throw Err() << module << " error: " << buf;
 }
 
