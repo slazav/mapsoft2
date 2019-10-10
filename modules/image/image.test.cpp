@@ -59,8 +59,9 @@ main(){
     {
       assert_err(Image im2(100,0,  IMAGE_32ARGB),    "non-positive image dimension: 100x0");
       assert_err(Image im2(0,1,    IMAGE_32ARGB),    "non-positive image dimension: 0x1");
-      assert_err(Image im2(100,-1, IMAGE_32ARGB),
-        "Image: can't allocate memory for Image(100x18446744073709551615, ARGB, 32bpp): std::bad_alloc");
+      //// arch-specific
+      //assert_err(Image im2(100,-1, IMAGE_32ARGB),
+      //    "Image: can't allocate memory for Image(100x18446744073709551615, ARGB, 32bpp): std::bad_alloc");
     }
 
 
