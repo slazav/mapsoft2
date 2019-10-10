@@ -132,12 +132,12 @@ main(){
       assert_eq(I.type(), IMAGE_24RGB);
       assert_eq(I.width(), 256);
       assert_eq(I.height(), 128);
-      assert(color_dist(I.get_argb(10,10),   0xff111111) < 2);
-      assert(color_dist(I.get_argb(117,117), 0xffcfcfcf) < 2);
-      assert(color_dist(I.get_argb(138,10),  0xFF030303) < 2);
-      assert(color_dist(I.get_argb(245,117), 0xff454545) < 2);
-      assert(color_dist(I.get_argb(64,64),   0xFF717171) < 2);
-      assert(color_dist(I.get_argb(192,64),  0xFF262626) < 2);
+      assert(color_dist(I.get_argb(10,10),   0xff111111) < 5);
+      assert(color_dist(I.get_argb(117,117), 0xffcfcfcf) < 5);
+      assert(color_dist(I.get_argb(138,10),  0xFF030303) < 5);
+      assert(color_dist(I.get_argb(245,117), 0xff454545) < 5);
+      assert(color_dist(I.get_argb(64,64),   0xFF717171) < 5);
+      assert(color_dist(I.get_argb(192,64),  0xFF262626) < 5);
     }
 
 
@@ -149,12 +149,12 @@ main(){
       assert_eq(I.type(), IMAGE_24RGB);
       assert_eq(I.width(), 256);
       assert_eq(I.height(), 128);
-      assert(color_dist(I.get_argb(10,10),   0xff101801) < 2);
-      assert(color_dist(I.get_argb(117,117), 0xffe6e600) < 2);
-      assert(color_dist(I.get_argb(138,10),  0xFF0a0000) < 2);
-      assert(color_dist(I.get_argb(245,117), 0xffe60001) < 2);
-      assert(color_dist(I.get_argb(64,64),   0xFF858501) < 2);
-      assert(color_dist(I.get_argb(192,64),  0xFF820201) < 2);
+      assert(color_dist(I.get_argb(10,10),   0xff101801) < 5);
+      assert(color_dist(I.get_argb(117,117), 0xffe6e600) < 5);
+      assert(color_dist(I.get_argb(138,10),  0xFF0a0000) < 5);
+      assert(color_dist(I.get_argb(245,117), 0xffe60001) < 5);
+      assert(color_dist(I.get_argb(64,64),   0xFF858501) < 5);
+      assert(color_dist(I.get_argb(192,64),  0xFF820201) < 5);
     }
 
     { // IMAGE_1
