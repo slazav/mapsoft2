@@ -20,16 +20,16 @@ assert "$P missing_file.kml" "Error: Can't open KML file: missing_file.kml" 1
 
 #############
 
-# default
-assert "$P test_data/test.plt -o tmp" "" 0
+# default (set precision to lower values to have same results on i586 and x64 arch)
+assert "$P test_data/test.plt --llprec 6 --dprec 2 --sprec 1 -o tmp" "" 0
 assert_diff test_data/test1.txt tmp
 
 # split by track segments
-assert "$P test_data/test.plt --break track -o tmp" "" 0
+assert "$P test_data/test.plt --llprec 6 --dprec 2 --sprec 1  --break track -o tmp" "" 0
 assert_diff test_data/test2.txt tmp
 
 # split by days
-assert "$P test_data/test.plt --break day -o tmp" "" 0
+assert "$P test_data/test.plt --llprec 6 --dprec 2 --sprec 1  --break day -o tmp" "" 0
 assert_diff test_data/test3.txt tmp
 
 # all fields

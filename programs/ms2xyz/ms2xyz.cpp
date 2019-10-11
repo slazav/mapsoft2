@@ -92,6 +92,14 @@ main (int argc, char **argv) {
     options.add("break", 1,'b', m,
       "Place to break calculation and put empty line "
       "(none | day | track, default: none)");
+    options.add("llprec", 1,0, m,
+      "Precision for latitude and longitude values (default: 7)");
+    options.add("zprec", 1,0, m,
+      "Precision for altitude values (default: 1)");
+    options.add("dprec", 1,0, m,
+      "Precision for distance values (default: 3)");
+    options.add("sprec", 1,0, m,
+      "Precision for speed values (default: 2)");
 
     ms2opt_add_std(options);
     ms2opt_add_out(options);
@@ -112,6 +120,10 @@ main (int argc, char **argv) {
     string fmt    = O.get<string>("fmt", "%x %y %z %T %D %S");
     double window = O.get<double>("window", 120.0);
     string br     = O.get<string>("break", "none");
+    int llprec    = O.get<int>("llprec", 7);
+    int zprec     = O.get<int>("zprec", 1);
+    int dprec     = O.get<int>("dprec", 3);
+    int sprec     = O.get<int>("sprec", 2);
 
     double speed=0, dist = 0, Dist = 0;
     queue<pair<double, double> > timedist;
@@ -172,19 +184,19 @@ main (int argc, char **argv) {
           }
           switch(*c){
             case '%': cout << *c; break;
-            case 'x': cout << fixed << setprecision(7) << tp.x; break;
-            case 'y': cout << fixed << setprecision(7) << tp.y; break;
-            case 'z': cout << fixed << setprecision(1) << tp.z; break;
+            case 'x': cout << fixed << setprecision(llprec) << tp.x; break;
+            case 'y': cout << fixed << setprecision(llprec) << tp.y; break;
+            case 'z': cout << fixed << setprecision(zprec) << tp.z; break;
 
             case 't': cout << int(tp.t/1000.0); break;
             case 'T': cout << write_fmt_time(tfmt.c_str(), tp.t); break;
             case 'u': cout << fixed << setprecision(3) << dt/1000.0; break;
 
-            case 'd': cout << fixed << setprecision(2) << dist/1000.0; break;
-            case 'D': cout << fixed << setprecision(3) << Dist/1000.0; break;
-            case 'e': cout << fixed << setprecision(2) << dd; break;
+            case 'd': cout << fixed << setprecision(dprec) << dist/1000.0; break;
+            case 'D': cout << fixed << setprecision(dprec) << Dist/1000.0; break;
+            case 'e': cout << fixed << setprecision(dprec) << dd; break;
 
-            case 'S': cout << fixed << setprecision(2) << speed;    break;
+            case 'S': cout << fixed << setprecision(sprec) << speed;    break;
 
             case 'n': cout << nn;    break;
             case 'N': cout << NN;    break;
