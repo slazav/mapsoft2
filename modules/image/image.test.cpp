@@ -11,9 +11,9 @@ main(){
   try{
 
     // color handling functions
-    assert_eq(color_dist(0xFFFFFFFF, 0xFEFEFEFE), 2);
-    assert_eq(color_dist(0xFFFFFFFF, 0xFFFFFFFE), 1);
-    assert_eq(color_dist(0xFEFFFFFF, 0xFFFFFFFF), 1);
+    assert_feq(color_dist(0xFFFFFFFF, 0xFEFEFEFE), 2, 1e-6);
+    assert_feq(color_dist(0xFFFFFFFF, 0xFFFFFFFE), 1, 1e-6);
+    assert_feq(color_dist(0xFEFFFFFF, 0xFFFFFFFF), 1, 1e-6);
 
     assert_eq(color_rem_transp(0x80FFFF00, 0), 0xFFFFFF00);
     assert_eq(color_rem_transp(0x80808000, 0), 0xFFFFFF00);

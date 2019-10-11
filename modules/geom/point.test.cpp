@@ -173,7 +173,7 @@ main(){
     iPoint p2(10,3,1);
     assert_feq(pscal(p1,p2), 18, 1e-6);
     assert_feq(pscal(p1,p1), 9, 1e-6);
-    assert_feq(dist(p1,p1), 0, 1e-6);
+    assert_deq(p1,p1, 1e-6);
     assert_feq(dist(p1,iPoint(0,0)), 3, 1e-6);
 
     assert_feq(pscal2d(p1,p2), 16, 1e-6);

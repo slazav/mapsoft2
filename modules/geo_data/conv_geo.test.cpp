@@ -79,12 +79,12 @@ main(){
     cnv2.bck(p2);
     assert_eq(iPoint(p2), p1a);
     cnv2.frw(p2);
-    assert(dist(p1,p2) < 2e-7);
+    assert_deq(p1, p2, 2e-7);
 
     cnv3.frw(p2);
     assert_eq(iPoint(p2), p1a);
     cnv3.bck(p2);
-    assert(dist(p1,p2) < 2e-7);
+    assert_deq(p1, p2, 2e-7);
 
     // same, 2D
     cnv2.set_2d();
@@ -93,12 +93,12 @@ main(){
     cnv2.bck(p2);
     assert_eq(iPoint(p2), p1z);
     cnv2.frw(p2);
-    assert(dist(p1,p2) < 2e-7);
+    assert_deq(p1, p2, 2e-7);
 
     cnv3.frw(p2);
     assert_eq(iPoint(p2), p1z);
     cnv3.bck(p2);
-    assert(dist(p1,p2) < 2e-7);
+    assert_deq(p1, p2, 2e-7);
 
     // nan altitude (2d conversion)
     cnv2.set_2d(false);
@@ -156,7 +156,7 @@ main(){
       cnv1.bck(p1);
       cnv2.bck(p2);
       p2.x += 17000000;
-      assert(dist(p1, p2)<1e-2); // m
+      assert_deq(p1, p2, 1e-2); // m
     }
 
     // no datum

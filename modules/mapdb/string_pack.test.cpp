@@ -39,7 +39,7 @@ main(){
         else if (tag == "bbox") {assert_eq(string_unpack_bbox(s2), bbox);}
         else throw Err() << "Unknown tag: " << tag;
       }
-      assert(dist(crds1,crds2)<1e-7);
+      assert_deq(crds1, crds2, 1e-7);
     }
 
   }

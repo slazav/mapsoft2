@@ -204,12 +204,12 @@ main(){
   assert_eq(rect_to_line(iRect(1,1,2,2), false), iLine("[[1,1],[3,1],[3,3],[1,3]]"));
 
   // dist
-  assert_feq(dist(
+  assert_deq(
     dLine("[[0,0],[1,1],[2,2]]"),
-    dLine("[[0,0],[1,1],[2,2]]")), 0, 1e-6);
-  assert_feq(dist(
+    dLine("[[0,0],[1,1],[2,2]]"), 1e-6);
+  assert_deq(
     dLine("[]"),
-    dLine("[]")), 0, 1e-6);
+    dLine("[]"), 1e-6);
   assert(dist(
     dLine("[[0,0],[1,1],[2,2]]"),
     dLine("[[0,0],[1,1]]")) == INFINITY);

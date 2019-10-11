@@ -15,14 +15,14 @@ void verify_area(
         double lat_min, double lon_min,
         double lat_max, double lon_max) {
     dRect r = GEOHASH_decode(hash);
-    assert(dist(r.tlc(), dPoint(lon_min, lat_min)) < 0.001);
-    assert(dist(r.brc(), dPoint(lon_max, lat_max)) < 0.001);
+    assert_deq(r.tlc(), dPoint(lon_min, lat_min), 0.001);
+    assert_deq(r.brc(), dPoint(lon_max, lat_max), 0.001);
 }
 
 void verify_area( const std::string & hash, const dRect & r0) {
     dRect r = GEOHASH_decode(hash);
-    assert(dist(r.tlc(), r0.tlc()) < 0.001);
-    assert(dist(r.brc(), r0.brc()) < 0.001);
+    assert_deq(r.tlc(), r0.tlc(), 0.001);
+    assert_deq(r.brc(), r0.brc(), 0.001);
 }
 
 void verify_neighbors(

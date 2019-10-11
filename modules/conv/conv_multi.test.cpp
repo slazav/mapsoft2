@@ -25,20 +25,20 @@ main(){
     // 2*(2*10/10)*0.5
 
     dPoint p(10,10);
-    cnv.frw(p);  assert(dist(p, dPoint(20,20)) < 1e-6);
-    cnv.bck(p);  assert(dist(p, dPoint(10,10)) < 1e-6);
+    cnv.frw(p);  assert_deq(p, dPoint(20,20), 1e-6);
+    cnv.bck(p);  assert_deq(p, dPoint(10,10), 1e-6);
 
     cnv.rescale_src(3);
-    cnv.frw(p); assert(dist(p, dPoint(60,60)) < 1e-6);
-    cnv.bck(p); assert(dist(p, dPoint(10,10)) < 1e-6);
+    cnv.frw(p); assert_deq(p, dPoint(60,60), 1e-6);
+    cnv.bck(p); assert_deq(p, dPoint(10,10), 1e-6);
 
     cnv.rescale_dst(3);
-    cnv.frw(p);  assert(dist(p, dPoint(180,180)) < 1e-6);
-    cnv.bck(p);  assert(dist(p, dPoint(10,10)) < 1e-6);
+    cnv.frw(p);  assert_deq(p, dPoint(180,180), 1e-6);
+    cnv.bck(p);  assert_deq(p, dPoint(10,10), 1e-6);
 
     cnv.rescale_dst(1/9.0);
-    cnv.frw(p);  assert(dist(p, dPoint(20,20)) < 1e-6);
-    cnv.bck(p);  assert(dist(p, dPoint(10,10)) < 1e-6);
+    cnv.frw(p);  assert_deq(p, dPoint(20,20), 1e-6);
+    cnv.bck(p);  assert_deq(p, dPoint(10,10), 1e-6);
 
    //some test with non-trivial conversion is needed
 
@@ -47,8 +47,8 @@ main(){
     assert_eq(cnv.size(), 3);
 
     assert_eq(cnv.simplify(dRect(0,0,10,10), 5), true);
-    cnv.frw(p);  assert(dist(p, dPoint(20,20)) < 1e-6);
-    cnv.bck(p);  assert(dist(p, dPoint(10,10)) < 1e-6);
+    cnv.frw(p);  assert_deq(p, dPoint(20,20), 1e-6);
+    cnv.bck(p);  assert_deq(p, dPoint(10,10), 1e-6);
 
     assert_eq(cnv.size(), 1);
     cnv.reset();

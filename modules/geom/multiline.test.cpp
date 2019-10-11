@@ -190,9 +190,9 @@ main(){
   }
 
   // dist
-  assert_eq(dist(
+  assert_deq(
     dMultiLine("[ [[0,0],[1,1],[2,2]], [[1,1]], [] ]"),
-    dMultiLine("[ [[0,0],[1,1],[2,2]], [[1,1]], [] ]")), 0);
+    dMultiLine("[ [[0,0],[1,1],[2,2]], [[1,1]], [] ]"), 1e-6);
   assert(dist(
     dMultiLine("[]"),
     dMultiLine("[]")) == 0);
@@ -205,9 +205,9 @@ main(){
   assert(dist(
     dMultiLine("[[[0,0],[1,1]],[]]"),
     dMultiLine("[[[0,0],[1,1]]]")) == INFINITY);
-  assert(dist(
+  assert_feq(dist(
     dMultiLine("[ [[0,0],[1,4],[2,2]], [[1,1]], []]"),
-    dMultiLine("[ [[0,0],[1,1],[2,2]], [[1,5]], []]")) == 5);
+    dMultiLine("[ [[0,0],[1,1],[2,2]], [[1,5]], []]")), 5, 1e-6);
 
   // iLine <-> dLine casting
   assert_eq(dMultiLine(str_to_type<iMultiLine>("[[[0,0],[2,0],[2,2]],[]]")),
