@@ -1,10 +1,10 @@
 Name:         mapsoft2
-Version:      0.1
+Version:      1.0
 Release:      alt1
 
 Summary:      mapsoft2 - programs for working with maps and geodata
 Group:        Sciences/Geosciences
-Url:          http://github.org/slazav/mapsoft2
+Url:          https://slazav.github.io/mapsoft2/
 Packager:     Vladislav Zavjalov <slazav@altlinux.org>
 License:      GPL3.0
 
@@ -12,8 +12,8 @@ Source:        %name-%version.tar
 
 BuildRequires: gcc-c++ libgtkmm3-devel libcairomm-devel
 BuildRequires: libjansson-devel libxml2-devel libzip-devel zlib-devel libproj-devel
-BuildRequires: libjpeg-devel libgif-devel libtiff-devel libpng-devel
-BuildRequires: m4 /usr/bin/pod2man
+BuildRequires: libjpeg-devel libgif-devel libtiff-devel libpng-devel libdb4.7-devel
+BuildRequires: /usr/bin/pod2man /usr/bin/pod2html /usr/bin/unzip
 
 %description
 mapsoft2 - programs for working with maps and geodata
@@ -22,6 +22,7 @@ mapsoft2 - programs for working with maps and geodata
 %setup -q
 
 %build
+export SKIP_IMG_DIFFS=1
 %make
 
 %install
@@ -34,3 +35,5 @@ mapsoft2 - programs for working with maps and geodata
 %_datadir/mapsoft2/mapsoft2.css
 
 %changelog
+* Wed Oct 09 2019 Vladislav Zavjalov <slazav@altlinux.org> 1.0-alt1
+- v1.0 - first release, first build for altlinux
