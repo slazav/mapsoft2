@@ -33,7 +33,7 @@ assert "$P test_data/test.plt --llprec 6 --dprec 2 --sprec 1  --break day -o tmp
 assert_diff test_data/test3.txt tmp
 
 # all fields
-a=$($P test_data/test.plt --break day --fmt "%% %x %y %z -- %t %T %u -- %d %D %e -- %S -- %n %N %p" -o tmp)
+a=$($P test_data/test.plt --break day --fmt "%% %x %y %z -- %t %T %u %U %v -- %d %D %e -- %S -- %n %N %p" -o tmp)
 assert "echo $a" "" 0
 assert_diff test_data/test5.txt tmp
 
