@@ -53,8 +53,7 @@ struct nom_struct_t {
 void read_num(std::istream & f, int & num, int & dig){
   num=0;
   int d;
-  for (d=0; d<dig; d++){
-    if (f.eof()) break;
+  for (d=0;!f.eof(); d++){
     char c = f.peek();
     if (c>='0' && c<='9') f.get();
     else break;
@@ -71,30 +70,35 @@ void read_num(std::istream & f, int & num, int & dig){
 // For 2 numbers should be n1%2==1
 // For 4 numbers should be n1%4==1
 // Return false if input is bad.
-bool read_nums(std::istream & f, int &num1, int &num2, int & dig){
+void read_nums(std::istream & f, int &num1, int &num2, int & dig){
   read_num(f, num1, dig);
   num2 = num1;
   int nn;
-  int d;
+  int d = dig;
   while (f.peek() == ',') {
     f.get();
     if (f.eof()) break;
     read_num(f, nn, d);
-    if (d!=dig) return false;
-    if (nn != num2+1) return false;
+    if (d==0)
+      throw Err() << "number expected";
+    if (d!=dig)
+      throw Err() << "wrong number of digits";
+    if (nn != num2+1)
+      throw Err() << "subsequent numbers expected";
     num2=nn;
     if (dig==1 && num2-num1==1) break;
     if (num2-num1==3) break;
   }
-  if (num2-num1==2) return false;
-  if (num2-num1==1 && num1%2!=1) return false;
-  if (num2-num1==3 && num1%4!=1) return false;
-  return true;
+  if (num2-num1==2) throw Err() << "2 or 4 subsequent numbers expected";
+  if (num2-num1==1 && num1%2!=1)
+    throw Err() << "group of 2 numbers should start with an odd number";
+  if (num2-num1==3 && num1%4!=1)
+    throw Err() << "group of 4 numbers should start with multiple of 4 plus 1";
 }
 
 // Read and check head: x?[a-u]-[0-9]{2}(,[0-9]{2})*
-// Return false if parsing failed.
-bool nom_parse(std::istream & f, nom_struct_t & M1, nom_struct_t & M2){
+// throw Err with a short message if parsing failed.
+void nom_parse(std::istream & f, nom_struct_t & M1, nom_struct_t & M2){
   M1 = M2 = nom_struct_t(); // initialize
 
   // Read first character. A..U, possibly prefixed with x
@@ -106,7 +110,7 @@ bool nom_parse(std::istream & f, nom_struct_t & M1, nom_struct_t & M2){
     c = tolower(f.get());
   }
 
-  if (f.fail() || c<'a' || c>'u') return false;
+  if (f.fail() || c<'a' || c>'u') throw Err() << "letter a..u with optional x prefix expected";
 
   M1.A = M2.A = c;
 
@@ -115,90 +119,130 @@ bool nom_parse(std::istream & f, nom_struct_t & M1, nom_struct_t & M2){
 
   // read first group of numbers (2 digits each, separated by ',')
   int n1,n2,dig = 2;
-  if (!read_nums(f, n1, n2, dig) || dig!=2 ||
-      n1<1 || n2>60) return false;
+  try { read_nums(f, n1, n2, dig); }
+  catch (Err e) {
+    throw Err() << "first group of numbers: " << e.str();
+  }
 
+  if (dig!=2 || n1<1 || n2>60)
+    throw Err() << "first group of numbers: 01..60 expected";
 
   M1.N = n1; M2.N = n2;
-  if (f.eof() || f.peek() == -1) return true;
+  if (f.eof() || f.peek() == -1) return;
 
-  if (n2!=n1) return false;
-  if (f.peek() != '-' ) return true; // '-' separator -> stop reading
+  if (n2!=n1)
+    throw Err() << "end of input expected after double/quad 1:1000000 map";
+
+  if (f.peek() != '-' ) return; // '-' separator -> stop reading
   f.get();
 
   // read second group of numbers (1, 2, or 3-digits, separated by ',')
   dig = 3;
-  if (!read_nums(f, n1, n2, dig)) return false;
-  if      (dig == 1) {
-    if (n1<1 || n2>4) return false;
+
+  try { read_nums(f, n1, n2, dig); }
+  catch (Err e) {
+    throw Err() << "second group of numbers: " << e.str();
+  }
+  if (dig == 1) {
+    if (n1<1 || n2>4) throw Err() << "second group of numbers: 1..4 expected";
     M1.sc = M2.sc = SC_500k;
   }
   else if (dig == 2) {
-    if (n1<1 || n2>36) return false;
+    if (n1<1 || n2>36) throw Err() << "second group of numbers: 01..36 expected";
     M1.sc = M2.sc = SC_200k;
   }
   else if (dig == 3) {
-    if (n1<1 || n2>144) return false;
+    if (n1<1 || n2>144) throw Err() << "second group of numbers: 001..144 expected";
     M1.sc = M2.sc = SC_100k;
   }
-  else return false;
+  else throw Err() << "second group of numbers: more then 3 digits";
 
 
   M1.N1=n1; M2.N1=n2;
-  if (f.eof() || f.peek() == -1) return true;
+  if (f.eof() || f.peek() == -1) return;
 
   // 1:100000 may be splitted to 1:50000
   if (M1.sc == SC_100k) {
-    if (f.peek() != '-' ) return true; // '-' separator -> stop reading
+    if (f.peek() != '-' ) return; // '-' separator -> stop reading
     f.get();
     dig=1;
-    if (!read_nums(f, n1, n2, dig) || dig!=1) return false;
-    if (n1<1 || n2>4) return false;
+
+    try { read_nums(f, n1, n2, dig); }
+    catch (Err e) {
+      throw Err() << "third group of numbers: " << e.str();
+    }
+
+    if (dig!=1 || n1<1 || n2>4)
+      throw Err() << "third group of numbers: 1..4 expected";
+
     M1.sc = M2.sc = SC_50k;
     M1.N2 = n1; M2.N2 = n2;
-    if (f.eof() || f.peek() == -1) return true;
+    if (f.eof() || f.peek() == -1) return;
   }
 
   // 1:50000 may have form T33-100-3,4,T33-101-3,4 (T and U only!)
   if (M1.sc == SC_50k && M1.A>='t' && M1.A<='u') {
-    if (f.peek() != ',' ) return true; // ',' separator -> stop reading
+    if (f.peek() != ',' ) return; // ',' separator -> stop reading
     f.get();
 
     nom_struct_t M3, M4;
-    if (!nom_parse(f, M3, M4)) return false;
+    try { nom_parse(f, M3, M4); }
+    catch (Err e) {
+      throw Err() << "second part of doubled 1:50000 map is wrong: " << e.str();
+    }
 
     // prefix and letter should be same
-    if (M3.north!=M1.north || M3.A!=M1.A) return false;
+    if (M3.north!=M1.north || M3.A!=M1.A)
+      throw Err() << "second part of doubled 1:50000 map is wrong: "
+                  << "x-prefix and letter should be same as in the first part";
+
     // first number should be same
-    if (M3.N!=M4.N || M3.N!=M1.N) return false;
+    if (M3.N!=M4.N || M3.N!=M1.N)
+      throw Err() << "second part of doubled 1:50000 map is wrong: "
+                  << "first number should be same as in the first part";
     // second number should differ by 1
-    if (M3.N1 != M1.N1+1) return false;
+    if (M3.N1 != M1.N1+1)
+      throw Err() << "second part of doubled 1:50000 map is wrong: "
+                  << "second number should differ by 1 from one in the first part";
     // third group should be same and contain two numbers
-    if (M4.N2-M3.N2!=1 || M3.N2!=M1.N2 || M4.N2!=M2.N2) return false;
+    if (M4.N2-M3.N2!=1 || M3.N2!=M1.N2 || M4.N2!=M2.N2)
+      throw Err() << "second part of doubled 1:50000 map is wrong: "
+                  << "third number group should be same as in the first part";
     M2 = M4;
-    if (f.eof() || f.peek() == -1) return true;
+    if (f.eof() || f.peek() == -1) return;
   }
 
   // 1:500000 may have form T33-3,4,T34-3,4 (T and U only!)
   if (M1.sc == SC_500k && M1.A>='t' && M1.A<='u') {
-    if (f.peek() != ',' ) return true; // ',' separator -> stop reading
+    if (f.peek() != ',' ) return; // ',' separator -> stop reading
     f.get();
 
     nom_struct_t M3, M4;
-    if (!nom_parse(f, M3, M4)) return false;
+    try { nom_parse(f, M3, M4); }
+    catch (Err e) {
+      throw Err() << "second part of doubled 1:500000 map is wrong: " << e.str();
+    }
 
     // prefix and letter should be same
-    if (M3.north!=M1.north || M3.A!=M1.A) return false;
+    if (M3.north!=M1.north || M3.A!=M1.A)
+      throw Err() << "second part of doubled 1:500000 map is wrong: "
+                  << "x-prefix and letter should be same as in the first part";
 
     // first number should differ by 1
-    if (M4.N!=M3.N || M3.N != M1.N+1) return false;
+    if (M4.N!=M3.N || M3.N != M1.N+1)
+      throw Err() << "second part of doubled 1:500000 map is wrong: "
+                  << "first number should differ by 1 from one in the first part";
+
     // second group should be same and contain two numbers
-    if (M4.N1-M3.N1!=1 || M3.N1!=M1.N1 || M4.N1!=M2.N1) return false;
+    if (M4.N1-M3.N1!=1 || M3.N1!=M1.N1 || M4.N1!=M2.N1)
+      throw Err() << "second part of doubled 1:500000 map is wrong: "
+                  << "second number group should be same as in the first part";
+
     M2 = M4;
-    if (f.eof() || f.peek() == -1) return true;
+    if (f.eof() || f.peek() == -1) return;
   }
   // reading is not finished!
-  return true;
+  return;
 }
 
 
@@ -253,8 +297,11 @@ nom_to_range(const string & key, nom_scale_t & scale, bool ex){
   istringstream f(key);
 
   nom_struct_t M1, M2;
-  if (!nom_parse(f, M1, M2))
-    throw Err() << "nom_to_range: can't parse name: " << key;
+  try { nom_parse(f, M1, M2); }
+  catch (Err e){
+    throw Err() << "nom_to_range: can't parse name: \"" << key
+                << "\": " << e.str();
+  }
   scale = M1.sc;
   dRect r1 = nom_to_range(M1);
   dRect r2 = nom_to_range(M2);
@@ -269,12 +316,12 @@ nom_to_range(const string & key, nom_scale_t & scale, bool ex){
       int k1, k2;
       read_num(f, k1, d1);
       if (f.get()!='x')
-        throw Err() << "nom_to_range: can't parse name: " << key
-                    << ": wrong <M>x<N> range";
+        throw Err() << "nom_to_range: can't parse name: \"" << key
+                    << "\": wrong <M>x<N> range";
       read_num(f, k2, d2);
       if (k1==0 || k2==0)
-        throw Err() << "nom_to_range: can't parse name: " << key
-                    << ": empty <M>x<N> range";
+        throw Err() << "nom_to_range: can't parse name: \"" << key
+                    << "\": empty <M>x<N> range";
 
       r.w *= k1;
       r.h *= k2;
@@ -283,19 +330,19 @@ nom_to_range(const string & key, nom_scale_t & scale, bool ex){
   else {
     // check if doubling is correct
     if (M1.A >= 'a' && M1.A <= 'o' && k!=1)
-      throw Err() << "nom_to_range: can't parse name: " << key
-                  << ": maps A .. O should be single";
+      throw Err() << "nom_to_range: can't parse name: \"" << key
+                  << "\": maps A .. O should be single";
     if (M1.A >= 'p' && M1.A <= 's' && k!=2)
-      throw Err() << "nom_to_range: can't parse name: " << key
-                  << ": maps P .. S should be in pairs";
+      throw Err() << "nom_to_range: can't parse name: \"" << key
+                  << "\": maps P .. S should be in pairs";
     if (M1.A >= 't' && M1.A <= 'u' && k!=4)
-      throw Err() << "nom_to_range: can't parse name: " << key
-                  << ": maps T .. U should be in quadruples";
+      throw Err() << "nom_to_range: can't parse name: \"" << key
+                  << "\": maps T .. U should be in quadruples";
   }
 
   if (!f.eof() || f.peek() != -1)
-    throw Err() << "nom_to_range: can't parse name: " << key
-                  << ": extra symbols after the name";
+    throw Err() << "nom_to_range: can't parse name: \"" << key
+                  << "\": extra symbols after the name";
   return r;
 }
 

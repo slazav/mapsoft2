@@ -107,20 +107,20 @@ xt17,18,19,20" 0
 
 
 assert "$P -n o37-134-1" "[36.5,56.1666667,0.25,0.166666667]" 0
-assert "$P -n o37-134-1,2" "Error: nom_to_range: can't parse name: o37-134-1,2: maps A .. O should be single" 1
+assert "$P -n o37-134-1,2" "Error: nom_to_range: can't parse name: \"o37-134-1,2\": maps A .. O should be single" 1
 
 assert "$P -E -n o37-134-1.2x2" "[36.5,56.1666667,0.5,0.333333333]" 0
-assert "$P -n o37-134-1.2x2" "Error: nom_to_range: can't parse name: o37-134-1.2x2: extra symbols after the name" 1
+assert "$P -n o37-134-1.2x2" "Error: nom_to_range: can't parse name: \"o37-134-1.2x2\": extra symbols after the name" 1
 
 assert "$P -c -n o37-134-1" "[36.625,56.25]" 0
-assert "$P -c -n o37-134-1,2" "Error: nom_to_range: can't parse name: o37-134-1,2: maps A .. O should be single" 1
+assert "$P -c -n o37-134-1,2" "Error: nom_to_range: can't parse name: \"o37-134-1,2\": maps A .. O should be single" 1
 assert "$P -E -c -n o37-134-1.2x2" "[36.75,56.3333333]" 0
-assert "$P -c -n o37-134-1.2x2" "Error: nom_to_range: can't parse name: o37-134-1.2x2: extra symbols after the name" 1
+assert "$P -c -n o37-134-1.2x2" "Error: nom_to_range: can't parse name: \"o37-134-1.2x2\": extra symbols after the name" 1
 
 assert "$P -n o37-134-1 --shift [1,1]" "o37-122-4" 0
-assert "$P -n o37-134-1,2 --shift [1,1]" "Error: nom_to_range: can't parse name: o37-134-1,2: maps A .. O should be single" 1
+assert "$P -n o37-134-1,2 --shift [1,1]" "Error: nom_to_range: can't parse name: \"o37-134-1,2\": maps A .. O should be single" 1
 assert "$P -E -n o37-134-1.2x2 --shift [1,1]" "o37-123-1" 0
-assert "$P -n o37-134-1.2x2 --shift [1,1]" "Error: nom_to_range: can't parse name: o37-134-1.2x2: extra symbols after the name" 1
+assert "$P -n o37-134-1.2x2 --shift [1,1]" "Error: nom_to_range: can't parse name: \"o37-134-1.2x2\": extra symbols after the name" 1
 
 assert "$P -n o37-134-1 -s 100k" "o37-134" 0
 assert "$P -n o37-134-1 -s 200k" "o37-31" 0
