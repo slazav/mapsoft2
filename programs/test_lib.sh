@@ -25,7 +25,8 @@ function assert_diff(){
   f_exp="$1"
   f_res="$2"
     if ! diff -q -- "$f_exp" "$f_res"; then
-    echo "different files: $f_exp $f_res"
+    echo "different files: $f_exp $f_res:"
+    diff -- "$f_exp" "$f_res"
     exit 1
   else
     rm -f "$f_res"
