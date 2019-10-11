@@ -35,8 +35,10 @@ void usage(bool pod=false){
    "  %z -- altitude, m\n"
 
    "  %t -- time (seconds since 1970-01-01 00:00:00 UTC)\n"
-   "  %T -- date and time in ISO 8601 form (<yyyy-mm-dd>T<HH:MM:SS.FFF>Z)\n"
-   "  %u -- time from the previous point, s\n"
+   "  %T -- formatted date and time (default: ISO 8601 form, <yyyy-mm-dd>T<HH:MM:SS.FFF>Z)\n"
+   "  %u -- time from part beginning, s\n"
+   "  %U -- time from data beginning, s\n"
+   "  %v -- time from the previous point, s\n"
 
    "  %d -- % distance from part beginning, km\n"
    "  %D -- % distance from data beginning, km\n"
@@ -100,6 +102,8 @@ main (int argc, char **argv) {
       "Precision for distance values (default: 3)");
     options.add("sprec", 1,0, m,
       "Precision for speed values (default: 2)");
+    options.add("tprec", 1,0, m,
+      "Precision for time values (default: 1)");
 
     ms2opt_add_std(options);
     ms2opt_add_out(options);
@@ -124,8 +128,9 @@ main (int argc, char **argv) {
     int zprec     = O.get<int>("zprec", 1);
     int dprec     = O.get<int>("dprec", 3);
     int sprec     = O.get<int>("sprec", 2);
+    int tprec     = O.get<int>("tprec", 1);
 
-    double speed=0, dist = 0, Dist = 0;
+    double speed=0, dist = 0, Dist = 0, t0 = 0, T0 = -1;
     queue<pair<double, double> > timedist;
 
     string ofile = O.get("out","");
@@ -140,6 +145,8 @@ main (int argc, char **argv) {
 
         tp = trk[p];
         tp.t += tshift*3600*1000;
+
+        if (T0<0) T0 = tp.t;
 
         if ( (br == "track" && (tp.start || p==0)) ||
              (br == "day"   && (nn != 0) &&
@@ -159,6 +166,7 @@ main (int argc, char **argv) {
           Dist +=dd;
         } else {
           dist = 0;
+          t0 = tp.t;
         }
 
         timedist.push(make_pair(tp.t/1000.0, Dist));
@@ -190,7 +198,9 @@ main (int argc, char **argv) {
 
             case 't': cout << int(tp.t/1000.0); break;
             case 'T': cout << write_fmt_time(tfmt.c_str(), tp.t); break;
-            case 'u': cout << fixed << setprecision(3) << dt/1000.0; break;
+            case 'u': cout << fixed << setprecision(tprec) << (tp.t-t0)/1000.0; break;
+            case 'U': cout << fixed << setprecision(tprec) << (tp.t-T0)/1000.0; break;
+            case 'v': cout << fixed << setprecision(tprec) << dt/1000.0; break;
 
             case 'd': cout << fixed << setprecision(dprec) << dist/1000.0; break;
             case 'D': cout << fixed << setprecision(dprec) << Dist/1000.0; break;
