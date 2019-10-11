@@ -164,5 +164,5 @@ parse_ozi_time(const string & str){
   if (ss.fail() || !ss.eof())
     throw Err() << "Unsupported time format: \"" << str << "\"";
 
-  return int64_t((t*3600.0*24.0 - 2209161600.0)*1000);
+  return rint((t*3600.0*24.0 - 2209161600.0)*1000);
 }
