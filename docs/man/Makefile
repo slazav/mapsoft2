@@ -27,7 +27,6 @@ clean:
 
 # pages generated from help messages
 $(POD1): %.pod: %.txt foot.txt
-	make -C ../../programs/$*
 	(../../programs/$*/$* --pod; cat $< foot.txt) > $@
 
 ## separate man-pages
