@@ -1,9 +1,9 @@
 =head1 CUSTOMIZING VIEWER INTERFACE WITH CSS STYLES
 
 Structure of B<ms2view> window is simple: a viewer, a main menu, a
-statusbar, and tables with waypoints, tracks, etc. Appearence of these
-elements is controlled by GTK3 theme. One can customize it using CSS
-styles. Styles are read from two places:
+statusbar, tables with waypoints, tracks, and maps, a few dialogs, etc.
+Appearence of these elements is controlled by GTK3 theme. One can
+customize it using CSS styles. Styles are read from two places:
 B</usr/share/mapsoft2/mapsoft2.css> -- system-wide file. By default it
 contains a few definitions, mostly for making interface elements smaller.
 Some tips about viewer structure can be also find there.
@@ -21,3 +21,10 @@ documentation or GTK theme sources:
 =item * L<https://github.com/GNOME/gtk/blob/master/gtk/theme/Adwaita/>
 
 =back
+
+=head1 CUSTOMIZING HOTKEYS
+
+Menu hotkeys can be changed in B<$HOME/.mapsoft2/mapsoft2.acc> file.
+The file is read each time the program is started and written when it
+exits. A default hotkey mapping with all lines commented is written in
+the first run.

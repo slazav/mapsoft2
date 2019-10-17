@@ -22,6 +22,7 @@
   <li><a href="#OPTIONS-FOR-DRAWING-WAYPOINTS">OPTIONS FOR DRAWING WAYPOINTS</a></li>
   <li><a href="#OPTIONS-FOR-DRAWING-MAPS">OPTIONS FOR DRAWING MAPS</a></li>
   <li><a href="#CUSTOMIZING-VIEWER-INTERFACE-WITH-CSS-STYLES">CUSTOMIZING VIEWER INTERFACE WITH CSS STYLES</a></li>
+  <li><a href="#CUSTOMIZING-HOTKEYS">CUSTOMIZING HOTKEYS</a></li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
 </ul>
@@ -354,7 +355,7 @@
 
 <h1 id="CUSTOMIZING-VIEWER-INTERFACE-WITH-CSS-STYLES">CUSTOMIZING VIEWER INTERFACE WITH CSS STYLES</h1>
 
-<p>Structure of <b>ms2view</b> window is simple: a viewer, a main menu, a statusbar, and tables with waypoints, tracks, etc. Appearence of these elements is controlled by GTK3 theme. One can customize it using CSS styles. Styles are read from two places: <b>/usr/share/mapsoft2/mapsoft2.css</b> -- system-wide file. By default it contains a few definitions, mostly for making interface elements smaller. Some tips about viewer structure can be also find there. <b>$HOME/.mapsoft2/mapsoft2.css</b> -- user-specific file.</p>
+<p>Structure of <b>ms2view</b> window is simple: a viewer, a main menu, a statusbar, tables with waypoints, tracks, and maps, a few dialogs, etc. Appearence of these elements is controlled by GTK3 theme. One can customize it using CSS styles. Styles are read from two places: <b>/usr/share/mapsoft2/mapsoft2.css</b> -- system-wide file. By default it contains a few definitions, mostly for making interface elements smaller. Some tips about viewer structure can be also find there. <b>$HOME/.mapsoft2/mapsoft2.css</b> -- user-specific file.</p>
 
 <p>Additional information about writing css styles can be found in GTK3 documentation or GTK theme sources:</p>
 
@@ -370,6 +371,10 @@
 
 </li>
 </ul>
+
+<h1 id="CUSTOMIZING-HOTKEYS">CUSTOMIZING HOTKEYS</h1>
+
+<p>Menu hotkeys can be changed in <b>$HOME/.mapsoft2/mapsoft2.acc</b> file. The file is read each time the program is started and written when it exits. A default hotkey mapping with all lines commented is written in the first run.</p>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 
