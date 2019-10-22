@@ -36,6 +36,8 @@ void usage(bool pod=false){
   pr.opts(MS2OPT_DRAWMAP);
 //  pr.head(1, "Options for drawing grid");
 //  pr.opts(MS2OPT_DRAWGRD);
+  pr.head(1, "Other options");
+  pr.opts(MS2OPT_NONSTD);
   throw Err();
 }
 
@@ -53,6 +55,12 @@ main(int argc, char **argv){
     ms2opt_add_drawtrk(options);
     ms2opt_add_drawmap(options);
 //  ms2opt_add_drawgrd(options);
+
+    options.add("mapdb", 1,0,MS2OPT_NONSTD,
+      "Open MapDB project");
+
+    options.add("mapdb_config", 1,0,MS2OPT_NONSTD,
+      "Resterisation config-file instead of default <mapdb dir>/raster.txt");
 
     std::vector<std::string> files;
     Opt opts = parse_options_all(&argc, &argv, options, ~0, files);
