@@ -59,17 +59,13 @@ with following fields:',
 
 <ul>
 
-<li>flags: ENRU(`A 32-bit integer. First 22 bits are not used; bits 23-24
-are used for to keep object directon (0-not specified, 1-forward,
-2-backward); bits 25-32 (last byte) are reserved for object classification (supported values:
-0-point, 1-line, 2-polygon).',
-`32-битное челое число. Первые 22 бит не используются. Биты 23-24 содержат
-информацию об ориентации объекта (0-не указана, 1-прямая, 2-обратная). Биты
-25-32 (последний байт) зарезервированы для классификации объекта
-(поддерживаются значения: 0-точка, 1-линия, 2-многоугольник).')
-
-<li>type: ENRU(`A 32-bit integer, object type.',
-`32-битное челое число, тип объекта.')
+<li>type: ENRU(`A 32-bit integer, object type. Bits 0..13 are not used,
+bits 14 and 15 are used for object classification (supported values:
+0-point, 1-line, 2-polygon), bits 16..31 (last two bytes) - object type',
+`32-битное челое число, тип объекта. Биты 0..13 не используются, биты
+14 и 15 используются для классификации объекта
+(поддерживаются значения: 0-точка, 1-линия, 2-многоугольник), биты 16..31
+(два последних байта) - собственно, тип объекта.')
 </ul>
 
 <p> ENRU(`Other fields are optional, they are packed in the RIFF-like
