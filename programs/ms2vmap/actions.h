@@ -42,7 +42,7 @@ class MapAction {
     // parse options and run the action
     void run(int *argc, char **argv[]){
       std::vector<std::string> args;
-      Opt opts = parse_options_all(argc, argv, options, ~0, args);
+      Opt opts = parse_options_all(argc, argv, options, {}, args);
       if (opts.exists("help")) {help(); throw Err();}
       run_impl(args, opts);
     };

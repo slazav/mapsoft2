@@ -13,8 +13,7 @@ void usage(bool pod=false){
   pr.usage("<options>");
 
   pr.head(1, "Options");
-  pr.opts(MS2OPT_NONSTD);
-  pr.opts(MS2OPT_STD);
+  pr.opts({"NONSTD", "STD"});
 
   pr.par(
     "Value of --tiles option can be a tile \"[x,y]\" or a "
@@ -39,16 +38,17 @@ int
 main(int argc, char **argv){
   try {
 
-    options.add("zindex", 1,'z',MS2OPT_NONSTD,
+    const char *g = "NONSTD";
+    options.add("zindex", 1,'z',g,
       "Set tile z-index.");
-    options.add("range",  1,'r',MS2OPT_NONSTD,
+    options.add("range",  1,'r',g,
       "Show tile range which covers a given figure. "
       "Figure is a point, rectangle or line in WGS84 coordinates.");
-    options.add("tiles", 1,'t',MS2OPT_NONSTD,
+    options.add("tiles", 1,'t',g,
       "Show coordinate range for a given tile or files.");
-    options.add("google", 0,'G',MS2OPT_NONSTD,
+    options.add("google", 0,'G',g,
       "Use Google tiles instead of TMS.");
-    options.add("center", 0,'c',MS2OPT_NONSTD,
+    options.add("center", 0,'c',g,
       "Instead of printing a coordinate range print its central point.");
 
     ms2opt_add_std(options);
@@ -56,7 +56,7 @@ main(int argc, char **argv){
 
     if (argc<2) usage();
     vector<string> nonopt;
-    Opt O = parse_options_all(&argc, &argv, options, ~0, nonopt);
+    Opt O = parse_options_all(&argc, &argv, options, {}, nonopt);
     if (O.exists("help")) usage();
     if (O.exists("pod"))  usage(true);
 

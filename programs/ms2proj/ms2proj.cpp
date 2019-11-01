@@ -35,8 +35,7 @@ void usage(bool pod=false){
     "with four numbers: [x,y,w,h]."
   );
   pr.head(1, "Options");
-  pr.opts(MS2OPT_NONSTD);
-  pr.opts(MS2OPT_STD);
+  pr.opts({"NONSTD", "STD"});
 
   throw Err();
 }
@@ -47,23 +46,23 @@ main(int argc, char *argv[]){
   try{
     ms2opt_add_std(options);
 
-    int m = MS2OPT_NONSTD;
-    options.add("from", 1, 'f', m,
-      "Source coordinate system, \"libproj\" parameter string "
+    const char *g = "NONSTD";
+    options.add("from", 1, 'f', g,
+      "Source coordinate systeg, \"libproj\" parameter string "
       "(e.g. \"+datum=WGS84 +proj=lonlat\") "
       "or mapsoft2 alias (\"WGS\", \"WEB\", \"FI\", \"CH\", \"SU39\", etc.). "
       "Default: \"WGS\"");
-    options.add("to", 1, 't', m, "Destination coordinate system.");
+    options.add("to", 1, 't', g, "Destination coordinate system.");
 
-    options.add("back", 0, 'b', m, "Do inverse conversion, destination -> source.");
-    options.add("alt",  0, 'z', m, "Convert altitude (by default it is not converted).");
-    options.add("acc",  1, 'a', m, "Convertion accuracy for lines and "
+    options.add("back", 0, 'b', g, "Do inverse conversion, destination -> source.");
+    options.add("alt",  0, 'z', g, "Convert altitude (by default it is not converted).");
+    options.add("acc",  1, 'a', g, "Convertion accuracy for lines and "
                                    "rectangles in source units, (default: 1.0).");
     options.remove("verbose");
 
     if (argc<2) usage();
     vector<string> forms;
-    Opt O = parse_options_all(&argc, &argv, options, ~0, forms);
+    Opt O = parse_options_all(&argc, &argv, options, {}, forms);
     if (O.exists("help")) usage();
     if (O.exists("pod"))  usage(true);
 

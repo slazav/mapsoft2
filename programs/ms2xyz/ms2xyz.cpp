@@ -20,12 +20,12 @@ void usage(bool pod=false){
   pr.usage("<options> <input files>");
 
   pr.head(1, "General options");
-  pr.opts(MS2OPT_NONSTD | MS2OPT_STD | MS2OPT_OUT);
+  pr.opts({"NONSTD", "STD", "OUT"});
 
   pr.par("If output file is not specified the data is printed to stdout.");
 
   pr.head(1, "Geodata input options");
-  pr.opts(MS2OPT_GEO_I | MS2OPT_GEO_IO);
+  pr.opts({"GEO_I", "GEO_IO"});
 
   pr.head(1, "Format");
   pr.par(
@@ -82,27 +82,27 @@ int
 main (int argc, char **argv) {
   try {
 
-    int m = MS2OPT_NONSTD;
-    options.add("tshift", 1,0,m,
+    const char *g = "NONSTD";
+    options.add("tshift", 1,0,g,
       "Time shift, hours.");
-    options.add("tfmt",   1,'t', m,
+    options.add("tfmt",   1,'t', g,
       "Time format string for %T field (default: \"%F %T\")");
-    options.add("fmt", 1,'f', m,
+    options.add("fmt", 1,'f', g,
       "Format string (default: \"%x %y %z %T %D %S\")");
-    options.add("win", 1,'w', m,
+    options.add("win", 1,'w', g,
       "Window for speed calculation, sec (default: 120)");
-    options.add("break", 1,'b', m,
+    options.add("break", 1,'b', g,
       "Place to break calculation and put empty line "
       "(none | day | track, default: none)");
-    options.add("llprec", 1,0, m,
+    options.add("llprec", 1,0, g,
       "Precision for latitude and longitude values (default: 7)");
-    options.add("zprec", 1,0, m,
+    options.add("zprec", 1,0, g,
       "Precision for altitude values (default: 1)");
-    options.add("dprec", 1,0, m,
+    options.add("dprec", 1,0, g,
       "Precision for distance values (default: 3)");
-    options.add("sprec", 1,0, m,
+    options.add("sprec", 1,0, g,
       "Precision for speed values (default: 2)");
-    options.add("tprec", 1,0, m,
+    options.add("tprec", 1,0, g,
       "Precision for time values (default: 1)");
 
     ms2opt_add_std(options);
@@ -112,7 +112,7 @@ main (int argc, char **argv) {
 
     if (argc<2) usage();
     vector<string> infiles;
-    Opt O = parse_options_all(&argc, &argv, options, ~0, infiles);
+    Opt O = parse_options_all(&argc, &argv, options, {}, infiles);
     if (O.exists("help")) usage();
     if (O.exists("pod"))  usage(true);
 

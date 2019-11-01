@@ -35,7 +35,7 @@ void usage(bool pod=false){
   pr.usage("<action> [<action arguments and options>]");
 
   pr.head(1, "General options:");
-  pr.opts(MS2OPT_STD);
+  pr.opts({"STD"});
   pr.head(1, "Actions:");
 
   // print list of actions
@@ -60,7 +60,7 @@ main(int argc, char *argv[]){
     options.remove("verbose");
 
     // general options -- up to first non-option argument
-    Opt O = parse_options(&argc, &argv, options, MS2OPT_STD, NULL);
+    Opt O = parse_options(&argc, &argv, options, {}, NULL);
     if (O.exists("help")) usage();
     if (O.exists("pod"))  usage(true);
     if (argc<1) usage();

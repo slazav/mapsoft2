@@ -23,21 +23,21 @@ void usage(bool pod=false){
   pr.name("mapsoft2 viewer for geodata and raster maps");
   pr.usage("[<options>] <input files>");
   pr.head(1, "General options");
-  pr.opts(MS2OPT_STD);
+  pr.opts({"STD"});
   pr.head(1, "Options for reading geodata");
-  pr.opts(MS2OPT_GEO_I | MS2OPT_GEO_IO);
+  pr.opts({"GEO_I","GEO_IO"});
   pr.head(1, "Options for making map reference");
-  pr.opts(MS2OPT_MKREF);
+  pr.opts({"MKREF"});
   pr.head(1, "Options for drawing tracks");
-  pr.opts(MS2OPT_DRAWTRK);
+  pr.opts({"DRAWTRK"});
   pr.head(1, "Options for drawing waypoints");
-  pr.opts(MS2OPT_DRAWWPT);
+  pr.opts({"DRAWWPT"});
   pr.head(1, "Options for drawing maps");
-  pr.opts(MS2OPT_DRAWMAP);
+  pr.opts({"DRAWMAP"});
 //  pr.head(1, "Options for drawing grid");
-//  pr.opts(MS2OPT_DRAWGRD);
+//  pr.opts({"DRAWGRD"});
   pr.head(1, "Other options");
-  pr.opts(MS2OPT_NONSTD);
+  pr.opts({"NONSTD"});
   throw Err();
 }
 
@@ -56,14 +56,16 @@ main(int argc, char **argv){
     ms2opt_add_drawmap(options);
 //  ms2opt_add_drawgrd(options);
 
-    options.add("mapdb", 1,0,MS2OPT_NONSTD,
+    const char *g = "NONSTD";
+    options.add("mapdb", 1,0,g,
       "Open MapDB project");
 
-    options.add("mapdb_config", 1,0,MS2OPT_NONSTD,
-      "Resterisation config-file instead of default <mapdb dir>/raster.txt");
+    options.add("mapdb_config", 1,0,g,
+      "Rasterisation config-file instead of default <mapdb dir>/raster.txt");
+
 
     std::vector<std::string> files;
-    Opt opts = parse_options_all(&argc, &argv, options, ~0, files);
+    Opt opts = parse_options_all(&argc, &argv, options, {}, files);
     std::shared_ptr<Opt> optsp(new Opt(opts));
 
     if (opts.exists("help")) usage();

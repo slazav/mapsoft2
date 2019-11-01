@@ -24,11 +24,11 @@ void usage(bool pod=false){
     "saves data to the output file.");
 
   pr.head(1, "General options");
-  pr.opts(MS2OPT_STD | MS2OPT_OUT);
+  pr.opts({"STD", "OUT"});
   pr.head(1, "Geodata input/output options");
-  pr.opts(MS2OPT_GEO_I | MS2OPT_GEO_IO | MS2OPT_GEO_O);
+  pr.opts({"GEO_I", "GEO_IO", "GEO_O"});
   pr.head(1, "Geodata filtering options");
-  pr.opts(MS2OPT_GEOFLT);
+  pr.opts({"GEOFLT"});
   pr.head(1, "Rendering images");
 
   pr.par(
@@ -45,17 +45,17 @@ void usage(bool pod=false){
     "default value.");
 
   pr.head(2, "Options for making map reference");
-  pr.opts(MS2OPT_MKREF);
+  pr.opts({"MKREF"});
   pr.head(2, "Options for drawing tracks");
-  pr.opts(MS2OPT_DRAWTRK);
+  pr.opts({"DRAWTRK"});
   pr.head(2, "Options for drawing waypoints");
-  pr.opts(MS2OPT_DRAWWPT);
+  pr.opts({"DRAWWPT"});
   pr.head(2, "Options for drawing maps");
-  pr.opts(MS2OPT_DRAWMAP);
+  pr.opts({"DRAWMAP"});
 //  pr.head(2, "Options for drawing grid");
-//  pr.opts(MS2OPT_DRAWGRD);
+//  pr.opts({"DRAWGRD"});
   pr.head(2, "Options for saving images");
-  pr.opts(MS2OPT_IMAGE);
+  pr.opts({"IMAGE", "IMAGE_CMAP"});
 
   throw Err();
 }
@@ -71,13 +71,13 @@ main(int argc, char *argv[]){
     ms2opt_add_geo_io(options);
     ms2opt_add_geoflt(options);
     ms2opt_add_geoimg(options);
-    options.replace("out_fmt", 1, 0, MS2OPT_OUT,
+    options.replace("out_fmt", 1, 0, "OUT",
       "Output format, geodata (json, gu, gpx, kml, kmz, ozi, zip) "
       "or image (jpeg, png, gif, tiff, ps, pdf, svg)");
 
     if (argc<2) usage();
     vector<string> infiles;
-    Opt O = parse_options_all(&argc, &argv, options, ~0, infiles);
+    Opt O = parse_options_all(&argc, &argv, options, {}, infiles);
     if (O.exists("help")) usage();
     if (O.exists("pod"))  usage(true);
     bool verb = O.exists("verbose");

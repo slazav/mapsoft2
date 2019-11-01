@@ -21,8 +21,7 @@ void usage(bool pod=false){
   pr.usage("[-E] -n <name> -r <range>  -- check if the map touches the range");
 
   pr.head(1, "Options");
-  pr.opts(MS2OPT_NONSTD);
-  pr.opts(MS2OPT_STD);
+  pr.opts({"NONSTD", "STD"});
 
   pr.par(
    "Program \"ms2nom\" does some calculations with standard Soviet "
@@ -63,29 +62,30 @@ int
 main(int argc, char **argv){
   try {
 
-    options.add("range",  1,'r',MS2OPT_NONSTD,
+    const char *g = "NONSTD";
+    options.add("range",  1,'r',g,
       "Show maps which cover a given figure. "
       "Figure is a point, rectangle or line in WGS84 coordinates. "
       "Option --scale should be set.");
 
-    options.add("scale",  1,'s',MS2OPT_NONSTD,
+    options.add("scale",  1,'s',g,
       "Set map scale. "
       "Scale should be set when --range option is used. If used with "
       "--name option then name will be converted to a new scale "
       "instead of printing the range.");
 
-    options.add("name", 1,'n',MS2OPT_NONSTD,
+    options.add("name", 1,'n',g,
       "Show coordinate range for a given map.");
 
-    options.add("ext", 0,'E',MS2OPT_NONSTD,
+    options.add("ext", 0,'E',g,
       "Use 'extended mode': single sheets (like Q10-001) are allowed "
       "on input and always returned on output; for a single sheet "
       "suffix '.<N>x<M>' is allowed to multiply the range (like n49-001.3x2).");
 
-    options.add("center", 0,'c',MS2OPT_NONSTD,
+    options.add("center", 0,'c',g,
       "Instead of printing a coordinate range print its central point.");
 
-    options.add("shift", 1,'S',MS2OPT_NONSTD,
+    options.add("shift", 1,'S',g,
       "Shift a map. Should be used with --name option. Not compatable with --range option. "
       "Argument is an array of two integer numbers [dx,dy].");
 
@@ -94,7 +94,7 @@ main(int argc, char **argv){
 
     if (argc<2) usage();
     vector<string> nonopt;
-    Opt O = parse_options_all(&argc, &argv, options, ~0, nonopt);
+    Opt O = parse_options_all(&argc, &argv, options, {}, nonopt);
     if (O.exists("help")) usage();
     if (O.exists("pod"))  usage(true);
 
