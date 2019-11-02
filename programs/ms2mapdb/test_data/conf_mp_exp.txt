@@ -7,7 +7,7 @@
 point 0x815 0x816
 point 0 0
 line 0 0
-area 0 0
+area 0xFF00 0xFF01
 
 id 123456
 name map1
