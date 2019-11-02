@@ -19,5 +19,13 @@ assert "$prog test_data/f5.mp" 'Error: read_mp: wrong level number: [Data3=(55.6
 assert "$prog test_data/f6.mp" 'Error: read_mp: Levels setting 2..10 is expected: [Levels=12]' 1
 assert "$prog test_data/f7.mp" 'Error: read_mp: not all levels are set in the header' 1
 
+# encoding
+$prog --mp_out_enc UTF-8 test_data/f_enc1.mp > tmp.mp
+assert_diff test_data/f_enc1a.mp tmp.mp
+
+$prog --mp_in_enc UTF-8 test_data/f_enc1a.mp > tmp.mp
+assert_diff test_data/f_enc1b.mp tmp.mp
+
+
 exit 0
 
