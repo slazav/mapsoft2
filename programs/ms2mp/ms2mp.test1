@@ -26,6 +26,10 @@ assert_diff test_data/f_enc1a.mp tmp.mp
 $prog --mp_in_enc UTF-8 test_data/f_enc1a.mp > tmp.mp
 assert_diff test_data/f_enc1b.mp tmp.mp
 
+# join maps
+$prog test_data/f_join1.mp test_data/f_join2.mp > tmp.mp
+assert_diff test_data/f_join3.mp tmp.mp
+
 
 exit 0
 
