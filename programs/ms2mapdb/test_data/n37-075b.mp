@@ -1,6 +1,6 @@
 [IMG ID]
-ID=0
-Name=
+ID=123456
+Name=map1
 LblCoding=9
 Codepage=1251
 Elevation=M
@@ -21,43 +21,43 @@ PolygonEvaluate=Y
 Transparent=N
 [END-IMG ID]
 [POI]
-Type=0x815
+Type=0x816
 Label=Бол.Тризново
 Data0=(53.953735,37.097267)
 [END]
 
 [POI]
-Type=0x815
+Type=0x816
 Label=Каменка
 Data0=(53.961707,37.006900)
 [END]
 
 [POI]
-Type=0x815
+Type=0x816
 Label=Каменские Выселки
 Data0=(53.945113,37.025821)
 [END]
 
 [POI]
-Type=0x815
+Type=0x816
 Label=Крапивна
 Data0=(53.941321,37.157343)
 [END]
 
 [POI]
-Type=0x815
+Type=0x816
 Label=Мал.Тризново
 Data0=(53.969651,37.049813)
 [END]
 
 [POI]
-Type=0x815
+Type=0x816
 Label=Орлово
 Data0=(53.959866,37.156152)
 [END]
 
 [POI]
-Type=0x815
+Type=0x816
 Label=Редочь
 Data0=(53.972747,37.056647)
 [END]

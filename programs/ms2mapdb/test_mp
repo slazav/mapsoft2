@@ -19,15 +19,16 @@ rm -rf tmp.db
 
 # importing with a config file:
 assert "$P import_mp tmp.db --config test_data/conf_mp_imp.txt test_data/n37-075.mp" "" 0
-assert "$P export_mp tmp.db tmp.mp" "" 0
+assert "$P export_mp tmp.db --config test_data/conf_mp_exp.txt tmp.mp" "" 0
 assert_diff test_data/n37-075b.mp tmp.mp
 
 rm -rf tmp.db
 
 # same but with command-line options
 assert "$P import_mp tmp.db --cnv_points [[\"0x900\",\"0x815\"],[0,0]] --cnv_lines [[4,0],[\"0xA\",0]] --cnv_areas=[] test_data/n37-075.mp" "" 0
-assert "$P export_mp tmp.db tmp.mp" "" 0
+assert "$P export_mp tmp.db --cnv_points [[\"0x815\",\"0x816\"],[0,0]] --id 123456 --name map1 tmp.mp" "" 0
 assert_diff test_data/n37-075b.mp tmp.mp
+
 
 rm -rf tmp.db
 
