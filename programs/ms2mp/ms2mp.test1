@@ -1,0 +1,23 @@
+#!/bin/sh -efu
+
+. ../test_lib.sh
+
+prog=${1:-./ms2mp}
+
+$prog test_data/f1.mp > tmp.mp
+assert_diff test_data/f1a.mp tmp.mp
+
+$prog test_data/f1.mp test_data/f11.mp  > tmp.mp
+assert_diff test_data/f11a.mp tmp.mp
+
+# correct levels settings
+assert "$prog test_data/missing.mp" "Error: can't read MP file" 1
+assert "$prog test_data/f2.mp" 'Error: read_mp: wrong level number: [Level4=17]' 1
+assert "$prog test_data/f3.mp" 'Error: read_mp: Level3 should be less then Level2' 1
+assert "$prog test_data/f4.mp" 'Error: read_mp: Level3 should be less then Level2' 1
+assert "$prog test_data/f5.mp" 'Error: read_mp: wrong level number: [Data3=(55.666607,35.998067),(55.666599,35.498060)]' 1
+assert "$prog test_data/f6.mp" 'Error: read_mp: Levels setting 2..10 is expected: [Levels=12]' 1
+assert "$prog test_data/f7.mp" 'Error: read_mp: not all levels are set in the header' 1
+
+exit 0
+
