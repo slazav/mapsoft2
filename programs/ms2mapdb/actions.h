@@ -76,7 +76,6 @@ public:
     if (args.size()!=2) throw Err() << get_name()
       << ": two arguments expected: map name, file name";
 
-    // TODO: options, help
     MapDB map(args[0], 1);
     map.import_mp(args[1], opts);
   }
@@ -105,7 +104,6 @@ public:
     if (args.size()!=2) throw Err() << get_name()
       << ": two arguments expected: map name, file name";
 
-    // TODO: options, help
     MapDB map(args[0], 0);
     map.export_mp(args[1], opts);
   }
@@ -115,14 +113,17 @@ public:
 
 class MapActionImportVMAP : public MapAction{
 public:
-  MapActionImportVMAP(){ }
+  MapActionImportVMAP(){
+    ms2opt_add_mapdb_vmap_imp(options);
+  }
 
-  std::string get_name() const override {
-    return "import_vmap";}
+  std::string get_name() const override { return "import_vmap";}
   std::string get_descr() const override {
     return "import mapsoft1 VMAP file to MapDB";}
 
-  void help_impl(HelpPrinter & pr) override { }
+  void help_impl(HelpPrinter & pr) override {
+    pr.opts({"MAPDB_VMAP_IMP"});
+  }
 
   virtual void run_impl(const std::vector<std::string> & args,
                    const Opt & opts) override {
@@ -130,7 +131,6 @@ public:
     if (args.size()!=2) throw Err() << get_name()
       << ": two arguments expected: map name, file name";
 
-    // TODO: options, help
     MapDB map(args[0], 1);
     map.import_vmap(args[1], opts);
   }
@@ -140,14 +140,17 @@ public:
 
 class MapActionExportVMAP : public MapAction{
 public:
-  MapActionExportVMAP(){ }
+  MapActionExportVMAP(){
+    ms2opt_add_mapdb_vmap_exp(options);
+  }
 
-  std::string get_name() const override {
-    return "export_vmap";}
+  std::string get_name() const override { return "export_vmap";}
   std::string get_descr() const override {
     return "export mapsoft1 VMAP file from MapDB";}
 
-  void help_impl(HelpPrinter & pr) override { }
+  void help_impl(HelpPrinter & pr) override {
+    pr.opts({"MAPDB_VMAP_EXP"});
+  }
 
   virtual void run_impl(const std::vector<std::string> & args,
                    const Opt & opts) override {
