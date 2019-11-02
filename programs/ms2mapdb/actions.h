@@ -37,7 +37,7 @@ class MapAction {
     }
 
     // implementation-specific part
-    virtual void help_impl(const HelpPrinter & pr) const = 0;
+    virtual void help_impl(HelpPrinter & pr) = 0;
 
     // parse options and run the action
     void run(int *argc, char **argv[]){
@@ -57,14 +57,18 @@ class MapAction {
 
 class MapActionImportMP : public MapAction{
 public:
-  MapActionImportMP(){ }
+  MapActionImportMP(){
+    ms2opt_add_mapdb_mp_imp(options);
+  }
 
   std::string get_name() const override {
     return "import_mp";}
   std::string get_descr() const override {
     return "import MP file to MapDB";}
 
-  void help_impl(const HelpPrinter & pr) const override{ }
+  void help_impl(HelpPrinter & pr) override {
+    pr.opts({"MAPDB_MP_IMP"});
+  }
 
   virtual void run_impl(const std::vector<std::string> & args,
                    const Opt & opts) override {
@@ -82,14 +86,18 @@ public:
 
 class MapActionExportMP : public MapAction{
 public:
-  MapActionExportMP(){ }
+  MapActionExportMP(){
+    ms2opt_add_mapdb_mp_exp(options);
+  }
 
   std::string get_name() const override {
     return "export_mp";}
   std::string get_descr() const override {
     return "export MP file from MapDB";}
 
-  void help_impl(const HelpPrinter & pr) const override{ }
+  void help_impl(HelpPrinter & pr) override {
+    pr.opts({"MAPDB_MP_EXP"});
+  }
 
   virtual void run_impl(const std::vector<std::string> & args,
                    const Opt & opts) override {
@@ -114,7 +122,7 @@ public:
   std::string get_descr() const override {
     return "import mapsoft1 VMAP file to MapDB";}
 
-  void help_impl(const HelpPrinter & pr) const override{ }
+  void help_impl(HelpPrinter & pr) override { }
 
   virtual void run_impl(const std::vector<std::string> & args,
                    const Opt & opts) override {
@@ -139,7 +147,7 @@ public:
   std::string get_descr() const override {
     return "export mapsoft1 VMAP file from MapDB";}
 
-  void help_impl(const HelpPrinter & pr) const override{ }
+  void help_impl(HelpPrinter & pr) override { }
 
   virtual void run_impl(const std::vector<std::string> & args,
                    const Opt & opts) override {
@@ -162,7 +170,7 @@ public:
   std::string get_name() const override {return "render";}
   std::string get_descr() const override {return "Render image from MapDB";}
 
-  void help_impl(const HelpPrinter & pr) const override{ }
+  void help_impl(HelpPrinter & pr) override{ }
 
   virtual void run_impl(const std::vector<std::string> & args,
                    const Opt & opts) override {

@@ -2,7 +2,7 @@
 
 # MP import/export
 
-P=${1:-./ms2vmap}
+P=${1:-./ms2mapdb}
 
 . ../test_lib.sh
 

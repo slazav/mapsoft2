@@ -27,9 +27,9 @@ std::vector<std::shared_ptr<MapAction> > actions = {
 
 /**********************************************************/
 void usage(bool pod=false){
-  HelpPrinter pr(pod, options, "ms2vmap");
+  HelpPrinter pr(pod, options, "ms2mapdb");
 
-  pr.name("working with vector maps");
+  pr.name("working with vector maps in MapDB storage");
   pr.usage("(-h|--help|--pod)");
   pr.usage("<action> (-h|--help)");
   pr.usage("<action> [<action arguments and options>]");
@@ -70,7 +70,7 @@ main(int argc, char *argv[]){
       if (a->get_name() == argv[0]) {a->run(&argc, &argv); return 0;}
     }
 
-    throw Err() << "ms2vmap: unknown action: " << argv[0];
+    throw Err() << "ms2mapdb: unknown action: " << argv[0];
 
   }
   catch (Err e) {
