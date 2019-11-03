@@ -148,6 +148,7 @@ ENRU(`Mapsoft2 native format for vector maps.',
 `Формат mapsoft2 для хранения векторных карт.')</a>
 </ul>
 
+<a href="mapdb_ru.htm"> ENRU(`Vector maps in mapsoft2 (RU)',`Векторные карты в Mapsoft2')</a>
 
 <!--#################################################################-->
 <div align=right>Vladislav Zavjalov, slazav at altlinux dot org</div>
