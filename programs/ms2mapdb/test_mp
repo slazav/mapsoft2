@@ -8,7 +8,7 @@ P=${1:-./ms2mapdb}
 
 rm -rf tmp.db
 
-assert "$P import_mp tmp.db" "Error: import_mp: two arguments expected: map name, file name" 1
+assert "$P import_mp tmp.db" "Error: import_mp: two arguments expected: MapDB folder, file name" 1
 assert "$P import_mp tmp.db missing.mp" "Error: can't read MP file" 1
 
 assert "$P import_mp tmp.db test_data/n37-075.mp" "" 0

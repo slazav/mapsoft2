@@ -6,6 +6,7 @@ OTHER_TESTS :=\
   test_interface\
   test_mp\
   test_vmap\
+  test_render\
 
 
 MODDIR      := ../../modules
