@@ -74,10 +74,12 @@ main(int argc, char **argv){
     // fix scrollbar problem
     setenv("GDK_CORE_DEVICE_EVENTS", "1", 1);
 
-    Gtk::Main kit(argc, argv);
+    auto app = Gtk::Application::create();
     Mapview mapview(optsp);
     mapview.add_files(files);
-    kit.run(mapview);
+    app->run(mapview, argc, argv);
+
+
     return 0;
 
   }
