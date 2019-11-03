@@ -5,7 +5,14 @@
 #include "getopt/getopt.h"
 #include "geo_data/geo_io.h"
 #include "geo_data/filters.h"
+#include "geo_data/conv_geo.h"
+#include "geo_mkref/geo_mkref.h"
 #include "geo_render/write_geoimg.h"
+#include "geo_render/gobj_trk.h"
+#include "geo_render/gobj_wpts.h"
+#include "geo_render/gobj_maps.h"
+//#include "draw_pulk_grid.h"
+#include "viewer/gobj_multi.h"
 #include <cstring>
 
 using namespace std;
@@ -70,6 +77,13 @@ main(int argc, char *argv[]){
     ms2opt_add_geo_o(options);
     ms2opt_add_geo_io(options);
     ms2opt_add_geoflt(options);
+
+    ms2opt_add_mkref(options);
+    ms2opt_add_drawwpt(options);
+    ms2opt_add_drawtrk(options);
+    ms2opt_add_drawmap(options);
+//  ms2opt_add_drawgrd(options);
+
     ms2opt_add_geoimg(options);
     options.replace("out_fmt", 1, 0, "OUT",
       "Output format, geodata (json, gu, gpx, kml, kmz, ozi, zip) "
@@ -100,7 +114,21 @@ main(int argc, char *argv[]){
 
     // render image file
     try {
-      write_geoimg(ofile, data, O);
+      // make reference and conversion map -> WGS84
+      GeoMap ref = geo_mkref(data, O);
+
+      // construct GObjMulti with all the objects we want to draw:
+      GObjMulti obj;
+      for (auto & m:data.maps)
+        obj.add(3, std::shared_ptr<GObjMaps>(new GObjMaps(m)));
+
+      for (auto & t:data.trks)
+        obj.add(2, std::shared_ptr<GObjTrk>(new GObjTrk(t)));
+
+      for (auto & w:data.wpts)
+        obj.add(1, std::shared_ptr<GObjWpts>(new GObjWpts(w)));
+
+      write_geoimg(ofile, obj, ref, O);
       return 0;
     }
     catch(Err e) {if (e.code()!=-2) throw e;}
