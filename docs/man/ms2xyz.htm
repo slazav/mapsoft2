@@ -90,6 +90,12 @@
 <p>Precision for speed values (default: 2)</p>
 
 </dd>
+<dt id="tprec-arg"><b>--tprec &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Precision for time values (default: 1)</p>
+
+</dd>
 <dt id="h---help"><b>-h, --help</b></dt>
 <dd>
 
@@ -149,8 +155,10 @@
   %y -- wgs lat
   %z -- altitude, m
   %t -- time (seconds since 1970-01-01 00:00:00 UTC)
-  %T -- date and time in ISO 8601 form (&lt;yyyy-mm-dd&gt;T&lt;HH:MM:SS.FFF&gt;Z)
-  %u -- time from the previous point, s
+  %T -- formatted date and time (default: ISO 8601 form, &lt;yyyy-mm-dd&gt;T&lt;HH:MM:SS.FFF&gt;Z)
+  %u -- time from part beginning, s
+  %U -- time from data beginning, s
+  %v -- time from the previous point, s
   %d -- % distance from part beginning, km
   %D -- % distance from data beginning, km
   %e -- % distance from the previous point, m
