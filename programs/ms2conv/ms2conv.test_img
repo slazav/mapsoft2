@@ -5,19 +5,19 @@
 
 P=${1:-./ms2conv}
 
-. ../test_lib.sh
+. ../../modules/test_lib.sh
 
 #################
 
 # map + data (reference will be taken from the map)
-#assert "$P test_data_img/20100320wz.zip test_data_img/o37-122.map\
+#assert_cmd "$P test_data_img/20100320wz.zip test_data_img/o37-122.map\
 # -o tmp.pdf" "" 0
 #assert_diff test_data_mkref/m47-022.map tmp.map
 
 [ -z "${SKIP_IMG_DIFFS:-}" ] || exit 0
 
 # 6x6 km box
-assert "$P test_data_img/20100320wz.zip test_data_img/o37-122.map\
+assert_cmd "$P test_data_img/20100320wz.zip test_data_img/o37-122.map\
  -o tmp.pdf\
  --mkref proj --proj SU37 --coords [7362000,6274000,6000,6000] --dpi 100 --scale 1000" "" 0
 
@@ -25,7 +25,7 @@ fix_pdf tmp.pdf
 assert_diff test_data_img/out1.pdf tmp.pdf
 
 # 6x6 km box -- png+map output
-assert "$P test_data_img/20100320wz.zip test_data_img/o37-122.map\
+assert_cmd "$P test_data_img/20100320wz.zip test_data_img/o37-122.map\
  --map tmp.map -o tmp.png\
  --mkref proj --proj SU37 --coords [7362000,6274000,6000,6000] --dpi 100 --scale 1000" "" 0
 
@@ -34,7 +34,7 @@ assert_diff test_data_img/out1.png tmp.png
 assert_diff test_data_img/out1.map tmp.map
 
 # 2x2 km box
-assert "$P test_data_img/20100320wz.zip test_data_img/o37-122.map\
+assert_cmd "$P test_data_img/20100320wz.zip test_data_img/o37-122.map\
  -o tmp.pdf\
  --mkref proj --proj SU37 --coords [7364000,6276000,2000,2000] --dpi 300" "" 0
 
@@ -42,7 +42,7 @@ fix_pdf tmp.pdf
 assert_diff test_data_img/out2.pdf tmp.pdf
 
 # 2x2 km box - smooth + fade
-assert "$P test_data_img/20100320wz.zip test_data_img/o37-122.map\
+assert_cmd "$P test_data_img/20100320wz.zip test_data_img/o37-122.map\
  -o tmp.pdf\
  --mkref proj --proj SU37 --coords [7364000,6276000,2000,2000] --dpi 300\
  --map_smooth 1 --map_fade 0x70FF70FF" "" 0

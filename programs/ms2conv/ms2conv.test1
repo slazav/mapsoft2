@@ -5,14 +5,14 @@
 
 P=${1:-./ms2conv}
 
-. ../test_lib.sh
+. ../../modules/test_lib.sh
 
 help_msg="$($P -h ||:)"
-assert "$P" "$help_msg" 1
-assert "$P --help" "$help_msg" 1
-assert "$P -o " "Error: missing argument: -o" 1
-assert "$P --xxx " "Error: unknown option: --xxx" 1
+assert_cmd "$P" "$help_msg" 1
+assert_cmd "$P --help" "$help_msg" 1
+assert_cmd "$P -o " "Error: missing argument: -o" 1
+assert_cmd "$P --xxx " "Error: unknown option: --xxx" 1
 
-assert "$P missing_file" "Error: Can't determine input format for file: missing_file" 1
-assert "$P missing_file.gpx" "Error: Can't open GPX file: missing_file.gpx" 1
-assert "$P missing_file.kml" "Error: Can't open KML file: missing_file.kml" 1
+assert_cmd "$P missing_file" "Error: Can't determine input format for file: missing_file" 1
+assert_cmd "$P missing_file.gpx" "Error: Can't open GPX file: missing_file.gpx" 1
+assert_cmd "$P missing_file.kml" "Error: Can't open KML file: missing_file.kml" 1

@@ -3,23 +3,23 @@
 ## Filters
 
 P=${1:-./ms2conv}
-. ../test_lib.sh
+. ../../modules/test_lib.sh
 
-assert "$P test_data/ozi1.wpt test_data/ozi1.plt test_data/ozi1.map --skip TM -o tmp.gpx"  "" 0
+assert_cmd "$P test_data/ozi1.wpt test_data/ozi1.plt test_data/ozi1.map --skip TM -o tmp.gpx"  "" 0
 assert_diff test_data/flt1.gpx tmp.gpx
 
-assert "$P test_data/ozi1.wpt test_data/ozi1.plt test_data/ozi1.map --skip W -o tmp.gpx"  "" 0
+assert_cmd "$P test_data/ozi1.wpt test_data/ozi1.plt test_data/ozi1.map --skip W -o tmp.gpx"  "" 0
 assert_diff test_data/flt2.gpx tmp.gpx
 
-assert "$P test_data/ozi1.wpt test_data/ozi1.plt test_data/ozi1.map --skip Wtz -o tmp.gpx"  "" 0
+assert_cmd "$P test_data/ozi1.wpt test_data/ozi1.plt test_data/ozi1.map --skip Wtz -o tmp.gpx"  "" 0
 assert_diff test_data/flt3.gpx tmp.gpx
 
-assert "$P test_data/ozi5.map --nom_brd -o tmp.map"  "" 0
+assert_cmd "$P test_data/ozi5.map --nom_brd -o tmp.map"  "" 0
 assert_diff test_data/flt4.map tmp.map
 
-assert "$P test_data/flt4.map --skip b -o tmp.map"  "" 0
+assert_cmd "$P test_data/flt4.map --skip b -o tmp.map"  "" 0
 assert_diff test_data/flt5.map tmp.map
 
-assert "$P test_data/gpx1.gpx test_data/gpx2.gpx  --join -o tmp.gpx"  "" 0
+assert_cmd "$P test_data/gpx1.gpx test_data/gpx2.gpx  --join -o tmp.gpx"  "" 0
 assert_diff test_data/flt6.gpx tmp.gpx
 

@@ -3,18 +3,18 @@
 ## KML input/output
 
 P=${1:-./ms2conv}
-. ../test_lib.sh
+. ../../modules/test_lib.sh
 
 # read and do nothing
-assert "$P test_data/kml1.kml"  "" 0
+assert_cmd "$P test_data/kml1.kml"  "" 0
 
 # Convert a simple gpx with track, waypoints, route.
 # By default all routes are converted to waypoints.
-assert "$P test_data/kml1.kml -o tmp.kml"  "" 0
+assert_cmd "$P test_data/kml1.kml -o tmp.kml"  "" 0
 assert_diff test_data/kml1a.kml tmp.kml
 
 # verbose
-assert "$P -v test_data/kml1.kml -o tmp.kml" \
+assert_cmd "$P -v test_data/kml1.kml -o tmp.kml" \
 "Reading KML file: test_data/kml1.kml
   Reading waypoints: WPTS_0 (2 points)
   Reading waypoints: WPTS_1 (2 points)
@@ -27,24 +27,24 @@ Writing KML file: tmp.kml
 assert_diff test_data/kml1a.kml tmp.kml
 
 # Use --xml_indent option
-assert "$P test_data/kml1.kml -o tmp.kml --xml_indent 0"  "" 0
+assert_cmd "$P test_data/kml1.kml -o tmp.kml --xml_indent 0"  "" 0
 assert_diff test_data/kml1b.kml tmp.kml
 
 # read written files again
-assert "$P test_data/kml1a.kml -o tmp.kml"  "" 0
+assert_cmd "$P test_data/kml1a.kml -o tmp.kml"  "" 0
 assert_diff test_data/kml1a.kml tmp.kml
 
-assert "$P test_data/kml1b.kml -o tmp.kml"  "" 0
+assert_cmd "$P test_data/kml1b.kml -o tmp.kml"  "" 0
 assert_diff test_data/kml1a.kml tmp.kml
 
 # kmz
 rm -f tmp.kmz tmp.kml
-assert "$P test_data/kml1.kml -o tmp.kmz"  "" 0
+assert_cmd "$P test_data/kml1.kml -o tmp.kmz"  "" 0
 unzip tmp.kmz &> /dev/null
 assert_diff test_data/kml1a.kml tmp.kml
 rm -f tmp.kmz
 
 # specify format
-assert "$P test_data/kml1.kml -o tmp --out_fmt kml"  "" 0
-assert "$P tmp --in_fmt kml -o tmp --out_fmt kml"  "" 0
+assert_cmd "$P test_data/kml1.kml -o tmp --out_fmt kml"  "" 0
+assert_cmd "$P tmp --in_fmt kml -o tmp --out_fmt kml"  "" 0
 assert_diff test_data/kml1a.kml tmp

@@ -5,15 +5,15 @@
 
 P=${1:-./ms2mapdb}
 
-. ../test_lib.sh
+. ../../modules/test_lib.sh
 
 rm -rf tmp.db
 
 help_msg="$($P -h ||:)"
-assert "$P" "$help_msg" 1
-assert "$P --help" "$help_msg" 1
-assert "$P --xxx " "Error: unknown option: --xxx" 1
+assert_cmd "$P" "$help_msg" 1
+assert_cmd "$P --help" "$help_msg" 1
+assert_cmd "$P --xxx " "Error: unknown option: --xxx" 1
 
-assert "$P a" "Error: ms2mapdb: unknown action: a" 1
-assert "$P a b" "Error: ms2mapdb: unknown action: a" 1
+assert_cmd "$P a" "Error: ms2mapdb: unknown action: a" 1
+assert_cmd "$P a b" "Error: ms2mapdb: unknown action: a" 1
 

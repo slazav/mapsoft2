@@ -4,39 +4,41 @@
 
 P=${1:-./ms2mapdb}
 
-. ../test_lib.sh
+. ../../modules/test_lib.sh
+
+make -C ../../data/pics
 
 rm -rf tmp.db
 
-assert "$P render tmp.db 1" "Error: render: one argument expected: MapDB folder" 1
-assert "$P render tmp.db" "Error: Can't find MapDB folder: tmp.db" 1
+assert_cmd "$P render tmp.db 1" "Error: render: one argument expected: MapDB folder" 1
+assert_cmd "$P render tmp.db" "Error: Can't find MapDB folder: tmp.db" 1
 
-assert "$P import_vmap tmp.db test_data/n37-016.vmap" "" 0
+assert_cmd "$P import_vmap tmp.db test_data/n37-016.vmap" "" 0
 
-assert "$P render tmp.db --out file.png"\
+assert_cmd "$P render tmp.db --out file.png"\
        "Error: GObjMapDB: can't open configuration file: tmp.db/render.cfg" 1
 
-assert "$P render tmp.db --out file.png --config ../../data/render.cfg"\
+assert_cmd "$P render tmp.db --out file.png --config ../../data/render.cfg"\
        "Error: Map reference is not set" 1
 
-assert "$P render tmp.db --out file.png --config ../../data/render.cfg --mkref nom --name n37-016" "" 0
+assert_cmd "$P render tmp.db --out file.png --config ../../data/render.cfg --mkref nom --name n37-016" "" 0
 
 
-#assert "$P import_vmap tmp.db test_data/n37-016.vmap" "" 0
+#assert_cmd "$P import_vmap tmp.db test_data/n37-016.vmap" "" 0
 #assert_diff test_data/n37-016a.vmap tmp.vmap
 
 #rm -rf tmp.db
 
 # importing with a config file:
-#assert "$P import_vmap tmp.db --config test_data/conf_vmap_imp.txt test_data/n37-016.vmap" "" 0
-#assert "$P export_vmap tmp.db --config test_data/conf_vmap_exp.txt tmp.vmap" "" 0
+#assert_cmd "$P import_vmap tmp.db --config test_data/conf_vmap_imp.txt test_data/n37-016.vmap" "" 0
+#assert_cmd "$P export_vmap tmp.db --config test_data/conf_vmap_exp.txt tmp.vmap" "" 0
 #assert_diff test_data/n37-016b.vmap tmp.vmap
 
 #rm -rf tmp.db
 
 # same but with command-line options
-#assert "$P import_vmap tmp.db --cnv_points [[\"0x900\",\"0x815\"],[0,0]] --cnv_lines [[4,0],[\"0xA\",0]] --cnv_areas=[[\"0x15\",\"0xFF00\"]] test_data/n37-016.vmap" "" 0
-#assert "$P export_vmap tmp.db --cnv_points [[\"0x815\",\"0x816\"],[0,0]] --cnv_areas=[[\"0xFF00\",\"0xFF01\"]] tmp.vmap" "" 0
+#assert_cmd "$P import_vmap tmp.db --cnv_points [[\"0x900\",\"0x815\"],[0,0]] --cnv_lines [[4,0],[\"0xA\",0]] --cnv_areas=[[\"0x15\",\"0xFF00\"]] test_data/n37-016.vmap" "" 0
+#assert_cmd "$P export_vmap tmp.db --cnv_points [[\"0x815\",\"0x816\"],[0,0]] --cnv_areas=[[\"0xFF00\",\"0xFF01\"]] tmp.vmap" "" 0
 #assert_diff test_data/n37-016b.vmap tmp.vmap
 
 rm -rf tmp.db
