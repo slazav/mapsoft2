@@ -22,6 +22,7 @@ mapsoft2 - programs for working with maps and geodata
 %setup -q
 
 %build
+tar -xvf modules.tar
 export SKIP_IMG_DIFFS=1
 %make
 
