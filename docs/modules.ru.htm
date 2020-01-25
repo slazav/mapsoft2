@@ -50,6 +50,21 @@
 надо записывать в виде <tt>#include "name/file.h"</tt>, а локальных
 заголовочных файлов - в виде <tt>#include "file.h"</tt>.
 
+<h3>Git и gears</h3>
+
+<p>
+Модули хранятся в отдельном git-репозитории и подключаются к <tt>mapsoft2</tt>
+как git submodule.
+
+<p>
+Использование git submodules не поддержиивается сборочной системой Altlinux
+(а именно, программой gear). Она хочет, чтобы весь исходный код был доступен
+из определенного коммита в git-репозитории. Эта проблема решается запаковкой
+всех модулей в отдельный tar-файл (см. скрипт <tt>update_modules</tt>) и
+хранением этого файла в репозитории <tt>mapsoft2</tt>. Если вы не используете
+<tt>gear</tt> для сборки пакета, то этот файл можно игнорировать.
+
+
 
 <p>В <tt>Makefile</tt> модуля могут быть определены следующие переменные:
 
@@ -138,6 +153,8 @@ KML, KMZ, GeoJson, OziExplorer). Расстояния между точками 
 <br><a href="https://github.com/slazav/mapsoft2/blob/master/modules/image/Readme.md">https://github.com/slazav/mapsoft2/blob/master/modules/image/Readme.md</a>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/iofilter">iofilter</a></b></td><td> Перенаправление <tt>std::stream</tt> через внешнюю программу.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/jsonxx">jsonxx</a></b></td><td> Простая C++ обертка для библиотеки libjansson.</td></tr>
 
 <tr><td valign=top><img src="img/unusable.png" alt="unusable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mapdb">mapdb</a></b></td><td> Локальное хранилище векторных карт с быстрым доступом и гео-индексацией на основе BerkleyDB.</td></tr>
 

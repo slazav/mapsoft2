@@ -47,6 +47,19 @@ header file <tt>file.h</tt> from a module <tt>name</tt> should be always
 written as <tt>#include "name/file.h"</tt>. Including local header file
 should be written as <tt>#include "file.h"</tt>.
 
+<h3>Git and gears</h3>
+
+<p>Modules are located in a separate git repository,
+and included into <tt>mapsoft2</tt> as git submodule.
+
+<p>Use of git submodules is not supported by Altlinux building
+system (<tt>gear</tt> program). It wants to have all source code
+accessible from a certain git commit. This problem
+is solved by packing all modules in a separate tarball (see <tt>update_modules</tt>
+script) and keeping it in <tt>mapsoft2</tt> repository. If you do not
+use <tt>gear</tt> for building the package, you can ignore this file.
+
+
 
 <p>In <tt>Makefile</tt> of a module following variables can be defined:
 
@@ -129,6 +142,8 @@ working with them. LineWalker class.</td></tr>
 <br><a href="https://github.com/slazav/mapsoft2/blob/master/modules/image/Readme.md">https://github.com/slazav/mapsoft2/blob/master/modules/image/Readme.md</a>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/iofilter">iofilter</a></b></td><td> Filtering <tt>std::stream</tt> through external program.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/jsonxx">jsonxx</a></b></td><td> Simple C++ wrapper for libjansson library.</td></tr>
 
 <tr><td valign=top><img src="img/unusable.png" alt="unusable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mapdb">mapdb</a></b></td><td> BerkleyDB-based local storage for vector maps with fast access and spatial indexing.</td></tr>
 

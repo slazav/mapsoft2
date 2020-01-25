@@ -47,6 +47,28 @@ should be written as <tt>#include "file.h"</tt>.',`
 надо записывать в виде <tt>#include "name/file.h"</tt>, а локальных
 заголовочных файлов - в виде <tt>#include "file.h"</tt>.')
 
+<h3>ENRU(`Git and gears',`Git и gears')</h3>
+
+<p>ENRU(`Modules are located in a separate git repository,
+and included into <tt>mapsoft2</tt> as git submodule.',`
+Модули хранятся в отдельном git-репозитории и подключаются к <tt>mapsoft2</tt>
+как git submodule.')
+
+<p>ENRU(`Use of git submodules is not supported by Altlinux building
+system (<tt>gear</tt> program). It wants to have all source code
+accessible from a certain git commit. This problem
+is solved by packing all modules in a separate tarball (see <tt>update_modules</tt>
+script) and keeping it in <tt>mapsoft2</tt> repository. If you do not
+use <tt>gear</tt> for building the package, you can ignore this file.
+',`
+Использование git submodules не поддержиивается сборочной системой Altlinux
+(а именно, программой gear). Она хочет, чтобы весь исходный код был доступен
+из определенного коммита в git-репозитории. Эта проблема решается запаковкой
+всех модулей в отдельный tar-файл (см. скрипт <tt>update_modules</tt>) и
+хранением этого файла в репозитории <tt>mapsoft2</tt>. Если вы не используете
+<tt>gear</tt> для сборки пакета, то этот файл можно игнорировать.
+')
+
 define(NAME, `<tt>&lt;name&gt;$1</tt>')dnl
 
 <p>ENRU(`In <tt>Makefile</tt> of a module following variables can be defined:',
@@ -206,6 +228,10 @@ ENRU(`-> Mapsoft2 image, supported file formats',
 _MODTAB_(iofilter, STABLE,
 `Filtering <tt>std::stream</tt> through external program.',
 `Перенаправление <tt>std::stream</tt> через внешнюю программу.')
+
+_MODTAB_(jsonxx, STABLE,
+`Simple C++ wrapper for libjansson library.',
+`Простая C++ обертка для библиотеки libjansson.')
 
 _MODTAB_(mapdb, UNUSABLE,
 `BerkleyDB-based local storage for vector maps with fast access and spatial indexing.',
