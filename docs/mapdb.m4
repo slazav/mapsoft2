@@ -79,12 +79,6 @@ integer value in 1/1000 degrees units. Packed with "angl" tag.',
 `Наклон объекта (используется для точек) представленное в виде 4-байтового
 целого числа, в единицах 1/1000 градуса. Запаковано с тэгом "angl".')
 
-<li>ENRU(`Object direction (used for lines) represented as
-4-byte integer: 1-forward, 2-backward, 0 or missing - unspecified. Packed
-with "dir " tag.', `Ориентация объекта (используется для линий)
-представленная в виде 4-байтового целого числа 1 - прямая, 2 - обратная,
-0 или отсутствует - не определена. Запаковано с тэгом "dir ".')
-
 <li>ENRU(`Object name (to be shown on the map),
 string packed with "name" tag.',
 `Название объекта (для показа на карте), строка, запакованая с тэгом "name".')
