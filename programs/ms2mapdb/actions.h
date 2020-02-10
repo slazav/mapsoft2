@@ -102,7 +102,7 @@ public:
     if (args.size()!=2) throw Err() << get_name()
       << ": two arguments expected: MapDB folder, file name";
 
-    MapDB map(args[0], 0);
+    MapDB map(args[0]);
     map.import_mp(args[1], opts);
   }
 };
@@ -131,7 +131,7 @@ public:
     if (args.size()!=2) throw Err() << get_name()
       << ": two arguments expected: MapDB folder, file name";
 
-    MapDB map(args[0], 0);
+    MapDB map(args[0]);
     map.export_mp(args[1], opts);
   }
 };
@@ -159,7 +159,7 @@ public:
     if (args.size()!=2) throw Err() << get_name()
       << ": two arguments expected: MapDB folder, file name";
 
-    MapDB map(args[0], 0);
+    MapDB map(args[0]);
     map.import_vmap(args[1], opts);
   }
 };
@@ -188,7 +188,7 @@ public:
       << ": two arguments expected: map folder, file name";
 
     // TODO: options, help
-    MapDB map(args[0], 0);
+    MapDB map(args[0]);
     map.export_vmap(args[1], opts);
   }
 };
