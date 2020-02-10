@@ -13,6 +13,7 @@ rm -rf tmp.db
 assert_cmd "$P render tmp.db 1" "Error: render: one argument expected: MapDB folder" 1
 assert_cmd "$P render tmp.db" "Error: Can't find MapDB folder: tmp.db" 1
 
+assert_cmd "$P create tmp.db" "" 0
 assert_cmd "$P import_vmap tmp.db test_data/n37-016.vmap" "" 0
 
 assert_cmd "$P render tmp.db --out file.png"\

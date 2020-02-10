@@ -25,7 +25,7 @@ class MapAction {
     virtual std::string get_descr() const = 0;
 
     // print help message
-    virtual void help(bool pod=false){
+    void help(bool pod=false){
       std::string fullname = std::string("ms2vmap ") + get_name();
       HelpPrinter pr(pod, options, fullname);
       pr.head(1, get_name() + " -- " + get_descr());
@@ -54,7 +54,32 @@ class MapAction {
 };
 
 /**********************************************************/
+// create map
+class MapActionCreate : public MapAction{
+public:
+  MapActionCreate(){ }
 
+  std::string get_name() const override {
+    return "create"; }
+  std::string get_descr() const override {
+    return "create MapDB map"; }
+
+  void help_impl(HelpPrinter & pr) override {
+    pr.usage("<mapdb_folder>");
+  }
+
+  virtual void run_impl(const std::vector<std::string> & args,
+                   const Opt & opts) override {
+
+    if (args.size()!=1) throw Err() << get_name()
+      << ": one argument expected: MapDB folder";
+
+    MapDB map(args[0], 1);
+  }
+};
+
+/**********************************************************/
+// import MP
 class MapActionImportMP : public MapAction{
 public:
   MapActionImportMP(){
@@ -77,20 +102,20 @@ public:
     if (args.size()!=2) throw Err() << get_name()
       << ": two arguments expected: MapDB folder, file name";
 
-    MapDB map(args[0], 1);
+    MapDB map(args[0], 0);
     map.import_mp(args[1], opts);
   }
 };
 
 /**********************************************************/
-
+// export MP
 class MapActionExportMP : public MapAction{
 public:
   MapActionExportMP(){
     ms2opt_add_mapdb_mp_exp(options);
   }
 
-  std::string get_name() const override {
+  std::string get_name() const override  {
     return "export_mp";}
   std::string get_descr() const override {
     return "export MP file from MapDB";}
@@ -112,7 +137,7 @@ public:
 };
 
 /**********************************************************/
-
+// import VMAP
 class MapActionImportVMAP : public MapAction{
 public:
   MapActionImportVMAP(){
@@ -134,13 +159,13 @@ public:
     if (args.size()!=2) throw Err() << get_name()
       << ": two arguments expected: MapDB folder, file name";
 
-    MapDB map(args[0], 1);
+    MapDB map(args[0], 0);
     map.import_vmap(args[1], opts);
   }
 };
 
 /**********************************************************/
-
+// export VMAP
 class MapActionExportVMAP : public MapAction{
 public:
   MapActionExportVMAP(){
@@ -169,7 +194,7 @@ public:
 };
 
 /**********************************************************/
-
+// Render
 #include "geo_render/write_geoimg.h"
 #include "geo_mkref/geo_mkref.h"
 #include "mapdb/gobj_mapdb.h"

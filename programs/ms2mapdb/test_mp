@@ -9,6 +9,10 @@ P=${1:-./ms2mapdb}
 rm -rf tmp.db
 
 assert_cmd "$P import_mp tmp.db" "Error: import_mp: two arguments expected: MapDB folder, file name" 1
+assert_cmd "$P import_mp tmp.db missing.mp" "Error: Can't find MapDB folder: tmp.db" 1
+
+assert_cmd "$P create tmp.db" "" 0
+assert_cmd "$P create tmp.db" "Error: db_simple: tmp.db/mapinfo.db: File exists" 1
 assert_cmd "$P import_mp tmp.db missing.mp" "Error: can't read MP file" 1
 
 assert_cmd "$P import_mp tmp.db test_data/n37-075.mp" "" 0
@@ -18,6 +22,7 @@ assert_diff test_data/n37-075a.mp tmp.mp
 rm -rf tmp.db
 
 # importing with a config file:
+assert_cmd "$P create tmp.db" "" 0
 assert_cmd "$P import_mp tmp.db --config test_data/conf_mp_imp.txt test_data/n37-075.mp" "" 0
 assert_cmd "$P export_mp tmp.db --config test_data/conf_mp_exp.txt tmp.mp" "" 0
 assert_diff test_data/n37-075b.mp tmp.mp
@@ -25,6 +30,7 @@ assert_diff test_data/n37-075b.mp tmp.mp
 rm -rf tmp.db
 
 # same but with command-line options
+assert_cmd "$P create tmp.db" "" 0
 assert_cmd "$P import_mp tmp.db --cnv_points [[\"0x900\",\"0x815\"],[0,0]] --cnv_lines [[4,0],[\"0xA\",0]] --cnv_areas=[[\"0x15\",\"0xFF00\"]] test_data/n37-075.mp" "" 0
 assert_cmd "$P export_mp tmp.db --cnv_points [[\"0x815\",\"0x816\"],[0,0]] --cnv_areas=[[\"0xFF00\",\"0xFF01\"]] --id 123456 --name map1 tmp.mp" "" 0
 assert_diff test_data/n37-075b.mp tmp.mp
