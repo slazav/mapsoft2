@@ -58,6 +58,8 @@ main(int argc, char *argv[]){
     options.add("alt",  0, 'z', g, "Convert altitude (by default it is not converted).");
     options.add("acc",  1, 'a', g, "Convertion accuracy for lines and "
                                    "rectangles in source units, (default: 1.0).");
+    options.add("shift", 1, 'M', g, "Shift coordinates before conversion (default: [0,0])");
+    options.add("scale", 1, 'S', g, "Scale coordinate after shifting and before conversion (default: 1)");
     options.remove("verbose");
 
     if (argc<2) usage();
@@ -68,6 +70,8 @@ main(int argc, char *argv[]){
 
     double acc  = O.get("acc",  1.0);
     bool   back = O.get("back", false);
+    double sc   = O.get("scale", 1.0);
+    dPoint sh   = O.get("shift", dPoint(0,0));
 
     ConvGeo cnv(
       O.get("from", "WGS"),
@@ -79,6 +83,7 @@ main(int argc, char *argv[]){
       // try point
       try {
         dPoint pt(f);
+        pt = (pt+sh)*sc;
         if (back) cnv.bck(pt);
         else cnv.frw(pt);
         std::cout << pt << "\n";
@@ -89,6 +94,7 @@ main(int argc, char *argv[]){
       // try line
       try {
         dLine l0(f), l1;
+        l0 = (l0+sh)*sc;
         if (back) l1 = cnv.bck_acc(l0, acc);
         else l1 = cnv.frw_acc(l0, acc);
         std::cout << l1 << "\n";
@@ -99,6 +105,7 @@ main(int argc, char *argv[]){
       // try multiline
       try {
         dMultiLine ml0(f), ml1;
+        ml0 = (ml0+sh)*sc;
         if (back) ml1 = cnv.bck_acc(ml0, acc);
         else ml1 = cnv.frw_acc(ml0, acc);
         std::cout << ml1 << "\n";
@@ -109,6 +116,7 @@ main(int argc, char *argv[]){
       // try rectangle
       try {
         dRect r0(f), r1;
+        r0 = (r0+sh)*sc;
         if (back) r1 = cnv.bck_acc(r0, acc);
         else r1 = cnv.frw_acc(r0, acc);
         std::cout << r1 << "\n";
