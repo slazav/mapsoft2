@@ -29,6 +29,8 @@ assert_cmd "$P -t SU39 [39,55]" "[7500118.65,6097339.95]" 0
 
 assert_cmd "$P -b -t SU39 [7500118.65,6097339.95]" "[39,55]" 0
 
+assert_cmd "$P -t WEB [0,0]" "[0,0]" 0
+
 # coordinates are taken from Retkikartta interface (<1m accuracy)
 assert_cmd "$P -z -t FI [24.871483333,60.1879266666]" "[3382086.06,6677045.97,-24.6031926]" 0
 assert_cmd "$P    -t FI [24.871483333,60.1879266666]" "[3382086.06,6677045.97]" 0
