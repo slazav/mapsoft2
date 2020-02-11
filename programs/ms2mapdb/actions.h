@@ -104,6 +104,35 @@ public:
 };
 
 /**********************************************************/
+// add object
+class MapActionAddObj : public MapAction{
+public:
+  MapActionAddObj(){ }
+
+  std::string get_name() const override {
+    return "add_obj"; }
+  std::string get_descr() const override {
+    return "add new object, print id"; }
+
+  void help_impl(HelpPrinter & pr) override {
+    pr.usage("<mapdb_folder> <object_type> <coordinates>");
+  }
+
+  virtual void run_impl(const std::vector<std::string> & args,
+                   const Opt & opts) override {
+
+    if (args.size()!=3) throw Err() << get_name()
+      << ": three arguments expected: <mapdb_folder> <object_type> <coordinates>";
+    MapDB map(args[0], 0);
+    MapDBObj obj(args[1]);
+    obj.set_coords(args[2]);
+    std::cout << map.add(obj) << "\n";
+  }
+};
+
+
+
+/**********************************************************/
 // import MP
 class MapActionImportMP : public MapAction{
 public:
