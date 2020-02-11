@@ -18,6 +18,7 @@ GetOptSet options;
 // all actions
 std::vector<std::shared_ptr<MapAction> > actions = {
   std::shared_ptr<MapAction>(new MapActionCreate),
+  std::shared_ptr<MapAction>(new MapActionDelete),
   std::shared_ptr<MapAction>(new MapActionImportMP),
   std::shared_ptr<MapAction>(new MapActionExportMP),
   std::shared_ptr<MapAction>(new MapActionImportVMAP),

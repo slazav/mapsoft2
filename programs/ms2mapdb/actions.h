@@ -79,6 +79,31 @@ public:
 };
 
 /**********************************************************/
+// delete map databases
+class MapActionDelete : public MapAction{
+public:
+  MapActionDelete(){ }
+
+  std::string get_name() const override {
+    return "delete"; }
+  std::string get_descr() const override {
+    return "delete MapDB databases"; }
+
+  void help_impl(HelpPrinter & pr) override {
+    pr.usage("<mapdb_folder>");
+  }
+
+  virtual void run_impl(const std::vector<std::string> & args,
+                   const Opt & opts) override {
+
+    if (args.size()!=1) throw Err() << get_name()
+      << ": one argument expected: MapDB folder";
+
+    MapDB::delete_db(args[0]);
+  }
+};
+
+/**********************************************************/
 // import MP
 class MapActionImportMP : public MapAction{
 public:
