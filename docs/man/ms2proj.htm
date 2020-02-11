@@ -17,6 +17,7 @@
   <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
   <li><a href="#DESCRIPTION">DESCRIPTION</a></li>
   <li><a href="#OPTIONS">OPTIONS</a></li>
+  <li><a href="#EXAMPLES">EXAMPLES</a></li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
 </ul>
@@ -94,6 +95,36 @@
 
 </dd>
 </dl>
+
+<h1 id="EXAMPLES">EXAMPLES</h1>
+
+<p>Convert point from WGS84 to Web mercator:</p>
+
+<pre><code>        ms2proj --to WEB [30,50]</code></pre>
+
+<p>Convert point from Web mercator to WGS84:</p>
+
+<pre><code>        ms2proj --from WEB [3339584,6446275]</code></pre>
+
+<p>Same, but coordinates are in kilometers:</p>
+
+<pre><code>        ms2proj --from WEB --scale 1000 [3339.584,6446.275]</code></pre>
+
+<p>Same, but source and target projections are written as libproj options:</p>
+
+<pre><code>        ms2proj --from &#39;+proj=webmerc +datum=WGS84&#39; --to &#39; +proj=lonlat +datum=WGS84&#39; [3339584,6446275]</code></pre>
+
+<p>Convert line from Finnish KKJ system to WGS84:</p>
+
+<pre><code>        ms2proj --from FI [[3385908,6675072],[3385908,6677072]]</code></pre>
+
+<p>Convert line from WGS84 to Soviet map system with lon0=33. Accuracy which is 1.0 by default is measured in source system (WGS84) and straight lines are converted to straight lines here:</p>
+
+<pre><code>        ms2proj --to SU33 [[30,50],[30,54],[36,54],[36,50],[30,50]]</code></pre>
+
+<p>To specify accuracy in meters we do this trick. Now the result contains more points when stright lines are converted to arcs:</p>
+
+<pre><code>        ms2proj --back --from SU33 [[30,50],[30,54],[36,54],[36,50],[30,50]]</code></pre>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 

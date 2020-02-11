@@ -37,6 +37,36 @@ void usage(bool pod=false){
   pr.head(1, "Options");
   pr.opts({"NONSTD", "STD"});
 
+  pr.head(1, "Examples");
+
+  pr.par("Convert point from WGS84 to Web mercator:");
+  pr.par("	ms2proj --to WEB [30,50]");
+
+  pr.par("Convert point from Web mercator to WGS84:");
+  pr.par("	ms2proj --from WEB [3339584,6446275]");
+
+  pr.par("Same, but coordinates are in kilometers:");
+  pr.par("	ms2proj --from WEB --scale 1000 [3339.584,6446.275]");
+
+  pr.par("Same, but source and target projections are written as libproj options:");
+  pr.par("	ms2proj --from '+proj=webmerc +datum=WGS84' --to ' +proj=lonlat +datum=WGS84'"
+         " [3339584,6446275]");
+
+  pr.par("Convert line from Finnish KKJ system to WGS84:");
+  pr.par("	ms2proj --from FI [[3385908,6675072],[3385908,6677072]]");
+
+  pr.par("Convert line from WGS84 to Soviet map system with lon0=33. Accuracy which is "
+         "1.0 by default is measured in source system (WGS84) and straight lines are "
+         "converted to straight lines here:");
+  pr.par("	ms2proj --to SU33 [[30,50],[30,54],[36,54],[36,50],[30,50]]");
+
+  pr.par("To specify accuracy in meters we do this trick. Now the result contains"
+         " more points when stright lines are converted to arcs:");
+  pr.par("	ms2proj --back --from SU33 [[30,50],[30,54],[36,54],[36,50],[30,50]]");
+
+
+
+
   throw Err();
 }
 
