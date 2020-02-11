@@ -80,49 +80,56 @@ main(int argc, char *argv[]){
     );
 
     for (auto & f: forms){
+      // We want to ignore parse errors (to try points,lines,rects),
+      // but throw errors during conversions
+      bool parse_done = false;
       // try point
       try {
         dPoint pt(f);
+        parse_done = true;
         pt = (pt+sh)*sc;
         if (back) cnv.bck(pt);
         else cnv.frw(pt);
         std::cout << pt << "\n";
         continue;
       }
-      catch (Err e) {}
+      catch (Err e) { if (parse_done) throw e;}
 
       // try line
       try {
         dLine l0(f), l1;
+        parse_done = true;
         l0 = (l0+sh)*sc;
         if (back) l1 = cnv.bck_acc(l0, acc);
         else l1 = cnv.frw_acc(l0, acc);
         std::cout << l1 << "\n";
         continue;
       }
-      catch (Err e) {}
+      catch (Err e) { if (parse_done) throw e;}
 
       // try multiline
       try {
         dMultiLine ml0(f), ml1;
+        parse_done = true;
         ml0 = (ml0+sh)*sc;
         if (back) ml1 = cnv.bck_acc(ml0, acc);
         else ml1 = cnv.frw_acc(ml0, acc);
         std::cout << ml1 << "\n";
         continue;
       }
-      catch (Err e) {}
+      catch (Err e) { if (parse_done) throw e;}
 
       // try rectangle
       try {
         dRect r0(f), r1;
+        parse_done = true;
         r0 = (r0+sh)*sc;
         if (back) r1 = cnv.bck_acc(r0, acc);
         else r1 = cnv.frw_acc(r0, acc);
         std::cout << r1 << "\n";
         continue;
       }
-      catch (Err e) {}
+      catch (Err e) { if (parse_done) throw e;}
 
       throw Err() << "Can't parse form: " << f;
 
