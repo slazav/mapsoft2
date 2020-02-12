@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# mapsoft2 programs
+MAPDB=../../programs/ms2mapdb/ms2mapdb
+CONV=../../programs/ms2conv/ms2conv
+PROJ=../../programs/ms2proj/ms2proj
+
+# remove old databases
+$MAPDB delete .
+
+# create map
+$MAPDB create .
+
+# Pulkovo coordinates in km and without zone prefix:
+point_m="[0.6,0.25]"
+line_m="[[0,0],[0.8,0.5],[1.2,0],[2,0.5]]"
+area_m="[[0,0.5],[0.3,0],[2,0.1],[1.8,0.45]]"
+
+# Convert coordinates to WGS
+point_d=$($PROJ --shift [1500,0] --scale 1000 --from SU3 --to WGS $point_m)
+line_d=$($PROJ --shift [1500,0] --scale 1000 --from SU3 --to WGS $line_m)
+area_d=$($PROJ --shift [1500,0] --scale 1000 --from SU3 --to WGS $area_m)
+
+# add object
+$MAPDB add_obj . point:1 "$point_d"
+$MAPDB add_obj . line:1 "$line_d"
+$MAPDB add_obj . area:1 "$area_d"
+
+# render
+for i in $(seq 1 7); do
+  $MAPDB render . --out render${i}.png --config render${i}.cfg\
+   --mkref proj --coords_wgs $line_d --scale 1000 --dpi 300\
+   --proj SU3 --margin 10
+done
+
+$MAPDB delete .
