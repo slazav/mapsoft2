@@ -492,6 +492,7 @@ bilinear (см. WWW(https://www.cairographics.org/operators/))
 
 RENDER_EXAMPLE(8)
 RENDER_EXAMPLE(9)
+RENDER_EXAMPLE(A)
 
 <li><tt> smooth &lt;distance&gt; </tt> -- Использовать закругленные
 линии с заданным размером закругления. Применимо к шагам line, area,

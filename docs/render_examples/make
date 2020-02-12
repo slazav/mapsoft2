@@ -27,7 +27,7 @@ $MAPDB add_obj . line:1 "$line_d"
 $MAPDB add_obj . area:1 "$area_d"
 
 # render
-for i in $(seq 1 9); do
+for i in $(seq 1 9) A; do
   $MAPDB render . --out render${i}.png --config render${i}.cfg\
    --mkref proj --coords_wgs $line_d --scale 1000 --dpi 300\
    --proj SU3 --margin 10
