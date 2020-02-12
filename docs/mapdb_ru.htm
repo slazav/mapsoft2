@@ -543,6 +543,11 @@ mapsoft2: png, gif, tiff, jpeg. Путь к картинке должен быт
 картинка рисуется в центре площади). Картинка задается так же, как и в
 свойстве patt.
 
+<li><tt> img_filter &lt;fltgt;</tt> -- Установить фильтр растровых
+изображений. Применимо к шагам point, area, map, используется совместно
+со свойствами img и patt. Возможные значение: fast, good, best, nearest,
+bilinear (см. <a href="https://www.cairographics.org/operators/">https://www.cairographics.org/operators/</a>)
+
 
 <div style="border-style:solid; border-width:0.5;
             margin:3px; padding: 3px; color: black;
@@ -559,16 +564,31 @@ map fill 0x80FFFFFF
 # draw polygon with contour and pattern filling
 area:1 stroke 0xFF008000 1
 +      patt vyr_o.png 0.3
-+      img  skala.png 0.3
-
-# draw line
-line:1 stroke 0xFF0000FF 2
 
 # draw point with image
 point:1 img skala.png 0.5
 
 # draw image in the center of polygon
 area:1 img skala.png 0.3
+
+</div><br>
+
+<div style="border-style:solid; border-width:0.5;
+            margin:3px; padding: 3px; color: black;
+            font-family:monospace; white-space:pre">
+<img src=render_examples/render9.png align=right>
+# Example for `patt` and `img` features
+
+
+# fill background with a pattern and then with
+# semi-transparent white color:
+map    patt vyr_o.png 0.3
++      img_filter nearest
+
+# draw polygon with contour and pattern filling
+area:1 stroke 0xFF008000 1
++      patt vyr_o.png 0.3
+
 
 </div><br>
 

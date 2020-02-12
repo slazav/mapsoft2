@@ -485,7 +485,13 @@ mapsoft2: png, gif, tiff, jpeg. Путь к картинке должен быт
 картинка рисуется в центре площади). Картинка задается так же, как и в
 свойстве patt.
 
+<li><tt> img_filter &lt;fltgt;</tt> -- Установить фильтр растровых
+изображений. Применимо к шагам point, area, map, используется совместно
+со свойствами img и patt. Возможные значение: fast, good, best, nearest,
+bilinear (см. WWW(https://www.cairographics.org/operators/))
+
 RENDER_EXAMPLE(8)
+RENDER_EXAMPLE(9)
 
 <li><tt> smooth &lt;distance&gt; </tt> -- Использовать закругленные
 линии с заданным размером закругления. Применимо к шагам line, area,
