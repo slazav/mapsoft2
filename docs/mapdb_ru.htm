@@ -541,7 +541,36 @@ mapsoft2: png, gif, tiff, jpeg. Путь к картинке должен быт
 <li><tt> img  &lt;image file&gt; &lt;scale&gt; &lt;dx&gt; &lt;dy&gt;</tt>
 -- Рисование изображения. Применимо к шагам point, area (в этом случае
 картинка рисуется в центре площади). Картинка задается так же, как и в
-свойстве pattю
+свойстве patt.
+
+
+<div style="border-style:solid; border-width:0.5;
+            margin:3px; padding: 3px; color: black;
+            font-family:monospace; white-space:pre">
+<img src=render_examples/render8.png align=right>
+# Example for `patt` and `img` features
+
+
+# fill background with a pattern and then with
+# semi-transparent white color:
+map fill 0x80FFFFFF
++      patt vyr_o.png 0.3
+
+# draw polygon with contour and pattern filling
+area:1 stroke 0xFF008000 1
++      patt vyr_o.png 0.3
++      img  skala.png 0.3
+
+# draw line
+line:1 stroke 0xFF0000FF 2
+
+# draw point with image
+point:1 img skala.png 0.5
+
+# draw image in the center of polygon
+area:1 img skala.png 0.3
+
+</div><br>
 
 <li><tt> smooth &lt;distance&gt; </tt> -- Использовать закругленные
 линии с заданным размером закругления. Применимо к шагам line, area,

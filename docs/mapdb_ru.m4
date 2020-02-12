@@ -483,7 +483,9 @@ mapsoft2: png, gif, tiff, jpeg. Путь к картинке должен быт
 <li><tt> img  &lt;image file&gt; &lt;scale&gt; &lt;dx&gt; &lt;dy&gt;</tt>
 -- Рисование изображения. Применимо к шагам point, area (в этом случае
 картинка рисуется в центре площади). Картинка задается так же, как и в
-свойстве pattю
+свойстве patt.
+
+RENDER_EXAMPLE(8)
 
 <li><tt> smooth &lt;distance&gt; </tt> -- Использовать закругленные
 линии с заданным размером закругления. Применимо к шагам line, area,
