@@ -487,7 +487,7 @@ area. Цвет всегда задается в виде 32-битного чи�
 <div style="border-style:solid; border-width:0.5;
             margin:3px; padding: 3px; color: black;
             font-family:monospace; white-space:pre">
-<img src=render_examples/render1.png align=right>
+<img src=render_examples/render01.png align=right>
 # Пример конфигурационного файла: свойства stroke и fill
 # (см. docs/render_examples)
 
@@ -510,7 +510,7 @@ point:1 stroke 0xFFFF0000 8
 <div style="border-style:solid; border-width:0.5;
             margin:3px; padding: 3px; color: black;
             font-family:monospace; white-space:pre">
-<img src=render_examples/render7.png align=right>
+<img src=render_examples/render07.png align=right>
 # Пример с полупрозрачными цветами
 
 map fill 0xFFFFFFFF
@@ -552,7 +552,7 @@ bilinear (см. <a href="https://www.cairographics.org/operators/">https://www.c
 <div style="border-style:solid; border-width:0.5;
             margin:3px; padding: 3px; color: black;
             font-family:monospace; white-space:pre">
-<img src=render_examples/render8.png align=right>
+<img src=render_examples/render08.png align=right>
 # Example for `patt` and `img` features
 
 
@@ -576,7 +576,7 @@ area:1 img skala.png 0.3
 <div style="border-style:solid; border-width:0.5;
             margin:3px; padding: 3px; color: black;
             font-family:monospace; white-space:pre">
-<img src=render_examples/render9.png align=right>
+<img src=render_examples/render09.png align=right>
 # Example for `img_filter` feature
 
 # fill background with a pattern with `nearest` (=`fast`) filter
@@ -593,7 +593,7 @@ area:1 stroke 0xFF008000 1
 <div style="border-style:solid; border-width:0.5;
             margin:3px; padding: 3px; color: black;
             font-family:monospace; white-space:pre">
-<img src=render_examples/renderA.png align=right>
+<img src=render_examples/render10.png align=right>
 # картинки, нарисованные в слишком мелком масштабе
 
 map    patt vyr_o.png 0.08
@@ -617,7 +617,7 @@ point:1 img skala.png 0.0001
 <div style="border-style:solid; border-width:0.5;
             margin:3px; padding: 3px; color: black;
             font-family:monospace; white-space:pre">
-<img src=render_examples/render2.png align=right>
+<img src=render_examples/render02.png align=right>
 # Example for `smooth` feature
 
 map fill 0xFFFFFFFF
@@ -644,7 +644,7 @@ point:1 stroke 0xFFFF0000 8
 <div style="border-style:solid; border-width:0.5;
             margin:3px; padding: 3px; color: black;
             font-family:monospace; white-space:pre">
-<img src=render_examples/render3.png align=right>
+<img src=render_examples/render03.png align=right>
 # Example for `dash` feature
 
 map fill 0xFFFFFFFF
@@ -674,7 +674,7 @@ point:1 stroke 0xFFFF0000 8
 <div style="border-style:solid; border-width:0.5;
             margin:3px; padding: 3px; color: black;
             font-family:monospace; white-space:pre">
-<img src=render_examples/render4.png align=right>
+<img src=render_examples/render04.png align=right>
 # Example for `cap` feature
 
 map fill 0xFFFFFFFF
@@ -705,7 +705,7 @@ point:1 stroke 0xFFFF0000 8
 <div style="border-style:solid; border-width:0.5;
             margin:3px; padding: 3px; color: black;
             font-family:monospace; white-space:pre">
-<img src=render_examples/render5.png align=right>
+<img src=render_examples/render05.png align=right>
 # Example for `join` feature
 
 map fill 0xFFFFFFFF
@@ -736,7 +736,7 @@ over. Применимо к шагам point, line, area, map.
 <div style="border-style:solid; border-width:0.5;
             margin:3px; padding: 3px; color: black;
             font-family:monospace; white-space:pre">
-<img src=render_examples/render6.png align=right>
+<img src=render_examples/render06.png align=right>
 # Пример использования свойства `operator`.
 # Иногда надо сделать "странную" последовательность рисовки объектов
 # (А над Б, Б над В, В над А). Это можно сделать, использовав разные
@@ -806,7 +806,7 @@ position
 <div style="border-style:solid; border-width:0.5;
             margin:3px; padding: 3px; color: black;
             font-family:monospace; white-space:pre">
-<img src=render_examples/renderB.png align=right>
+<img src=render_examples/render11.png align=right>
 # Рисование дополнительных элементов
 
 map fill 0xFFFFFFFF
@@ -876,14 +876,46 @@ point:1 stroke 0xFFFF0000 1
 То же, что и move_to, но объект также поворачивается по направлению
 линии.
 
+
+<div style="border-style:solid; border-width:0.5;
+            margin:3px; padding: 3px; color: black;
+            font-family:monospace; white-space:pre">
+<img src=render_examples/render12.png align=right>
+# Сдвигание тоек к ближайшем линиям.
+# Иногда хочется, чтобы при рисовании точки точно
+# попадали на линии (перевалы на хребет, отметки уреза воды на
+# реки и озера, ж/д станции на ж/д)
+
+map fill 0xFFFFFFFF
+
+# площадной объект
+area:1 stroke 0xFF00FF00 1
++      fill 0xFFAAFFAA
+
+# линейный объект
+line:1 stroke 0xFF0000FF 1
+
+# точка - исходное положение
+point:1 stroke 0xFF000000 4
+
+# точка - сдвинута к ближайшей линии типа 1 или площадному
+# объекту типа 1 (но не дальше 30 точек)
+point:1 stroke 0xFFFF0000 4
++ move_to 30 line:1 area:1
+
+# точка - сдвинута к границе ближайшего площадного объекта (но не дальше 30 точек)
+point:1 stroke 0xFF0000FF 4
++ move_to 30 area:1
+
+
+</div><br>
+
 <li><tt> name  &lt;name&gt; </tt> -- Объявить название шага (для показа в
 интерфейсе). По умолчанию название составляется из типа шага и типа объекта,
 напрмер "line:0x25".
 
 <li><tt> group &lt;name&gt; </tt> -- Название группы для данного шага.
 Группа может включать несколько шагов.
-
-<li>TODO: штрихи (на заборах, мостах и т.п.)
 
 </ul>
 
