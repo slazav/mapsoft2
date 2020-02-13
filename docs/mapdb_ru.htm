@@ -812,16 +812,16 @@ position
 map fill 0xFFFFFFFF
 
 # рисуем площадной объект
-area:1 stroke 0xFF00FF00 1
+area:1 stroke 0xFF008000 1
 +      fill 0xFFAAFFAA
 
 # отмечаем узлы точки площадного синими кружками с
-# ркасной заливкой (круг с центром в точке и радиусом 3)
-
+# красной заливкой (круг с центром в точке и радиусом 3)
 area:1 stroke 0xFF0000FF 1
 +      fill   0xFFFF0000
 +      circles [0,0,3]
 
+# зеленые штрихи, направленные вперед и влево от направления линии
 area:1 stroke 0xFF008000 1
 +      lines [[0,0],[3,-3]]
 +      draw_pos adist
@@ -836,12 +836,11 @@ line:1 stroke 0xFF0000FF 1
 line:1 stroke 0xFF0000FF 1
 +      lines [[6,-4],[0,0],[6,4]]
 +      draw_pos begin
-
 line:1 stroke 0xFF0000FF 1
 +      lines [[-6,-4],[0,0],[-6,4]]
 +      draw_pos end
 
-# поперечные линии примерно через 20 точек, рассояние от краев 12 точек:
+# поперечные линии примерно через 20 точек, расстояние от обоих краев 12 точек:
 line:1 stroke 0xFF0000FF 1
 +      lines [[0,-4],[0,4],[4,4]]
 +      draw_pos adist
@@ -910,12 +909,51 @@ point:1 stroke 0xFF0000FF 4
 
 </div><br>
 
+<li><tt> sel_range &lt;width&gt; &lt;color&gt; </tt> -- Нарисовать
+предполагаемый диапазон объекта, по которому он выбирается из базы
+данных. Для расчета диапазона используются остальные правила рисования
+(например, stroke с ненулевой толщиной линии увеличивает диапазон на
+толщину линии, картинка - на диагональный размер картинки и т.п.)
+
+
+<div style="border-style:solid; border-width:0.5;
+            margin:3px; padding: 3px; color: black;
+            font-family:monospace; white-space:pre">
+<img src=render_examples/render13.png align=right>
+# Показ ораниц объектов, по которым производится их выборка
+
+map fill 0xFFFFFFFF
+
+# площадной объект
+area:1 stroke 0xFF00FF00 4
++      fill 0xFFAAFFAA
++      sel_range 0xFFFF0000 0.5
+
+# линейный объект
+line:1 stroke 0xFF0000FF 4
++      sel_range 0xFFFF00FF 0.5
+
+# точка - исходное положение
+point:1 stroke 0xFFFF0000 4
++       sel_range 0xFFFF00FF 0.5
+
+# точка - сдвинута к ближайшей линии типа 1 или площадному
+# объекту типа 1 (но не дальше 20 точек)
+point:1 stroke 0xFFFF0000 4
++       move_to 20 line:1 area:1
++       sel_range 0xFFFF00FF 0.5
+
+
+</div><br>
+
 <li><tt> name  &lt;name&gt; </tt> -- Объявить название шага (для показа в
 интерфейсе). По умолчанию название составляется из типа шага и типа объекта,
 напрмер "line:0x25".
 
 <li><tt> group &lt;name&gt; </tt> -- Название группы для данного шага.
 Группа может включать несколько шагов.
+
+
 
 </ul>
 
