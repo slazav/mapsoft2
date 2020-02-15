@@ -107,7 +107,12 @@ public:
 // add object
 class MapActionAddObj : public MapAction{
 public:
-  MapActionAddObj(){ }
+  MapActionAddObj(){
+    const char *g = "MAPDB_ADD_OBJ";
+    options.add("name",  1,'n',g, "Specify object name.");
+    options.add("comm",  1,'c',g, "Specify object comment.");
+    options.add("angle", 1,'a',g, "Specify object angle.");
+  }
 
   std::string get_name() const override {
     return "add_obj"; }
@@ -116,6 +121,8 @@ public:
 
   void help_impl(HelpPrinter & pr) override {
     pr.usage("<mapdb_folder> <object_type> <coordinates>");
+    pr.head(2, "Options");
+    pr.opts({"MAPDB_ADDOBJ"});
   }
 
   virtual void run_impl(const std::vector<std::string> & args,
@@ -126,6 +133,9 @@ public:
     MapDB map(args[0], 0);
     MapDBObj obj(args[1]);
     obj.set_coords(args[2]);
+    if (opts.exists("name"))  obj.name  = opts.get("name","");
+    if (opts.exists("comm"))  obj.comm  = opts.get("comm","");
+    if (opts.exists("angle")) obj.angle = opts.get("angle", 0.0);
     std::cout << map.add(obj) << "\n";
   }
 };
