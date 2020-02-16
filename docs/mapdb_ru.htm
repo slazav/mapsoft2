@@ -988,18 +988,19 @@ point:1 stroke 0xFF0000FF 4
 данных. Для расчета диапазона используются остальные правила рисования
 (например, stroke с ненулевой толщиной линии увеличивает диапазон на
 толщину линии, картинка - на диагональный размер картинки и т.п.)
+Для поиска текста используется параметр max_text_size (см.ниже).
 
 
 <div style="border-style:solid; border-width:0.5;
             margin:3px; padding: 3px; color: black;
             font-family:monospace; white-space:pre">
 <img src=render_examples/render13.png align=right>
-# Показ ораниц объектов, по которым производится их выборка
+# Показ границ объектов, по которым производится их выборка.
 
 map fill 0xFFFFFFFF
 
 # площадной объект
-area:1 stroke 0xFF00FF00 4
+area:1 stroke 0xFF00FF00 1
 +      fill 0xFFAAFFAA
 +      sel_range 0xFFFF0000 0.5
 
@@ -1017,6 +1018,13 @@ point:1 stroke 0xFFFF0000 4
 +       move_to 20 line:1 area:1
 +       sel_range 0xFFFF00FF 0.5
 
+# По умолчанию ищется текст с размером до 1024x1024 точек.
+# Это можно изменить командой max_text_size
+max_text_size 10
+
+text:1 font 10 "DejaVu Sans:Bold:semicondensed:rgba=none"
++      write 0xFF0000FF
++      sel_range 0xFFFF00FF 0.5
 
 </div><br>
 
@@ -1073,11 +1081,22 @@ join.
 
 <p>Дополнительные команды, которые могут встречаться в конфигурационном файле:
 
-<p> Установить "естественную" привязку карты:
-<pre><tt>
-set_ref file &lt;filename&gt;
-set_ref nom &lt;name&gt; &lt;dpi&gt;
-</tt></pre>
+<ul>
+
+<li><tt> set_ref file &lt;filename&gt; </tt> -- установить "естественную"
+привязку карты из файла (сейчас поддерживаются только файлы OziExplorer).
+
+
+<li><tt> set_ref nom &lt;name&gt; &lt;dpi&gt;</tt> -- установить "естественную"
+привязку карты по советскому номенклатурному листу.
+
+<li><tt> max_text_size  &lt;number&gt;</tt> -- изменить максимальный размер текста
+(в точках). Этот параметр используется при поиске текстовых объектов на карте.
+Значение по умолчанию - 1024 точки.
+
+<li>
+
+</ul>
 
 <p>В первом случае привязка читается из файла (сейчас поддерживаются
 только OziExplorer map-файлы), во втором задается в виде имени советского
