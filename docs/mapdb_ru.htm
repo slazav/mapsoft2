@@ -530,23 +530,30 @@ text:1 font 10 "DejaVu Sans:Bold:semicondensed:rgba=none"
             margin:3px; padding: 3px; color: black;
             font-family:monospace; white-space:pre">
 <img src=render_examples/render14.png align=right>
-# Example for `fill` feature with text objects
-
 # Нарисовать текст можно, используя свойство fill вместо write,
 # В этом случае вместо стандартной функции рендера текста
 # создается контур, который заливается нужным цветом.
 # Результат немного отличается.
 
-map fill 0xFFFFFFFF
-area:1 stroke 0xFF00FF00 1
-+      fill 0xFFAAFFAA
-line:1 stroke 0xFF0000FF 2
+# кроме того, здесь же я даю пример использования команды define
+# (см. ниже)
+
+define white 0xFFFFFFFF
+define green 0xFF00FF00
+define blue  0xFF0000FF
+define light_green 0xFFAAFFAA
+define myfont "DejaVu Sans:Bold:semicondensed:rgba=none"
+
+map fill white
+area:1 stroke green 1
++      fill light_green
+line:1 stroke blue 2
 
 # текст:
-text:1 font 10 "DejaVu Sans:Bold:semicondensed:rgba=none"
-+      stroke 0xFFFFFFFF 4
-text:1 font 10 "DejaVu Sans:Bold:semicondensed:rgba=none"
-+      fill 0xFF0000FF
+text:1 font 10 myfont
++      stroke white 4
+text:1 font 10 myfont
++      fill blue
 
 # (Для текста можно использовать и свойство patt, заливать
 # контур картинкой, хотя непонятно, зачем бы это могло пригодится...)
@@ -1093,6 +1100,11 @@ join.
 <li><tt> max_text_size  &lt;number&gt;</tt> -- изменить максимальный размер текста
 (в точках). Этот параметр используется при поиске текстовых объектов на карте.
 Значение по умолчанию - 1024 точки.
+
+<li><tt> define &lt;name&gt; &lt;definition&gt;</tt> -- переопределить
+некое слово. В последующем файле все слова &lt;name&gt; будут заменены на
+&lt;definition&gt;. Замена производится один раз, заменяются только целые
+слова.
 
 <li>
 
