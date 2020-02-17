@@ -112,6 +112,8 @@ public:
     options.add("name",  1,'n',g, "Specify object name.");
     options.add("comm",  1,'c',g, "Specify object comment.");
     options.add("angle", 1,'a',g, "Specify object angle.");
+    options.add("scale", 1,'s',g, "Specify object scale.");
+    options.add("align", 1,'A',g, "Specify object alignment (NW,N,NE,E,SE,S,SW,C).");
   }
 
   std::string get_name() const override {
@@ -136,6 +138,20 @@ public:
     if (opts.exists("name"))  obj.name  = opts.get("name","");
     if (opts.exists("comm"))  obj.comm  = opts.get("comm","");
     if (opts.exists("angle")) obj.angle = opts.get("angle", 0.0);
+    if (opts.exists("scale")) obj.scale = opts.get("scale", 0.0);
+
+    std::string align = opts.get("align", "");
+    if      (align == "NW") obj.align = MAPDB_ALIGN_NW;
+    else if (align == "W")  obj.align = MAPDB_ALIGN_W;
+    else if (align == "SW") obj.align = MAPDB_ALIGN_SW;
+    else if (align == "S")  obj.align = MAPDB_ALIGN_S;
+    else if (align == "SE") obj.align = MAPDB_ALIGN_SE;
+    else if (align == "E")  obj.align = MAPDB_ALIGN_E;
+    else if (align == "NE") obj.align = MAPDB_ALIGN_NE;
+    else if (align == "N")  obj.align = MAPDB_ALIGN_N;
+    else if (align == "C")  obj.align = MAPDB_ALIGN_C;
+    else if (align != "")   throw Err() << "unknown --align argument: " << align;
+
     std::cout << map.add(obj) << "\n";
   }
 };
