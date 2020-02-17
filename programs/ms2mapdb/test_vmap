@@ -29,10 +29,3 @@ assert_diff test_data/n37-016b.vmap tmp.vmap
 
 rm -rf tmp.db
 
-# same but with command-line options
-assert_cmd "$P create tmp.db" "" 0
-assert_cmd "$P import_vmap tmp.db --cnv_points [[\"0x900\",\"0x815\"],[0,0]] --cnv_lines [[4,0],[\"0xA\",0]] --cnv_areas=[[\"0x15\",\"0xFF00\"]] test_data/n37-016.vmap" "" 0
-assert_cmd "$P export_vmap tmp.db --cnv_points [[\"0x815\",\"0x816\"],[0,0]] --cnv_areas=[[\"0xFF00\",\"0xFF01\"]] tmp.vmap" "" 0
-assert_diff test_data/n37-016b.vmap tmp.vmap
-
-rm -rf tmp.db
