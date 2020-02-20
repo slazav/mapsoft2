@@ -1,3 +1,11 @@
+# Update modules.tar from modules subdirectory.
+# The file modules.tar is needed only for Altlinux builds
+# (because gear program goes not support git modules),
+# it should be updated and commited before building a
+# new version to Altlinux.
+
+# See also mapsoft2.spec %build section.
+
 cd modules;
 gear --export-dir .. $@
 rm -f ../mapsoft2-libs.spec
