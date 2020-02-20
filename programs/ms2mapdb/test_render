@@ -22,7 +22,8 @@ assert_cmd "$P render tmp.db --out file.png"\
 assert_cmd "$P render tmp.db --out file.png --config ../../data/render.cfg"\
        "Error: Map reference is not set" 1
 
-assert_cmd "$P render tmp.db --out file.png --config ../../data/render.cfg --mkref nom --name n37-016" "" 0
+#assert_cmd "$P render tmp.db --out file.png\
+#   --config ../../docs/render_example_vmap/render.cfg --mkref nom --name n37-016" "" 0
 
 
 #assert_cmd "$P import_vmap tmp.db test_data/n37-016.vmap" "" 0
