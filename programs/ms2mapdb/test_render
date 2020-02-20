@@ -6,9 +6,10 @@ P=${1:-./ms2mapdb}
 
 . ../../modules/test_lib.sh
 
-make -C ../../data/pics
 
 rm -rf tmp.db
+
+cfg=../../docs/render_example_vmap/render.cfg
 
 assert_cmd "$P render tmp.db 1" "Error: render: one argument expected: MapDB folder" 1
 assert_cmd "$P render tmp.db" "Error: Can't find MapDB folder: tmp.db" 1
@@ -19,11 +20,11 @@ assert_cmd "$P import_vmap tmp.db test_data/n37-016.vmap" "" 0
 assert_cmd "$P render tmp.db --out file.png"\
        "Error: GObjMapDB: can't open configuration file: tmp.db/render.cfg" 1
 
-assert_cmd "$P render tmp.db --out file.png --config ../../data/render.cfg"\
+assert_cmd "$P render tmp.db --out file.png --config $cfg"\
        "Error: Map reference is not set" 1
 
-#assert_cmd "$P render tmp.db --out file.png\
-#   --config ../../docs/render_example_vmap/render.cfg --mkref nom --name n37-016" "" 0
+assert_cmd "$P render tmp.db --out file.png\
+   --config $cfg --mkref nom --name n37-016" "" 0
 
 
 #assert_cmd "$P import_vmap tmp.db test_data/n37-016.vmap" "" 0
