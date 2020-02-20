@@ -50,21 +50,6 @@
 надо записывать в виде <tt>#include "name/file.h"</tt>, а локальных
 заголовочных файлов - в виде <tt>#include "file.h"</tt>.
 
-<h3>Git и gears</h3>
-
-<p>
-Модули хранятся в отдельном git-репозитории и подключаются к <tt>mapsoft2</tt>
-как git submodule.
-
-<p>
-Использование git submodules не поддержиивается сборочной системой Altlinux
-(а именно, программой gear). Она хочет, чтобы весь исходный код был доступен
-из определенного коммита в git-репозитории. Эта проблема решается запаковкой
-всех модулей в отдельный tar-файл (см. скрипт <tt>update_modules</tt>) и
-хранением этого файла в репозитории <tt>mapsoft2</tt>. Если вы не используете
-<tt>gear</tt> для сборки пакета, то этот файл можно игнорировать.
-
-
 
 <p>В <tt>Makefile</tt> модуля могут быть определены следующие переменные:
 
@@ -94,10 +79,23 @@
 
 <li><tt>OTHER_TESTS</tt> -- Программы или скрипты, которые должны быть запущены после окончания сборки.
 
-<li><tt>PKG_CONFIG   -- Внешние библиотеки используемые в этом модуле (подключаются с помощью <a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a>).
+<li><tt>PKG_CONFIG</tt>   -- Внешние библиотеки используемые в этом модуле (подключаются с помощью <a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a>).
 Локальные файлы для pkg-config можно положить в директорию <tt>$(MODDIR)/pc/</tt>.
 </ul>
 
+<h3>Git и gears</h3>
+
+<p>
+Модули хранятся в отдельном git-репозитории и подключаются к <tt>mapsoft2</tt>
+как git submodule.
+
+<p>
+Использование git submodules не поддержиивается сборочной системой Altlinux
+(а именно, программой gear). Она хочет, чтобы весь исходный код был доступен
+из определенного коммита в git-репозитории. Эта проблема решается запаковкой
+всех модулей в отдельный tar-файл (см. скрипт <tt>update_modules</tt>) и
+хранением этого файла в репозитории <tt>mapsoft2</tt>. Если вы не используете
+<tt>gear</tt> для сборки пакета, то этот файл можно игнорировать.
 
 
 <h3>Модули</h3>
@@ -124,8 +122,9 @@
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_data">geo_data</a></b></td><td> Классы для работы с геоданными. Чтение и запись (форматы GPX,
 KML, KMZ, GeoJson, OziExplorer). Расстояния между точками на поверхности Земли
 (формула Гаверсинуса). Геодезические преобразования (обертка для
-библиотеки <a href="https://proj4.org/">libproj</a>).</td></tr>
-<br><a href="https://github.com/slazav/mapsoft2/blob/master/modules/geo_data/Formats.md">https://github.com/slazav/mapsoft2/blob/master/modules/geo_data/Formats.md</a>
+библиотеки <a href="https://proj4.org/">libproj</a>).
+<br><a href="https://github.com/slazav/mapsoft2-libs/blob/master/geo_data/Formats.md">https://github.com/slazav/mapsoft2-libs/blob/master/geo_data/Formats.md</a>
+</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_mkref">geo_mkref</a></b></td><td> Изготовление
 привязок карт.</td></tr>
@@ -149,8 +148,9 @@ KML, KMZ, GeoJson, OziExplorer). Расстояния между точками 
 
 <tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/image">image</a></b></td><td> Двухмерный массив данных для хранения растровых изображений. Чтение и
 запись растровых изображений (PNG, TIFF, JPEG, GIF), квантизация цветов и
-другие операции.</td></tr>
-<br><a href="https://github.com/slazav/mapsoft2/blob/master/modules/image/Readme.md">https://github.com/slazav/mapsoft2/blob/master/modules/image/Readme.md</a>
+другие операции.
+<br><a href="https://github.com/slazav/mapsoft2-libs/blob/master/image/Readme.md">https://github.com/slazav/mapsoft2-libs/blob/master/image/Readme.md</a>
+</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/iofilter">iofilter</a></b></td><td> Перенаправление <tt>std::stream</tt> через внешнюю программу.</td></tr>
 

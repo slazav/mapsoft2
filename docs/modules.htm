@@ -47,19 +47,6 @@ header file <tt>file.h</tt> from a module <tt>name</tt> should be always
 written as <tt>#include "name/file.h"</tt>. Including local header file
 should be written as <tt>#include "file.h"</tt>.
 
-<h3>Git and gears</h3>
-
-<p>Modules are located in a separate git repository,
-and included into <tt>mapsoft2</tt> as git submodule.
-
-<p>Use of git submodules is not supported by Altlinux building
-system (<tt>gear</tt> program). It wants to have all source code
-accessible from a certain git commit. This problem
-is solved by packing all modules in a separate tarball (see <tt>update_modules</tt>
-script) and keeping it in <tt>mapsoft2</tt> repository. If you do not
-use <tt>gear</tt> for building the package, you can ignore this file.
-
-
 
 <p>In <tt>Makefile</tt> of a module following variables can be defined:
 
@@ -86,10 +73,21 @@ each <tt>&lt;name&gt;</tt> a source file <tt>&lt;name&gt;.test.cpp</tt> and a sc
 
 <li><tt>OTHER_TESTS</tt> -- Any programs or scripts which should be run after building.
 
-<li><tt>PKG_CONFIG   -- External libraries used in this module (for <a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a>). Local pkg-config
+<li><tt>PKG_CONFIG</tt>   -- External libraries used in this module (for <a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a>). Local pkg-config
 files can be put in <tt>$(MODDIR)/pc/</tt>.
 </ul>
 
+<h3>Git and gears</h3>
+
+<p>Modules are located in a separate git repository,
+and included into <tt>mapsoft2</tt> as git submodule.
+
+<p>Use of git submodules is not supported by Altlinux building
+system (<tt>gear</tt> program). It wants to have all source code
+accessible from a certain git commit. This problem
+is solved by packing all modules in a separate tarball (see <tt>update_modules</tt>
+script) and keeping it in <tt>mapsoft2</tt> repository. If you do not
+use <tt>gear</tt> for building the package, you can ignore this file.
 
 
 <h3>Modules</h3>
@@ -115,8 +113,9 @@ which I also use for drawing maps.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_data">geo_data</a></b></td><td> Classes for geodata handling. Functions for reading and writing geodata
 (GPX, KML, KMZ, GeoJson, OziExplorer formats). Great-circle distance (Haversine
-formula). Geo-conversions (<a href="https://proj4.org/">libproj</a> wrapper). </td></tr>
-<br><a href="https://github.com/slazav/mapsoft2/blob/master/modules/geo_data/Formats.md">https://github.com/slazav/mapsoft2/blob/master/modules/geo_data/Formats.md</a>
+formula). Geo-conversions (<a href="https://proj4.org/">libproj</a> wrapper).
+<br><a href="https://github.com/slazav/mapsoft2-libs/blob/master/geo_data/Formats.md">https://github.com/slazav/mapsoft2-libs/blob/master/geo_data/Formats.md</a>.
+</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_mkref">geo_mkref</a></b></td><td> Making map references.</td></tr>
 
@@ -138,8 +137,9 @@ working with them. LineWalker class.</td></tr>
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/iconv">iconv</a></b></td><td> Character encoding converter, a wrapper for <a href="https://www.gnu.org/software/libiconv/">libiconv</a>.</td></tr>
 
 <tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/image">image</a></b></td><td> 2d array of data for raster images. Reading and writing raster images
-(PNG, TIFF, JPEG, GIF), color quantization and other operations.</td></tr>
-<br><a href="https://github.com/slazav/mapsoft2/blob/master/modules/image/Readme.md">https://github.com/slazav/mapsoft2/blob/master/modules/image/Readme.md</a>
+(PNG, TIFF, JPEG, GIF), color quantization and other operations.
+<br><a href="https://github.com/slazav/mapsoft2-libs/blob/master/image/Readme.md">https://github.com/slazav/mapsoft2-libs/blob/master/image/Readme.md</a>
+</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/iofilter">iofilter</a></b></td><td> Filtering <tt>std::stream</tt> through external program.</td></tr>
 

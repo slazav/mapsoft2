@@ -47,28 +47,6 @@ should be written as <tt>#include "file.h"</tt>.',`
 надо записывать в виде <tt>#include "name/file.h"</tt>, а локальных
 заголовочных файлов - в виде <tt>#include "file.h"</tt>.')
 
-<h3>ENRU(`Git and gears',`Git и gears')</h3>
-
-<p>ENRU(`Modules are located in a separate git repository,
-and included into <tt>mapsoft2</tt> as git submodule.',`
-Модули хранятся в отдельном git-репозитории и подключаются к <tt>mapsoft2</tt>
-как git submodule.')
-
-<p>ENRU(`Use of git submodules is not supported by Altlinux building
-system (<tt>gear</tt> program). It wants to have all source code
-accessible from a certain git commit. This problem
-is solved by packing all modules in a separate tarball (see <tt>update_modules</tt>
-script) and keeping it in <tt>mapsoft2</tt> repository. If you do not
-use <tt>gear</tt> for building the package, you can ignore this file.
-',`
-Использование git submodules не поддержиивается сборочной системой Altlinux
-(а именно, программой gear). Она хочет, чтобы весь исходный код был доступен
-из определенного коммита в git-репозитории. Эта проблема решается запаковкой
-всех модулей в отдельный tar-файл (см. скрипт <tt>update_modules</tt>) и
-хранением этого файла в репозитории <tt>mapsoft2</tt>. Если вы не используете
-<tt>gear</tt> для сборки пакета, то этот файл можно игнорировать.
-')
-
 define(NAME, `<tt>&lt;name&gt;$1</tt>')dnl
 
 <p>ENRU(`In <tt>Makefile</tt> of a module following variables can be defined:',
@@ -120,14 +98,34 @@ NAME(.test.script). Программа будет собрана, после с�
 `Any programs or scripts which should be run after building.',
 `Программы или скрипты, которые должны быть запущены после окончания сборки.')
 
-<li><tt>PKG_CONFIG   -- ENRU(
+<li><tt>PKG_CONFIG</tt>   -- ENRU(
 `External libraries used in this module (for _PKGCONFIG_). Local pkg-config
 files can be put in <tt>$(MODDIR)/pc/</tt>.',
 `Внешние библиотеки используемые в этом модуле (подключаются с помощью _PKGCONFIG_).
 Локальные файлы для pkg-config можно положить в директорию <tt>$(MODDIR)/pc/</tt>.')
 </ul>
 
+<h3>ENRU(`Git and gears',`Git и gears')</h3>
 
+<p>ENRU(`Modules are located in a separate git repository,
+and included into <tt>mapsoft2</tt> as git submodule.',`
+Модули хранятся в отдельном git-репозитории и подключаются к <tt>mapsoft2</tt>
+как git submodule.')
+
+<p>ENRU(`Use of git submodules is not supported by Altlinux building
+system (<tt>gear</tt> program). It wants to have all source code
+accessible from a certain git commit. This problem
+is solved by packing all modules in a separate tarball (see <tt>update_modules</tt>
+script) and keeping it in <tt>mapsoft2</tt> repository. If you do not
+use <tt>gear</tt> for building the package, you can ignore this file.
+',`
+Использование git submodules не поддержиивается сборочной системой Altlinux
+(а именно, программой gear). Она хочет, чтобы весь исходный код был доступен
+из определенного коммита в git-репозитории. Эта проблема решается запаковкой
+всех модулей в отдельный tar-файл (см. скрипт <tt>update_modules</tt>) и
+хранением этого файла в репозитории <tt>mapsoft2</tt>. Если вы не используете
+<tt>gear</tt> для сборки пакета, то этот файл можно игнорировать.
+')
 
 <h3>ENRU(`Modules', `Модули')</h3>
 define(_MODTAB_, `<tr><td valign=top>$2`'_MOD_($1)</td><td> ENRU(`$3',`$4')</td></tr>')
@@ -169,14 +167,17 @@ _MODTAB_(filename, STABLE,
 _MODTAB_(geo_data, STABLE,
 `Classes for geodata handling. Functions for reading and writing geodata
 (GPX, KML, KMZ, GeoJson, OziExplorer formats). Great-circle distance (Haversine
-formula). Geo-conversions (_LIBPROJ_ wrapper). ',
+formula). Geo-conversions (_LIBPROJ_ wrapper).
+<br>WWW(`https://github.com/slazav/mapsoft2-libs/blob/master/geo_data/Formats.md',
+`-> Mapsoft2 geodata, supported file formats').
+',
 `Классы для работы с геоданными. Чтение и запись (форматы GPX,
 KML, KMZ, GeoJson, OziExplorer). Расстояния между точками на поверхности Земли
 (формула Гаверсинуса). Геодезические преобразования (обертка для
-библиотеки _LIBPROJ_).')
-<br>WWW(`https://github.com/slazav/mapsoft2/blob/master/modules/geo_data/Formats.md',
-ENRU(`-> Mapsoft2 geodata, supported file formats',
-`-> Геоданные в Mapsoft2, поддерживаемые форматы файлов'))
+библиотеки _LIBPROJ_).
+<br>WWW(`https://github.com/slazav/mapsoft2-libs/blob/master/geo_data/Formats.md',
+`-> Mapsoft2 geodata, supported file formats')
+')
 
 _MODTAB_(geo_mkref, STABLE, `Making map references.',`Изготовление
 привязок карт.')
@@ -217,13 +218,16 @@ _MODTAB_(iconv, STABLE,
 
 _MODTAB_(image, UNSTABLE,
 `2d array of data for raster images. Reading and writing raster images
-(PNG, TIFF, JPEG, GIF), color quantization and other operations.',
+(PNG, TIFF, JPEG, GIF), color quantization and other operations.
+<br>WWW(`https://github.com/slazav/mapsoft2-libs/blob/master/image/Readme.md',
+`-> Mapsoft2 image, supported file formats')
+',
 `Двухмерный массив данных для хранения растровых изображений. Чтение и
 запись растровых изображений (PNG, TIFF, JPEG, GIF), квантизация цветов и
-другие операции.')
-<br>WWW(`https://github.com/slazav/mapsoft2/blob/master/modules/image/Readme.md',
-ENRU(`-> Mapsoft2 image, supported file formats',
-`-> Растровые изображения в Mapsoft2, поддерживаемые форматы файлов'))
+другие операции.
+<br>WWW(`https://github.com/slazav/mapsoft2-libs/blob/master/image/Readme.md',
+`-> Mapsoft2 image, supported file formats')
+')
 
 _MODTAB_(iofilter, STABLE,
 `Filtering <tt>std::stream</tt> through external program.',
