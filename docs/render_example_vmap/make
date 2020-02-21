@@ -18,26 +18,34 @@ $MAPDB delete .
 # create map
 $MAPDB create .
 
+name=n49-032
+dpi=100
+
 # import vmap file
-$MAPDB import_vmap . n49-032.vmap --config import_vmap.cfg
+$MAPDB import_vmap . $name.vmap --config import_vmap.cfg
 
-# render
-time $MAPDB render . --out n49-032.png --config render.cfg\
-   --mkref nom --name n49-032 --dpi 100 --margin 10\
-   --cmap_color 255 --png_format pal
+# render, result is 8-bit PNG + map
+time $MAPDB render . --out $name.png --config render.cfg\
+   --mkref nom --name $name --dpi $dpi --margin 10\
+   --cmap_color 255 --png_format pal\
+   --map $name.map
 
-
+# remove old databases
 $MAPDB delete .
 
 # create map
 $MAPDB create .
 
+name=n37-030
+dpi=200
+
 # import vmap file
-$MAPDB import_vmap . n37-030.vmap --config import_vmap.cfg
+$MAPDB import_vmap . $name.vmap --config import_vmap.cfg
 
 # render
-time $MAPDB render . --out n37-030.png --config render.cfg\
-   --mkref nom --name n37-030 --dpi 200 --margin 10\
-   --cmap_color 255 --png_format pal
+time $MAPDB render . --out $name.png --config render.cfg\
+   --mkref nom --name $name --dpi $dpi --margin 10\
+   --cmap_color 255 --png_format pal\
+   --map $name.map
 
 $MAPDB delete .
