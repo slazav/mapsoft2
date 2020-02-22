@@ -319,11 +319,12 @@ public:
     // open map, make GObj
     GObjMapDB map(mapdir, opts);
 
-    // get reference (todo: make reference from options)
-    GeoMap ref = map.get_ref(); // default map reference
 
     // If "mkref" option exists build reference using options
-    if (opts.exists("mkref")) ref = geo_mkref(opts);
+    if (opts.exists("mkref")) map.set_ref(geo_mkref(opts));
+
+    // get map reference
+    GeoMap ref = map.get_ref(); // default map reference
 
     if (ref.empty()) throw Err() << "Map reference is not set";
 
