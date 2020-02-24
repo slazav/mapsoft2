@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# mapsoft2 programs
+MAPDB=../../programs/ms2mapdb/ms2mapdb
+CONV=../../programs/ms2conv/ms2conv
+PROJ=../../programs/ms2proj/ms2proj
+
+# remove old databases
+$MAPDB delete .
+
+# create map
+$MAPDB create .
+
+# Add object to MapDB in cwd.
+# Arguments:
+# - type (line:1, etc.)
+# - coordinates in SU3 km, shifted 300 km from zone center (note 1200km prefix)
+#   to have difference between geographic north and map vertical lines.
+# - additional arguments to ms2mapdb
+function add_obj {
+  type="$1"; shift
+  crd_km="$1"; shift
+  #convert to degrees
+  crd_deg=$($PROJ --shift [1200,5000] --scale 1000 --from SU3 --to WGS $crd_km)
+  $MAPDB add_obj . "$type" "$crd_deg" "$@"
+}
+
+text="1. Горизонтальный и наклонный текст на карте"
+add_obj area:1 "[[0,0],[1.8,0],[1.8,0.8],[0,0.8]]"
+add_obj text:1  "[0.0111,0.64001]"  --name "$text"
+add_obj text:1  "[0.0222,0.56002]"  --name "$text"
+add_obj text:1  "[0.0333,0.48003]"  --name "$text"
+add_obj text:1  "[0.0444,0.40004]"  --name "$text"
+add_obj text:1  "[0.0555,0.32005]"  --name "$text" --angle 0
+add_obj text:1  "[0.0666,0.24006]"  --name "$text" --angle 0
+add_obj text:1  "[0.0777,0.16007]"  --name "$text" --angle 0
+add_obj text:1  "[0.0888,0.08008]"  --name "$text" --angle 0
+
+crd_deg=$($PROJ --shift [1200,5000] --scale 1000 --from SU3 --to WGS [[0,0],[1.8,0.8]])
+
+# render
+for i in $(seq -w 1 8); do
+  $MAPDB render . --out render${i}.png --config render${i}.cfg\
+   --mkref proj --coords_wgs $crd_deg --scale 1000 --dpi 300\
+   --proj SU3 --margin 10
+done
+
+#$MAPDB export_vmap . a.vmap
+
+$MAPDB delete .
