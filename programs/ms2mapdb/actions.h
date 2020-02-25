@@ -291,6 +291,9 @@ public:
     ms2opt_add_geoimg(options);
     options.remove("img_in_fmt");
     options.remove("img_out_fmt");
+    const char *g = "MAPDB_RENDER";
+    options.add("obj_scale", 1,0,g, "Set object scaling.");
+    options.add("map_scale", 1,0,g, "Set map scaling (coordinates+objects).");
   }
 
   std::string get_name() const override {return "render";}
@@ -321,7 +324,7 @@ public:
 
 
     // If "mkref" option exists build reference using options
-    if (opts.exists("mkref")) map.set_ref(geo_mkref(opts));
+    if (opts.exists("mkref")) map.set_ref(geo_mkref(opts)/opts.get("map_scale", 1.0));
 
     // get map reference
     GeoMap ref = map.get_ref(); // default map reference
