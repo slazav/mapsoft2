@@ -15,11 +15,16 @@ man5dir ?= $(mandir)/man5
 #################################
 ## Build rules
 
+
 all: $(PROGRAMS) man
 ms2%:
 	make -C programs/$@
 man:
 	make -C docs/man
+
+clean:
+	make -C programs clean
+	make -C modules  clean
 
 #################################
 ## Install rules
