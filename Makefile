@@ -5,9 +5,10 @@ PROGRAMS := ms2conv ms2nom ms2tiles ms2view ms2xyz ms2proj
 #################################
 ## define paths
 
-bindir  ?= /usr/bin
-datadir ?= /usr/share
-mandir  ?= /usr/share/man
+prefix  ?= /usr
+bindir  ?= $(prefix)/bin
+datadir ?= $(prefix)/share
+mandir  ?= $(datadir)/man
 man1dir ?= $(mandir)/man1
 man5dir ?= $(mandir)/man5
 
