@@ -9,7 +9,7 @@ P=${1:-./ms2mapdb}
 
 rm -rf tmp.db
 
-cfg=../../docs/render_example_vmap/render.cfg
+cfg=test_data/render.cfg
 
 assert_cmd "$P render tmp.db 1" "Error: render: one argument expected: MapDB folder" 1
 assert_cmd "$P render tmp.db" "Error: Can't find MapDB folder: tmp.db" 1
