@@ -48,4 +48,4 @@ time $MAPDB render . --out $name.png --config render.cfg\
    --cmap_color 255 --png_format pal\
    --map $name.map
 
-$MAPDB delete .
+#$MAPDB delete .
