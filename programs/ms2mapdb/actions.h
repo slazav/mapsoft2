@@ -156,7 +156,57 @@ public:
   }
 };
 
+/**********************************************************/
+// print all object types in the map
+class MapActionTypes : public MapAction{
+public:
+  MapActionTypes(){}
 
+  std::string get_name() const override {
+    return "types"; }
+  std::string get_descr() const override {
+    return "print all object types in the map"; }
+
+  void help_impl(HelpPrinter & pr) override {
+    pr.usage("<mapdb_folder>");
+  }
+
+  virtual void run_impl(const std::vector<std::string> & args,
+                   const Opt & opts) override {
+
+    if (args.size()!=1) throw Err() << get_name()
+      << ": one argument: <mapdb_folder>";
+    MapDB map(args[0], 0);
+    auto types = map.get_types();
+    for (auto const & t:types)
+      std::cout << MapDBObj::print_type(t) << "\n";
+  }
+};
+
+/**********************************************************/
+// print bounding box of the map (using geohash data)
+class MapActionBBox : public MapAction{
+public:
+  MapActionBBox(){}
+
+  std::string get_name() const override {
+    return "bbox"; }
+  std::string get_descr() const override {
+    return "print bounding box of the map (using geohash data)"; }
+
+  void help_impl(HelpPrinter & pr) override {
+    pr.usage("<mapdb_folder>");
+  }
+
+  virtual void run_impl(const std::vector<std::string> & args,
+                   const Opt & opts) override {
+
+    if (args.size()!=1) throw Err() << get_name()
+      << ": one argument: <mapdb_folder>";
+    MapDB map(args[0], 0);
+    std::cout << map.bbox() << "\n";
+  }
+};
 
 /**********************************************************/
 // import MP

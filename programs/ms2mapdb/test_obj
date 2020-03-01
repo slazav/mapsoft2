@@ -1,0 +1,26 @@
+#!/bin/bash -efu
+
+# Add objects
+
+P=${1:-./ms2mapdb}
+
+. ../../modules/test_lib.sh
+
+rm -rf tmp.db
+
+assert_cmd "$P create tmp.db" "" 0
+assert_cmd "$P add_obj tmp.db point:1 [38,55]" "0" 0
+assert_cmd "$P add_obj tmp.db point:1 [39,55]" "1" 0
+assert_cmd "$P add_obj tmp.db line:0xFF00 [[30,55],[32,56]]" "2" 0
+assert_cmd "$P add_obj tmp.db area:1 [[30,55],[32,56],[33,55]]" "3" 0
+assert_cmd "$P add_obj tmp.db text:16 [38,55] --name Text" "4" 0
+
+assert_cmd "$P types tmp.db" "point:0x1
+line:0xff00
+area:0x1
+text:0x10" 0
+
+assert_cmd "$P bbox tmp.db" "[22.5,50.625,16.5,5.625]" 0
+
+
+rm -rf tmp.db
