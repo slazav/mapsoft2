@@ -1,0 +1,21 @@
+<?xml version="1.0" standalone="no"?>
+<!-- Creator: fig2dev Version 3.2.7 -->
+<!-- CreationDate: 2020-03-02 16:00:23 -->
+<!-- Magnification: 7.87 -->
+<svg	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	width="58" height="46"
+	viewBox="-54.50 -54.50 109 86">
+<g fill="none">
+<!-- Line -->
+<polygon points=" -47,24 0,-47 47,24"
+	stroke="#fefefe" stroke-width="15px" stroke-linejoin="round" stroke-linecap="round"/>
+<!-- Line -->
+<polygon points=" -47,24 0,-47 47,24" fill="#005500"
+	stroke="#000000" stroke-width="8px" stroke-linejoin="round" stroke-linecap="round"/>
+<!-- Line -->
+<polygon points=" -47,24 0,-47 47,24" fill="#005500"/>
+<!-- Line -->
+<polygon points=" 0,-35 -19,24 19,24" fill="#ffffff"/>
+</g>
+</svg>
