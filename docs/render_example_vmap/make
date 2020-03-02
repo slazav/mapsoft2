@@ -28,7 +28,8 @@ $MAPDB import_vmap . $name.vmap --config import_vmap.cfg
 time $MAPDB render . --out $name.png --config render.cfg\
    --mkref nom --name $name --dpi $dpi --margin 10\
    --cmap_color 255 --png_format pal\
-   --map $name.map
+   --map $name.map --defs "{\"hr\": \"1\"}"
+
 
 # remove old databases
 $MAPDB delete .
@@ -48,4 +49,4 @@ time $MAPDB render . --out $name.png --config render.cfg\
    --cmap_color 255 --png_format pal\
    --map $name.map
 
-#$MAPDB delete .
+$MAPDB delete .
