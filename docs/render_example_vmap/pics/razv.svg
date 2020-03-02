@@ -1,0 +1,28 @@
+<?xml version="1.0" standalone="no"?>
+<!-- Creator: fig2dev Version 3.2.7 -->
+<!-- CreationDate: 2020-03-02 16:00:23 -->
+<!-- Magnification: 7.87 -->
+<svg	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	width="40" height="40"
+	fill="white"
+	viewBox="-40 -40 80 80">
+
+<rect x="-40" y="-40" width="80" height="80" fill="white"/>
+
+<defs>
+	<symbol id="bdot">
+		<rect x="-8" y="-8" width="16" height="16" fill="black"/>
+	</symbol>
+	<symbol id="bline">
+		<use xlink:href="#bdot" x="0" y="0" transform="translate(-24 0)"/>
+		<use xlink:href="#bdot" x="0" y="0" transform="translate(  0 0)"/>
+		<use xlink:href="#bdot" x="0" y="0" transform="translate( 24 0)"/>
+	</symbol>
+</defs>
+<use xlink:href="#bline" x="0" y="0" transform="translate(0 -24)"/>
+<use xlink:href="#bline" x="0" y="0" transform="translate(0   0)"/>
+<use xlink:href="#bline" x="0" y="0" transform="translate(0  24)"/>
+
+		<rect x="-8" y="-8" width="16" height="16" fill="white"/>
+</svg>

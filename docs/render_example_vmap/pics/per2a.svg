@@ -1,0 +1,23 @@
+<?xml version="1.0" standalone="no"?>
+<!-- Creator: fig2dev Version 3.2.7 -->
+<!-- CreationDate: 2020-03-02 16:00:23 -->
+<!-- Magnification: 7.87 -->
+<svg	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	width="59" height="59"
+	viewBox="-55.5 -55.5 111 111">
+<g fill="none">
+<!-- Line -->
+<polyline points=" 33,-33 -33,33"
+	stroke="#fefefe" stroke-width="45px" stroke-linejoin="round" stroke-linecap="round"/>
+<!-- Line -->
+<polyline points=" -33,-33 33,33"
+	stroke="#fefefe" stroke-width="45px" stroke-linejoin="round" stroke-linecap="round"/>
+<!-- Line -->
+<polyline points=" 33,-33 -33,33"
+	stroke="#008f8f" stroke-width="30px" stroke-linecap="round"/>
+<!-- Line -->
+<polyline points=" -33,-33 33,33"
+	stroke="#008f8f" stroke-width="30px" stroke-linecap="round"/>
+</g>
+</svg>
