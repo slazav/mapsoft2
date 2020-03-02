@@ -343,6 +343,7 @@ public:
     options.remove("img_out_fmt");
     const char *g = "MAPDB_RENDER";
     options.add("obj_scale", 1,0,g, "Set object scaling.");
+    options.add("define",    1,0,g, "definitions.");
     options.add("map_scale", 1,0,g, "Set map scaling (coordinates+objects).");
   }
 
