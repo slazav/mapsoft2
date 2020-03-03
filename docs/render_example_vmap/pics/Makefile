@@ -4,8 +4,11 @@ PICS := avt kladb cross cerkov pam ohotn bash shaht razv dom trig trig_hr kan\
         rossip1 rossip2 sand_ov camp
 
 PNG := $(patsubst %,%.png,$(PICS))
+SVG := $(patsubst %,%.svg,$(PICS))
 
-all: $(PNG)
+all: $(SVG)
+clean:
+	rm -f *.png *.svg *.gif
 
 # fig2dev -t option only allowed for GIF transparent color
 %.gif: %.fig
@@ -13,3 +16,6 @@ all: $(PNG)
 
 %.png: %.gif
 	convert -trim "$<" -repage +0+0 PNG32:"$@"
+
+%.svg: %.fig
+	fig2dev -m7.5 -Lsvg "$<" > "$@"
