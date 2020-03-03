@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <svg	xmlns="http://www.w3.org/2000/svg"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
-	width="32px" height="16px"
+	width="256px" height="128px"
 	viewBox="0 -45 90 45">
 <g fill="none">
 <rect x="0" y="-45" width="90" height="45" fill="#aaffaa"/>
