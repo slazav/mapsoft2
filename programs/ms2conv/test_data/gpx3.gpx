@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <gpx version='1.1' creator='mapsoft-2'>
-  <wpt lon='17.5146880'>
+  <wpt lon='17.5146880'> <!-- lat is missing! -->
     <ele>1508.82</ele>
     <time>2018-04-28T07:55:47Z</time>
     <name>177</name>
