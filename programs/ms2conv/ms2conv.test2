@@ -57,3 +57,7 @@ assert_diff test_data/gpx1a.gpx tmp
 assert_cmd "$P test_data/gpx2.gpx -o tmp.gpx"  "" 0
 assert_diff test_data/gpx2.gpx tmp.gpx
 
+# gpx2 -- empty wpt/trk elements
+assert_cmd "$P test_data/gpx3.gpx -o tmp.gpx"  "" 0
+assert_diff test_data/gpx3a.gpx tmp.gpx
+
