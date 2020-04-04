@@ -124,7 +124,7 @@ public:
   void help_impl(HelpPrinter & pr) override {
     pr.usage("<mapdb_folder> <object_type> <coordinates>");
     pr.head(2, "Options");
-    pr.opts({"MAPDB_ADDOBJ"});
+    pr.opts({"MAPDB_ADD_OBJ"});
   }
 
   virtual void run_impl(const std::vector<std::string> & args,
@@ -375,13 +375,12 @@ public:
 
 
     // If "mkref" option exists build reference using options
-    if (opts.exists("mkref")) map.set_ref(geo_mkref(opts)/opts.get("map_scale", 1.0));
+    if (opts.exists("mkref")) map.set_ref(geo_mkref(opts)*opts.get("map_scale", 1.0));
 
     // get map reference
     GeoMap ref = map.get_ref(); // default map reference
 
     if (ref.empty()) throw Err() << "Map reference is not set";
-
     write_geoimg(fname, map, ref, opts);
   }
 };
