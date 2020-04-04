@@ -1,5 +1,5 @@
-PROGRAMS := ms2conv ms2nom ms2tiles ms2view ms2xyz ms2proj
-# ms2vmap -- not usable yet
+PROGRAMS := ms2conv ms2mapdb ms2nom ms2proj ms2tiles ms2view ms2xyz
+
 # ms2fig  -- to be written
 
 #################################

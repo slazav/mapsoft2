@@ -1,5 +1,5 @@
 Name:         mapsoft2
-Version:      1.0
+Version:      1.1
 Release:      alt1
 
 Summary:      mapsoft2 - programs for working with maps and geodata
@@ -13,6 +13,7 @@ Source:        %name-%version.tar
 BuildRequires: gcc-c++ libgtkmm3-devel libcairomm-devel
 BuildRequires: libjansson-devel libxml2-devel libzip-devel zlib-devel libproj-devel
 BuildRequires: libjpeg-devel libgif-devel libtiff-devel libpng-devel libdb4.7-devel
+BuildRequires: librsvg-devel
 BuildRequires: /usr/bin/pod2man /usr/bin/pod2html /usr/bin/unzip
 
 %description
@@ -36,5 +37,13 @@ export SKIP_IMG_DIFFS=1
 %_datadir/mapsoft2/mapsoft2.css
 
 %changelog
+* Sat Apr 04 2020 Vladislav Zavjalov <slazav@altlinux.org> 1.1-alt1
+- add ms2mapdb program - work with mapsoft2 vector maps
+  (conversion to/from mp/vmap, rendering)
+- basic support for mapdb in ms2view
+- ms2proj: --scale, --shift options
+- update documentation
+- change packaging, use git-submodules, fix a few errors.
+
 * Wed Oct 09 2019 Vladislav Zavjalov <slazav@altlinux.org> 1.0-alt1
 - v1.0 - first release, first build for altlinux
