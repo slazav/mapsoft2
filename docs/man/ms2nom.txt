@@ -1,5 +1,3 @@
-=head1 NAME
-
 =head1 EXAMPLES
 
 Which 1:100000 map is covering a point lon=69, lat=36:
