@@ -1,0 +1,566 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>ms2mapdb</title>
+<link rel="stylesheet" href="manpages.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body>
+
+
+
+<ul id="index">
+  <li><a href="#NAME">NAME</a></li>
+  <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
+  <li><a href="#GENERAL-OPTIONS">GENERAL OPTIONS:</a></li>
+  <li><a href="#ACTIONS">ACTIONS:</a></li>
+  <li><a href="#CREATE----CREATE-MAPDB-MAP">CREATE -- CREATE MAPDB MAP</a></li>
+  <li><a href="#SYNOPSIS1">SYNOPSIS</a></li>
+  <li><a href="#DELETE----DELETE-MAPDB-DATABASES">DELETE -- DELETE MAPDB DATABASES</a></li>
+  <li><a href="#SYNOPSIS2">SYNOPSIS</a></li>
+  <li><a href="#ADD_OBJ----ADD-NEW-OBJECT-PRINT-ID">ADD_OBJ -- ADD NEW OBJECT, PRINT ID</a></li>
+  <li><a href="#SYNOPSIS3">SYNOPSIS</a>
+    <ul>
+      <li><a href="#Options">Options</a></li>
+    </ul>
+  </li>
+  <li><a href="#TYPES----PRINT-ALL-OBJECT-TYPES-IN-THE-MAP">TYPES -- PRINT ALL OBJECT TYPES IN THE MAP</a></li>
+  <li><a href="#SYNOPSIS4">SYNOPSIS</a></li>
+  <li><a href="#BBOX----PRINT-BOUNDING-BOX-OF-THE-MAP-USING-GEOHASH-DATA">BBOX -- PRINT BOUNDING BOX OF THE MAP (USING GEOHASH DATA)</a></li>
+  <li><a href="#SYNOPSIS5">SYNOPSIS</a></li>
+  <li><a href="#IMPORT_MP----IMPORT-MP-FILE-TO-MAPDB">IMPORT_MP -- IMPORT MP FILE TO MAPDB</a></li>
+  <li><a href="#SYNOPSIS6">SYNOPSIS</a></li>
+  <li><a href="#EXPORT_MP----EXPORT-MP-FILE-FROM-MAPDB">EXPORT_MP -- EXPORT MP FILE FROM MAPDB</a></li>
+  <li><a href="#SYNOPSIS7">SYNOPSIS</a></li>
+  <li><a href="#IMPORT_VMAP----IMPORT-MAPSOFT1-VMAP-FILE-TO-MAPDB">IMPORT_VMAP -- IMPORT MAPSOFT1 VMAP FILE TO MAPDB</a></li>
+  <li><a href="#SYNOPSIS8">SYNOPSIS</a></li>
+  <li><a href="#EXPORT_VMAP----EXPORT-MAPSOFT1-VMAP-FILE-FROM-MAPDB">EXPORT_VMAP -- EXPORT MAPSOFT1 VMAP FILE FROM MAPDB</a></li>
+  <li><a href="#SYNOPSIS9">SYNOPSIS</a></li>
+  <li><a href="#RENDER----RENDER-IMAGE-FROM-MAPDB">RENDER -- RENDER IMAGE FROM MAPDB</a></li>
+  <li><a href="#SYNOPSIS10">SYNOPSIS</a>
+    <ul>
+      <li><a href="#Options-for-rendering-MapDB">Options for rendering MapDB</a></li>
+      <li><a href="#Options-for-making-map-reference">Options for making map reference</a></li>
+      <li><a href="#Options-for-saving-images">Options for saving images</a></li>
+    </ul>
+  </li>
+  <li><a href="#AUTHOR">AUTHOR</a></li>
+  <li><a href="#SEE-ALSO">SEE ALSO</a></li>
+</ul>
+
+<h1 id="NAME">NAME</h1>
+
+<p>ms2mapdb -- working with vector maps in MapDB storage</p>
+
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
+
+<pre><code>        ms2mapdb (-h|--help|--pod)
+
+        ms2mapdb &lt;action&gt; (-h|--help)
+
+        ms2mapdb &lt;action&gt; [&lt;action arguments and options&gt;]</code></pre>
+
+<h1 id="GENERAL-OPTIONS">GENERAL OPTIONS:</h1>
+
+<dl>
+
+<dt id="h---help"><b>-h, --help</b></dt>
+<dd>
+
+<p>Show help message.</p>
+
+</dd>
+<dt id="pod"><b>--pod</b></dt>
+<dd>
+
+<p>Show help message as POD template.</p>
+
+</dd>
+</dl>
+
+<h1 id="ACTIONS">ACTIONS:</h1>
+
+<pre><code>        ms2mapdb create &lt;arguments&gt; -- create MapDB map
+
+        ms2mapdb delete &lt;arguments&gt; -- delete MapDB databases
+
+        ms2mapdb add_obj &lt;arguments&gt; -- add new object, print id
+
+        ms2mapdb types &lt;arguments&gt; -- print all object types in the map
+
+        ms2mapdb bbox &lt;arguments&gt; -- print bounding box of the map (using geohash data)
+
+        ms2mapdb import_mp &lt;arguments&gt; -- import MP file to MapDB
+
+        ms2mapdb export_mp &lt;arguments&gt; -- export MP file from MapDB
+
+        ms2mapdb import_vmap &lt;arguments&gt; -- import mapsoft1 VMAP file to MapDB
+
+        ms2mapdb export_vmap &lt;arguments&gt; -- export mapsoft1 VMAP file from MapDB
+
+        ms2mapdb render &lt;arguments&gt; -- Render image from MapDB</code></pre>
+
+<h1 id="CREATE----CREATE-MAPDB-MAP">CREATE -- CREATE MAPDB MAP</h1>
+
+<h1 id="SYNOPSIS1">SYNOPSIS</h1>
+
+<pre><code>        ms2vmap create &lt;mapdb_folder&gt;</code></pre>
+
+<h1 id="DELETE----DELETE-MAPDB-DATABASES">DELETE -- DELETE MAPDB DATABASES</h1>
+
+<h1 id="SYNOPSIS2">SYNOPSIS</h1>
+
+<pre><code>        ms2vmap delete &lt;mapdb_folder&gt;</code></pre>
+
+<h1 id="ADD_OBJ----ADD-NEW-OBJECT-PRINT-ID">ADD_OBJ -- ADD NEW OBJECT, PRINT ID</h1>
+
+<h1 id="SYNOPSIS3">SYNOPSIS</h1>
+
+<pre><code>        ms2vmap add_obj &lt;mapdb_folder&gt; &lt;object_type&gt; &lt;coordinates&gt;</code></pre>
+
+<h2 id="Options">Options</h2>
+
+<dl>
+
+<dt id="n---name-arg"><b>-n, --name &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Specify object name.</p>
+
+</dd>
+<dt id="c---comm-arg"><b>-c, --comm &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Specify object comment.</p>
+
+</dd>
+<dt id="a---angle-arg"><b>-a, --angle &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Specify object angle.</p>
+
+</dd>
+<dt id="s---scale-arg"><b>-s, --scale &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Specify object scale.</p>
+
+</dd>
+<dt id="A---align-arg"><b>-A, --align &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Specify object alignment (NW,N,NE,E,SE,S,SW,C).</p>
+
+</dd>
+</dl>
+
+<h1 id="TYPES----PRINT-ALL-OBJECT-TYPES-IN-THE-MAP">TYPES -- PRINT ALL OBJECT TYPES IN THE MAP</h1>
+
+<h1 id="SYNOPSIS4">SYNOPSIS</h1>
+
+<pre><code>        ms2vmap types &lt;mapdb_folder&gt;</code></pre>
+
+<h1 id="BBOX----PRINT-BOUNDING-BOX-OF-THE-MAP-USING-GEOHASH-DATA">BBOX -- PRINT BOUNDING BOX OF THE MAP (USING GEOHASH DATA)</h1>
+
+<h1 id="SYNOPSIS5">SYNOPSIS</h1>
+
+<pre><code>        ms2vmap bbox &lt;mapdb_folder&gt;</code></pre>
+
+<h1 id="IMPORT_MP----IMPORT-MP-FILE-TO-MAPDB">IMPORT_MP -- IMPORT MP FILE TO MAPDB</h1>
+
+<h1 id="SYNOPSIS6">SYNOPSIS</h1>
+
+<pre><code>        ms2vmap import_mp &lt;mapdb_folder&gt; &lt;file_name&gt; &lt;options&gt;</code></pre>
+
+<dl>
+
+<dt id="c---config-arg"><b>-c, --config &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Configuration file for MP-&gt;MapDB conversion</p>
+
+</dd>
+<dt id="cnv_points-arg"><b>--cnv_points &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Type conversion rules for point objects: [[&lt;type_in&gt;, &lt;type_out&gt;], [&lt;type_in&gt;, &lt;type_out&gt;], ...] type_in==0 matches all types; type_out==0 sets output type same as input one. Default value: [[0,0]].</p>
+
+</dd>
+<dt id="cnv_lines-arg"><b>--cnv_lines &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Type conversion rules for line objects. Same notation as in cnv_point.</p>
+
+</dd>
+<dt id="cnv_areas-arg"><b>--cnv_areas &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Type conversion rules for area objects. Same notation as in cnv_point.</p>
+
+</dd>
+<dt id="data_level-arg"><b>--data_level &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Read data from a specified MP data level</p>
+
+</dd>
+</dl>
+
+<h1 id="EXPORT_MP----EXPORT-MP-FILE-FROM-MAPDB">EXPORT_MP -- EXPORT MP FILE FROM MAPDB</h1>
+
+<h1 id="SYNOPSIS7">SYNOPSIS</h1>
+
+<pre><code>        ms2vmap export_mp &lt;mapdb_folder&gt; &lt;file_name&gt; &lt;options&gt;</code></pre>
+
+<dl>
+
+<dt id="c---config-arg1"><b>-c, --config &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Configuration file for MapDB-&gt;MP conversion</p>
+
+</dd>
+<dt id="cnv_points-arg1"><b>--cnv_points &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Type conversion rules for point objects: [[&lt;type_in&gt;, &lt;type_out&gt;], [&lt;type_in&gt;, &lt;type_out&gt;], ...] type_in==0 matches all types; type_out==0 sets output type same as input one. Default value: [[0,0]].</p>
+
+</dd>
+<dt id="cnv_lines-arg1"><b>--cnv_lines &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Type conversion rules for line objects. Same notation as in cnv_point.</p>
+
+</dd>
+<dt id="cnv_areas-arg1"><b>--cnv_areas &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Type conversion rules for area objects. Same notation as in cnv_point.</p>
+
+</dd>
+<dt id="codepage-arg"><b>--codepage &lt;arg&gt;</b></dt>
+<dd>
+
+<p>set MP codepage</p>
+
+</dd>
+<dt id="name-arg"><b>--name &lt;arg&gt;</b></dt>
+<dd>
+
+<p>set MP map name</p>
+
+</dd>
+<dt id="id-arg"><b>--id &lt;arg&gt;</b></dt>
+<dd>
+
+<p>ser MP map ID</p>
+
+</dd>
+</dl>
+
+<h1 id="IMPORT_VMAP----IMPORT-MAPSOFT1-VMAP-FILE-TO-MAPDB">IMPORT_VMAP -- IMPORT MAPSOFT1 VMAP FILE TO MAPDB</h1>
+
+<h1 id="SYNOPSIS8">SYNOPSIS</h1>
+
+<pre><code>        ms2vmap import_vmap &lt;mapdb_folder&gt; &lt;file_name&gt; &lt;options&gt;</code></pre>
+
+<dl>
+
+<dt id="c---config-arg2"><b>-c, --config &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Configuration file for VMAP-&gt;MapDB conversion</p>
+
+</dd>
+</dl>
+
+<h1 id="EXPORT_VMAP----EXPORT-MAPSOFT1-VMAP-FILE-FROM-MAPDB">EXPORT_VMAP -- EXPORT MAPSOFT1 VMAP FILE FROM MAPDB</h1>
+
+<h1 id="SYNOPSIS9">SYNOPSIS</h1>
+
+<pre><code>        ms2vmap export_vmap &lt;mapdb_folder&gt; &lt;file_name&gt; &lt;options&gt;</code></pre>
+
+<dl>
+
+<dt id="c---config-arg3"><b>-c, --config &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Configuration file for MapDB-&gt;VMAP conversion</p>
+
+</dd>
+</dl>
+
+<h1 id="RENDER----RENDER-IMAGE-FROM-MAPDB">RENDER -- RENDER IMAGE FROM MAPDB</h1>
+
+<h1 id="SYNOPSIS10">SYNOPSIS</h1>
+
+<pre><code>        ms2vmap render &lt;mapdb_folder&gt; &lt;options&gt;</code></pre>
+
+<h2 id="Options-for-rendering-MapDB">Options for rendering MapDB</h2>
+
+<dl>
+
+<dt id="c---config-arg4"><b>-c, --config &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Configuration file for vector map rendering.</p>
+
+</dd>
+<dt id="obj_scale-arg"><b>--obj_scale &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set object scaling.</p>
+
+</dd>
+<dt id="define-arg"><b>--define &lt;arg&gt;</b></dt>
+<dd>
+
+<p>definitions.</p>
+
+</dd>
+<dt id="map_scale-arg"><b>--map_scale &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set map scaling (coordinates+objects).</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-making-map-reference">Options for making map reference</h2>
+
+<dl>
+
+<dt id="mkref-arg"><b>--mkref &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Choose map type (nom, google_tile, tms_tile, proj)</p>
+
+</dd>
+<dt id="name-arg1"><b>--name &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set map name. For &quot;nom&quot; maps it should contain a valid Soviet nomenclature name.</p>
+
+</dd>
+<dt id="dpi-arg"><b>--dpi &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map resolution, pixels per inch (&quot;nom&quot; and &quot;proj&quot; maps)</p>
+
+</dd>
+<dt id="mag-arg"><b>--mag &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map magnification (&quot;nom&quot; maps)</p>
+
+</dd>
+<dt id="margins-arg"><b>--margins &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map margins, pixels (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="top_margin-arg"><b>--top_margin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override top margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="left_margin-arg"><b>--left_margin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override left margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="right_margin-arg"><b>--right_margin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override right margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="bottom_margin-arg"><b>--bottom_margin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override bottom margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="zindex-arg"><b>--zindex &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Tile zindex (&quot;*_tile&quot; maps). Can be skipped if tile argument has the form [x,y,z]</p>
+
+</dd>
+<dt id="tiles-arg"><b>--tiles &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Tile or tile range (&quot;*_tile&quot; maps), [x,y], [x,y,z], or [x,y,w,h]</p>
+
+</dd>
+<dt id="coords-arg"><b>--coords &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Figure in projection coordinates (rectangle or lines) to be covered by the map (&quot;proj&quot; maps). Figure can be a rectangle written as [x,y,w,h], or a line, [[x1,y1],[x2,y2], ...], or a multi-segment line, [&lt;line&gt;, &lt;line&gt;, ...].</p>
+
+</dd>
+<dt id="border-arg"><b>--border &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map border in projection coordinates (&quot;proj&quot; maps), a line or a multi-segment line.</p>
+
+</dd>
+<dt id="coords_wgs-arg"><b>--coords_wgs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Figure in wgs84 coordinates to be covered by the map (&quot;*_tile&quot; or &quot;proj&quot; maps), a rectangle, a line, or a multi-segment line.</p>
+
+</dd>
+<dt id="border_wgs-arg"><b>--border_wgs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map border in wgs84 coordinates (&quot;*_tile&quot; or &quot;proj&quot; maps), a line or a multi-segment line.</p>
+
+</dd>
+<dt id="proj-arg"><b>--proj &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Projection setting, &quot;libproj&quot; parameter string (e.g. &quot;+datum=WGS84 +proj=lonlat&quot;) or mapsoft2 alias (&quot;WGS&quot;, &quot;WEB&quot;, &quot;FI&quot;, &quot;CH&quot;, &quot;SU39&quot;, etc.).Default is WGS.</p>
+
+</dd>
+<dt id="scale-arg"><b>--scale &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map scale, projection units per map cm (&quot;proj&quot; maps). Default value is 0.01 degree/cm for degree projections, 1000m/cm for metric projections.</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-saving-images">Options for saving images</h2>
+
+<dl>
+
+<dt id="o---out-arg"><b>-o, --out &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Output file.</p>
+
+</dd>
+<dt id="tiff_format-arg"><b>--tiff_format &lt;arg&gt;</b></dt>
+<dd>
+
+<p>When writing TIFF, convert image to one of following forms: argb, rgb, grey, pal (default depends on the image).</p>
+
+</dd>
+<dt id="tiff_minwhite-arg"><b>--tiff_minwhite &lt;arg&gt;</b></dt>
+<dd>
+
+<p>When writing greyscale TIFF, use MINISWHITE colors (default: 0).</p>
+
+</dd>
+<dt id="jpeg_quality-arg"><b>--jpeg_quality &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set JPEG quality (default 95).</p>
+
+</dd>
+<dt id="png_format-arg"><b>--png_format &lt;arg&gt;</b></dt>
+<dd>
+
+<p>When writing PNG, convert image to one of following forms: argb, rgb, grey, agrey, pal (default depends on the image).</p>
+
+</dd>
+<dt id="cmap_colors-arg"><b>--cmap_colors &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Colormap size for reducing image colors (2..256). Image colors are reduced when saving to GIF, to PNG with --png_format=pal, to TIFF with --tiff_format=pal</p>
+
+</dd>
+<dt id="cmap_alpha-arg"><b>--cmap_alpha &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Alpha channel: none (default) -- remove it; full -- treat it equally with other channels; gif -- keep only fully-transparent color, if needed. When saving GIF file (which supports only fully transparent color) &quot;full&quot; works in the same way as &quot;gif&quot;.</p>
+
+</dd>
+<dt id="cmap_dim_method-arg"><b>--cmap_dim_method &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Analog of pnmcolormap options -spreadbrightness and -spreadluminosity. When a box in the color space is measured, color dimensions can be treated equally or with luminosity factors. Values: norm (default) or lumin.</p>
+
+</dd>
+<dt id="cmap_rep_method-arg"><b>--cmap_rep_method &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Analog of pnmcolormap options -center, -meancolor, and -meanpixel. When a box in the color space is chosen, it can be represented by its geometrical center, or by averaging pixels or colors in it. Values: center, meanpix (default), meancol.</p>
+
+</dd>
+<dt id="cmap_split_method-arg"><b>--cmap_split_method &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Analog of pnmcolormap options -splitpix, -splitcol, -splitdim. How to choose a box in the color space for splitting: by its maximum dimension, maximum number of pixels or colors in it. Values: maxdim (default), maxpix, maxcol.</p>
+
+</dd>
+<dt id="ozi_map_grid-arg"><b>--ozi_map_grid &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Write map reference points in grid coordinates (OziExplorer format), default 0</p>
+
+</dd>
+<dt id="ozi_map_wgs-arg"><b>--ozi_map_wgs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Always use wgs84 datum for map coordinates (OziExplorer format), default 0</p>
+
+</dd>
+<dt id="out_fmt-arg"><b>--out_fmt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Explicitely set image output format: pdf, ps, svg, png, jpeg, tiff, gif. By default format is determined from the output file extension.</p>
+
+</dd>
+<dt id="bgcolor-arg"><b>--bgcolor &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Image background color (default 0xFFFFFFFF).</p>
+
+</dd>
+<dt id="m---map-arg"><b>-m, --map &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Write map file in OziExprorer format (by default it is not written).</p>
+
+</dd>
+<dt id="skip_image"><b>--skip_image</b></dt>
+<dd>
+
+<p>Do not write image file (can be used if only the map file is needed). Option -o &lt;file&gt; should be provided anyway, the filename will be written to the map-file.</p>
+
+</dd>
+</dl>
+
+<h1 id="AUTHOR">AUTHOR</h1>
+
+<p>Vladislav Zavjalov &lt;slazav@altlinux.org&gt;</p>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<ul>
+
+<li><p><a href="http://slazav.github.io/mapsoft2">Mapsoft2 documentation (ru, en)</a></p>
+
+</li>
+<li><p><a href="http://github.com/slazav/mapsoft2">Mapsoft2 source code, bugtracker</a></p>
+
+</li>
+<li><p><a href="http://github.com/ushakov/mapsoft">Old Mapsoft project</a></p>
+
+</li>
+</ul>
+
+
+</body>
+
+</html>
+
+
