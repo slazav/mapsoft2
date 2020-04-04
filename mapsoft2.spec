@@ -1,6 +1,6 @@
 Name:         mapsoft2
 Version:      1.1
-Release:      alt1
+Release:      alt2
 
 Summary:      mapsoft2 - programs for working with maps and geodata
 Group:        Sciences/Geosciences
@@ -37,6 +37,9 @@ export SKIP_IMG_DIFFS=1
 %_datadir/mapsoft2/mapsoft2.css
 
 %changelog
+* Sat Apr 04 2020 Vladislav Zavjalov <slazav@altlinux.org> 1.1-alt2
+- fix build on i586 (rounding errors in modules/geom_tools/np.test.cpp)
+
 * Sat Apr 04 2020 Vladislav Zavjalov <slazav@altlinux.org> 1.1-alt1
 - add ms2mapdb program - work with mapsoft2 vector maps
   (conversion to/from mp/vmap, rendering)
