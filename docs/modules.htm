@@ -27,7 +27,7 @@ Language:
 <p>
 Mapsoft2 code is organized as a set of separate "modules". Each
 module can contain its own documentation, tests, programs, etc.. Some of
-there modules are stable and used in my other projects, others may be
+these modules are stable and used in my other projects, others may be
 experimental, unstable, or even useless. Modules may depend on each other.
 Makefile-based building system allows to build programs and libraries
 which depend only on certain modules and to transfer modules between
@@ -38,14 +38,14 @@ different projects.
 <p> The building system is based on GNU make. All modules are
 located in <tt>modules</tt> directory. Programs, libraries and modules
 which are not intended to be used by other modules can be located
-anywhere (see <tt>programs</tt> directory). Each module has a
-<tt>Makefile</tt> there a few variables are set to declare module
-components and <tt>Makefile.inc</tt> from the <tt>modules</tt> directory
-is included. For building dependency tree a separate script is used:
-<tt>modules/get_deps</tt>. For correct dependency search including a
-header file <tt>file.h</tt> from a module <tt>name</tt> should be always
-written as <tt>#include "name/file.h"</tt>. Including local header file
-should be written as <tt>#include "file.h"</tt>.
+anywhere. Each module has a <tt>Makefile</tt> there a few variables are
+set to declare module components and <tt>Makefile.inc</tt> from the
+<tt>modules</tt> directory is included. For building dependency tree a
+separate script is used: <tt>modules/get_deps</tt>. For correct
+dependency search including a header file <tt>file.h</tt> from a module
+<tt>name</tt> should be always written as <tt>#include
+"name/file.h"</tt>. Including local header file should be written as
+<tt>#include "file.h"</tt>.
 
 
 <p>In <tt>Makefile</tt> of a module following variables can be defined:
@@ -77,10 +77,11 @@ each <tt>&lt;name&gt;</tt> a source file <tt>&lt;name&gt;.test.cpp</tt> and a sc
 files can be put in <tt>$(MODDIR)/pc/</tt>.
 </ul>
 
-<h3>Git and gears</h3>
+<h3>Gear and git submodule</h3>
 
-<p>Modules are located in a separate git repository,
-and included into <tt>mapsoft2</tt> as git submodule.
+<p>Modules are located in a separate git repository, and can be
+included into different projects (e.g. <tt>mapsoft2</tt>) as git
+submodule.
 
 <p>Use of git submodules is not supported by Altlinux building
 system (<tt>gear</tt> program). It wants to have all source code
@@ -88,6 +89,19 @@ accessible from a certain git commit. This problem
 is solved by packing all modules in a separate tarball (see <tt>update_modules</tt>
 script) and keeping it in <tt>mapsoft2</tt> repository. If you do not
 use <tt>gear</tt> for building the package, you can ignore this file.
+
+
+<h3>Projects which use mapsoft2-libs</h3>
+<p>as git submodule:
+<ul>
+<li>mapsoft2: <a href="https://github.com/slazav/mapsoft2">https://github.com/slazav/mapsoft2</a>
+<li>graphene: <a href="https://github.com/slazav/graphene">https://github.com/slazav/graphene</a>
+<li>dev_server: <a href="https://github.com/slazav/dev_server">https://github.com/slazav/dev_server</a>
+</ul>
+<p>copy of some modules:
+<ul>
+<li>pico_rec: <a href="https://github.com/slazav/pico_osc">https://github.com/slazav/pico_osc</a>
+</ul>
 
 
 <h3>Modules</h3>
@@ -100,6 +114,8 @@ number or their size).</td></tr>
 <tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/cairo">cairo</a></b></td><td> Wrapper for <a href="https://www.cairographics.org/">libcairo</a>.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/conv">conv</a></b></td><td> Coordinate conversions for geometric objects.</td></tr>
+
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/downloader">downloader</a></b></td><td> A multy-thread download manager.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/err">err</a></b></td><td> Simple class for throwing errors with human-readable descriptions.
 Used in many of my projects.</td></tr>
@@ -121,7 +137,7 @@ formula). Geo-conversions (<a href="https://proj4.org/">libproj</a> wrapper).
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_nom">geo_nom</a></b></td><td> Functions for working with Soviet nomenclature map names.</td></tr>
 
-<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_render">geo_render</a></b></td><td> Rendering geodata, map grids, vector maps...</td></tr>
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_render">geo_render</a></b></td><td> Rendering geodata, map grids, raster maps...</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geo_tiles">geo_tiles</a></b></td><td> Functions for working with TMS/Google tiles.</td></tr>
 

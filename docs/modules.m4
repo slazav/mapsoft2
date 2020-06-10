@@ -5,7 +5,7 @@ HEADER(modules,`
 <p>ENRU(`
 Mapsoft2 code is organized as a set of separate "modules". Each
 module can contain its own documentation, tests, programs, etc.. Some of
-there modules are stable and used in my other projects, others may be
+these modules are stable and used in my other projects, others may be
 experimental, unstable, or even useless. Modules may depend on each other.
 Makefile-based building system allows to build programs and libraries
 which depend only on certain modules and to transfer modules between
@@ -26,22 +26,21 @@ different projects.
 <p>ENRU(` The building system is based on GNU make. All modules are
 located in <tt>modules</tt> directory. Programs, libraries and modules
 which are not intended to be used by other modules can be located
-anywhere (see <tt>programs</tt> directory). Each module has a
-<tt>Makefile</tt> there a few variables are set to declare module
-components and <tt>Makefile.inc</tt> from the <tt>modules</tt> directory
-is included. For building dependency tree a separate script is used:
-<tt>modules/get_deps</tt>. For correct dependency search including a
-header file <tt>file.h</tt> from a module <tt>name</tt> should be always
-written as <tt>#include "name/file.h"</tt>. Including local header file
-should be written as <tt>#include "file.h"</tt>.',`
+anywhere. Each module has a <tt>Makefile</tt> there a few variables are
+set to declare module components and <tt>Makefile.inc</tt> from the
+<tt>modules</tt> directory is included. For building dependency tree a
+separate script is used: <tt>modules/get_deps</tt>. For correct
+dependency search including a header file <tt>file.h</tt> from a module
+<tt>name</tt> should be always written as <tt>#include
+"name/file.h"</tt>. Including local header file should be written as
+<tt>#include "file.h"</tt>.',`
 
 Сборочая система сделана на основе GNU make. Модули расположены в
 директории <tt>modules</tt>. Программы, библиотеки и модули, которые  не
-используются другими модулями, могут быть расположены в любом месте (см.,
-например, директорию <tt>programs</tt>). Каждый модуль содержит
-<tt>Makefile</tt> где описаны его компоненты и включен файл
-<tt>Makefile.inc</tt> из директории <tt>modules</tt>. Для построения
-дерева зависимостей используется отдельный скрипт
+используются другими модулями, могут быть расположены в любом месте.
+Каждый модуль содержит <tt>Makefile</tt> где описаны его компоненты и
+включен файл <tt>Makefile.inc</tt> из директории <tt>modules</tt>. Для
+построения дерева зависимостей используется отдельный скрипт
 <tt>modules/get_deps</tt>. Для правильного поиска зависимостей
 подключение заголовочного файла <tt>file.h</tt> из модуля <tt>name</tt>
 надо записывать в виде <tt>#include "name/file.h"</tt>, а локальных
@@ -105,12 +104,13 @@ files can be put in <tt>$(MODDIR)/pc/</tt>.',
 Локальные файлы для pkg-config можно положить в директорию <tt>$(MODDIR)/pc/</tt>.')
 </ul>
 
-<h3>ENRU(`Git and gears',`Git и gears')</h3>
+<h3>ENRU(`Gear and git submodule',`Gear и git submodule')</h3>
 
-<p>ENRU(`Modules are located in a separate git repository,
-and included into <tt>mapsoft2</tt> as git submodule.',`
-Модули хранятся в отдельном git-репозитории и подключаются к <tt>mapsoft2</tt>
-как git submodule.')
+<p>ENRU(`Modules are located in a separate git repository, and can be
+included into different projects (e.g. <tt>mapsoft2</tt>) as git
+submodule.',`
+Модули хранятся в отдельном git-репозитории и могут подключаться к разным
+проектам (например, <tt>mapsoft2</tt>) как git submodule.')
 
 <p>ENRU(`Use of git submodules is not supported by Altlinux building
 system (<tt>gear</tt> program). It wants to have all source code
@@ -126,6 +126,19 @@ use <tt>gear</tt> for building the package, you can ignore this file.
 хранением этого файла в репозитории <tt>mapsoft2</tt>. Если вы не используете
 <tt>gear</tt> для сборки пакета, то этот файл можно игнорировать.
 ')
+
+<h3>ENRU(`Projects which use mapsoft2-libs', `Пректы, использующие mapsoft2-libs')</h3>
+<p>as git submodule:
+<ul>
+<li>mapsoft2: WWW(`https://github.com/slazav/mapsoft2')
+<li>graphene: WWW(`https://github.com/slazav/graphene')
+<li>dev_server: WWW(`https://github.com/slazav/dev_server')
+</ul>
+<p>copy of some modules:
+<ul>
+<li>pico_rec: WWW(`https://github.com/slazav/pico_osc')
+</ul>
+
 
 <h3>ENRU(`Modules', `Модули')</h3>
 define(_MODTAB_, `<tr><td valign=top>$2`'_MOD_($1)</td><td> ENRU(`$3',`$4')</td></tr>')
@@ -143,6 +156,10 @@ _MODTAB_(cairo, UNSTABLE,
 _MODTAB_(conv, STABLE,
 `Coordinate conversions for geometric objects.',
 `Преобразования координат геометрических объектов.')
+
+_MODTAB_(downloader, UNSTABLE,
+`A multy-thread download manager.',
+`Многопоточный менеджер загрузок.')
 
 _MODTAB_(err, STABLE,
 `Simple class for throwing errors with human-readable descriptions.
@@ -176,7 +193,7 @@ KML, KMZ, GeoJson, OziExplorer). Расстояния между точками 
 (формула Гаверсинуса). Геодезические преобразования (обертка для
 библиотеки _LIBPROJ_).
 <br>WWW(`https://github.com/slazav/mapsoft2-libs/blob/master/geo_data/Formats.md',
-`-> Mapsoft2 geodata, supported file formats')
+`-> форматы геоданных в Mapsoft2')
 ')
 
 _MODTAB_(geo_mkref, STABLE, `Making map references.',`Изготовление
@@ -187,8 +204,8 @@ _MODTAB_(geo_nom, STABLE,
 `Функции для работы с именами советских номенклатурных карт.')
 
 _MODTAB_(geo_render, UNSTABLE,
-`Rendering geodata, map grids, vector maps...',
-`Рисование геоданных, сеток, векторных карт на растровых картинках.')
+`Rendering geodata, map grids, raster maps...',
+`Рисование геоданных, сеток, растровых карт на растровых картинках.')
 
 _MODTAB_(geo_tiles, STABLE,
 `Functions for working with TMS/Google tiles.',
@@ -305,7 +322,7 @@ in <tt>viewer/examples</tt> folder.',
 `Вьюер (GTK) для объектов, которые умеют рисовать растровые изображения.
 "Резиновые линии" и "действия" для изготовления интерактивных интерфейсов
 (например, рисование и редактирование геометрических объектов). Примеры
-использования находятся в директории <tt>examples/viewer/</tt>.')
+использования находятся в директории <tt>viewer/examples</tt>.')
 
 _MODTAB_(vmap, STABLE,
 `Reading and writing of VMAP, old mapsoft format for vector maps.',
