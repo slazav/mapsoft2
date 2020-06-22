@@ -80,7 +80,7 @@ main(int argc, char **argv){
         if (p.z>0) z = p.z;
         tiles = iRect(p, p+iPoint(1,1));
       }
-      catch (Err e){
+      catch (Err & e){
         tiles = O.get("tiles", iRect());
       }
       if (tiles.is_zsize())
@@ -124,7 +124,7 @@ main(int argc, char **argv){
 
     throw Err() << "--tiles or --range option expected";
   }
-  catch (Err e) {
+  catch (Err & e) {
     if (e.str()!="") cerr << "Error: " << e.str() << "\n";
     return 1;
   }

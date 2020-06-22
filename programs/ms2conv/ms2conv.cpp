@@ -110,7 +110,7 @@ main(int argc, char *argv[]){
       write_geo(ofile, data, O);
       return 0;
     }
-    catch(Err e) {if (e.code()!=-2) throw e;}
+    catch(Err & e) {if (e.code()!=-2) throw;}
 
     // render image file
     try {
@@ -131,12 +131,12 @@ main(int argc, char *argv[]){
       write_geoimg(ofile, obj, ref, O);
       return 0;
     }
-    catch(Err e) {if (e.code()!=-2) throw e;}
+    catch(Err & e) {if (e.code()!=-2) throw;}
 
     throw Err() << "Can't determine output format for file: " << ofile;
   }
 
-  catch(Err e){
+  catch(Err & e){
     if (e.str()!="") cerr << "Error: " << e.str() << "\n";
     return 1;
   }

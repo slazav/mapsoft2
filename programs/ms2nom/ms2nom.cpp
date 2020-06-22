@@ -162,7 +162,7 @@ main(int argc, char **argv){
     throw Err() << "--name or --range option expected";
 
   }
-  catch (Err e) {
+  catch (Err & e) {
     if (e.str()!="") cerr << "Error: " << e.str() << "\n";
     return 1;
   }

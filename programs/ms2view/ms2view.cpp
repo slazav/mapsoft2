@@ -83,7 +83,7 @@ main(int argc, char **argv){
     return 0;
 
   }
-  catch (Err e) {
+  catch (Err & e) {
     if (e.str()!="") std::cerr << "Error: " << e.str() << "\n";
     return 1;
   }

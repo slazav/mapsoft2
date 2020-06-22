@@ -123,7 +123,7 @@ main(int argc, char *argv[]){
         std::cout << pt << "\n";
         continue;
       }
-      catch (Err e) { if (parse_done) throw e;}
+      catch (Err & e) { if (parse_done) throw;}
 
       // try line
       try {
@@ -135,7 +135,7 @@ main(int argc, char *argv[]){
         std::cout << l1 << "\n";
         continue;
       }
-      catch (Err e) { if (parse_done) throw e;}
+      catch (Err & e) { if (parse_done) throw;}
 
       // try multiline
       try {
@@ -147,7 +147,7 @@ main(int argc, char *argv[]){
         std::cout << ml1 << "\n";
         continue;
       }
-      catch (Err e) { if (parse_done) throw e;}
+      catch (Err & e) { if (parse_done) throw;}
 
       // try rectangle
       try {
@@ -159,14 +159,14 @@ main(int argc, char *argv[]){
         std::cout << r1 << "\n";
         continue;
       }
-      catch (Err e) { if (parse_done) throw e;}
+      catch (Err & e) { if (parse_done) throw;}
 
       throw Err() << "Can't parse form: " << f;
 
     }
   }
 
-  catch(Err e){
+  catch(Err & e){
     if (e.str()!="") cerr << "Error: " << e.str() << "\n";
     return 1;
   }
