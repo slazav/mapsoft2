@@ -66,7 +66,6 @@ main(int argc, char **argv){
 
     std::vector<std::string> files;
     Opt opts = parse_options_all(&argc, &argv, options, {}, files);
-    std::shared_ptr<Opt> optsp(new Opt(opts));
 
     if (opts.exists("help")) usage();
     if (opts.exists("pod")) usage(true);
@@ -75,7 +74,7 @@ main(int argc, char **argv){
     setenv("GDK_CORE_DEVICE_EVENTS", "1", 1);
 
     auto app = Gtk::Application::create();
-    Mapview mapview(optsp);
+    Mapview mapview(opts);
     mapview.add_files(files);
     app->run(mapview, argc, argv);
 
