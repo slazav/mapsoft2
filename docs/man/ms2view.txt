@@ -28,3 +28,25 @@ Menu hotkeys can be changed in B<$HOME/.mapsoft2/mapsoft2.acc> file.
 The file is read each time the program is started and written when it
 exits. A default hotkey mapping with all lines commented is written in
 the first run.
+
+=head1 VIEWER PROJECTION
+
+Mapsoft2 viewer uses the following algorithm to set viewer projection
+and view area:
+
+=over 1
+
+=item In the beginning a web mercator projection is set, it is considered as
+      "temporary" projection.
+
+=item When new maps are loaded, the temporary projection is replaced by
+      projection of the first map and become non-temporary.
+      Zoom and position of the viewer window is adjusted to
+      keep roughly the save area on the screen. If original
+      projection is non-temporary, then no modifications are done.
+
+=item When new tracks or points are loaded, projection does not change.
+      Zoom and position of the viewer window is adjusted to have
+      all loaded data on the screen.
+
+=back

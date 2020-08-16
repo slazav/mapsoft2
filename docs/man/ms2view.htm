@@ -24,6 +24,7 @@
   <li><a href="#OTHER-OPTIONS">OTHER OPTIONS</a></li>
   <li><a href="#CUSTOMIZING-VIEWER-INTERFACE-WITH-CSS-STYLES">CUSTOMIZING VIEWER INTERFACE WITH CSS STYLES</a></li>
   <li><a href="#CUSTOMIZING-HOTKEYS">CUSTOMIZING HOTKEYS</a></li>
+  <li><a href="#VIEWER-PROJECTION">VIEWER PROJECTION</a></li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
 </ul>
@@ -394,6 +395,26 @@
 <h1 id="CUSTOMIZING-HOTKEYS">CUSTOMIZING HOTKEYS</h1>
 
 <p>Menu hotkeys can be changed in <b>$HOME/.mapsoft2/mapsoft2.acc</b> file. The file is read each time the program is started and written when it exits. A default hotkey mapping with all lines commented is written in the first run.</p>
+
+<h1 id="VIEWER-PROJECTION">VIEWER PROJECTION</h1>
+
+<p>Mapsoft2 viewer uses the following algorithm to set viewer projection and view area:</p>
+
+<dl>
+
+<dt id="In-the-beginning-a-web-mercator-projection-is-set-it-is-considered-as-temporary-projection">In the beginning a web mercator projection is set, it is considered as &quot;temporary&quot; projection.</dt>
+<dd>
+
+</dd>
+<dt id="When-new-maps-are-loaded-the-temporary-projection-is-replaced-by-projection-of-the-first-map-and-become-non-temporary.-Zoom-and-position-of-the-viewer-window-is-adjusted-to-keep-roughly-the-save-area-on-the-screen.-If-original-projection-is-non-temporary-then-no-modifications-are-done">When new maps are loaded, the temporary projection is replaced by projection of the first map and become non-temporary. Zoom and position of the viewer window is adjusted to keep roughly the save area on the screen. If original projection is non-temporary, then no modifications are done.</dt>
+<dd>
+
+</dd>
+<dt id="When-new-tracks-or-points-are-loaded-projection-does-not-change.-Zoom-and-position-of-the-viewer-window-is-adjusted-to-have-all-loaded-data-on-the-screen">When new tracks or points are loaded, projection does not change. Zoom and position of the viewer window is adjusted to have all loaded data on the screen.</dt>
+<dd>
+
+</dd>
+</dl>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 
