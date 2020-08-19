@@ -37,16 +37,18 @@ and view area:
 =over 1
 
 =item In the beginning a web mercator projection is set, it is considered as
-      "temporary" projection.
+      "temporary" projection. Position and zoom is set to cover the whole world,
+      it is considered as "temporary" view.
 
-=item When new maps are loaded, the temporary projection is replaced by
-      projection of the first map and become non-temporary.
-      Zoom and position of the viewer window is adjusted to
-      keep roughly the save area on the screen. If original
-      projection is non-temporary, then no modifications are done.
+=item When new maps are loaded, if projection temporary, then
+      it is replaced by projection of the first map and become
+      non-temporary. If view is non-temporary, then it is updated to keep
+      same area on the screen, and remains temporary. If viewer
+      projection was non-temporary, then no projection change or
+      zooming/scrolling is done.
 
 =item When new tracks or points are loaded, projection does not change.
       Zoom and position of the viewer window is adjusted to have
-      all loaded data on the screen.
+      all loaded data on the screen. The view become non-temporary.
 
 =back
