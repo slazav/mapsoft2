@@ -36,6 +36,7 @@ export SKIP_IMG_DIFFS=1
 %_bindir/ms2*
 %_mandir/man1/ms2*
 %_mandir/man5/mapsoft2*
+%dir %_datadir/mapsoft2
 %_datadir/mapsoft2/mapsoft2.css
 
 %changelog
