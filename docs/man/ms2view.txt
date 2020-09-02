@@ -42,10 +42,8 @@ and view area:
 
 =item When new maps are loaded, if projection temporary, then
       it is replaced by projection of the first map and become
-      non-temporary. If view is non-temporary, then it is updated to keep
-      same area on the screen, and remains temporary. If viewer
-      projection was non-temporary, then no projection change or
-      zooming/scrolling is done.
+      non-temporary. If view is temporary, then the map is shown (view remains temporary).
+      If viewer projection was non-temporary, then no projection change or zooming/scrolling is done.
 
 =item When new tracks or points are loaded, projection does not change.
       Zoom and position of the viewer window is adjusted to have

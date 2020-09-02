@@ -200,19 +200,13 @@
 <dt id="trk_draw_mode-arg"><b>--trk_draw_mode &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Track drawing mode (normal, speed, height).</p>
+<p>Track drawing mode (normal, speed, height, default - normal).</p>
 
 </dd>
-<dt id="trk_draw_th-arg"><b>--trk_draw_th &lt;arg&gt;</b></dt>
+<dt id="trk_draw_transp-arg"><b>--trk_draw_transp &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Line thickness, overrides track setting.</p>
-
-</dd>
-<dt id="trk_draw_color-arg"><b>--trk_draw_color &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Color (for normal drawing mode), overrides track color.</p>
+<p>Use transparent color (0..1, default - 0).</p>
 
 </dd>
 <dt id="trk_draw_dots-arg"><b>--trk_draw_dots &lt;arg&gt;</b></dt>
@@ -221,22 +215,28 @@
 <p>Draw dots (for normal drawing mode), default: 1.</p>
 
 </dd>
-<dt id="trk_draw_arrows-arg"><b>--trk_draw_arrows &lt;arg&gt;</b></dt>
+<dt id="trk_draw_smin-arg"><b>--trk_draw_smin &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Draw arrows (for normal drawing mode), default: 0.</p>
+<p>Min value for speed mode [km/h].</p>
 
 </dd>
-<dt id="trk_draw_min-arg"><b>--trk_draw_min &lt;arg&gt;</b></dt>
+<dt id="trk_draw_smax-arg"><b>--trk_draw_smax &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Min value (km/h for speed mode, m for height mode).</p>
+<p>Max value for speed mode [km/h].</p>
 
 </dd>
-<dt id="trk_draw_max-arg"><b>--trk_draw_max &lt;arg&gt;</b></dt>
+<dt id="trk_draw_hmin-arg"><b>--trk_draw_hmin &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Max value (km/h for speed mode, m for height mode).</p>
+<p>Min value for height mode [m].</p>
+
+</dd>
+<dt id="trk_draw_hmax-arg"><b>--trk_draw_hmax &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Max value for height mode [m].</p>
 
 </dd>
 <dt id="trk_draw_grad-arg"><b>--trk_draw_grad &lt;arg&gt;</b></dt>
@@ -314,7 +314,7 @@
 <dt id="wpt_skip_far-arg"><b>--wpt_skip_far &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Skip points if their labels can not be placed close enough (default: 5*wpt_stick_len).</p>
+<p>Skip points if their labels can not be placed close enough (default: 10*wpt_stick_len).</p>
 
 </dd>
 </dl>
@@ -326,7 +326,7 @@
 <dt id="map_smooth-arg"><b>--map_smooth &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Smooth map drawing (interpolation for small scales, averaging for large ones), default 0.</p>
+<p>Smooth map drawing, interpolation for small scales, averaging for large ones, (0|1, default - 0).</p>
 
 </dd>
 <dt id="map_clip_brd-arg"><b>--map_clip_brd &lt;arg&gt;</b></dt>
@@ -406,7 +406,7 @@
 <dd>
 
 </dd>
-<dt id="When-new-maps-are-loaded-if-projection-temporary-then-it-is-replaced-by-projection-of-the-first-map-and-become-non-temporary.-If-view-is-non-temporary-then-it-is-updated-to-keep-same-area-on-the-screen-and-remains-temporary.-If-viewer-projection-was-non-temporary-then-no-projection-change-or-zooming-scrolling-is-done">When new maps are loaded, if projection temporary, then it is replaced by projection of the first map and become non-temporary. If view is non-temporary, then it is updated to keep same area on the screen, and remains temporary. If viewer projection was non-temporary, then no projection change or zooming/scrolling is done.</dt>
+<dt id="When-new-maps-are-loaded-if-projection-temporary-then-it-is-replaced-by-projection-of-the-first-map-and-become-non-temporary.-If-view-is-temporary-then-the-map-is-shown-view-remains-temporary-.-If-viewer-projection-was-non-temporary-then-no-projection-change-or-zooming-scrolling-is-done">When new maps are loaded, if projection temporary, then it is replaced by projection of the first map and become non-temporary. If view is temporary, then the map is shown (view remains temporary). If viewer projection was non-temporary, then no projection change or zooming/scrolling is done.</dt>
 <dd>
 
 </dd>
