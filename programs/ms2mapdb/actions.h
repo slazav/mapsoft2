@@ -342,9 +342,7 @@ public:
     options.remove("img_in_fmt");
     options.remove("img_out_fmt");
     const char *g = "MAPDB_RENDER";
-    options.add("obj_scale", 1,0,g, "Set object scaling.");
     options.add("define",    1,0,g, "definitions.");
-    options.add("map_scale", 1,0,g, "Set map scaling (coordinates+objects).");
   }
 
   std::string get_name() const override {return "render";}
@@ -374,17 +372,17 @@ public:
     GObjMapDB map(mapdir, opts);
 
     // If "mkref" option exists build reference using options
-    if (opts.exists("mkref"))
-      map.set_ref(geo_mkref(opts)*opts.get("map_scale", 1.0));
-
-    // get map reference
-    GeoMap ref = map.get_ref(); // default map reference
+    if (opts.exists("mkref"))  map.set_ref(geo_mkref(opts));
 
     // Update border from options (this is needed in the case if
     // no mkref options are used)
     auto brd = map.get_brd();
     geo_mkref_brd(opts, brd);
     map.set_brd(brd);
+
+    // get map reference (with updated border)
+    auto ref = map.get_ref(); // default map reference
+
 
     if (ref.empty()) throw Err() << "Map reference is not set";
     write_geoimg(fname, map, ref, opts);
