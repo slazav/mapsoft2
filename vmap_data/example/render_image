@@ -11,7 +11,6 @@ name=n49-032
 dpi=100
 
 time $MAPDB render $name --out $name.png --config $name.cfg\
-   --mkref nom --name $name --dpi $dpi --margin 10\
    --cmap_color 255 --png_format pal\
    --map $name.map
 
@@ -19,9 +18,11 @@ time $MAPDB render $name --out $name.png --config $name.cfg\
 name=n37-030
 dpi=200
 
-# render, result is 8-bit PNG + map
+# use multy-segment-track from border.gpx as a border
+# fill background with dark-red color
+
 time $MAPDB render $name --out $name.png --config $name.cfg\
-   --mkref nom --name $name --dpi $dpi --margin 10\
    --cmap_color 255 --png_format pal\
-   --map $name.map
+   --map $name.map --border_file border.gpx --bgcolor 0xFF800000
+
 
