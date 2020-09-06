@@ -373,12 +373,18 @@ public:
     // open map, make GObj
     GObjMapDB map(mapdir, opts);
 
-
     // If "mkref" option exists build reference using options
-    if (opts.exists("mkref")) map.set_ref(geo_mkref(opts)*opts.get("map_scale", 1.0));
+    if (opts.exists("mkref"))
+      map.set_ref(geo_mkref(opts)*opts.get("map_scale", 1.0));
 
     // get map reference
     GeoMap ref = map.get_ref(); // default map reference
+
+    // Update border from options (this is needed in the case if
+    // no mkref options are used)
+    auto brd = map.get_brd();
+    geo_mkref_brd(opts, brd);
+    map.set_brd(brd);
 
     if (ref.empty()) throw Err() << "Map reference is not set";
     write_geoimg(fname, map, ref, opts);
