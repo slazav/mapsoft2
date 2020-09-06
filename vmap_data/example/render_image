@@ -1,0 +1,27 @@
+#!/bin/sh -eu
+
+################################################
+## Render map from mapdb database
+## result is 8-bit PNG + map
+
+# mapdb program
+MAPDB=../../programs/ms2mapdb/ms2mapdb
+
+name=n49-032
+dpi=100
+
+time $MAPDB render $name --out $name.png --config $name.cfg\
+   --mkref nom --name $name --dpi $dpi --margin 10\
+   --cmap_color 255 --png_format pal\
+   --map $name.map
+
+
+name=n37-030
+dpi=200
+
+# render, result is 8-bit PNG + map
+time $MAPDB render $name --out $name.png --config $name.cfg\
+   --mkref nom --name $name --dpi $dpi --margin 10\
+   --cmap_color 255 --png_format pal\
+   --map $name.map
+

@@ -1,0 +1,30 @@
+#!/bin/sh -eu
+
+################################################
+## Download example maps, create mapdb databases
+
+
+# mapdb program
+MAPDB=../../programs/ms2mapdb/ms2mapdb
+
+# download vmap files if needed
+[ -f n37-030.vmap ] ||
+  wget https://raw.githubusercontent.com/slazav/map_podm/master/vmap/n37-030.vmap
+[ -f n49-032.vmap ] ||
+  wget https://raw.githubusercontent.com/slazav/map_hr/master/vmap/n49-032.vmap
+
+# make pics if needed
+make -C ../pics
+
+for name in n37-030 n49-032; do
+
+  # remove old database
+  $MAPDB delete $name
+
+  # create map
+  $MAPDB create $name
+
+  # import vmap file
+  $MAPDB import_vmap $name $name.vmap --config ../import_vmap.cfg
+
+done

@@ -1,0 +1,29 @@
+#!/bin/sh -eu
+
+################################################
+## Render map from mapdb database
+## result is 8-bit PNG + map
+
+# mapdb program
+MAPDB=../../programs/ms2mapdb/ms2mapdb
+
+name=n49-032
+
+mkdir -p $name.tiles
+rm -f $name.tiles/*
+
+time $MAPDB render $name --out $name.png --config $name.cfg\
+   --tmap --out "$name.tiles/map-{x}-{y}-{z}.png" --zmin 9 --zmax 12\
+   --bgcolor 0  --cmap_color 255 --png_format pal\
+
+
+name=n37-030
+
+mkdir -p $name.tiles
+rm -f $name.tiles/*
+
+# render, result is 8-bit PNG + map
+time $MAPDB render $name --out $name.png --config $name.cfg\
+   --tmap --out "$name.tiles/map-{x}-{y}-{z}.png" --zmin 9 --zmax 12\
+   --bgcolor 0 --cmap_color 255 --png_format pal
+
