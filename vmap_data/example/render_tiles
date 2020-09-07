@@ -12,9 +12,9 @@ name=n49-032
 mkdir -p $name.tiles
 rm -f $name.tiles/*
 
-time $MAPDB render $name --out $name.png --config $name.cfg\
+time $MAPDB render $name --config $name.cfg\
    --tmap --out "$name.tiles/map-{x}-{y}-{z}.png" --zmin 9 --zmax 12\
-   --bgcolor 0  --cmap_color 255 --png_format pal\
+   --bgcolor 0  --cmap_color 255 --png_format pal --cmap_alpha=gif\
 
 
 name=n37-030
@@ -24,7 +24,8 @@ rm -f $name.tiles/*
 
 # use multy-segment-track from border.gpx as a border
 
-time $MAPDB render $name --out $name.png --config $name.cfg\
+time $MAPDB render $name --config $name.cfg\
    --tmap --out "$name.tiles/map-{x}-{y}-{z}.png" --zmin 9 --zmax 12\
-   --bgcolor 0 --cmap_color 255 --png_format pal  --border_file border.gpx
+   --bgcolor 0 --cmap_color 255 --png_format pal --cmap_alpha=gif\
+   --border_file border.gpx
 
