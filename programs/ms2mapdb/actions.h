@@ -341,8 +341,6 @@ public:
     ms2opt_add_geoimg(options);
     options.remove("img_in_fmt");
     options.remove("img_out_fmt");
-    const char *g = "MAPDB_RENDER";
-    options.add("define",    1,0,g, "definitions.");
   }
 
   std::string get_name() const override {return "render";}
