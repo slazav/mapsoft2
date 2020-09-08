@@ -11,8 +11,8 @@ name=n49-032
 dpi=100
 
 time $MAPDB render $name --out $name.png --config $name.cfg\
-   --cmap_color 255 --png_format pal\
-   --map $name.map
+   --cmap_color 255 --cmap_save $name.cmap.png --cmap_add 0\
+   --png_format pal --map $name.map
 
 
 name=n37-030
@@ -22,7 +22,7 @@ dpi=200
 # fill background with dark-red color
 
 time $MAPDB render $name --out $name.png --config $name.cfg\
-   --cmap_color 255 --png_format pal\
+   --cmap_color 255 --cmap_save $name.cmap.png --cmap_add 0\
    --map $name.map --border_file border.gpx --bgcolor 0xFF800000
 
 

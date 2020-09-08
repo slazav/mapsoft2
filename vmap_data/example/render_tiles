@@ -14,7 +14,10 @@ rm -f $name.tiles/*
 
 time $MAPDB render $name --config $name.cfg\
    --tmap --out "$name.tiles/map-{x}-{y}-{z}.png" --zmin 9 --zmax 12\
-   --bgcolor 0  --cmap_color 255 --png_format pal --cmap_alpha=gif\
+   --bgcolor 0  --cmap_load n49-032.cmap.png --png_format pal --cmap_alpha=gif\
+
+
+exit
 
 
 name=n37-030
