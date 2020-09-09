@@ -2,7 +2,7 @@
 
 ################################################
 ## Render map from mapdb database
-## result is 8-bit PNG + map
+## result is 8-bit PNG (colormap is taken from $name.cmap.png files)
 
 # mapdb program
 MAPDB=../../programs/ms2mapdb/ms2mapdb
@@ -13,12 +13,9 @@ mkdir -p $name.tiles
 rm -f $name.tiles/*
 
 time $MAPDB render $name --config $name.cfg\
-   --tmap --out "$name.tiles/map-{x}-{y}-{z}.png" --zmin 9 --zmax 12\
-   --bgcolor 0  --cmap_load n49-032.cmap.png --png_format pal --cmap_alpha=gif\
-
-
-exit
-
+   --tmap --out "$name.tiles/map-{x}-{y}-{z}.png" --zmin 0 --zmax 12\
+   --bgcolor 0 --png_format pal --cmap_load $name.cmap.png\
+   --tmap_scale 1
 
 name=n37-030
 
@@ -29,6 +26,7 @@ rm -f $name.tiles/*
 
 time $MAPDB render $name --config $name.cfg\
    --tmap --out "$name.tiles/map-{x}-{y}-{z}.png" --zmin 9 --zmax 12\
-   --bgcolor 0 --cmap_color 255 --png_format pal --cmap_alpha=gif\
-   --border_file border.gpx
+   --bgcolor 0 --png_format pal --cmap_load $name.cmap.png\
+   --border_file border.gpx\
+   --tmap_scale 1
 
