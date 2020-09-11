@@ -85,14 +85,46 @@ dialog filechooser list * {
 }
 
 /* smaller folder stack */
+/*
 dialog filechooser stack *,
 dialog actionbar button{
   padding: 1px 2px;
   min-height: 0px;
   min-width: 0px;
 }
-
+*/
 dialog buttonbox *{
   min-height: 0px;
   min-width: 0px;
 }
+
+/* smaller buttons in dialogs: */
+
+spinbutton{
+  min-height: 0px;
+  min-width:  0px;
+}
+
+spinbutton *{
+  padding: 2px 2px;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+}
+
+button {
+  padding: 0px 2px;
+  min-height: 0px;
+  min-width:  0px;
+}
+
+entry {
+  padding: 2px 2px;
+  min-height: 0px;
+  min-width:  0px;
+}
+
+frame {
+  margin:5px;
+}
+
