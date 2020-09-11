@@ -98,7 +98,7 @@
 <dt id="name-arg"><b>--name &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Set map name. For &quot;nom&quot; maps it should contain a valid Soviet nomenclature name.</p>
+<p>Set map name. For --mkref=&quot;nom&quot; it should contain a valid Soviet nomenclature name. For --mkref=&quot;file&quot; it should contain map-file name.</p>
 
 </dd>
 <dt id="dpi-arg"><b>--dpi &lt;arg&gt;</b></dt>
@@ -161,22 +161,28 @@
 <p>Figure in projection coordinates (rectangle or lines) to be covered by the map (&quot;proj&quot; maps). Figure can be a rectangle written as [x,y,w,h], or a line, [[x1,y1],[x2,y2], ...], or a multi-segment line, [&lt;line&gt;, &lt;line&gt;, ...].</p>
 
 </dd>
-<dt id="border-arg"><b>--border &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Map border in projection coordinates (&quot;proj&quot; maps), a line or a multi-segment line.</p>
-
-</dd>
 <dt id="coords_wgs-arg"><b>--coords_wgs &lt;arg&gt;</b></dt>
 <dd>
 
 <p>Figure in wgs84 coordinates to be covered by the map (&quot;*_tile&quot; or &quot;proj&quot; maps), a rectangle, a line, or a multi-segment line.</p>
 
 </dd>
+<dt id="border-arg"><b>--border &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map border in projection coordinates (For --mkref=&quot;proj&quot; maps), a line or a multi-segment line.</p>
+
+</dd>
 <dt id="border_wgs-arg"><b>--border_wgs &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Map border in wgs84 coordinates (&quot;*_tile&quot; or &quot;proj&quot; maps), a line or a multi-segment line.</p>
+<p>Set map border in wgs84 coordinates (argument is a line or a multi-segment line).</p>
+
+</dd>
+<dt id="border_file-arg"><b>--border_file &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set map border from track in a file.</p>
 
 </dd>
 <dt id="proj-arg"><b>--proj &lt;arg&gt;</b></dt>

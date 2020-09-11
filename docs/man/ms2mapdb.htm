@@ -309,22 +309,28 @@
 <p>Configuration file for vector map rendering.</p>
 
 </dd>
-<dt id="obj_scale-arg"><b>--obj_scale &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Set object scaling.</p>
-
-</dd>
 <dt id="define-arg"><b>--define &lt;arg&gt;</b></dt>
 <dd>
 
-<p>definitions.</p>
+<p>Definitions for vector map rendering (json object)</p>
 
 </dd>
-<dt id="map_scale-arg"><b>--map_scale &lt;arg&gt;</b></dt>
+<dt id="obj_scale-arg"><b>--obj_scale &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Set map scaling (coordinates+objects).</p>
+<p>Rescaling factor for all objects, default 1.0.</p>
+
+</dd>
+<dt id="mapdb_minsc-arg"><b>--mapdb_minsc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Minimum map scale (calculated from the &#39;natural&#39; reference). Below it the map is drawn by with color (see --mapdb_minsc_color option). Default is 0.01</p>
+
+</dd>
+<dt id="mapdb_minsc_color-arg"><b>--mapdb_minsc_color &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Color to draw maps below minimum scale (see --mapdb_minsc). Default is 0xFFDB5A00).</p>
 
 </dd>
 </dl>
@@ -342,7 +348,7 @@
 <dt id="name-arg1"><b>--name &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Set map name. For &quot;nom&quot; maps it should contain a valid Soviet nomenclature name.</p>
+<p>Set map name. For --mkref=&quot;nom&quot; it should contain a valid Soviet nomenclature name. For --mkref=&quot;file&quot; it should contain map-file name.</p>
 
 </dd>
 <dt id="dpi-arg"><b>--dpi &lt;arg&gt;</b></dt>
@@ -405,22 +411,28 @@
 <p>Figure in projection coordinates (rectangle or lines) to be covered by the map (&quot;proj&quot; maps). Figure can be a rectangle written as [x,y,w,h], or a line, [[x1,y1],[x2,y2], ...], or a multi-segment line, [&lt;line&gt;, &lt;line&gt;, ...].</p>
 
 </dd>
-<dt id="border-arg"><b>--border &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Map border in projection coordinates (&quot;proj&quot; maps), a line or a multi-segment line.</p>
-
-</dd>
 <dt id="coords_wgs-arg"><b>--coords_wgs &lt;arg&gt;</b></dt>
 <dd>
 
 <p>Figure in wgs84 coordinates to be covered by the map (&quot;*_tile&quot; or &quot;proj&quot; maps), a rectangle, a line, or a multi-segment line.</p>
 
 </dd>
+<dt id="border-arg"><b>--border &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map border in projection coordinates (For --mkref=&quot;proj&quot; maps), a line or a multi-segment line.</p>
+
+</dd>
 <dt id="border_wgs-arg"><b>--border_wgs &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Map border in wgs84 coordinates (&quot;*_tile&quot; or &quot;proj&quot; maps), a line or a multi-segment line.</p>
+<p>Set map border in wgs84 coordinates (argument is a line or a multi-segment line).</p>
+
+</dd>
+<dt id="border_file-arg"><b>--border_file &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set map border from track in a file.</p>
 
 </dd>
 <dt id="proj-arg"><b>--proj &lt;arg&gt;</b></dt>
@@ -474,7 +486,7 @@
 <dt id="cmap_colors-arg"><b>--cmap_colors &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Colormap size for reducing image colors (2..256). Image colors are reduced when saving to GIF, to PNG with --png_format=pal, to TIFF with --tiff_format=pal</p>
+<p>Colormap size for reducing image colors (0..256, default 255, if 0 - use all colors). Image colors are reduced when saving to GIF, to PNG with --png_format=pal, to TIFF with --tiff_format=pal.</p>
 
 </dd>
 <dt id="cmap_alpha-arg"><b>--cmap_alpha &lt;arg&gt;</b></dt>
@@ -499,6 +511,24 @@
 <dd>
 
 <p>Analog of pnmcolormap options -splitpix, -splitcol, -splitdim. How to choose a box in the color space for splitting: by its maximum dimension, maximum number of pixels or colors in it. Values: maxdim (default), maxpix, maxcol.</p>
+
+</dd>
+<dt id="cmap_save-arg"><b>--cmap_save &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Save colormap to PNG file.</p>
+
+</dd>
+<dt id="cmap_load-arg"><b>--cmap_load &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Load colormap from PNG file (make in from the image</p>
+
+</dd>
+<dt id="cmap_add-arg"><b>--cmap_add &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Add a color to colormap (useful to add transparent color to non-transparent colormap) TODO: allow multiple colors.</p>
 
 </dd>
 <dt id="ozi_map_grid-arg"><b>--ozi_map_grid &lt;arg&gt;</b></dt>
@@ -535,6 +565,30 @@
 <dd>
 
 <p>Do not write image file (can be used if only the map file is needed). Option -o &lt;file&gt; should be provided anyway, the filename will be written to the map-file.</p>
+
+</dd>
+<dt id="tmap"><b>--tmap</b></dt>
+<dd>
+
+<p>Write tiled map. In this case `fname` parameter should contain a template with {x}, {y}, {z} fields. Output of map file is not supported at the moment. `mkref` options are ignored.</p>
+
+</dd>
+<dt id="zmin-arg"><b>--zmin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Min zoom for tiled maps.</p>
+
+</dd>
+<dt id="zmax-arg"><b>--zmax &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Max zoom for tiled maps.</p>
+
+</dd>
+<dt id="tmap_scale-arg"><b>--tmap_scale &lt;arg&gt;</b></dt>
+<dd>
+
+<p>When creating tile map with multiple zoom levels scale larger tiles to create smaller ones (instead of rendering all tiles separately). Default: 0</p>
 
 </dd>
 </dl>
