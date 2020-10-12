@@ -13,10 +13,13 @@ MAPDB=../../programs/ms2mapdb/ms2mapdb
 [ -f n49-032.vmap ] ||
   wget https://raw.githubusercontent.com/slazav/map_hr/master/vmap/n49-032.vmap
 
+[ -f n49-033.vmap ] ||
+  wget https://raw.githubusercontent.com/slazav/map_hr/master/vmap/n49-033.vmap
+
 # make pics if needed
 make -C ../pics
 
-for name in n37-030 n49-032; do
+for name in n37-030 n49-032 n49-033; do
 
   # remove old database
   $MAPDB delete $name
