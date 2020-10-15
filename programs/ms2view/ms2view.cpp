@@ -36,6 +36,9 @@ void usage(bool pod=false){
   pr.opts({"DRAWMAP"});
 //  pr.head(1, "Options for drawing grid");
 //  pr.opts({"DRAWGRD"});
+  pr.head(1, "Options for drawing SRTM data");
+  pr.opts({"SRTM"});
+  pr.opts({"DRAWSRTM"});
   pr.head(1, "Other options");
   pr.opts({"NONSTD"});
   throw Err();
@@ -55,6 +58,7 @@ main(int argc, char **argv){
     ms2opt_add_drawtrk(options);
     ms2opt_add_drawmap(options);
 //  ms2opt_add_drawgrd(options);
+    ms2opt_add_drawsrtm(options);
 
     const char *g = "NONSTD";
     options.add("mapdb", 1,0,g,
