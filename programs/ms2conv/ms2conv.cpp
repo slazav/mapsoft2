@@ -11,6 +11,7 @@
 #include "geo_render/gobj_trk.h"
 #include "geo_render/gobj_wpts.h"
 #include "geo_render/gobj_maps.h"
+#include "geo_render/gobj_srtm.h"
 //#include "draw_pulk_grid.h"
 #include "viewer/gobj_multi.h"
 #include <cstring>
@@ -61,6 +62,9 @@ void usage(bool pod=false){
   pr.opts({"DRAWMAP"});
 //  pr.head(2, "Options for drawing grid");
 //  pr.opts({"DRAWGRD"});
+  pr.head(2, "Options for drawing SRTM data");
+  pr.opts({"SRTM"});
+  pr.opts({"DRAWSRTM"});
   pr.head(2, "Options for saving images");
   pr.opts({"IMAGE", "IMAGE_CMAP"});
 
@@ -83,11 +87,14 @@ main(int argc, char *argv[]){
     ms2opt_add_drawtrk(options);
     ms2opt_add_drawmap(options);
 //  ms2opt_add_drawgrd(options);
+    ms2opt_add_drawsrtm(options);
 
     ms2opt_add_geoimg(options);
     options.replace("out_fmt", 1, 0, "OUT",
       "Output format, geodata (json, gu, gpx, kml, kmz, ozi, zip) "
       "or image (jpeg, png, gif, tiff, ps, pdf, svg)");
+
+    options.add("srtm", 0, 0, "SRTM", "Add SRTM layer");
 
     if (argc<2) usage();
     vector<string> infiles;
@@ -119,6 +126,13 @@ main(int argc, char *argv[]){
 
       // construct GObjMulti with all the objects we want to draw:
       GObjMulti obj;
+
+      std::shared_ptr<SRTM> s;
+      if (O.exists("srtm")){
+        s.reset(new SRTM(O));
+        obj.add(4, std::shared_ptr<GObjSRTM>(new GObjSRTM(s.get(),O)));
+      }
+
       for (auto & m:data.maps)
         obj.add(3, std::shared_ptr<GObjMaps>(new GObjMaps(m)));
 
