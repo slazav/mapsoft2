@@ -12,7 +12,9 @@ for name in n49-032 n49-033; do
   time $MAPDB render $name --out $name.png --config render.cfg\
      --define "{\"nom_name\":\"$name\", \"hr\":\"1\"}"\
      --cmap_color 255 --cmap_save $name.cmap.png --cmap_add 0\
-     --png_format pal --map $name.map
+     --png_format pal --map $name.map\
+     --title "$name" --margins 5 --top_margin 20\
+     --mkref nom --name $name --dpi 100
 done
 
 
