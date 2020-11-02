@@ -1,13 +1,12 @@
 # simple configuration file:
-# - convert point type 0x900->0x815
-# - keep all other point types
-# - skip all lines except 0x4 and 0xA
-# - skip all area objects
 
-point 0x815 0x816
-point 0 0
-line 0 0
-area 0xFF00 0xFF01
+point:0x815 point:0x816
+line:0x4 -
+line:0xA -
+area:0xFF00 area:0xFF01
+point:0x2c0b -
+point:0x6403 -
+point:0x2f08 -
 
 id 123456
 name map1
