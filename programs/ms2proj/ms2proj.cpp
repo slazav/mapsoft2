@@ -82,7 +82,7 @@ main(int argc, char *argv[]){
       "(e.g. \"+datum=WGS84 +proj=lonlat\") "
       "or mapsoft2 alias (\"WGS\", \"WEB\", \"FI\", \"CH\", \"SU39\", etc.). "
       "Default: \"WGS\"");
-    options.add("to", 1, 't', g, "Destination coordinate system.");
+    options.add("to", 1, 't', g, "Destination coordinate system. Default: \"WGS\"");
 
     options.add("back", 0, 'b', g, "Do inverse conversion, destination -> source.");
     options.add("alt",  0, 'z', g, "Convert altitude (by default it is not converted).");
