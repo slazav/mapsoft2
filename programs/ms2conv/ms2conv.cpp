@@ -88,6 +88,8 @@ main(int argc, char *argv[]){
     ms2opt_add_drawmap(options);
 //  ms2opt_add_drawgrd(options);
     ms2opt_add_drawsrtm(options);
+    options.add("htm", 1,0,"DRAWMAP", "Write html map for the image.");
+
 
     ms2opt_add_geoimg(options);
     options.replace("out_fmt", 1, 0, "OUT",
@@ -142,7 +144,11 @@ main(int argc, char *argv[]){
       for (auto & w:data.wpts)
         obj.add(1, std::shared_ptr<GObjWpts>(new GObjWpts(w)));
 
+      if (O.exists("htm"))
+        write_html_map(O.get("htm",""), ofile, ref, data.maps);
+
       write_geoimg(ofile, obj, ref, O);
+
       return 0;
     }
     catch(Err & e) {if (e.code()!=-2) throw;}
