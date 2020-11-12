@@ -183,24 +183,6 @@
 <p>Configuration file for MP-&gt;MapDB conversion</p>
 
 </dd>
-<dt id="cnv_points-arg"><b>--cnv_points &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Type conversion rules for point objects: [[&lt;type_in&gt;, &lt;type_out&gt;], [&lt;type_in&gt;, &lt;type_out&gt;], ...] type_in==0 matches all types; type_out==0 sets output type same as input one. Default value: [[0,0]].</p>
-
-</dd>
-<dt id="cnv_lines-arg"><b>--cnv_lines &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Type conversion rules for line objects. Same notation as in cnv_point.</p>
-
-</dd>
-<dt id="cnv_areas-arg"><b>--cnv_areas &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Type conversion rules for area objects. Same notation as in cnv_point.</p>
-
-</dd>
 <dt id="data_level-arg"><b>--data_level &lt;arg&gt;</b></dt>
 <dd>
 
@@ -221,24 +203,6 @@
 <dd>
 
 <p>Configuration file for MapDB-&gt;MP conversion</p>
-
-</dd>
-<dt id="cnv_points-arg1"><b>--cnv_points &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Type conversion rules for point objects: [[&lt;type_in&gt;, &lt;type_out&gt;], [&lt;type_in&gt;, &lt;type_out&gt;], ...] type_in==0 matches all types; type_out==0 sets output type same as input one. Default value: [[0,0]].</p>
-
-</dd>
-<dt id="cnv_lines-arg1"><b>--cnv_lines &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Type conversion rules for line objects. Same notation as in cnv_point.</p>
-
-</dd>
-<dt id="cnv_areas-arg1"><b>--cnv_areas &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Type conversion rules for area objects. Same notation as in cnv_point.</p>
 
 </dd>
 <dt id="codepage-arg"><b>--codepage &lt;arg&gt;</b></dt>
@@ -564,13 +528,25 @@
 <dt id="m---map-arg"><b>-m, --map &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Write map file in OziExprorer format (by default it is not written).</p>
+<p>Write OziExplorer map file for the image.</p>
 
 </dd>
 <dt id="skip_image"><b>--skip_image</b></dt>
 <dd>
 
 <p>Do not write image file (can be used if only the map file is needed). Option -o &lt;file&gt; should be provided anyway, the filename will be written to the map-file.</p>
+
+</dd>
+<dt id="title-arg"><b>--title &lt;arg&gt;</b></dt>
+<dd>
+
+<p>write text in the top-left corner.</p>
+
+</dd>
+<dt id="title_size-arg"><b>--title_size &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Font size for the title.</p>
 
 </dd>
 <dt id="tmap"><b>--tmap</b></dt>

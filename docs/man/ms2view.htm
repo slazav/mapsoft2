@@ -21,6 +21,7 @@
   <li><a href="#OPTIONS-FOR-DRAWING-TRACKS">OPTIONS FOR DRAWING TRACKS</a></li>
   <li><a href="#OPTIONS-FOR-DRAWING-WAYPOINTS">OPTIONS FOR DRAWING WAYPOINTS</a></li>
   <li><a href="#OPTIONS-FOR-DRAWING-MAPS">OPTIONS FOR DRAWING MAPS</a></li>
+  <li><a href="#OPTIONS-FOR-DRAWING-SRTM-DATA">OPTIONS FOR DRAWING SRTM DATA</a></li>
   <li><a href="#OTHER-OPTIONS">OTHER OPTIONS</a></li>
   <li><a href="#CUSTOMIZING-VIEWER-INTERFACE-WITH-CSS-STYLES">CUSTOMIZING VIEWER INTERFACE WITH CSS STYLES</a></li>
   <li><a href="#CUSTOMIZING-HOTKEYS">CUSTOMIZING HOTKEYS</a></li>
@@ -357,6 +358,184 @@
 <dd>
 
 <p>Color to fade the map (default is 0, no fading).</p>
+
+</dd>
+</dl>
+
+<h1 id="OPTIONS-FOR-DRAWING-SRTM-DATA">OPTIONS FOR DRAWING SRTM DATA</h1>
+
+<dl>
+
+<dt id="srtm_dir-arg"><b>--srtm_dir &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set srtm data folder, default - $HOME/.srtm_data</p>
+
+</dd>
+<dt id="srtm_draw_mode-arg"><b>--srtm_draw_mode &lt;arg&gt;</b></dt>
+<dd>
+
+<p>SRTM drawing mode (slopes, heights, shades, default - shades).</p>
+
+</dd>
+<dt id="srtm_hmin-arg"><b>--srtm_hmin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Min height [m] for heights and shades modes (default - 0).</p>
+
+</dd>
+<dt id="srtm_hmax-arg"><b>--srtm_hmax &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Max height [m] for heights and shades modes (default - 5000).</p>
+
+</dd>
+<dt id="srtm_smin-arg"><b>--srtm_smin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Min slope [deg] for slopes mode (default - 35).</p>
+
+</dd>
+<dt id="srtm_smax-arg"><b>--srtm_smax &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Max slope [deg] for slopes mode (default - 50).</p>
+
+</dd>
+<dt id="srtm_interp_holes-arg"><b>--srtm_interp_holes &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Interpolate holes (0|1, default 1).</p>
+
+</dd>
+<dt id="srtm_bgcolor-arg"><b>--srtm_bgcolor &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Color to draw no-data and out-of-scale areas (default 0x60FF0000).</p>
+
+</dd>
+</dl>
+
+<dl>
+
+<dt id="srtm_surf-arg"><b>--srtm_surf &lt;arg&gt;</b></dt>
+<dd>
+
+<p>draw SRTM color surface (default 1).</p>
+
+</dd>
+<dt id="srtm_maxsc-arg"><b>--srtm_maxsc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Do not draw srtm data out of this scale (default 15).</p>
+
+</dd>
+<dt id="srtm_cnt-arg"><b>--srtm_cnt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Draw contours (0|1, default - 1).</p>
+
+</dd>
+<dt id="srtm_cnt_step-arg"><b>--srtm_cnt_step &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> Contour step [m], default 50.</code></pre>
+
+</dd>
+<dt id="srtm_cnt_smult-arg"><b>--srtm_cnt_smult &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> Step multiplier for thick contours, default - 5.</code></pre>
+
+</dd>
+<dt id="srtm_cnt_col-arg"><b>--srtm_cnt_col &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> Contour color, default - 0xFF000000.</code></pre>
+
+</dd>
+<dt id="srtm_cnt_w-arg"><b>--srtm_cnt_w &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> Contour line width, default - 0.25.</code></pre>
+
+</dd>
+<dt id="srtm_cnt_wmult-arg"><b>--srtm_cnt_wmult &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> Width multiplier for thick contours, default - 2.</code></pre>
+
+</dd>
+<dt id="srtm_cnt_crv-arg"><b>--srtm_cnt_crv &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> Size of round corners on contours, in linewidth units, default - 20.</code></pre>
+
+</dd>
+<dt id="srtm_holes-arg"><b>--srtm_holes &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> Draw contours around data holes (1|0, default - 0).</code></pre>
+
+</dd>
+<dt id="srtm_holes_col-arg"><b>--srtm_holes_col &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> Color of hole contours, default - 0xFF000000.</code></pre>
+
+</dd>
+<dt id="srtm_holes_w-arg"><b>--srtm_holes_w &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> Linewidth of hole contours, default - 1.</code></pre>
+
+</dd>
+<dt id="srtm_peaks-arg"><b>--srtm_peaks &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> Draw summits (0|1, default - 0).</code></pre>
+
+</dd>
+<dt id="srtm_peaks_col-arg"><b>--srtm_peaks_col &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> Summit&#39;s color, default - 0xFF000000.</code></pre>
+
+</dd>
+<dt id="srtm_peaks_w-arg"><b>--srtm_peaks_w &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> Summit point size, default - 3.</code></pre>
+
+</dd>
+<dt id="srtm_peaks_dh-arg"><b>--srtm_peaks_dh &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> DH parameter for peak finder [m], default - 20.</code></pre>
+
+</dd>
+<dt id="srtm_peaks_ps-arg"><b>--srtm_peaks_ps &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> PS parameter fr peak finder [pts], default - 1000.</code></pre>
+
+</dd>
+<dt id="srtm_peaks_text-arg"><b>--srtm_peaks_text &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> Draw peak text (0|1, default - 1).</code></pre>
+
+</dd>
+<dt id="srtm_peaks_text_size-arg"><b>--srtm_peaks_text_size &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> Peak text size, default - 10.</code></pre>
+
+</dd>
+<dt id="srtm_peaks_text_font-arg"><b>--srtm_peaks_text_font &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code> Peak text font, default - serif.</code></pre>
 
 </dd>
 </dl>
