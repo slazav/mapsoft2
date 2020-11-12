@@ -1,4 +1,4 @@
-PROGRAMS := ms2conv ms2mapdb ms2nom ms2proj ms2tiles ms2view ms2xyz
+PROGRAMS := ms2conv ms2mapdb ms2nom ms2proj ms2tiles ms2view ms2xyz ms2img
 
 # ms2fig  -- to be written
 
