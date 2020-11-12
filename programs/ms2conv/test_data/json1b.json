@@ -30,9 +30,7 @@
         ],
         "type":"MultiLineString"
       },
-      "properties":{
-        "name":"2018-04-28 09:12:42 Day"
-      },
+      "name":"2018-04-28 09:12:42 Day",
       "type":"Feature"
     },
     {
@@ -45,9 +43,9 @@
             ],
             "type":"Point"
           },
+          "name":"177",
           "properties":{
-            "gpx_sym":"Flag, Blue",
-            "name":"177"
+            "gpx_sym":"Flag, Blue"
           },
           "type":"Feature"
         },
@@ -59,9 +57,9 @@
             ],
             "type":"Point"
           },
+          "name":"178",
           "properties":{
-            "gpx_sym":"Flag, Blue",
-            "name":"178"
+            "gpx_sym":"Flag, Blue"
           },
           "type":"Feature"
         },
@@ -73,9 +71,9 @@
             ],
             "type":"Point"
           },
+          "name":"179",
           "properties":{
-            "gpx_sym":"Flag, Blue",
-            "name":"179"
+            "gpx_sym":"Flag, Blue"
           },
           "type":"Feature"
         },
