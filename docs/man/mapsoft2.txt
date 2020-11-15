@@ -12,3 +12,4 @@ mapsoft2 -- tools for working with maps and geodata
 	ms2xyz -- writing track in a text form
 	ms2mkref -- creating a map reference
 	ms2proj -- convert coordinates
+	ms2img -- convert images
