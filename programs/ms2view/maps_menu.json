@@ -1,0 +1,97 @@
+{ "type":"FeatureCollection",
+  "features": [
+
+    { "type":"FeatureCollection",
+      "ms2maps_name": "Mapy.cz",
+      "ms2maps":[{
+          "image":"https://m{[1234]}.mapserver.mapy.cz/turist-m/{z}-{x}-{y}.png",
+          "image_size":[ 256.0, 256.0 ],
+          "is_tiled":1,
+          "name": "Mapy.cz",
+          "proj":"WEB",
+          "ref":[[ 0.0,     0.0, -180.0,  85.0511288 ],
+                 [ 0.0,   256.0, -180.0, -85.0511288 ],
+                 [ 256.0,   0.0,  180.0,  85.0511288 ],
+                 [ 256.0, 256.0,  180.0, -85.0511288 ]]
+      }]
+    },
+
+    { "type":"FeatureCollection",
+      "ms2maps_name": "OSM",
+      "ms2maps":[{
+          "image":"https://{[abc]}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          "image_size":[ 256.0, 256.0 ],
+          "is_tiled":1,
+          "name":"OSM",
+          "proj":"WEB",
+          "ref":[[ 0.0,     0.0, -180.0,  85.0511288 ],
+                 [ 0.0,   256.0, -180.0, -85.0511288 ],
+                 [ 256.0,   0.0,  180.0,  85.0511288 ],
+                 [ 256.0, 256.0,  180.0, -85.0511288 ]]
+      }]
+    },
+
+    { "type":"FeatureCollection",
+      "ms2maps_name": "ESRI sat",
+      "ms2maps":[{
+          "image":"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+          "image_size":[ 256.0, 256.0 ],
+          "is_tiled":1,
+          "name":"ESRI sat",
+          "proj":"WEB",
+          "ref":[[ 0.0,     0.0, -180.0,  85.0511288 ],
+                 [ 0.0,   256.0, -180.0, -85.0511288 ],
+                 [ 256.0,   0.0,  180.0,  85.0511288 ],
+                 [ 256.0, 256.0,  180.0, -85.0511288 ]]
+      }]
+    },
+
+    { "type":"FeatureCollection",
+      "ms2maps_name": "Yandex sat",
+      "ms2maps":[{
+          "image":"https://sat0{[1234]}.maps.yandex.net/tiles?l=sat&x={x}&y={y}&z={z}",
+          "image_size":[ 256.0, 256.0 ],
+          "is_tiled":1,
+          "name":"Yandex sat",
+          "proj":"EWEB",
+          "ref":[[ 0.0,     0.0, -180.0,  85.0840591 ],
+                 [ 0.0,   256.0, -180.0, -85.0840591 ],
+                 [ 256.0,   0.0,  180.0,  85.0840591 ],
+                 [ 256.0, 256.0,  180.0, -85.0840591 ]]
+      }]
+    },
+
+    { "type":"FeatureCollection",
+      "ms2maps_name": "Google sat",
+      "ms2maps":[{
+          "image":"https://mt{[0123]}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+          "image_size":[ 256.0, 256.0 ],
+          "is_tiled":1,
+          "name":"Google sat",
+          "proj":"WEB",
+          "ref":[[ 0.0,     0.0, -180.0,  85.0511288 ],
+                 [ 0.0,   256.0, -180.0, -85.0511288 ],
+                 [ 256.0,   0.0,  180.0,  85.0511288 ],
+                 [ 256.0, 256.0,  180.0, -85.0511288 ]]
+      }]
+    },
+
+    { "type":"FeatureCollection",
+      "ms2maps_name": "slazav podm",
+      "ms2maps":[{
+          "image":"https://{[abc]}.tiles.nakarte.me/map_podm/{z}/{x}/{y}",
+          "image_size":[ 256.0, 256.0 ],
+          "is_tiled":1,
+          "tile_maxz":14,
+          "tile_swapy":1,
+          "name":"slazav podm",
+          "proj":"WEB",
+          "ref":[[ 0.0,     0.0, -180.0,  85.0511288 ],
+                 [ 0.0,   256.0, -180.0, -85.0511288 ],
+                 [ 256.0,   0.0,  180.0,  85.0511288 ],
+                 [ 256.0, 256.0,  180.0, -85.0511288 ]]
+      }]
+    }
+
+  ]
+}
