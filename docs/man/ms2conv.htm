@@ -199,6 +199,18 @@
 <p>Set map border for a Soviet nomenclature map (the map should have a valid name)</p>
 
 </dd>
+<dt id="rescale_maps-arg"><b>--rescale_maps &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Rescale image part of map references by some factor.</p>
+
+</dd>
+<dt id="shift_maps-arg"><b>--shift_maps &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Shift image part of map references by some (x,y) vector.</p>
+
+</dd>
 </dl>
 
 <h1 id="RENDERING-IMAGES">RENDERING IMAGES</h1>
@@ -473,6 +485,24 @@
 <dd>
 
 <p>Color to fade the map (default is 0, no fading).</p>
+
+</dd>
+<dt id="map_min_sc-arg"><b>--map_min_sc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Min scale (&lt;map pixels&gt;/&lt;image pixels&gt;) (default is 0.1).</p>
+
+</dd>
+<dt id="map_max_sc-arg"><b>--map_max_sc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Max scale (&lt;map pixels&gt;/&lt;image pixels&gt;) (default is 10).</p>
+
+</dd>
+<dt id="map_def_col-arg"><b>--map_def_col &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Color to paint the map outside min_sc/max_sc (default is 0x80FF0000).</p>
 
 </dd>
 <dt id="htm-arg"><b>--htm &lt;arg&gt;</b></dt>
