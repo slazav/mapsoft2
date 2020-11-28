@@ -19,10 +19,10 @@ assert_diff test_data/json1.json tmp.json
 assert_cmd "$P -v test_data/json1.json -o tmp.json --json_compact 0 --json_indent 1" \
 "Reading GeoJSON file: test_data/json1.json
   Reading track: 2018-04-28 09:12:42 Day (5 points)
-  Reading waypoints:  (4 points)
+  Reading waypoints: gpx2 (4 points)
 Writing GeoJSON file: tmp.json
   Writing track: 2018-04-28 09:12:42 Day (5 points)
-  Writing waypoints:  (4 points)" 0
+  Writing waypoints: gpx2 (4 points)" 0
 assert_diff test_data/json1.json tmp.json
 
 # compact version

@@ -15,6 +15,7 @@
     </rtept>
   </rte>
   <rte>
+    <name>gpx1</name>
     <rtept lat='79.0121820' lon='17.5146880'>
       <ele>1508.82</ele>
       <time>2018-04-28T07:55:47Z</time>
