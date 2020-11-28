@@ -34,20 +34,34 @@
 только необходимые модули, а также переносить модули между различными
 проектами.
 
+<p>
+Модули находятся в <a href="https://github.com/slazav/mapsoft2-libs">https://github.com/slazav/mapsoft2-libs</a>. Их можно подключить
+в виде git submodule или cкопировать в проект.
+
+
+<p>
+Использование git submodules не поддержиивается сборочной системой Altlinux
+(а именно, программой gear). Она хочет, чтобы весь исходный код был доступен
+из определенного коммита в git-репозитории. Эта проблема решается запаковкой
+всех модулей в отдельный tar-файл (см. скрипт <tt>update_modules</tt>) и
+хранением этого файла в репозитории <tt>mapsoft2</tt>. Если вы не используете
+<tt>gear</tt> для сборки пакета, то этот файл можно игнорировать.
+
+
 <h3>Сборочная система</h3>
 
 <p>
 
-Сборочая система сделана на основе GNU make. Модули расположены в
-директории <tt>modules</tt>. Программы, библиотеки и модули, которые  не
-используются другими модулями, могут быть расположены в любом месте.
-Каждый модуль содержит <tt>Makefile</tt> где описаны его компоненты и
-включен файл <tt>Makefile.inc</tt> из директории <tt>modules</tt>. Для
-построения дерева зависимостей используется отдельный скрипт
-<tt>modules/get_deps</tt>. Для правильного поиска зависимостей
-подключение заголовочного файла <tt>file.h</tt> из модуля <tt>name</tt>
-надо записывать в виде <tt>#include "name/file.h"</tt>, а локальных
-заголовочных файлов - в виде <tt>#include "file.h"</tt>.
+Сборочая система сделана на основе GNU make. Модули расположены в одной
+директории (обычно <tt>modules</tt>). Программы, библиотеки и модули,
+которые  не используются другими модулями, могут быть расположены в любом
+месте. Каждый модуль содержит <tt>Makefile</tt> где описаны его
+компоненты и включен файл <tt>Makefile.inc</tt> из директории
+<tt>modules</tt>. Для построения дерева зависимостей используется
+отдельный скрипт <tt>modules/get_deps</tt>. Для правильного поиска
+зависимостей подключение заголовочного файла <tt>file.h</tt> из модуля
+<tt>name</tt> надо записывать в виде <tt>#include "name/file.h"</tt>, а
+локальных заголовочных файлов - в виде <tt>#include "file.h"</tt>.
 
 
 <p>В <tt>Makefile</tt> модуля могут быть определены следующие переменные:
@@ -80,21 +94,10 @@
 
 <li><tt>PKG_CONFIG</tt>   -- Внешние библиотеки используемые в этом модуле (подключаются с помощью <a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a>).
 Локальные файлы для pkg-config можно положить в директорию <tt>$(MODDIR)/pc/</tt>.
+
+<li><tt>LDLIBS, LDFLAGS, CXXFLAGS</tt> -- стандартные переменные make.
+
 </ul>
-
-<h3>Gear и git submodule</h3>
-
-<p>
-Модули хранятся в отдельном git-репозитории и могут подключаться к разным
-проектам (например, <tt>mapsoft2</tt>) как git submodule.
-
-<p>
-Использование git submodules не поддержиивается сборочной системой Altlinux
-(а именно, программой gear). Она хочет, чтобы весь исходный код был доступен
-из определенного коммита в git-репозитории. Эта проблема решается запаковкой
-всех модулей в отдельный tar-файл (см. скрипт <tt>update_modules</tt>) и
-хранением этого файла в репозитории <tt>mapsoft2</tt>. Если вы не используете
-<tt>gear</tt> для сборки пакета, то этот файл можно игнорировать.
 
 
 <h3>Пректы, использующие mapsoft2-libs</h3>
@@ -152,7 +155,7 @@ KML, KMZ, GeoJson, OziExplorer). Расстояния между точками 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geohash">geohash</a></b></td><td> Библиотека <a href="https://en.wikipedia.org/wiki/Geohash">Geohash</a> и простое хранилище данных с гео-индексацией.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geom">geom</a></b></td><td> Геометрические объекты: классы Point, Line, Multiline и Rect. Множество
-полузных функция для работы с ними. Класс LineWalker.</td></tr>
+полезных функция для работы с ними.</td></tr>
 
 <tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geom_tools">geom_tools</a></b></td><td> Дополнительные функции для работы с геометрическими объектами.</td></tr>
 
@@ -170,17 +173,16 @@ KML, KMZ, GeoJson, OziExplorer). Расстояния между точками 
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/jsonxx">jsonxx</a></b></td><td> Простая C++ обертка для библиотеки libjansson.</td></tr>
 
-<tr><td valign=top><img src="img/unusable.png" alt="unusable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mapdb">mapdb</a></b></td><td> Локальное хранилище векторных карт с быстрым доступом и гео-индексацией на основе BerkleyDB.</td></tr>
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/log">log</a></b></td><td> Простой способ вывода сообщений в консоль или в файл.</td></tr>
 
-<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mapsoft_data">mapsoft_data</a></b></td><td> Глобальная структура данных mapsoft и функции чтения/записи. Должна
-работать со всеми поддерживаемыми форматами.</td></tr>
+<tr><td valign=top><img src="img/unusable.png" alt="unusable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mapdb">mapdb</a></b></td><td> Локальное хранилище векторных карт с быстрым доступом и гео-индексацией на основе BerkleyDB.</td></tr>
 
 <tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mapview">mapview</a></b></td><td> Окно вьюера геоданных и карт. Для использования в программе ms2view.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mp">mp</a></b></td><td> Чтение и запись MP-файлов. MP -- это формат векторных карт, используемый для
 компиляции карт для Garmin GPS.</td></tr>
 
-<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/opt">opt</a></b></td><td> Контейнер <tt>map&lt;string,string&gt;<tt> с функциями для записи и
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/opt">opt</a></b></td><td> Контейнер <tt>map&lt;string,string&gt;</tt> с функциями для записи и
 чтения различных типов данных. Широко используется в <tt>mapsoft</tt>.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/rainbow">rainbow</a></b></td><td> Преобразовать вещественное число в цвет в соответствии с некоторым
@@ -192,6 +194,8 @@ KML, KMZ, GeoJson, OziExplorer). Расстояния между точками 
 Похоже на чтение строки параметров в shell.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/shape">shape</a></b></td><td> Чтение и запись SHAPE-файлов, обертка для <a href="http://shapelib.maptools.org/">shapelib</a>.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/srtm">srtm</a></b></td><td> Работа с картами высот (форматы hgt и tiff).</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/time_fmt">time_fmt</a></b></td><td> Функции для чтения и записи времени в различных форматах.</td></tr>
 

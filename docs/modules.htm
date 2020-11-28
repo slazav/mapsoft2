@@ -33,10 +33,23 @@ Makefile-based building system allows to build programs and libraries
 which depend only on certain modules and to transfer modules between
 different projects.
 
+<p>
+Modules are located in <a href="https://github.com/slazav/mapsoft2-libs">https://github.com/slazav/mapsoft2-libs</a>.
+They can be used as git submodule or copied into a project.
+
+
+<p>Use of git submodules is not supported by Altlinux building
+system (<tt>gear</tt> program). It wants to have all source code
+accessible from a certain git commit. This problem
+is solved by packing all modules in a separate tarball (see <tt>update_modules</tt>
+script) and keeping it in <tt>mapsoft2</tt> repository. If you do not
+use <tt>gear</tt> for building the package, you can ignore this file.
+
+
 <h3>Building system</h3>
 
 <p> The building system is based on GNU make. All modules are
-located in <tt>modules</tt> directory. Programs, libraries and modules
+located in a single directory (usually <tt>modules</tt>). Programs, libraries and modules
 which are not intended to be used by other modules can be located
 anywhere. Each module has a <tt>Makefile</tt> there a few variables are
 set to declare module components and <tt>Makefile.inc</tt> from the
@@ -75,20 +88,10 @@ each <tt>&lt;name&gt;</tt> a source file <tt>&lt;name&gt;.test.cpp</tt> and a sc
 
 <li><tt>PKG_CONFIG</tt>   -- External libraries used in this module (for <a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a>). Local pkg-config
 files can be put in <tt>$(MODDIR)/pc/</tt>.
+
+<li><tt>LDLIBS, LDFLAGS, CXXFLAGS</tt> -- standard Makefile variables.
+
 </ul>
-
-<h3>Gear and git submodule</h3>
-
-<p>Modules are located in a separate git repository, and can be
-included into different projects (e.g. <tt>mapsoft2</tt>) as git
-submodule.
-
-<p>Use of git submodules is not supported by Altlinux building
-system (<tt>gear</tt> program). It wants to have all source code
-accessible from a certain git commit. This problem
-is solved by packing all modules in a separate tarball (see <tt>update_modules</tt>
-script) and keeping it in <tt>mapsoft2</tt> repository. If you do not
-use <tt>gear</tt> for building the package, you can ignore this file.
 
 
 <h3>Projects which use mapsoft2-libs</h3>
@@ -144,7 +147,7 @@ formula). Geo-conversions (<a href="https://proj4.org/">libproj</a> wrapper).
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geohash">geohash</a></b></td><td> <a href="https://en.wikipedia.org/wiki/Geohash">Geohash</a> library and simple data storage with spatial indexing</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geom">geom</a></b></td><td> Geometrical forms: Point, Line, Multiline, and Rect classes. Many useful functions for
-working with them. LineWalker class.</td></tr>
+working with them.</td></tr>
 
 <tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/geom_tools">geom_tools</a></b></td><td> Additional functions for working with geometric objects.</td></tr>
 
@@ -161,17 +164,16 @@ working with them. LineWalker class.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/jsonxx">jsonxx</a></b></td><td> Simple C++ wrapper for libjansson library.</td></tr>
 
-<tr><td valign=top><img src="img/unusable.png" alt="unusable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mapdb">mapdb</a></b></td><td> BerkleyDB-based local storage for vector maps with fast access and spatial indexing.</td></tr>
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/log">log</a></b></td><td> A simple way of writing log messages to stdin or file.</td></tr>
 
-<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mapsoft_data">mapsoft_data</a></b></td><td> Mapsoft global data structure and read/write function. Should work with
-all supported formats.</td></tr>
+<tr><td valign=top><img src="img/unusable.png" alt="unusable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mapdb">mapdb</a></b></td><td> BerkleyDB-based local storage for vector maps with fast access and spatial indexing.</td></tr>
 
 <tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mapview">mapview</a></b></td><td> Viewer for maps and geodata. For use in ms2view program.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/mp">mp</a></b></td><td> Reading and writing of MP files. MP is a vector map format used for
 compiling Garmin GPS maps.</td></tr>
 
-<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/opt">opt</a></b></td><td> A <tt>map&lt;string,string&gt;<tt> container with functions for
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/opt">opt</a></b></td><td> A <tt>map&lt;string,string&gt;</tt> container with functions for
 getting/putting values of arbitrary types. Used widely in
 <tt>mapsoft</tt>.</td></tr>
 
@@ -183,6 +185,8 @@ separated by spaces. Comments, quoting, escape symbols are supported.
 Similar to reading shell argument list.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/shape">shape</a></b></td><td> Reading and writing of Shape-files, wrapper for <a href="http://shapelib.maptools.org/">shapelib</a>.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/srtm">srtm</a></b></td><td> Working with digital elevation models (hgt anf tiff formats).</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/time_fmt">time_fmt</a></b></td><td> Functions for reading and writing time in different forms.</td></tr>
 

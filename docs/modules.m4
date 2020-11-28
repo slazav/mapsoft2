@@ -21,10 +21,33 @@ different projects.
 проектами.
 ')dnl
 
+<p>ENRU(`
+Modules are located in WWW(`https://github.com/slazav/mapsoft2-libs').
+They can be used as git submodule or copied into a project.
+',`
+Модули находятся в WWW(`https://github.com/slazav/mapsoft2-libs'). Их можно подключить
+в виде git submodule или cкопировать в проект.
+')
+
+<p>ENRU(`Use of git submodules is not supported by Altlinux building
+system (<tt>gear</tt> program). It wants to have all source code
+accessible from a certain git commit. This problem
+is solved by packing all modules in a separate tarball (see <tt>update_modules</tt>
+script) and keeping it in <tt>mapsoft2</tt> repository. If you do not
+use <tt>gear</tt> for building the package, you can ignore this file.
+',`
+Использование git submodules не поддержиивается сборочной системой Altlinux
+(а именно, программой gear). Она хочет, чтобы весь исходный код был доступен
+из определенного коммита в git-репозитории. Эта проблема решается запаковкой
+всех модулей в отдельный tar-файл (см. скрипт <tt>update_modules</tt>) и
+хранением этого файла в репозитории <tt>mapsoft2</tt>. Если вы не используете
+<tt>gear</tt> для сборки пакета, то этот файл можно игнорировать.
+')
+
 <h3>ENRU(`Building system',`Сборочная система')</h3>
 
 <p>ENRU(` The building system is based on GNU make. All modules are
-located in <tt>modules</tt> directory. Programs, libraries and modules
+located in a single directory (usually <tt>modules</tt>). Programs, libraries and modules
 which are not intended to be used by other modules can be located
 anywhere. Each module has a <tt>Makefile</tt> there a few variables are
 set to declare module components and <tt>Makefile.inc</tt> from the
@@ -35,16 +58,16 @@ dependency search including a header file <tt>file.h</tt> from a module
 "name/file.h"</tt>. Including local header file should be written as
 <tt>#include "file.h"</tt>.',`
 
-Сборочая система сделана на основе GNU make. Модули расположены в
-директории <tt>modules</tt>. Программы, библиотеки и модули, которые  не
-используются другими модулями, могут быть расположены в любом месте.
-Каждый модуль содержит <tt>Makefile</tt> где описаны его компоненты и
-включен файл <tt>Makefile.inc</tt> из директории <tt>modules</tt>. Для
-построения дерева зависимостей используется отдельный скрипт
-<tt>modules/get_deps</tt>. Для правильного поиска зависимостей
-подключение заголовочного файла <tt>file.h</tt> из модуля <tt>name</tt>
-надо записывать в виде <tt>#include "name/file.h"</tt>, а локальных
-заголовочных файлов - в виде <tt>#include "file.h"</tt>.')
+Сборочая система сделана на основе GNU make. Модули расположены в одной
+директории (обычно <tt>modules</tt>). Программы, библиотеки и модули,
+которые  не используются другими модулями, могут быть расположены в любом
+месте. Каждый модуль содержит <tt>Makefile</tt> где описаны его
+компоненты и включен файл <tt>Makefile.inc</tt> из директории
+<tt>modules</tt>. Для построения дерева зависимостей используется
+отдельный скрипт <tt>modules/get_deps</tt>. Для правильного поиска
+зависимостей подключение заголовочного файла <tt>file.h</tt> из модуля
+<tt>name</tt> надо записывать в виде <tt>#include "name/file.h"</tt>, а
+локальных заголовочных файлов - в виде <tt>#include "file.h"</tt>.')
 
 define(NAME, `<tt>&lt;name&gt;$1</tt>')dnl
 
@@ -102,30 +125,12 @@ NAME(.test.script). Программа будет собрана, после с�
 files can be put in <tt>$(MODDIR)/pc/</tt>.',
 `Внешние библиотеки используемые в этом модуле (подключаются с помощью _PKGCONFIG_).
 Локальные файлы для pkg-config можно положить в директорию <tt>$(MODDIR)/pc/</tt>.')
+
+<li><tt>LDLIBS, LDFLAGS, CXXFLAGS</tt> -- ENRU(`standard Makefile variables',
+`стандартные переменные make').
+
 </ul>
 
-<h3>ENRU(`Gear and git submodule',`Gear и git submodule')</h3>
-
-<p>ENRU(`Modules are located in a separate git repository, and can be
-included into different projects (e.g. <tt>mapsoft2</tt>) as git
-submodule.',`
-Модули хранятся в отдельном git-репозитории и могут подключаться к разным
-проектам (например, <tt>mapsoft2</tt>) как git submodule.')
-
-<p>ENRU(`Use of git submodules is not supported by Altlinux building
-system (<tt>gear</tt> program). It wants to have all source code
-accessible from a certain git commit. This problem
-is solved by packing all modules in a separate tarball (see <tt>update_modules</tt>
-script) and keeping it in <tt>mapsoft2</tt> repository. If you do not
-use <tt>gear</tt> for building the package, you can ignore this file.
-',`
-Использование git submodules не поддержиивается сборочной системой Altlinux
-(а именно, программой gear). Она хочет, чтобы весь исходный код был доступен
-из определенного коммита в git-репозитории. Эта проблема решается запаковкой
-всех модулей в отдельный tar-файл (см. скрипт <tt>update_modules</tt>) и
-хранением этого файла в репозитории <tt>mapsoft2</tt>. Если вы не используете
-<tt>gear</tt> для сборки пакета, то этот файл можно игнорировать.
-')
 
 <h3>ENRU(`Projects which use mapsoft2-libs', `Пректы, использующие mapsoft2-libs')</h3>
 <p>as git submodule:
@@ -217,9 +222,9 @@ _MODTAB_(geohash, STABLE,
 
 _MODTAB_(geom, STABLE,
 `Geometrical forms: Point, Line, Multiline, and Rect classes. Many useful functions for
-working with them. LineWalker class.',
+working with them.',
 `Геометрические объекты: классы Point, Line, Multiline и Rect. Множество
-полузных функция для работы с ними. Класс LineWalker.')
+полезных функция для работы с ними.')
 
 _MODTAB_(geom_tools, UNSTABLE,
 `Additional functions for working with geometric objects.',
@@ -254,15 +259,13 @@ _MODTAB_(jsonxx, STABLE,
 `Simple C++ wrapper for libjansson library.',
 `Простая C++ обертка для библиотеки libjansson.')
 
+_MODTAB_(log, STABLE,
+`A simple way of writing log messages to stdin or file.',
+`Простой способ вывода сообщений в консоль или в файл.')
+
 _MODTAB_(mapdb, UNUSABLE,
 `BerkleyDB-based local storage for vector maps with fast access and spatial indexing.',
 `Локальное хранилище векторных карт с быстрым доступом и гео-индексацией на основе BerkleyDB.')
-
-_MODTAB_(mapsoft_data, UNSTABLE,
-`Mapsoft global data structure and read/write function. Should work with
-all supported formats.',
-`Глобальная структура данных mapsoft и функции чтения/записи. Должна
-работать со всеми поддерживаемыми форматами.')
 
 _MODTAB_(mapview, UNSTABLE,
 `Viewer for maps and geodata. For use in ms2view program.',
@@ -275,10 +278,10 @@ compiling Garmin GPS maps.',
 компиляции карт для Garmin GPS.')
 
 _MODTAB_(opt, STABLE,
-`A <tt>map&lt;string,string&gt;<tt> container with functions for
+`A <tt>map&lt;string,string&gt;</tt> container with functions for
 getting/putting values of arbitrary types. Used widely in
 <tt>mapsoft</tt>.',
-`Контейнер <tt>map&lt;string,string&gt;<tt> с функциями для записи и
+`Контейнер <tt>map&lt;string,string&gt;</tt> с функциями для записи и
 чтения различных типов данных. Широко используется в <tt>mapsoft</tt>.')
 
 _MODTAB_(rainbow, STABLE,
@@ -299,6 +302,10 @@ Similar to reading shell argument list.',
 _MODTAB_(shape, STABLE,
 `Reading and writing of Shape-files, wrapper for _SHAPELIB_.',
 `Чтение и запись SHAPE-файлов, обертка для _SHAPELIB_.')
+
+_MODTAB_(srtm, STABLE,
+`Working with digital elevation models (hgt anf tiff formats).',
+`Работа с картами высот (форматы hgt и tiff).')
 
 _MODTAB_(time_fmt, STABLE,
 `Functions for reading and writing time in different forms.',

@@ -31,23 +31,16 @@ A collection of tools and libraries for working with maps and geo-data.
 We started writing programs for handling GPS-data and maps since
 first GPS-receivers appeared in our hiking group at 1997-1998. First it
 was tools for downloading tracks, putting them on a map, editing, and
-uploading back to GPS. When we started creating our own maps: hiking maps
-of Moscow region and some mountain regions:
-
-<ul>
-
-<li><a href="https://nakarte.me/#m=7/55.61249/37.65564&l=O/Z">Maps of Moscow region at nakarte.me</a>
-<li><a href="http://slazav.mccme.ru/maps/podm_txt.htm">About Moscow region maps (RU)</a>
-<li><a href="https://nakarte.me/#m=2/20.13847/57.48047&l=O/Q">Mountain maps at nakarte.me</a>
-</ul>
-
-<p>
-
+uploading back to GPS. When we started creating our own maps:
+<a href="https://nakarte.me/#m=7/55.61249/37.65564&l=O/Z">hiking maps
+of Moscow region</a> and some <a href="https://nakarte.me/#m=2/20.13847/57.48047&l=O/Q">
+mountain regions</a>.
 All programs for working with geodata, raster and vector maps, SRTM-data,
 etc, have been collected to <a href="https://github.com/ushakov/mapsoft">mapsoft</a> project.
-
-<p><b>Mapsoft-2</b> is an attempt to rewrite these programs fixing some
+<b>Mapsoft2</b> is an attempt to rewrite these programs fixing some
 fundamental problems and improving the code.
+
+
 <h2>Links</h2>
 
 <ul>
@@ -60,35 +53,26 @@ Source code, bug tracker (github).
 Discussions (google group).
 </a>
 
-<li><a href="https://github.com/ushakov/mapsoft">
-Old mapsoft code (github).
-</a>
-
 </ul>
 
-<!--#################################################################-->
-<h2>Source code library</h2>
-
- Mapsoft consists of many different pieces of code: simple and sophisticated,
-stable and experimental, good and bad. Some of this pieces are also used
-in other projects, not related to maps. I found very useful to make a
-"source code library" which consists of separate "modules" (something
-like <a href="https://www.gnu.org/software/gnulib/">gnulib</a>). Each module has its own documentation, tests, and it can
-be easily transferred to another project.
-<br><a href="modules.htm"><b>Read more...</b></a>
-
-
-<!--#################################################################-->
-<h2>Programs</h2>
+<p>Documentation</h2>
 
 <ul>
+<li><a href="geodata_ru.htm"> Geodata in mapsoft2 (RU)</a>
+<li><a href="mapdb_ru.htm"> Vector maps in mapsoft2 (RU)</a>
+<li><a href="modules.htm">Source code library</a>
+</ul>
+
+<p>man-pages</h2>
 
 
+
+<ul>
 
 <li><img src="img/stable.png" alt="stable">&nbsp; <b><a href="man/ms2conv.htm"><tt>ms2conv</tt></a></b> -- Converter for geodata and raster maps
 .
 
-<li><img src="img/stable.png" alt="stable">&nbsp; <b><a href="man/ms2view.htm"><tt>ms2view</tt></a></b> -- Viewer for geodata and raster maps.
+<li><img src="img/unstable.png" alt="unstable">&nbsp; <b><a href="man/ms2view.htm"><tt>ms2view</tt></a></b> -- Viewer for geodata and raster maps.
 
 <li><img src="img/stable.png" alt="stable">&nbsp; <b><a href="man/ms2nom.htm"><tt>ms2nom</tt></a></b> -- Program for soviet nomenclature map
 calculations. Coordinates of a map sheet, adjacent sheets, sheets
@@ -110,22 +94,6 @@ maps.
 
 <p>Here <img src="img/stable.png" alt="stable">&nbsp; - more or less stable programs, <img src="img/unstable.png" alt="unstable">&nbsp; - unstable
 programs, interface will be changed, <img src="img/unusable.png" alt="unusable">&nbsp; - unusable programs.
-
-<!--#################################################################-->
-<h2>Supported file formats</h2>
-
-<ul>
-<li>Geodata: OziExplorer, GPX, KML, GarminUtils, GeoJSON.
-<li>Raster images: JPEG, PNG, TIFF, GIF.
-<li>FIG     - vector graphics format
-<li>MP      - "Polish" format for vector maps
-<li>VMAP    - mapsoft1 format for vector maps
-<li>SHP+DBF - format for vector map data
-<li><a href="mapdb.htm">MapDB</a> --
-Mapsoft2 native format for vector maps.</a>
-</ul>
-
-<a href="mapdb_ru.htm"> Vector maps in mapsoft2 (RU)</a>
 
 <!--#################################################################-->
 <div align=right>Vladislav Zavjalov, slazav at altlinux dot org</div>
