@@ -71,7 +71,7 @@ assert_cmd "$P -v test_data/ozi1.map test_data/ozi1.plt test_data/ozi1.wpt -o tm
 Reading OziExplorer file test_data/ozi1.plt
   Reading track: ACTIVE LOG                          (11 points)
 Reading OziExplorer file test_data/ozi1.wpt
-  Reading waypoints:  (11 points)
+  Reading waypoints: ozi1 (11 points)
 Writing waypoints to OziExplorer file: tmp.wpt
 Writing track to OziExplorer file: tmp.plt
 Writing map to OziExplorer file tmp.map" 0
