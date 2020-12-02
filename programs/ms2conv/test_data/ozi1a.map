@@ -2,7 +2,7 @@ OziExplorer Map Data File Version 2.2
 MO-006-007-png
 test_data/Page006.png
 1 ,Map Code,
-Pulkovo 1942 (2),,   0.0000,   0.0000,WGS 84
+Pulkovo 1942 (2),WGS 84,   0.0000,   0.0000,WGS 84
 Reserved 1
 Reserved 2
 Magnetic Variation,,,E
@@ -37,7 +37,7 @@ Point27,xy,     ,     ,in, deg,    ,        ,N,    ,        ,W, grid,   ,       
 Point28,xy,     ,     ,in, deg,    ,        ,N,    ,        ,W, grid,   ,           ,           ,N
 Point29,xy,     ,     ,in, deg,    ,        ,N,    ,        ,W, grid,   ,           ,           ,N
 Point30,xy,     ,     ,in, deg,    ,        ,N,    ,        ,W, grid,   ,           ,           ,N
-Projection Setup,,37.500000000,,38991.00,-6289575.00
+Projection Setup,,37.500000000,1.0,38991.00,-6289575.00
 Map Feature = MF ; Map Comment = MC     These follow if they exist
 Track File = TF      These follow if they exist
 Moving Map Parameters = MM?    These follow if they exist
