@@ -3,7 +3,7 @@ PAGES := index modules mapdb
 HTMLS := $(patsubst %,%.htm,$(PAGES))\
          $(patsubst %,%.ru.htm,$(PAGES))
 
-all: $(HTMLS) mapdb_ru.htm
+all: $(HTMLS) mapdb_ru.htm geodata_ru.htm
 
 
 %.ru.htm: defs.m4 %.m4
