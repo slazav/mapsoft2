@@ -175,22 +175,10 @@
 <p>Skip part of geodata. Argument is a string which letters show what to skip: W - waypoints, T - tracks, M - maps, t - time, z - altitude, b - map borders.</p>
 
 </dd>
-<dt id="join"><b>--join</b></dt>
+<dt id="join-arg"><b>--join &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Join all waypoint lists, tracks, map lists.</p>
-
-</dd>
-<dt id="name-arg"><b>--name &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Set name in the first waypoint lists, track, or map list.</p>
-
-</dd>
-<dt id="comm-arg"><b>--comm &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Set comment in the first waypoint list, track, map list.</p>
+<p>Join all waypoint lists, tracks, map lists. Use argument as a name.</p>
 
 </dd>
 <dt id="nom_brd"><b>--nom_brd</b></dt>
@@ -227,6 +215,12 @@
 <dd>
 
 <p>Choose map type (nom, google_tile, tms_tile, proj)</p>
+
+</dd>
+<dt id="name-arg"><b>--name &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set map name. For --mkref=&quot;nom&quot; it should contain a valid Soviet nomenclature name. For --mkref=&quot;file&quot; it should contain map-file name.</p>
 
 </dd>
 <dt id="dpi-arg"><b>--dpi &lt;arg&gt;</b></dt>
