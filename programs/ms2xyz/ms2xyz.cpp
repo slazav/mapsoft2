@@ -136,12 +136,12 @@ main (int argc, char **argv) {
     string ofile = O.get("out","");
     if (ofile != "") FILE * F=freopen(ofile.c_str(),"w",stdout);
 
-    int nn = 0;
-    int NN = 0;
-    int pn = 0;
+    size_t nn = 0;
+    size_t NN = 0;
+    size_t pn = 0;
     GeoTpt tp, pp;
     for (auto const & trk: data.trks) {
-      for (int p = 0; p < trk.size(); ++p) {
+      for (size_t p = 0; p < trk.size(); ++p) {
 
         tp = trk[p];
         tp.t += tshift*3600*1000;
