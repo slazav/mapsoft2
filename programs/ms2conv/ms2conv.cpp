@@ -82,6 +82,10 @@ main(int argc, char *argv[]){
     ms2opt_add_geo_io(options);
     ms2opt_add_geoflt(options);
 
+    // Option --out_fmt appears in both geo_o and geoimg modules.
+    // We will combine description for both of them.
+    options.remove("out_fmt");
+
     ms2opt_add_mkref(options);
     ms2opt_add_drawwpt(options);
     ms2opt_add_drawtrk(options);
