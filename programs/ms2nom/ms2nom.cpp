@@ -2,6 +2,7 @@
 #include "geo_nom/geo_nom.h"
 #include "geom/poly_tools.h"
 #include "getopt/getopt.h"
+#include "geo_data/conv_geo.h"
 
 using namespace std;
 
@@ -12,13 +13,13 @@ void usage(bool pod=false){
   HelpPrinter pr(pod, options, "ms2nom");
   pr.name("Soviet nomenclature map calculations");
 
-  pr.usage("[-E] -r <point> -s <scale> -- map at the point");
-  pr.usage("[-E] -r <range> -s <scale> -- maps at the range");
-  pr.usage("[-E] -n <name> -- map range");
-  pr.usage("[-E] -c -n <name> -- map center");
+  pr.usage("[-E] [-W] -r <point> -s <scale> -- map at the point");
+  pr.usage("[-E] [-W] -r <range> -s <scale> -- maps at the range");
+  pr.usage("[-E] [-W] -n <name> -- map range");
+  pr.usage("[-E] [-W] -n <name> -r <range>  -- check if the map touches the range");
+  pr.usage("[-E] [-W] -c -n <name> -- map center");
   pr.usage("[-E] -n <name> --shift [x_shift,y_shift] -- adjacent map");
   pr.usage("[-E] -n <name> -s <scale> -- convert map to a different scale");
-  pr.usage("[-E] -n <name> -r <range>  -- check if the map touches the range");
 
   pr.head(1, "Options");
   pr.opts({"NONSTD", "STD"});
@@ -28,23 +29,27 @@ void usage(bool pod=false){
    "nomenclature map names.");
 
   pr.par(
-    "Option --ext turns on 'extended mode': single sheets (like Q10-001) are allowed "
+    "Option --ext (-E) turns on 'extended mode': single sheets (like Q10-001) are allowed "
     "on input and always returned on output; for a single sheet suffix '.<N>x<M>' is "
     "allowed to multiply the range (like n49-001.3x2).");
-
-  pr.par(
-    "If both --range and --name options are given "
-    "program returns with exit code 0 or 1 depending "
-    "on whether the coordinate range intersects with the tile range.");
 
   pr.par(
     "At the moment combination of --ext and --shift options with such a "
     "\"multiplied\" name returns non-multiplied adjecent sheets. This is not "
     "very useful and maybe changed later.");
 
+
   pr.par(
-    "Soviet nomenclature maps are drawn in Krassovsky-1942 datum "
-    "(+ellps=krass +towgs84=28,-130,-95).");
+    "If both --range (-r) and --name (-n) options are given "
+    "program returns with exit code 0 or 1 depending "
+    "on whether the coordinate range intersects with the tile range.");
+
+  pr.par(
+    "Soviet nomenclature maps use Pukovo-1942 datum "
+    "(+ellps=krass +towgs84=28,-130,-95). By default Pulkovo datum is used "
+    "for all calculations. In this datum map corners have round coordinates. "
+    "If option --wgs (-W) is given then WGS datum is used  instead of "
+    "Pulkovo.");
 
   pr.par(
     "Supported scales: 1:1000000, 1:500000, 1:200000, 1:100000, 1:50000."
@@ -82,6 +87,9 @@ main(int argc, char **argv){
       "on input and always returned on output; for a single sheet "
       "suffix '.<N>x<M>' is allowed to multiply the range (like n49-001.3x2).");
 
+    options.add("wgs", 0,'W',g,
+      "Use WGS datum for coordinates (instead of Pulkovo).");
+
     options.add("center", 0,'c',g,
       "Instead of printing a coordinate range print its central point.");
 
@@ -100,6 +108,7 @@ main(int argc, char **argv){
 
     if (nonopt.size()) throw Err() << "unexpected value: " << nonopt[0];
 
+    bool wgs = O.get("wgs", false);
     bool ex  = O.get("ext", false);
     bool cnt = O.get("center", false);
 
@@ -128,6 +137,10 @@ main(int argc, char **argv){
       }
 
       if (!O.exists("range")){
+        if (wgs){
+          ConvGeo cnv("SU_LL", "WGS");
+          range_n = cnv.frw_acc(range_n, 1e-7);
+        }
         if (cnt) cout << range_n.cnt() << "\n";
         else     cout << range_n << "\n";
         return 0;
@@ -141,8 +154,14 @@ main(int argc, char **argv){
     if (O.exists("range")){
 
       range = figure_bbox<double>(O.get("range",""));
+
       if (range.is_empty()) throw Err()
         << "wrong coordinate range: " << O.get("range","");
+
+      if (wgs){
+        ConvGeo cnv("SU_LL", "WGS");
+        range = cnv.bck_acc(range, 1e-7);
+      }
 
       if (!O.exists("name")){
 
