@@ -27,19 +27,19 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code>        ms2nom [-E] -r &lt;point&gt; -s &lt;scale&gt; -- map at the point
+<pre><code>        ms2nom [-E] [-W] -r &lt;point&gt; -s &lt;scale&gt; -- map at the point
 
-        ms2nom [-E] -r &lt;range&gt; -s &lt;scale&gt; -- maps at the range
+        ms2nom [-E] [-W] -r &lt;range&gt; -s &lt;scale&gt; -- maps at the range
 
-        ms2nom [-E] -n &lt;name&gt; -- map range
+        ms2nom [-E] [-W] -n &lt;name&gt; -- map range
 
-        ms2nom [-E] -c -n &lt;name&gt; -- map center
+        ms2nom [-E] [-W] -n &lt;name&gt; -r &lt;range&gt;  -- check if the map touches the range
+
+        ms2nom [-E] [-W] -c -n &lt;name&gt; -- map center
 
         ms2nom [-E] -n &lt;name&gt; --shift [x_shift,y_shift] -- adjacent map
 
-        ms2nom [-E] -n &lt;name&gt; -s &lt;scale&gt; -- convert map to a different scale
-
-        ms2nom [-E] -n &lt;name&gt; -r &lt;range&gt;  -- check if the map touches the range</code></pre>
+        ms2nom [-E] -n &lt;name&gt; -s &lt;scale&gt; -- convert map to a different scale</code></pre>
 
 <h1 id="OPTIONS">OPTIONS</h1>
 
@@ -67,6 +67,12 @@
 <dd>
 
 <p>Use &#39;extended mode&#39;: single sheets (like Q10-001) are allowed on input and always returned on output; for a single sheet suffix &#39;.&lt;N&gt;x&lt;M&gt;&#39; is allowed to multiply the range (like n49-001.3x2).</p>
+
+</dd>
+<dt id="W---wgs"><b>-W, --wgs</b></dt>
+<dd>
+
+<p>Use WGS datum for coordinates (instead of Pulkovo).</p>
 
 </dd>
 <dt id="c---center"><b>-c, --center</b></dt>
@@ -97,13 +103,13 @@
 
 <p>Program &quot;ms2nom&quot; does some calculations with standard Soviet nomenclature map names.</p>
 
-<p>Option --ext turns on &#39;extended mode&#39;: single sheets (like Q10-001) are allowed on input and always returned on output; for a single sheet suffix &#39;.&lt;N&gt;x&lt;M&gt;&#39; is allowed to multiply the range (like n49-001.3x2).</p>
-
-<p>If both --range and --name options are given program returns with exit code 0 or 1 depending on whether the coordinate range intersects with the tile range.</p>
+<p>Option --ext (-E) turns on &#39;extended mode&#39;: single sheets (like Q10-001) are allowed on input and always returned on output; for a single sheet suffix &#39;.&lt;N&gt;x&lt;M&gt;&#39; is allowed to multiply the range (like n49-001.3x2).</p>
 
 <p>At the moment combination of --ext and --shift options with such a &quot;multiplied&quot; name returns non-multiplied adjecent sheets. This is not very useful and maybe changed later.</p>
 
-<p>Soviet nomenclature maps are drawn in Krassovsky-1942 datum (+ellps=krass +towgs84=28,-130,-95).</p>
+<p>If both --range (-r) and --name (-n) options are given program returns with exit code 0 or 1 depending on whether the coordinate range intersects with the tile range.</p>
+
+<p>Soviet nomenclature maps use Pukovo-1942 datum (+ellps=krass +towgs84=28,-130,-95). By default Pulkovo datum is used for all calculations. In this datum map corners have round coordinates. If option --wgs (-W) is given then WGS datum is used instead of Pulkovo.</p>
 
 <p>Supported scales: 1:1000000, 1:500000, 1:200000, 1:100000, 1:50000.Scale can be written in following forms: * 1:1000000, 1:1&#39;000&#39;000, 1000000, 1M, 10km/cm * 1:500000, 1:500&#39;000, 500000, 500k, 5km/cm * 1:200000, 1:200&#39;000, 200000, 100k, 1km/cm * 1:100000, 1:100&#39;000, 100000, 100k, 1km/cm * 1:50000, 1:50&#39;000, 50000, 50k, 500m/cm</p>
 
@@ -133,9 +139,18 @@
 <pre><code>        $ ms2nom -n j42-112-2 --shift [1,0]
         j42-113-1</code></pre>
 
-<p>List of 1:50&#39;000 maps for p42-111,112 map: $ ms2nom -n p42-111,112 -s 50k p42-111-1,2 p42-111-3,4 p42-112-1,2 p42-112-3,4</p>
+<p>List of 1:50&#39;000 maps for p42-111,112 map:</p>
 
-<p>Opposite: $ ms2nom -n p42-111-3,4 -s 100k p42-111,112</p>
+<pre><code>        $ ms2nom -n p42-111,112 -s 50k
+        p42-111-1,2
+        p42-111-3,4
+        p42-112-1,2
+        p42-112-3,4</code></pre>
+
+<p>Opposite:</p>
+
+<pre><code>        $ ms2nom -n p42-111-3,4 -s 100k
+        p42-111,112</code></pre>
 
 <p>Test if map touches a coordinate range:</p>
 

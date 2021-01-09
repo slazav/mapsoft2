@@ -25,6 +25,7 @@ Right neighbour of j42-112-2 map:
 	j42-113-1
 
 List of 1:50'000 maps for p42-111,112 map:
+
 	$ ms2nom -n p42-111,112 -s 50k
 	p42-111-1,2
 	p42-111-3,4
@@ -32,6 +33,7 @@ List of 1:50'000 maps for p42-111,112 map:
 	p42-112-3,4
 
 Opposite:
+
 	$ ms2nom -n p42-111-3,4 -s 100k
 	p42-111,112
 
