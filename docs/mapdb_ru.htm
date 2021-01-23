@@ -747,7 +747,7 @@ area:1 stroke 0xFF008000 1
 
 map    patt vyr_o.png 0.08
 
-# Заливка картинкой в мелком масштабе рисуется однордным
+# Заливка картинкой в мелком масштабе рисуется однородным
 # усредненным цветом
 area:1 stroke 0xFF008000 1
 +      patt vyr_o.png 0.0001
@@ -896,7 +896,7 @@ over. Применимо к шагам point, line, area, text, map, brd.
 area:1 stroke 0xFF007F00 3
 +      fill 0xFFAAFFAA
 
-# шаг2: рисую линейный объект (толстая синяя линяя)
+# шаг2: рисую линейный объект (толстая синяя линия)
 line:1 stroke 0xFF0000FF 8
 +      cap butt
 
@@ -932,6 +932,75 @@ map fill 0xFFFFFFFF
 text:1 font 15 "DejaVu Sans:Bold:semicondensed:rgba=none"
 +      write 0xFF0000FF
 
+
+</div><br>
+
+<li><tt> clip </tt> -- Установить обрезку изображения по объекту типа
+text, area, map или brd. Обрезка будет действовать для всех дальнейших
+шагов. Это не нарушит обрезку по границе, которая устанавливается до
+рисования и регулируется параметром clip_border.
+
+
+<div style="border-style:solid; border-width:0.5;
+            margin:3px; padding: 3px; color: black;
+            font-family:monospace; white-space:pre">
+<img src=render_examples/render15.png align=right>
+# Пример использования свойства `clip`.
+# Я хочу, чтобы линия, проходящая поверх зеленой заливки меняла цвет
+# (например, на некоторых картах горизонтали на ледницах рисуют синим цветом).
+
+# рисую площадной объект
+area:1 stroke 0xFF007F00 3
++      fill 0xFFAAFFAA
+
+# рисую линейный объект (толстая синяя линия)
+line:1 stroke 0xFF0000FF 8
+
+# устанавливаю обрезку по площадному объекту:
+area:1 clip
+
+# рисую линию
+line:1 stroke 0xFF800080 8
+
+# убираю обрезку
+map clip
+
+# рисую тонкую красную линию, чтоб проверить, что обрезка убрана
+line:1 stroke 0xFFFF0000 2
+
+</div><br>
+
+<div style="border-style:solid; border-width:0.5;
+            margin:3px; padding: 3px; color: black;
+            font-family:monospace; white-space:pre">
+<img src=render_examples/render16.png align=right>
+# Того же эффекта можно добиться с помощью свойства operator.
+# Одноко, в более сложных случаях crop может быть удобнее.
+
+# контур
+area:1 stroke 0xFF007F00 3
+
+# линия
+line:1 stroke 0xFF0000FF 8
+
+# вырезаю дырку
+area:1 fill 0xFFAAFFAA
++      operator clear
+
+# рисую линию
+line:1 stroke 0xFF800080 8
++      operator dest_over
+
+# контур
+area:1 stroke 0xFF007F00 3
++      operator dest_over
+
+# заливка
+area:1 fill 0xFFAAFFAA
++      operator dest_over
+
+# красная линия
+line:1 stroke 0xFFFF0000 2
 
 </div><br>
 

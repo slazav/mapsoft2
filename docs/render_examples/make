@@ -30,7 +30,7 @@ $MAPDB add_obj . area:1 "$area_d"
 $MAPDB add_obj . text:1 "$text_d" --name "Text on the map"
 
 # render
-for i in $(seq -w 1 14); do
+for i in $(seq -w 1 16); do
   $MAPDB render . --out render${i}.png --config render${i}.cfg\
    --mkref proj --coords_wgs $line_d --scale 1000 --dpi 300\
    --proj SU3 --margin 10
