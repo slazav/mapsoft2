@@ -18,15 +18,13 @@ rm -f n49.tiles/*
 # Smaller tiles are created by rescaling large ones (--tmap_scale option)
 
 for name in n49-{032,033}; do
-time $MAPDB render $name --config render.cfg\
-   --define "{\"nom_name\":\"$name\", \"hr\":\"1\", \"border_style\":\"none\"}"\
+time $MAPDB render $name --config ../render.cfg\
+   --define "{\"my_nom_name\":\"$name\", \"hr\":\"1\", \"border_style\":\"none\", \"my_dpi\":\"100\"}"\
    --tmap --add --out "n49.tiles/map-{x}-{y}-{z}.png" --zmin 9 --zmax 12\
    --bgcolor 0 --png_format pal --cmap_load $name.cmap.png\
    --border_file brd_n49.plt\
    --tmap_scale 1
 done
-
-exit
 
 name=n37-030
 
@@ -35,8 +33,8 @@ rm -f $name.tiles/*
 
 # use multy-segment-track from border.gpx as a border
 
-time $MAPDB render $name --config render.cfg\
-   --define "{\"nom_name\":\"$name\", \"hr\":\"0\"}"\
+time $MAPDB render $name --config ../render.cfg\
+   --define "{\"my_nom_name\":\"$name\", \"hr\":\"0\", \"my_dpi\":\"200\"}"\
    --tmap --out "$name.tiles/map-{x}-{y}-{z}.png" --zmin 9 --zmax 12\
    --bgcolor 0 --png_format pal --cmap_load $name.cmap.png\
    --border_file brd_n37.gpx\

@@ -7,26 +7,25 @@
 # mapdb program
 MAPDB=../../programs/ms2mapdb/ms2mapdb
 
-dpi=100
 for name in n49-032 n49-033; do
-  time $MAPDB render $name --out $name.png --config render.cfg\
-     --define "{\"nom_name\":\"$name\", \"hr\":\"1\"}"\
+  time $MAPDB render $name --out $name.png --config ../render.cfg\
+     --define "{\"my_nom_name\":\"$name\", \"hr\":\"1\", \"my_dpi\":\"100\"}"\
      --cmap_color 255 --cmap_save $name.cmap.png --cmap_add 0\
      --png_format pal --map $name.map\
      --title "$name" --margins 5 --top_margin 20\
-     --mkref nom --name $name --dpi 100
+     --mkref nom --north --name $name --dpi 100
 done
 
 
 name=n37-030
-dpi=200
 
 # use multy-segment-track from border.gpx as a border
 # fill background with dark-red color
 
-time $MAPDB render $name --out $name.png --config render.cfg\
-   --define "{\"nom_name\":\"$name\", \"hr\":\"0\"}"\
+time $MAPDB render $name --out $name.png --config ../render.cfg\
+   --define "{\"my_nom_name\":\"$name\", \"hr\":\"0\", \"my_dpi\":\"200\"}"\
    --cmap_color 255 --cmap_save $name.cmap.png --cmap_add 0\
-   --map $name.map --border_file brd_n37.gpx --bgcolor 0xFF800000
+   --map $name.map --border_file brd_n37.gpx --bgcolor 0xFF800000\
+   --mkref nom --north --name $name --dpi 100
 
 
