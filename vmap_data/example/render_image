@@ -27,6 +27,6 @@ dpi=200
 time $MAPDB render $name --out $name.png --config render.cfg\
    --define "{\"nom_name\":\"$name\", \"hr\":\"0\"}"\
    --cmap_color 255 --cmap_save $name.cmap.png --cmap_add 0\
-   --map $name.map --border_file border.gpx --bgcolor 0xFF800000
+   --map $name.map --border_file brd_n37.gpx --bgcolor 0xFF800000
 
 
