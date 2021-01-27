@@ -3,6 +3,7 @@
 #include "geom/poly_tools.h"
 #include "getopt/getopt.h"
 #include "geo_data/conv_geo.h"
+#include "geo_data/geo_io.h"
 
 using namespace std;
 
@@ -16,7 +17,8 @@ void usage(bool pod=false){
   pr.usage("[-E] [-W] -r <point> -s <scale> -- map at the point");
   pr.usage("[-E] [-W] -r <range> -s <scale> -- maps at the range");
   pr.usage("[-E] [-W] -n <name> -- map range");
-  pr.usage("[-E] [-W] -n <name> -r <range>  -- check if the map touches the range");
+  pr.usage("[-E] [-W] -n <name> -r <line,point,rect>  -- check if the map touches given figure");
+  pr.usage("[-E] -n <name> -g <geodata>  -- check if the map touches geodata (tracks and points)");
   pr.usage("[-E] [-W] -c -n <name> -- map center");
   pr.usage("[-E] -n <name> --shift [x_shift,y_shift] -- adjacent map");
   pr.usage("[-E] -n <name> -s <scale> -- convert map to a different scale");
@@ -40,9 +42,9 @@ void usage(bool pod=false){
 
 
   pr.par(
-    "If both --range (-r) and --name (-n) options are given "
+    "If --range (-r) or --gdata (-g) and --name (-n) options are given "
     "program returns with exit code 0 or 1 depending "
-    "on whether the coordinate range intersects with the tile range.");
+    "on whether the coordinate range intersects with the given figure.");
 
   pr.par(
     "Soviet nomenclature maps use Pukovo-1942 datum "
@@ -71,6 +73,11 @@ main(int argc, char **argv){
     options.add("range",  1,'r',g,
       "Show maps which cover a given figure. "
       "Figure is a point, rectangle or line in WGS84 coordinates. "
+      "Option --scale should be set.");
+
+    options.add("gdata",  1,'g',g,
+      "Show maps which cover a given geodata (tracks and points). "
+      "-W option is ignored, WGS84 is always used. "
       "Option --scale should be set.");
 
     options.add("scale",  1,'s',g,
@@ -136,7 +143,7 @@ main(int argc, char **argv){
         return 0;
       }
 
-      if (!O.exists("range")){
+      if (!O.exists("range") && !O.exists("gdata")){
         if (wgs){
           ConvGeo cnv("SU_LL", "WGS");
           range_n = cnv.frw_acc(range_n, 1e-7);
@@ -145,15 +152,15 @@ main(int argc, char **argv){
         else     cout << range_n << "\n";
         return 0;
       }
+
     }
 
 
     // get coordinate range if needed
-    dRect range; // given coordinate range
-    set<string> names_r; // calculated map names for given coordinates
     if (O.exists("range")){
 
-      range = figure_bbox<double>(O.get("range",""));
+      set<string> names_r; // calculated map names for given coordinates
+      dRect range = figure_bbox<double>(O.get("range",""));
 
       if (range.is_empty()) throw Err()
         << "wrong coordinate range: " << O.get("range","");
@@ -173,12 +180,62 @@ main(int argc, char **argv){
         for (auto const &n:names_r) cout << n << "\n";
         return 0;
       }
+      else {
+        return intersect(range, range_n).is_empty();
+      }
     }
 
-    if (O.exists("name") && O.exists("range"))
-      return intersect(range, range_n).is_empty();
 
-    throw Err() << "--name or --range option expected";
+    // get figure from geodata
+    if (O.exists("gdata")){
+
+      GeoData data;
+      read_geo(O.get("gdata"), data);
+
+      // always convert data
+      ConvGeo cnv("SU_LL", "WGS");
+
+      set<string> names_r; // calculated map names for given coordinates
+      if (!O.exists("name")){
+        if (!O.exists("scale")) throw Err()
+          << "scale is not set";
+        nom_scale_t sc = str_to_type<nom_scale_t>(O.get("scale", ""));
+
+        for (const auto & t: data.trks){
+          auto l = cnv.bck_pts((dMultiLine)t);
+          auto nn = range_to_nomlist(l.bbox(), sc, ex);
+          for (const auto & n: nn) {
+            if (rect_in_polygon(nom_to_range(n, sc, ex), l))
+              names_r.insert(n);
+          }
+        }
+        for (const auto & wl: data.wpts){
+          for (const auto & w: wl){
+            auto p = cnv.bck_pts((dPoint)w);
+            names_r.insert(pt_to_nom(p, sc, ex));
+          }
+        }
+        for (auto const &n:names_r) cout << n << "\n";
+        return 0;
+      }
+
+      else {
+        for (const auto & t: data.trks){
+          auto l = cnv.bck_pts((dMultiLine)t);
+          if (rect_in_polygon(range_n,l)) return 1;
+        }
+        for (const auto & wl: data.wpts){
+          for (const auto & w: wl){
+            auto p = cnv.bck_pts((dPoint)w);
+            if (range_n.contains(p)) return 1;
+          }
+        }
+        return 0;
+      }
+    }
+
+
+    throw Err() << "--name, --range, or --gdata option expected";
 
   }
   catch (Err & e) {

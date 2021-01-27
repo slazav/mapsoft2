@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" creator="http://nakarte.me" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1">
+	<wpt lat="59.833775" lon="68.104248">
+		<name>001</name>
+	</wpt>
+	<trk>
+		<name>New track</name>
+		<trkseg>
+			<trkpt lat="60.415208" lon="64.470520"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+			<trkpt lat="60.405715" lon="66.217346"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+			<trkpt lat="60.089502" lon="67.192383"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+			<trkpt lat="59.576069" lon="67.186890"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+			<trkpt lat="59.539888" lon="65.187378"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+			<trkpt lat="59.905468" lon="64.816589"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+		</trkseg>
+		<trkseg>
+			<trkpt lat="60.056616" lon="67.074280"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+			<trkpt lat="59.626103" lon="67.066040"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+			<trkpt lat="59.628880" lon="66.379395"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+			<trkpt lat="60.078544" lon="66.360168"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+		</trkseg>
+		<trkseg>
+			<trkpt lat="59.225150" lon="68.161926"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+			<trkpt lat="59.202658" lon="68.362427"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+			<trkpt lat="59.092793" lon="68.269043"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+			<trkpt lat="59.118178" lon="68.153687"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+		</trkseg>
+	</trk>
+</gpx>

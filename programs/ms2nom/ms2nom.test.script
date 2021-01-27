@@ -180,3 +180,33 @@ assert_cmd "$P -W -r [96,54,0.5,0.16666667] -s 1km" "n47-061
 n47-062
 n47-073
 n47-074" 0
+
+###########
+# gdata
+
+assert_cmd "$P  --scale 1km --gdata test_data.gpx" "o41-010
+o41-011
+o41-012
+o41-023
+o41-024
+o42-001
+o42-003
+o42-005
+o42-013
+o42-014
+o42-015
+o42-029
+p41-129,130
+p41-131,132
+p41-141,142
+p41-143,144
+p42-121,122
+p42-133,134
+p42-135,136" 0
+
+assert_cmd "$P  --name o41-011 --gdata test_data.gpx" "" 1
+assert_cmd "$P  --name o42-001 --gdata test_data.gpx" "" 1
+assert_cmd "$P  --name o42-003 --gdata test_data.gpx" "" 1
+assert_cmd "$P  --name o42-006 --gdata test_data.gpx" "" 0
+assert_cmd "$P  --name p41-129,130 --gdata test_data.gpx" "" 1
+assert_cmd "$P  --name q41-129,130 --gdata test_data.gpx" "" 0
