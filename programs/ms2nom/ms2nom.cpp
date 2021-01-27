@@ -160,28 +160,32 @@ main(int argc, char **argv){
     if (O.exists("range")){
 
       set<string> names_r; // calculated map names for given coordinates
-      dRect range = figure_bbox<double>(O.get("range",""));
+      dMultiLine ml = figure_line<double>(O.get("range",""));
+
+      if (wgs){
+        ConvGeo cnv("SU_LL", "WGS");
+        ml = cnv.bck_pts(ml);
+      }
+
+      dRect range = ml.bbox();
 
       if (range.is_empty()) throw Err()
         << "wrong coordinate range: " << O.get("range","");
 
-      if (wgs){
-        ConvGeo cnv("SU_LL", "WGS");
-        range = cnv.bck_acc(range, 1e-7);
-      }
-
       if (!O.exists("name")){
-
         if (!O.exists("scale")) throw Err()
           << "scale is not set";
         nom_scale_t sc = str_to_type<nom_scale_t>(O.get("scale", ""));
         names_r = range_to_nomlist(range, sc, ex);
 
-        for (auto const &n:names_r) cout << n << "\n";
+        for (auto const &n:names_r){
+          if (rect_in_polygon(nom_to_range(n, sc, ex), ml))
+            cout << n << "\n";
+        }
         return 0;
       }
       else {
-        return intersect(range, range_n).is_empty();
+        return rect_in_polygon(range_n, ml) == 0;
       }
     }
 
@@ -222,15 +226,15 @@ main(int argc, char **argv){
       else {
         for (const auto & t: data.trks){
           auto l = cnv.bck_pts((dMultiLine)t);
-          if (rect_in_polygon(range_n,l)) return 1;
+          if (rect_in_polygon(range_n,l)) return 0;
         }
         for (const auto & wl: data.wpts){
           for (const auto & w: wl){
             auto p = cnv.bck_pts((dPoint)w);
-            if (range_n.contains(p)) return 1;
+            if (range_n.contains(p)) return 0;
           }
         }
-        return 0;
+        return 1;
       }
     }
 
