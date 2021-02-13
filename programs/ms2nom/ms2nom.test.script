@@ -204,9 +204,9 @@ p42-121,122
 p42-133,134
 p42-135,136" 0
 
-assert_cmd "$P  --name o41-011 --gdata test_data.gpx" "" 1
-assert_cmd "$P  --name o42-001 --gdata test_data.gpx" "" 1
-assert_cmd "$P  --name o42-003 --gdata test_data.gpx" "" 1
-assert_cmd "$P  --name o42-006 --gdata test_data.gpx" "" 0
-assert_cmd "$P  --name p41-129,130 --gdata test_data.gpx" "" 1
-assert_cmd "$P  --name q41-129,130 --gdata test_data.gpx" "" 0
+assert_cmd "$P  --name o41-011 --gdata test_data.gpx" "" 0
+assert_cmd "$P  --name o42-001 --gdata test_data.gpx" "" 0
+assert_cmd "$P  --name o42-003 --gdata test_data.gpx" "" 0
+assert_cmd "$P  --name o42-006 --gdata test_data.gpx" "" 1
+assert_cmd "$P  --name p41-129,130 --gdata test_data.gpx" "" 0
+assert_cmd "$P  --name q41-129,130 --gdata test_data.gpx" "" 1
