@@ -26,8 +26,6 @@ void usage(bool pod=false){
   pr.opts({"STD"});
   pr.head(1, "Options for reading geodata");
   pr.opts({"GEO_I","GEO_IO"});
-  pr.head(1, "Options for making map reference");
-  pr.opts({"MKREF"});
   pr.head(1, "Options for drawing tracks");
   pr.opts({"DRAWTRK"});
   pr.head(1, "Options for drawing waypoints");
@@ -53,7 +51,6 @@ main(int argc, char **argv){
     ms2opt_add_std(options);
     ms2opt_add_geo_i(options);
     ms2opt_add_geo_io(options);
-    ms2opt_add_mkref(options);
     ms2opt_add_drawwpt(options);
     ms2opt_add_drawtrk(options);
     ms2opt_add_drawmap(options);

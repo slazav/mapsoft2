@@ -43,8 +43,8 @@ void usage(bool pod=false){
     "ms2conv can produce images with raster maps, tracks and "
     "waypoints. Supported formats: jpeg, png, gif, tiff, ps, pdf, svg. "
     "Format is selected by output file extension or by --out_fmt option. "
-    "Option --map can be used to save map reference for the image (at the "
-    "moment only OziExplorer map format is supported).");
+    "Option --map can be used to save map reference for the image (OziExplorer or "
+    "mapsoft2-specific geojson format.");
 
   pr.par(
     "When rendering images the reference should be specified. If --mkref "
@@ -53,7 +53,9 @@ void usage(bool pod=false){
     "default value.");
 
   pr.head(2, "Options for making map reference");
-  pr.opts({"MKREF"});
+  pr.opts({"MKREF_OPTS"});
+  pr.opts({"MKREF_BRD"});
+  pr.opts({"MKREF_DATA"});
   pr.head(2, "Options for drawing tracks");
   pr.opts({"DRAWTRK"});
   pr.head(2, "Options for drawing waypoints");
@@ -86,7 +88,17 @@ main(int argc, char *argv[]){
     // We will combine description for both of them.
     options.remove("out_fmt");
 
-    ms2opt_add_mkref(options);
+    ms2opt_add_mkref_opts(options);
+    ms2opt_add_mkref_brd(options);
+
+    // option --mag appeares in both mkref_opts and mkref_data modules.
+    // we will combine both descriptions here.
+    options.remove("mag");
+    ms2opt_add_mkref_data(options);
+    options.replace("mag", 1, 0, "MKREF_OPTS",
+      "1. Map magnification (with --mkref nom)"
+      "2. When using existing map as a reference source, rescale it.");
+
     ms2opt_add_drawwpt(options);
     ms2opt_add_drawtrk(options);
     ms2opt_add_drawmap(options);
@@ -94,11 +106,12 @@ main(int argc, char *argv[]){
     ms2opt_add_drawsrtm(options);
     options.add("htm", 1,0,"DRAWMAP", "Write html map for the image.");
 
-
     ms2opt_add_geoimg(options);
     options.replace("out_fmt", 1, 0, "OUT",
       "Output format, geodata (json, gu, gpx, kml, kmz, ozi, zip) "
       "or image (jpeg, png, gif, tiff, ps, pdf, svg)");
+
+
 
     options.add("srtm", 0, 0, "SRTM", "Add SRTM layer");
 
@@ -127,8 +140,6 @@ main(int argc, char *argv[]){
 
     // render image file
     try {
-      // make reference and conversion map -> WGS84
-      GeoMap ref = geo_mkref(data, O);
 
       // construct GObjMulti with all the objects we want to draw:
       GObjMulti obj;
@@ -148,6 +159,13 @@ main(int argc, char *argv[]){
       for (auto & w:data.wpts)
         obj.add(1, std::shared_ptr<GObjWpts>(new GObjWpts(w)));
 
+      // Create map reference
+      GeoMap ref = geo_mkref_opts(O);
+      if (ref.empty())
+        ref = geo_mkref_data(data, O);
+      geo_mkref_brd(ref, O); // update border;
+
+      O.check_conflict({"tmap" "htm"});
       if (O.exists("htm"))
         write_html_map(O.get("htm",""), ofile, ref, data.maps);
 

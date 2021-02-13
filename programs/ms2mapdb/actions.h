@@ -336,7 +336,8 @@ public:
   // one should write a standard function for making a raster image from GObj + GeoMap.
 
   MapActionRender(){
-    ms2opt_add_mkref(options);
+    ms2opt_add_mkref_opts(options);
+    ms2opt_add_mkref_brd(options);
     ms2opt_add_mapdb_render(options);
     ms2opt_add_geoimg(options);
     options.remove("img_in_fmt");
@@ -351,7 +352,8 @@ public:
     pr.head(2, "Options for rendering MapDB");
     pr.opts({"MAPDB_RENDER"});
     pr.head(2, "Options for making map reference");
-    pr.opts({"MKREF"});
+    pr.opts({"MKREF_OPTS"});
+    pr.opts({"MKREF_BRD"});
     pr.head(2, "Options for saving images");
     pr.opts({"IMAGE", "IMAGE_CMAP", "OUT", "GEO_O"});
 
@@ -371,24 +373,9 @@ public:
 
     // If "mkref" option exists build reference using options.
     // In not, use internal MapDB reference
-    GeoMap ref;
-    if (opts.exists("mkref")) {
-      // Build reference from options.
-      ref = geo_mkref(opts);
-    }
-    else {
-      // Use map internal reference (or --tmap option).
-      ref = map.get_ref();
-      // Process border. If --mkref option is not used
-      // we still want to use border options.
-      // This is important for --tmap rendering.
-      if (!ref.empty()) {
-        ConvMap cnv(ref);
-        dMultiLine brd1;
-        geo_mkref_brd(opts, brd1); // wgs84
-        ref.border = cnv.bck_acc(brd1);
-      }
-    }
+    GeoMap ref = geo_mkref_opts(opts);
+    if (ref.empty()) ref = map.get_ref();
+    geo_mkref_brd(ref, opts);
 
     if (ref.empty()) throw Err() << "Map reference is not set";
     write_geoimg(fname, map, ref, opts);
