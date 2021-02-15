@@ -41,6 +41,16 @@ Projection Setup,0.0,0.0,1.0,0.0,0.0
 Map Feature = MF ; Map Comment = MC     These follow if they exist
 Track File = TF      These follow if they exist
 Moving Map Parameters = MM?    These follow if they exist
-MM0,No
+MM0,Yes
+MMPNUM,4
+MMPXY,1,0,256
+MMPXY,2,256,256
+MMPXY,3,256,0
+MMPXY,4,0,0
+MMPLL,1, 26.762695,  61.333540
+MMPLL,2, 26.784668,  61.333540
+MMPLL,3, 26.784668,  61.344078
+MMPLL,4, 26.762695,  61.344078
+MM1B,4.583996
 MOP,Map Open Position,0,0
 IWH,Map Image Width/Height,256,256
