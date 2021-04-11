@@ -1,6 +1,7 @@
 #include <cstring>
 #include "geo_tiles/geo_tiles.h"
 #include "getopt/getopt.h"
+#include "geo_data/geo_utils.h"
 #include "geom/poly_tools.h"
 
 using namespace std;
@@ -28,7 +29,8 @@ main(int argc, char **argv){
     options.add("range",  1,'r',g,
       "Show tile range which covers a given figure. "
       "Figure is a point ([lon,lat]), rectangle ([<lon>,<lat>,<width>,<height>]) "
-      "or line ([[lon1,lat1],[lon1,lat1],...]) or multi-segment line in WGS84 coordinates.");
+      "line ([[lon1,lat1],[lon1,lat1],...]), multi-segment line in WGS84 coordinates, "
+      "or a geodata file with a track.");
     options.add("cover",  1,0,g,
       "Show all tiles which cover a given figure. "
       "Figure is set in the same way as in the --range option.");
@@ -100,7 +102,7 @@ main(int argc, char **argv){
     // get coordinate range for --range or --cover options
     if (O.exists("range")){
       // wgs range of the figure given in --range option
-      dRect range = figure_bbox<double>(O.get("range",""));
+      dRect range = figure_geo_line(O.get("range","")).bbox();
       if (range.is_empty()) throw Err()
         << "empty coordinate range: " << O.get("range","");
 
@@ -117,7 +119,7 @@ main(int argc, char **argv){
 
     if (O.exists("cover")){
       // wgs figure given in --range option
-      dMultiLine f = figure_line<double>(O.get("cover",""));
+      dMultiLine f = figure_geo_line(O.get("cover",""));
       if (f.size()==0) throw Err()
         << "empty coordinates: " << O.get("cover","");
       dRect range = f.bbox();
