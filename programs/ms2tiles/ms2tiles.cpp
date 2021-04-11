@@ -87,7 +87,7 @@ main(int argc, char **argv){
                        T.tile_to_range(tiles.brc(),z).tlc();
       range_t = dRect(tlc,brc);
 
-      if (!O.exists("range")){
+      if (!O.exists("range") && !O.exists("cover")){
         if (cnt)
           std::cout << range_t.cnt() << "\n";
         else
@@ -130,11 +130,15 @@ main(int argc, char **argv){
 
       for (int y = tiles_r.y; y < tiles_r.y + tiles_r.h; y++){
         for (int x = tiles_r.x; x < tiles_r.x + tiles_r.w; x++){
-          dRect trange = G? T.gtile_to_range(iPoint(x,y), z):
-                            T.tile_to_range(iPoint(x,y), z);
-          if (rect_in_polygon(trange, f) == 0) continue;
-          if (O.exists("tiles")) return 0;
-          std::cout << iPoint(x,y,z) << "\n";
+          dRect r = G? T.gtile_to_range(iPoint(x,y), z):
+                       T.tile_to_range(iPoint(x,y), z);
+          if (rect_in_polygon(r, f) == 0) continue;
+          if (O.exists("tiles")) {
+            if (tiles.contains_l(iPoint(x,y))) return 0;
+          }
+          else {
+            std::cout << iPoint(x,y,z) << "\n";
+          }
         }
       }
       if (O.exists("tiles")) return 1;
