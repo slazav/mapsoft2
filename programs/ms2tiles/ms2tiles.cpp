@@ -30,15 +30,15 @@ main(int argc, char **argv){
       "Show tile range which covers a given figure. "
       "Figure is a point ([lon,lat]), rectangle ([<lon>,<lat>,<width>,<height>]) "
       "line ([[lon1,lat1],[lon1,lat1],...]), multi-segment line in WGS84 coordinates, "
-      "or a geodata file with a track.");
+      "or a geodata file with tracks/waypoints.");
     options.add("cover",  1,0,g,
       "Show all tiles which cover a given figure. "
       "Figure is set in the same way as in the --range option.");
     options.add("tiles", 1,'t',g,
       "Show coordinate range for a given tile \"[x,y]\" or a tile range \"[x,y,w,h]\". "
       "If --tiles option is combined with --cover or --range, program returns with "
-      "exit code 0 or 1 depending on whether the figure or its bounding box intersects "
-      "with the tile range.");
+      "exit code 0 or 1 depending on whether the figure or its bounding is covered "
+      "with the tile or the tile range.");
     options.add("google", 0,'G',g,
       "By default the program works with TMS tiles. "
       "Use --google option to work with Google tiles instead.");
