@@ -11,56 +11,53 @@ assert_cmd "$P --help" "$help_msg" 1
 assert_cmd "$P --xxx " "Error: unknown option: --xxx" 1
 assert_cmd "$P z " "Error: unexpected value: z" 1
 
-assert_cmd "$P -r [190,50] -s 1:1000000" "Error: pt_to_nom: bad coordinates: [190,50]" 1
-assert_cmd "$P -r [190,150] -s 1:1000000" "Error: pt_to_nom: bad coordinates: [190,150]" 1
+assert_cmd "$P --cover [190,150] -s 1:1000000" "Error: pt_to_nom: bad coordinates: [190,150]" 1
+assert_cmd "$P --cover [24.94,60.17] -s 1:1000000" "p35,36" 0
 
-assert_cmd "$P -r [24.94,60.17] -s 1:1000000" "p35,36" 0
+assert_cmd "$P --cover [24.94,60.17] -s 1:1\\'000\\'000" "p35,36" 0
+assert_cmd "$P --cover [24.94,60.17] -s 1000000" "p35,36" 0
+assert_cmd "$P --cover [24.94,60.17] -s 1M" "p35,36" 0
+assert_cmd "$P --cover [24.94,60.17] -s 10km" "p35,36" 0
+assert_cmd "$P --cover [24.94,60.17] -s 10km/cm" "p35,36" 0
 
+assert_cmd "$P --cover [24.94,60.17] -s 1:500000" "p35-3,4" 0
+assert_cmd "$P --cover [24.94,60.17] -s 1:500\\'000" "p35-3,4" 0
+assert_cmd "$P --cover [24.94,60.17] -s 500000" "p35-3,4" 0
+assert_cmd "$P --cover [24.94,60.17] -s 500k" "p35-3,4" 0
+assert_cmd "$P --cover [24.94,60.17] -s 5km" "p35-3,4" 0
+assert_cmd "$P --cover [24.94,60.17] -s 5km/cm" "p35-3,4" 0
 
-assert_cmd "$P -r [24.94,60.17] -s 1:1\\'000\\'000" "p35,36" 0
-assert_cmd "$P -r [24.94,60.17] -s 1000000" "p35,36" 0
-assert_cmd "$P -r [24.94,60.17] -s 1M" "p35,36" 0
-assert_cmd "$P -r [24.94,60.17] -s 10km" "p35,36" 0
-assert_cmd "$P -r [24.94,60.17] -s 10km/cm" "p35,36" 0
+assert_cmd "$P --cover [24.94,60.17] -s 1:200000" "p35-31,32" 0
+assert_cmd "$P --cover [24.94,60.17] -s 1:200\\'000" "p35-31,32" 0
+assert_cmd "$P --cover [24.94,60.17] -s 200000" "p35-31,32" 0
+assert_cmd "$P --cover [24.94,60.17] -s 200k" "p35-31,32" 0
+assert_cmd "$P --cover [24.94,60.17] -s 2km" "p35-31,32" 0
+assert_cmd "$P --cover [24.94,60.17] -s 2km/cm" "p35-31,32" 0
 
-assert_cmd "$P -r [24.94,60.17] -s 1:500000" "p35-3,4" 0
-assert_cmd "$P -r [24.94,60.17] -s 1:500\\'000" "p35-3,4" 0
-assert_cmd "$P -r [24.94,60.17] -s 500000" "p35-3,4" 0
-assert_cmd "$P -r [24.94,60.17] -s 500k" "p35-3,4" 0
-assert_cmd "$P -r [24.94,60.17] -s 5km" "p35-3,4" 0
-assert_cmd "$P -r [24.94,60.17] -s 5km/cm" "p35-3,4" 0
+assert_cmd "$P --cover [24.94,60.17] -s 1:100000" "p35-133,134" 0
+assert_cmd "$P --cover [24.94,60.17] -s 1:100\\'000" "p35-133,134" 0
+assert_cmd "$P --cover [24.94,60.17] -s 100000" "p35-133,134" 0
+assert_cmd "$P --cover [24.94,60.17] -s 100k" "p35-133,134" 0
+assert_cmd "$P --cover [24.94,60.17] -s 1km" "p35-133,134" 0
+assert_cmd "$P --cover [24.94,60.17] -s 1km/cm" "p35-133,134" 0
 
-assert_cmd "$P -r [24.94,60.17] -s 1:200000" "p35-31,32" 0
-assert_cmd "$P -r [24.94,60.17] -s 1:200\\'000" "p35-31,32" 0
-assert_cmd "$P -r [24.94,60.17] -s 200000" "p35-31,32" 0
-assert_cmd "$P -r [24.94,60.17] -s 200k" "p35-31,32" 0
-assert_cmd "$P -r [24.94,60.17] -s 2km" "p35-31,32" 0
-assert_cmd "$P -r [24.94,60.17] -s 2km/cm" "p35-31,32" 0
+assert_cmd "$P --cover [24.94,60.17] -s 1:50000" "p35-134-1,2" 0
+assert_cmd "$P --cover [24.94,60.17] -s 1:50\\'000" "p35-134-1,2" 0
+assert_cmd "$P --cover [24.94,60.17] -s 50000" "p35-134-1,2" 0
+assert_cmd "$P --cover [24.94,60.17] -s 50k" "p35-134-1,2" 0
+assert_cmd "$P --cover [24.94,60.17] -s 500m" "p35-134-1,2" 0
+assert_cmd "$P --cover [24.94,60.17] -s 500m/cm" "p35-134-1,2" 0
 
-assert_cmd "$P -r [24.94,60.17] -s 1:100000" "p35-133,134" 0
-assert_cmd "$P -r [24.94,60.17] -s 1:100\\'000" "p35-133,134" 0
-assert_cmd "$P -r [24.94,60.17] -s 100000" "p35-133,134" 0
-assert_cmd "$P -r [24.94,60.17] -s 100k" "p35-133,134" 0
-assert_cmd "$P -r [24.94,60.17] -s 1km" "p35-133,134" 0
-assert_cmd "$P -r [24.94,60.17] -s 1km/cm" "p35-133,134" 0
-
-assert_cmd "$P -r [24.94,60.17] -s 1:50000" "p35-134-1,2" 0
-assert_cmd "$P -r [24.94,60.17] -s 1:50\\'000" "p35-134-1,2" 0
-assert_cmd "$P -r [24.94,60.17] -s 50000" "p35-134-1,2" 0
-assert_cmd "$P -r [24.94,60.17] -s 50k" "p35-134-1,2" 0
-assert_cmd "$P -r [24.94,60.17] -s 500m" "p35-134-1,2" 0
-assert_cmd "$P -r [24.94,60.17] -s 500m/cm" "p35-134-1,2" 0
-
-assert_cmd "$P -E -r [24.94,60.17] -s 1:1000000" "p35" 0
-assert_cmd "$P -E -r [24.94,60.17] -s 1:500000" "p35-3" 0
-assert_cmd "$P -E -r [24.94,60.17] -s 1:200000" "p35-31" 0
-assert_cmd "$P -E -r [24.94,60.17] -s 1:100000" "p35-134" 0
-assert_cmd "$P -E -r [24.94,60.17] -s 1:50000" "p35-134-2" 0
+assert_cmd "$P -E --cover [24.94,60.17] -s 1:1000000" "p35" 0
+assert_cmd "$P -E --cover [24.94,60.17] -s 1:500000" "p35-3" 0
+assert_cmd "$P -E --cover [24.94,60.17] -s 1:200000" "p35-31" 0
+assert_cmd "$P -E --cover [24.94,60.17] -s 1:100000" "p35-134" 0
+assert_cmd "$P -E --cover [24.94,60.17] -s 1:50000" "p35-134-2" 0
 
 
 ##############################
 
-assert_cmd "$P -r [64,58,10,20] -s 1:1000000" "o41
+assert_cmd "$P --cover [64,58,10,20] -s 1:1000000" "o41
 o42
 o43
 p41,42
@@ -73,7 +70,7 @@ s41,42
 s43,44
 t41,42,43,44" 0
 
-assert_cmd "$P -E -r [64,58,10,20] -s 1:1000000" "o41
+assert_cmd "$P -E --cover [64,58,10,20] -s 1:1000000" "o41
 o42
 o43
 p41
@@ -92,7 +89,7 @@ t41
 t42
 t43" 0
 
-assert_cmd "$P -r [-74,-78,10,20] -s 1:1000000" "xo18
+assert_cmd "$P --cover [-74,-78,10,20] -s 1:1000000" "xo18
 xo19
 xo20
 xp17,18
@@ -164,19 +161,19 @@ r37
 r38" 0
 
 
-assert_cmd "$P -n q37,38 -r [0,0,10,10]" "" 1
-assert_cmd "$P -n q37,38 -r [35,63,2,2]" "" 0
-assert_cmd "$P -n q37,38 -r [0,0,180,80]" "" 0
+assert_cmd "$P -n q37,38 --cover [0,0,10,10]" "" 1
+assert_cmd "$P -n q37,38 --cover [35,63,2,2]" "" 0
+assert_cmd "$P -n q37,38 --cover [0,0,180,80]" "" 0
 
 ###########
 # wgs mode
 
 assert_cmd "$P -W -n o37-134-1" "[36.4980413,56.1666231,0.25001236,0.166673421]" 0
 
-assert_cmd "$P    -r [96,54] -s 1km" n47-061 0
-assert_cmd "$P -W -r [96,54] -s 1km" n47-073 0
-assert_cmd "$P    -r [96,54,0.5,0.16666667] -s 1km" n47-061 0
-assert_cmd "$P -W -r [96,54,0.5,0.16666667] -s 1km" "n47-061
+assert_cmd "$P    --cover [96,54] -s 1km" n47-061 0
+assert_cmd "$P -W --cover [96,54] -s 1km" n47-073 0
+assert_cmd "$P    --cover [96,54,0.5,0.16666667] -s 1km" n47-061 0
+assert_cmd "$P -W --cover [96,54,0.5,0.16666667] -s 1km" "n47-061
 n47-062
 n47-073
 n47-074" 0
@@ -184,7 +181,7 @@ n47-074" 0
 ###########
 # gdata
 
-assert_cmd "$P  --scale 1km --gdata test_data.gpx" "o41-010
+assert_cmd "$P  --scale 1km --cover test_data.gpx" "o41-010
 o41-011
 o41-012
 o41-023
@@ -204,9 +201,9 @@ p42-121,122
 p42-133,134
 p42-135,136" 0
 
-assert_cmd "$P  --name o41-011 --gdata test_data.gpx" "" 0
-assert_cmd "$P  --name o42-001 --gdata test_data.gpx" "" 0
-assert_cmd "$P  --name o42-003 --gdata test_data.gpx" "" 0
-assert_cmd "$P  --name o42-006 --gdata test_data.gpx" "" 1
-assert_cmd "$P  --name p41-129,130 --gdata test_data.gpx" "" 0
-assert_cmd "$P  --name q41-129,130 --gdata test_data.gpx" "" 1
+assert_cmd "$P  --name o41-011 --cover test_data.gpx" "" 0
+assert_cmd "$P  --name o42-001 --cover test_data.gpx" "" 0
+assert_cmd "$P  --name o42-003 --cover test_data.gpx" "" 0
+assert_cmd "$P  --name o42-006 --cover test_data.gpx" "" 1
+assert_cmd "$P  --name p41-129,130 --cover test_data.gpx" "" 0
+assert_cmd "$P  --name q41-129,130 --cover test_data.gpx" "" 1

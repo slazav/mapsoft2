@@ -4,6 +4,7 @@
 #include "getopt/getopt.h"
 #include "geo_data/conv_geo.h"
 #include "geo_data/geo_io.h"
+#include "geo_data/geo_utils.h"
 
 using namespace std;
 
@@ -14,10 +15,9 @@ void usage(bool pod=false){
   HelpPrinter pr(pod, options, "ms2nom");
   pr.name("Soviet nomenclature map calculations");
 
-  pr.usage("[-E] [-W] -r <point> -s <scale> -- map at the point");
-  pr.usage("[-E] [-W] -r <range> -s <scale> -- maps at the range");
+  pr.usage("[-E] [-W] --cover <figure> -s <scale> -- maps, covering the figure");
   pr.usage("[-E] [-W] -n <name> -- map range");
-  pr.usage("[-E] [-W] -n <name> -r <line,point,rect>  -- check if the map touches given figure");
+  pr.usage("[-E] [-W] -n <name> --cover <figure>  -- check if the map touches given figure");
   pr.usage("[-E] -n <name> -g <geodata>  -- check if the map touches geodata (tracks and points)");
   pr.usage("[-E] [-W] -c -n <name> -- map center");
   pr.usage("[-E] -n <name> --shift [x_shift,y_shift] -- adjacent map");
@@ -42,9 +42,9 @@ void usage(bool pod=false){
 
 
   pr.par(
-    "If --range (-r) or --gdata (-g) and --name (-n) options are given "
+    "If both --cover and --name (-n) options are given "
     "program returns with exit code 0 or 1 depending "
-    "on whether the coordinate range intersects with the given figure.");
+    "on whether the map covers the given figure.");
 
   pr.par(
     "Soviet nomenclature maps use Pukovo-1942 datum "
@@ -70,19 +70,15 @@ main(int argc, char **argv){
   try {
 
     const char *g = "NONSTD";
-    options.add("range",  1,'r',g,
+    options.add("cover",  1,0,g,
       "Show maps which cover a given figure. "
-      "Figure is a point, rectangle or line in WGS84 coordinates. "
-      "Option --scale should be set.");
-
-    options.add("gdata",  1,'g',g,
-      "Show maps which cover a given geodata (tracks and points). "
-      "-W option is ignored, WGS84 is always used. "
+      "Figure is a point, rectangle, line, multiline in WGS84 coordinates, "
+      "or a geodata file with tracks or points. "
       "Option --scale should be set.");
 
     options.add("scale",  1,'s',g,
       "Set map scale. "
-      "Scale should be set when --range option is used. If used with "
+      "Scale should be set when --cover option is used. If used with "
       "--name option then name will be converted to a new scale "
       "instead of printing the range.");
 
@@ -101,7 +97,7 @@ main(int argc, char **argv){
       "Instead of printing a coordinate range print its central point.");
 
     options.add("shift", 1,'S',g,
-      "Shift a map. Should be used with --name option. Not compatable with --range option. "
+      "Shift a map. Should be used with --name option. Not compatable with --cover option. "
       "Argument is an array of two integer numbers [dx,dy].");
 
     ms2opt_add_std(options);
@@ -119,7 +115,7 @@ main(int argc, char **argv){
     bool ex  = O.get("ext", false);
     bool cnt = O.get("center", false);
 
-    O.check_conflict({"range", "shift"});
+    O.check_conflict({"cover", "shift"});
 
     // get map name if needed
     std::string name; // given map name
@@ -143,7 +139,7 @@ main(int argc, char **argv){
         return 0;
       }
 
-      if (!O.exists("range") && !O.exists("gdata")){
+      if (!O.exists("cover")){
         if (wgs){
           ConvGeo cnv("SU_LL", "WGS");
           range_n = cnv.frw_acc(range_n, 1e-7);
@@ -157,87 +153,50 @@ main(int argc, char **argv){
 
 
     // get coordinate range if needed
-    if (O.exists("range")){
+    if (O.exists("cover")){
 
       set<string> names_r; // calculated map names for given coordinates
-      dMultiLine ml = figure_line<double>(O.get("range",""));
+      dMultiLine ml = figure_geo_line(O.get("cover",""));
 
+      // convert WGS -> Pulkovo
       if (wgs){
         ConvGeo cnv("SU_LL", "WGS");
         ml = cnv.bck_pts(ml);
       }
-
       dRect range = ml.bbox();
-
       if (range.is_empty()) throw Err()
-        << "wrong coordinate range: " << O.get("range","");
+        << "wrong coordinate range: " << O.get("cover","");
 
-      if (!O.exists("name")){
-        if (!O.exists("scale")) throw Err()
-          << "scale is not set";
-        nom_scale_t sc = str_to_type<nom_scale_t>(O.get("scale", ""));
-        names_r = range_to_nomlist(range, sc, ex);
-
-        for (auto const &n:names_r){
-          if (rect_in_polygon(nom_to_range(n, sc, ex), ml))
-            cout << n << "\n";
-        }
-        return 0;
+      // set scale: from name if --name is set, from --scale overwise
+      nom_scale_t sc;
+      if (O.exists("name")){
+        nom_to_range(O.get("name"), sc, ex);
       }
       else {
-        return rect_in_polygon(range_n, ml) == 0;
+        if (!O.exists("scale")) throw Err() << "scale is not set";
+        sc = str_to_type<nom_scale_t>(O.get("scale", ""));
       }
+//std::cerr << ">> " << ml << " " << range << "\n";
+//std::cerr << ">> " << sc << "\n";
+
+      // calculate all maps in the range
+      auto nn = range_to_nomlist(range, sc, ex);
+      for (const auto & n: nn) {
+//std::cerr << ">>   " << n << "\n";
+        if (!rect_in_polygon(nom_to_range(n, sc, ex), ml)) continue;
+
+
+        if (O.exists("name")){
+          if (n == O.get("name")) return 0;
+        }
+        else {
+          cout << n << "\n";
+        }
+      }
+
+      if (O.exists("name")) return 1;
+      else return 0;
     }
-
-
-    // get figure from geodata
-    if (O.exists("gdata")){
-
-      GeoData data;
-      read_geo(O.get("gdata"), data);
-
-      // always convert data
-      ConvGeo cnv("SU_LL", "WGS");
-
-      set<string> names_r; // calculated map names for given coordinates
-      if (!O.exists("name")){
-        if (!O.exists("scale")) throw Err()
-          << "scale is not set";
-        nom_scale_t sc = str_to_type<nom_scale_t>(O.get("scale", ""));
-
-        for (const auto & t: data.trks){
-          auto l = cnv.bck_pts((dMultiLine)t);
-          auto nn = range_to_nomlist(l.bbox(), sc, ex);
-          for (const auto & n: nn) {
-            if (rect_in_polygon(nom_to_range(n, sc, ex), l))
-              names_r.insert(n);
-          }
-        }
-        for (const auto & wl: data.wpts){
-          for (const auto & w: wl){
-            auto p = cnv.bck_pts((dPoint)w);
-            names_r.insert(pt_to_nom(p, sc, ex));
-          }
-        }
-        for (auto const &n:names_r) cout << n << "\n";
-        return 0;
-      }
-
-      else {
-        for (const auto & t: data.trks){
-          auto l = cnv.bck_pts((dMultiLine)t);
-          if (rect_in_polygon(range_n,l)) return 0;
-        }
-        for (const auto & wl: data.wpts){
-          for (const auto & w: wl){
-            auto p = cnv.bck_pts((dPoint)w);
-            if (range_n.contains(p)) return 0;
-          }
-        }
-        return 1;
-      }
-    }
-
 
     throw Err() << "--name, --range, or --gdata option expected";
 
