@@ -15,22 +15,6 @@ void usage(bool pod=false){
   pr.head(1, "Options");
   pr.opts({"NONSTD", "STD"});
 
-  pr.par(
-    "Value of --tiles option can be a tile \"[x,y]\" or a "
-    "tile range \"[x,y,w,h]\". Value of --range option is a "
-    "point \"[lon,lat]\", or rectangle \"[<lon>,<lat>,<width>,<height>]\", "
-    "or line \"[[lon1,lat1],[lon1,lat1],...]\"."
-  );
-  pr.par(
-    "If both --range and --tiles options are given "
-    "program returns with exit code 0 or 1 depending "
-    "on whether the coordinate range intersects with the tile range.");
-  pr.par(
-    "By default the program works with TMS tiles. Use --google option "
-    "for google tiles."
-  );
-
-
   throw Err();
 }
 
@@ -43,11 +27,19 @@ main(int argc, char **argv){
       "Set tile z-index.");
     options.add("range",  1,'r',g,
       "Show tile range which covers a given figure. "
-      "Figure is a point, rectangle or line in WGS84 coordinates.");
+      "Figure is a point ([lon,lat]), rectangle ([<lon>,<lat>,<width>,<height>]) "
+      "or line ([[lon1,lat1],[lon1,lat1],...]) or multi-segment line in WGS84 coordinates.");
+    options.add("cover",  1,0,g,
+      "Show all tiles which cover a given figure. "
+      "Figure is set in the same way as in the --range option.");
     options.add("tiles", 1,'t',g,
-      "Show coordinate range for a given tile or files.");
+      "Show coordinate range for a given tile \"[x,y]\" or a tile range \"[x,y,w,h]\". "
+      "If --tiles option is combined with --cover or --range, program returns with "
+      "exit code 0 or 1 depending on whether the figure or its bounding box intersects "
+      "with the tile range.");
     options.add("google", 0,'G',g,
-      "Use Google tiles instead of TMS.");
+      "By default the program works with TMS tiles. "
+      "Use --google option to work with Google tiles instead.");
     options.add("center", 0,'c',g,
       "Instead of printing a coordinate range print its central point.");
 
@@ -102,27 +94,52 @@ main(int argc, char **argv){
       }
     }
 
-    // get coordinate range if needed
-    dRect range; // given coordinate range
-    iRect tiles_r; // calculated tile range for given coordinates
+    // range or cover options
+    O.check_conflict({"range", "cover"});
+
+    // get coordinate range for --range or --cover options
     if (O.exists("range")){
-      range = figure_bbox<double>(O.get("range",""));
+      // wgs range of the figure given in --range option
+      dRect range = figure_bbox<double>(O.get("range",""));
       if (range.is_empty()) throw Err()
-        << "wrong coordinate range: " << O.get("range","");
+        << "empty coordinate range: " << O.get("range","");
 
-      tiles_r = G? T.range_to_gtiles(range,z):
-                   T.range_to_tiles(range,z);
+      dRect tiles_r = G? T.range_to_gtiles(range,z):
+                         T.range_to_tiles(range,z);
 
-      if (!O.exists("tiles")){
-        std::cout << tiles_r << "\n";
-        return 0;
-      }
+      if (O.exists("tiles"))
+        return intersect(range, range_t).is_empty();
+
+      std::cout << tiles_r << "\n";
+      return 0;
     }
 
-    if (O.exists("tiles") && O.exists("range"))
-      return intersect(range, range_t).is_empty();
 
-    throw Err() << "--tiles or --range option expected";
+    if (O.exists("cover")){
+      // wgs figure given in --range option
+      dMultiLine f = figure_line<double>(O.get("cover",""));
+      if (f.size()==0) throw Err()
+        << "empty coordinates: " << O.get("cover","");
+      dRect range = f.bbox();
+
+      // tile range
+      dRect tiles_r = G? T.range_to_gtiles(range,z):
+                         T.range_to_tiles(range,z);
+
+      for (int y = tiles_r.y; y < tiles_r.y + tiles_r.h; y++){
+        for (int x = tiles_r.x; x < tiles_r.x + tiles_r.w; x++){
+          dRect trange = G? T.gtile_to_range(iPoint(x,y), z):
+                            T.tile_to_range(iPoint(x,y), z);
+          if (rect_in_polygon(trange, f) == 0) continue;
+          if (O.exists("tiles")) return 0;
+          std::cout << iPoint(x,y,z) << "\n";
+        }
+      }
+      if (O.exists("tiles")) return 1;
+      return 0;
+    }
+
+    throw Err() << "--tiles, --range or --cover option expected";
   }
   catch (Err & e) {
     if (e.str()!="") cerr << "Error: " << e.str() << "\n";
