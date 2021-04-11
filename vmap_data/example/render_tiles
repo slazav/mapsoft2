@@ -8,8 +8,7 @@
 MAPDB=../../programs/ms2mapdb/ms2mapdb
 
 
-mkdir -p n49.tiles
-rm -f n49.tiles/*
+rm -rf n49.tiles
 
 # Example of imcremental tile generation. Multiple maps are rendered in the
 # same tile set (--add option). Each map is clipped to its own border
@@ -20,7 +19,7 @@ rm -f n49.tiles/*
 for name in n49-{032,033}; do
 time $MAPDB render $name --config ../render.cfg\
    --define "{\"my_nom_name\":\"$name\", \"hr\":\"1\", \"border_style\":\"none\", \"my_dpi\":\"100\"}"\
-   --tmap --add --out "n49.tiles/map-{x}-{y}-{z}.png" --zmin 9 --zmax 12\
+   --tmap --add --out "n49.tiles/map-{z}/{x}-{y}.png" --zmin 9 --zmax 12\
    --bgcolor 0 --png_format pal --cmap_load $name.cmap.png\
    --border_file brd_n49.plt\
    --tmap_scale 1
@@ -28,14 +27,13 @@ done
 
 name=n37-030
 
-mkdir -p $name.tiles
-rm -f $name.tiles/*
+rm -rf $name.tiles
 
 # use multy-segment-track from border.gpx as a border
 
 time $MAPDB render $name --config ../render.cfg\
    --define "{\"my_nom_name\":\"$name\", \"hr\":\"0\", \"my_dpi\":\"200\"}"\
-   --tmap --out "$name.tiles/map-{x}-{y}-{z}.png" --zmin 9 --zmax 12\
+   --tmap --out "$name.tiles/map-{z}/{x}-{y}.png" --zmin 9 --zmax 12\
    --bgcolor 0 --png_format pal --cmap_load $name.cmap.png\
    --border_file brd_n37.gpx\
    --tmap_scale 1
