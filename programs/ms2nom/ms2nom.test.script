@@ -165,6 +165,12 @@ assert_cmd "$P -n q37,38 --cover [0,0,10,10]" "" 1
 assert_cmd "$P -n q37,38 --cover [35,63,2,2]" "" 0
 assert_cmd "$P -n q37,38 --cover [0,0,180,80]" "" 0
 
+assert_cmd "$P -E -n q37 --cover [0,0,10,10]" "" 1
+assert_cmd "$P -E -n q37 --cover [35,63,2,2]" "" 0
+
+assert_cmd "$P -E -n q37.1x2 --cover [0,0,10,10]" "" 1
+assert_cmd "$P -E -n q37.1x2 --cover [35,63,2,2]" "" 0
+
 ###########
 # wgs mode
 

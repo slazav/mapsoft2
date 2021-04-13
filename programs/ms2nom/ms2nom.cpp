@@ -167,35 +167,23 @@ main(int argc, char **argv){
       if (range.is_empty()) throw Err()
         << "wrong coordinate range: " << O.get("cover","");
 
-      // set scale: from name if --name is set, from --scale overwise
       nom_scale_t sc;
       if (O.exists("name")){
-        nom_to_range(O.get("name"), sc, ex);
+        // calculate scale
+        auto r = nom_to_range(O.get("name"), sc, ex);
+        return !rect_in_polygon(r, ml);
       }
-      else {
-        if (!O.exists("scale")) throw Err() << "scale is not set";
-        sc = str_to_type<nom_scale_t>(O.get("scale", ""));
-      }
-//std::cerr << ">> " << ml << " " << range << "\n";
-//std::cerr << ">> " << sc << "\n";
+
+      if (!O.exists("scale")) throw Err() << "scale is not set";
+      sc = str_to_type<nom_scale_t>(O.get("scale", ""));
 
       // calculate all maps in the range
       auto nn = range_to_nomlist(range, sc, ex);
       for (const auto & n: nn) {
-//std::cerr << ">>   " << n << "\n";
         if (!rect_in_polygon(nom_to_range(n, sc, ex), ml)) continue;
-
-
-        if (O.exists("name")){
-          if (n == O.get("name")) return 0;
-        }
-        else {
-          cout << n << "\n";
-        }
+        cout << n << "\n";
       }
-
-      if (O.exists("name")) return 1;
-      else return 0;
+      return 0;
     }
 
     throw Err() << "--name, --range, or --gdata option expected";
