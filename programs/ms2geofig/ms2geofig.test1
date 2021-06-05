@@ -1,0 +1,29 @@
+#!/bin/bash -efu
+
+# General interface and option tests
+# See also getopt module tests
+
+. ../../modules/test_lib.sh
+
+./ms2geofig create --mkref nom --name n37-001 --north -o n37-001.fig
+./ms2geofig add test_data/data.gpx -o n37-001.fig
+
+diff -q n37-001.fig test_data/fig1.fig
+
+./ms2geofig del --wpts test_data.gpx -o n37-001.fig
+
+diff -q n37-001.fig test_data/fig2.fig
+
+./ms2geofig del --trks test_data.gpx -o n37-001.fig
+
+diff -q n37-001.fig test_data/fig3.fig
+
+./ms2geofig add test_data/data.gpx -o n37-001.fig
+
+diff -q n37-001.fig test_data/fig1.fig
+
+./ms2geofig del test_data.gpx -o n37-001.fig
+
+diff -q n37-001.fig test_data/fig4.fig
+
+rm -f n37-001.fig

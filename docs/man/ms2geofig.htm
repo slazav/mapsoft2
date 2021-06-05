@@ -1,0 +1,295 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>ms2geofig</title>
+<link rel="stylesheet" href="manpages.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body>
+
+
+
+<ul id="index">
+  <li><a href="#NAME">NAME</a></li>
+  <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
+  <li><a href="#GENERAL-OPTIONS">GENERAL OPTIONS:</a></li>
+  <li><a href="#MAKING-REFERENCE-AND-WRITING-IT-TO-FIG-FILE-IN-CREATE-ACTION">MAKING REFERENCE AND WRITING IT TO FIG FILE IN `CREATE` ACTION:</a></li>
+  <li><a href="#READING-GEODATA-ADD-ACTION">READING GEODATA (`ADD` ACTION):</a></li>
+  <li><a href="#DELETE-SERTAIN-COMPONENTS-OF-GEOFIG-FILE-DEL-ACTION">DELETE SERTAIN COMPONENTS OF GEOFIG FILE (`DEL` ACTION):</a></li>
+  <li><a href="#WRITING-TRACKS-AND-WAYPOINTS-TO-FIG-FILE-ADD-ACTION">WRITING TRACKS AND WAYPOINTS TO FIG FILE (`ADD` ACTION):</a></li>
+  <li><a href="#AUTHOR">AUTHOR</a></li>
+  <li><a href="#SEE-ALSO">SEE ALSO</a></li>
+</ul>
+
+<h1 id="NAME">NAME</h1>
+
+<p>ms2geofig -- greate geo-referenced fig files, add geodata to them</p>
+
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
+
+<pre><code>        ms2geofig create [&lt;options&gt;] -o &lt;output file&gt;
+
+        ms2geofig add [&lt;options&gt;] &lt;files&gt; -o &lt;fig file&gt;
+
+        ms2geofig del [&lt;options&gt;] -o &lt;fig file&gt;</code></pre>
+
+<h1 id="GENERAL-OPTIONS">GENERAL OPTIONS:</h1>
+
+<dl>
+
+<dt id="h---help"><b>-h, --help</b></dt>
+<dd>
+
+<p>Show help message.</p>
+
+</dd>
+<dt id="pod"><b>--pod</b></dt>
+<dd>
+
+<p>Show help message as POD template.</p>
+
+</dd>
+<dt id="v---verbose"><b>-v, --verbose</b></dt>
+<dd>
+
+<p>Be verbose.</p>
+
+</dd>
+<dt id="o---out-arg"><b>-o, --out &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Output file.</p>
+
+</dd>
+<dt id="fig_enc-arg"><b>--fig_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Encoding for reading/writing fig files (default: KOI8-R).</p>
+
+</dd>
+<dt id="fig_header-arg"><b>--fig_header &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Read/write fig headers (default: true).</p>
+
+</dd>
+</dl>
+
+<h1 id="MAKING-REFERENCE-AND-WRITING-IT-TO-FIG-FILE-IN-CREATE-ACTION">MAKING REFERENCE AND WRITING IT TO FIG FILE IN `CREATE` ACTION:</h1>
+
+<dl>
+
+<dt id="ref_templ-arg"><b>--ref_templ &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Template for reference points (default: &quot;2 1 0 4 4 7 1 -1 -1 0.000 0 1 -1 0 0&quot;).</p>
+
+</dd>
+<dt id="brd_templ-arg"><b>--brd_templ &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Template for border lines (default: &quot;2 1 0 4 4 7 1 -1 -1 0.000 0 1 -1 0 0&quot;).</p>
+
+</dd>
+<dt id="mkref-arg"><b>--mkref &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Choose map type (nom, google_tile, tms_tile, proj)</p>
+
+</dd>
+<dt id="name-arg"><b>--name &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set map name. For --mkref=&quot;nom&quot; it should contain a valid Soviet nomenclature name. For --mkref=&quot;file&quot; it should contain map-file name.</p>
+
+</dd>
+<dt id="dpi-arg"><b>--dpi &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map resolution, pixels per inch (&quot;nom&quot; and &quot;proj&quot; maps)</p>
+
+</dd>
+<dt id="mag-arg"><b>--mag &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map magnification (&quot;nom&quot; maps)</p>
+
+</dd>
+<dt id="north"><b>--north</b></dt>
+<dd>
+
+<p>Orient map to north (&quot;nom&quot; maps)</p>
+
+</dd>
+<dt id="margins-arg"><b>--margins &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map margins, pixels (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="top_margin-arg"><b>--top_margin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override top margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="left_margin-arg"><b>--left_margin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override left margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="right_margin-arg"><b>--right_margin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override right margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="bottom_margin-arg"><b>--bottom_margin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override bottom margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="zindex-arg"><b>--zindex &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Tile zindex (&quot;*_tile&quot; maps). Can be skipped if tile argument has the form [x,y,z]</p>
+
+</dd>
+<dt id="tiles-arg"><b>--tiles &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Tile or tile range (&quot;*_tile&quot; maps), [x,y], [x,y,z], or [x,y,w,h]</p>
+
+</dd>
+<dt id="coords-arg"><b>--coords &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Figure in projection coordinates (rectangle or lines) to be covered by the map (&quot;proj&quot; maps). Figure can be a rectangle written as [x,y,w,h], or a line, [[x1,y1],[x2,y2], ...], or a multi-segment line, [&lt;line&gt;, &lt;line&gt;, ...].</p>
+
+</dd>
+<dt id="coords_wgs-arg"><b>--coords_wgs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Figure in wgs84 coordinates to be covered by the map (&quot;*_tile&quot; or &quot;proj&quot; maps), a rectangle, a line, or a multi-segment line.</p>
+
+</dd>
+<dt id="border-arg"><b>--border &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map border in projection coordinates (For --mkref=&quot;proj&quot; maps), a line or a multi-segment line.</p>
+
+</dd>
+<dt id="proj-arg"><b>--proj &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Projection setting, &quot;libproj&quot; parameter string (e.g. &quot;+datum=WGS84 +proj=lonlat&quot;) or mapsoft2 alias (&quot;WGS&quot;, &quot;WEB&quot;, &quot;FI&quot;, &quot;CH&quot;, &quot;SU39&quot;, etc.).Default is WGS.</p>
+
+</dd>
+<dt id="scale-arg"><b>--scale &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map scale, projection units per map cm (&quot;proj&quot; maps). Default value is 0.01 degree/cm for degree projections, 1000m/cm for metric projections.</p>
+
+</dd>
+<dt id="border_wgs-arg"><b>--border_wgs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set map border in wgs84 coordinates (argument is a line or a multi-segment line).</p>
+
+</dd>
+<dt id="border_file-arg"><b>--border_file &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set map border from track in a file.</p>
+
+</dd>
+</dl>
+
+<h1 id="READING-GEODATA-ADD-ACTION">READING GEODATA (`ADD` ACTION):</h1>
+
+<dl>
+
+<dt id="in_fmt-arg"><b>--in_fmt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip).</p>
+
+</dd>
+<dt id="gu_enc-arg"><b>--gu_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Garmin Utils format charset (default KOI8-R).</p>
+
+</dd>
+<dt id="ozi_enc-arg"><b>--ozi_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>OziExplorer format charset (default Windows-1251).</p>
+
+</dd>
+</dl>
+
+<h1 id="DELETE-SERTAIN-COMPONENTS-OF-GEOFIG-FILE-DEL-ACTION">DELETE SERTAIN COMPONENTS OF GEOFIG FILE (`DEL` ACTION):</h1>
+
+<dl>
+
+<dt id="wpts"><b>--wpts</b></dt>
+<dd>
+
+<p>Delete only waypoints.</p>
+
+</dd>
+<dt id="trks"><b>--trks</b></dt>
+<dd>
+
+<p>Delete only tracks.</p>
+
+</dd>
+<dt id="maps"><b>--maps</b></dt>
+<dd>
+
+<p>Delete only maps.</p>
+
+</dd>
+<dt id="ref"><b>--ref</b></dt>
+<dd>
+
+<p>Delete only reference.</p>
+
+</dd>
+</dl>
+
+<p>If no options are given then delete everything.</p>
+
+<h1 id="WRITING-TRACKS-AND-WAYPOINTS-TO-FIG-FILE-ADD-ACTION">WRITING TRACKS AND WAYPOINTS TO FIG FILE (`ADD` ACTION):</h1>
+
+<h1 id="AUTHOR">AUTHOR</h1>
+
+<p>Vladislav Zavjalov &lt;slazav@altlinux.org&gt;</p>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<ul>
+
+<li><p><a href="http://slazav.github.io/mapsoft2">Mapsoft2 documentation (ru, en)</a></p>
+
+</li>
+<li><p><a href="http://github.com/slazav/mapsoft2">Mapsoft2 source code, bugtracker</a></p>
+
+</li>
+<li><p><a href="http://github.com/ushakov/mapsoft">Old Mapsoft project</a></p>
+
+</li>
+</ul>
+
+
+</body>
+
+</html>
+
+

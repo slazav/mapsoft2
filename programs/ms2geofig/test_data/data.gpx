@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" creator="http://nakarte.me" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1">
+	<wpt lat="55.854360" lon="36.273336">
+		<name>248</name>
+	</wpt>
+	<trk>
+		<name>New track</name>
+		<trkseg>
+			<trkpt lat="55.836578" lon="36.269302"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+			<trkpt lat="55.854311" lon="36.273165"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+			<trkpt lat="55.853252" lon="36.288700"><time>1970-01-01T00:00:01.000Z</time></trkpt>
+		</trkseg>
+	</trk>
+</gpx>
