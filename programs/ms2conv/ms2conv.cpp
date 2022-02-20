@@ -69,6 +69,8 @@ void usage(bool pod=false){
   pr.opts({"DRAWSRTM"});
   pr.head(2, "Options for saving images");
   pr.opts({"IMAGE", "IMAGE_CMAP"});
+  pr.head(2, "Options for downloading");
+  pr.opts({"DNLDR"});
 
   throw Err();
 }
@@ -83,6 +85,7 @@ main(int argc, char *argv[]){
     ms2opt_add_geo_o(options);
     ms2opt_add_geo_io(options);
     ms2opt_add_geoflt(options);
+    ms2opt_add_downloader(options);
 
     // Option --out_fmt appears in both geo_o and geoimg modules.
     // We will combine description for both of them.
