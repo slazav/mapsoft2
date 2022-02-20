@@ -141,44 +141,38 @@ main(int argc, char *argv[]){
     }
     catch(Err & e) {if (e.code()!=-2) throw;}
 
-    // render image file
-    try {
 
-      // construct GObjMulti with all the objects we want to draw:
-      GObjMulti obj;
+    // construct GObjMulti with all the objects we want to draw:
+    GObjMulti obj;
 
-      std::shared_ptr<SRTM> s;
-      if (O.exists("srtm")){
-        s.reset(new SRTM(O));
-        obj.add(4, std::shared_ptr<GObjSRTM>(new GObjSRTM(s.get(),O)));
-      }
-
-      for (auto & m:data.maps)
-        obj.add(3, std::shared_ptr<GObjMaps>(new GObjMaps(m)));
-
-      for (auto & t:data.trks)
-        obj.add(2, std::shared_ptr<GObjTrk>(new GObjTrk(t)));
-
-      for (auto & w:data.wpts)
-        obj.add(1, std::shared_ptr<GObjWpts>(new GObjWpts(w)));
-
-      // Create map reference
-      GeoMap ref = geo_mkref_opts(O);
-      if (ref.empty())
-        ref = geo_mkref_data(data, O);
-      geo_mkref_brd(ref, O); // update border;
-
-      O.check_conflict({"tmap" "htm"});
-      if (O.exists("htm"))
-        write_html_map(O.get("htm",""), ofile, ref, data.maps);
-
-      write_geoimg(ofile, obj, ref, O);
-
-      return 0;
+    std::shared_ptr<SRTM> s;
+    if (O.exists("srtm")){
+      s.reset(new SRTM(O));
+      obj.add(4, std::shared_ptr<GObjSRTM>(new GObjSRTM(s.get(),O)));
     }
-    catch(Err & e) {if (e.code()!=-2) throw;}
 
-    throw Err() << "Can't determine output format for file: " << ofile;
+    for (auto & m:data.maps)
+      obj.add(3, std::shared_ptr<GObjMaps>(new GObjMaps(m)));
+
+    for (auto & t:data.trks)
+      obj.add(2, std::shared_ptr<GObjTrk>(new GObjTrk(t)));
+
+    for (auto & w:data.wpts)
+      obj.add(1, std::shared_ptr<GObjWpts>(new GObjWpts(w)));
+
+    // Create map reference
+    GeoMap ref = geo_mkref_opts(O);
+    if (ref.empty())
+      ref = geo_mkref_data(data, O);
+    geo_mkref_brd(ref, O); // update border;
+
+    O.check_conflict({"tmap" "htm"});
+    if (O.exists("htm"))
+      write_html_map(O.get("htm",""), ofile, ref, data.maps);
+
+    write_geoimg(ofile, obj, ref, O);
+
+    return 0;
   }
 
   catch(Err & e){
