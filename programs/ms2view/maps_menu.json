@@ -91,6 +91,23 @@
                  [ 256.0,   0.0,  180.0,  85.0511288 ],
                  [ 256.0, 256.0,  180.0, -85.0511288 ]]
       }]
+    },
+
+    { "type":"FeatureCollection",
+      "ms2maps_name": "NorwayPaper",
+      "ms2maps":[{
+
+          "image":"https://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=toporaster4&zoom={z}&x={x}&y={y}",
+          "image_size":[ 256.0, 256.0 ],
+          "is_tiled":1,
+          "tile_maxz":14,
+          "name":"NorwayPaper",
+          "proj":"WEB",
+          "ref":[[ 0.0,     0.0, -180.0,  85.0511288 ],
+                 [ 0.0,   256.0, -180.0, -85.0511288 ],
+                 [ 256.0,   0.0,  180.0,  85.0511288 ],
+                 [ 256.0, 256.0,  180.0, -85.0511288 ]]
+      }]
     }
 
   ]
