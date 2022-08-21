@@ -22,15 +22,13 @@ void usage(bool pod=false){
   pr.head(1, "Making reference and writing it to FIG file in `create` action:");
   pr.opts({"MKREF_OPTS", "MKREF_BRD", "GEOFIG_REF"});
 
-  pr.head(1, "Reading geodata (`add` action):");
-  pr.opts({"GEO_I", "GEO_IO"});
+  pr.head(1, "Reading geodata, writing tracks and waypoints to FIG file (`add` action):");
+  pr.opts({"GEO_I", "GEO_IO", "GEOFIG_DATA"});
 
-  pr.head(1, "Delete sertain components of GeoFIG file (`del` action):");
+  pr.head(1, "Delete certain components of GeoFIG file (`del` action):");
   pr.opts({"GEOFIG_DEL"});
   pr.par("If no options are given then delete everything.");
 
-  pr.head(1, "Writing tracks and waypoints to FIG file (`add` action):");
-  pr.opts({"GEOFIG_DATA"});
 
   throw Err();
 }
@@ -44,6 +42,7 @@ main(int argc, char **argv){
     ms2opt_add_out(options);
     ms2opt_add_fig(options);
     ms2opt_add_geofig_ref(options);
+    ms2opt_add_geofig_data(options);
     ms2opt_add_mkref_opts(options);
     ms2opt_add_mkref_brd(options);
     ms2opt_add_geo_i(options);
