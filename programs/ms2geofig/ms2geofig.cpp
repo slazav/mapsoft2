@@ -8,6 +8,7 @@
 #include "srtm/srtm.h"
 #include "geom/poly_tools.h"
 #include "geom_tools/line_utils.h"
+#include "geo_render/gobj_maps.h"
 
 
 using namespace std;
@@ -28,7 +29,7 @@ void usage(bool pod=false){
   pr.opts({"MKREF_OPTS", "MKREF_BRD", "GEOFIG_REF"});
 
   pr.head(1, "Reading geodata, writing tracks and waypoints to FIG file (`add` action):");
-  pr.opts({"GEO_I", "GEO_IO", "GEOFIG_DATA"});
+  pr.opts({"GEO_I", "GEO_IO", "GEOFIG_DATA", "DRAWMAP"});
 
   pr.head(1, "Delete certain components of GeoFIG file (`del` action):");
   pr.opts({"GEOFIG_DEL"});
@@ -70,6 +71,7 @@ main(int argc, char **argv){
     ms2opt_add_geo_i(options);
     ms2opt_add_geo_io(options);
     ms2opt_add_srtm(options);
+    ms2opt_add_drawmap(options);
 
     {
       std::string g = "GEOFIG_DEL";
@@ -127,7 +129,7 @@ main(int argc, char **argv){
 
     if (action == "add"){
       Opt O = parse_options_all(&argc, &argv, options,
-        {"STD", "OUT", "GEO_I", "GEO_IO", "FIG", "GEOFIG_DATA"}, pars);
+        {"STD", "OUT", "GEO_I", "GEO_IO", "FIG", "GEOFIG_DATA", "DRAWMAP"}, pars);
       if (O.exists("help")) {usage(); return 0;}
       if (O.exists("pod")) {usage(true); return 0;}
       bool v = O.exists("verbose");
@@ -144,10 +146,13 @@ main(int argc, char **argv){
       Fig F;
       read_fig(ofile, F, O);
 
+      O.put_missing("map_dir", ofile+".img");
+
       if (v) cerr << "Writing data to " << ofile << "\n";
       GeoMap ref = fig_get_ref(F);
       fig_add_wpts(F, ref, data, O);
       fig_add_trks(F, ref, data, O);
+      fig_add_maps(F, ref, data, O);
 
       write_fig(ofile, F, O);
       return 0;
