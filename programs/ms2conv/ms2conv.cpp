@@ -145,9 +145,9 @@ main(int argc, char *argv[]){
     // construct GObjMulti with all the objects we want to draw:
     GObjMulti obj;
 
-    std::shared_ptr<SRTM> s;
+    std::shared_ptr<SRTMSurf> s;
     if (O.exists("srtm")){
-      s.reset(new SRTM(O));
+      s.reset(new SRTMSurf(O));
       obj.add(4, std::shared_ptr<GObjSRTM>(new GObjSRTM(s.get(),O)));
     }
 
