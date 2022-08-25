@@ -20,6 +20,6 @@ assert_diff test_data/flt4.map tmp.map
 assert_cmd "$P test_data/flt4.map --skip b -o tmp.map"  "" 0
 assert_diff test_data/flt5.map tmp.map
 
-assert_cmd "$P test_data/gpx1.gpx test_data/gpx2.gpx --join JOIN -o tmp.gpx"  "" 0
+assert_cmd "$P test_data/gpx1.gpx test_data/gpx2.gpx --join --trk_name JOIN -o tmp.gpx"  "" 0
 assert_diff test_data/flt6.gpx tmp.gpx
 
