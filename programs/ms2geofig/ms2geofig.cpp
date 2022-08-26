@@ -98,6 +98,10 @@ main(int argc, char **argv){
       options.add("peaks_templ",1,0,g, "FIG template for peaks (default: 2 1 0 3 24 7  57 -1 -1 0.000 0 1 -1 0 0)");
     }
 
+    // replace helsp message for --map_dir (we use different default)
+    options.replace("map_dir",   1,0,"GEOFIG_DATA", "Directory for raster map tiles (default <filename>.img).");
+
+
     Opt O = parse_options(&argc, &argv, options, {"STD"});
     if (O.exists("help")) {usage(); return 0;}
     if (O.exists("pod")) {usage(true); return 0;}
