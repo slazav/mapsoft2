@@ -25,7 +25,7 @@ ENRU(`<a href="index.htm">Main page...</a>',
 ')
 ##################
 
-define(_MOD_, `<b><a href="https://github.com/slazav/mapsoft2/tree/master/modules/$1">$1</a></b>')
+define(_MOD_, `<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/$1">$1</a></b>')
 
 define(_LIBICONV_, `<a href="https://www.gnu.org/software/libiconv/">libiconv</a>')
 define(_GNULIB_, `<a href="https://www.gnu.org/software/gnulib/">gnulib</a>')

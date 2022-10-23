@@ -137,11 +137,11 @@ files can be put in <tt>$(MODDIR)/pc/</tt>.',
 <ul>
 <li>mapsoft2: WWW(`https://github.com/slazav/mapsoft2')
 <li>graphene: WWW(`https://github.com/slazav/graphene')
-<li>dev_server: WWW(`https://github.com/slazav/dev_server')
+<li>device2:    WWW(`https://github.com/slazav/device2')
 </ul>
 <p>copy of some modules:
 <ul>
-<li>pico_rec: WWW(`https://github.com/slazav/pico_osc')
+<li>pico_osc: WWW(`https://github.com/slazav/pico_osc')
 </ul>
 
 
