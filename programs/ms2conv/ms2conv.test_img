@@ -18,7 +18,7 @@ P=${1:-./ms2conv}
 
 # 6x6 km box
 assert_cmd "$P test_data_img/20100320wz.zip test_data_img/o37-122.map\
- -o tmp.pdf\
+ -o tmp.pdf --trk_draw_transp 0 --trk_draw_width 1\
  --mkref proj --proj SU39 --coords [7362000,6274000,6000,6000] --dpi 100 --scale 1000" "" 0
 
 fix_pdf tmp.pdf
@@ -26,7 +26,7 @@ assert_diff test_data_img/out1.pdf tmp.pdf
 
 # 6x6 km box -- png+map output
 assert_cmd "$P test_data_img/20100320wz.zip test_data_img/o37-122.map\
- --map tmp.map -o tmp.png\
+ --map tmp.map -o tmp.png --trk_draw_transp 0 --trk_draw_width 1\
  --mkref proj --proj SU39 --coords [7362000,6274000,6000,6000] --dpi 100 --scale 1000" "" 0
 
 sed -i '3s/tmp.png/out1.png/'  tmp.map
@@ -35,7 +35,7 @@ assert_diff test_data_img/out1.map tmp.map
 
 # 2x2 km box
 assert_cmd "$P test_data_img/20100320wz.zip test_data_img/o37-122.map\
- -o tmp.pdf\
+ -o tmp.pdf --trk_draw_transp 0 --trk_draw_width 1\
  --mkref proj --proj SU39 --coords [7364000,6276000,2000,2000] --dpi 300" "" 0
 
 fix_pdf tmp.pdf
@@ -43,7 +43,7 @@ assert_diff test_data_img/out2.pdf tmp.pdf
 
 # 2x2 km box - smooth + fade
 assert_cmd "$P test_data_img/20100320wz.zip test_data_img/o37-122.map\
- -o tmp.pdf\
+ -o tmp.pdf --trk_draw_transp 0 --trk_draw_width 1\
  --mkref proj --proj SU39 --coords [7364000,6276000,2000,2000] --dpi 300\
  --map_smooth 1 --map_fade 0x70FF70FF" "" 0
 
