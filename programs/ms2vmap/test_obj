@@ -1,0 +1,25 @@
+#!/bin/bash -efu
+
+# Add objects
+
+P=${1:-./ms2vmap}
+
+. ../../modules/test_lib.sh
+
+assert_cmd "$P db_delete tmp" "" 0
+
+assert_cmd "$P db_create tmp" "" 0
+assert_cmd "$P db_add_obj tmp point:1 [38,55]" "0" 0
+assert_cmd "$P db_add_obj tmp point:1 [39,55]" "1" 0
+assert_cmd "$P db_add_obj tmp line:0xFF00 [[30,55],[32,56]]" "2" 0
+assert_cmd "$P db_add_obj tmp area:1 [[30,55],[32,56],[33,55]]" "3" 0
+assert_cmd "$P db_add_obj tmp text:16 [38,55] --name Text" "4" 0
+
+assert_cmd "$P db_types tmp" "point:0x1
+area:0x1
+text:0x10
+unknown:0xff00" 0
+
+assert_cmd "$P db_bbox tmp.db" "[29.53125,54.84375,9.46875002,1.40625]" 0
+
+assert_cmd "$P db_delete tmp" "" 0

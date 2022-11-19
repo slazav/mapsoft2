@@ -1,0 +1,53 @@
+#!/bin/bash -efu
+
+# VMAP and VMAP2 import/export
+
+P=${1:-./ms2vmap}
+
+. ../../modules/test_lib.sh
+
+
+assert_cmd "$P db_import tmp" "Error: db_import: non-empty database name expected (use -o option)" 1
+assert_cmd "$P db_import -o tmp missing.vmap" "Error: db_simple: tmp.vmap2db: No such file or directory" 1
+
+
+# vmap -> vmap2
+assert_cmd "$P convert test_data/in.vmap -o tmp.vmap2 -t test_data/types.cfg" "" 0
+assert_diff test_data/out.vmap2 tmp.vmap2
+
+# vmap -> vmap (note that header is lost, this information is not supported in mapsoft2)
+assert_cmd "$P convert test_data/in.vmap -o tmp.vmap -t test_data/types.cfg" "" 0
+assert_diff test_data/out.vmap tmp.vmap
+
+# vmap2 -> vmap2
+assert_cmd "$P convert test_data/out.vmap2 -o tmp.vmap2 -t test_data/types.cfg" "" 0
+assert_diff test_data/out.vmap2 tmp.vmap2
+
+# vmap -> vmap
+assert_cmd "$P convert test_data/out.vmap -o tmp.vmap -t test_data/types.cfg" "" 0
+assert_diff test_data/out.vmap tmp.vmap
+
+# vmap -> mp
+assert_cmd "$P convert test_data/out.vmap -o tmp.mp -t test_data/types.cfg" "" 0
+assert_diff test_data/out.mp tmp.mp
+
+# mp -> vmap2 (labels lost)
+assert_cmd "$P convert test_data/out.mp -o tmp.vmap2 -t test_data/types.cfg" "" 0
+assert_diff test_data/out2.vmap2 tmp.vmap2
+
+# create database, import vmap
+$P db_delete tmp
+assert_cmd "$P db_create tmp" "" 0
+assert_cmd "$P db_create tmp" "Error: db_simple: tmp.vmap2db: File exists" 1
+assert_cmd "$P db_import -o tmp missing.vmap" "Error: can't read VMAP file" 1
+
+# vmap2db -> vmap2
+assert_cmd "$P db_import -o tmp test_data/in.vmap -t test_data/types.cfg" "" 0
+assert_cmd "$P convert tmp.vmap2db -o tmp.vmap2" "" 0
+assert_diff test_data/out.vmap2 tmp.vmap2
+
+# vmap2db -> vmap
+assert_cmd "$P convert tmp.vmap2db -o tmp.vmap" "" 0
+assert_diff test_data/out.vmap tmp.vmap
+
+$P db_delete tmp
