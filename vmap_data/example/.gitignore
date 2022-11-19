@@ -1,5 +1,7 @@
-n37-030
-n49-032
 *.vmap
+*.vmap2
+*.vmap2db
+*.vmap2gh
+*.tiles
 *.png
 *.map

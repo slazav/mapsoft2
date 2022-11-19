@@ -26,7 +26,6 @@ std::vector<std::shared_ptr<Action> > actions = {
   std::shared_ptr<Action>(new ActionDBTypes),
   std::shared_ptr<Action>(new ActionDBBBox),
   std::shared_ptr<Action>(new ActionConvert),
-  std::shared_ptr<Action>(new ActionRender),
 };
 
 /**********************************************************/

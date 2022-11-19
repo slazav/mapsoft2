@@ -2,11 +2,10 @@ MOD_HEADERS := actions.h
 
 PROGRAMS := ms2vmap
 
-# OTHER_TESTS :=\
-#   test_interface\
-#   test_obj\
-#   test_mp\
-#   test_vmap\
+ OTHER_TESTS :=\
+   test_interface\
+   test_obj\
+   test_convert\
 #   test_render\
 
 

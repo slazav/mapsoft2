@@ -187,7 +187,7 @@ n47-074" 0
 ###########
 # gdata
 
-assert_cmd "$P  --scale 1km --cover test_data.gpx" "o41-010
+assert_cmd "$P  --scale 1km --cover test_data/track.gpx" "o41-010
 o41-011
 o41-012
 o41-023
@@ -207,9 +207,9 @@ p42-121,122
 p42-133,134
 p42-135,136" 0
 
-assert_cmd "$P  --name o41-011 --cover test_data.gpx" "" 0
-assert_cmd "$P  --name o42-001 --cover test_data.gpx" "" 0
-assert_cmd "$P  --name o42-003 --cover test_data.gpx" "" 0
-assert_cmd "$P  --name o42-006 --cover test_data.gpx" "" 1
-assert_cmd "$P  --name p41-129,130 --cover test_data.gpx" "" 0
-assert_cmd "$P  --name q41-129,130 --cover test_data.gpx" "" 1
+assert_cmd "$P  --name o41-011 --cover test_data/track.gpx" "" 0
+assert_cmd "$P  --name o42-001 --cover test_data/track.gpx" "" 0
+assert_cmd "$P  --name o42-003 --cover test_data/track.gpx" "" 0
+assert_cmd "$P  --name o42-006 --cover test_data/track.gpx" "" 1
+assert_cmd "$P  --name p41-129,130 --cover test_data/track.gpx" "" 0
+assert_cmd "$P  --name q41-129,130 --cover test_data/track.gpx" "" 1

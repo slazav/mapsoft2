@@ -39,7 +39,7 @@ assert_diff test_data/out2.vmap2 tmp.vmap2
 $P db_delete tmp
 assert_cmd "$P db_create tmp" "" 0
 assert_cmd "$P db_create tmp" "Error: db_simple: tmp.vmap2db: File exists" 1
-assert_cmd "$P db_import -o tmp missing.vmap" "Error: can't read VMAP file" 1
+assert_cmd "$P db_import -o tmp missing.vmap" "Error: can't open file: missing.vmap" 1
 
 # vmap2db -> vmap2
 assert_cmd "$P db_import -o tmp test_data/in.vmap -t test_data/types.cfg" "" 0

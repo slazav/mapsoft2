@@ -58,11 +58,11 @@ main(int argc, char **argv){
     ms2opt_add_drawsrtm(options);
 
     const char *g = "NONSTD";
-    options.add("mapdb", 1,0,g,
-      "Open MapDB project");
+    options.add("vmap", 1,0,g,
+      "Open vector map");
 
-    options.add("mapdb_config", 1,0,g,
-      "Rasterisation config-file instead of default <mapdb dir>/raster.txt");
+    options.add("vmap_config", 1,0,g,
+      "Rasterisation config-file instead of default raster.txt");
 
 
     std::vector<std::string> files;
