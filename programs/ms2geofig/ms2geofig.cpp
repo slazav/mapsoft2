@@ -16,7 +16,7 @@ GetOptSet options;
 
 void usage(bool pod=false){
   HelpPrinter pr(pod, options, "ms2geofig");
-  pr.name("greate geo-referenced fig files, add geodata to them");
+  pr.name("working with geo-referenced fig files");
   pr.usage("create [<options>] -o <output file>");
   pr.usage("add [<options>] <files> -o <fig file>");
   pr.usage("del [<options>] -o <fig file>");
