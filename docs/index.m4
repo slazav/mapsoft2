@@ -53,10 +53,25 @@ ENRU(`Discussions (google group).', `Обсуждения (гугл-группа
 <p>ENRU(`Documentation', `Документация')</h2>
 
 <ul>
-<li><a href="geodata_ru.htm"> ENRU(`Geodata in mapsoft2 (RU)',`Геоданные в mapsoft2')</a>
-<li><a href="mapdb_ru.htm"> ENRU(`Vector maps in mapsoft2 (RU)',`Векторные карты в mapsoft2')</a>
-<li>ENRU(`<a href="modules.htm">Source code library</a>', `<a href="modules.ru.htm">Библиотека исходного кода</a>')
-<li><a href="diff.htm"> ENRU(`Differences between mapsoft1 and mapsoft2 (RU)',`Различия mapsoft1 и mapsoft2')</a>
+
+<li>ENRU(`<a href="modules.htm">Source code library</a>',
+        `<a href="modules.ru.htm">Библиотека исходного кода</a>')
+
+<li><a href="geodata.htm">
+  ENRU(`Geodata in mapsoft2 (RU)',
+       `Геоданные в mapsoft2')</a>
+
+<li><a href="vmap2.htm">
+  ENRU(`Vector maps in mapsoft2 (RU)',
+       `Векторные карты в mapsoft2')</a>
+
+<li><a href="vmap2render.htm">
+  ENRU(`Vector maps in mapsoft2: rendering raster images (RU)',
+       `Векторные карты в mapsoft2: рендер растровых изображений')</a>
+
+<li><a href="diff.htm">
+    ENRU(`Differences between mapsoft1 and mapsoft2 (RU)',
+         `Различия mapsoft1 и mapsoft2')</a>
 </ul>
 
 <p>ENRU(`man-pages', `man-страницы (EN)')</h2>

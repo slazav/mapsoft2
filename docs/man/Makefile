@@ -1,5 +1,7 @@
 # pages generated from help messages
-SRC1 := ms2conv ms2view ms2xyz ms2vmap ms2proj ms2tiles ms2nom ms2mapdb ms2img ms2geofig
+SRC1 := ms2conv ms2geofig ms2img ms2mp ms2nom ms2proj\
+        ms2render ms2tiles ms2view ms2vmap ms2xyz
+
 ## separate man-pages
 SRC5 := mapsoft2
 

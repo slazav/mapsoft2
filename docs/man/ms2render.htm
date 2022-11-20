@@ -1,0 +1,927 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>ms2render</title>
+<link rel="stylesheet" href="manpages.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body>
+
+
+
+<ul id="index">
+  <li><a href="#NAME">NAME</a></li>
+  <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
+  <li><a href="#DESCRIPTION">DESCRIPTION</a></li>
+  <li><a href="#GENERAL-OPTIONS">GENERAL OPTIONS</a></li>
+  <li><a href="#GEODATA-INPUT-OUTPUT-OPTIONS">GEODATA INPUT/OUTPUT OPTIONS</a></li>
+  <li><a href="#OPTIONS-FOR-MAKING-MAP-REFERENCE">OPTIONS FOR MAKING MAP REFERENCE</a></li>
+  <li><a href="#OPTIONS-FOR-RENDERING-TRACKS">OPTIONS FOR RENDERING TRACKS</a></li>
+  <li><a href="#OPTIONS-FOR-RENDERING-WAYPOINTS">OPTIONS FOR RENDERING WAYPOINTS</a></li>
+  <li><a href="#OPTIONS-FOR-RENDERING-RASTER-MAPS">OPTIONS FOR RENDERING RASTER MAPS</a></li>
+  <li><a href="#OPTIONS-FOR-RENDERING-VECTOR-MAPS">OPTIONS FOR RENDERING VECTOR MAPS</a></li>
+  <li><a href="#OPTIONS-FOR-DRAWING-SRTM-DATA">OPTIONS FOR DRAWING SRTM DATA</a></li>
+  <li><a href="#OPTIONS-FOR-SAVING-IMAGES">OPTIONS FOR SAVING IMAGES</a></li>
+  <li><a href="#OPTIONS-FOR-DOWNLOADING">OPTIONS FOR DOWNLOADING</a></li>
+  <li><a href="#AUTHOR">AUTHOR</a></li>
+  <li><a href="#SEE-ALSO">SEE ALSO</a></li>
+</ul>
+
+<h1 id="NAME">NAME</h1>
+
+<p>ms2render -- render geodata, srtm, raster and vector maps</p>
+
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
+
+<pre><code>ms2render &lt;options&gt; &lt;input files&gt; -o &lt;output file&gt;</code></pre>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<p>ms2render produce images with raster maps, tracks, waypoints, srtm data. Supported formats: jpeg, png, gif, tiff, ps, pdf, svg. Format is selected by output file extension or by --out_fmt option. Option --map can be used to save map reference for the image (OziExplorer or mapsoft2-specific geojson format.</p>
+
+<p>Reference for the image should be specified. If --mkref option exists then it is created from options. If not, then reference of the first map is used, or it is set to some default value.</p>
+
+<h1 id="GENERAL-OPTIONS">GENERAL OPTIONS</h1>
+
+<dl>
+
+<dt id="h---help"><b>-h, --help</b></dt>
+<dd>
+
+<p>Show help message.</p>
+
+</dd>
+<dt id="pod"><b>--pod</b></dt>
+<dd>
+
+<p>Show help message as POD template.</p>
+
+</dd>
+<dt id="v---verbose"><b>-v, --verbose</b></dt>
+<dd>
+
+<p>Be verbose.</p>
+
+</dd>
+<dt id="o---out-arg"><b>-o, --out &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Output file.</p>
+
+</dd>
+</dl>
+
+<h1 id="GEODATA-INPUT-OUTPUT-OPTIONS">GEODATA INPUT/OUTPUT OPTIONS</h1>
+
+<dl>
+
+<dt id="in_fmt-arg"><b>--in_fmt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip).</p>
+
+</dd>
+<dt id="xml_compr-arg"><b>--xml_compr &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Compress XML output (GPX and KML formats), default 0.</p>
+
+</dd>
+<dt id="xml_indent-arg"><b>--xml_indent &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Use XML indentation (GPX and KML formats), default 1.</p>
+
+</dd>
+<dt id="xml_ind_str-arg"><b>--xml_ind_str &lt;arg&gt;</b></dt>
+<dd>
+
+<p>XML indentation string (GPX and KML formats), default &#39; &#39;.</p>
+
+</dd>
+<dt id="xml_qchar-arg"><b>--xml_qchar &lt;arg&gt;</b></dt>
+<dd>
+
+<p>XML quoting character (GPX and KML formats), default &#39;&#39;&#39;.</p>
+
+</dd>
+<dt id="gpx_write_rte-arg"><b>--gpx_write_rte &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Write waypoint lists as routes (GPX format), default 0.</p>
+
+</dd>
+<dt id="json_sort_keys-arg"><b>--json_sort_keys &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Sort json objects by keys (GeoJSON format), default 1.</p>
+
+</dd>
+<dt id="json_compact-arg"><b>--json_compact &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Write compact json (GeoJSON format), default 0.</p>
+
+</dd>
+<dt id="json_indent-arg"><b>--json_indent &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Use json indentation (GeoJSON format), default 1.</p>
+
+</dd>
+<dt id="ozi_map_grid-arg"><b>--ozi_map_grid &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Write map reference points in grid coordinates (OziExplorer format), default 0</p>
+
+</dd>
+<dt id="ozi_map_wgs-arg"><b>--ozi_map_wgs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Always use wgs84 datum for map coordinates (OziExplorer format), default 0</p>
+
+</dd>
+<dt id="gu_enc-arg"><b>--gu_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Garmin Utils format charset (default KOI8-R).</p>
+
+</dd>
+<dt id="ozi_enc-arg"><b>--ozi_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>OziExplorer format charset (default Windows-1251).</p>
+
+</dd>
+</dl>
+
+<h1 id="OPTIONS-FOR-MAKING-MAP-REFERENCE">OPTIONS FOR MAKING MAP REFERENCE</h1>
+
+<dl>
+
+<dt id="mkref-arg"><b>--mkref &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Choose map type (nom, google_tile, tms_tile, proj)</p>
+
+</dd>
+<dt id="name-arg"><b>--name &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set map name. For --mkref=&quot;nom&quot; it should contain a valid Soviet nomenclature name. For --mkref=&quot;file&quot; it should contain map-file name.</p>
+
+</dd>
+<dt id="dpi-arg"><b>--dpi &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map resolution, pixels per inch (&quot;nom&quot; and &quot;proj&quot; maps)</p>
+
+</dd>
+<dt id="north"><b>--north</b></dt>
+<dd>
+
+<p>Orient map to north (&quot;nom&quot; maps)</p>
+
+</dd>
+<dt id="margins-arg"><b>--margins &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map margins, pixels (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="top_margin-arg"><b>--top_margin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override top margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="left_margin-arg"><b>--left_margin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override left margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="right_margin-arg"><b>--right_margin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override right margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="bottom_margin-arg"><b>--bottom_margin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override bottom margin value (&quot;nom&quot; and &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="zindex-arg"><b>--zindex &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Tile zindex (&quot;*_tile&quot; maps). Can be skipped if tile argument has the form [x,y,z]</p>
+
+</dd>
+<dt id="tiles-arg"><b>--tiles &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Tile or tile range (&quot;*_tile&quot; maps), [x,y], [x,y,z], or [x,y,w,h]</p>
+
+</dd>
+<dt id="coords-arg"><b>--coords &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Figure in projection coordinates (rectangle or lines) to be covered by the map (&quot;proj&quot; maps). Figure can be a rectangle written as [x,y,w,h], or a line, [[x1,y1],[x2,y2], ...], or a multi-segment line, [&lt;line&gt;, &lt;line&gt;, ...].</p>
+
+</dd>
+<dt id="coords_wgs-arg"><b>--coords_wgs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Figure in wgs84 coordinates to be covered by the map (&quot;*_tile&quot; or &quot;proj&quot; maps), a rectangle, a line, or a multi-segment line.</p>
+
+</dd>
+<dt id="coords_file-arg"><b>--coords_file &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Use tracks and points in the file to calculate map size (&quot;*_tile&quot; or &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="coords_nom-arg"><b>--coords_nom &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Use Soviet nomenclature name calculate map size (&quot;*_tile&quot; or &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="border-arg"><b>--border &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map border in projection coordinates (For --mkref=&quot;proj&quot; maps), a line or a multi-segment line.</p>
+
+</dd>
+<dt id="proj-arg"><b>--proj &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Projection setting, &quot;libproj&quot; parameter string (e.g. &quot;+datum=WGS84 +proj=lonlat&quot;) or mapsoft2 alias (&quot;WGS&quot;, &quot;WEB&quot;, &quot;FI&quot;, &quot;CH&quot;, &quot;SU39&quot;, etc.).Default is WGS.</p>
+
+</dd>
+<dt id="scale-arg"><b>--scale &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Map scale, projection units per map cm (&quot;proj&quot; maps). Default value is 0.01 degree/cm for degree projections, 1000m/cm for metric projections.</p>
+
+</dd>
+<dt id="mag-arg"><b>--mag &lt;arg&gt;</b></dt>
+<dd>
+
+<p>1. Map magnification (with --mkref nom)2. When using existing map as a reference source, rescale it.</p>
+
+</dd>
+</dl>
+
+<dl>
+
+<dt id="border_wgs-arg"><b>--border_wgs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set map border in wgs84 coordinates (argument is a line or a multi-segment line).</p>
+
+</dd>
+<dt id="border_file-arg"><b>--border_file &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set map border from track in a file.</p>
+
+</dd>
+</dl>
+
+<h1 id="OPTIONS-FOR-RENDERING-TRACKS">OPTIONS FOR RENDERING TRACKS</h1>
+
+<dl>
+
+<dt id="trk_draw_mode-arg"><b>--trk_draw_mode &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Track drawing mode (normal, speed, height, default - normal).</p>
+
+</dd>
+<dt id="trk_draw_transp-arg"><b>--trk_draw_transp &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Use transparent color (0..1, default - 0.5).</p>
+
+</dd>
+<dt id="trk_draw_dots-arg"><b>--trk_draw_dots &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Draw dots (for normal drawing mode), default: 1.</p>
+
+</dd>
+<dt id="trk_draw_width-arg"><b>--trk_draw_width &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Track width factor, default: 3px.</p>
+
+</dd>
+<dt id="trk_draw_smin-arg"><b>--trk_draw_smin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Min value for speed mode [km/h].</p>
+
+</dd>
+<dt id="trk_draw_smax-arg"><b>--trk_draw_smax &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Max value for speed mode [km/h].</p>
+
+</dd>
+<dt id="trk_draw_hmin-arg"><b>--trk_draw_hmin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Min value for height mode [m].</p>
+
+</dd>
+<dt id="trk_draw_hmax-arg"><b>--trk_draw_hmax &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Max value for height mode [m].</p>
+
+</dd>
+<dt id="trk_draw_grad-arg"><b>--trk_draw_grad &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Color gradient (for speed or height modes), default: BCGYRM.</p>
+
+</dd>
+</dl>
+
+<h1 id="OPTIONS-FOR-RENDERING-WAYPOINTS">OPTIONS FOR RENDERING WAYPOINTS</h1>
+
+<dl>
+
+<dt id="wpt_text_font-arg"><b>--wpt_text_font &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Waypoint font (default: &quot;serif&quot;).</p>
+
+</dd>
+<dt id="wpt_text_size-arg"><b>--wpt_text_size &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Waypoint font size, pixels (default: 10).</p>
+
+</dd>
+<dt id="wpt_text_pad-arg"><b>--wpt_text_pad &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Waypoint text padding, pixels (default: 2).</p>
+
+</dd>
+<dt id="wpt_draw_size-arg"><b>--wpt_draw_size &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Waypoint dot radius, pixels (default: 3).</p>
+
+</dd>
+<dt id="wpt_line_width-arg"><b>--wpt_line_width &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Waypoint line width, (default: 1).</p>
+
+</dd>
+<dt id="wpt_stick_len-arg"><b>--wpt_stick_len &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Length of waypoint flag stick (default: 10).</p>
+
+</dd>
+<dt id="wpt_color-arg"><b>--wpt_color &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Waypoint color (default: 0xFF000000).</p>
+
+</dd>
+<dt id="wpt_bgcolor-arg"><b>--wpt_bgcolor &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Waypoint background color (default: 0xFFFFFFFF).</p>
+
+</dd>
+<dt id="wpt_adj-arg"><b>--wpt_adj &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Adjust waypoint flag positions to prevent mutual collisions (default: 1).</p>
+
+</dd>
+<dt id="wpt_adj_brd-arg"><b>--wpt_adj_brd &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Adjust waypoint flag positions to prevent boundary collisions (default: 0).</p>
+
+</dd>
+<dt id="wpt_skip_far-arg"><b>--wpt_skip_far &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Skip points if their labels can not be placed close enough (default: 10*wpt_stick_len).</p>
+
+</dd>
+</dl>
+
+<h1 id="OPTIONS-FOR-RENDERING-RASTER-MAPS">OPTIONS FOR RENDERING RASTER MAPS</h1>
+
+<dl>
+
+<dt id="map_smooth-arg"><b>--map_smooth &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Smooth map drawing, interpolation for small scales, averaging for large ones, (0|1, default - 0).</p>
+
+</dd>
+<dt id="map_clip_brd-arg"><b>--map_clip_brd &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Clip map to its border (default 1).</p>
+
+</dd>
+<dt id="map_draw_refs-arg"><b>--map_draw_refs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Draw map reference points (ARGB color, default 0).</p>
+
+</dd>
+<dt id="map_draw_brd-arg"><b>--map_draw_brd &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Draw map border (ARGB color, default 0).</p>
+
+</dd>
+<dt id="map_fade-arg"><b>--map_fade &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Color to fade the map (default is 0, no fading).</p>
+
+</dd>
+<dt id="map_min_sc-arg"><b>--map_min_sc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Min scale (&lt;map pixels&gt;/&lt;image pixels&gt;) (default is 0.1).</p>
+
+</dd>
+<dt id="map_max_sc-arg"><b>--map_max_sc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Max scale (&lt;map pixels&gt;/&lt;image pixels&gt;) (default is 10).</p>
+
+</dd>
+<dt id="map_def_col-arg"><b>--map_def_col &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Color to paint the map outside min_sc/max_sc (default is 0x80FF0000).</p>
+
+</dd>
+<dt id="htm-arg"><b>--htm &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Write html map for the image.</p>
+
+</dd>
+</dl>
+
+<h1 id="OPTIONS-FOR-RENDERING-VECTOR-MAPS">OPTIONS FOR RENDERING VECTOR MAPS</h1>
+
+<dl>
+
+<dt id="c---config-arg"><b>-c, --config &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Configuration file for vector map rendering.</p>
+
+</dd>
+<dt id="define-arg"><b>--define &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Definitions for vector map rendering (json object)</p>
+
+</dd>
+<dt id="obj_scale-arg"><b>--obj_scale &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Rescaling factor for all objects, default 1.0.</p>
+
+</dd>
+<dt id="vmap2_minsc-arg"><b>--vmap2_minsc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Minimum map scale (calculated from the &#39;natural&#39; reference). Below it the map is drawn by with color (see --vmap2_minsc_color option). Default is 0.01</p>
+
+</dd>
+<dt id="fit_patt_size"><b>--fit_patt_size</b></dt>
+<dd>
+
+<p>Adjust pattern size to fit image size. This option is useful for generating tiled images. Default: false.</p>
+
+</dd>
+<dt id="vmap2_minsc_color-arg"><b>--vmap2_minsc_color &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Color to draw maps below minimum scale (see --vmap2_minsc). Default is 0xFFDB5A00).</p>
+
+</dd>
+<dt id="t---types-arg"><b>-t, --types &lt;arg&gt;</b></dt>
+<dd>
+
+<p>File with type information.</p>
+
+</dd>
+</dl>
+
+<h1 id="OPTIONS-FOR-DRAWING-SRTM-DATA">OPTIONS FOR DRAWING SRTM DATA</h1>
+
+<dl>
+
+<dt id="srtm_dir-arg"><b>--srtm_dir &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set srtm data folder, default - $HOME/.srtm_data</p>
+
+</dd>
+<dt id="srtm_interp_holes-arg"><b>--srtm_interp_holes &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Interpolate holes (0|1, default 1).</p>
+
+</dd>
+<dt id="srtm_draw_mode-arg"><b>--srtm_draw_mode &lt;arg&gt;</b></dt>
+<dd>
+
+<p>SRTM surface drawing mode (slopes, heights, shades, default - shades).</p>
+
+</dd>
+<dt id="srtm_hmin-arg"><b>--srtm_hmin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Min height [m] for heights and shades modes (default - 0).</p>
+
+</dd>
+<dt id="srtm_hmax-arg"><b>--srtm_hmax &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Max height [m] for heights and shades modes (default - 5000).</p>
+
+</dd>
+<dt id="srtm_smin-arg"><b>--srtm_smin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Min slope [deg] for slopes mode (default - 35).</p>
+
+</dd>
+<dt id="srtm_smax-arg"><b>--srtm_smax &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Max slope [deg] for slopes mode (default - 50).</p>
+
+</dd>
+<dt id="srtm_bgcolor-arg"><b>--srtm_bgcolor &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Color to draw no-data and out-of-scale areas (default 0x60FF0000).</p>
+
+</dd>
+<dt id="srtm_surf-arg"><b>--srtm_surf &lt;arg&gt;</b></dt>
+<dd>
+
+<p>draw SRTM color surface (default 1).</p>
+
+</dd>
+<dt id="srtm_maxsc-arg"><b>--srtm_maxsc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Do not draw srtm data out of this scale (default 15).</p>
+
+</dd>
+<dt id="srtm_maxscv-arg"><b>--srtm_maxscv &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Do not draw srtm contours out of this scale (default 1.0).</p>
+
+</dd>
+<dt id="srtm_cnt-arg"><b>--srtm_cnt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Draw contours (0|1, default - 1).</p>
+
+</dd>
+<dt id="srtm_cnt_step-arg"><b>--srtm_cnt_step &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Contour step [m], default 50.</code></pre>
+
+</dd>
+<dt id="srtm_cnt_smult-arg"><b>--srtm_cnt_smult &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Step multiplier for thick contours, default - 5.</code></pre>
+
+</dd>
+<dt id="srtm_cnt_col-arg"><b>--srtm_cnt_col &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Contour color, default - 0xFF000000.</code></pre>
+
+</dd>
+<dt id="srtm_cnt_w-arg"><b>--srtm_cnt_w &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Contour line width, default - 0.25.</code></pre>
+
+</dd>
+<dt id="srtm_cnt_wmult-arg"><b>--srtm_cnt_wmult &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Width multiplier for thick contours, default - 2.</code></pre>
+
+</dd>
+<dt id="srtm_cnt_crv-arg"><b>--srtm_cnt_crv &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Size of round corners on contours, in linewidth units, default - 20.</code></pre>
+
+</dd>
+<dt id="srtm_holes-arg"><b>--srtm_holes &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Draw contours around data holes (1|0, default - 0).</code></pre>
+
+</dd>
+<dt id="srtm_holes_col-arg"><b>--srtm_holes_col &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Color of hole contours, default - 0xFF000000.</code></pre>
+
+</dd>
+<dt id="srtm_holes_w-arg"><b>--srtm_holes_w &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Linewidth of hole contours, default - 1.</code></pre>
+
+</dd>
+<dt id="srtm_peaks-arg"><b>--srtm_peaks &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Draw summits (0|1, default - 0).</code></pre>
+
+</dd>
+<dt id="srtm_peaks_col-arg"><b>--srtm_peaks_col &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Summit&#39;s color, default - 0xFF000000.</code></pre>
+
+</dd>
+<dt id="srtm_peaks_w-arg"><b>--srtm_peaks_w &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Summit point size, default - 3.</code></pre>
+
+</dd>
+<dt id="srtm_peaks_dh-arg"><b>--srtm_peaks_dh &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>DH parameter for peak finder [m], default - 20.</code></pre>
+
+</dd>
+<dt id="srtm_peaks_ps-arg"><b>--srtm_peaks_ps &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>PS parameter fr peak finder [pts], default - 1000.</code></pre>
+
+</dd>
+<dt id="srtm_peaks_text-arg"><b>--srtm_peaks_text &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Draw peak text (0|1, default - 1).</code></pre>
+
+</dd>
+<dt id="srtm_peaks_text_size-arg"><b>--srtm_peaks_text_size &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Peak text size, default - 10.</code></pre>
+
+</dd>
+<dt id="srtm_peaks_text_font-arg"><b>--srtm_peaks_text_font &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Peak text font, default - serif.</code></pre>
+
+</dd>
+<dt id="srtm"><b>--srtm</b></dt>
+<dd>
+
+<p>Add SRTM layer</p>
+
+</dd>
+</dl>
+
+<h1 id="OPTIONS-FOR-SAVING-IMAGES">OPTIONS FOR SAVING IMAGES</h1>
+
+<dl>
+
+<dt id="tiff_format-arg"><b>--tiff_format &lt;arg&gt;</b></dt>
+<dd>
+
+<p>When writing TIFF, convert image to one of following forms: argb, rgb, grey, pal (default depends on the image).</p>
+
+</dd>
+<dt id="tiff_compression-arg"><b>--tiff_compression &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set compression algorythm for writing TIFF files: none, ccit_rle, ccit_rlew, ccit_fax3, ccit_fax4, lzw (default), jpeg, packbits</p>
+
+</dd>
+<dt id="tiff_minwhite-arg"><b>--tiff_minwhite &lt;arg&gt;</b></dt>
+<dd>
+
+<p>When writing greyscale TIFF, use MINISWHITE colors (default: 0).</p>
+
+</dd>
+<dt id="jpeg_quality-arg"><b>--jpeg_quality &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set JPEG quality for writing jpeg and tiff files (default 95).</p>
+
+</dd>
+<dt id="png_format-arg"><b>--png_format &lt;arg&gt;</b></dt>
+<dd>
+
+<p>When writing PNG, convert image to one of following forms: argb, rgb, grey, agrey, pal (default depends on the image).</p>
+
+</dd>
+<dt id="cmap_colors-arg"><b>--cmap_colors &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Colormap size for reducing image colors (0..256, default 255, if 0 - use all colors). Image colors are reduced when saving to GIF, to PNG with --png_format=pal, to TIFF with --tiff_format=pal.</p>
+
+</dd>
+<dt id="cmap_alpha-arg"><b>--cmap_alpha &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Alpha channel: none (default) -- remove it; full -- treat it equally with other channels; gif -- keep only fully-transparent color, if needed. When saving GIF file (which supports only fully transparent color) &quot;full&quot; works in the same way as &quot;gif&quot;.</p>
+
+</dd>
+<dt id="cmap_dim_method-arg"><b>--cmap_dim_method &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Analog of pnmcolormap options -spreadbrightness and -spreadluminosity. When a box in the color space is measured, color dimensions can be treated equally or with luminosity factors. Values: norm (default) or lumin.</p>
+
+</dd>
+<dt id="cmap_rep_method-arg"><b>--cmap_rep_method &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Analog of pnmcolormap options -center, -meancolor, and -meanpixel. When a box in the color space is chosen, it can be represented by its geometrical center, or by averaging pixels or colors in it. Values: center, meanpix (default), meancol.</p>
+
+</dd>
+<dt id="cmap_split_method-arg"><b>--cmap_split_method &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Analog of pnmcolormap options -splitpix, -splitcol, -splitdim. How to choose a box in the color space for splitting: by its maximum dimension, maximum number of pixels or colors in it. Values: maxdim (default), maxpix, maxcol.</p>
+
+</dd>
+<dt id="cmap_save-arg"><b>--cmap_save &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Save colormap to PNG file.</p>
+
+</dd>
+<dt id="cmap_load-arg"><b>--cmap_load &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Load colormap from PNG file.</p>
+
+</dd>
+<dt id="cmap_add-arg"><b>--cmap_add &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Add a color to colormap (useful to add transparent color to non-transparent colormap) TODO: allow multiple colors.</p>
+
+</dd>
+<dt id="out_fmt-arg"><b>--out_fmt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Explicitely set image output format: pdf, ps, svg, png, jpeg, tiff, gif. By default format is determined from the output file extension.</p>
+
+</dd>
+<dt id="add"><b>--add</b></dt>
+<dd>
+
+<p>If image file exists, read it and use as the background. The image should have same dimensions.</p>
+
+</dd>
+<dt id="bgcolor-arg"><b>--bgcolor &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Image background color (default 0xFFFFFFFF).</p>
+
+</dd>
+<dt id="m---map-arg"><b>-m, --map &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Write OziExplorer map file for the image.</p>
+
+</dd>
+<dt id="skip_image"><b>--skip_image</b></dt>
+<dd>
+
+<p>Do not write image file (can be used if only the map file is needed). Option -o &lt;file&gt; should be provided anyway, the filename will be written to the map-file.</p>
+
+</dd>
+<dt id="title-arg"><b>--title &lt;arg&gt;</b></dt>
+<dd>
+
+<p>write text in the top-left corner.</p>
+
+</dd>
+<dt id="title_size-arg"><b>--title_size &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Font size for the title.</p>
+
+</dd>
+<dt id="tmap"><b>--tmap</b></dt>
+<dd>
+
+<p>Write tiled map. In this case `fname` parameter should contain a template with {x}, {y}, {z} fields. Output of map file is not supported at the moment. `mkref` options are ignored. Sub-directories are created if needed.</p>
+
+</dd>
+<dt id="zmin-arg"><b>--zmin &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Min zoom for tiled maps.</p>
+
+</dd>
+<dt id="zmax-arg"><b>--zmax &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Max zoom for tiled maps.</p>
+
+</dd>
+<dt id="tmap_scale-arg"><b>--tmap_scale &lt;arg&gt;</b></dt>
+<dd>
+
+<p>When creating tiles with multiple zoom levels scale larger tiles to create smaller ones (instead of rendering all tiles separately). Tile is created only if at least one source tile is newer then the destination tile (or destination does not exist). Default: 0.</p>
+
+</dd>
+<dt id="skip_empty"><b>--skip_empty</b></dt>
+<dd>
+
+<p>Do not save image if nothing was drawn. Default: 0</p>
+
+</dd>
+</dl>
+
+<h1 id="OPTIONS-FOR-DOWNLOADING">OPTIONS FOR DOWNLOADING</h1>
+
+<dl>
+
+<dt id="insecure-arg"><b>--insecure &lt;arg&gt;</b></dt>
+<dd>
+
+<p>do not check TLS certificate (default: 0)</p>
+
+</dd>
+<dt id="user_agent-arg"><b>--user_agent &lt;arg&gt;</b></dt>
+<dd>
+
+<p>set user agent (default: &quot;mapsoft2 downloader&quot;)</p>
+
+</dd>
+<dt id="http_ref-arg"><b>--http_ref &lt;arg&gt;</b></dt>
+<dd>
+
+<p>set http reference (default: &quot;https://github.com/slazav/mapsoft2&quot;)</p>
+
+</dd>
+</dl>
+
+<h1 id="AUTHOR">AUTHOR</h1>
+
+<p>Vladislav Zavjalov &lt;slazav@altlinux.org&gt;</p>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<ul>
+
+<li><p><a href="http://slazav.github.io/mapsoft2">Mapsoft2 documentation (ru, en)</a></p>
+
+</li>
+<li><p><a href="http://github.com/slazav/mapsoft2">Mapsoft2 source code, bugtracker</a></p>
+
+</li>
+<li><p><a href="http://github.com/ushakov/mapsoft">Old Mapsoft project</a></p>
+
+</li>
+</ul>
+
+
+</body>
+
+</html>
+
+

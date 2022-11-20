@@ -6,10 +6,13 @@ mapsoft2 -- tools for working with maps and geodata
 =head1 PROGRAMS
 
 	ms2conv -- converter for geodata and raster maps
-	ms2view -- viewer for geodata and raster maps
-	ms2nom -- Soviet nomenclature map calculations
-	ms2tiles -- TMS/Google tile calculations
-	ms2xyz -- writing track in a text form
-	ms2mkref -- creating a map reference
-	ms2proj -- convert coordinates
-	ms2img -- convert images
+	ms2geofig -- Working with geo-referenced fig files
+	ms2img    -- Convert raster images
+	ms2mp     -- Convert MP vector maps
+	ms2nom    -- Soviet nomenclature map calculations
+	ms2proj   -- Convert coordinates
+	ms2render -- Render geodata, srtm, raster and vector maps
+	ms2tiles  -- TMS/Google tile calculations
+	ms2view   -- Viewer for geodata and raster maps
+	ms2vmap   -- Convert vector maps
+	ms2xyz    -- Writing track as a text table

@@ -1,9 +1,11 @@
-PAGES := index modules mapdb
+PAGES := index modules
+PAGES_RU := vmap2 vmap2render diff geodata
 
 HTMLS := $(patsubst %,%.htm,$(PAGES))\
-         $(patsubst %,%.ru.htm,$(PAGES))
+         $(patsubst %,%.ru.htm,$(PAGES))\
+         $(patsubst %,%.htm,$(PAGES_RU))
 
-all: $(HTMLS) mapdb_ru.htm geodata_ru.htm  diff.htm
+all: $(HTMLS)
 
 
 %.ru.htm: defs.m4 %.m4
