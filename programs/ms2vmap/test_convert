@@ -30,3 +30,8 @@ assert_diff test_data/out.mp tmp.mp
 assert_cmd "$P test_data/out.mp -o tmp.vmap2 -t test_data/types.cfg" "" 0
 assert_diff test_data/out2.vmap2 tmp.vmap2
 
+# mp -> vmap2, keep old labels
+cp test_data/out.vmap2 tmp.vmap2
+assert_cmd "$P test_data/out.mp -o tmp.vmap2
+  -t test_data/types.cfg --keep_labels 1" "" 0
+assert_diff test_data/out.vmap2 tmp.vmap2

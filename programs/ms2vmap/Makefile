@@ -1,5 +1,3 @@
-MOD_HEADERS := actions.h
-
 PROGRAMS := ms2vmap
 
  OTHER_TESTS :=\
