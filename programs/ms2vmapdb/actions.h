@@ -60,11 +60,11 @@ class Action {
 
 /**********************************************************/
 // create map database
-class ActionDBCreate : public Action{
+class ActionCreate : public Action{
 public:
-  ActionDBCreate(){ }
+  ActionCreate(){ }
 
-  std::string get_name() const override { return "db_create"; }
+  std::string get_name() const override { return "create"; }
   std::string get_descr() const override { return "create vmap2 database"; }
   void help_impl(HelpPrinter & pr) override {
     pr.usage("<dbname>");
@@ -82,11 +82,11 @@ public:
 
 /**********************************************************/
 // delete map database
-class ActionDBDelete : public Action{
+class ActionDelete : public Action{
 public:
-  ActionDBDelete(){ }
+  ActionDelete(){ }
 
-  std::string get_name() const override { return "db_delete"; }
+  std::string get_name() const override { return "delete"; }
   std::string get_descr() const override { return "delete vmap2 database"; }
   void help_impl(HelpPrinter & pr) override {
     pr.usage("<dbname>");
@@ -104,11 +104,11 @@ public:
 
 /**********************************************************/
 // dump geohash database
-class ActionDBDumpGH : public Action{
+class ActionDumpGH : public Action{
 public:
-  ActionDBDumpGH(){ }
+  ActionDumpGH(){ }
 
-  std::string get_name() const override { return "db_dump_gh"; }
+  std::string get_name() const override { return "dump_gh"; }
   std::string get_descr() const override { return "dump geohashes for vmap2 database"; }
   void help_impl(HelpPrinter & pr) override {
     pr.usage("<dbname>");
@@ -126,11 +126,11 @@ public:
 
 /**********************************************************/
 // rebuild geohash database
-class ActionDBRebuildGH : public Action{
+class ActionRebuildGH : public Action{
 public:
-  ActionDBRebuildGH(){ }
+  ActionRebuildGH(){ }
 
-  std::string get_name() const override { return "db_rebuild_gh"; }
+  std::string get_name() const override { return "rebuild_gh"; }
   std::string get_descr() const override { return "rebuild geohashes for vmap2 database"; }
   void help_impl(HelpPrinter & pr) override {
     pr.usage("<dbname>");
@@ -146,55 +146,12 @@ public:
   }
 };
 
-/**********************************************************/
-// import objects to a database (keep existing objects)
-class ActionDBImport : public Action{
-public:
-  ActionDBImport(){
-    const char *g = "VMAP2_DBIMPORT";
-    options.add("out",   1,'o',g, "Output database name (with or without .vmap2db extension).");
-    options.add("types", 1,'t',g, "File with type information"
-                                  "(for reading vmap, mp, fig).");
-    ms2opt_add_mp(options);  // MP group, reading/writing mp files
-    ms2opt_add_fig(options); // FIG group, reading/writing fig files
-  }
-
-  std::string get_name() const override { return "db_import"; }
-  std::string get_descr() const override { return "import objects to vmap2 database"; }
-  void help_impl(HelpPrinter & pr) override {
-    pr.usage("<file1> <file2> ... -o <dbname> -t <type info file>");
-    pr.par("Read map objects in different formats and add to a database.");
-    pr.head(2, "Options:");
-    pr.opts({"VMAP2_DBIMPORT"});
-    pr.head(2, "Options for reading/writing MP and FIG formats:");
-    pr.opts({"MP", "FIG"});
-  }
-
-  virtual void run_impl(const std::vector<std::string> & args,
-                   const Opt & opts) override {
-
-    if (args.size()<1) throw Err() << get_name()
-      << ": at least one input file expected";
-
-    std::string ofile = opts.get("out", "");
-    if (ofile == "") throw Err() << get_name()
-      << ": non-empty database name expected (use -o option)";
-
-    // Read file with type information if it's available
-    VMap2types types;
-    if (opts.exists("types")) types.load(opts.get("types"));
-
-    VMap2 vmap2(ofile);
-    any_to_vmap2(args, types, vmap2, opts);
-  }
-};
-
 
 /**********************************************************/
 // add object
-class ActionDBAddObj : public Action{
+class ActionAddObj : public Action{
 public:
-  ActionDBAddObj(){
+  ActionAddObj(){
     const char *g = "MAPDB_ADD_OBJ";
     options.add("name",  1,'n',g, "Specify object name.");
     options.add("comm",  1,'c',g, "Specify object comment.");
@@ -204,7 +161,7 @@ public:
   }
 
   std::string get_name() const override {
-    return "db_add_obj"; }
+    return "add_obj"; }
   std::string get_descr() const override {
     return "add new object to vmap2 database, print id"; }
 
@@ -233,12 +190,12 @@ public:
 
 /**********************************************************/
 // print all object types in the map
-class ActionDBTypes : public Action{
+class ActionTypes : public Action{
 public:
-  ActionDBTypes(){}
+  ActionTypes(){}
 
   std::string get_name() const override {
-    return "db_types"; }
+    return "types"; }
   std::string get_descr() const override {
     return "print all object types in vmap2 database"; }
 
@@ -260,12 +217,12 @@ public:
 
 /**********************************************************/
 // print bounding box of the map (using geohash data)
-class ActionDBBBox : public Action{
+class ActionBBox : public Action{
 public:
-  ActionDBBBox(){}
+  ActionBBox(){}
 
   std::string get_name() const override {
-    return "db_bbox"; }
+    return "bbox"; }
   std::string get_descr() const override {
     return "print bounding box of the map (using geohash data)"; }
 
@@ -284,34 +241,88 @@ public:
 };
 
 /**********************************************************/
-// convert vector map
-class ActionConvert : public Action{
+// import objects to a database (keep existing objects)
+class ActionImport : public Action{
 public:
-  ActionConvert(){
-    ms2opt_add_vmap2io(options);
+  ActionImport(){
+    ms2opt_add_out(options);     // OUT group, -o
+    ms2opt_add_vmap2t(options);  // VMAP2 group, -t
+    ms2opt_add_vmap2i(options);  // VMAP2, MP, FIG groups
   }
 
-  std::string get_name() const override { return "convert"; }
-  std::string get_descr() const override { return "convert vector maps"; }
+  std::string get_name() const override { return "import"; }
+  std::string get_descr() const override { return "import objects to vmap2 database"; }
   void help_impl(HelpPrinter & pr) override {
-    pr.usage("<file1> <file2> ... -o <out file> [<options>]");
-
-    pr.par("Converts collection of vector map objects between different "
-           "formats (vmap2, vmap2db, vmap, mp, fig).");
-
+    pr.usage("<file1> <file2> ... -o <dbname> -t <type info file>");
+    pr.par("Read map objects in different formats and add to a database.");
     pr.head(2, "Options:");
-    pr.opts({"VMAP2IO"});
-    pr.head(2, "Options for reading/writing MP and FIG formats:");
+    pr.opts({"OUT, VMAP2"});
+    pr.head(2, "Options for reading MP and FIG formats:");
     pr.opts({"MP", "FIG"});
-    pr.head(2, "Options for creating FIG reference:");
-    pr.opts({"GEOFIG_REF", "MKREF_OPTS", "MKREF_BRD"});
   }
 
   virtual void run_impl(const std::vector<std::string> & args,
                    const Opt & opts) override {
 
-    vmap2_convert(args, opts);
+    if (args.size()<1) throw Err() << get_name()
+      << ": at least one input file expected";
+
+    std::string ofile = opts.get("out", "");
+    if (ofile == "") throw Err() << get_name()
+      << ": non-empty database name expected (use -o option)";
+
+    // Read file with type information if it's available
+    VMap2types types;
+    if (opts.exists("types")) types.load(opts.get("types"));
+
+    VMap2 vmap2(ofile);
+    vmap2_import(args, types, vmap2, opts);
   }
 };
+
+/**********************************************************/
+// export vector map
+class ActionExport : public Action{
+public:
+  ActionExport(){
+    ms2opt_add_out(options);
+    ms2opt_add_vmap2t(options);
+    ms2opt_add_vmap2o(options);
+  }
+
+  std::string get_name() const override { return "export"; }
+  std::string get_descr() const override { return "export vector map to a different format"; }
+  void help_impl(HelpPrinter & pr) override {
+    pr.usage("<dbname> -o <out file> [<options>]");
+
+    pr.par("Supported formats: vmap2, vmap2db, vmap, mp, fig");
+
+    pr.head(2, "Options:");
+    pr.opts({"OUT", "VMAP2"});
+    pr.head(2, "Options for writing MP format:");
+    pr.opts({"MP"});
+    pr.head(2, "Options for writing FIG format:");
+    pr.opts({"FIG"});
+  }
+
+  virtual void run_impl(const std::vector<std::string> & args,
+                   const Opt & opts) override {
+
+    if (args.size()!=1) throw Err() << get_name()
+      << ": one argument expected: <dbname>";
+
+    std::string ofile = opts.get("out", "");
+    if (ofile == "") throw Err()
+      << "non-empty output file expected (use -o option)";
+
+    // read file with type information if it's available
+    VMap2types types;
+    if (opts.exists("types")) types.load(opts.get("types"));
+
+    VMap2 map(args[0], 0);
+    vmap2_export(map, types, ofile, opts);
+  }
+};
+
 
 #endif

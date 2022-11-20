@@ -1,11 +1,11 @@
 MOD_HEADERS := actions.h
 
-PROGRAMS := ms2vmap
+PROGRAMS := ms2vmapdb
 
  OTHER_TESTS :=\
    test_interface\
+   test_obj\
    test_convert\
-#   test_render\
 
 
 MODDIR      := ../../modules

@@ -1,0 +1,30 @@
+#!/bin/bash -efu
+
+# VMAP and VMAP2 import/export
+
+P=${1:-./ms2vmapdb}
+
+. ../../modules/test_lib.sh
+
+# use same text data as in ../ms2vmap
+TESTDIR=../ms2vmap/test_data
+
+assert_cmd "$P import tmp" "Error: import: non-empty database name expected (use -o option)" 1
+assert_cmd "$P import -o tmp missing.vmap" "Error: db_simple: tmp.vmap2db: No such file or directory" 1
+
+# create database, import vmap
+$P delete tmp
+assert_cmd "$P create tmp" "" 0
+assert_cmd "$P create tmp" "Error: db_simple: tmp.vmap2db: File exists" 1
+assert_cmd "$P import -o tmp missing.vmap" "Error: can't open file: missing.vmap" 1
+
+# vmap2db -> vmap2
+assert_cmd "$P import -o tmp $TESTDIR/in.vmap -t $TESTDIR/types.cfg" "" 0
+assert_cmd "$P export tmp -o tmp.vmap2" "" 0
+assert_diff $TESTDIR/out.vmap2 tmp.vmap2
+
+# vmap2db -> vmap
+assert_cmd "$P export tmp -o tmp.vmap" "" 0
+assert_diff $TESTDIR/out.vmap tmp.vmap
+
+$P delete tmp

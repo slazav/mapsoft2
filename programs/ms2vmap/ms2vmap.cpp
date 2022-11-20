@@ -9,47 +9,27 @@
 
 #include "err/err.h"
 #include "getopt/getopt.h"
+#include "vmap2/vmap2io.h"
 
-#include "actions.h"
+#include "filename/filename.h"
 
 using namespace std;
 GetOptSet options;
-
-// all actions
-std::vector<std::shared_ptr<Action> > actions = {
-  std::shared_ptr<Action>(new ActionDBCreate),
-  std::shared_ptr<Action>(new ActionDBDelete),
-  std::shared_ptr<Action>(new ActionDBRebuildGH),
-  std::shared_ptr<Action>(new ActionDBDumpGH),
-  std::shared_ptr<Action>(new ActionDBImport),
-  std::shared_ptr<Action>(new ActionDBAddObj),
-  std::shared_ptr<Action>(new ActionDBTypes),
-  std::shared_ptr<Action>(new ActionDBBBox),
-  std::shared_ptr<Action>(new ActionConvert),
-};
 
 /**********************************************************/
 void usage(bool pod=false){
   HelpPrinter pr(pod, options, "ms2vmap");
 
-  pr.name("working with vector maps");
+  pr.name("convert vector maps between different formats");
   pr.usage("(-h|--help|--pod)");
-  pr.usage("<action> (-h|--help)");
-  pr.usage("<action> [<action arguments and options>]");
+  pr.usage("<file> ... -o <out file> [<options>]");
 
-  pr.head(1, "General options:");
-  pr.opts({"STD"});
-  pr.head(1, "Actions:");
-
-  // print list of actions
-  for (auto const & a: actions){
-    pr.usage(a->get_name() + " <arguments> -- " + a->get_descr());
-  }
-
-  // print halp message for each action:
-  if (pod){
-    for (auto const & a: actions) a->help(pod);
-  }
+  pr.head(2, "Options:");
+  pr.opts({"STD", "OUT", "VMAP2I", "VMAP2O", "VMAP2IO", "VMAP2T"});
+  pr.head(2, "Options for reading/writing MP format:");
+  pr.opts({"MP"});
+  pr.head(2, "Options for reading/writing FIG format:");
+  pr.opts({"FIG"});
 
   throw Err();
 }
@@ -60,21 +40,37 @@ main(int argc, char *argv[]){
   try{
 
     ms2opt_add_std(options);
+    ms2opt_add_out(options);
+    ms2opt_add_vmap2i(options);
+    ms2opt_add_vmap2o(options);
+    ms2opt_add_vmap2io(options);
+    ms2opt_add_vmap2t(options);
     options.remove("verbose");
 
     // general options -- up to first non-option argument
-    Opt O = parse_options(&argc, &argv, options, {}, NULL);
+    vector<string> infiles;
+    Opt O = parse_options_all(&argc, &argv, options, {}, infiles);
     if (O.exists("help")) usage();
     if (O.exists("pod"))  usage(true);
-    if (argc<1) usage();
+    if (infiles.size()<1) usage();
 
-    // run the action
-    for (auto const & a: actions){
-      if (a->get_name() == argv[0]) {a->run(&argc, &argv); return 0;}
-    }
+    // check output file
+    std::string ofile = O.get("out", "");
+    if (ofile == "") throw Err()
+      << "non-empty output file expected (use -o option)";
 
-    throw Err() << "ms2mapdb: unknown action: " << argv[0];
+    // read file with type information if it's available
+    VMap2types types;
+    if (O.exists("types")) types.load(O.get("types"));
 
+    // move to import? how to avoid copying of vmap?
+    VMap2 vmap;
+    if (infiles.size()==1 && file_ext_check(infiles[0], ".vmap2db"))
+      vmap = VMap2(infiles[0]); // open vmap2 database (no need to read!)
+    else
+      vmap2_import(infiles, types, vmap, O); // read all files (incl databases)
+
+    vmap2_export(vmap, types, ofile, O);
   }
   catch (Err & e) {
     if (e.str()!="") cerr << "Error: " << e.str() << "\n";

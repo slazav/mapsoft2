@@ -3,7 +3,7 @@
 # General interface and option tests
 # See also getopt module tests
 
-P=${1:-./ms2vmap}
+P=${1:-./ms2vmapdb}
 
 . ../../modules/test_lib.sh
 
@@ -14,6 +14,6 @@ assert_cmd "$P" "$help_msg" 1
 assert_cmd "$P --help" "$help_msg" 1
 assert_cmd "$P --xxx " "Error: unknown option: --xxx" 1
 
-assert_cmd "$P a" "Error: non-empty output file expected (use -o option)" 1
-assert_cmd "$P a -o b" "Error: unsupported file extension: a" 1
+assert_cmd "$P a" "Error: ms2vmapdb: unknown action: a" 1
+assert_cmd "$P a b" "Error: ms2vmapdb: unknown action: a" 1
 
