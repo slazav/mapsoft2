@@ -80,11 +80,17 @@ define(_PROG_,`<b><a href="man/$1.htm"><tt>$1</tt></a></b>')
 
 <ul>
 
-<li>STABLE _PROG_(ms2conv) -- ENRU(`Converter for geodata and raster maps
-.', `Преобразования геоданных и растровых карт.')
+<li>STABLE _PROG_(ms2conv) -- ENRU(`Convert geodata. Formats: GPX, KMZ/KML, OziExplorer,
+GeoJSON, GarminUtils, ZIP.', `Преобразования геоданных. Форматы: GPX, KMZ/KML, OziExplorer,
+GeoJSON, GarminUtils, ZIP.')
 
-<li>UNSTABLE _PROG_(ms2view) -- ENRU(`Viewer for geodata and raster maps.',
-`Вьюер для геоданных и растровых карт.')
+<li>STABLE _PROG_(ms2geofig) -- ENRU(
+`Working with geo-referenced FIG files. Adding geodata, raster maps, DEM
+data.', `Работа с FIG-файлами, имеющими геодезическую привязку.
+Добавление растровых карт, геоданных, DEM-данных.')
+
+<li>STABLE _PROG_(ms2img) -- ENRU(`Convert raster images.',
+`Преобразования растровых изображений.')
 
 <li>STABLE _PROG_(ms2nom) -- ENRU(`Program for soviet nomenclature map
 calculations. Coordinates of a map sheet, adjacent sheets, sheets
@@ -92,21 +98,35 @@ covering a given region, etc.', `Программа для вычислений,
 советской номенклатурой карт: координаты данного листа, соседние листы,
 покрывающие данный район листы и т.п.')
 
+<li>STABLE _PROG_(ms2mp) -- ENRU(`Convert MP files. Mostly for mapsoft2 testing.',
+`Преобразования MP файлов. Сделано в основном для тестирования mapsoft2.')
+
+<li>STABLE _PROG_(ms2proj) -- ENRU(`Geo coordinate converter.',
+`Преобразование геодезических координат.')
+
+<li>UNSTABLE _PROG_(ms2render) -- ENRU(`Render vector and raster maps,
+geodata, DEM data.', `Рендер векторных и растровых карт, геоданных,
+DEM-данных.')
+
 <li>STABLE _PROG_(ms2tiles) -- ENRU(`Program for TMS/Google tile
 calculations. Coordinates of a tile, tiles covering a given region,
 etc.', `Программа для вычислений, связанных с тайлами TMS/Google:
 координаты данного тайла, покрывающие данный район тайлы и т.п.')
 
+<li>UNSTABLE _PROG_(ms2view) -- ENRU(`Viewer for geodata and raster maps.',
+`Вьюер для геоданных и растровых карт.')
+
+<li>UNUSABLE _PROG_(ms2vmap) -- ENRU(`Convert vector maps. Supported formats:
+vmap2db, vmap2, vmap, mp, fig.',
+`Преобразование векторных карт. Форматы: vmap2db, vmap2, vmap, mp, fig.')
+
+<li>UNUSABLE _PROG_(ms2vmapdb) -- ENRU(`Working with vector map database (vmap2db).',
+`Работа с базой данных векторных карт (vmap2db).')
+
 <li>STABLE _PROG_(ms2xyz) -- ENRU(`Program for writing tracks as
 text tables. Time, distance, velocity calculations, adjustable format.',
 `Программа для вывода треков в виде текстовой таблицы. Вычисления времен,
 расстояний, скоростей, настраиваемый формат.')
-
-<li>STABLE _PROG_(ms2proj) -- ENRU(`Coordinate converter.',
-`Преобразование координат.')
-
-<li>UNUSABLE _PROG_(ms2vmap) -- ENRU(`Program for working with vector
-maps.', `Программа для работы с векторными картами.')
 
 </ul>
 

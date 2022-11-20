@@ -31,7 +31,7 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code>        ms2img &lt;options&gt; &lt;input file&gt; &lt;output file&gt;</code></pre>
+<pre><code>ms2img &lt;options&gt; &lt;input file&gt; &lt;output file&gt;</code></pre>
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
@@ -77,6 +77,12 @@
 <p>When writing TIFF, convert image to one of following forms: argb, rgb, grey, pal (default depends on the image).</p>
 
 </dd>
+<dt id="tiff_compression-arg"><b>--tiff_compression &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set compression algorythm for writing TIFF files: none, ccit_rle, ccit_rlew, ccit_fax3, ccit_fax4, lzw (default), jpeg, packbits</p>
+
+</dd>
 <dt id="tiff_minwhite-arg"><b>--tiff_minwhite &lt;arg&gt;</b></dt>
 <dd>
 
@@ -86,7 +92,7 @@
 <dt id="jpeg_quality-arg"><b>--jpeg_quality &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Set JPEG quality (default 95).</p>
+<p>Set JPEG quality for writing jpeg and tiff files (default 95).</p>
 
 </dd>
 <dt id="png_format-arg"><b>--png_format &lt;arg&gt;</b></dt>

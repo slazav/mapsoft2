@@ -27,34 +27,34 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code>        ms2nom [-E] [-W] -r &lt;point&gt; -s &lt;scale&gt; -- map at the point
+<pre><code>ms2nom [-E] [-W] --cover &lt;figure&gt; -s &lt;scale&gt; -- maps, covering the figure
 
-        ms2nom [-E] [-W] -r &lt;range&gt; -s &lt;scale&gt; -- maps at the range
+ms2nom [-E] [-W] -n &lt;name&gt; -- map range
 
-        ms2nom [-E] [-W] -n &lt;name&gt; -- map range
+ms2nom [-E] [-W] -n &lt;name&gt; --cover &lt;figure&gt;  -- check if the map touches given figure
 
-        ms2nom [-E] [-W] -n &lt;name&gt; -r &lt;range&gt;  -- check if the map touches the range
+ms2nom [-E] -n &lt;name&gt; -g &lt;geodata&gt;  -- check if the map touches geodata (tracks and points)
 
-        ms2nom [-E] [-W] -c -n &lt;name&gt; -- map center
+ms2nom [-E] [-W] -c -n &lt;name&gt; -- map center
 
-        ms2nom [-E] -n &lt;name&gt; --shift [x_shift,y_shift] -- adjacent map
+ms2nom [-E] -n &lt;name&gt; --shift [x_shift,y_shift] -- adjacent map
 
-        ms2nom [-E] -n &lt;name&gt; -s &lt;scale&gt; -- convert map to a different scale</code></pre>
+ms2nom [-E] -n &lt;name&gt; -s &lt;scale&gt; -- convert map to a different scale</code></pre>
 
 <h1 id="OPTIONS">OPTIONS</h1>
 
 <dl>
 
-<dt id="r---range-arg"><b>-r, --range &lt;arg&gt;</b></dt>
+<dt id="cover-arg"><b>--cover &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Show maps which cover a given figure. Figure is a point, rectangle or line in WGS84 coordinates. Option --scale should be set.</p>
+<p>Show maps which cover a given figure. Figure is a point, rectangle, line, multiline in WGS84 coordinates, or a geodata file with tracks or points. Option --scale should be set.</p>
 
 </dd>
 <dt id="s---scale-arg"><b>-s, --scale &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Set map scale. Scale should be set when --range option is used. If used with --name option then name will be converted to a new scale instead of printing the range.</p>
+<p>Set map scale. Scale should be set when --cover option is used. If used with --name option then name will be converted to a new scale instead of printing the range.</p>
 
 </dd>
 <dt id="n---name-arg"><b>-n, --name &lt;arg&gt;</b></dt>
@@ -84,7 +84,7 @@
 <dt id="S---shift-arg"><b>-S, --shift &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Shift a map. Should be used with --name option. Not compatable with --range option. Argument is an array of two integer numbers [dx,dy].</p>
+<p>Shift a map. Should be used with --name option. Not compatable with --cover option. Argument is an array of two integer numbers [dx,dy].</p>
 
 </dd>
 <dt id="h---help"><b>-h, --help</b></dt>
@@ -107,7 +107,7 @@
 
 <p>At the moment combination of --ext and --shift options with such a &quot;multiplied&quot; name returns non-multiplied adjecent sheets. This is not very useful and maybe changed later.</p>
 
-<p>If both --range (-r) and --name (-n) options are given program returns with exit code 0 or 1 depending on whether the coordinate range intersects with the tile range.</p>
+<p>If both --cover and --name (-n) options are given program returns with exit code 0 or 1 depending on whether the map covers the given figure.</p>
 
 <p>Soviet nomenclature maps use Pukovo-1942 datum (+ellps=krass +towgs84=28,-130,-95). By default Pulkovo datum is used for all calculations. In this datum map corners have round coordinates. If option --wgs (-W) is given then WGS datum is used instead of Pulkovo.</p>
 
@@ -117,47 +117,47 @@
 
 <p>Which 1:100000 map is covering a point lon=69, lat=36:</p>
 
-<pre><code>        $ ms2nom -r &quot;[69,36]&quot; -s 1:100000
-        j42-139</code></pre>
+<pre><code>$ ms2nom -r &quot;[69,36]&quot; -s 1:100000
+j42-139</code></pre>
 
 <p>Which 1:100000 maps are touching range lon=36.0-36.5, lat=70.0-70.5:</p>
 
-<pre><code>        $ ms2nom -r &quot;[36,70,0.5,0.5]&quot; -s 1:100000
-        r37-049,050
-        r37-061,062</code></pre>
+<pre><code>$ ms2nom -r &quot;[36,70,0.5,0.5]&quot; -s 1:100000
+r37-049,050
+r37-061,062</code></pre>
 
 <p>Coordinate range and center of j42-1 map:</p>
 
-<pre><code>        $ ms2nom -n j42-1
-        [66,38,3,2]
+<pre><code>$ ms2nom -n j42-1
+[66,38,3,2]
 
-        $ ms2nom -n j42-1 -c
-        [67.5,39]</code></pre>
+$ ms2nom -n j42-1 -c
+[67.5,39]</code></pre>
 
 <p>Right neighbour of j42-112-2 map:</p>
 
-<pre><code>        $ ms2nom -n j42-112-2 --shift [1,0]
-        j42-113-1</code></pre>
+<pre><code>$ ms2nom -n j42-112-2 --shift [1,0]
+j42-113-1</code></pre>
 
 <p>List of 1:50&#39;000 maps for p42-111,112 map:</p>
 
-<pre><code>        $ ms2nom -n p42-111,112 -s 50k
-        p42-111-1,2
-        p42-111-3,4
-        p42-112-1,2
-        p42-112-3,4</code></pre>
+<pre><code>$ ms2nom -n p42-111,112 -s 50k
+p42-111-1,2
+p42-111-3,4
+p42-112-1,2
+p42-112-3,4</code></pre>
 
 <p>Opposite:</p>
 
-<pre><code>        $ ms2nom -n p42-111-3,4 -s 100k
-        p42-111,112</code></pre>
+<pre><code>$ ms2nom -n p42-111-3,4 -s 100k
+p42-111,112</code></pre>
 
 <p>Test if map touches a coordinate range:</p>
 
-<pre><code>        $ ms2nom -n n37 -r &quot;[36,52,1,1]&quot;; echo $?
-        0
-        $ ms2nom -n n37 -r &quot;[26,52,1,1]&quot;; echo $?
-        1</code></pre>
+<pre><code>$ ms2nom -n n37 -r &quot;[36,52,1,1]&quot;; echo $?
+0
+$ ms2nom -n n37 -r &quot;[26,52,1,1]&quot;; echo $?
+1</code></pre>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 

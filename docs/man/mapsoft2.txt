@@ -2,10 +2,9 @@
 
 mapsoft2 -- tools for working with maps and geodata
 
-
 =head1 PROGRAMS
 
-	ms2conv -- converter for geodata and raster maps
+	ms2conv   -- converter for geodata
 	ms2geofig -- Working with geo-referenced fig files
 	ms2img    -- Convert raster images
 	ms2mp     -- Convert MP vector maps
@@ -15,4 +14,5 @@ mapsoft2 -- tools for working with maps and geodata
 	ms2tiles  -- TMS/Google tile calculations
 	ms2view   -- Viewer for geodata and raster maps
 	ms2vmap   -- Convert vector maps
+	ms2vmapdb -- Working with vector map database
 	ms2xyz    -- Writing track as a text table

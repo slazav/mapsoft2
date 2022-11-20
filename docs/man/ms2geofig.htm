@@ -17,9 +17,10 @@
   <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
   <li><a href="#GENERAL-OPTIONS">GENERAL OPTIONS:</a></li>
   <li><a href="#MAKING-REFERENCE-AND-WRITING-IT-TO-FIG-FILE-IN-CREATE-ACTION">MAKING REFERENCE AND WRITING IT TO FIG FILE IN `CREATE` ACTION:</a></li>
-  <li><a href="#READING-GEODATA-ADD-ACTION">READING GEODATA (`ADD` ACTION):</a></li>
-  <li><a href="#DELETE-SERTAIN-COMPONENTS-OF-GEOFIG-FILE-DEL-ACTION">DELETE SERTAIN COMPONENTS OF GEOFIG FILE (`DEL` ACTION):</a></li>
-  <li><a href="#WRITING-TRACKS-AND-WAYPOINTS-TO-FIG-FILE-ADD-ACTION">WRITING TRACKS AND WAYPOINTS TO FIG FILE (`ADD` ACTION):</a></li>
+  <li><a href="#READING-GEODATA-WRITING-TRACKS-AND-WAYPOINTS-TO-FIG-FILE-ADD-ACTION">READING GEODATA, WRITING TRACKS AND WAYPOINTS TO FIG FILE (`ADD` ACTION):</a></li>
+  <li><a href="#DELETE-CERTAIN-COMPONENTS-OF-GEOFIG-FILE-DEL-ACTION">DELETE CERTAIN COMPONENTS OF GEOFIG FILE (`DEL` ACTION):</a></li>
+  <li><a href="#SRTM-OPTIONS-SRTM-ACTIONS">SRTM OPTIONS (`SRTM` ACTIONS):</a></li>
+  <li><a href="#EXAMPLES">EXAMPLES:</a></li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
 </ul>
@@ -30,11 +31,13 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code>        ms2geofig create [&lt;options&gt;] -o &lt;output file&gt;
+<pre><code>ms2geofig create [&lt;options&gt;] -o &lt;output file&gt;
 
-        ms2geofig add [&lt;options&gt;] &lt;files&gt; -o &lt;fig file&gt;
+ms2geofig add [&lt;options&gt;] &lt;files&gt; -o &lt;fig file&gt;
 
-        ms2geofig del [&lt;options&gt;] -o &lt;fig file&gt;</code></pre>
+ms2geofig del [&lt;options&gt;] -o &lt;fig file&gt;
+
+ms2geofig srtm [&lt;options&gt;] -o &lt;fig file&gt;</code></pre>
 
 <h1 id="GENERAL-OPTIONS">GENERAL OPTIONS:</h1>
 
@@ -178,6 +181,18 @@
 <p>Figure in wgs84 coordinates to be covered by the map (&quot;*_tile&quot; or &quot;proj&quot; maps), a rectangle, a line, or a multi-segment line.</p>
 
 </dd>
+<dt id="coords_file-arg"><b>--coords_file &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Use tracks and points in the file to calculate map size (&quot;*_tile&quot; or &quot;proj&quot; maps).</p>
+
+</dd>
+<dt id="coords_nom-arg"><b>--coords_nom &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Use Soviet nomenclature name calculate map size (&quot;*_tile&quot; or &quot;proj&quot; maps).</p>
+
+</dd>
 <dt id="border-arg"><b>--border &lt;arg&gt;</b></dt>
 <dd>
 
@@ -210,10 +225,58 @@
 </dd>
 </dl>
 
-<h1 id="READING-GEODATA-ADD-ACTION">READING GEODATA (`ADD` ACTION):</h1>
+<h1 id="READING-GEODATA-WRITING-TRACKS-AND-WAYPOINTS-TO-FIG-FILE-ADD-ACTION">READING GEODATA, WRITING TRACKS AND WAYPOINTS TO FIG FILE (`ADD` ACTION):</h1>
 
 <dl>
 
+<dt id="raw"><b>--raw</b></dt>
+<dd>
+
+<p>Convert tracks and points to fig as simple lines, without any additional information.</p>
+
+</dd>
+<dt id="trk_templ-arg"><b>--trk_templ &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Template for track lines (default: &quot;2 1 0 1 1 7 7 0 -1 1 1 1 -1 0 0&quot;).</p>
+
+</dd>
+<dt id="wpt_templ-arg"><b>--wpt_templ &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Template for waypoints (default: &quot;2 1 0 2 0 7 6 0 -1 1 1 1 -1 0 0&quot;).</p>
+
+</dd>
+<dt id="txt_templ-arg"><b>--txt_templ &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Template for waypoint labels (default: &quot;4 0 8 5 -1 18 6 0.0000 4&quot;).</p>
+
+</dd>
+<dt id="map_tsize-arg"><b>--map_tsize &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Tile size for raster maps (default 1024).</p>
+
+</dd>
+<dt id="map_depth-arg"><b>--map_depth &lt;arg&gt;</b></dt>
+<dd>
+
+<p>FIG depth for raster maps (default 500).</p>
+
+</dd>
+<dt id="map_marg-arg"><b>--map_marg &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Margins for raster maps (pixels, default 50).</p>
+
+</dd>
+<dt id="map_dir-arg"><b>--map_dir &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Directory for raster map tiles (default &lt;filename&gt;.img).</p>
+
+</dd>
 <dt id="in_fmt-arg"><b>--in_fmt &lt;arg&gt;</b></dt>
 <dd>
 
@@ -232,9 +295,57 @@
 <p>OziExplorer format charset (default Windows-1251).</p>
 
 </dd>
+<dt id="map_smooth-arg"><b>--map_smooth &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Smooth map drawing, interpolation for small scales, averaging for large ones, (0|1, default - 0).</p>
+
+</dd>
+<dt id="map_clip_brd-arg"><b>--map_clip_brd &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Clip map to its border (default 1).</p>
+
+</dd>
+<dt id="map_draw_refs-arg"><b>--map_draw_refs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Draw map reference points (ARGB color, default 0).</p>
+
+</dd>
+<dt id="map_draw_brd-arg"><b>--map_draw_brd &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Draw map border (ARGB color, default 0).</p>
+
+</dd>
+<dt id="map_fade-arg"><b>--map_fade &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Color to fade the map (default is 0, no fading).</p>
+
+</dd>
+<dt id="map_min_sc-arg"><b>--map_min_sc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Min scale (&lt;map pixels&gt;/&lt;image pixels&gt;) (default is 0.1).</p>
+
+</dd>
+<dt id="map_max_sc-arg"><b>--map_max_sc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Max scale (&lt;map pixels&gt;/&lt;image pixels&gt;) (default is 10).</p>
+
+</dd>
+<dt id="map_def_col-arg"><b>--map_def_col &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Color to paint the map outside min_sc/max_sc (default is 0x80FF0000).</p>
+
+</dd>
 </dl>
 
-<h1 id="DELETE-SERTAIN-COMPONENTS-OF-GEOFIG-FILE-DEL-ACTION">DELETE SERTAIN COMPONENTS OF GEOFIG FILE (`DEL` ACTION):</h1>
+<h1 id="DELETE-CERTAIN-COMPONENTS-OF-GEOFIG-FILE-DEL-ACTION">DELETE CERTAIN COMPONENTS OF GEOFIG FILE (`DEL` ACTION):</h1>
 
 <dl>
 
@@ -266,7 +377,121 @@
 
 <p>If no options are given then delete everything.</p>
 
-<h1 id="WRITING-TRACKS-AND-WAYPOINTS-TO-FIG-FILE-ADD-ACTION">WRITING TRACKS AND WAYPOINTS TO FIG FILE (`ADD` ACTION):</h1>
+<h1 id="SRTM-OPTIONS-SRTM-ACTIONS">SRTM OPTIONS (`SRTM` ACTIONS):</h1>
+
+<p>At the moment objects are added in a rectangular bounding box of map image, refpoints, and border. I plan to add border cropping later</p>
+
+<dl>
+
+<dt id="srtm_dir-arg"><b>--srtm_dir &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Set srtm data folder, default - $HOME/.srtm_data</p>
+
+</dd>
+<dt id="srtm_interp_holes-arg"><b>--srtm_interp_holes &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Interpolate holes (0|1, default 1).</p>
+
+</dd>
+</dl>
+
+<dl>
+
+<dt id="cnt-arg"><b>--cnt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Make contours (default: 1)</p>
+
+</dd>
+<dt id="cnt_step-arg"><b>--cnt_step &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Contour step, m (default: 100)</p>
+
+</dd>
+<dt id="cnt_smult-arg"><b>--cnt_smult &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Thick contour multiplier (default: 5, every 5th contour is thick)</p>
+
+</dd>
+<dt id="cnt_minpts-arg"><b>--cnt_minpts &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Min.number of points in a contour (default: 6)</p>
+
+</dd>
+<dt id="cnt_templ1-arg"><b>--cnt_templ1 &lt;arg&gt;</b></dt>
+<dd>
+
+<p>FIG template for contours (default: 2 1 0 1 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0)</p>
+
+</dd>
+<dt id="cnt_templ2-arg"><b>--cnt_templ2 &lt;arg&gt;</b></dt>
+<dd>
+
+<p>FIG template for thick contours (default: 2 1 0 2 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0)</p>
+
+</dd>
+<dt id="scnt-arg"><b>--scnt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Make large slope contours (default: 1)</p>
+
+</dd>
+<dt id="scnt_minpts-arg"><b>--scnt_minpts &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Min.number of point in a slope contour (default: 12)</p>
+
+</dd>
+<dt id="scnt_val-arg"><b>--scnt_val &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Threshold value for slope contour (in degrees, default: 35)</p>
+
+</dd>
+<dt id="scnt_templ-arg"><b>--scnt_templ &lt;arg&gt;</b></dt>
+<dd>
+
+<p>FIG template for large slopes (default: 2 3 0 0 0 24 91 -1 20 0.000 0 0 -1 0 0)</p>
+
+</dd>
+<dt id="peaks-arg"><b>--peaks &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Make peaks points (default: 1)</p>
+
+</dd>
+<dt id="peaks_dh-arg"><b>--peaks_dh &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>DH parameter for peak finder [m], default - 20.</code></pre>
+
+</dd>
+<dt id="peaks_ps-arg"><b>--peaks_ps &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>PS parameter fr peak finder [pts], default - 1000.</code></pre>
+
+</dd>
+<dt id="peaks_templ-arg"><b>--peaks_templ &lt;arg&gt;</b></dt>
+<dd>
+
+<p>FIG template for peaks (default: 2 1 0 3 24 7 57 -1 -1 0.000 0 1 -1 0 0)</p>
+
+</dd>
+</dl>
+
+<h1 id="EXAMPLES">EXAMPLES:</h1>
+
+<p>Create standart map sheen n30-068 (1km at 1cm) as a FIG file: &gt; ms2geofig create --mkref nom --name n30-068 -o n30-068.fig</p>
+
+<p>Add track to the file: &gt; ms2geofig add Current.gpx -o n30-068.fig</p>
+
+<p>Add objects from SRTM data (20/100m contours, areas with slope &gt; 25deg, peaks): &gt; ms2geofig srtm --srtm_dir ${srtm_dir} -o n30-068.fig\ --cnt 1 --cnt_step 20 --scnt 1 --scnt_val 25 --peaks 1</p>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 

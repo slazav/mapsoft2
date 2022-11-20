@@ -30,7 +30,7 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code>        ms2xyz &lt;options&gt; &lt;input files&gt;</code></pre>
+<pre><code>ms2xyz &lt;options&gt; &lt;input files&gt;</code></pre>
 
 <h1 id="GENERAL-OPTIONS">GENERAL OPTIONS</h1>
 
@@ -150,52 +150,52 @@
 
 <h1 id="FORMAT">FORMAT</h1>
 
-<pre><code>  %% -- % sign
-  %x -- wgs lon
-  %y -- wgs lat
-  %z -- altitude, m
-  %t -- time (seconds since 1970-01-01 00:00:00 UTC)
-  %T -- formatted date and time (default: ISO 8601 form, &lt;yyyy-mm-dd&gt;T&lt;HH:MM:SS.FFF&gt;Z)
-  %u -- time from part beginning, s
-  %U -- time from data beginning, s
-  %v -- time from the previous point, s
-  %d -- % distance from part beginning, km
-  %D -- % distance from data beginning, km
-  %e -- % distance from the previous point, m
-  %S -- % speed, km/h
-  %n -- %  point number from part beginning
-  %N -- %  point number from data beginning
-  %p -- %  part number</code></pre>
+<pre><code>%% -- % sign
+%x -- wgs lon
+%y -- wgs lat
+%z -- altitude, m
+%t -- time (seconds since 1970-01-01 00:00:00 UTC)
+%T -- formatted date and time (default: ISO 8601 form, &lt;yyyy-mm-dd&gt;T&lt;HH:MM:SS.FFF&gt;Z)
+%u -- time from part beginning, s
+%U -- time from data beginning, s
+%v -- time from the previous point, s
+%d -- % distance from part beginning, km
+%D -- % distance from data beginning, km
+%e -- % distance from the previous point, m
+%S -- % speed, km/h
+%n -- %  point number from part beginning
+%N -- %  point number from data beginning
+%p -- %  part number</code></pre>
 
 <h1 id="TIME-FORMAT">TIME FORMAT</h1>
 
-<pre><code>  %% -- a literal %
-  %n -- a newline
-  %t -- a tab
-  %Y -- year
-  %y -- last two digits of year (00..99)
-  %m -- month (01..12)
-  %d -- day of month (e.g., 01)
-  %H -- hour (00..23)
-  %M -- minute (00..59)
-  %S -- second (00..60)
-  %F -- same as %Y-%m-%d
-  %T -- same as %H:%M:%S
-  %a -- abbreviated weekday name (e.g., Sun)
-  %b -- abbreviated month name (e.g., Jan)
-  %s -- seconds since 1970-01-01 00:00:00 UTC
-  %f -- fractional part of a second it it is non-zero (non-standard)</code></pre>
+<pre><code>%% -- a literal %
+%n -- a newline
+%t -- a tab
+%Y -- year
+%y -- last two digits of year (00..99)
+%m -- month (01..12)
+%d -- day of month (e.g., 01)
+%H -- hour (00..23)
+%M -- minute (00..59)
+%S -- second (00..60)
+%F -- same as %Y-%m-%d
+%T -- same as %H:%M:%S
+%a -- abbreviated weekday name (e.g., Sun)
+%b -- abbreviated month name (e.g., Jan)
+%s -- seconds since 1970-01-01 00:00:00 UTC
+%f -- fractional part of a second it it is non-zero (non-standard)</code></pre>
 
 <h1 id="EXAMPLES">EXAMPLES</h1>
 
 <p>Print track as a 3-column table with unix time (seconds), distance from the beginning, and altitude:</p>
 
-<pre><code>        $ ms2xyz mytrack.plt -f &quot;%t %D %z&quot;
-        1559876972 0.000 1238.8
-        1559876995 0.031 1226.3
-        1559877026 0.050 1185.4
-        1559877060 0.051 1186.9
-        ...</code></pre>
+<pre><code>$ ms2xyz mytrack.plt -f &quot;%t %D %z&quot;
+1559876972 0.000 1238.8
+1559876995 0.031 1226.3
+1559877026 0.050 1185.4
+1559877060 0.051 1186.9
+...</code></pre>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 

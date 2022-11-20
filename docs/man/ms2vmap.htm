@@ -13,9 +13,105 @@
 
 
 <ul id="index">
+  <li><a href="#NAME">NAME</a></li>
+  <li><a href="#SYNOPSIS">SYNOPSIS</a>
+    <ul>
+      <li><a href="#Options">Options:</a></li>
+      <li><a href="#Options-for-reading-writing-MP-format">Options for reading/writing MP format:</a></li>
+      <li><a href="#Options-for-reading-writing-FIG-format">Options for reading/writing FIG format:</a></li>
+    </ul>
+  </li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
 </ul>
+
+<h1 id="NAME">NAME</h1>
+
+<p>ms2vmap -- convert vector maps between different formats</p>
+
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
+
+<pre><code>ms2vmap (-h|--help|--pod)
+
+ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
+
+<h2 id="Options">Options:</h2>
+
+<dl>
+
+<dt id="h---help"><b>-h, --help</b></dt>
+<dd>
+
+<p>Show help message.</p>
+
+</dd>
+<dt id="pod"><b>--pod</b></dt>
+<dd>
+
+<p>Show help message as POD template.</p>
+
+</dd>
+<dt id="o---out-arg"><b>-o, --out &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Output file.</p>
+
+</dd>
+<dt id="t---types-arg"><b>-t, --types &lt;arg&gt;</b></dt>
+<dd>
+
+<p>File with type information.</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-reading-writing-MP-format">Options for reading/writing MP format:</h2>
+
+<dl>
+
+<dt id="mp_enc-arg"><b>--mp_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override encoding for reading MP-files (does not change CodePage setting)</p>
+
+</dd>
+<dt id="mp_ip-arg"><b>--mp_ip &lt;arg&gt;</b></dt>
+<dd>
+
+<p>override MP ID</p>
+
+</dd>
+<dt id="mp_name-arg"><b>--mp_name &lt;arg&gt;</b></dt>
+<dd>
+
+<p>override MP Name</p>
+
+</dd>
+<dt id="mp_in_enc-arg"><b>--mp_in_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override input encoding for MP-files (does not change CodePage setting)</p>
+
+</dd>
+<dt id="mp_out_enc-arg"><b>--mp_out_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override output encoding for MP-files (does not change CodePage setting)</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-reading-writing-FIG-format">Options for reading/writing FIG format:</h2>
+
+<dl>
+
+<dt id="fig_enc-arg"><b>--fig_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Encoding for reading/writing fig files (default: KOI8-R).</p>
+
+</dd>
+</dl>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 

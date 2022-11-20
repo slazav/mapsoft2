@@ -27,7 +27,7 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code>        ms2tiles &lt;options&gt;</code></pre>
+<pre><code>ms2tiles &lt;options&gt;</code></pre>
 
 <h1 id="OPTIONS">OPTIONS</h1>
 
@@ -42,19 +42,25 @@
 <dt id="r---range-arg"><b>-r, --range &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Show tile range which covers a given figure. Figure is a point, rectangle or line in WGS84 coordinates.</p>
+<p>Show tile range which covers a given figure. Figure is a point ([lon,lat]), rectangle ([&lt;lon&gt;,&lt;lat&gt;,&lt;width&gt;,&lt;height&gt;]) line ([[lon1,lat1],[lon1,lat1],...]), multi-segment line in WGS84 coordinates, or a geodata file with tracks/waypoints.</p>
+
+</dd>
+<dt id="cover-arg"><b>--cover &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Show all tiles which cover a given figure. Figure is set in the same way as in the --range option.</p>
 
 </dd>
 <dt id="t---tiles-arg"><b>-t, --tiles &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Show coordinate range for a given tile or files.</p>
+<p>Show coordinate range for a given tile &quot;[x,y]&quot; or a tile range &quot;[x,y,w,h]&quot;. If --tiles option is combined with --cover or --range, program returns with exit code 0 or 1 depending on whether the figure or its bounding is covered with the tile or the tile range.</p>
 
 </dd>
 <dt id="G---google"><b>-G, --google</b></dt>
 <dd>
 
-<p>Use Google tiles instead of TMS.</p>
+<p>By default the program works with TMS tiles. Use --google option to work with Google tiles instead.</p>
 
 </dd>
 <dt id="c---center"><b>-c, --center</b></dt>
@@ -77,40 +83,34 @@
 </dd>
 </dl>
 
-<p>Value of --tiles option can be a tile &quot;[x,y]&quot; or a tile range &quot;[x,y,w,h]&quot;. Value of --range option is a point &quot;[lon,lat]&quot;, or rectangle &quot;[&lt;lon&gt;,&lt;lat&gt;,&lt;width&gt;,&lt;height&gt;]&quot;, or line &quot;[[lon1,lat1],[lon1,lat1],...]&quot;.</p>
-
-<p>If both --range and --tiles options are given program returns with exit code 0 or 1 depending on whether the coordinate range intersects with the tile range.</p>
-
-<p>By default the program works with TMS tiles. Use --google option for google tiles.</p>
-
 <h1 id="EXAMPLES">EXAMPLES</h1>
 
 <p>A point with coordinates lon=69.1, lat=36.1 is located on the TMS tile with z=13, x=5668, y=4977:</p>
 
-<pre><code>        $ ms2tiles -z 13 -r &quot;[69.1,36.1]&quot;
-        [5668,4977,1,1]</code></pre>
+<pre><code>$ ms2tiles -z 13 -r &quot;[69.1,36.1]&quot;
+[5668,4977,1,1]</code></pre>
 
 <p>A coordinate range 1x1 degree starting at lon=69, lat=36 is covered by 23x29 Google tiles with z=13, starting with tile x=5666, y=3188:</p>
 
-<pre><code>        $ ms2tiles -G -z 13 -r &quot;[69,36,1,1]&quot;
-        [5666,3188,23,29]</code></pre>
+<pre><code>$ ms2tiles -G -z 13 -r &quot;[69,36,1,1]&quot;
+[5666,3188,23,29]</code></pre>
 
 <p>Finding a coordinate range for a TMS tile x=5666, y=4975, z=13</p>
 
-<pre><code>        $ ms2tiles -z 13 -t &quot;[5666,4975]&quot;
-        [68.9941406,35.9957854,0.0439453125,0.0355463899]</code></pre>
+<pre><code>$ ms2tiles -z 13 -t &quot;[5666,4975]&quot;
+[68.9941406,35.9957854,0.0439453125,0.0355463899]</code></pre>
 
 <p>Finding center of a tile:</p>
 
-<pre><code>        $ ms2tiles -z 13 -c -t &quot;[5666,4975]&quot;
-        [69.0161133,36.0135586]</code></pre>
+<pre><code>$ ms2tiles -z 13 -c -t &quot;[5666,4975]&quot;
+[69.0161133,36.0135586]</code></pre>
 
 <p>Checking if a tile touches a coordinate range:</p>
 
-<pre><code>        $ ms2tiles -z 13 -t &quot;[5666,4975]&quot; -r &quot;[69,36,1,1]&quot;; echo $?
-        0
-        $ ms2tiles -z 13 -t &quot;[5666,4975]&quot; -r &quot;[59,36,1,1]&quot;; echo $?
-        1</code></pre>
+<pre><code>$ ms2tiles -z 13 -t &quot;[5666,4975]&quot; -r &quot;[69,36,1,1]&quot;; echo $?
+0
+$ ms2tiles -z 13 -t &quot;[5666,4975]&quot; -r &quot;[59,36,1,1]&quot;; echo $?
+1</code></pre>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 
