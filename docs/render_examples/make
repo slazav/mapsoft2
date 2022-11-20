@@ -1,15 +1,16 @@
 #!/bin/sh
 
 # mapsoft2 programs
-MAPDB=../../programs/ms2mapdb/ms2mapdb
+MAPDB=../../programs/ms2vmapdb/ms2vmapdb
+RENDER=../../programs/ms2render/ms2render
 CONV=../../programs/ms2conv/ms2conv
 PROJ=../../programs/ms2proj/ms2proj
 
 # remove old databases
-$MAPDB delete .
+$MAPDB delete tmp
 
 # create map
-$MAPDB create .
+$MAPDB create tmp
 
 # Pulkovo coordinates in km and without zone prefix:
 point_m="[0.6,0.25]"
@@ -24,18 +25,18 @@ area_d=$($PROJ --shift [1500,0] --scale 1000 --from SU3 --to WGS $area_m)
 text_d=$($PROJ --shift [1500,0] --scale 1000 --from SU3 --to WGS $text_m)
 
 # add object
-$MAPDB add_obj . point:1 "$point_d"
-$MAPDB add_obj . line:1 "$line_d"
-$MAPDB add_obj . area:1 "$area_d"
-$MAPDB add_obj . text:1 "$text_d" --name "Text on the map"
+$MAPDB add_obj tmp point:1 "$point_d"
+$MAPDB add_obj tmp line:1 "$line_d"
+$MAPDB add_obj tmp area:1 "$area_d"
+$MAPDB add_obj tmp text:1 "$text_d" --name "Text on the map"
 
 # render
 for i in $(seq -w 1 16); do
-  $MAPDB render . --out render${i}.png --config render${i}.cfg\
+  $RENDER tmp.vmap2db --out render${i}.png --config render${i}.cfg\
    --mkref proj --coords_wgs $line_d --scale 1000 --dpi 300\
    --proj SU3 --margin 10
 done
 
-#$MAPDB export_vmap . a.vmap
+#$MAPDB export_vmap tmp a.vmap
 
-$MAPDB delete .
+$MAPDB delete tmp

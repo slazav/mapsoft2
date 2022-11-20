@@ -1,15 +1,16 @@
 #!/bin/sh
 
 # mapsoft2 programs
-MAPDB=../../programs/ms2mapdb/ms2mapdb
+MAPDB=../../programs/ms2vmapdb/ms2vmapdb
+RENDER=../../programs/ms2render/ms2render
 CONV=../../programs/ms2conv/ms2conv
 PROJ=../../programs/ms2proj/ms2proj
 
 # remove old databases
-$MAPDB delete .
+$MAPDB delete tmp
 
 # create map
-$MAPDB create .
+$MAPDB create tmp
 
 # Add object to MapDB in cwd.
 # Arguments:
@@ -22,7 +23,7 @@ function add_obj {
   crd_km="$1"; shift
   #convert to degrees
   crd_deg=$($PROJ --shift [1200,5000] --scale 1000 --from SU3 --to WGS $crd_km)
-  $MAPDB add_obj . "$type" "$crd_deg" "$@"
+  $MAPDB add_obj tmp "$type" "$crd_deg" "$@"
 }
 
 text="1. Горизонтальный и наклонный текст на карте"
@@ -40,11 +41,11 @@ crd_deg=$($PROJ --shift [1200,5000] --scale 1000 --from SU3 --to WGS [[0,0],[1.8
 
 # render
 for i in $(seq -w 1 8); do
-  $MAPDB render . --out render${i}.png --config render${i}.cfg\
+  $RENDER tmp.vmap2db --out render${i}.png --config render${i}.cfg\
    --mkref proj --coords_wgs $crd_deg --scale 1000 --dpi 300\
    --proj SU3 --margin 10
 done
 
-#$MAPDB export_vmap . a.vmap
+#$MAPDB export_vmap tmp a.vmap
 
-$MAPDB delete .
+$MAPDB delete tmp
