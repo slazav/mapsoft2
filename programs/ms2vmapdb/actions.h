@@ -256,7 +256,7 @@ public:
     pr.usage("<file1> <file2> ... -o <dbname> -t <type info file>");
     pr.par("Read map objects in different formats and add to a database.");
     pr.head(2, "Options:");
-    pr.opts({"OUT, VMAP2"});
+    pr.opts({"OUT", "VMAP2"});
     pr.head(2, "Options for reading MP and FIG formats:");
     pr.opts({"MP", "FIG"});
   }
