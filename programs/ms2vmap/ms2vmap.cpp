@@ -25,11 +25,13 @@ void usage(bool pod=false){
   pr.usage("<file> ... -o <out file> [<options>]");
 
   pr.head(2, "Options:");
-  pr.opts({"STD", "OUT", "VMAP2I", "VMAP2O", "VMAP2IO", "VMAP2T"});
+  pr.opts({"STD", "OUT", "VMAP2"});
   pr.head(2, "Options for reading/writing MP format:");
   pr.opts({"MP"});
   pr.head(2, "Options for reading/writing FIG format:");
   pr.opts({"FIG"});
+  pr.head(2, "Options for reading/writing VMAP format:");
+  pr.opts({"VMAP"});
 
   throw Err();
 }
@@ -41,10 +43,8 @@ main(int argc, char *argv[]){
 
     ms2opt_add_std(options);
     ms2opt_add_out(options);
-    ms2opt_add_vmap2i(options);
-    ms2opt_add_vmap2o(options);
-    ms2opt_add_vmap2io(options);
     ms2opt_add_vmap2t(options);
+    ms2opt_add_vmap2io(options);
     options.remove("verbose");
 
     // general options -- up to first non-option argument
