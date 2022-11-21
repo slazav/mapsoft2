@@ -247,7 +247,7 @@ public:
   ActionImport(){
     ms2opt_add_out(options);     // OUT group, -o
     ms2opt_add_vmap2t(options);  // VMAP2 group, -t
-    ms2opt_add_vmap2i(options);  // VMAP2, MP, FIG groups
+    ms2opt_add_vmap2(options, 1, 0);
   }
 
   std::string get_name() const override { return "import"; }
@@ -259,6 +259,8 @@ public:
     pr.opts({"OUT", "VMAP2"});
     pr.head(2, "Options for reading MP and FIG formats:");
     pr.opts({"MP", "FIG"});
+    pr.head(2, "Options for reading VMAP format:");
+    pr.opts({"VMAP"});
   }
 
   virtual void run_impl(const std::vector<std::string> & args,
@@ -287,7 +289,7 @@ public:
   ActionExport(){
     ms2opt_add_out(options);
     ms2opt_add_vmap2t(options);
-    ms2opt_add_vmap2o(options);
+    ms2opt_add_vmap2(options, 0, 1);
   }
 
   std::string get_name() const override { return "export"; }
