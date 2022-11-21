@@ -1,6 +1,16 @@
-PROGRAMS := ms2conv ms2mapdb ms2nom ms2proj ms2tiles ms2view ms2xyz ms2img ms2geofig
-
-# ms2fig  -- to be written
+PROGRAMS :=
+  s2conv\
+  ms2geofig\
+  ms2img\
+  ms2mp\
+  ms2nom\
+  ms2proj\
+  ms2render\
+  ms2tiles\
+  ms2view\
+  ms2vmap\
+  ms2vmapdb\
+  ms2xyz\
 
 #################################
 ## define paths
