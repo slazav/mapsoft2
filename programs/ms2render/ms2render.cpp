@@ -155,7 +155,7 @@ main(int argc, char *argv[]){
     if (O.exists("types")) types.load(O.get("types"));
     for (auto const & f:non_geodata) {
       if (file_ext_check(f, ".vmap2db")) vmap2 = VMap2(f);
-      else any_to_vmap2({f}, types, vmap2, O);
+      else vmap2_import({f}, types, vmap2, O);
       auto obj_v = std::shared_ptr<GObjVMap2>(new GObjVMap2(vmap2, O));
       obj.add(4, obj_v);
       if (ref_v.empty()) ref_v = obj_v->get_ref();
