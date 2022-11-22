@@ -17,8 +17,9 @@
   <li><a href="#SYNOPSIS">SYNOPSIS</a>
     <ul>
       <li><a href="#Options">Options:</a></li>
-      <li><a href="#Options-for-reading-writing-MP-format">Options for reading/writing MP format:</a></li>
-      <li><a href="#Options-for-reading-writing-FIG-format">Options for reading/writing FIG format:</a></li>
+      <li><a href="#Options-for-MP-format">Options for MP format:</a></li>
+      <li><a href="#Options-for-FIG-format">Options for FIG format:</a></li>
+      <li><a href="#Options-for-VMAP-format">Options for VMAP format:</a></li>
     </ul>
   </li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
@@ -63,18 +64,48 @@ ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 <p>File with type information.</p>
 
 </dd>
+<dt id="q---quite-arg"><b>-q, --quite &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Be quiet, do not print types of skipped objects. Default: 0. This works when reading/writing MP, VMAP, writing FIG.</p>
+
+</dd>
+<dt id="skip_unknown-arg"><b>--skip_unknown &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Skip objects which are not defined in typeinfo file. Default: 0. This works when reading/writing MP, VMAP.</p>
+
+</dd>
+<dt id="keep_labels-arg"><b>--keep_labels &lt;arg&gt;</b></dt>
+<dd>
+
+<p>keep old labels</p>
+
+</dd>
+<dt id="update_tag-arg"><b>--update_tag &lt;arg&gt;</b></dt>
+<dd>
+
+<p>only update objects with a tag</p>
+
+</dd>
+<dt id="fix_rounding-arg"><b>--fix_rounding &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Fix rounding errors using information from the output file. This should be used when editing map in fig format and then returning changes to other format. Then untached points are detected and rounding errors fixed.</p>
+
+</dd>
+<dt id="rounding_acc-arg"><b>--rounding_acc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>accuracy for fixing rounding errors (m). Fig accuracy is 1/450 cm, 2.2 m for 1:100&#39;000 maps. Default: 5</p>
+
+</dd>
 </dl>
 
-<h2 id="Options-for-reading-writing-MP-format">Options for reading/writing MP format:</h2>
+<h2 id="Options-for-MP-format">Options for MP format:</h2>
 
 <dl>
 
-<dt id="mp_enc-arg"><b>--mp_enc &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Override encoding for reading MP-files (does not change CodePage setting)</p>
-
-</dd>
 <dt id="mp_ip-arg"><b>--mp_ip &lt;arg&gt;</b></dt>
 <dd>
 
@@ -101,14 +132,38 @@ ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 </dd>
 </dl>
 
-<h2 id="Options-for-reading-writing-FIG-format">Options for reading/writing FIG format:</h2>
+<h2 id="Options-for-FIG-format">Options for FIG format:</h2>
 
 <dl>
 
+<dt id="min_depth-arg"><b>--min_depth &lt;arg&gt;</b></dt>
+<dd>
+
+<p>minimum depth of map object (default 40)</p>
+
+</dd>
+<dt id="max_depth-arg"><b>--max_depth &lt;arg&gt;</b></dt>
+<dd>
+
+<p>minimum depth of map object (default 200)</p>
+
+</dd>
 <dt id="fig_enc-arg"><b>--fig_enc &lt;arg&gt;</b></dt>
 <dd>
 
 <p>Encoding for reading/writing fig files (default: KOI8-R).</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-VMAP-format">Options for VMAP format:</h2>
+
+<dl>
+
+<dt id="def_label_type-arg"><b>--def_label_type &lt;arg&gt;</b></dt>
+<dd>
+
+<p>When reading VMAP file, set type number for labels which are not defined in typeinfo file. Use -1 to skip unknown labels (default). If skip_unknown is set then labels are skipped with unknown objects.</p>
 
 </dd>
 </dl>

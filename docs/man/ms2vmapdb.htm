@@ -35,16 +35,28 @@
   <li><a href="#SYNOPSIS6">SYNOPSIS</a></li>
   <li><a href="#BBOX----PRINT-BOUNDING-BOX-OF-THE-MAP-USING-GEOHASH-DATA">BBOX -- PRINT BOUNDING BOX OF THE MAP (USING GEOHASH DATA)</a></li>
   <li><a href="#SYNOPSIS7">SYNOPSIS</a></li>
-  <li><a href="#IMPORT----IMPORT-OBJECTS-TO-VMAP2-DATABASE">IMPORT -- IMPORT OBJECTS TO VMAP2 DATABASE</a></li>
+  <li><a href="#UPDATE_LABELS----UPDATE-LABELS">UPDATE_LABELS -- UPDATE LABELS</a></li>
   <li><a href="#SYNOPSIS8">SYNOPSIS</a>
     <ul>
       <li><a href="#Options1">Options:</a></li>
-      <li><a href="#Options-for-reading-MP-and-FIG-formats">Options for reading MP and FIG formats:</a></li>
     </ul>
   </li>
-  <li><a href="#SYNOPSIS9">SYNOPSIS</a>
+  <li><a href="#CROP_NOM----CROP-TO-NOMENCLATURE-MAP-PAGE">CROP_NOM -- CROP TO NOMENCLATURE MAP PAGE</a></li>
+  <li><a href="#SYNOPSIS9">SYNOPSIS</a></li>
+  <li><a href="#CROP_RECT----CROP-TO-RECTANGULAR-RANGE">CROP_RECT -- CROP TO RECTANGULAR RANGE</a></li>
+  <li><a href="#SYNOPSIS10">SYNOPSIS</a></li>
+  <li><a href="#IMPORT----IMPORT-OBJECTS-TO-VMAP2-DATABASE">IMPORT -- IMPORT OBJECTS TO VMAP2 DATABASE</a></li>
+  <li><a href="#SYNOPSIS11">SYNOPSIS</a>
     <ul>
       <li><a href="#Options2">Options:</a></li>
+      <li><a href="#Options-for-reading-MP-and-FIG-formats">Options for reading MP and FIG formats:</a></li>
+      <li><a href="#Options-for-reading-VMAP-format">Options for reading VMAP format:</a></li>
+    </ul>
+  </li>
+  <li><a href="#EXPORT----EXPORT-VECTOR-MAP-TO-A-DIFFERENT-FORMAT">EXPORT -- EXPORT VECTOR MAP TO A DIFFERENT FORMAT</a></li>
+  <li><a href="#SYNOPSIS12">SYNOPSIS</a>
+    <ul>
+      <li><a href="#Options3">Options:</a></li>
       <li><a href="#Options-for-writing-MP-format">Options for writing MP format:</a></li>
       <li><a href="#Options-for-writing-FIG-format">Options for writing FIG format:</a></li>
     </ul>
@@ -98,6 +110,12 @@ ms2vmapdb add_obj &lt;arguments&gt; -- add new object to vmap2 database, print i
 ms2vmapdb types &lt;arguments&gt; -- print all object types in vmap2 database
 
 ms2vmapdb bbox &lt;arguments&gt; -- print bounding box of the map (using geohash data)
+
+ms2vmapdb update_labels &lt;arguments&gt; -- update labels
+
+ms2vmapdb crop_nom &lt;arguments&gt; -- crop to nomenclature map page
+
+ms2vmapdb crop_rect &lt;arguments&gt; -- crop to rectangular range
 
 ms2vmapdb import &lt;arguments&gt; -- import objects to vmap2 database
 
@@ -171,6 +189,18 @@ ms2vmapdb export &lt;arguments&gt; -- export vector map to a different format</c
 <p>Specify object alignment (NW,N,NE,E,SE,S,SW,C).</p>
 
 </dd>
+<dt id="ref_type-arg"><b>--ref_type &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Specify ref_type.</p>
+
+</dd>
+<dt id="ref_pt-arg"><b>--ref_pt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Specify ref_pt.</p>
+
+</dd>
 </dl>
 
 <h1 id="TYPES----PRINT-ALL-OBJECT-TYPES-IN-VMAP2-DATABASE">TYPES -- PRINT ALL OBJECT TYPES IN VMAP2 DATABASE</h1>
@@ -185,43 +215,43 @@ ms2vmapdb export &lt;arguments&gt; -- export vector map to a different format</c
 
 <pre><code>ms2vmap bbox &lt;dbname&gt;</code></pre>
 
-<h1 id="IMPORT----IMPORT-OBJECTS-TO-VMAP2-DATABASE">IMPORT -- IMPORT OBJECTS TO VMAP2 DATABASE</h1>
+<h1 id="UPDATE_LABELS----UPDATE-LABELS">UPDATE_LABELS -- UPDATE LABELS</h1>
 
 <h1 id="SYNOPSIS8">SYNOPSIS</h1>
 
-<pre><code>ms2vmap import &lt;file1&gt; &lt;file2&gt; ... -o &lt;dbname&gt; -t &lt;type info file&gt;</code></pre>
-
-<p>Read map objects in different formats and add to a database.</p>
+<pre><code>ms2vmap update_labels &lt;dbname&gt; -t &lt;typeinfo file&gt;</code></pre>
 
 <h2 id="Options1">Options:</h2>
 
-<h2 id="Options-for-reading-MP-and-FIG-formats">Options for reading MP and FIG formats:</h2>
-
 <dl>
 
-<dt id="mp_enc-arg"><b>--mp_enc &lt;arg&gt;</b></dt>
+<dt id="t---types-arg"><b>-t, --types &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Override encoding for reading MP-files (does not change CodePage setting)</p>
-
-</dd>
-<dt id="fig_enc-arg"><b>--fig_enc &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Encoding for reading/writing fig files (default: KOI8-R).</p>
+<p>File with type information.</p>
 
 </dd>
 </dl>
 
-<p>WARNING: options have not been printed: out (group: OUT)</p>
-
-<p>WARNING: options have not been printed: types (group: VMAP2T) =head1 EXPORT -- EXPORT VECTOR MAP TO A DIFFERENT FORMAT</p>
+<h1 id="CROP_NOM----CROP-TO-NOMENCLATURE-MAP-PAGE">CROP_NOM -- CROP TO NOMENCLATURE MAP PAGE</h1>
 
 <h1 id="SYNOPSIS9">SYNOPSIS</h1>
 
-<pre><code>ms2vmap export &lt;dbname&gt; -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
+<pre><code>ms2vmap crop_nom &lt;dbname&gt; &lt;nom name&gt;</code></pre>
 
-<p>Supported formats: vmap2, vmap2db, vmap, mp, fig</p>
+<h1 id="CROP_RECT----CROP-TO-RECTANGULAR-RANGE">CROP_RECT -- CROP TO RECTANGULAR RANGE</h1>
+
+<h1 id="SYNOPSIS10">SYNOPSIS</h1>
+
+<pre><code>ms2vmap crop_rect &lt;dbname&gt; &lt;rectangle&gt;</code></pre>
+
+<h1 id="IMPORT----IMPORT-OBJECTS-TO-VMAP2-DATABASE">IMPORT -- IMPORT OBJECTS TO VMAP2 DATABASE</h1>
+
+<h1 id="SYNOPSIS11">SYNOPSIS</h1>
+
+<pre><code>ms2vmap import &lt;file1&gt; &lt;file2&gt; ... -o &lt;dbname&gt; -t &lt;type info file&gt;</code></pre>
+
+<p>Read map objects in different formats and add to a database.</p>
 
 <h2 id="Options2">Options:</h2>
 
@@ -231,6 +261,146 @@ ms2vmapdb export &lt;arguments&gt; -- export vector map to a different format</c
 <dd>
 
 <p>Output file.</p>
+
+</dd>
+<dt id="t---types-arg1"><b>-t, --types &lt;arg&gt;</b></dt>
+<dd>
+
+<p>File with type information.</p>
+
+</dd>
+<dt id="q---quite-arg"><b>-q, --quite &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Be quiet, do not print types of skipped objects. Default: 0. This works when reading/writing MP, VMAP, writing FIG.</p>
+
+</dd>
+<dt id="skip_unknown-arg"><b>--skip_unknown &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Skip objects which are not defined in typeinfo file. Default: 0. This works when reading/writing MP, VMAP.</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-reading-MP-and-FIG-formats">Options for reading MP and FIG formats:</h2>
+
+<dl>
+
+<dt id="min_depth-arg"><b>--min_depth &lt;arg&gt;</b></dt>
+<dd>
+
+<p>minimum depth of map object (default 40)</p>
+
+</dd>
+<dt id="max_depth-arg"><b>--max_depth &lt;arg&gt;</b></dt>
+<dd>
+
+<p>minimum depth of map object (default 200)</p>
+
+</dd>
+<dt id="fig_enc-arg"><b>--fig_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Encoding for reading/writing fig files (default: KOI8-R).</p>
+
+</dd>
+<dt id="mp_enc-arg"><b>--mp_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override encoding for reading MP-files (does not change CodePage setting)</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-reading-VMAP-format">Options for reading VMAP format:</h2>
+
+<dl>
+
+<dt id="def_label_type-arg"><b>--def_label_type &lt;arg&gt;</b></dt>
+<dd>
+
+<p>When reading VMAP file, set type number for labels which are not defined in typeinfo file. Use -1 to skip unknown labels (default). If skip_unknown is set then labels are skipped with unknown objects.</p>
+
+</dd>
+</dl>
+
+<h1 id="EXPORT----EXPORT-VECTOR-MAP-TO-A-DIFFERENT-FORMAT">EXPORT -- EXPORT VECTOR MAP TO A DIFFERENT FORMAT</h1>
+
+<h1 id="SYNOPSIS12">SYNOPSIS</h1>
+
+<pre><code>ms2vmap export &lt;dbname&gt; -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
+
+<p>Supported formats: vmap2, vmap2db, vmap, mp, fig</p>
+
+<h2 id="Options3">Options:</h2>
+
+<dl>
+
+<dt id="o---out-arg1"><b>-o, --out &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Output file.</p>
+
+</dd>
+<dt id="t---types-arg2"><b>-t, --types &lt;arg&gt;</b></dt>
+<dd>
+
+<p>File with type information.</p>
+
+</dd>
+<dt id="q---quite-arg1"><b>-q, --quite &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Be quiet, do not print types of skipped objects. Default: 0. This works when reading/writing MP, VMAP, writing FIG.</p>
+
+</dd>
+<dt id="skip_unknown-arg1"><b>--skip_unknown &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Skip objects which are not defined in typeinfo file. Default: 0. This works when reading/writing MP, VMAP.</p>
+
+</dd>
+<dt id="crop_nom-arg"><b>--crop_nom &lt;arg&gt;</b></dt>
+<dd>
+
+<p>crop map to nomenclature region</p>
+
+</dd>
+<dt id="crop_rect-arg"><b>--crop_rect &lt;arg&gt;</b></dt>
+<dd>
+
+<p>crop map to a rectangle</p>
+
+</dd>
+<dt id="update_labels-arg"><b>--update_labels &lt;arg&gt;</b></dt>
+<dd>
+
+<p>update labels</p>
+
+</dd>
+<dt id="keep_labels-arg"><b>--keep_labels &lt;arg&gt;</b></dt>
+<dd>
+
+<p>keep old labels</p>
+
+</dd>
+<dt id="update_tag-arg"><b>--update_tag &lt;arg&gt;</b></dt>
+<dd>
+
+<p>only update objects with a tag</p>
+
+</dd>
+<dt id="fix_rounding-arg"><b>--fix_rounding &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Fix rounding errors using information from the output file. This should be used when editing map in fig format and then returning changes to other format. Then untached points are detected and rounding errors fixed.</p>
+
+</dd>
+<dt id="rounding_acc-arg"><b>--rounding_acc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>accuracy for fixing rounding errors (m). Fig accuracy is 1/450 cm, 2.2 m for 1:100&#39;000 maps. Default: 5</p>
 
 </dd>
 </dl>
@@ -263,6 +433,18 @@ ms2vmapdb export &lt;arguments&gt; -- export vector map to a different format</c
 
 <dl>
 
+<dt id="min_depth-arg1"><b>--min_depth &lt;arg&gt;</b></dt>
+<dd>
+
+<p>minimum depth of map object (default 40)</p>
+
+</dd>
+<dt id="max_depth-arg1"><b>--max_depth &lt;arg&gt;</b></dt>
+<dd>
+
+<p>minimum depth of map object (default 200)</p>
+
+</dd>
 <dt id="fig_enc-arg1"><b>--fig_enc &lt;arg&gt;</b></dt>
 <dd>
 
@@ -270,8 +452,6 @@ ms2vmapdb export &lt;arguments&gt; -- export vector map to a different format</c
 
 </dd>
 </dl>
-
-<p>WARNING: options have not been printed: types (group: VMAP2T)</p>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 
