@@ -1,0 +1,44 @@
+point:0x1
+name Point1
+crds 38.000000 55.000000
+
+point:0x2
+name Point2
+crds 39.000000 56.000000
+
+line:0x2
+name Line1
+crds 30.000000 55.000000 31.000000 56.000000
+
+area:0x1
+name Area
+crds 40.000000 55.000000 40.000000 56.000000 41.000000 56.000000
+
+text:0x1
+name Point2
+reft point:0x2
+refp 39.000000 56.000000
+crds 39.000000 56.000000
+
+text:0x1
+name Text
+reft point:0x1
+refp 38.001000 55.001000
+crds 38.000000 55.000000
+
+text:0x2
+name Line
+reft line:0x2
+refp 31.001000 56.001000
+crds 31.000000 56.000000
+
+text:0x2
+name Unknown1
+crds 31.000000 56.000000
+
+text:0x2
+name Unknown2
+reft point:0x1
+refp 30.000000 55.000000
+crds 31.000000 56.000000
+

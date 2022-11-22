@@ -24,6 +24,9 @@ std::vector<std::shared_ptr<Action> > actions = {
   std::shared_ptr<Action>(new ActionAddObj),
   std::shared_ptr<Action>(new ActionTypes),
   std::shared_ptr<Action>(new ActionBBox),
+  std::shared_ptr<Action>(new ActionUpdLabels),
+  std::shared_ptr<Action>(new ActionCropNom),
+  std::shared_ptr<Action>(new ActionCropRect),
   std::shared_ptr<Action>(new ActionImport),
   std::shared_ptr<Action>(new ActionExport),
 };

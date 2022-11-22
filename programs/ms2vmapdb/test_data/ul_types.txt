@@ -1,0 +1,14 @@
+type point:0x1
+ + label_type 1
+
+type point:0x2
+
+type line:0x2
+ + label_type 1
+
+type area:0x1
+ + label_type 0x2
+ + label_def_scale 0.85
+
+type text:0x1
+type text:0x2

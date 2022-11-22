@@ -5,7 +5,8 @@
 #include <string>
 #include "vmap2/vmap2.h"
 #include "vmap2/vmap2io.h"
-
+#include "vmap2/vmap2tools.h"
+#include "geo_data/geo_utils.h"
 #include "geo_mkref/geo_mkref.h"
 #include "fig_geo/fig_geo.h"
 
@@ -158,6 +159,8 @@ public:
     options.add("angle", 1,'a',g, "Specify object angle.");
     options.add("scale", 1,'s',g, "Specify object scale.");
     options.add("align", 1,'A',g, "Specify object alignment (NW,N,NE,E,SE,S,SW,C).");
+    options.add("ref_type",  1,0,g, "Specify ref_type.");
+    options.add("ref_pt",    1,0,g, "Specify ref_pt.");
   }
 
   std::string get_name() const override {
@@ -184,6 +187,8 @@ public:
     if (opts.exists("angle")) obj.angle = opts.get("angle", 0.0);
     if (opts.exists("scale")) obj.scale = opts.get("scale", 0.0);
     if (opts.exists("align")) obj.align = VMap2obj::parse_align(opts.get("align"));
+    if (opts.exists("ref_type")) obj.set_ref_type(opts.get("ref_type"));
+    if (opts.exists("ref_pt"))   obj.ref_pt = opts.get("ref_pt", dPoint());
     std::cout << map.add(obj) << "\n";
   }
 };
@@ -237,6 +242,92 @@ public:
       << ": one argument expected: <dbname>";
     VMap2 map(args[0], 0);
     std::cout << map.bbox() << "\n";
+  }
+};
+
+/**********************************************************/
+// update labels
+class ActionUpdLabels : public Action{
+public:
+  ActionUpdLabels(){
+    ms2opt_add_vmap2t(options);
+  }
+
+  std::string get_name() const override {
+    return "update_labels"; }
+  std::string get_descr() const override {
+    return "update labels"; }
+
+  void help_impl(HelpPrinter & pr) override {
+    pr.usage("<dbname> -t <typeinfo file>");
+    pr.head(2, "Options:");
+    pr.opts({"VMAP2"});
+  }
+
+  virtual void run_impl(const std::vector<std::string> & args,
+                   const Opt & opts) override {
+
+    if (args.size()!=1) throw Err() << get_name()
+      << ": one argument expected: <dbname>";
+
+    // Read file with type information if it's available
+    VMap2types types;
+    if (opts.exists("types")) types.load(opts.get("types"));
+
+    VMap2 map(args[0], 0);
+    do_update_labels(map, types);
+  }
+};
+
+/**********************************************************/
+// crop to nomenclature map page
+class ActionCropNom : public Action{
+public:
+  ActionCropNom(){}
+
+  std::string get_name() const override {
+    return "crop_nom"; }
+  std::string get_descr() const override {
+    return "crop to nomenclature map page"; }
+
+  void help_impl(HelpPrinter & pr) override {
+    pr.usage("<dbname> <nom name>");
+  }
+
+  virtual void run_impl(const std::vector<std::string> & args,
+                   const Opt & opts) override {
+
+    if (args.size()!=2) throw Err() << get_name()
+      << ": two arguments expected: <dbname> <nom name>";
+
+    VMap2 map(args[0], 0);
+    do_crop_rect(map, nom_to_wgs(args[1]));
+  }
+};
+
+/**********************************************************/
+// crop to rectangular range
+class ActionCropRect : public Action{
+public:
+  ActionCropRect(){}
+
+  std::string get_name() const override {
+    return "crop_rect"; }
+  std::string get_descr() const override {
+    return "crop to rectangular range"; }
+
+  void help_impl(HelpPrinter & pr) override {
+    pr.usage("<dbname> <rectangle>");
+  }
+
+  virtual void run_impl(const std::vector<std::string> & args,
+                   const Opt & opts) override {
+
+    if (args.size()!=2) throw Err() << get_name()
+      << ": two arguments expected: <dbname> <rectangle>";
+
+    VMap2 map(args[0], 0);
+    do_crop_rect(map, dRect(args[1]));
   }
 };
 

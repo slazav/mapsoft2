@@ -1,0 +1,46 @@
+#!/bin/bash -efu
+
+# Add objects
+
+P=${1:-./ms2vmapdb}
+
+. ../../modules/test_lib.sh
+
+assert_cmd "$P delete tmp" "" 0
+
+assert_cmd "$P create tmp" "" 0
+# labels will be updated
+assert_cmd "$P add_obj tmp point:1 [38,55] --name Point1" "0" 0
+assert_cmd "$P add_obj tmp line:2  [[30,55],[31,56]] --name Line1" "1" 0
+
+# label will be created with scale 0.85 (accorting to typeinfo file)
+assert_cmd "$P add_obj tmp area:1 [[40,55],[40,56],[41,56]] --name Area" "2" 0
+
+# keep, adjust ref_pt and name
+assert_cmd "$P add_obj tmp text:1  [38,55] --name Text --ref_type point:1 --ref_pt [38.001,55.001]" "3" 0
+
+# keep, adjust ref_pt, name and type (according with label_type in typeinfo file)
+assert_cmd "$P add_obj tmp text:2  [31,56] --name Line --ref_type line:2  --ref_pt [31.001,56.001]" "4" 0
+
+# no ref_pt -> delete
+assert_cmd "$P add_obj tmp text:2  [31,56] --name Unknown1" "5" 0
+
+# ref_pt too far from point:1 object -> delete
+assert_cmd "$P add_obj tmp text:2  [31,56] --name Unknown2 --ref_type point:1 --ref_pt [30,55]" "6" 0
+
+# label will be deleted because there are no label_type for point:2 in typeinfo file
+assert_cmd "$P add_obj tmp point:2 [39,56] --name Point2" "7" 0
+assert_cmd "$P add_obj tmp text:1  [39,56] --name Point2 --ref_type point:2 --ref_pt [39,56]" "8" 0
+
+###
+
+assert_cmd "$P export tmp -o tmp.vmap2" "" 0
+assert_diff test_data/ul1.vmap2 tmp.vmap2
+
+assert_cmd "$P update_labels tmp -t test_data/ul_types.txt" "" 0
+
+assert_cmd "$P export tmp -o tmp.vmap2" "" 0
+assert_diff test_data/ul2.vmap2 tmp.vmap2
+
+assert_cmd "$P delete tmp" "" 0
+
