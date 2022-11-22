@@ -1,5 +1,5 @@
-PROGRAMS :=
-  s2conv\
+PROGRAMS :=\
+  ms2conv\
   ms2geofig\
   ms2img\
   ms2mp\
