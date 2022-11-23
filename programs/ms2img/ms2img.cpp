@@ -4,6 +4,7 @@
 //#include <vector>
 
 #include "getopt/getopt.h"
+#include "getopt/help_printer.h"
 #include "image/io.h"
 
 using namespace std;

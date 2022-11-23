@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include "getopt/getopt.h"
+#include "getopt/help_printer.h"
 #include "geo_data/conv_geo.h"
 
 using namespace std;

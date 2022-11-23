@@ -1,6 +1,7 @@
 #include <cstring>
 #include "geo_tiles/geo_tiles.h"
 #include "getopt/getopt.h"
+#include "getopt/help_printer.h"
 #include "geo_data/geo_utils.h"
 #include "geom/poly_tools.h"
 

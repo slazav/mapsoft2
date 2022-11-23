@@ -1,6 +1,7 @@
 #include <fstream>
 #include "mp/mp.h"
 #include "getopt/getopt.h"
+#include "getopt/help_printer.h"
 
 using namespace std;
 

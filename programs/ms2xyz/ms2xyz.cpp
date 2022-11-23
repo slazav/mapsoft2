@@ -8,6 +8,7 @@
 #include "geo_data/geo_utils.h"
 #include "err/err.h"
 #include "getopt/getopt.h"
+#include "getopt/help_printer.h"
 #include "time_fmt/time_fmt.h"
 
 using namespace std;

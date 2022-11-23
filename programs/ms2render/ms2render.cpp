@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "getopt/getopt.h"
+#include "getopt/help_printer.h"
 #include "geo_data/geo_io.h"
 #include "geo_data/filters.h"
 #include "geo_data/conv_geo.h"

@@ -2,6 +2,7 @@
 #include "geo_nom/geo_nom.h"
 #include "geom/poly_tools.h"
 #include "getopt/getopt.h"
+#include "getopt/help_printer.h"
 #include "geo_data/conv_geo.h"
 #include "geo_data/geo_io.h"
 #include "geo_data/geo_utils.h"

@@ -9,6 +9,7 @@
 
 #include "err/err.h"
 #include "getopt/getopt.h"
+#include "getopt/help_printer.h"
 #include "vmap2/vmap2io.h"
 
 #include "filename/filename.h"
