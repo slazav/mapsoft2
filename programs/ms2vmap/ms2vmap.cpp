@@ -26,7 +26,7 @@ void usage(bool pod=false){
   pr.usage("<file> ... -o <out file> [<options>]");
 
   pr.head(2, "Options:");
-  pr.opts({"STD", "OUT", "VMAP2"});
+  pr.opts({"HELP","POD","VERB","OUT", "VMAP2"});
   pr.head(2, "Options for MP format:");
   pr.opts({"MP"});
   pr.head(2, "Options for FIG format:");
@@ -42,8 +42,7 @@ int
 main(int argc, char *argv[]){
   try{
 
-    ms2opt_add_std(options);
-    ms2opt_add_out(options);
+    ms2opt_add_std(options, {"HELP","POD","VERB","OUT"});
     ms2opt_add_vmap2t(options);
     ms2opt_add_vmap2(options, 1, 1);
     options.remove("verbose");

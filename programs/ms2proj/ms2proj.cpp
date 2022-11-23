@@ -36,7 +36,7 @@ void usage(bool pod=false){
     "with four numbers: [x,y,w,h]."
   );
   pr.head(1, "Options");
-  pr.opts({"NONSTD", "STD"});
+  pr.opts({"NONSTD", "HELP","POD","VERB"});
 
   pr.head(1, "Examples");
 
@@ -75,7 +75,7 @@ void usage(bool pod=false){
 int
 main(int argc, char *argv[]){
   try{
-    ms2opt_add_std(options);
+    ms2opt_add_std(options, {"HELP","POD","VERB"});
 
     const char *g = "NONSTD";
     options.add("from", 1, 'f', g,

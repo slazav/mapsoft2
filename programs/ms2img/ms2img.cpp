@@ -22,7 +22,7 @@ void usage(bool pod=false){
     "Can be used to change image format, colormap or scale.");
 
   pr.head(1, "General options");
-  pr.opts({"STD", "OUT"});
+  pr.opts({"HELP","POD","VERB"});
 
   pr.head(2, "Options for saving images");
   pr.opts({"IMAGE", "IMAGE_CMAP"});
@@ -34,7 +34,7 @@ void usage(bool pod=false){
 int
 main(int argc, char *argv[]){
   try{
-    ms2opt_add_std(options);
+    ms2opt_add_std(options, {"HELP","POD","VERB"});
     ms2opt_add_image(options);
 
     options.add("scale", 1,0, "IMAGE", "Downscaling factor, integer value (default: 1)");

@@ -46,7 +46,7 @@ void usage(bool pod=false){
     "default value.");
 
   pr.head(1, "General options");
-  pr.opts({"STD", "OUT"});
+  pr.opts({"HELP","POD","VERB","OUT"});
   pr.head(1, "Geodata input/output options");
   pr.opts({"GEO_I", "GEO_IO", "GEO_O"});
   pr.head(1, "Options for making map reference");
@@ -77,8 +77,7 @@ void usage(bool pod=false){
 int
 main(int argc, char *argv[]){
   try{
-    ms2opt_add_std(options);
-    ms2opt_add_out(options);
+    ms2opt_add_std(options, {"HELP","POD","VERB","OUT"});
     ms2opt_add_geo_i(options);
     ms2opt_add_geo_o(options);
     ms2opt_add_geo_io(options);

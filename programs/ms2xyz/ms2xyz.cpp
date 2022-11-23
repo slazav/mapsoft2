@@ -21,7 +21,7 @@ void usage(bool pod=false){
   pr.usage("<options> <input files>");
 
   pr.head(1, "General options");
-  pr.opts({"NONSTD", "STD", "OUT"});
+  pr.opts({"NONSTD","HELP","POD","VERB","OUT"});
 
   pr.par("If output file is not specified the data is printed to stdout.");
 
@@ -106,8 +106,7 @@ main (int argc, char **argv) {
     options.add("tprec", 1,0, g,
       "Precision for time values (default: 1)");
 
-    ms2opt_add_std(options);
-    ms2opt_add_out(options);
+    ms2opt_add_std(options, {"HELP","POD","VERB","OUT"});
     ms2opt_add_geo_i(options);
     ms2opt_add_geo_io(options);
 

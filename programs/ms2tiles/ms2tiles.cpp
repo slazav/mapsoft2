@@ -15,7 +15,7 @@ void usage(bool pod=false){
   pr.usage("<options>");
 
   pr.head(1, "Options");
-  pr.opts({"NONSTD", "STD"});
+  pr.opts({"NONSTD", "HELP", "POD"});
 
   throw Err();
 }
@@ -46,8 +46,7 @@ main(int argc, char **argv){
     options.add("center", 0,'c',g,
       "Instead of printing a coordinate range print its central point.");
 
-    ms2opt_add_std(options);
-    options.remove("verbose");
+    ms2opt_add_std(options, {"HELP", "POD"});
 
     if (argc<2) usage();
     vector<string> nonopt;

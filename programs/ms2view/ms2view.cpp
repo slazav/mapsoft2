@@ -24,7 +24,7 @@ void usage(bool pod=false){
   pr.name("mapsoft2 viewer for geodata and raster maps");
   pr.usage("[<options>] <input files>");
   pr.head(1, "General options");
-  pr.opts({"STD"});
+  pr.opts({"HELP","POD","VERB"});
   pr.head(1, "Options for reading geodata");
   pr.opts({"GEO_I","GEO_IO"});
   pr.head(1, "Options for drawing tracks");
@@ -49,7 +49,7 @@ main(int argc, char **argv){
 
     //options.add("grid", 0,0, MS2OPT_NONSTD, "draw grid");
 
-    ms2opt_add_std(options);
+    ms2opt_add_std(options, {"HELP","POD","VERB"});
     ms2opt_add_geo_i(options);
     ms2opt_add_geo_io(options);
     ms2opt_add_drawwpt(options);

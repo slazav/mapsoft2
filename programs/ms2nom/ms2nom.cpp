@@ -25,7 +25,7 @@ void usage(bool pod=false){
   pr.usage("[-E] -n <name> -s <scale> -- convert map to a different scale");
 
   pr.head(1, "Options");
-  pr.opts({"NONSTD", "STD"});
+  pr.opts({"NONSTD","HELP","POD"});
 
   pr.par(
    "Program \"ms2nom\" does some calculations with standard Soviet "
@@ -101,8 +101,7 @@ main(int argc, char **argv){
       "Shift a map. Should be used with --name option. Not compatable with --cover option. "
       "Argument is an array of two integer numbers [dx,dy].");
 
-    ms2opt_add_std(options);
-    options.remove("verbose");
+    ms2opt_add_std(options, {"HELP","POD"});
 
     if (argc<2) usage();
     vector<string> nonopt;
