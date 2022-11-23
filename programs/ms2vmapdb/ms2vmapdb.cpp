@@ -271,7 +271,7 @@ class ActionImport : public Action{
 public:
   ActionImport():
     Action("import", "import objects to vmap2 database"){
-    ms2opt_add_out(options);     // OUT group, -o
+    ms2opt_add_std(options, {"OUT"});
     ms2opt_add_vmap2t(options);  // VMAP2 group, -t
     ms2opt_add_vmap2(options, 1, 0);
   }
@@ -312,7 +312,7 @@ class ActionExport : public Action{
 public:
   ActionExport():
     Action("export", "export vector map to a different format"){
-    ms2opt_add_out(options);
+    ms2opt_add_std(options, {"OUT"});
     ms2opt_add_vmap2t(options);
     ms2opt_add_vmap2(options, 0, 1);
   }

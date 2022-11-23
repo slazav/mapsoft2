@@ -15,7 +15,7 @@ class ActionCreate : public Action{
 public:
   ActionCreate():
     Action("create", "create referenced fig file") {
-    ms2opt_add_out(options);
+    ms2opt_add_std(options, {"OUT"});
     ms2opt_add_fig(options);
     ms2opt_add_mkref_opts(options);
     ms2opt_add_mkref_brd(options);
@@ -60,7 +60,7 @@ public:
   ActionAdd():
     Action("add", "add geodata (tracks, waypoints, maps) to referenced fig file") {
 
-    ms2opt_add_out(options);
+    ms2opt_add_std(options, {"OUT"});
     ms2opt_add_geo_i(options);
     ms2opt_add_geo_io(options);
     ms2opt_add_fig(options);
@@ -118,7 +118,7 @@ public:
   ActionDel():
     Action("del", "delete geodata to referenced fig file") {
 
-    ms2opt_add_out(options);
+    ms2opt_add_std(options, {"OUT"});
     ms2opt_add_fig(options);
     std::string g = "GEOFIG_DEL";
     options.add("wpts", 0,0,g, "Delete only waypoints.");
@@ -163,7 +163,7 @@ public:
   ActionSRTM():
     Action("srtm", "add DEM data to referenced fig file") {
 
-    ms2opt_add_out(options);
+    ms2opt_add_std(options, {"OUT"});
     ms2opt_add_fig(options);
     ms2opt_add_srtm(options);
 
@@ -303,7 +303,7 @@ public:
   ActionMakeRef():
     Action("make_ref", "make fig reference using matching geodata") {
 
-    ms2opt_add_out(options);
+    ms2opt_add_std(options, {"OUT"});
     ms2opt_add_fig(options);
     ms2opt_add_geo_i(options);
     ms2opt_add_geo_io(options);

@@ -23,7 +23,7 @@ int
 main(int argc, char **argv){
   try {
 
-    ms2opt_add_out(options);
+    ms2opt_add_std(options, {"OUT"});
     ms2opt_add_mp_io(options);
     options.remove("verbose");
 
