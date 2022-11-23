@@ -16,11 +16,51 @@
   <li><a href="#NAME">NAME</a></li>
   <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
   <li><a href="#GENERAL-OPTIONS">GENERAL OPTIONS:</a></li>
-  <li><a href="#MAKING-REFERENCE-AND-WRITING-IT-TO-FIG-FILE-IN-CREATE-ACTION">MAKING REFERENCE AND WRITING IT TO FIG FILE IN `CREATE` ACTION:</a></li>
-  <li><a href="#READING-GEODATA-WRITING-TRACKS-AND-WAYPOINTS-TO-FIG-FILE-ADD-ACTION">READING GEODATA, WRITING TRACKS AND WAYPOINTS TO FIG FILE (`ADD` ACTION):</a></li>
-  <li><a href="#DELETE-CERTAIN-COMPONENTS-OF-GEOFIG-FILE-DEL-ACTION">DELETE CERTAIN COMPONENTS OF GEOFIG FILE (`DEL` ACTION):</a></li>
-  <li><a href="#SRTM-OPTIONS-SRTM-ACTIONS">SRTM OPTIONS (`SRTM` ACTIONS):</a></li>
+  <li><a href="#ACTIONS">ACTIONS:</a></li>
+  <li><a href="#CREATE----CREATE-REFERENCED-FIG-FILE">CREATE -- CREATE REFERENCED FIG FILE</a></li>
+  <li><a href="#SYNOPSIS1">SYNOPSIS</a>
+    <ul>
+      <li><a href="#Options-for-making-reference">Options for making reference:</a></li>
+      <li><a href="#Options-for-writing-fig-file">Options for writing fig file:</a></li>
+    </ul>
+  </li>
   <li><a href="#EXAMPLES">EXAMPLES:</a></li>
+  <li><a href="#ADD----ADD-GEODATA-TRACKS-WAYPOINTS-MAPS-TO-REFERENCED-FIG-FILE">ADD -- ADD GEODATA (TRACKS, WAYPOINTS, MAPS) TO REFERENCED FIG FILE</a></li>
+  <li><a href="#SYNOPSIS2">SYNOPSIS</a>
+    <ul>
+      <li><a href="#Options-for-reading-data">Options for reading data:</a></li>
+      <li><a href="#Options-for-writing-fig-file1">Options for writing fig file:</a></li>
+    </ul>
+  </li>
+  <li><a href="#EXAMPLES1">EXAMPLES:</a></li>
+  <li><a href="#DEL----DELETE-GEODATA-TO-REFERENCED-FIG-FILE">DEL -- DELETE GEODATA TO REFERENCED FIG FILE</a></li>
+  <li><a href="#SYNOPSIS3">SYNOPSIS</a>
+    <ul>
+      <li><a href="#Options-for-selecting-data">Options for selecting data:</a></li>
+      <li><a href="#Options-for-writing-fig-file2">Options for writing fig file:</a></li>
+    </ul>
+  </li>
+  <li><a href="#GET----EXTRACT-GEODATA-FROM-FIG-FILE">GET -- EXTRACT GEODATA FROM FIG FILE</a></li>
+  <li><a href="#SYNOPSIS4">SYNOPSIS</a>
+    <ul>
+      <li><a href="#Options-for-selecting-data1">Options for selecting data:</a></li>
+      <li><a href="#Options-for-writing-geodata-file">Options for writing geodata file:</a></li>
+    </ul>
+  </li>
+  <li><a href="#SRTM----ADD-DEM-DATA-TO-REFERENCED-FIG-FILE">SRTM -- ADD DEM DATA TO REFERENCED FIG FILE</a></li>
+  <li><a href="#SYNOPSIS5">SYNOPSIS</a>
+    <ul>
+      <li><a href="#Options-for-writing-DEM-data">Options for writing DEM data:</a></li>
+      <li><a href="#Options-for-writing-fig-file3">Options for writing fig file:</a></li>
+    </ul>
+  </li>
+  <li><a href="#MAKE_REF----MAKE-FIG-REFERENCE-USING-MATCHING-GEODATA">MAKE_REF -- MAKE FIG REFERENCE USING MATCHING GEODATA</a></li>
+  <li><a href="#SYNOPSIS6">SYNOPSIS</a>
+    <ul>
+      <li><a href="#Options-for-reading-data1">Options for reading data:</a></li>
+      <li><a href="#Options-for-writing-fig-file4">Options for writing fig file:</a></li>
+    </ul>
+  </li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
 </ul>
@@ -31,13 +71,11 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code>ms2geofig create [&lt;options&gt;] -o &lt;output file&gt;
+<pre><code>ms2geofig (-h|--help|--pod)
 
-ms2geofig add [&lt;options&gt;] &lt;files&gt; -o &lt;fig file&gt;
+ms2geofig &lt;action&gt; (-h|--help)
 
-ms2geofig del [&lt;options&gt;] -o &lt;fig file&gt;
-
-ms2geofig srtm [&lt;options&gt;] -o &lt;fig file&gt;</code></pre>
+ms2geofig &lt;action&gt; [&lt;action arguments and options&gt;]</code></pre>
 
 <h1 id="GENERAL-OPTIONS">GENERAL OPTIONS:</h1>
 
@@ -55,48 +93,32 @@ ms2geofig srtm [&lt;options&gt;] -o &lt;fig file&gt;</code></pre>
 <p>Show help message as POD template.</p>
 
 </dd>
-<dt id="v---verbose"><b>-v, --verbose</b></dt>
-<dd>
-
-<p>Be verbose.</p>
-
-</dd>
-<dt id="o---out-arg"><b>-o, --out &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Output file.</p>
-
-</dd>
-<dt id="fig_enc-arg"><b>--fig_enc &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Encoding for reading/writing fig files (default: KOI8-R).</p>
-
-</dd>
-<dt id="fig_header-arg"><b>--fig_header &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Read/write fig headers (default: true).</p>
-
-</dd>
 </dl>
 
-<h1 id="MAKING-REFERENCE-AND-WRITING-IT-TO-FIG-FILE-IN-CREATE-ACTION">MAKING REFERENCE AND WRITING IT TO FIG FILE IN `CREATE` ACTION:</h1>
+<h1 id="ACTIONS">ACTIONS:</h1>
+
+<pre><code>ms2geofig create -- create referenced fig file
+
+ms2geofig add -- add geodata (tracks, waypoints, maps) to referenced fig file
+
+ms2geofig del -- delete geodata to referenced fig file
+
+ms2geofig get -- extract geodata from fig file
+
+ms2geofig srtm -- add DEM data to referenced fig file
+
+ms2geofig make_ref -- make fig reference using matching geodata</code></pre>
+
+<h1 id="CREATE----CREATE-REFERENCED-FIG-FILE">CREATE -- CREATE REFERENCED FIG FILE</h1>
+
+<h1 id="SYNOPSIS1">SYNOPSIS</h1>
+
+<pre><code>ms2vmap create [&lt;options&gt;] -o &lt;output file&gt;</code></pre>
+
+<h2 id="Options-for-making-reference">Options for making reference:</h2>
 
 <dl>
 
-<dt id="ref_templ-arg"><b>--ref_templ &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Template for reference points (default: &quot;2 1 0 4 4 7 1 -1 -1 0.000 0 1 -1 0 0&quot;).</p>
-
-</dd>
-<dt id="brd_templ-arg"><b>--brd_templ &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Template for border lines (default: &quot;2 3 0 1 5 7 2 -1 -1 0.000 0 0 7 0 0&quot;).</p>
-
-</dd>
 <dt id="mkref-arg"><b>--mkref &lt;arg&gt;</b></dt>
 <dd>
 
@@ -225,10 +247,86 @@ ms2geofig srtm [&lt;options&gt;] -o &lt;fig file&gt;</code></pre>
 </dd>
 </dl>
 
-<h1 id="READING-GEODATA-WRITING-TRACKS-AND-WAYPOINTS-TO-FIG-FILE-ADD-ACTION">READING GEODATA, WRITING TRACKS AND WAYPOINTS TO FIG FILE (`ADD` ACTION):</h1>
+<h2 id="Options-for-writing-fig-file">Options for writing fig file:</h2>
 
 <dl>
 
+<dt id="o---out-arg"><b>-o, --out &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Output file.</p>
+
+</dd>
+<dt id="fig_enc-arg"><b>--fig_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Encoding for reading/writing fig files (default: KOI8-R).</p>
+
+</dd>
+<dt id="ref_templ-arg"><b>--ref_templ &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Template for reference points (default: &quot;2 1 0 4 4 7 1 -1 -1 0.000 0 1 -1 0 0&quot;).</p>
+
+</dd>
+<dt id="brd_templ-arg"><b>--brd_templ &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Template for border lines (default: &quot;2 3 0 1 5 7 2 -1 -1 0.000 0 0 7 0 0&quot;).</p>
+
+</dd>
+</dl>
+
+<h1 id="EXAMPLES">EXAMPLES:</h1>
+
+<p>Create standard map n30-068 (1km at 1cm) as a FIG file: &gt; ms2geofig create --mkref nom --name n30-068 -o n30-068.fig</p>
+
+<h1 id="ADD----ADD-GEODATA-TRACKS-WAYPOINTS-MAPS-TO-REFERENCED-FIG-FILE">ADD -- ADD GEODATA (TRACKS, WAYPOINTS, MAPS) TO REFERENCED FIG FILE</h1>
+
+<h1 id="SYNOPSIS2">SYNOPSIS</h1>
+
+<pre><code>ms2vmap add [&lt;options&gt;] &lt;files&gt; -o &lt;output file&gt;</code></pre>
+
+<h2 id="Options-for-reading-data">Options for reading data:</h2>
+
+<dl>
+
+<dt id="in_fmt-arg"><b>--in_fmt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip).</p>
+
+</dd>
+<dt id="gu_enc-arg"><b>--gu_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Garmin Utils format charset (default KOI8-R).</p>
+
+</dd>
+<dt id="ozi_enc-arg"><b>--ozi_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>OziExplorer format charset (default Windows-1251).</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-writing-fig-file1">Options for writing fig file:</h2>
+
+<dl>
+
+<dt id="o---out-arg1"><b>-o, --out &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Output file.</p>
+
+</dd>
+<dt id="fig_enc-arg1"><b>--fig_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Encoding for reading/writing fig files (default: KOI8-R).</p>
+
+</dd>
 <dt id="raw"><b>--raw</b></dt>
 <dd>
 
@@ -275,24 +373,6 @@ ms2geofig srtm [&lt;options&gt;] -o &lt;fig file&gt;</code></pre>
 <dd>
 
 <p>Directory for raster map tiles (default &lt;filename&gt;.img).</p>
-
-</dd>
-<dt id="in_fmt-arg"><b>--in_fmt &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip).</p>
-
-</dd>
-<dt id="gu_enc-arg"><b>--gu_enc &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Garmin Utils format charset (default KOI8-R).</p>
-
-</dd>
-<dt id="ozi_enc-arg"><b>--ozi_enc &lt;arg&gt;</b></dt>
-<dd>
-
-<p>OziExplorer format charset (default Windows-1251).</p>
 
 </dd>
 <dt id="map_smooth-arg"><b>--map_smooth &lt;arg&gt;</b></dt>
@@ -345,41 +425,209 @@ ms2geofig srtm [&lt;options&gt;] -o &lt;fig file&gt;</code></pre>
 </dd>
 </dl>
 
-<h1 id="DELETE-CERTAIN-COMPONENTS-OF-GEOFIG-FILE-DEL-ACTION">DELETE CERTAIN COMPONENTS OF GEOFIG FILE (`DEL` ACTION):</h1>
+<h1 id="EXAMPLES1">EXAMPLES:</h1>
+
+<p>Add track to the file: &gt; ms2geofig add Current.gpx -o n30-068.fig</p>
+
+<h1 id="DEL----DELETE-GEODATA-TO-REFERENCED-FIG-FILE">DEL -- DELETE GEODATA TO REFERENCED FIG FILE</h1>
+
+<h1 id="SYNOPSIS3">SYNOPSIS</h1>
+
+<pre><code>ms2vmap del [&lt;options&gt;] -o &lt;output file&gt;</code></pre>
+
+<h2 id="Options-for-selecting-data">Options for selecting data:</h2>
 
 <dl>
 
-<dt id="wpts"><b>--wpts</b></dt>
+<dt id="W---wpts"><b>-W, --wpts</b></dt>
 <dd>
 
-<p>Delete only waypoints.</p>
+<p>Delete waypoints.</p>
 
 </dd>
-<dt id="trks"><b>--trks</b></dt>
+<dt id="T---trks"><b>-T, --trks</b></dt>
 <dd>
 
-<p>Delete only tracks.</p>
+<p>Delete tracks.</p>
 
 </dd>
-<dt id="maps"><b>--maps</b></dt>
+<dt id="M---maps"><b>-M, --maps</b></dt>
 <dd>
 
-<p>Delete only maps.</p>
+<p>Delete maps.</p>
 
 </dd>
-<dt id="ref"><b>--ref</b></dt>
+<dt id="A---all"><b>-A, --all</b></dt>
 <dd>
 
-<p>Delete only reference.</p>
+<p>Delete waypoints, tracks, maps.</p>
+
+</dd>
+<dt id="R---ref"><b>-R, --ref</b></dt>
+<dd>
+
+<p>Delete reference.</p>
 
 </dd>
 </dl>
 
-<p>If no options are given then delete everything.</p>
+<h2 id="Options-for-writing-fig-file2">Options for writing fig file:</h2>
 
-<h1 id="SRTM-OPTIONS-SRTM-ACTIONS">SRTM OPTIONS (`SRTM` ACTIONS):</h1>
+<dl>
 
-<p>At the moment objects are added in a rectangular bounding box of map image, refpoints, and border. I plan to add border cropping later</p>
+<dt id="o---out-arg2"><b>-o, --out &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Output file.</p>
+
+</dd>
+<dt id="fig_enc-arg2"><b>--fig_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Encoding for reading/writing fig files (default: KOI8-R).</p>
+
+</dd>
+</dl>
+
+<h1 id="GET----EXTRACT-GEODATA-FROM-FIG-FILE">GET -- EXTRACT GEODATA FROM FIG FILE</h1>
+
+<h1 id="SYNOPSIS4">SYNOPSIS</h1>
+
+<pre><code>ms2vmap get [&lt;options&gt;] &lt;fig file&gt; -o &lt;output file&gt;</code></pre>
+
+<h2 id="Options-for-selecting-data1">Options for selecting data:</h2>
+
+<dl>
+
+<dt id="W---wpts1"><b>-W, --wpts</b></dt>
+<dd>
+
+<p>Get waypoints.</p>
+
+</dd>
+<dt id="T---trks1"><b>-T, --trks</b></dt>
+<dd>
+
+<p>Get tracks.</p>
+
+</dd>
+<dt id="M---maps1"><b>-M, --maps</b></dt>
+<dd>
+
+<p>Get maps.</p>
+
+</dd>
+<dt id="A---all1"><b>-A, --all</b></dt>
+<dd>
+
+<p>Get waypoints, tracks, maps.</p>
+
+</dd>
+<dt id="R---ref1"><b>-R, --ref</b></dt>
+<dd>
+
+<p>Get fig reference.</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-writing-geodata-file">Options for writing geodata file:</h2>
+
+<dl>
+
+<dt id="o---out-arg3"><b>-o, --out &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Output file.</p>
+
+</dd>
+<dt id="out_fmt-arg"><b>--out_fmt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Geodata output format (json, gu, gpx, kml, kmz, ozi, zip).</p>
+
+</dd>
+<dt id="xml_compr-arg"><b>--xml_compr &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Compress XML output (GPX and KML formats), default 0.</p>
+
+</dd>
+<dt id="xml_indent-arg"><b>--xml_indent &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Use XML indentation (GPX and KML formats), default 1.</p>
+
+</dd>
+<dt id="xml_ind_str-arg"><b>--xml_ind_str &lt;arg&gt;</b></dt>
+<dd>
+
+<p>XML indentation string (GPX and KML formats), default &#39; &#39;.</p>
+
+</dd>
+<dt id="xml_qchar-arg"><b>--xml_qchar &lt;arg&gt;</b></dt>
+<dd>
+
+<p>XML quoting character (GPX and KML formats), default &#39;&#39;&#39;.</p>
+
+</dd>
+<dt id="gpx_write_rte-arg"><b>--gpx_write_rte &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Write waypoint lists as routes (GPX format), default 0.</p>
+
+</dd>
+<dt id="json_sort_keys-arg"><b>--json_sort_keys &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Sort json objects by keys (GeoJSON format), default 1.</p>
+
+</dd>
+<dt id="json_compact-arg"><b>--json_compact &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Write compact json (GeoJSON format), default 0.</p>
+
+</dd>
+<dt id="json_indent-arg"><b>--json_indent &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Use json indentation (GeoJSON format), default 1.</p>
+
+</dd>
+<dt id="ozi_map_grid-arg"><b>--ozi_map_grid &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Write map reference points in grid coordinates (OziExplorer format), default 0</p>
+
+</dd>
+<dt id="ozi_map_wgs-arg"><b>--ozi_map_wgs &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Always use wgs84 datum for map coordinates (OziExplorer format), default 0</p>
+
+</dd>
+<dt id="gu_enc-arg1"><b>--gu_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Garmin Utils format charset (default KOI8-R).</p>
+
+</dd>
+<dt id="ozi_enc-arg1"><b>--ozi_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>OziExplorer format charset (default Windows-1251).</p>
+
+</dd>
+</dl>
+
+<h1 id="SRTM----ADD-DEM-DATA-TO-REFERENCED-FIG-FILE">SRTM -- ADD DEM DATA TO REFERENCED FIG FILE</h1>
+
+<h1 id="SYNOPSIS5">SYNOPSIS</h1>
+
+<pre><code>ms2vmap srtm [&lt;options&gt;] -o &lt;output file&gt;</code></pre>
+
+<h2 id="Options-for-writing-DEM-data">Options for writing DEM data:</h2>
 
 <dl>
 
@@ -395,10 +643,6 @@ ms2geofig srtm [&lt;options&gt;] -o &lt;fig file&gt;</code></pre>
 <p>Interpolate holes (0|1, default 1).</p>
 
 </dd>
-</dl>
-
-<dl>
-
 <dt id="cnt-arg"><b>--cnt &lt;arg&gt;</b></dt>
 <dd>
 
@@ -485,13 +729,75 @@ ms2geofig srtm [&lt;options&gt;] -o &lt;fig file&gt;</code></pre>
 </dd>
 </dl>
 
-<h1 id="EXAMPLES">EXAMPLES:</h1>
+<h2 id="Options-for-writing-fig-file3">Options for writing fig file:</h2>
 
-<p>Create standart map sheen n30-068 (1km at 1cm) as a FIG file: &gt; ms2geofig create --mkref nom --name n30-068 -o n30-068.fig</p>
+<dl>
 
-<p>Add track to the file: &gt; ms2geofig add Current.gpx -o n30-068.fig</p>
+<dt id="o---out-arg4"><b>-o, --out &lt;arg&gt;</b></dt>
+<dd>
 
-<p>Add objects from SRTM data (20/100m contours, areas with slope &gt; 25deg, peaks): &gt; ms2geofig srtm --srtm_dir ${srtm_dir} -o n30-068.fig\ --cnt 1 --cnt_step 20 --scnt 1 --scnt_val 25 --peaks 1</p>
+<p>Output file.</p>
+
+</dd>
+<dt id="fig_enc-arg3"><b>--fig_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Encoding for reading/writing fig files (default: KOI8-R).</p>
+
+</dd>
+</dl>
+
+<h1 id="MAKE_REF----MAKE-FIG-REFERENCE-USING-MATCHING-GEODATA">MAKE_REF -- MAKE FIG REFERENCE USING MATCHING GEODATA</h1>
+
+<h1 id="SYNOPSIS6">SYNOPSIS</h1>
+
+<pre><code>ms2vmap make_ref [&lt;options&gt;] &lt;files&gt; -o &lt;output file&gt;</code></pre>
+
+<p>Fig file should contain track or waypoint objects (lines or points with TRK &lt;name&gt; or WPT &lt;name&gt; comment) with same name as in the geodata. For each point of such data a reference point is added.</p>
+
+<p>This can be used to make reference for a map: add raster image witn &quot;MAP &lt;name&gt;&quot; comment; optionally draw border with &quot;BRD &lt;name&gt;&quot; comment; draw a line through some points with &quot;TRK &lt;name1&gt;&quot; comment; somewhere else make a track through same points on a referenced map with &lt;name1&gt; name; do make_ref &lt;track file&gt; -o &lt;fig file&gt;; extract map reference from fig file using ms2geofig get -M &lt;fig file&gt; -o &lt;map file&gt;.</p>
+
+<h2 id="Options-for-reading-data1">Options for reading data:</h2>
+
+<dl>
+
+<dt id="in_fmt-arg1"><b>--in_fmt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip).</p>
+
+</dd>
+<dt id="gu_enc-arg2"><b>--gu_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Garmin Utils format charset (default KOI8-R).</p>
+
+</dd>
+<dt id="ozi_enc-arg2"><b>--ozi_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>OziExplorer format charset (default Windows-1251).</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-writing-fig-file4">Options for writing fig file:</h2>
+
+<dl>
+
+<dt id="o---out-arg5"><b>-o, --out &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Output file.</p>
+
+</dd>
+<dt id="fig_enc-arg4"><b>--fig_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Encoding for reading/writing fig files (default: KOI8-R).</p>
+
+</dd>
+</dl>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 
