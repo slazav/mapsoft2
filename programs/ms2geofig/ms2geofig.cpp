@@ -17,7 +17,6 @@ public:
     Action("create", "create referenced fig file") {
     ms2opt_add_out(options);
     ms2opt_add_fig(options);
-    options.remove("fig_head");
     ms2opt_add_mkref_opts(options);
     ms2opt_add_mkref_brd(options);
     ms2opt_add_geofig_ref(options);
@@ -65,7 +64,6 @@ public:
     ms2opt_add_geo_i(options);
     ms2opt_add_geo_io(options);
     ms2opt_add_fig(options);
-    options.remove("fig_head");
     ms2opt_add_geofig_data(options);
     ms2opt_add_drawmap(options);
     // replace help message for --map_dir (we use different default)
@@ -122,7 +120,6 @@ public:
 
     ms2opt_add_out(options);
     ms2opt_add_fig(options);
-    options.remove("fig_head");
     std::string g = "GEOFIG_DEL";
     options.add("wpts", 0,0,g, "Delete only waypoints.");
     options.add("trks", 0,0,g, "Delete only tracks.");
@@ -168,7 +165,6 @@ public:
 
     ms2opt_add_out(options);
     ms2opt_add_fig(options);
-    options.remove("fig_head");
     ms2opt_add_srtm(options);
 
     std::string g = "GEOFIG_SRTM";
@@ -309,10 +305,8 @@ public:
 
     ms2opt_add_out(options);
     ms2opt_add_fig(options);
-    options.remove("fig_head");
     ms2opt_add_geo_i(options);
     ms2opt_add_geo_io(options);
-    options.remove("fig_head");
   }
 
   void help_impl(HelpPrinter & pr) override {
