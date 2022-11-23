@@ -1,5 +1,5 @@
 PAGES := index modules
-PAGES_RU := vmap2 vmap2render diff geodata
+PAGES_RU := vmap2 vmap2_2020 vmap2render diff geodata
 
 HTMLS := $(patsubst %,%.htm,$(PAGES))\
          $(patsubst %,%.ru.htm,$(PAGES))\
