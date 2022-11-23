@@ -120,19 +120,19 @@ public:
 
     ms2opt_add_std(options, {"OUT"});
     ms2opt_add_fig(options);
-    std::string g = "GEOFIG_DEL";
-    options.add("wpts", 0,0,g, "Delete only waypoints.");
-    options.add("trks", 0,0,g, "Delete only tracks.");
-    options.add("maps", 0,0,g, "Delete only maps.");
-    options.add("ref", 0,0,g, "Delete only reference.");
+    std::string g = "GEOFIG_SEL";
+    options.add("wpts", 0,'W',g, "Delete waypoints.");
+    options.add("trks", 0,'T',g, "Delete tracks.");
+    options.add("maps", 0,'M',g, "Delete maps.");
+    options.add("all",  0,'A',g, "Delete waypoints, tracks, maps.");
+    options.add("ref", 0,'R',g, "Delete reference.");
   }
 
   void help_impl(HelpPrinter & pr) override {
     pr.usage("[<options>] -o <output file>");
-    pr.head(2, "Options for deleting data:");
-    pr.opts({"GEOFIG_DEL"});
+    pr.head(2, "Options for selecting data:");
+    pr.opts({"GEOFIG_SEL"});
     pr.head(2, "Options for writing fig file:");
-    pr.par("\nIf no options are given then delete everything.");
     pr.opts({"OUT", "FIG"});
   }
 
@@ -147,13 +147,64 @@ public:
     Fig F;
     read_fig(ofile, F, opts);
 
-    bool all = !opts.exists("wpts") && !opts.exists("trks") &&
-               !opts.exists("maps") && !opts.exists("ref");
+    bool all = opts.exists("all");
     if (opts.exists("wpts") || all) fig_del_wpts(F);
     if (opts.exists("trks") || all) fig_del_trks(F);
     if (opts.exists("maps") || all) fig_del_maps(F);
-    if (opts.exists("ref")  || all) fig_del_ref(F);
+    if (opts.exists("ref")) fig_del_ref(F);
     write_fig(ofile, F, opts);
+  }
+};
+
+/*****************************************************************/
+class ActionGet : public Action{
+public:
+  ActionGet():
+    Action("get", "extract geodata from fig file") {
+
+    ms2opt_add_std(options, {"OUT"});
+    ms2opt_add_geo_o(options);
+    ms2opt_add_geo_io(options);
+    std::string g = "GEOFIG_SEL";
+    options.add("wpts", 0,'W',g, "Get waypoints.");
+    options.add("trks", 0,'T',g, "Get tracks.");
+    options.add("maps", 0,'M',g, "Get maps.");
+    options.add("all",  0,'A',g, "Get waypoints, tracks, maps.");
+    options.add("ref", 0,'R',g, "Get fig reference.");
+  }
+
+  void help_impl(HelpPrinter & pr) override {
+    pr.usage("[<options>] <fig file> -o <output file>");
+    pr.head(2, "Options for selecting data:");
+    pr.opts({"GEOFIG_SEL"});
+    pr.head(2, "Options for writing geodata file:");
+    pr.opts({"OUT", "GEO_O", "GEO_IO"});
+  }
+
+  virtual void run_impl(const std::vector<std::string> & args,
+                   const Opt & opts) override {
+
+    if (args.size()!=1) throw Err() << "argument expected: fig file";
+    if (!opts.exists("out")) throw Err() << "no output files";
+    std::string ifile = args[0];
+    std::string ofile = opts.get<std::string>("out");
+    bool v = opts.get("verb", false);
+
+    Fig F;
+    read_fig(ifile, F, opts);
+    GeoMap ref = fig_get_ref(F);
+    GeoData data;
+
+    bool all = opts.exists("all");
+    if (opts.exists("wpts") || all) fig_get_wpts(F, ref, data);
+    if (opts.exists("trks") || all) fig_get_trks(F, ref, data);
+    if (opts.exists("maps") || all) fig_get_maps(F, ref, data);
+    if (opts.exists("ref")){
+      GeoMapList ml; ml.push_back(ref);
+      data.maps.push_back(ml);
+    }
+
+    write_geo(ofile, data, opts);
   }
 };
 
@@ -321,7 +372,7 @@ public:
            " draw a line through some points with \"TRK <name1>\" comment;"
            " somewhere else make a track through same points on a referenced"
            " map with <name1> name; do make_ref <track file> -o <fig file>;"
-           " extract map reference from fig file using ms2conv.");
+           " extract map reference from fig file using ms2geofig get -M <fig file> -o <map file>.");
 
     pr.head(2, "Options for reading data:");
     pr.opts({"GEO_I", "GEO_IO"});
@@ -414,6 +465,7 @@ main(int argc, char **argv){
     std::shared_ptr<Action>(new ActionCreate),
     std::shared_ptr<Action>(new ActionAdd),
     std::shared_ptr<Action>(new ActionDel),
+    std::shared_ptr<Action>(new ActionGet),
     std::shared_ptr<Action>(new ActionSRTM),
     std::shared_ptr<Action>(new ActionMakeRef)
   });
