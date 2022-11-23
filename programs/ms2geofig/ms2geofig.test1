@@ -23,7 +23,7 @@ $P add test_data/data.gpx -o n37-001.fig
 
 diff -q n37-001.fig test_data/fig1.fig
 
-$P del -o n37-001.fig
+$P del -A -R -o n37-001.fig
 
 diff -q n37-001.fig test_data/fig4.fig
 
