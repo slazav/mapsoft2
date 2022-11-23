@@ -21,6 +21,7 @@ void usage(bool pod=false){
   pr.usage("add [<options>] <files> -o <fig file>");
   pr.usage("del [<options>] -o <fig file>");
   pr.usage("srtm [<options>] -o <fig file>");
+  pr.usage("make_ref [<options>] <geodata files> -o <fig file>");
 
   pr.head(1, "General options:");
   pr.opts({"STD", "OUT", "FIG"});
@@ -35,15 +36,28 @@ void usage(bool pod=false){
   pr.opts({"GEOFIG_DEL"});
   pr.par("If no options are given then delete everything.");
 
+  pr.head(1, "Making reference (`make_ref` action):");
+  pr.par("Make fig reference using matching geodata."
+         " Fig file should contain track or waypoint objects (lines or points with"
+         " TRK <name> or WPT <name> comment) with same name as in the geodata."
+         " For each point of such data a reference point is added."
+         " This can be used to make reference for a map: add raster image witn MAP <name>;"
+         " comment, optionally draw border with BRD <name> comment;"
+         " draw a line through some points with TRK <name1> comment;"
+         " somewhere else make a track through same points on a referenced"
+         " map with <name1> name; do make_ref <track file> -o <fig file>;"
+         " extract map reference from fig file using ms2conv.");
+
   pr.head(1, "SRTM options (`srtm` actions):");
   pr.par("At the moment objects are added in a rectangular bounding box "
          "of map image, refpoints, and border. I plan to add border cropping later");
   pr.opts({"SRTM"});
   pr.opts({"GEOFIG_SRTM"});
 
+
   pr.head(1, "Examples:");
 
-  pr.par("Create standart map sheen n30-068 (1km at 1cm) as a FIG file:\n"
+  pr.par("Create standart map n30-068 (1km at 1cm) as a FIG file:\n"
          "> ms2geofig create --mkref nom --name n30-068 -o n30-068.fig");
 
   pr.par("Add track to the file:\n"
@@ -300,6 +314,85 @@ main(int argc, char **argv){
       return 0;
     }
 
+    /*****************************************/
+
+    if (action == "make_ref"){
+      Opt O = parse_options_all(&argc, &argv, options,
+        {"STD", "OUT", "GEO_I", "GEO_IO", "FIG"}, pars);
+
+      if (O.exists("help")) {usage(); return 0;}
+      if (O.exists("pod")) {usage(true); return 0;}
+      bool v = O.exists("verbose");
+      string ofile = O.get<string>("out");
+
+      GeoData data;
+      for (auto const & f:pars) read_geo(f, data, O);
+
+      // reading Fig file
+      Fig F;
+      read_fig(ofile, F, O);
+
+      // remove reference
+      fig_del_ref(F);
+
+      bool add = false;
+ 
+      // replace TRK with reference points
+      for (const auto & o:F){
+        if (o.comment.size()==0 || o.comment[0].substr(0,3) != "TRK")
+          continue;
+        std::string name = o.comment[0].substr(4);
+        for (const auto & tr:data.trks){
+          if (tr.name != name) continue;
+          if (v) std::cerr << "matching track: " << name << "\n";
+
+          for (int n = 0; n < min(tr.size(), o.size()); n++){
+              ostringstream st;
+              st << "REF " << tr[n].x << " " << tr[n].y;
+
+            FigObj o1(o);
+            o1.clear();
+            o1.comment.clear();
+            o1.comment.push_back(st.str());
+
+            o1.push_back(iPoint(o[n].x,o[n].y));
+            F.push_back(o1);
+            add = true;
+          }
+        }
+      }
+
+      // replace WPT with reference points
+      for (const auto & o:F){
+        if (o.comment.size()==0 ||
+            o.comment[0].substr(0,3) != "WPT" ||
+            o.size()<1) continue;
+
+        std::string name = o.comment[0].substr(4);
+        for (const auto & wl:data.wpts){
+          for (const auto & w:wl){
+            if (w.name != name) continue;
+            if (v) std::cerr << "matching waypoint: " << name << "\n";
+
+            ostringstream st;
+            st << "REF " << w.x << " " << w.y;
+
+            FigObj o1(o);
+            o1.clear();
+            o1.comment.clear();
+            o1.comment.push_back(st.str());
+
+            o1.push_back(iPoint(o[0].x,o[0].y));
+            F.push_back(o1);
+            add = true;
+          }
+        }
+      }
+      if (!add) throw Err()
+        << "can not make reference: no matching tracks or waypoints";
+
+      write_fig(ofile, F, O);
+    }
 
     /*****************************************/
     else throw Err() << "Unknown action: " << action;

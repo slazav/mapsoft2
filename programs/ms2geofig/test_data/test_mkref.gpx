@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1">
+	<trk>
+		<name>m2</name>
+		<trkseg>
+			<trkpt lat="43.286832" lon="77.317802"></trkpt>
+			<trkpt lat="43.289206" lon="77.319251"></trkpt>
+			<trkpt lat="43.287621" lon="77.325039"></trkpt>
+			<trkpt lat="43.280193" lon="77.325168"></trkpt>
+			<trkpt lat="43.274815" lon="77.328499"></trkpt>
+			<trkpt lat="43.281197" lon="77.316322"></trkpt>
+		</trkseg>
+	</trk>
+</gpx>
