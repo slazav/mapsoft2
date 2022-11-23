@@ -1,0 +1,22 @@
+#!/bin/bash -efu
+
+# Add objects
+
+P=${1:-./ms2vmapdb}
+
+. ../../modules/test_lib.sh
+
+assert_cmd "$P delete tmp" "" 0
+assert_cmd "$P create tmp" "" 0
+
+assert_cmd "$P import test_data/mkpt1.vmap2 -o tmp -t test_data/mkpt_types.txt" "" 0
+assert_cmd "$P export tmp -o tmp.vmap2 -t test_data/mkpt_types.txt" "" 0
+assert_diff test_data/mkpt1.vmap2 tmp.vmap2
+
+assert_cmd "$P update_labels tmp -t test_data/mkpt_types.txt" "" 0
+assert_cmd "$P export tmp -o tmp.vmap2 -t test_data/mkpt_types.txt" "" 0
+assert_diff test_data/mkpt2.vmap2 tmp.vmap2
+
+
+assert_cmd "$P delete tmp" "" 0
+

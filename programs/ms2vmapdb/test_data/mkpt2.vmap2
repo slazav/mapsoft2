@@ -1,0 +1,29 @@
+point:0xa
+name Area1
+crds 40.500000 55.500000
+
+point:0xa
+name Area2
+crds 50.500000 55.500000
+
+area:0x1
+name Area1
+crds 40.000000 55.000000 40.000000 56.000000 41.000000 56.000000
+
+area:0x1
+name Area2
+crds 50.000000 55.000000 50.000000 56.000000 51.000000 56.000000
+
+text:0x1
+scle 0.85
+name Area2
+reft point:0xa
+refp 50.500000 55.500000
+crds 50.500000 55.500000
+
+text:0x1
+name Area1
+reft point:0xa
+refp 40.500000 55.500000
+crds 40.200000 55.200000
+

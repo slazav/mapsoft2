@@ -6,6 +6,7 @@ PROGRAMS := ms2vmapdb
    test_convert\
    test_update_labels\
    test_crop\
+   test_mkpt\
 
 MODDIR      := ../../modules
 include $(MODDIR)/Makefile.inc

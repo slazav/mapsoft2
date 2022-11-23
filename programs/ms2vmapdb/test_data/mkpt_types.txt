@@ -1,0 +1,9 @@
+type point:0x10
+ + label_type 1
+
+type area:0x1
+ + label_type 1
+ + label_def_scale 0.85
+ + label_mkpt 10
+
+type text:0x1
