@@ -213,8 +213,7 @@ public:
       << ": one argument expected: <dbname>";
 
     // Read file with type information if it's available
-    VMap2types types;
-    if (opts.exists("types")) types.load(opts.get("types"));
+    VMap2types types(opts);
 
     VMap2 map(args[0], 0);
     do_update_labels(map, types);
@@ -298,8 +297,7 @@ public:
       << ": non-empty database name expected (use -o option)";
 
     // Read file with type information if it's available
-    VMap2types types;
-    if (opts.exists("types")) types.load(opts.get("types"));
+    VMap2types types(opts);
 
     VMap2 vmap2(ofile);
     vmap2_import(args, types, vmap2, opts);
@@ -341,8 +339,7 @@ public:
       << "non-empty output file expected (use -o option)";
 
     // read file with type information if it's available
-    VMap2types types;
-    if (opts.exists("types")) types.load(opts.get("types"));
+    VMap2types types(opts);
 
     VMap2 map(args[0], 0);
     vmap2_export(map, types, ofile, opts);

@@ -60,8 +60,7 @@ main(int argc, char *argv[]){
       << "non-empty output file expected (use -o option)";
 
     // read file with type information if it's available
-    VMap2types types;
-    if (O.exists("types")) types.load(O.get("types"));
+    VMap2types types(O);
 
     // move to import? how to avoid copying of vmap?
     VMap2 vmap;
