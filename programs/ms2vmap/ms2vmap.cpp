@@ -25,6 +25,14 @@ void usage(bool pod=false){
   pr.usage("(-h|--help|--pod)");
   pr.usage("<file> ... -o <out file> [<options>]");
 
+  pr.par("\nRead vector map objects from a number of files (having no input files"
+         " is also allowed), optionally apply some modifications and save to the"
+         " output file. Normally output file is just overwritten, except for fig "
+         " format where existing geo reference is used, all non-map objects are"
+         " preserved (accroding with --min_depth/--max_depth options)."
+         " Also some options (--keep_labels, --update_tag, --fix_rounding)"
+         " read old data from the output file and merge them with new data.");
+
   pr.head(2, "Options:");
   pr.opts({"HELP","POD","VERB","OUT", "VMAP2"});
   pr.head(2, "Options for MP format:");
@@ -52,7 +60,6 @@ main(int argc, char *argv[]){
     Opt O = parse_options_all(&argc, &argv, options, {}, infiles);
     if (O.exists("help")) usage();
     if (O.exists("pod"))  usage(true);
-    if (infiles.size()<1) usage();
 
     // check output file
     std::string ofile = O.get("out", "");

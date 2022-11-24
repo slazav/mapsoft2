@@ -10,7 +10,7 @@ P=${1:-./ms2vmap}
 rm -rf tmp.db
 
 help_msg="$($P -h ||:)"
-assert_cmd "$P" "$help_msg" 1
+assert_cmd "$P" "Error: non-empty output file expected (use -o option)" 1
 assert_cmd "$P --help" "$help_msg" 1
 assert_cmd "$P --xxx " "Error: unknown option: --xxx" 1
 
