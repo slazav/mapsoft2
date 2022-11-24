@@ -17,6 +17,8 @@
 #include "geo_data/geo_utils.h"
 #include "geo_mkref/geo_mkref.h"
 #include "fig_geo/fig_geo.h"
+#include "fig_opt/fig_opt.h"
+#include "filename/filename.h"
 
 #include "getopt/action_prog.h"
 
@@ -346,6 +348,74 @@ public:
   }
 };
 
+/**********************************************************/
+// make fig library
+class ActionFigLib : public Action{
+public:
+  ActionFigLib():
+    Action("fig_lib", "make fig library using typeinfo file"){
+    ms2opt_add_std(options, {"OUT"});
+    ms2opt_add_vmap2t(options);
+  }
+
+  void help_impl(HelpPrinter & pr) override {
+    pr.usage("[<options>]");
+    pr.head(2, "Options:");
+    pr.opts({"OUT", "VMAP2"});
+  }
+
+  virtual void run_impl(const std::vector<std::string> & args,
+                   const Opt & opts) override {
+
+    std::string odir = opts.get("out", "");
+    if (odir == "") throw Err()
+      << "non-empty output directory expected (use -o option)";
+
+    // make directory if needed
+    file_mkdir(odir);
+
+    if (! opts.exists("types")) throw Err()
+      << "typeinfo file expected (use -t option)";
+
+    // read file with type information
+    for (const auto & t:VMap2types(opts)){
+      if (t.second.fig_mask=="") continue;
+      auto cl = VMap2obj::get_class(t.first);
+      if (cl==VMAP2_TEXT) continue;
+      Fig F;
+      FigObj o = figobj_template(t.second.fig_mask);
+      o.type=2; o.sub_type=1; // line
+      switch (cl){
+        case VMAP2_POINT:
+        o.set_points(dLine("[[0,0]]"));
+        // Picture
+        if (t.second.fig_pic.size()){
+          std::list<FigObj> pic = t.second.fig_pic;
+          for (auto & p:pic) fig_add_opt(p, "MapType", "pic");
+          F.insert(F.end(), pic.begin(), pic.end());
+        }
+        break;
+        case VMAP2_LINE:
+          o.set_points(dLine("[[0,-30],[470,0],[500,-100]]"));
+        break;
+        case VMAP2_POLYGON:
+          o.sub_type = 3;
+          o.set_points(dLine("[[0,0],[30,-100],[470,-70],[500,0],[0,0]]"));
+        break;
+        default: continue;
+      }
+      F.push_back(o);
+
+      // save fig file
+      std::ostringstream fname;
+      fname << odir << "/" << VMap2obj::print_type(t.first) << ".fig";
+      write_fig(fname.str(), F);
+    }
+
+  }
+};
+
+
 using namespace std;
 
 int
@@ -364,6 +434,7 @@ main(int argc, char *argv[]){
     std::shared_ptr<Action>(new ActionCropRect),
     std::shared_ptr<Action>(new ActionImport),
     std::shared_ptr<Action>(new ActionExport),
+    std::shared_ptr<Action>(new ActionFigLib),
   });
 }
 
