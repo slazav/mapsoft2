@@ -309,10 +309,9 @@ join.
 <li><tt> minsc_color &lt;color&gt;</tt> -- изменить цвет заливки для карты с
 масштабом меньше минимального. По умолчанию 0xFFDB5A00.
 
-<li><tt> define &lt;name&gt; &lt;definition&gt;</tt> -- переопределить
-некое слово. В последующем файле все слова &lt;name&gt; будут заменены на
-&lt;definition&gt;. Замена производится один раз, заменяются только целые
-слова.
+<li><tt> define &lt;name&gt; &lt;definition&gt;</tt> -- определить
+переменную. В последующем файле все вхождения ${&lt;name&gt;} будут
+заменены на &lt;definition&gt;.
 
 <li><tt> if &lt;name&gt; (==|!=) &lt;name&gt;</tt>
 <li><tt> else
