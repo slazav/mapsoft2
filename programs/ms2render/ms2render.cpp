@@ -59,8 +59,8 @@ void usage(bool pod=false){
   pr.opts({"DRAWWPT"});
   pr.head(1, "Options for rendering raster maps");
   pr.opts({"DRAWMAP"});
-  pr.head(1, "Options for rendering vector maps");
-  pr.opts({"VMAP2_RENDER"});
+  pr.head(1, "Options for reading and rendering vector maps");
+  pr.opts({"VMAP2","VMAP2_RENDER", "FIG", "MP", "VMAP"});
 //  pr.head(1, "Options for drawing grid");
 //  pr.opts({"DRAWGRD"});
   pr.head(1, "Options for drawing SRTM data");
@@ -98,9 +98,13 @@ main(int argc, char *argv[]){
     ms2opt_add_drawmap(options);
 //  ms2opt_add_drawgrd(options);
     ms2opt_add_drawsrtm(options);
+    ms2opt_add_vmap2t(options);
+    options.remove("define");
+    ms2opt_add_vmap2(options, 1,0);
     ms2opt_add_vmap2_render(options);
-
-    options.add("types", 1, 't', "VMAP2_RENDER", "File with type information.");
+    options.remove("define");
+    options.add("define", 1, 'D', "VMAP2",
+      "Define variables for type information and render configuration."); 
 
     // Option --out_fmt appears in both geo_o and geoimg modules.
     options.remove("out_fmt");
@@ -149,10 +153,9 @@ main(int argc, char *argv[]){
       obj.add(1, std::shared_ptr<GObjWpts>(new GObjWpts(w)));
 
     // Vector maps
-    VMap2types types; // read file with type information if it's available
+    VMap2types types(O); // read file with type information if it's available
     GeoMap ref_v;
     VMap2 vmap2; // keeps data for GObjV
-    if (O.exists("types")) types.load(O.get("types"));
     for (auto const & f:non_geodata) {
       if (file_ext_check(f, ".vmap2db")) vmap2 = VMap2(f);
       else vmap2_import({f}, types, vmap2, O);
