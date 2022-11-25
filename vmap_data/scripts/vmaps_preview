@@ -1,0 +1,58 @@
+#!/bin/sh -eu
+
+##################################################
+
+# read global configuration and functions
+. vmaps.sh
+
+# read local configuration
+. ./vmaps.conf
+
+##################################################
+
+files=${@:-$VMAP_DIR/*.$VMAP_EXT}
+
+for i in $files; do
+  # name without directory and extension:
+  name=${i%.*}
+  name=${name##*/}
+  vmap="$VMAP_DIR/$name.$VMAP_DIR"
+  [ -f "$vmap" ] || continue
+
+  new="$DIFF_DIR/${name}_n.png"
+  old="$DIFF_DIR/${name}_o.png"
+  dif="$DIFF_DIR/${name}_d.png"
+
+  # If git status is clean skip this file and delete
+  # all pictures in diff folder
+  st="$(git status --porcelain -- "$vmap")"
+  if [ "$st" = "" ]; then
+    rm -f $DIFF_DIR/${name}_*.png
+    continue
+  fi
+
+  have_old=1;
+  [ "${st%% *}" != "??" ] || have_old=0
+
+  # skip file if $new is newer then vmap
+  [ "$vmap" -nt "$new" ] || continue
+
+  echo "$name"
+  title="$name   /$(date +"%Y-%m-%d")/"
+
+  # If there is $new file, move it to $old,
+  # if not, generate it from last commit
+  if [ -s "$new" ]; then
+    mv -f "$new" "$old"
+  elif [ "$have_old" = 1 ]; then
+    o_vmap="$DIFF_DIR/tmp.$VMAP_EXT"
+    git show "HEAD:$vmap" > "$o_vmap"
+    render "$o_vmap" "$old" "$name"
+    vmap_render_map "$o_vmap" "$name" "$old" "" "$title" "$DPI_PR"
+    rm -rf $o_vmap
+  fi
+
+  vmap_render_map "$vmap" "$name" "$new" "" "$title" "$DPI_PR"
+
+  [ -s "$old" -a -s "$new" ] && compare -matte "$old" "$new" "PNG8:$dif" ||:
+done

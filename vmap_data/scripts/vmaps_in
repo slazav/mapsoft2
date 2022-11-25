@@ -1,0 +1,73 @@
+#!/bin/sh -eu
+
+# Update VMAP using FIG or MP from DIR_IN.
+# Arguments: names with or without paths.
+# No arguments: process all fig and mp files
+#
+# Version for mapsoft2, 2022-11-24
+
+##################################################
+
+# read global configuration and functions
+. vmaps.sh
+
+# local configuration
+. ./vmap.conf
+
+##################################################
+
+files=${@:-$IN_DIR/*.fig $IN_DIR/*.mp}
+
+for i in $files; do
+  [ -f "$i" ] || continue
+
+  # name without directory and extension:
+  name=${i%.*}
+  name=${name##*/}
+  ext=${i##*.}
+
+  vmap=$VMAP_DIR/$name.$VMAP_EXT
+
+  if [ ! -f "$vmap" ]; then
+    echo " . skipping unknown file: $i"
+    continue;
+  fi
+
+  if [ "$i" -ot "$vmap" ]; then
+    echo " . skipping old file: $i"
+    continue;
+  fi
+
+  echo " * updating from: $i"
+
+  # save .bak file
+  cp -f "$i" "$i.bak"
+
+  # mp has no labels
+  if [ "$ext" = "mp" ]; then
+    extra_args="--keep_labels 1"
+  fi
+
+  # fig needs fixing rounding errors
+  if [ "$ext" = "fig" ]; then
+    extra_args="--fix_rounding 1"
+  fi
+
+  # update vmap from the input file
+  $MS2VMAP "$i" --out "$vmap" --types "$TYPEINFO"\
+    --skip_unknown 1 --quite 0 --crop_nom "$name"\
+    --update_labels 1 $extra_args
+
+  # save fig template
+  if [ "$ext" = "fig" ]; then
+    fig_tmpl="$FIG_DIR/$name.fig"
+    cp -f -- "$i" "$fig_tmpl"
+    $MS2VMAP --out "$fig_tmpl" --types "$TYPEINFO"
+
+    # update fig, restore old timestamp
+    ot="$(stat "$i" -c %y)"
+    vmaps_get_fig "$i"
+    touch -d "$ot" "$i"
+  fi
+
+done

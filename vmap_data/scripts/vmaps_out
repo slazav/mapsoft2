@@ -1,0 +1,244 @@
+#!/bin/sh -eu
+
+# Make files in OUT dir:
+# * png+map, htm+jpg, mp.zip+img for each vmap file
+# * tiles, tile list, tile databases
+# * img, index htm+jpg for each region
+#
+# Arguments: names with or without paths.
+# No arguments: process all vmap files
+# Version for mapsoft2, 2022-11-24
+
+##################################################
+
+# read global configuration and functions
+. vmaps.sh
+
+# read local configuration
+. ./vmaps.conf
+
+GMT=gmt
+CGPSM=cgpsmapper-static
+
+##################################################
+
+# Update colormap if needed
+if [ ! -f "$CMAP" ]; then
+  echo "Colormap is missing. Updating $CMAP"
+  vmap_update_cmap $CMAP_SRC $CMAP
+fi
+
+##################################################
+# Build list of files (all maps of names from cmdline),
+# check that git status is clean for them
+files=${@:-$VMAP_DIR/*.$VMAP_EXT}
+
+# check that git is clean
+git_clean=1
+for i in $files; do
+  name=${i%.*}
+  name=${name##*/}
+  vmap="$VMAP_DIR/$name.$VMAP_EXT"
+  [ -f "$vmap" ] || continue
+
+  st="$(git status --porcelain -- "$vmap")"
+  if [ "$st" != "" ]; then
+    echo "NON-CLEAN GIT STATUS: $st"
+    git_clean=""
+  fi
+done
+
+#if [ "$git_clean" != 1 ]; then exit 1; fi
+
+##################################################
+# For each map file
+for i in $files; do
+  name=${i%.*}
+  name=${name##*/}
+  vmap="$VMAP_DIR/$name.$VMAP_EXT"
+  [ -f "$vmap" ] || continue
+
+  png="$OUT_DIR/$name.png"
+  map="$OUT_DIR/$name.map"
+  jpg="$OUT_DIR/$name.jpg"
+  htm="$OUT_DIR/$name.htm"
+  mp="$OUT_DIR/$name.mp"
+  mpz="$OUT_DIR/$name.mp.zip"
+  img="$OUT_DIR/$name.img"
+
+  # timestamp of the last commit
+  git_t="$(git log --format="%at" -n1 -- "$vmap" ||:)"
+  git_d=""
+  if [ "$git_t" != "" ]; then
+    #touch -d "@$git_t" "$vmap"
+    git_d="$(date -d "@$git_t" "+map data: %Y-%m-%d")"
+  fi
+  cur_d="$(date "+render: %Y-%m-%d")"
+
+  # Update PNG and MAP
+  if [ "$png" -ot "$vmap" -o "$map" -ot "$vmap" ]; then
+    echo "Making PNG+MAP: $name"
+    title="$name   /$git_d, $cur_d/"
+    vmap_render_map "$vmap" "$name" "$png" "$map" "$title"
+  fi
+
+  # Update JPG + HTM
+  if [ -f "$HTM_TEMPL" -a "$jpg" -ot "$png" -o "$htm" -ot "$png" ]; then
+    echo "Making JPG+HTM: $name"
+    pngtopnm "$png" | pnmscale 0.2 | cjpeg -quality 50 > "$jpg"
+    date=`date +"%Y-%m-%d"`;\
+    sed "s|((NAME))|$name|g;s|((DATE))|$date|g" "$HTM_TEMPL" > "$htm"
+  fi
+
+  # update MP + IMG
+  if [ "$img" -ot "$vmap" -o "$mpz" -ot "$vmap" ]; then
+    echo "Making IMG+MP: $name"
+
+    # generate MP
+    id=$(echo $name | md5sum | head -c6 | tr a-z A-Z)
+    id=$(echo -e "ibase=16\n$id\n" | bc)
+    $MS2VMAP "$vmap" -o "$mp" -t "$TYPEINFO" --mp_name "$name" --mp_id "$id"
+
+    # generate IMG
+    $CGPSM "$mp" -o "$img"
+
+    # generate mp.zip
+    zip -j "$mpz" "$mp"
+    rm -f "$mp"
+  fi
+
+  # Loop through all regions (brd/<name>.gpx)
+  tiles_updated=0
+  for brd in $BRD_DIR/*.gpx; do
+    brd_name=$(basename $brd .gpx)
+
+    $($MS2NOM --ext --name "$name" --cover "$brd") || continue
+
+    # update tiles
+    if [ "$vmap" -nt "$TLIST" ]; then
+      echo "Rendering tiles: $name"
+      $MS2RENDER $vmap --config "$REND_CFG" -t "$TYPEINFO"\
+        --define "{\"nom_name\":\"$name\", \"border_style\":\"clip\"}"\
+        --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png" --zmin 7 --zmax 14\
+        --bgcolor 0 --png_format pal --cmap_load $CMAP\
+        --border_file $brd\
+        --tmap_scale 1 --fit_patt_size;\
+
+      $MS2RENDER $vmap --config "$REND_CFG" -t "$TYPEINFO"\
+        --define "{\"nom_name\":\"$name\", \"border_style\":\"clip\"}"\
+        --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png" --zmin 0 --zmax 6\
+        --bgcolor 0 --png_format pal --cmap_load $CMAP\
+        --border_file $brd\
+        --tmap_scale 1 --vmap_minsc 1;\
+      tiles_updated=1
+    fi
+  done
+
+done
+
+if [ "$tiles_updated" = 1 ]; then
+  echo "Updating tile list and databases"
+  find $TILE_DIR/ -name '*.png' | xargs md5sum | sed "s| $TILE_DIR/| |" > $TLIST
+  vmaps_mbtiles  $TILE_DIR $MBTILES
+  vmaps_sqlitedb $TILE_DIR $SQLITEDB
+fi
+
+##############################################################
+#index files
+
+for brd in $BRD2_DIR/*.gpx; do
+  [ -f "$brd" ] || continue
+  reg=$(basename $brd .gpx)
+  echo "Updating region: $reg"
+
+  htm=$OUT_DIR/all_$reg.htm
+  jpg=$OUT_DIR/all_$reg.jpg
+  img=$OUT_DIR/all_$reg.img
+
+  # Build list of map files, update timestamps
+  list=""
+  imgs=""
+  maps=""
+  img_tstamp="$(mktemp -u tmp_XXXXXX.tstamp)"
+  png_tstamp="$(mktemp -u tmp_XXXXXX.tstamp)"
+  touch  $img_tstamp -d "1970-01-01"
+  touch  $png_tstamp -d "1970-01-01"
+
+  for i in $VMAP_DIR/*.$VMAP_EXT; do
+    name=${i%.*}
+    name=${name##*/}
+
+    # Is the file touches the border?
+    $MS2NOM --ext --name "$name" --cover "$brd" || continue
+    list="$list $name"
+    imgs="$imgs $OUT_DIR/$name.img"
+    maps="$maps $OUT_DIR/$name.map"
+
+    [ $img_tstamp -nt $OUT_DIR/$name.img ] ||
+      touch $img_tstamp -r $OUT_DIR/$name.img
+
+    [ $png_tstamp -nt $OUT_DIR/$name.png ] ||
+      touch $png_tstamp -r $OUT_DIR/$name.png
+
+  done
+  echo "Map list: $list"
+
+  # make img file
+  if [ $img -ot $img_tstamp ]; then
+    echo "Making $img"
+    $GMT -j -v -m "slazav-$reg" -f 779,3 -o $img $imgs $TYP
+  fi
+  rm -f $img_tstamp
+
+  # make jpg+htm file
+  if [ $htm -ot $png_tstamp -o $jpg -ot $png_tstamp ]; then
+    echo "Making $htm + $jpg"
+
+    # Put all maps in a single json file, use jpeg instead of png
+    # (to make conversion faster)
+    tmp="$(mktemp -u tmp_XXXXXX.json)"
+    $MS2CONV $maps --rescale_maps=$JPEG_SCALE -o "$tmp"
+    sed -i -e 's/\.png/\.jpg/g' "$tmp"
+
+    # Make thumbnail image + html map
+    $MS2RENDER "$tmp" $EXTRA_TRACKS $BRD_DIR/$reg.gpx -o "$jpg"\
+      --trk_draw_dots 0 --trk_draw_transp 0 --trk_draw_width 1\
+      --map_draw_brd 0xFFFF0000 --map_max_sc 100\
+      --htm "$htm" --mag $INDEX_SCALE;
+    rm -f "$tmp"
+
+    # Fix html map
+    [ ! -f "$htm" ] || sed -e '
+      /^<area/ {
+        s/"\([^"]*\)\.jpg"/"\1.htm"/
+      }
+      s/src="/src="MAPDIR\//
+      s|OUT/|MAPDIR/|g
+      /<\/html>/d
+      /<html>/d
+    ' -i "$htm"
+
+    # Add list of files to html map
+    echo "<ul>" >> "$htm"
+    for name in $list; do
+      vmap="$VMAP_DIR/$name.$VMAP_EXT"
+      [ -f "$vmap" ] || continue
+
+      ## Use last commit in vmap to put timestamp
+      d="$(git log -1 --pretty="format:%ci" "$vmap" | cut -d ' ' -f 1)"
+
+      echo "<li><b>$name</b> (<font color=gray>$d</font>): "
+      echo "  <a href=\"MAPDIR/$name.png\">[PNG]</a>"
+      echo "  <a href=\"MAPDIR/$name.map\">[MAP]</a>"
+      echo "  <a href=\"MAPDIR/$name.mp.zip\">[MP.ZIP]</a>"
+      echo "  <a href=\"MAPDIR/$name.img\">[IMG]</a>"
+    done >> "$htm"
+    echo "</ul>" >> "$htm"
+
+    # Add link to img file
+    echo "<p><a href=\"MAPDIR/all_$reg.img\">Векторная карта всего района в формате IMG</a>" >> "$htm"
+  fi
+  rm -f $png_tstamp
+
+done
+

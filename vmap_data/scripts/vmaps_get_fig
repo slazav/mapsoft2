@@ -1,0 +1,44 @@
+#!/bin/sh -efu
+
+# Get fig files for editing in DIR_ID.
+# Fig templates are stored in FIG_DIR folder,
+# they are created if missing.
+# Arguments: names (with or without path or extension).
+# Version for mapsoft2, 2022-11-24
+
+##################################################
+
+# read global configuration and functions
+. vmaps.sh
+
+# read local configuration
+. ./vmaps.conf
+
+##################################################
+
+for i in "$@"; do
+  # name without directory and extension:
+  name=${i%.*}
+  name=${name##*/}
+
+  # files
+  fig_tmpl="$FIG_DIR/$name.fig"
+  fig_in="$IN_DIR/$name.fig"
+  vmap="$VMAP_DIR/$name.$VMAP_EXT"
+
+  if [ ! -f "$vmap" ]; then
+    echo "no $VMAP_EXT file"
+    continue
+  fi
+
+  if [ ! -f "$fig_tmpl" ]; then
+    echo "creating fig template"
+    $MS2GEOFIG create --mkref nom --name $name\
+      --mag $NOM_MAG --north -o "$fig_tmpl"
+  fi
+
+  cp -f -- "$fig_tmpl" "$fig_in" ||:
+
+  $MS2VMAP "$vmap" -o "$fig_in" --types "$TYPEINFO"
+
+done
