@@ -12,7 +12,7 @@
 . vmaps.sh
 
 # local configuration
-. ./vmap.conf
+. ./vmaps.conf
 
 ##################################################
 
@@ -54,7 +54,8 @@ for i in $files; do
   fi
 
   # update vmap from the input file
-  $MS2VMAP "$i" --out "$vmap" --types "$TYPEINFO"\
+  $MS2VMAP "$i" --out "$vmap"\
+    --types "$TYPEINFO" --define "$(vmap_defs)"\
     --skip_unknown 1 --quite 0 --crop_nom "$name"\
     --update_labels 1 $extra_args
 
@@ -62,7 +63,8 @@ for i in $files; do
   if [ "$ext" = "fig" ]; then
     fig_tmpl="$FIG_DIR/$name.fig"
     cp -f -- "$i" "$fig_tmpl"
-    $MS2VMAP --out "$fig_tmpl" --types "$TYPEINFO"
+    $MS2VMAP --out "$fig_tmpl"\
+      --types "$TYPEINFO" --define "$(vmap_defs)"
 
     # update fig, restore old timestamp
     ot="$(stat "$i" -c %y)"

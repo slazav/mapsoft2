@@ -97,7 +97,9 @@ for i in $files; do
     # generate MP
     id=$(echo $name | md5sum | head -c6 | tr a-z A-Z)
     id=$(echo -e "ibase=16\n$id\n" | bc)
-    $MS2VMAP "$vmap" -o "$mp" -t "$TYPEINFO" --mp_name "$name" --mp_id "$id"
+    $MS2VMAP "$vmap" -o "$mp"\
+      -t "$TYPEINFO" --define "$(vmap_defs)"\
+      --mp_name "$name" --mp_id "$id"
 
     # generate IMG
     $CGPSM "$mp" -o "$img"
@@ -117,16 +119,16 @@ for i in $files; do
     # update tiles
     if [ "$vmap" -nt "$TLIST" ]; then
       echo "Rendering tiles: $name"
-      $MS2RENDER $vmap --config "$REND_CFG" -t "$TYPEINFO"\
-        --define "{\"nom_name\":\"$name\", \"border_style\":\"clip\"}"\
+      $MS2RENDER $vmap\
+        --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs)"\
         --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png"\
         --zmin $(($TILE_MAXE+1)) --zmax $TILE_MAXZ\
         --bgcolor 0 --png_format pal --cmap_load $CMAP\
         --border_file $brd\
         --tmap_scale 1 --fit_patt_size;\
 
-      $MS2RENDER $vmap --config "$REND_CFG" -t "$TYPEINFO"\
-        --define "{\"nom_name\":\"$name\", \"border_style\":\"clip\"}"\
+      $MS2RENDER $vmap\
+        --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs)"\
         --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png"\
         --zmin 0 --zmax $TILE_MAXE\
         --bgcolor 0 --png_format pal --cmap_load $CMAP\

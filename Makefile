@@ -26,16 +26,20 @@ man5dir ?= $(mandir)/man5
 #################################
 ## Build rules
 
+.PHONY: all man vmap_data clean
+all: $(PROGRAMS) man vmap_data
 
-all: $(PROGRAMS) man
 ms2%:
 	make -C programs/$@
 man:
 	make -C docs/man
+vmap_data:
+	make -C vmap_data
 
 clean:
 	make -C programs clean
 	make -C modules  clean
+	make -C vmap_data clean
 
 #################################
 ## Install rules
@@ -48,6 +52,5 @@ install:
 	install -D -m644 docs/man/mapsoft2.5 $(man5dir)/mapsoft2.5
 	install -D -m644 programs/ms2view/mapsoft2.css   $(datadir)/mapsoft2/mapsoft2.css
 	install -D -m644 programs/ms2view/maps_menu.json $(datadir)/mapsoft2/maps_menu.json
-	for i in vmap_data/scripts/*; do\
-	  install -D -m755 $$i $(bindir);\
-	done
+	make -C vmap_data install
+

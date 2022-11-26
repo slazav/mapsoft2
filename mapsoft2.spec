@@ -19,6 +19,16 @@ BuildRequires: /usr/bin/pod2man /usr/bin/pod2html /usr/bin/unzip
 %description
 mapsoft2 - programs for working with maps and geodata
 
+%package vmap-data
+Summary: mapsoft-vmap-data - example of data and scripts for vector map handling
+Group: Sciences/Geosciences
+Requires: %name = %version-%release
+BuildArch: noarch
+
+%description vmap-data
+Example of data, scripts, xfig libraries for vector map handling.
+
+
 %prep
 %setup -q
 
@@ -35,7 +45,14 @@ export SKIP_IMG_DIFFS=1
 %_mandir/man1/ms2*
 %_mandir/man5/mapsoft2*
 %dir %_datadir/mapsoft2
-%_datadir/mapsoft2/*
+%_datadir/mapsoft2/mapsoft2.css
+%_datadir/mapsoft2/maps_menu.json
+
+%files vmap-data
+%_datadir/mapsoft2/render.cfg
+%_datadir/mapsoft2/types.cfg
+%_datadir/mapsoft2/pics
+%_datadir/xfig/Libraries/*
 
 %changelog
 * Sun Oct 23 2022 Vladislav Zavjalov <slazav@altlinux.org> 1.8-alt1

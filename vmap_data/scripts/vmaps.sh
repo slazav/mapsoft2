@@ -10,16 +10,19 @@ BRD2_DIR=brd;    # Global borders in gpx format -- for index files
 
 VMAP_EXT=vmap;       # Extension/format of vector maps
 NOM_MAG=2;           # Scaling of maps. Use NOM_MAP=2 for 1km sheets with 500m maps
-DPI=400;             # DPI for images
-DPI_PR=150;          # DPI for preview images
+DPI=400;             # DPI for rendering images
+DPI_PR=150;          # DPI for rendering preview images
+DPI_MAP=200;         # DPI for "original" map reference (normally 200 or 100)
+STYLE_HR=0;          # hr variable to be used in render.cfg and types.cfg
+
 CMAP=conf/cmap.png;        # Colormap
 CMAP_SRC=                  # nomenclatere name used for colormap source
-REND_CFG=conf/render.cfg;  # Render configuration
-TYPEINFO=conf/types.cfg    # Type information
-HTM_TEMPL=conf/map.htm;    # template for htm page
+REND_CFG=/usr/share/mapsoft2/render.cfg;  # Render configuration
+TYPEINFO=/usr/share/mapsoft2/types.cfg    # Type information
+HTM_TEMPL=/usr/share/mapsoft2/map_templ.htm;    # template for htm page
 
 # index files (one set per BRD2_DIR/*.gpx)
-TYP=conf/slazav.typ
+TYP=/usr/share/mapsoft2/slazav.typ
 EXTRA_TRACKS=;    # extra tracks to be added to index image
 JPEG_SCALE=0.2;   # scale for jpeg preview images
 INDEX_SCALE=0.05; # scale for index image (in addition to jpeg_scale)
@@ -39,12 +42,17 @@ MS2GEOFIG=ms2geofig
 MS2CONV=ms2conv
 MS2NOM=ms2nom
 
+function vmap_defs() {
+  echo "{\"nom_name\":\"$name\", \"border_style\":\"normal\", "\
+       " \"dpi_val\":\"$DPI_MAP\", \"hr\":\"$STYLE_HR\"}"
+}
+
 function vmap_update_cmap() {
   name=$1
   cmap=$2
   vmap=$VMAP_DIR/$name.$VMAP_EXT
-  $MS2RENDER $vmap --out tmp_cmap.png --config "$REND_CFG" -t "$TYPEINFO"\
-    --define "{\"nom_name\":\"$name\", \"border_style\":\"normal\"}"\
+  $MS2RENDER $vmap --out tmp_cmap.png\
+    --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs)"\
     --mkref nom --north --name "$name" --dpi $DPI --margins 10 --top_margin 30\
     --title "$name" --title_size 20\
     --cmap_save $cmap --png_format pal --png_format pal
@@ -58,9 +66,10 @@ function vmap_render_map() {
   map=$4
   title=$5
   dpi=${6:-$DPI}
-  $MS2RENDER $ifile --out "$png" --config "$REND_CFG" -t "$TYPEINFO"\
-    --define "{\"nom_name\":\"$name\", \"border_style\":\"normal\"}"\
+  $MS2RENDER $ifile --out "$png"\
+    --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs)"\
     --mkref nom --north --name "$name" --dpi "$dpi" --margins 10 --top_margin 30\
     --title "$title" --title_size 20\
-    --cmap_load "$CMAP" --png_format pal --map "$map"
+    --cmap_load "$CMAP" --png_format pal ${map:+--map $map}
 }
+
