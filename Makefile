@@ -48,3 +48,6 @@ install:
 	install -D -m644 docs/man/mapsoft2.5 $(man5dir)/mapsoft2.5
 	install -D -m644 programs/ms2view/mapsoft2.css   $(datadir)/mapsoft2/mapsoft2.css
 	install -D -m644 programs/ms2view/maps_menu.json $(datadir)/mapsoft2/maps_menu.json
+	for i in vmap_data/scripts/*; do\
+	  install -D -m755 $$i $(bindir);\
+	done

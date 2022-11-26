@@ -119,14 +119,16 @@ for i in $files; do
       echo "Rendering tiles: $name"
       $MS2RENDER $vmap --config "$REND_CFG" -t "$TYPEINFO"\
         --define "{\"nom_name\":\"$name\", \"border_style\":\"clip\"}"\
-        --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png" --zmin 7 --zmax 14\
+        --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png"\
+        --zmin $(($TILE_MAXE+1)) --zmax $TILE_MAXZ\
         --bgcolor 0 --png_format pal --cmap_load $CMAP\
         --border_file $brd\
         --tmap_scale 1 --fit_patt_size;\
 
       $MS2RENDER $vmap --config "$REND_CFG" -t "$TYPEINFO"\
         --define "{\"nom_name\":\"$name\", \"border_style\":\"clip\"}"\
-        --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png" --zmin 0 --zmax 6\
+        --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png"\
+        --zmin 0 --zmax $TILE_MAXE\
         --bgcolor 0 --png_format pal --cmap_load $CMAP\
         --border_file $brd\
         --tmap_scale 1 --vmap_minsc 1;\

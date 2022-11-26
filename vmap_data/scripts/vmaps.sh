@@ -5,28 +5,32 @@ IN_DIR=IN;       # Input folder. Maps are updated from .fig/.mp files in this fo
 OUT_DIR=OUT;     # Output older for raster maps, mp/img files
 DIFF_DIR=diff;   # Difference
 FIG_DIR=fig;     # Fig templates
-TILE_DIR=TILES;  # Tiles
 BRD_DIR=brd;     # Global borders in gpx format -- for tiles
 BRD2_DIR=brd;    # Global borders in gpx format -- for index files
 
-VMAP_EXT=vmap;             # Extension/format of vector maps
-NOM_MAG=2;     # Scaling of maps. Use NOM_MAP=2 for 1km sheets with 500m maps
-DPI=400;
-DPI_PR=150;
+VMAP_EXT=vmap;       # Extension/format of vector maps
+NOM_MAG=2;           # Scaling of maps. Use NOM_MAP=2 for 1km sheets with 500m maps
+DPI=400;             # DPI for images
+DPI_PR=150;          # DPI for preview images
 CMAP=conf/cmap.png;        # Colormap
-CMAP_SRC=                  # nomenclatere name 
+CMAP_SRC=                  # nomenclatere name used for colormap source
 REND_CFG=conf/render.cfg;  # Render configuration
 TYPEINFO=conf/types.cfg    # Type information
 HTM_TEMPL=conf/map.htm;    # template for htm page
-TYP=conf/slazav.typ
-EXTRA_TRACKS="conf/MO.plt conf/MKAD.plt"
 
+# index files (one set per BRD2_DIR/*.gpx)
+TYP=conf/slazav.typ
+EXTRA_TRACKS=;    # extra tracks to be added to index image
 JPEG_SCALE=0.2;   # scale for jpeg preview images
 INDEX_SCALE=0.05; # scale for index image (in addition to jpeg_scale)
 
+# tiles (single set for all maps)
+TILE_DIR=TILES;
 SQLITEDB=$OUT_DIR/map.sqlitedb;
 MBTILES=$OUT_DIR/map.mbtiles;
 TLIST=$TILE_DIR/tile.list;
+TILE_MAXZ=14;  # max z-index
+TILE_MAXE=6    # max index for empty map
 
 # programs (can be redifined in the local configuration)
 MS2VMAP=ms2vmap
