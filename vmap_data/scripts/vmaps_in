@@ -61,6 +61,7 @@ for i in $files; do
 
   # save fig template
   if [ "$ext" = "fig" ]; then
+    mkdir -p "$FIG_DIR"
     fig_tmpl="$FIG_DIR/$name.fig"
     cp -f -- "$i" "$fig_tmpl"
     $MS2VMAP --out "$fig_tmpl"\

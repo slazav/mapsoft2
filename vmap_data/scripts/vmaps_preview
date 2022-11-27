@@ -19,6 +19,7 @@ for i in $files; do
   vmap="$VMAP_DIR/$name.$VMAP_DIR"
   [ -f "$vmap" ] || continue
 
+  mkdir -p "$DIFF_DIR"
   new="$DIFF_DIR/${name}_n.png"
   old="$DIFF_DIR/${name}_o.png"
   dif="$DIFF_DIR/${name}_d.png"

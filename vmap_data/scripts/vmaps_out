@@ -58,6 +58,7 @@ for i in $files; do
   vmap="$VMAP_DIR/$name.$VMAP_EXT"
   [ -f "$vmap" ] || continue
 
+  mkdir -p "$OUT_DIR"
   png="$OUT_DIR/$name.png"
   map="$OUT_DIR/$name.map"
   jpg="$OUT_DIR/$name.jpg"

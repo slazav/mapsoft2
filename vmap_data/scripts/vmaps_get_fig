@@ -22,6 +22,7 @@ for i in "$@"; do
   name=${name##*/}
 
   # files
+  mkdir -p "$FIG_DIR"
   fig_tmpl="$FIG_DIR/$name.fig"
   fig_in="$IN_DIR/$name.fig"
   vmap="$VMAP_DIR/$name.$VMAP_EXT"
