@@ -22,7 +22,7 @@
   <li><a href="#OPTIONS-FOR-RENDERING-TRACKS">OPTIONS FOR RENDERING TRACKS</a></li>
   <li><a href="#OPTIONS-FOR-RENDERING-WAYPOINTS">OPTIONS FOR RENDERING WAYPOINTS</a></li>
   <li><a href="#OPTIONS-FOR-RENDERING-RASTER-MAPS">OPTIONS FOR RENDERING RASTER MAPS</a></li>
-  <li><a href="#OPTIONS-FOR-RENDERING-VECTOR-MAPS">OPTIONS FOR RENDERING VECTOR MAPS</a></li>
+  <li><a href="#OPTIONS-FOR-READING-AND-RENDERING-VECTOR-MAPS">OPTIONS FOR READING AND RENDERING VECTOR MAPS</a></li>
   <li><a href="#OPTIONS-FOR-DRAWING-SRTM-DATA">OPTIONS FOR DRAWING SRTM DATA</a></li>
   <li><a href="#OPTIONS-FOR-SAVING-IMAGES">OPTIONS FOR SAVING IMAGES</a></li>
   <li><a href="#OPTIONS-FOR-DOWNLOADING">OPTIONS FOR DOWNLOADING</a></li>
@@ -486,20 +486,74 @@
 </dd>
 </dl>
 
-<h1 id="OPTIONS-FOR-RENDERING-VECTOR-MAPS">OPTIONS FOR RENDERING VECTOR MAPS</h1>
+<h1 id="OPTIONS-FOR-READING-AND-RENDERING-VECTOR-MAPS">OPTIONS FOR READING AND RENDERING VECTOR MAPS</h1>
 
 <dl>
 
+<dt id="t---types-arg"><b>-t, --types &lt;arg&gt;</b></dt>
+<dd>
+
+<p>File with type information.</p>
+
+</dd>
+<dt id="q---quite-arg"><b>-q, --quite &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Be quiet, do not print types of skipped objects. Default: 0. This works when reading/writing MP, VMAP, writing FIG.</p>
+
+</dd>
+<dt id="skip_unknown-arg"><b>--skip_unknown &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Skip objects which are not defined in typeinfo file. Default: 0. This works when reading/writing MP, VMAP.</p>
+
+</dd>
+<dt id="min_depth-arg"><b>--min_depth &lt;arg&gt;</b></dt>
+<dd>
+
+<p>minimum depth of map object (default 40)</p>
+
+</dd>
+<dt id="max_depth-arg"><b>--max_depth &lt;arg&gt;</b></dt>
+<dd>
+
+<p>minimum depth of map object (default 200)</p>
+
+</dd>
+<dt id="fig_enc-arg"><b>--fig_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Encoding for reading/writing fig files (default: KOI8-R).</p>
+
+</dd>
+<dt id="def_label_type-arg"><b>--def_label_type &lt;arg&gt;</b></dt>
+<dd>
+
+<p>When reading VMAP file, set type number for labels which are not defined in typeinfo file. Use -1 to skip unknown labels (default). If skip_unknown is set then labels are skipped with unknown objects.</p>
+
+</dd>
+<dt id="osm_conf-arg"><b>--osm_conf &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Configuration file for OSM XML -&gt; VMAP2 conversion</p>
+
+</dd>
+<dt id="osm_min_size-arg"><b>--osm_min_size &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Default minimum size (in m) for OSM lines and objects (default value: 10).</p>
+
+</dd>
+<dt id="mp_enc-arg"><b>--mp_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override encoding for reading MP-files (does not change CodePage setting)</p>
+
+</dd>
 <dt id="c---config-arg"><b>-c, --config &lt;arg&gt;</b></dt>
 <dd>
 
 <p>Configuration file for vector map rendering.</p>
-
-</dd>
-<dt id="define-arg"><b>--define &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Definitions for vector map rendering (json object)</p>
 
 </dd>
 <dt id="obj_scale-arg"><b>--obj_scale &lt;arg&gt;</b></dt>
@@ -508,7 +562,7 @@
 <p>Rescaling factor for all objects, default 1.0.</p>
 
 </dd>
-<dt id="vmap2_minsc-arg"><b>--vmap2_minsc &lt;arg&gt;</b></dt>
+<dt id="vmap_minsc-arg"><b>--vmap_minsc &lt;arg&gt;</b></dt>
 <dd>
 
 <p>Minimum map scale (calculated from the &#39;natural&#39; reference). Below it the map is drawn by with color (see --vmap2_minsc_color option). Default is 0.01</p>
@@ -520,16 +574,16 @@
 <p>Adjust pattern size to fit image size. This option is useful for generating tiled images. Default: false.</p>
 
 </dd>
-<dt id="vmap2_minsc_color-arg"><b>--vmap2_minsc_color &lt;arg&gt;</b></dt>
+<dt id="vmap_minsc_color-arg"><b>--vmap_minsc_color &lt;arg&gt;</b></dt>
 <dd>
 
 <p>Color to draw maps below minimum scale (see --vmap2_minsc). Default is 0xFFDB5A00).</p>
 
 </dd>
-<dt id="t---types-arg"><b>-t, --types &lt;arg&gt;</b></dt>
+<dt id="D---define-arg"><b>-D, --define &lt;arg&gt;</b></dt>
 <dd>
 
-<p>File with type information.</p>
+<p>Define variables for type information and render configuration.</p>
 
 </dd>
 </dl>

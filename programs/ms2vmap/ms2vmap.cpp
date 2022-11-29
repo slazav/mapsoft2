@@ -41,6 +41,8 @@ void usage(bool pod=false){
   pr.opts({"FIG"});
   pr.head(2, "Options for VMAP format:");
   pr.opts({"VMAP"});
+  pr.head(2, "Options for OSM XML format:");
+  pr.opts({"OSM"});
 
   throw Err();
 }

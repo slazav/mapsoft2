@@ -36,6 +36,8 @@
 
 ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 
+<p>Read vector map objects from a number of files (having no input files is also allowed), optionally apply some modifications and save to the output file. Normally output file is just overwritten, except for fig format where existing geo reference is used, all non-map objects are preserved (accroding with --min_depth/--max_depth options). Also some options (--keep_labels, --update_tag, --fix_rounding) read old data from the output file and merge them with new data.</p>
+
 <h2 id="Options">Options:</h2>
 
 <dl>
@@ -64,6 +66,12 @@ ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 <p>File with type information.</p>
 
 </dd>
+<dt id="D---define-arg"><b>-D, --define &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Define variables for type information file.</p>
+
+</dd>
 <dt id="q---quite-arg"><b>-q, --quite &lt;arg&gt;</b></dt>
 <dd>
 
@@ -74,6 +82,18 @@ ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 <dd>
 
 <p>Skip objects which are not defined in typeinfo file. Default: 0. This works when reading/writing MP, VMAP.</p>
+
+</dd>
+<dt id="osm_conf-arg"><b>--osm_conf &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Configuration file for OSM XML -&gt; VMAP2 conversion</p>
+
+</dd>
+<dt id="osm_min_size-arg"><b>--osm_min_size &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Default minimum size (in m) for OSM lines and objects (default value: 10).</p>
 
 </dd>
 <dt id="crop_nom-arg"><b>--crop_nom &lt;arg&gt;</b></dt>
@@ -124,7 +144,7 @@ ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 
 <dl>
 
-<dt id="mp_ip-arg"><b>--mp_ip &lt;arg&gt;</b></dt>
+<dt id="mp_id-arg"><b>--mp_id &lt;arg&gt;</b></dt>
 <dd>
 
 <p>override MP ID</p>

@@ -282,10 +282,14 @@ public:
     pr.par("Read map objects in different formats and add to a database.");
     pr.head(2, "Options:");
     pr.opts({"OUT", "VMAP2"});
-    pr.head(2, "Options for reading MP and FIG formats:");
-    pr.opts({"MP", "FIG"});
     pr.head(2, "Options for reading VMAP format:");
     pr.opts({"VMAP"});
+    pr.head(2, "Options for reading MP format:");
+    pr.opts({"MP"});
+    pr.head(2, "Options for reading FIG format:");
+    pr.opts({"FIG"});
+    pr.head(2, "Options for reading OSM_XML format:");
+    pr.opts({"OSM"});
   }
 
   virtual void run_impl(const std::vector<std::string> & args,

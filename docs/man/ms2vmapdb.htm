@@ -49,8 +49,10 @@
   <li><a href="#SYNOPSIS11">SYNOPSIS</a>
     <ul>
       <li><a href="#Options2">Options:</a></li>
-      <li><a href="#Options-for-reading-MP-and-FIG-formats">Options for reading MP and FIG formats:</a></li>
       <li><a href="#Options-for-reading-VMAP-format">Options for reading VMAP format:</a></li>
+      <li><a href="#Options-for-reading-MP-format">Options for reading MP format:</a></li>
+      <li><a href="#Options-for-reading-FIG-format">Options for reading FIG format:</a></li>
+      <li><a href="#Options-for-reading-OSM_XML-format">Options for reading OSM_XML format:</a></li>
     </ul>
   </li>
   <li><a href="#EXPORT----EXPORT-VECTOR-MAP-TO-A-DIFFERENT-FORMAT">EXPORT -- EXPORT VECTOR MAP TO A DIFFERENT FORMAT</a></li>
@@ -59,6 +61,12 @@
       <li><a href="#Options3">Options:</a></li>
       <li><a href="#Options-for-writing-MP-format">Options for writing MP format:</a></li>
       <li><a href="#Options-for-writing-FIG-format">Options for writing FIG format:</a></li>
+    </ul>
+  </li>
+  <li><a href="#FIG_LIB----MAKE-FIG-LIBRARY-USING-TYPEINFO-FILE">FIG_LIB -- MAKE FIG LIBRARY USING TYPEINFO FILE</a></li>
+  <li><a href="#SYNOPSIS13">SYNOPSIS</a>
+    <ul>
+      <li><a href="#Options4">Options:</a></li>
     </ul>
   </li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
@@ -119,7 +127,9 @@ ms2vmapdb crop_rect -- crop to rectangular range
 
 ms2vmapdb import -- import objects to vmap2 database
 
-ms2vmapdb export -- export vector map to a different format</code></pre>
+ms2vmapdb export -- export vector map to a different format
+
+ms2vmapdb fig_lib -- make fig library using typeinfo file</code></pre>
 
 <h1 id="CREATE----CREATE-VMAP2-DATABASE">CREATE -- CREATE VMAP2 DATABASE</h1>
 
@@ -231,6 +241,12 @@ ms2vmapdb export -- export vector map to a different format</code></pre>
 <p>File with type information.</p>
 
 </dd>
+<dt id="D---define-arg"><b>-D, --define &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Define variables for type information file.</p>
+
+</dd>
 </dl>
 
 <h1 id="CROP_NOM----CROP-TO-NOMENCLATURE-MAP-PAGE">CROP_NOM -- CROP TO NOMENCLATURE MAP PAGE</h1>
@@ -269,6 +285,12 @@ ms2vmapdb export -- export vector map to a different format</code></pre>
 <p>File with type information.</p>
 
 </dd>
+<dt id="D---define-arg1"><b>-D, --define &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Define variables for type information file.</p>
+
+</dd>
 <dt id="q---quite-arg"><b>-q, --quite &lt;arg&gt;</b></dt>
 <dd>
 
@@ -283,7 +305,31 @@ ms2vmapdb export -- export vector map to a different format</code></pre>
 </dd>
 </dl>
 
-<h2 id="Options-for-reading-MP-and-FIG-formats">Options for reading MP and FIG formats:</h2>
+<h2 id="Options-for-reading-VMAP-format">Options for reading VMAP format:</h2>
+
+<dl>
+
+<dt id="def_label_type-arg"><b>--def_label_type &lt;arg&gt;</b></dt>
+<dd>
+
+<p>When reading VMAP file, set type number for labels which are not defined in typeinfo file. Use -1 to skip unknown labels (default). If skip_unknown is set then labels are skipped with unknown objects.</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-reading-MP-format">Options for reading MP format:</h2>
+
+<dl>
+
+<dt id="mp_enc-arg"><b>--mp_enc &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Override encoding for reading MP-files (does not change CodePage setting)</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-reading-FIG-format">Options for reading FIG format:</h2>
 
 <dl>
 
@@ -305,22 +351,22 @@ ms2vmapdb export -- export vector map to a different format</code></pre>
 <p>Encoding for reading/writing fig files (default: KOI8-R).</p>
 
 </dd>
-<dt id="mp_enc-arg"><b>--mp_enc &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Override encoding for reading MP-files (does not change CodePage setting)</p>
-
-</dd>
 </dl>
 
-<h2 id="Options-for-reading-VMAP-format">Options for reading VMAP format:</h2>
+<h2 id="Options-for-reading-OSM_XML-format">Options for reading OSM_XML format:</h2>
 
 <dl>
 
-<dt id="def_label_type-arg"><b>--def_label_type &lt;arg&gt;</b></dt>
+<dt id="osm_conf-arg"><b>--osm_conf &lt;arg&gt;</b></dt>
 <dd>
 
-<p>When reading VMAP file, set type number for labels which are not defined in typeinfo file. Use -1 to skip unknown labels (default). If skip_unknown is set then labels are skipped with unknown objects.</p>
+<p>Configuration file for OSM XML -&gt; VMAP2 conversion</p>
+
+</dd>
+<dt id="osm_min_size-arg"><b>--osm_min_size &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Default minimum size (in m) for OSM lines and objects (default value: 10).</p>
 
 </dd>
 </dl>
@@ -347,6 +393,12 @@ ms2vmapdb export -- export vector map to a different format</code></pre>
 <dd>
 
 <p>File with type information.</p>
+
+</dd>
+<dt id="D---define-arg2"><b>-D, --define &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Define variables for type information file.</p>
 
 </dd>
 <dt id="q---quite-arg1"><b>-q, --quite &lt;arg&gt;</b></dt>
@@ -409,7 +461,7 @@ ms2vmapdb export -- export vector map to a different format</code></pre>
 
 <dl>
 
-<dt id="mp_ip-arg"><b>--mp_ip &lt;arg&gt;</b></dt>
+<dt id="mp_id-arg"><b>--mp_id &lt;arg&gt;</b></dt>
 <dd>
 
 <p>override MP ID</p>
@@ -449,6 +501,36 @@ ms2vmapdb export -- export vector map to a different format</code></pre>
 <dd>
 
 <p>Encoding for reading/writing fig files (default: KOI8-R).</p>
+
+</dd>
+</dl>
+
+<h1 id="FIG_LIB----MAKE-FIG-LIBRARY-USING-TYPEINFO-FILE">FIG_LIB -- MAKE FIG LIBRARY USING TYPEINFO FILE</h1>
+
+<h1 id="SYNOPSIS13">SYNOPSIS</h1>
+
+<pre><code>ms2vmap fig_lib [&lt;options&gt;]</code></pre>
+
+<h2 id="Options4">Options:</h2>
+
+<dl>
+
+<dt id="o---out-arg2"><b>-o, --out &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Output file.</p>
+
+</dd>
+<dt id="t---types-arg3"><b>-t, --types &lt;arg&gt;</b></dt>
+<dd>
+
+<p>File with type information.</p>
+
+</dd>
+<dt id="D---define-arg3"><b>-D, --define &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Define variables for type information file.</p>
 
 </dd>
 </dl>
