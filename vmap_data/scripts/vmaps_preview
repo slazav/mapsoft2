@@ -16,7 +16,7 @@ for i in $files; do
   # name without directory and extension:
   name=${i%.*}
   name=${name##*/}
-  vmap="$VMAP_DIR/$name.$VMAP_DIR"
+  vmap="$VMAP_DIR/$name.$VMAP_EXT"
   [ -f "$vmap" ] || continue
 
   mkdir -p "$DIFF_DIR"
