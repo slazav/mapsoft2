@@ -43,7 +43,8 @@ MS2CONV=ms2conv
 MS2NOM=ms2nom
 
 function vmap_defs() {
-  echo "{\"nom_name\":\"$name\", \"border_style\":\"normal\", "\
+  border_style="${1:-normal}"
+  echo "{\"nom_name\":\"$name\", \"border_style\":\"$border_style\", "\
        " \"dpi_val\":\"$DPI_MAP\", \"hr\":\"$STYLE_HR\"}"
 }
 

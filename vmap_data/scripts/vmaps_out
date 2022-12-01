@@ -121,7 +121,7 @@ for i in $files; do
     if [ "$vmap" -nt "$TLIST" ]; then
       echo "Rendering tiles: $name"
       $MS2RENDER $vmap\
-        --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs)"\
+        --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs clip)"\
         --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png"\
         --zmin $(($TILE_MAXE+1)) --zmax $TILE_MAXZ\
         --bgcolor 0 --png_format pal --cmap_load $CMAP\
@@ -129,7 +129,7 @@ for i in $files; do
         --tmap_scale 1 --fit_patt_size;\
 
       $MS2RENDER $vmap\
-        --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs)"\
+        --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs clip)"\
         --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png"\
         --zmin 0 --zmax $TILE_MAXE\
         --bgcolor 0 --png_format pal --cmap_load $CMAP\
