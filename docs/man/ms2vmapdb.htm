@@ -363,12 +363,6 @@ ms2vmapdb fig_lib -- make fig library using typeinfo file</code></pre>
 <p>Configuration file for OSM XML -&gt; VMAP2 conversion</p>
 
 </dd>
-<dt id="osm_min_size-arg"><b>--osm_min_size &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Default minimum size (in m) for OSM lines and objects (default value: 10).</p>
-
-</dd>
 </dl>
 
 <h1 id="EXPORT----EXPORT-VECTOR-MAP-TO-A-DIFFERENT-FORMAT">EXPORT -- EXPORT VECTOR MAP TO A DIFFERENT FORMAT</h1>
@@ -455,6 +449,36 @@ ms2vmapdb fig_lib -- make fig library using typeinfo file</code></pre>
 <p>accuracy for fixing rounding errors (m). Fig accuracy is 1/450 cm, 2.2 m for 1:100&#39;000 maps. Default: 5</p>
 
 </dd>
+<dt id="join_lines"><b>--join_lines</b></dt>
+<dd>
+
+<p>join similar line objects (same type, name, comment, tags)</p>
+
+</dd>
+<dt id="join_lines_d-arg"><b>--join_lines_d &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Max distance for joining lines in meters. Default 5.</p>
+
+</dd>
+<dt id="join_lines_a-arg"><b>--join_lines_a &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Max angle for joining lines in degrees. Default 45.</p>
+
+</dd>
+<dt id="filter_pts"><b>--filter_pts</b></dt>
+<dd>
+
+<p>Reduce number of points in lines and polygons.</p>
+
+</dd>
+<dt id="filter_pts_d-arg"><b>--filter_pts_d &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Accuracy for point filtering in meters. Default: 10</p>
+
+</dd>
 </dl>
 
 <h2 id="Options-for-writing-MP-format">Options for writing MP format:</h2>
@@ -471,6 +495,12 @@ ms2vmapdb fig_lib -- make fig library using typeinfo file</code></pre>
 <dd>
 
 <p>override MP Name</p>
+
+</dd>
+<dt id="mp_levels-arg"><b>--mp_levels &lt;arg&gt;</b></dt>
+<dd>
+
+<p>set mp data levels (comma-separated integers), default: &quot;24,22,20,18,17,15&quot;.</p>
 
 </dd>
 <dt id="mp_enc-arg1"><b>--mp_enc &lt;arg&gt;</b></dt>

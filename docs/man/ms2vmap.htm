@@ -20,6 +20,7 @@
       <li><a href="#Options-for-MP-format">Options for MP format:</a></li>
       <li><a href="#Options-for-FIG-format">Options for FIG format:</a></li>
       <li><a href="#Options-for-VMAP-format">Options for VMAP format:</a></li>
+      <li><a href="#Options-for-OSM-XML-format">Options for OSM XML format:</a></li>
     </ul>
   </li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
@@ -84,18 +85,6 @@ ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 <p>Skip objects which are not defined in typeinfo file. Default: 0. This works when reading/writing MP, VMAP.</p>
 
 </dd>
-<dt id="osm_conf-arg"><b>--osm_conf &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Configuration file for OSM XML -&gt; VMAP2 conversion</p>
-
-</dd>
-<dt id="osm_min_size-arg"><b>--osm_min_size &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Default minimum size (in m) for OSM lines and objects (default value: 10).</p>
-
-</dd>
 <dt id="crop_nom-arg"><b>--crop_nom &lt;arg&gt;</b></dt>
 <dd>
 
@@ -138,6 +127,36 @@ ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 <p>accuracy for fixing rounding errors (m). Fig accuracy is 1/450 cm, 2.2 m for 1:100&#39;000 maps. Default: 5</p>
 
 </dd>
+<dt id="join_lines"><b>--join_lines</b></dt>
+<dd>
+
+<p>join similar line objects (same type, name, comment, tags)</p>
+
+</dd>
+<dt id="join_lines_d-arg"><b>--join_lines_d &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Max distance for joining lines in meters. Default 5.</p>
+
+</dd>
+<dt id="join_lines_a-arg"><b>--join_lines_a &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Max angle for joining lines in degrees. Default 45.</p>
+
+</dd>
+<dt id="filter_pts"><b>--filter_pts</b></dt>
+<dd>
+
+<p>Reduce number of points in lines and polygons.</p>
+
+</dd>
+<dt id="filter_pts_d-arg"><b>--filter_pts_d &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Accuracy for point filtering in meters. Default: 10</p>
+
+</dd>
 </dl>
 
 <h2 id="Options-for-MP-format">Options for MP format:</h2>
@@ -154,6 +173,12 @@ ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 <dd>
 
 <p>override MP Name</p>
+
+</dd>
+<dt id="mp_levels-arg"><b>--mp_levels &lt;arg&gt;</b></dt>
+<dd>
+
+<p>set mp data levels (comma-separated integers), default: &quot;24,22,20,18,17,15&quot;.</p>
 
 </dd>
 <dt id="mp_in_enc-arg"><b>--mp_in_enc &lt;arg&gt;</b></dt>
@@ -202,6 +227,18 @@ ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 <dd>
 
 <p>When reading VMAP file, set type number for labels which are not defined in typeinfo file. Use -1 to skip unknown labels (default). If skip_unknown is set then labels are skipped with unknown objects.</p>
+
+</dd>
+</dl>
+
+<h2 id="Options-for-OSM-XML-format">Options for OSM XML format:</h2>
+
+<dl>
+
+<dt id="osm_conf-arg"><b>--osm_conf &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Configuration file for OSM XML -&gt; VMAP2 conversion</p>
 
 </dd>
 </dl>
