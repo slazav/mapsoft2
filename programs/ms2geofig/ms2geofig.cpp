@@ -7,7 +7,6 @@
 #include "geo_data/conv_geo.h"
 #include "srtm/srtm.h"
 #include "geom/poly_tools.h"
-#include "geom_tools/line_utils.h"
 #include "geo_render/gobj_maps.h"
 
 /*****************************************************************/
