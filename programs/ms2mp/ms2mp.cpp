@@ -15,7 +15,7 @@ void usage(bool pod=false){
   pr.usage("[<options>] <in_files> > <out_file>");
 
   pr.head(1, "Options");
-  pr.opts({"OUT", "MP"});
+  pr.opts({"OUT", "HELP", "POD", "MP"});
   throw Err();
 }
 
@@ -23,9 +23,8 @@ int
 main(int argc, char **argv){
   try {
 
-    ms2opt_add_std(options, {"OUT"});
+    ms2opt_add_std(options, {"OUT", "HELP", "POD"});
     ms2opt_add_mp_io(options);
-    options.remove("verbose");
 
     if (argc<2) usage();
     vector<string> files;
