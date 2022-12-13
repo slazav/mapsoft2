@@ -41,6 +41,7 @@ for i in "$@"; do
   cp -f -- "$fig_tmpl" "$fig_in" ||:
 
   $MS2VMAP "$vmap" -o "$fig_in"\
-    --types "$TYPEINFO" --define "$(vmap_defs)"
+    --types "$TYPEINFO" --define "$(vmap_defs)"\
+    --fig_enc "$FIG_ENC"
 
 done

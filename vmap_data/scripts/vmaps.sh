@@ -20,6 +20,7 @@ CMAP_SRC=                  # nomenclatere name used for colormap source
 REND_CFG=/usr/share/mapsoft2/render.cfg;  # Render configuration
 TYPEINFO=/usr/share/mapsoft2/types.cfg    # Type information
 HTM_TEMPL=/usr/share/mapsoft2/map_templ.htm;    # template for htm page
+FIG_ENC=KOI8-R
 
 # index files (one set per BRD2_DIR/*.gpx)
 TYP=/usr/share/mapsoft2/slazav.typ
