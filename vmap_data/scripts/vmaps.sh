@@ -44,7 +44,8 @@ MS2CONV=ms2conv
 MS2NOM=ms2nom
 
 function vmap_defs() {
-  border_style="${1:-normal}"
+  name="$1"
+  border_style="${2:-normal}"
   echo "{\"nom_name\":\"$name\", \"border_style\":\"$border_style\", "\
        " \"dpi_val\":\"$DPI_MAP\", \"hr\":\"$STYLE_HR\"}"
 }
@@ -54,7 +55,7 @@ function vmap_update_cmap() {
   cmap=$2
   vmap=$VMAP_DIR/$name.$VMAP_EXT
   $MS2RENDER $vmap --out tmp_cmap.png\
-    --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs)"\
+    --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs "$name")"\
     --mkref nom --north --name "$name" --dpi $DPI --margins 10 --top_margin 30\
     --title "$name" --title_size 20\
     --cmap_save $cmap --png_format pal --png_format pal
@@ -69,7 +70,7 @@ function vmap_render_map() {
   title=$5
   dpi=${6:-$DPI}
   $MS2RENDER $ifile --out "$png"\
-    --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs)"\
+    --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs "$name")"\
     --mkref nom --north --name "$name" --dpi "$dpi" --margins 10 --top_margin 30\
     --title "$title" --title_size 20\
     --cmap_load "$CMAP" --png_format pal ${map:+--map $map}
