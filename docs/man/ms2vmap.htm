@@ -64,7 +64,7 @@ ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 <dt id="t---types-arg"><b>-t, --types &lt;arg&gt;</b></dt>
 <dd>
 
-<p>File with type information.</p>
+<p>File with type information. Default: /usr/share/mapsoft2/types.cfg</p>
 
 </dd>
 <dt id="D---define-arg"><b>-D, --define &lt;arg&gt;</b></dt>
@@ -83,6 +83,18 @@ ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 <dd>
 
 <p>Skip objects which are not defined in typeinfo file. Default: 0. This works when reading/writing MP, VMAP.</p>
+
+</dd>
+<dt id="wpt_type-arg"><b>--wpt_type &lt;arg&gt;</b></dt>
+<dd>
+
+<p>select type for GPX track import/export</p>
+
+</dd>
+<dt id="trk_type-arg"><b>--trk_type &lt;arg&gt;</b></dt>
+<dd>
+
+<p>select type for GPX waypoint import/export</p>
 
 </dd>
 <dt id="crop_nom-arg"><b>--crop_nom &lt;arg&gt;</b></dt>
@@ -112,7 +124,19 @@ ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 <dt id="update_tag-arg"><b>--update_tag &lt;arg&gt;</b></dt>
 <dd>
 
-<p>only update objects with a tag</p>
+<p>update objects with a tag</p>
+
+</dd>
+<dt id="update_type-arg"><b>--update_type &lt;arg&gt;</b></dt>
+<dd>
+
+<p>update objects with a given type</p>
+
+</dd>
+<dt id="update_types-arg"><b>--update_types &lt;arg&gt;</b></dt>
+<dd>
+
+<p>update all types which exist on input (0|1)</p>
 
 </dd>
 <dt id="fix_rounding-arg"><b>--fix_rounding &lt;arg&gt;</b></dt>
@@ -239,6 +263,18 @@ ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 <dd>
 
 <p>Configuration file for OSM XML -&gt; VMAP2 conversion</p>
+
+</dd>
+<dt id="osm_ids"><b>--osm_ids</b></dt>
+<dd>
+
+<p>Put OSM IDs in object comments</p>
+
+</dd>
+<dt id="osm_tags"><b>--osm_tags</b></dt>
+<dd>
+
+<p>Put OSM tags in object comments</p>
 
 </dd>
 </dl>
