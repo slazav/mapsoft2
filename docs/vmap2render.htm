@@ -830,7 +830,12 @@ join.
 переменную. В последующем файле все вхождения ${&lt;name&gt;} будут
 заменены на &lt;definition&gt;.
 
+<li><tt> define_if_undef &lt;name&gt; &lt;definition&gt;</tt> -- определить
+переменную, если она еще не определена.
+
 <li><tt> if &lt;name&gt; (==|!=) &lt;name&gt;</tt>
+<li><tt> ifdef &lt;name&gt;</tt>
+<li><tt> ifundef &lt;name&gt;</tt>
 <li><tt> else
 <li><tt> endif  -- команды if/else/endif: в зависимости
 от истинности условия, обрабатывать или игнорировать текст, заключенный
