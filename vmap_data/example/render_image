@@ -9,7 +9,7 @@ MS2REND=../../programs/ms2render/ms2render
 
 for name in n49-032 n49-033; do
   time $MS2REND $name.vmap2db --out $name.png --config ../render.cfg\
-     --define "{\"my_nom_name\":\"$name\", \"hr\":\"1\", \"my_dpi\":\"100\"}"\
+     --define "{\"nom_name\":\"$name\", \"hr\":\"1\", \"dpi_val\":\"100\"}"\
      --cmap_color 255 --cmap_save $name.cmap.png --cmap_add 0\
      --png_format pal --map $name.map\
      --title "$name" --margins 5 --top_margin 20\
@@ -23,7 +23,7 @@ name=n37-030
 # fill background with dark-red color
 
 time $MS2REND $name.vmap2db --out $name.png --config ../render.cfg\
-   --define "{\"my_nom_name\":\"$name\", \"hr\":\"0\", \"my_dpi\":\"200\"}"\
+   --define "{\"nom_name\":\"$name\", \"dpi_val\":\"200\"}"\
    --cmap_color 255 --cmap_save $name.cmap.png --cmap_add 0\
    --map $name.map --border_file brd_n37.gpx --bgcolor 0xFF800000\
    --mkref nom --north --name $name --dpi 100
