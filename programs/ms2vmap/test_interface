@@ -15,5 +15,6 @@ assert_cmd "$P --help" "$help_msg" 1
 assert_cmd "$P --xxx " "Error: unknown option: --xxx" 1
 
 assert_cmd "$P a" "Error: non-empty output file expected (use -o option)" 1
-assert_cmd "$P a -o b" "Error: unsupported file extension: a" 1
+assert_cmd "$P --types nofile a -o b" "Error: can't open file: nofile" 1
+assert_cmd "$P --types test_data/types.cfg a -o b" "Error: unsupported file extension: a" 1
 
