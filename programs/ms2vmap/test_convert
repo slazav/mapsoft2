@@ -39,7 +39,7 @@ assert_diff test_data/out.vmap2 tmp.vmap2
 # update tag S1
 cp test_data/out.vmap2 tmp.vmap2
 assert_cmd "$P test_data/in_tags.vmap2 -o tmp.vmap2
-  -t test_data/types.cfg --update_tag S1" "" 0
+  -t test_data/types.cfg --replace_tag S1" "" 0
 assert_diff test_data/out3.vmap2 tmp.vmap2
 
 # vmap -> fig
