@@ -303,16 +303,22 @@ ms2vmapdb fig_lib -- make fig library using typeinfo file</code></pre>
 <p>Skip objects which are not defined in typeinfo file. Default: 0. This works when reading/writing MP, VMAP.</p>
 
 </dd>
+<dt id="trk_type-arg"><b>--trk_type &lt;arg&gt;</b></dt>
+<dd>
+
+<p>select type for GPX waypoint import/export</p>
+
+</dd>
 <dt id="wpt_type-arg"><b>--wpt_type &lt;arg&gt;</b></dt>
 <dd>
 
 <p>select type for GPX track import/export</p>
 
 </dd>
-<dt id="trk_type-arg"><b>--trk_type &lt;arg&gt;</b></dt>
+<dt id="wpt_pref-arg"><b>--wpt_pref &lt;arg&gt;</b></dt>
 <dd>
 
-<p>select type for GPX waypoint import/export</p>
+<p>prefix for waypoint names (names w/o prefix are skipped). Default: &quot;=&quot;</p>
 
 </dd>
 </dl>
@@ -431,16 +437,22 @@ ms2vmapdb fig_lib -- make fig library using typeinfo file</code></pre>
 <p>Skip objects which are not defined in typeinfo file. Default: 0. This works when reading/writing MP, VMAP.</p>
 
 </dd>
+<dt id="trk_type-arg1"><b>--trk_type &lt;arg&gt;</b></dt>
+<dd>
+
+<p>select type for GPX waypoint import/export</p>
+
+</dd>
 <dt id="wpt_type-arg1"><b>--wpt_type &lt;arg&gt;</b></dt>
 <dd>
 
 <p>select type for GPX track import/export</p>
 
 </dd>
-<dt id="trk_type-arg1"><b>--trk_type &lt;arg&gt;</b></dt>
+<dt id="wpt_pref-arg1"><b>--wpt_pref &lt;arg&gt;</b></dt>
 <dd>
 
-<p>select type for GPX waypoint import/export</p>
+<p>prefix for waypoint names (names w/o prefix are skipped). Default: &quot;=&quot;</p>
 
 </dd>
 <dt id="crop_nom-arg"><b>--crop_nom &lt;arg&gt;</b></dt>
@@ -458,31 +470,37 @@ ms2vmapdb fig_lib -- make fig library using typeinfo file</code></pre>
 <dt id="update_labels-arg"><b>--update_labels &lt;arg&gt;</b></dt>
 <dd>
 
-<p>update labels</p>
+<p>Update labels (0|1): find labels for each object, add missing labels, remove labels without objects, update label type, name, and reference. Values: 0 or 1, default: 0.</p>
+
+</dd>
+<dt id="label_names-arg"><b>--label_names &lt;arg&gt;</b></dt>
+<dd>
+
+<p>When updating labels, get names from labels, not from objects. Useful for updating map from a source (e.g. gpx) where names are missing.Values: 0 or 1, default: 0.</p>
 
 </dd>
 <dt id="keep_labels-arg"><b>--keep_labels &lt;arg&gt;</b></dt>
 <dd>
 
-<p>keep old labels</p>
+<p>Keep old labels. Values: 0 or 1, default: 0.</p>
 
 </dd>
-<dt id="update_tag-arg"><b>--update_tag &lt;arg&gt;</b></dt>
+<dt id="replace_tag-arg"><b>--replace_tag &lt;arg&gt;</b></dt>
 <dd>
 
-<p>update objects with a tag</p>
+<p>Replace objects with a given tag.</p>
 
 </dd>
-<dt id="update_type-arg"><b>--update_type &lt;arg&gt;</b></dt>
+<dt id="replace_type-arg"><b>--replace_type &lt;arg&gt;</b></dt>
 <dd>
 
-<p>update objects with a given type</p>
+<p>Replace objects with a given type.</p>
 
 </dd>
-<dt id="update_types-arg"><b>--update_types &lt;arg&gt;</b></dt>
+<dt id="replace_types-arg"><b>--replace_types &lt;arg&gt;</b></dt>
 <dd>
 
-<p>update all types which exist on input (0|1)</p>
+<p>Replace objects with all types which exist in input files. Values: 0 or 1, default: 0.</p>
 
 </dd>
 <dt id="fix_rounding-arg"><b>--fix_rounding &lt;arg&gt;</b></dt>
