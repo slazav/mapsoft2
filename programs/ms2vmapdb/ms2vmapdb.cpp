@@ -227,10 +227,14 @@ public:
 class ActionCropNom : public Action{
 public:
   ActionCropNom():
-    Action("crop_nom", "crop to nomenclature map page"){}
+    Action("crop_nom", "crop to nomenclature map page"){
+    const char *g = "MAPDB_CROP";
+    options.add("crop_labels",  1,'n',g, "Crop labels. Values: 0 or 1, default 0.");
+  }
 
   void help_impl(HelpPrinter & pr) override {
     pr.usage("<dbname> <nom name>");
+    pr.opts({"MAPDB_CROP"});
   }
 
   virtual void run_impl(const std::vector<std::string> & args,
@@ -240,7 +244,7 @@ public:
       << ": two arguments expected: <dbname> <nom name>";
 
     VMap2 map(args[0], 0);
-    do_crop_rect(map, nom_to_wgs(args[1]));
+    do_crop_rect(map, nom_to_wgs(args[1]), opts.get("crop_labels", false));
   }
 };
 
@@ -249,10 +253,14 @@ public:
 class ActionCropRect : public Action{
 public:
   ActionCropRect():
-    Action("crop_rect", "crop to rectangular range") {}
+    Action("crop_rect", "crop to rectangular range") {
+    const char *g = "MAPDB_CROP";
+    options.add("crop_labels",  1,'n',g, "Crop labels. Values: 0 or 1, default 0.");
+  }
 
   void help_impl(HelpPrinter & pr) override {
     pr.usage("<dbname> <rectangle>");
+    pr.opts({"MAPDB_CROP"});
   }
 
   virtual void run_impl(const std::vector<std::string> & args,
@@ -262,7 +270,7 @@ public:
       << ": two arguments expected: <dbname> <rectangle>";
 
     VMap2 map(args[0], 0);
-    do_crop_rect(map, dRect(args[1]));
+    do_crop_rect(map, dRect(args[1]), opts.get("crop_labels", false));
   }
 };
 
