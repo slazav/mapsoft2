@@ -20,7 +20,7 @@ sqlite3 "$MBTILES" 'CREATE TABLE tiles (tile_column int, tile_row int,
 sqlite3 "$MBTILES" 'CREATE UNIQUE INDEX tile_index on tiles (zoom_level, tile_column, tile_row);'
 
 # Find all tiles and put them into db
-find "$TILE_DIR" -type f -name '*.png' | (
+find -L "$TILE_DIR" -type f -name '*.png' | (
   echo 'PRAGMA journal_mode = OFF; PRAGMA synchronous = 0;'
   while read tile; do
 

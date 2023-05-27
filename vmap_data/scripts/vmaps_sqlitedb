@@ -16,7 +16,7 @@ sqlite3 "$SQLITEDB" 'CREATE TABLE tiles (x int, y int, z int, image blob,
   PRIMARY KEY (x,y,z));'
 
 # Find all tiles and put them into db
-find "$TILE_DIR" -type f -name '*.png' | (
+find -L "$TILE_DIR" -type f -name '*.png' | (
   echo 'PRAGMA journal_mode = OFF; PRAGMA synchronous = 0;'
   while read tile; do
 
