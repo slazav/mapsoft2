@@ -5,8 +5,11 @@
 # Usage: make_sqlitedb <tile dir> <out file>
 # Tile format: x-y-z.png, z/x-y.png
 
-TILE_DIR=$1
-SQLITEDB=$2
+# read global configuration and functions
+. vmaps.sh
+
+# read local configuration
+. ./vmaps.conf
 
 # Remove output file if it exists
 rm -f -- "$SQLITEDB"

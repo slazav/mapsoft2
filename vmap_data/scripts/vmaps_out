@@ -144,8 +144,8 @@ done
 if [ "$tiles_updated" = 1 ]; then
   echo "Updating tile list and databases"
   find $TILE_DIR/ -name '*.png' | xargs md5sum | sed "s| $TILE_DIR/| |" > $TLIST
-  vmaps_mbtiles  $TILE_DIR $MBTILES
-  vmaps_sqlitedb $TILE_DIR $SQLITEDB
+  vmaps_mbtiles
+  vmaps_sqlitedb
 fi
 
 ##############################################################
