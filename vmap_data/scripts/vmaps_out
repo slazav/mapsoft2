@@ -52,6 +52,7 @@ done
 
 ##################################################
 # For each map file
+tiles_updated=0
 for i in $files; do
   name=${i%.*}
   name=${name##*/}
@@ -111,7 +112,6 @@ for i in $files; do
   fi
 
   # Loop through all regions (brd/<name>.gpx)
-  tiles_updated=0
   for brd in $BRD_DIR/*.gpx; do
     brd_name=$(basename $brd .gpx)
 
