@@ -280,6 +280,10 @@ getting/putting values of arbitrary types. Used widely in
 `Контейнер <tt>map&lt;string,string&gt;</tt> с функциями для записи и
 чтения различных типов данных. Широко используется в <tt>mapsoft</tt>.')
 
+_MODTAB_(osmxml, STABLE,
+`Reading OSM XML files.',
+`Чтение файлов OSM XML.')
+
 _MODTAB_(rainbow, STABLE,
 `Convert double values into RGB color gradients. Useful code which I use
 in many places.',
