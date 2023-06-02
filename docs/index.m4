@@ -85,21 +85,21 @@ GeoJSON, GarminUtils, ZIP.', `Преобразования геоданных. �
 GeoJSON, GarminUtils, ZIP.')
 
 <li>STABLE _PROG_(ms2geofig) -- ENRU(
-`Working with geo-referenced FIG files. Adding geodata, raster maps, DEM
+`Working with geo-referenced FIG files. Adding/extracting geodata, adding raster maps, DEM
 data.', `Работа с FIG-файлами, имеющими геодезическую привязку.
-Добавление растровых карт, геоданных, DEM-данных.')
+Добавление/извлечение растровых карт,  добавление геоданных, DEM-данных.')
 
 <li>STABLE _PROG_(ms2img) -- ENRU(`Convert raster images.',
 `Преобразования растровых изображений.')
+
+<li>STABLE _PROG_(ms2mp) -- ENRU(`Convert MP files. Mostly for mapsoft2 testing.',
+`Преобразования MP файлов. Сделано в основном для тестирования mapsoft2.')
 
 <li>STABLE _PROG_(ms2nom) -- ENRU(`Program for soviet nomenclature map
 calculations. Coordinates of a map sheet, adjacent sheets, sheets
 covering a given region, etc.', `Программа для вычислений, связанных с
 советской номенклатурой карт: координаты данного листа, соседние листы,
 покрывающие данный район листы и т.п.')
-
-<li>STABLE _PROG_(ms2mp) -- ENRU(`Convert MP files. Mostly for mapsoft2 testing.',
-`Преобразования MP файлов. Сделано в основном для тестирования mapsoft2.')
 
 <li>STABLE _PROG_(ms2proj) -- ENRU(`Geo coordinate converter.',
 `Преобразование геодезических координат.')
@@ -116,11 +116,11 @@ etc.', `Программа для вычислений, связанных с т
 <li>UNSTABLE _PROG_(ms2view) -- ENRU(`Viewer for geodata and raster maps.',
 `Вьюер для геоданных и растровых карт.')
 
-<li>UNUSABLE _PROG_(ms2vmap) -- ENRU(`Convert vector maps. Supported formats:
+<li>UNSTABLE _PROG_(ms2vmap) -- ENRU(`Convert vector maps. Supported formats:
 vmap2db, vmap2, vmap, mp, fig.',
 `Преобразование векторных карт. Форматы: vmap2db, vmap2, vmap, mp, fig.')
 
-<li>UNUSABLE _PROG_(ms2vmapdb) -- ENRU(`Working with vector map database (vmap2db).',
+<li>UNSTABLE _PROG_(ms2vmapdb) -- ENRU(`Working with vector map database (vmap2db).',
 `Работа с базой данных векторных карт (vmap2db).')
 
 <li>STABLE _PROG_(ms2xyz) -- ENRU(`Program for writing tracks as
