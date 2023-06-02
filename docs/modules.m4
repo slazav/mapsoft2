@@ -178,7 +178,11 @@ which I also use for drawing maps.',
 `Чтение и запись FIG-файлов. Fig - это древний векторный графический
 формат, который я использую, в частности, для рисования карт.')
 
-_MODTAB_(fig_opt, UNSTABLE,
+_MODTAB_(fig_geo, STABLE,
+`Extension for FIG format for keeping georeference and geodata.',
+`Расширение формата FIG для хранения геоданных и привязки.')
+
+_MODTAB_(fig_opt, STABLE,
 `Extension for FIG format for keeping data in object comments.',
 `Расширение формата FIG для хранения данных в комментариях объектов.')
 
@@ -226,10 +230,6 @@ working with them.',
 `Геометрические объекты: классы Point, Line, Multiline и Rect. Множество
 полезных функция для работы с ними.')
 
-_MODTAB_(geom_tools, UNSTABLE,
-`Additional functions for working with geometric objects.',
-`Дополнительные функции для работы с геометрическими объектами.')
-
 _MODTAB_(getopt, STABLE,
 `getopt wrapper for building complicated command-line interfaces.',
 `Обертка getopt для изготовления сложных интерфейсов командной строки.')
@@ -262,10 +262,6 @@ _MODTAB_(jsonxx, STABLE,
 _MODTAB_(log, STABLE,
 `A simple way of writing log messages to stdin or file.',
 `Простой способ вывода сообщений в консоль или в файл.')
-
-_MODTAB_(mapdb, UNUSABLE,
-`BerkleyDB-based local storage for vector maps with fast access and spatial indexing.',
-`Локальное хранилище векторных карт с быстрым доступом и гео-индексацией на основе BerkleyDB.')
 
 _MODTAB_(mapview, UNSTABLE,
 `Viewer for maps and geodata. For use in ms2view program.',
@@ -334,6 +330,10 @@ in <tt>viewer/examples</tt> folder.',
 _MODTAB_(vmap, STABLE,
 `Reading and writing of VMAP, old mapsoft format for vector maps.',
 `Чтение и запись VMAP, старого формата mapsoft для векторных карт.')
+
+_MODTAB_(vmap2, STABLE,
+`VMAP2 vector maps, new format (text/database), all operations with this format.',
+`VMAP2, новый формат векторных карт (текстовый или база данных) и все операции с ним.')
 
 </table>
 
