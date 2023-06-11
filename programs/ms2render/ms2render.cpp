@@ -132,7 +132,8 @@ main(int argc, char *argv[]){
       obj.add(5, std::shared_ptr<GObjSRTM>(new GObjSRTM(s.get(),O)));
     }
 
-    // Geodata
+    // First read all files which can be read as Geodata (in a single geodata object)
+    // put all others to non_geodata list.
     std::vector<std::string> non_geodata;
     GeoData data;
     for (auto const & f:infiles){
@@ -152,13 +153,12 @@ main(int argc, char *argv[]){
     for (auto & w:data.wpts)
       obj.add(1, std::shared_ptr<GObjWpts>(new GObjWpts(w)));
 
-    // Vector maps
-    VMap2types types(O); // read file with type information if it's available
-    GeoMap ref_v;
+    // Read other files as vector maps
+    GeoMap ref_v; // reference for vector maps
     VMap2 vmap2; // keeps data for GObjV
     for (auto const & f:non_geodata) {
       if (file_ext_check(f, ".vmap2db")) vmap2 = VMap2(f);
-      else vmap2_import({f}, types, vmap2, O);
+      else vmap2_import({f}, VMap2types(O), vmap2, O);
       auto obj_v = std::shared_ptr<GObjVMap2>(new GObjVMap2(vmap2, O));
       obj.add(4, obj_v);
       if (ref_v.empty()) ref_v = obj_v->get_ref();
