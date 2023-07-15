@@ -1,3 +1,4 @@
+define(`LANG', RU)
 HEADER(geodata,`Геоданные в Mapsoft2 (2020-01-02)')
 
 define(TT,`<tt>$1</tt>')

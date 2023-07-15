@@ -255,11 +255,31 @@ ms2vmapdb fig_lib -- make fig library using typeinfo file</code></pre>
 
 <pre><code>ms2vmap crop_nom &lt;dbname&gt; &lt;nom name&gt;</code></pre>
 
+<dl>
+
+<dt id="n---crop_labels-arg"><b>-n, --crop_labels &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Crop labels. Values: 0 or 1, default 0.</p>
+
+</dd>
+</dl>
+
 <h1 id="CROP_RECT----CROP-TO-RECTANGULAR-RANGE">CROP_RECT -- CROP TO RECTANGULAR RANGE</h1>
 
 <h1 id="SYNOPSIS10">SYNOPSIS</h1>
 
 <pre><code>ms2vmap crop_rect &lt;dbname&gt; &lt;rectangle&gt;</code></pre>
+
+<dl>
+
+<dt id="n---crop_labels-arg1"><b>-n, --crop_labels &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Crop labels. Values: 0 or 1, default 0.</p>
+
+</dd>
+</dl>
 
 <h1 id="IMPORT----IMPORT-OBJECTS-TO-VMAP2-DATABASE">IMPORT -- IMPORT OBJECTS TO VMAP2 DATABASE</h1>
 
@@ -458,13 +478,19 @@ ms2vmapdb fig_lib -- make fig library using typeinfo file</code></pre>
 <dt id="crop_nom-arg"><b>--crop_nom &lt;arg&gt;</b></dt>
 <dd>
 
-<p>crop map to nomenclature region</p>
+<p>Crop map to nomenclature region.</p>
 
 </dd>
 <dt id="crop_rect-arg"><b>--crop_rect &lt;arg&gt;</b></dt>
 <dd>
 
-<p>crop map to a rectangle</p>
+<p>Crop map to a rectangle.</p>
+
+</dd>
+<dt id="crop_labels-arg"><b>--crop_labels &lt;arg&gt;</b></dt>
+<dd>
+
+<p>By default crop_* commands are not applied to labels. This option can change it. Values: 0 or 1, default: 0.</p>
 
 </dd>
 <dt id="update_labels-arg"><b>--update_labels &lt;arg&gt;</b></dt>

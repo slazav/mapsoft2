@@ -1,3 +1,4 @@
+define(`LANG', RU)
 HEADER(mapdb,`
   Векторные карты в Mapsoft2 (2020-02-15)
 ')

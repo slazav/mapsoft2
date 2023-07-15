@@ -1,3 +1,4 @@
+define(`LANG', RU)
 HEADER(mapdb,`
   Форматы векторных карт в Mapsoft2 (2022-11-22)
 ')
