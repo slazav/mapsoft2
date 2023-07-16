@@ -214,10 +214,8 @@ public:
     if (args.size()!=1) throw Err() << get_name()
       << ": one argument expected: <dbname>";
 
-    // Read file with type information if it's available
-    VMap2types types(opts);
-
     VMap2 map(args[0], 0);
+    VMap2types types(opts);
     do_update_labels(map, types);
   }
 };
@@ -310,10 +308,8 @@ public:
     if (ofile == "") throw Err() << get_name()
       << ": non-empty database name expected (use -o option)";
 
-    // Read file with type information if it's available
-    VMap2types types(opts);
-
     VMap2 vmap2(ofile);
+    VMap2types types(opts);
     vmap2_import(args, types, vmap2, opts);
   }
 };
@@ -352,10 +348,8 @@ public:
     if (ofile == "") throw Err()
       << "non-empty output file expected (use -o option)";
 
-    // read file with type information if it's available
-    VMap2types types(opts);
-
     VMap2 map(args[0], 0);
+    VMap2types types(opts);
     vmap2_export(map, types, ofile, opts);
   }
 };
@@ -385,9 +379,6 @@ public:
 
     // make directory if needed
     file_mkdir(odir);
-
-    if (! opts.exists("types")) throw Err()
-      << "typeinfo file expected (use -t option)";
 
     // read file with type information
     for (const auto & t:VMap2types(opts)){
