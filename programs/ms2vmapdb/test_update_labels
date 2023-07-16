@@ -6,6 +6,9 @@ P=${1:-./ms2vmapdb}
 
 . ../../modules/test_lib.sh
 
+TESTDIR=../ms2vmap/test_data
+TYPES="$TESTDIR/types.cfg"
+
 assert_cmd "$P delete tmp" "" 0
 
 assert_cmd "$P create tmp" "" 0
@@ -34,12 +37,12 @@ assert_cmd "$P add_obj tmp text:1  [39,56] --name Point2 --ref_type point:2 --re
 
 ###
 
-assert_cmd "$P export tmp -o tmp.vmap2" "" 0
+assert_cmd "$P export tmp -o tmp.vmap2 -t $TYPES" "" 0
 assert_diff test_data/ul1.vmap2 tmp.vmap2
 
 assert_cmd "$P update_labels tmp -t test_data/ul_types.txt" "" 0
 
-assert_cmd "$P export tmp -o tmp.vmap2" "" 0
+assert_cmd "$P export tmp -o tmp.vmap2 -t $TYPES" "" 0
 assert_diff test_data/ul2.vmap2 tmp.vmap2
 
 assert_cmd "$P delete tmp" "" 0
