@@ -12,6 +12,12 @@
 
 files=${@:-$VMAP_DIR/*.$VMAP_EXT}
 
+# Update colormap if needed
+if [ ! -f "$CMAP" ]; then
+  echo "Colormap is missing. Updating $CMAP"
+  vmap_update_cmap $CMAP_SRC $CMAP
+fi
+
 for i in $files; do
   # name without directory and extension:
   name=${i%.*}
