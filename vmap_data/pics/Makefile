@@ -1,8 +1,11 @@
 PICS := avt kladb cross cerkov pam ohotn bash shaht razv dom trig trig_hr kan\
-        ldp per per1a per1b per2a per2b per3a per3b pernk kladb pupyr yama skala\
+        per per1a per1b per2a per2b per3a per3b pernk\
+        v2_per v2_per1a v2_per1b v2_per2a v2_per2b v2_per3a v2_per3b v2_pernk\
+        ldp  kladb pupyr yama skala\
         bol_l bol_h zd ur_vod por vdp pesch\
         rossip1 rossip2 sand_ov camp\
         ledn redk vyr_n vyr_o sand
+
 
 PNG := $(patsubst %,%.png,$(PICS))
 SVG := $(patsubst %,%.svg,$(PICS))
@@ -24,7 +27,7 @@ bol_l.png: OPT=-background transparent -extent 192x83
 
 # fig2dev -t option only allowed for GIF transparent color
 %.gif: %.fig
-	fig2dev -m$(SC) -Lgif -t#ffffff "$<" > "$@"
+	fig2dev -m$(SC) -Lgif -t#ffffff -j "$<" > "$@"
 
 %.png: %.gif
 	convert -trim "$<" -repage +0+0 $(OPT) PNG32:"$@"
