@@ -1,10 +1,10 @@
-#!/bin/sh -eu
+#!/bin/sh -eux
 
 ################################################
 ## Download example maps, create vmap2 databases and text files
 
 
-P=../../programs/ms2vmap/ms2vmap
+P=../../programs/ms2vmapdb/ms2vmapdb
 
 # download vmap files if needed
 [ -f n37-030.vmap ] ||
@@ -20,15 +20,15 @@ make -C ../pics
 for name in n37-030 n49-032 n49-033; do
 
   # remove old database
-  $P db_delete $name
+  $P delete $name
 
   # create map
-  $P db_create $name
+  $P create $name
 
   # import vmap file
-  $P db_import $name.vmap -o $name -t ../types.cfg
+  $P import $name.vmap -o $name -t ../types.cfg
 
   # convert to vmap2 text format
-  $P convert $name.vmap -o $name.vmap2 -t ../types.cfg
+  $P export $name.vmap -o $name.vmap2 -t ../types.cfg
 
 done
