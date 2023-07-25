@@ -15,6 +15,7 @@ DPI_PR=150;          # DPI for rendering preview images
 DPI_MAP=200;         # DPI for "original" map reference (normally 200 or 100)
 STYLE_HR=0;          # hr variable to be used in render.cfg and types.cfg
 STYLE_V2_PER=0;      # new style of passes
+GRID=0;              # draw grid
 
 CMAP=conf/cmap.png;        # Colormap
 CMAP_SRC=                  # nomenclatere name used for colormap source
@@ -50,7 +51,8 @@ function vmap_defs() {
   name="$1"
   border_style="${2:-normal}"
   echo "{\"nom_name\":\"$name\", \"border_style\":\"$border_style\", "\
-       " \"dpi_val\":\"$DPI_MAP\", \"hr\":\"$STYLE_HR\", \"v2_per\":\"$STYLE_V2_PER\"}"
+       " \"dpi_val\":\"$DPI_MAP\", \"hr\":\"$STYLE_HR\", "\
+       " \"v2_per\":\"$STYLE_V2_PER\", \"grid\":\"$GRID\"}"
 }
 
 function vmap_update_cmap() {
