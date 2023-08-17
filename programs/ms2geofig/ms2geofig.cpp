@@ -2,6 +2,7 @@
 
 #include "getopt/action_prog.h"
 #include "fig_geo/fig_geo.h"
+#include "fig/fig_utils.h"
 #include "geo_mkref/geo_mkref.h"
 #include "geo_data/geo_io.h"
 #include "geo_data/conv_geo.h"
@@ -232,6 +233,7 @@ public:
     options.add("peaks_dh",   1,0,g, " DH parameter for peak finder [m], default - 20.");
     options.add("peaks_ps",   1,0,g, " PS parameter fr peak finder [pts], default - 1000.");
     options.add("peaks_templ",1,0,g, "FIG template for peaks (default: 2 1 0 3 24 7  57 -1 -1 0.000 0 1 -1 0 0)");
+    options.add("replace",    0,0,g, "remove existing objects before adding new ones");
   }
 
   void help_impl(HelpPrinter & pr) override {
@@ -269,6 +271,7 @@ public:
       "2 3 0 0 0 24 91 -1 20 0.000 0 0 -1 0 0");
     std::string peaks_templ = opts.get("peaks_templ",
       "2 1 0 3 24 7  57 -1 -1 0.000 0 1 -1 0 0");
+    bool replace = opts.get("replace",   true);
 
     double acc=5;
 
@@ -289,6 +292,10 @@ public:
 
     // Contours
     if (cnt) {
+      if (replace){
+        fig_remove_templ(F, cnt_templ1);
+        fig_remove_templ(F, cnt_templ2);
+      }
       if (v) std::cout << "Finding contours\n";
       auto cnt_data = srtm.find_contours(wgs_range, cnt_step);
       for(auto & c:cnt_data){
@@ -298,7 +305,7 @@ public:
         if (v) std::cout << c.first << " ";
         for (const auto & l:c.second){
           if (l.size() < cnt_minpts) continue;
-          FigObj fo = figobj_template(isth? cnt_templ1: cnt_templ2);	
+          FigObj fo = figobj_template(isth? cnt_templ1: cnt_templ2);
           fo.comment.push_back(type_to_str(c.first));
           fo.set_points(l);
           F.push_back(fo);
@@ -309,6 +316,9 @@ public:
 
     /// Slope contour
     if (scnt) {
+      if (replace)
+        fig_remove_templ(F, scnt_templ);
+
       if (v) std::cout << "Finding areas with large slope: ";
       auto scnt_data = srtm.find_slope_contours(wgs_range, scnt_val, 1);
       cnv.bck(scnt_data);
@@ -329,6 +339,9 @@ public:
 
     // Summits
     if (peaks) {
+      if (replace)
+        fig_remove_templ(F, peaks_templ);
+
       if (v) std::cout << "Finding summits: ";
       auto peak_data = srtm.find_peaks(wgs_range, peaks_dh, peaks_ps);
       for(auto const & pt:peak_data){
