@@ -226,7 +226,7 @@ public:
     options.add("cnt_templ1", 1,0,g, "FIG template for contours (default: 2 1 0 1 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0)");
     options.add("cnt_templ2", 1,0,g, "FIG template for thick contours (default: 2 1 0 2 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0)");
     options.add("scnt",       1,0,g, "Make large slope contours (default: 1)");
-    options.add("scnt_minpts",1,0,g, "Min.number of point in a slope contour (default: 12)");
+    options.add("scnt_minpts",1,0,g, "Min.number of point in a slope contour (default: 5)");
     options.add("scnt_val",   1,0,g, "Threshold value for slope contour (in degrees, default: 35)");
     options.add("scnt_templ", 1,0,g, "FIG template for large slopes (default: 2 3 0 0 0 24 91 -1 20 0.000 0 0 -1 0 0)");
     options.add("peaks",      1,0,g, "Make peaks points (default: 1)");
@@ -259,7 +259,7 @@ public:
     int cnt_step  = opts.get<int>("cnt_step", 100);
     int cnt_smult = opts.get<int>("cnt_smult",  5);
     int cnt_minpts = opts.get<int>("cnt_minpts",  6);
-    int scnt_minpts = opts.get<int>("scnt_minpts",  12);
+    int scnt_minpts = opts.get<int>("scnt_minpts",  5);
     double scnt_val = opts.get<double>("scnt_val",     35.0);
     auto peaks_dh = opts.get<int>("peaks_dh",   20);
     auto peaks_ps = opts.get<int>("peaks_ps",  1000);
@@ -322,14 +322,21 @@ public:
       if (v) std::cout << "Finding areas with large slope: ";
       auto scnt_data = srtm.find_slope_contours(wgs_range, scnt_val, 1);
       cnv.bck(scnt_data);
-      line_filter_v1(scnt_data, acc);
-      remove_holes(scnt_data);
+
+      // remove small pieces
       for(auto c = scnt_data.begin(); c!= scnt_data.end(); c++){
         if (c->size() < scnt_minpts) {
           scnt_data.erase(c--);
           continue;
         }
+      }
 
+      // reduce number of points
+      line_filter_v1(scnt_data, acc);
+      remove_holes(scnt_data);
+
+      // create fig objects
+      for(auto c = scnt_data.begin(); c!= scnt_data.end(); c++){
         FigObj fo = figobj_template(scnt_templ);
         fo.set_points(*c);
         F.push_back(fo);
