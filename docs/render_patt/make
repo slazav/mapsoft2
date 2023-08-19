@@ -27,8 +27,9 @@ line_d=$($PROJ --shift [0,0] --scale 1000 --from SU3 --to WGS $line_m)
 $MAPDB add_obj tmp line:1 "$line_d"
 
 # render
-for i in 1 2 3 4; do
-  $RENDER tmp.vmap2db --out render${i}.png --config render${i}.cfg\
+for i in *.cfg; do
+  echo "rendering $i"
+  $RENDER tmp.vmap2db --out ${i%.cfg}.png --config $i\
    --mkref proj --coords_wgs $line_d --scale 1000 --dpi 300\
    --proj SU3 --margin 10
 done

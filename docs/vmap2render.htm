@@ -691,6 +691,29 @@ point:1 stroke 0xFF000000 1
 
 </div><br>
 
+<li><p><tt> short_expand &lt;length&gt; </tt> --
+Удлиннить короткие линии до указанной длины, пропорционально удлиннив крайние сегменты.
+
+<li><p><tt> short_skip &lt;length&gt; </tt> --
+Удалить линии, имеющие длину меньше указанной.
+
+
+<div style="border-style:solid; border-width:0.5;
+            margin:3px; padding: 3px; color: black;
+            font-family:monospace; white-space:pre">
+<img src=render_short/render1.png align=right>
+area:1 fill 0xFFA0FFA0
+
+line:1 stroke 0xFF0000FF 6
+
+line:1 stroke 0xFF000000 1
+ + short_expand 50
+
+line:1 stroke 0xFFFF0000 3
+ + short_skip 50
+
+</div><br>
+
 <li><p><tt> sel_range &lt;width&gt; &lt;color&gt; </tt> -- Нарисовать
 предполагаемый диапазон объекта, по которому он выбирается из базы
 данных. Для расчета диапазона используются остальные правила рисования

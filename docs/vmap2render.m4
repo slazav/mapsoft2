@@ -220,6 +220,14 @@ RENDER_EXAMPLE(render_examples, 11)
 
 RENDER_EXAMPLE(render_examples, 12)
 
+<li><p><tt> short_expand &lt;length&gt; </tt> --
+Удлиннить короткие линии до указанной длины, пропорционально удлиннив крайние сегменты.
+
+<li><p><tt> short_skip &lt;length&gt; </tt> --
+Удалить линии, имеющие длину меньше указанной.
+
+RENDER_EXAMPLE(render_short, 1)
+
 <li><p><tt> sel_range &lt;width&gt; &lt;color&gt; </tt> -- Нарисовать
 предполагаемый диапазон объекта, по которому он выбирается из базы
 данных. Для расчета диапазона используются остальные правила рисования

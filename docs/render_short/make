@@ -28,14 +28,21 @@ function add_obj {
 
 text="1. Горизонтальный и наклонный текст на карте"
 add_obj area:1 "[[0,0],[1.8,0],[1.8,0.8],[0,0.8]]"
-add_obj text:1  "[0.0111,0.64001]"  --name "$text"
-add_obj text:1  "[0.0222,0.56002]"  --name "$text"
-add_obj text:1  "[0.0333,0.48003]"  --name "$text"
-add_obj text:1  "[0.0444,0.40004]"  --name "$text"
-add_obj text:1  "[0.0555,0.32005]"  --name "$text" --angle 0
-add_obj text:1  "[0.0666,0.24006]"  --name "$text" --angle 0
-add_obj text:1  "[0.0777,0.16007]"  --name "$text" --angle 0
-add_obj text:1  "[0.0888,0.08008]"  --name "$text" --angle 0
+add_obj line:1  "[[0.1,0.1],[0.8,0.1]]"
+add_obj line:1  "[[0.2,0.2],[0.8,0.2]]"
+add_obj line:1  "[[0.3,0.3],[0.8,0.3]]"
+add_obj line:1  "[[0.4,0.4],[0.8,0.4]]"
+add_obj line:1  "[[0.5,0.5],[0.8,0.5]]"
+add_obj line:1  "[[0.6,0.6],[0.8,0.6]]"
+add_obj line:1  "[[0.7,0.7],[0.8,0.7]]"
+
+add_obj line:1  "[[1.0,0.1],[1.1,0.05],[1.2,0.1]]"
+add_obj line:1  "[[1.0,0.2],[1.1,0.15],[1.3,0.2]]"
+add_obj line:1  "[[1.0,0.3],[1.1,0.25],[1.4,0.3]]"
+add_obj line:1  "[[1.0,0.4],[1.1,0.35],[1.5,0.4]]"
+add_obj line:1  "[[1.0,0.5],[1.1,0.45],[1.6,0.5]]"
+add_obj line:1  "[[1.0,0.6],[1.1,0.55],[1.7,0.6]]"
+add_obj line:1  "[[1.0,0.7],[1.1,0.65],[1.8,0.7]]"
 
 crd_deg=$($PROJ --shift [1200,5000] --scale 1000 --from SU3 --to WGS [[0,0],[1.8,0.8]])
 
