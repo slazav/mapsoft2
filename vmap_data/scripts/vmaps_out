@@ -206,7 +206,7 @@ for brd in $BRD2_DIR/*.gpx; do
     sed -i -e 's/\.png/\.jpg/g' "$tmp"
 
     # Make thumbnail image + html map
-    $MS2RENDER "$tmp" $EXTRA_TRACKS $BRD_DIR/$reg.gpx -o "$jpg"\
+    $MS2RENDER "$tmp" $EXTRA_TRACKS $BRD_DIR/*.gpx -o "$jpg"\
       --trk_draw_dots 0 --trk_draw_transp 0 --trk_draw_width 1\
       --map_draw_brd 0xFFFF0000 --map_max_sc 100\
       --htm "$htm" --mag $INDEX_SCALE;
