@@ -50,9 +50,20 @@ export SKIP_IMG_DIFFS=1
 %_datadir/mapsoft2/maps_menu.json
 
 %files vmap-data
+%_bindir/vmaps.sh
+%_bindir/vmaps_get_fig
+%_bindir/vmaps_in
+%_bindir/vmaps_mbtiles
+%_bindir/vmaps_out
+%_bindir/vmaps_preview
+%_bindir/vmaps_sqlitedb
+%_bindir/vmaps_wp_parse
+%_bindir/vmaps_wp_update
 %_datadir/mapsoft2/render.cfg
 %_datadir/mapsoft2/types.cfg
 %_datadir/mapsoft2/pics
+%_datadir/mapsoft2/slazav.typ
+%_datadir/mapsoft2/map_templ.htm
 %_datadir/xfig/Libraries/*
 
 %changelog
