@@ -137,11 +137,14 @@ struct track_pt_t{
 /**********************************************************/
 
 std::vector<track_pt_t>
-read_data(const GeoData & data, const Opt & O){
+read_data(const vector<string> & infiles, const Opt & O){
   double tshift = O.get<double>("tshift", 0);
   double window = O.get<double>("window", 120.0);
   string br     = O.get<string>("break", "none");
   std::vector<track_pt_t> pt_data;
+
+  GeoData data;
+  for (auto const & f:infiles) read_geo(f, data, O);
 
   double speed=0, dist = 0, Dist = 0, t0 = 0, T0 = -1;
   queue<pair<double, double> > timedist;
@@ -215,6 +218,49 @@ read_data(const GeoData & data, const Opt & O){
 }
 
 /**********************************************************/
+/* Project track to a reference track.
+ We should consider a few possibilities:
+ - Point can be far from the reference track
+ - Point can be close to a wrong part of the reference track
+   (track with a loop, back-and-forth motion, etc.)
+
+ We do projection in the following way:
+ For each new point we calculate distance from the previous one
+ (or from beginning of the reference track) and use only
+ part on the reference track which stays in this range x 2.
+ In this range we project to the nearest point.
+*/
+
+void
+project_data(std::vector<track_pt_t> & pt_data, const std::vector<track_pt_t> & ref_data){
+  if (pt_data.size()<1 || ref_data.size()<1) return;
+
+  size_t nref0 = 0; // index of the last used ref track point
+  for (size_t n = 0; n<pt_data.size(); n++){
+    auto & pp = n>0? pt_data[n-1]:ref_data[0];
+    auto & pt = pt_data[n];
+
+    // find nearest point from ref track in the correct range
+    double dmin = INFINITY;
+    size_t nmin = nref0;
+    for (size_t nref = nref0; nref<ref_data.size(); nref++){
+      const auto & ref = ref_data[nref];
+      if (geo_dist_2d(ref.pt, pp.pt) > 2*geo_dist_2d(pt.pt, pp.pt)) break;
+
+      auto d = geo_dist_2d(pt.pt, ref.pt);
+      if (d<dmin) {dmin=d; nmin=nref;}
+    }
+
+    const auto & ref1 = ref_data[nmin];
+    pt.pt.x = ref1.pt.x;
+    pt.pt.y = ref1.pt.y;
+    pt.dist1 = ref1.dist1;
+    pt.dist2 = ref1.dist2;
+    nref0 = nmin;
+  }
+}
+
+/**********************************************************/
 
 int
 main (int argc, char **argv) {
@@ -242,6 +288,10 @@ main (int argc, char **argv) {
       "Precision for speed values (default: 2)");
     options.add("tprec", 1,0, g,
       "Precision for time values (default: 1)");
+    options.add("ref", 1,0, g,
+      "Print distance and coordinates as a projection to the reference track. "
+      "Useful when track has only a few points and there is a more accurate reference track "
+      "without timestamps. Default: \"\". --break option is ignored.");
 
     ms2opt_add_std(options, {"HELP","POD","VERB","OUT"});
     ms2opt_add_geo_i(options);
@@ -253,14 +303,24 @@ main (int argc, char **argv) {
     if (O.exists("help")) usage();
     if (O.exists("pod"))  usage(true);
 
+
+
     // open output file
     string ofile = O.get("out","");
     if (ofile != "") FILE * F=freopen(ofile.c_str(),"w",stdout);
 
     // read data
-    GeoData data;
-    for (auto const & f:infiles) read_geo(f, data, O);
-    auto pt_data = read_data(data, O);
+    auto pt_data = read_data(infiles, O);
+
+    // project if needed
+    string ref_fname = O.get<string>("ref", "");
+    if (ref_fname != ""){
+      O.put("break", "none");
+      std::vector<std::string> ref_files;
+      ref_files.push_back(ref_fname);
+      auto ref_data = read_data(ref_files, O);
+      project_data(pt_data, ref_data);
+    }
 
     // print data
     for (const auto & pt : pt_data) pt.print(O);
