@@ -25,7 +25,7 @@ assert_cmd "$P test_data/test.plt --llprec 6 --dprec 2 --sprec 1 -o tmp" "" 0
 assert_diff test_data/test1.txt tmp
 
 # split by track segments
-assert_cmd "$P test_data/test.plt --llprec 6 --dprec 2 --sprec 1  --break track -o tmp" "" 0
+assert_cmd "$P test_data/test.plt --llprec 6 --dprec 2 --sprec 1  --break segment -o tmp" "" 0
 assert_diff test_data/test2.txt tmp
 
 # split by days
@@ -40,3 +40,7 @@ assert_diff test_data/test5.txt tmp
 # time shift
 assert_cmd "$P test_data/test.plt --tshift 9 --break day -o tmp" "" 0
 assert_diff test_data/test6.txt tmp
+
+# ref
+assert_cmd "$P test_data/20040222_reduced.plt --ref test_data/20040222_ref.gpx -o tmp" "" 0
+assert_diff test_data/test7.txt tmp

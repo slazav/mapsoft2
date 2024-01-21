@@ -81,11 +81,16 @@ void usage(bool pod=false){
 /**********************************************************/
 struct track_pt_t{
   GeoTpt pt;
+  bool   start; // start - start of the part
   double time1, time2, dt; // seconds
   double dist1, dist2, dd; // meters
   double speed;            // km/h
   int    nn1, nn2, pn;
-  bool   br; // print linebreak before the point
+
+  track_pt_t(): start(false),
+                time1(0.0), time2(0.0), dt(0.0),
+                dist1(0.0), dist2(0.0), dd(0.0),
+                speed(0.0), nn1(0), nn2(0), pn(0) {}
 
   // print values according to fmt
   void print(const Opt & O) const{
@@ -97,7 +102,7 @@ struct track_pt_t{
     int sprec     = O.get<int>("sprec", 2);
     int tprec     = O.get<int>("tprec", 1);
 
-    if (br) cout << endl;
+    if (start) cout << endl;
     bool esc=false;
     for (string::const_iterator c=fmt.begin(); c!=fmt.end(); c++){
       if (!esc){
@@ -143,75 +148,95 @@ read_data(const vector<string> & infiles, const Opt & O){
   string br     = O.get<string>("break", "none");
   std::vector<track_pt_t> pt_data;
 
+  // read data
   GeoData data;
   for (auto const & f:infiles) read_geo(f, data, O);
 
-  double speed=0, dist = 0, Dist = 0, t0 = 0, T0 = -1;
-  queue<pair<double, double> > timedist;
-
-  size_t nn = 0;
-  size_t NN = 0;
-  size_t pn = 0;
-  GeoTpt tp, pp;
-  for (auto const & trk: data.trks) {
-    for (size_t p = 0; p < trk.size(); ++p) {
-
-      tp = trk[p];
-      tp.t += tshift*3600*1000;
-
-      if (T0<0) T0 = tp.t;
-
-      bool do_br = false;
-      if ( (br == "track" && (tp.start || p==0)) ||
-           (br == "day"   && (nn != 0) &&
-             (tp.t/86400000 != pp.t/86400000)) ){
-        nn=0;
-        pn++;
-        do_br = true;
+  // fill point array, detect breakpoints
+  int64_t tp = 0;
+  for (auto const & trk: data.trks){
+    bool trk_start = true;
+    for (auto const & seg: trk){
+      bool seg_start = true;
+      for (auto const & pt: seg){
+        track_pt_t p;
+        p.pt = pt;
+        p.pt.t += tshift*3600*1000;
+        p.start =
+           (br == "track"   && trk_start) ||
+           (br == "segment" && seg_start) ||
+           (br == "day"     && p.pt.t/86400000 != tp/86400000);
+        tp = p.pt.t;
+        pt_data.push_back(p);
+        seg_start = trk_start = false;
       }
-
-      double dd=0;
-      int    dt=0;
-      if (nn != 0) {
-        // update values:
-        dd = geo_dist_2d(tp,pp);
-        dt = tp.t - pp.t;
-        dist +=dd;
-        Dist +=dd;
-      } else {
-        dist = 0;
-        t0 = tp.t;
-      }
-
-      timedist.push(make_pair(tp.t/1000.0, Dist));
-      while (timedist.front().first < tp.t/1000.0 - window &&
-             timedist.size() > 2) timedist.pop();
-
-      double traveled = timedist.back().second - timedist.front().second;
-      double time = timedist.back().first - timedist.front().first;
-      if (time==0) speed=0;
-      else speed = traveled/time * 3.6;
-
-      pp = tp;
-      ++nn;
-      ++NN;
-
-      // fill data
-      track_pt_t pt;
-      pt.pt = tp;
-      pt.time1 = (tp.t-T0)/1000.0;
-      pt.time2 = (tp.t-t0)/1000.0;
-      pt.dt = dt/1000.0;
-      pt.dist1 = Dist;
-      pt.dist2 = dist;
-      pt.dd = dd;
-      pt.speed = speed;
-      pt.nn1 = NN;
-      pt.nn2 = nn;
-      pt.pn = pn;
-      pt.br = do_br;
-      pt_data.push_back(pt);
     }
+  }
+  if (pt_data.size()==0) return pt_data;
+
+  // remove start flag on the first point
+  pt_data[0].start = false;
+
+  // reference times
+  double time01 = pt_data[0].pt.t;
+  double time02 = pt_data[0].pt.t;
+
+  double speed=0, dist1=0, dist2=0;
+  size_t nn1=0, nn2=0, pn=0;
+
+  // first pass: fill times, distances, point numbers
+  for (size_t i = 0; i < pt_data.size(); ++i) {
+
+    auto & pt0 = pt_data[i];
+    auto & ptp = pt_data[i>0? i-1:0];
+
+    double dd = geo_dist_2d(pt0.pt, ptp.pt);
+    double dt = pt0.pt.t - ptp.pt.t;
+
+    // reset values in the beginning of a new part
+    if (pt0.start){
+      pn++;
+      time02 = pt0.pt.t;
+      dist2 = 0.0;
+      nn2 = 0;
+      // Remove td/dd information for gap between segments,
+      // Exclude distance between segments from dist1.
+      // Do we want this?
+      dd = dt = 0.0;
+    }
+    dist1 += dd;
+    dist2 += dd;
+    nn1++;
+    nn2++;
+
+    // fill data
+    pt0.time1 = (pt0.pt.t-time01)/1000.0;
+    pt0.time2 = (pt0.pt.t-time02)/1000.0;
+    pt0.dt = dt/1000.0;
+    pt0.dist1 = dist1;
+    pt0.dist2 = dist2;
+    pt0.dd = dd;
+    pt0.nn1 = nn1;
+    pt0.nn2 = nn2;
+    pt0.pn = pn;
+  }
+
+  // second pass: speed
+  for (size_t i = 1; i < pt_data.size(); ++i) {
+    // go back until we reach needed time window or beginning of the part
+    size_t j;
+    for (j=i-1; j!=0; j--){
+      if (pt_data[i].time1 - pt_data[j].time1 >= window) break;
+      if (pt_data[j].start) break;
+    }
+
+    // Shrink range to fit it within the window if possible. Do we want this?
+    if (pt_data[i].time1 - pt_data[j].time1 > window && j+1<i) j++;
+
+    double dist = pt_data[i].dist1 - pt_data[j].dist1;
+    double time = pt_data[i].time1 - pt_data[j].time1;
+    pt_data[i].speed = time!=0 ? dist/time*3.6 : 0;
+//std::cerr << ">> " << dist << " " << time << " " << pt_data[i].speed << "\n";
   }
 
   return pt_data;
@@ -277,7 +302,7 @@ main (int argc, char **argv) {
       "Window for speed calculation, sec (default: 120)");
     options.add("break", 1,'b', g,
       "Place to break calculation and put empty line "
-      "(none | day | track, default: none)");
+      "(none | day | track | segment, default: none)");
     options.add("llprec", 1,0, g,
       "Precision for latitude and longitude values (default: 7)");
     options.add("zprec", 1,0, g,
