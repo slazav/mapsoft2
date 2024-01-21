@@ -7,14 +7,6 @@
 #include "geo_data/geo_io.h"
 #include "geo_data/filters.h"
 #include "geo_data/conv_geo.h"
-#include "geo_mkref/geo_mkref.h"
-#include "geo_render/write_geoimg.h"
-#include "geo_render/gobj_trk.h"
-#include "geo_render/gobj_wpts.h"
-#include "geo_render/gobj_maps.h"
-#include "geo_render/gobj_srtm.h"
-//#include "draw_pulk_grid.h"
-#include "viewer/gobj_multi.h"
 #include <cstring>
 
 using namespace std;
