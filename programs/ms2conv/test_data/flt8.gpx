@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<gpx version='1.1' creator='mapsoft-2'>
+  <trk>
+    <name>ACTIVE LOG                         </name>
+    <trkseg>
+      <trkpt lat='58.8211400' lon='42.6270600'>
+        <ele>167.40</ele>
+        <time>2010-02-21T08:56:05.001Z</time>
+      </trkpt>
+      <trkpt lat='58.8213000' lon='42.6272800'>
+        <ele>166.94</ele>
+        <time>2010-02-21T08:56:15.999Z</time>
+      </trkpt>
+      <trkpt lat='58.8216900' lon='42.6277900'>
+        <ele>164.04</ele>
+        <time>2010-02-21T08:56:33.003Z</time>
+      </trkpt>
+    </trkseg>
+    <trkseg>
+      <trkpt lat='58.8219800' lon='42.6281100'>
+        <ele>163.07</ele>
+        <time>2010-02-21T08:56:47Z</time>
+      </trkpt>
+      <trkpt lat='58.8220300' lon='42.6281600'>
+        <ele>161.15</ele>
+        <time>2010-02-21T08:57:04.003Z</time>
+      </trkpt>
+      <trkpt lat='58.8221000' lon='42.6282600'>
+        <ele>161.15</ele>
+        <time>2010-02-21T08:58:06.997Z</time>
+      </trkpt>
+    </trkseg>
+    <trkseg>
+      <trkpt lat='58.8223600' lon='42.6285500'>
+        <ele>161.15</ele>
+        <time>2010-02-21T08:58:21.996Z</time>
+      </trkpt>
+      <trkpt lat='58.8227300' lon='42.6290300'>
+        <ele>161.15</ele>
+        <time>2010-02-21T08:58:40.996Z</time>
+      </trkpt>
+      <trkpt lat='58.8233500' lon='42.6298100'>
+        <ele>160.20</ele>
+        <time>2010-02-21T08:59:15.003Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>

@@ -23,3 +23,9 @@ assert_diff test_data/flt5.map tmp.map
 assert_cmd "$P test_data/gpx1.gpx test_data/gpx2.gpx --join --trk_name JOIN -o tmp.gpx"  "" 0
 assert_diff test_data/flt6.gpx tmp.gpx
 
+assert_cmd "$P test_data/ozi1.plt --trk_reduce_acc 20 -o tmp.gpx"  "" 0
+assert_diff test_data/flt7.gpx tmp.gpx
+
+assert_cmd "$P test_data/ozi1.plt --trk_reduce_num 3 -o tmp.gpx"  "" 0
+assert_diff test_data/flt8.gpx tmp.gpx
+
