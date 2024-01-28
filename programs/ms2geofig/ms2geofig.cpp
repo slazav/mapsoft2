@@ -300,7 +300,7 @@ public:
       auto cnt_data = srtm.find_contours(wgs_range, cnt_step);
       for(auto & c:cnt_data){
         cnv.bck(c.second);
-        line_filter_v1(c.second, acc);
+        line_filter_v1(c.second, -1, acc);
         bool isth = c.first%(cnt_step*cnt_smult); // is it a thin contour
         if (v) std::cout << c.first << " ";
         for (const auto & l:c.second){
@@ -332,7 +332,7 @@ public:
       }
 
       // reduce number of points
-      line_filter_v1(scnt_data, acc);
+      line_filter_v1(scnt_data, -1, acc);
       remove_holes(scnt_data);
 
       // create fig objects
@@ -427,18 +427,23 @@ public:
         if (tr.name != name) continue;
         if (v) std::cerr << "matching track: " << name << "\n";
 
-        for (int n = 0; n < std::min(tr.size(), o.size()); n++){
-          std::ostringstream st;
-          st << "REF " << tr[n].x << " " << tr[n].y;
+        size_t n=0;
+        for (const auto & seg: tr){
+          for (const auto & pt: seg){
+            if (n>=o.size()) break;
+            std::ostringstream st;
+            st << "REF " << pt.x << " " << pt.y;
 
-          FigObj o1(o);
-          o1.clear();
-          o1.comment.clear();
-          o1.comment.push_back(st.str());
+            FigObj o1(o);
+            o1.clear();
+            o1.comment.clear();
+            o1.comment.push_back(st.str());
 
-          o1.push_back(iPoint(o[n].x,o[n].y));
-          F.push_back(o1);
-          add = true;
+            o1.push_back(iPoint(o[n].x,o[n].y));
+            F.push_back(o1);
+            add = true;
+            n++;
+          }
         }
       }
     }
