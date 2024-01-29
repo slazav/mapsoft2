@@ -229,6 +229,8 @@ public:
     options.add("scnt_minpts",1,0,g, "Min.number of point in a slope contour (default: 5)");
     options.add("scnt_val",   1,0,g, "Threshold value for slope contour (in degrees, default: 35)");
     options.add("scnt_templ", 1,0,g, "FIG template for large slopes (default: 2 3 0 0 0 24 91 -1 20 0.000 0 0 -1 0 0)");
+//                                                                           "2 3 0 1 24 24 91 -1 -1 0.000 1 1 7 0 0"
+    options.add("smooth",     1,0,g, "Smooth data with a given radius when finding altitude and slope contours (default 0.0 - no smoothing)");
     options.add("peaks",      1,0,g, "Make peaks points (default: 1)");
     options.add("peaks_dh",   1,0,g, " DH parameter for peak finder [m], default - 20.");
     options.add("peaks_ps",   1,0,g, " PS parameter fr peak finder [pts], default - 1000.");
@@ -256,6 +258,7 @@ public:
     bool cnt   = opts.get("cnt",   true);
     bool scnt  = opts.get("scnt",  true);
     bool peaks = opts.get("peaks", true);
+    double smooth = opts.get<int>("smooth", 0.0);
     int cnt_step  = opts.get<int>("cnt_step", 100);
     int cnt_smult = opts.get<int>("cnt_smult",  5);
     int cnt_minpts = opts.get<int>("cnt_minpts",  6);
@@ -273,7 +276,7 @@ public:
       "2 1 0 3 24 7  57 -1 -1 0.000 0 1 -1 0 0");
     bool replace = opts.get("replace",   true);
 
-    double acc=5;
+    double acc=5; // FIG units
 
     // read fig file
     Fig F;
@@ -297,10 +300,10 @@ public:
         fig_remove_templ(F, cnt_templ2);
       }
       if (v) std::cout << "Finding contours\n";
-      auto cnt_data = srtm.find_contours(wgs_range, cnt_step);
+      auto cnt_data = srtm.find_contours(wgs_range, cnt_step, smooth);
       for(auto & c:cnt_data){
         cnv.bck(c.second);
-        line_filter_v1(c.second, -1, acc);
+        line_filter_v1(c.second, acc, -1);
         bool isth = c.first%(cnt_step*cnt_smult); // is it a thin contour
         if (v) std::cout << c.first << " ";
         for (const auto & l:c.second){
@@ -320,7 +323,7 @@ public:
         fig_remove_templ(F, scnt_templ);
 
       if (v) std::cout << "Finding areas with large slope: ";
-      auto scnt_data = srtm.find_slope_contours(wgs_range, scnt_val, 1);
+      auto scnt_data = srtm.find_slope_contours(wgs_range, scnt_val, 1, smooth);
       cnv.bck(scnt_data);
 
       // remove small pieces
@@ -332,7 +335,7 @@ public:
       }
 
       // reduce number of points
-      line_filter_v1(scnt_data, -1, acc);
+      line_filter_v1(scnt_data, acc, -1);
       remove_holes(scnt_data);
 
       // create fig objects
