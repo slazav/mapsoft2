@@ -335,7 +335,6 @@ public:
 
       // reduce number of points
       line_filter_v1(scnt_data, acc, -1);
-      remove_holes(scnt_data);
 
       // create fig objects
       for(auto c = scnt_data.begin(); c!= scnt_data.end(); c++){
