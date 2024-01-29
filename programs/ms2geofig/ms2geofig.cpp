@@ -228,8 +228,7 @@ public:
     options.add("scnt",       1,0,g, "Make large slope contours (default: 1)");
     options.add("scnt_minpts",1,0,g, "Min.number of point in a slope contour (default: 5)");
     options.add("scnt_val",   1,0,g, "Threshold value for slope contour (in degrees, default: 35)");
-    options.add("scnt_templ", 1,0,g, "FIG template for large slopes (default: 2 3 0 0 0 24 91 -1 20 0.000 0 0 -1 0 0)");
-//                                                                           "2 3 0 1 24 24 91 -1 -1 0.000 1 1 7 0 0"
+    options.add("scnt_templ", 1,0,g, "FIG template for large slopes (default: 2 3 0 1 24 24 91 -1 -1 0.000 1 1 7 0 0)");
     options.add("smooth",     1,0,g, "Smooth data with a given radius when finding altitude and slope contours (default 0.0 - no smoothing)");
     options.add("peaks",      1,0,g, "Make peaks points (default: 1)");
     options.add("peaks_dh",   1,0,g, " DH parameter for peak finder [m], default - 20.");
@@ -271,7 +270,7 @@ public:
     std::string cnt_templ2 = opts.get("cnt_templ2",
       "2 1 0 2 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0");
     std::string scnt_templ = opts.get("scnt_templ",
-      "2 3 0 0 0 24 91 -1 20 0.000 0 0 -1 0 0");
+      "2 3 0 1 24 24 91 -1 -1 0.000 1 1 7 0 0");
     std::string peaks_templ = opts.get("peaks_templ",
       "2 1 0 3 24 7  57 -1 -1 0.000 0 1 -1 0 0");
     bool replace = opts.get("replace",   true);
