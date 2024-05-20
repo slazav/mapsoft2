@@ -6,6 +6,7 @@
 #include "getopt/getopt.h"
 #include "getopt/help_printer.h"
 #include "image/io.h"
+#include "image/image_colors.h"
 
 using namespace std;
 
@@ -37,7 +38,8 @@ main(int argc, char *argv[]){
     ms2opt_add_std(options, {"HELP","POD","VERB"});
     ms2opt_add_image(options);
 
-    options.add("scale", 1,0, "IMAGE", "Downscaling factor, double value (default: 1.0)");
+    options.add("scale",  1,0, "IMAGE", "Downscaling factor, double value (default: 1.0)");
+    options.add("invert", 0,0, "IMAGE", "Invert image");
 
     if (argc<2) usage();
     vector<string> files;
@@ -49,7 +51,14 @@ main(int argc, char *argv[]){
     double scale = O.get("scale", 1.0);
 
     if (files.size() != 2) usage();
+
+    // load file
     auto img = image_load(files[0], scale, O);
+
+    // apply filters
+    if (O.exists("invert")) image_invert(img);
+
+    // save file
     image_save(img, files[1], O);
   }
 
