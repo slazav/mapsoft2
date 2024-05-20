@@ -37,7 +37,7 @@ main(int argc, char *argv[]){
     ms2opt_add_std(options, {"HELP","POD","VERB"});
     ms2opt_add_image(options);
 
-    options.add("scale", 1,0, "IMAGE", "Downscaling factor, integer value (default: 1)");
+    options.add("scale", 1,0, "IMAGE", "Downscaling factor, double value (default: 1.0)");
 
     if (argc<2) usage();
     vector<string> files;
