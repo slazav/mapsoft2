@@ -55,6 +55,9 @@ main(int argc, char *argv[]){
     options.add("autolevel_th", 1,0, "IMAGE", "Skip some fraction on white/black colors in the autolevel calculation. "
                                               "Argument is one or two (for white and black) numbers in the range 0..1. "
                                               "Default is 0,0.");
+    options.add("ir_undust",    1,0, "IMAGE", "Remove dust using IR channel. Argument is a file with the IR channel");
+    options.add("ir_undust_sh", 1,0, "IMAGE", "Shift of the IR channel, [x,y] in pixels.");
+    options.add("ir_undust_th", 1,0, "IMAGE", "Threshold for the IR channel, default 0.06.");
     options.add("crop",         1,0, "IMAGE", "Crop image to a rectangular area (intersection with the image coordinate range). "
                                               "Argument is json array with 4 numbers: [<x>,<y>,<w>,<h>]");
     options.add("autocrop",     0,0, "IMAGE", "Crop image automatically, remove all 'bad' lines from each side "
@@ -88,6 +91,14 @@ main(int argc, char *argv[]){
       if (mm.size()==1) {tt.push_back(tt[0]);}
       if (tt.size()!=2) throw Err() << "argument of --autolevel_th option should contain two float numbers";
       image_autolevel(img, brd, mm[0], mm[1], mm[2], tt[0], tt[1]);
+    }
+
+    // ir_undust filter
+    if (O.exists("ir_undust")){
+      auto ir = image_load(O.get("ir_undust"), scale, O);
+      auto sh = O.get<iPoint>("ir_undust_sh");
+      auto th = O.get<double>("ir_undust_th", 0.06);
+      img = image_ir_undust(img, ir, brd, sh, th);
     }
 
     // crop filter
