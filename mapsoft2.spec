@@ -16,7 +16,6 @@ BuildRequires: libjpeg-devel libgif-devel libtiff-devel libpng-devel libdb4.7-de
 BuildRequires: librsvg-devel libcurl-devel
 BuildRequires: /usr/bin/pod2man /usr/bin/pod2html /usr/bin/unzip
 BuildRequires: transfig ImageMagick-tools
-
 %description
 mapsoft2 - programs for working with maps and geodata
 
@@ -24,6 +23,7 @@ mapsoft2 - programs for working with maps and geodata
 Summary: mapsoft-vmap-data - example of data and scripts for vector map handling
 Group: Sciences/Geosciences
 Requires: %name = %version-%release
+BuildRequires: perl-Text-Iconv
 BuildArch: noarch
 
 %description vmap-data
