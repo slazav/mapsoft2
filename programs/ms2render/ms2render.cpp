@@ -14,6 +14,7 @@
 #include "geo_render/gobj_maps.h"
 #include "geo_render/gobj_srtm.h"
 //#include "draw_pulk_grid.h"
+#include "srtm/srtm.h"
 #include "viewer/gobj_multi.h"
 #include <cstring>
 
@@ -126,9 +127,9 @@ main(int argc, char *argv[]){
 
 
     // Srtm layer
-    std::shared_ptr<SRTMSurf> s;
+    std::shared_ptr<SRTM> s;
     if (O.exists("srtm")){
-      s.reset(new SRTMSurf(O));
+      s.reset(new SRTM(O));
       obj.add(5, std::shared_ptr<GObjSRTM>(new GObjSRTM(s.get(),O)));
     }
 
