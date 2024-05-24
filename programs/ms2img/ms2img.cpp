@@ -28,6 +28,10 @@ void usage(bool pod=false){
   pr.head(2, "Options for saving images");
   pr.opts({"IMAGE", "IMAGE_CMAP"});
 
+  pr.head(1, "Filter order");
+  pr.par(
+    "filters are applied in the following order: invert, autolevel, crop, autocrop.");
+
   throw Err();
 }
 
@@ -38,8 +42,24 @@ main(int argc, char *argv[]){
     ms2opt_add_std(options, {"HELP","POD","VERB"});
     ms2opt_add_image(options);
 
-    options.add("scale",  1,0, "IMAGE", "Downscaling factor, double value (default: 1.0)");
-    options.add("invert", 0,0, "IMAGE", "Invert image");
+    options.add("scale",        1,0, "IMAGE", "Downscaling factor, double value (default: 1.0)");
+    options.add("invert",       0,0, "IMAGE", "Invert image");
+    options.add("autolevel",    1,0, "IMAGE", "Do auto color levels. Color components are transformed as f(x) = a-c/(a-x) "
+                                              "in such a way that the darkest color becomes black, lightest one becomes white, "
+                                              "average color becomes the value set by the option argument. "
+                                              "Argument is one floating-point number (for all components) or three "
+                                              "comma-separated numbers in the range 0..1, reasonable value is near 0.5. "
+                                              "If --invert option is set then the transformation happens after the inversion. "
+                                              "Color min/max/avr values are calculated in the central part determined "
+                                              "by the --border option.");
+    options.add("autolevel_th", 1,0, "IMAGE", "Skip some fraction on white/black colors in the autolevel calculation. "
+                                              "Argument is one or two (for white and black) numbers in the range 0..1. "
+                                              "Default is 0,0.");
+    options.add("crop",         1,0, "IMAGE", "Crop image to a rectangular area (intersection with the image coordinate range). "
+                                              "Argument is json array with 4 numbers: [<x>,<y>,<w>,<h>]");
+    options.add("autocrop",     0,0, "IMAGE", "Crop image automatically, remove all 'bad' lines from each side "
+                                              "within region specified by --border.");
+    options.add("border",       1,0, "IMAGE", "Border for --autolevel and --autocrop calculations (pixels, default 50)");
 
     if (argc<2) usage();
     vector<string> files;
@@ -48,15 +68,39 @@ main(int argc, char *argv[]){
     if (O.exists("pod"))  usage(true);
 
     bool verb = O.exists("verbose");
-    double scale = O.get("scale", 1.0);
+    auto scale = O.get<double>("scale", 1.0);
+    auto brd = O.get<unsigned int>("border", 50);
 
     if (files.size() != 2) usage();
 
     // load file
     auto img = image_load(files[0], scale, O);
 
-    // apply filters
+    // invert filter
     if (O.exists("invert")) image_invert(img);
+
+    // autolevel filter
+    if (O.exists("autolevel")){
+      auto mm = str_to_type_dvec(O.get("autolevel", "0.51,0.55,0.59"));
+      auto tt = str_to_type_dvec(O.get("autolevel_th", "0.00, 0.00"));
+      if (mm.size()==1) {mm.push_back(mm[0]); mm.push_back(mm[0]);}
+      if (mm.size()!=3) throw Err() << "argument of --autolevel option should contain three float numbers";
+      if (mm.size()==1) {tt.push_back(tt[0]);}
+      if (tt.size()!=2) throw Err() << "argument of --autolevel_th option should contain two float numbers";
+      image_autolevel(img, brd, mm[0], mm[1], mm[2], tt[0], tt[1]);
+    }
+
+    // crop filter
+    if (O.exists("crop")){
+      iRect crop = O.get<iRect>("crop");
+      img = image_crop(img, crop);
+    }
+
+    // autocrop filter
+    if (O.exists("autocrop")){
+      iRect crop = image_autocrop(img, brd, 0.8);
+      img = image_crop(img, crop);
+    }
 
     // save file
     image_save(img, files[1], O);
