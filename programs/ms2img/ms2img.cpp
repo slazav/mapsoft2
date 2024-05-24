@@ -62,6 +62,7 @@ main(int argc, char *argv[]){
                                               "Argument is json array with 4 numbers: [<x>,<y>,<w>,<h>]");
     options.add("autocrop",     0,0, "IMAGE", "Crop image automatically, remove all 'bad' lines from each side "
                                               "within region specified by --border.");
+    options.add("autocrop_ref", 1,0, "IMAGE", "Use another image for autocrop calculations.");
     options.add("border",       1,0, "IMAGE", "Border for --autolevel and --autocrop calculations (pixels, default 50)");
 
     if (argc<2) usage();
@@ -109,7 +110,10 @@ main(int argc, char *argv[]){
 
     // autocrop filter
     if (O.exists("autocrop")){
-      iRect crop = image_autocrop(img, brd, 0.8);
+      ImageR ref = img;
+      if (O.exists("autocrop_ref"))
+        ref = image_load(O.get("autocrop_ref"), scale, O);
+      dRect crop = image_autocrop(ref, brd, 0.8);
       img = image_crop(img, crop);
     }
 
