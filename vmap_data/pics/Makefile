@@ -27,7 +27,7 @@ bol_l.png: OPT=-background transparent -extent 192x83
 
 # fig2dev -t option only allowed for GIF transparent color
 %.gif: %.fig
-	fig2dev -m$(SC) -Lgif -t#ffffff -j "$<" > "$@"
+	fig2dev -m$(SC) -Lgif -t#ffffff "$<" > "$@"
 
 %.png: %.gif
 	convert -trim "$<" -repage +0+0 $(OPT) PNG32:"$@"
