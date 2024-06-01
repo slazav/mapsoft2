@@ -35,6 +35,16 @@ ll2wp(){
   }
 }
 
+function get_conv(){
+  local name="$1"
+  while IFS="	" read -rs map re; do
+    [ "${map}" != '' ] || continue
+    [ "${re}"  != '' ] || continue
+    [ "${map%%#*}" != '' ] || continue
+    [ "$map" = '*' -o "$map" = "$name" ] || continue
+    echo "$re"
+  done < "wpasses.cnv"
+}
 
 mkdir -p -- wpasses
 for i in "$@"; do
@@ -53,15 +63,21 @@ for i in "$@"; do
   # kml -> mp, txt
   vmaps_wp_parse "wpasses/${name}_wp.kml"
 
+  if [ -f "wpasses.cnv" ]; then
+    echo "$(get_conv $name)" > wpasses_${name}.sed
+  fi
+
   # merge into vmap
   ms2vmap wpasses/${name}_wp.mp -o "$vmap"\
     --types "$TYPEINFO" --define "$(vmap_defs $name)"\
     --replace_tag westra_passes --fix_rounding 1\
     --update_labels 1
 
+  # old-style sed conversion
   sed_args=''
   if [ -f "wpasses.sed" ];            then sed_args="$sed_args --file wpasses.sed"; fi
   if [ -f "wpasses/${name}_wp.sed" ]; then sed_args="$sed_args --file wpasses/${name}_wp.sed"; fi
+  if [ -f "wpasses_${name}.sed" ];    then sed_args="$sed_args --file wpasses_${name}.sed"; fi
   if [ -n "$sed_args" -a "$VMAP_EXT" = "vmap" ]; then
     sed -r -i -e '/^OBJECT\t0x(67..|64..|1100)/,/^ +DATA/{' $sed_args -e "}" "$vmap"
   fi
@@ -70,6 +86,7 @@ for i in "$@"; do
   fi
 
   rm -f -- "wpasses/${name}_wp.mp"
+  rm -f -- "wpasses_${name}.sed"
 
   # update fig if needed
   if [ -f IN/$name.fig ]; then
