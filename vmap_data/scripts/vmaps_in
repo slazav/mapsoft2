@@ -49,7 +49,7 @@ for i in $files; do
   fi
 
   if [ "$ext" = "fig" ]; then
-    extra_args="--fig_enc \"$FIG_ENC\""
+    extra_args="--fig_enc UTF-8"
   fi
 
   # update vmap from the input file

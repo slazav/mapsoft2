@@ -42,6 +42,6 @@ for i in "$@"; do
 
   $MS2VMAP "$vmap" -o "$fig_in"\
     --types "$TYPEINFO" --define "$(vmap_defs "$name")"\
-    --fig_enc "$FIG_ENC"
+    --fig_enc UTF-8
 
 done
