@@ -236,12 +236,15 @@ for brd in $BRD2_DIR/*.gpx; do
       echo "  <a href=\"MAPDIR/$name.png\">[PNG]</a>"
       echo "  <a href=\"MAPDIR/$name.map\">[MAP]</a>"
       echo "  <a href=\"MAPDIR/$name.mp.zip\">[MP.ZIP]</a>"
-      echo "  <a href=\"MAPDIR/$name.img\">[IMG]</a>"
+      #echo "  <a href=\"MAPDIR/$name.img\">[IMG]</a>"
     done >> "$htm"
     echo "</ul>" >> "$htm"
 
     # Add link to img file
-    echo "<p><a href=\"MAPDIR/all_$reg.img\">Векторная карта всего района в формате IMG</a>" >> "$htm"
+    echo "<p><a href=\"MAPDIR/all_$reg.img\">
+      <span class=ru>Векторная карта всего района в формате IMG (для Garmin).</span>
+      <span class=en>Vector map of the whole region in IMG format (for Garmin).</span>
+      </a>" >> "$htm"
   fi
   rm -f $png_tstamp
 
