@@ -20,12 +20,18 @@ $P del --trks -o n37-001.fig
 diff -q n37-001.fig test_data/fig3.fig
 
 $P add test_data/data.gpx -o n37-001.fig
-
 diff -q n37-001.fig test_data/fig1.fig
 
-$P del -A -R -o n37-001.fig
+$P del -A -o n37-001.fig
 
+$P add test_data/data.gpx --add_comm "comm1
+comm2" -o n37-001.fig
+diff -q n37-001.fig test_data/fig1a.fig
+
+$P del -A -R -o n37-001.fig
 diff -q n37-001.fig test_data/fig4.fig
+
+
 
 rm -f n37-001.fig
 

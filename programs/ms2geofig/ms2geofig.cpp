@@ -234,7 +234,8 @@ public:
     options.add("peaks_dh",   1,0,g, " DH parameter for peak finder [m], default - 20.");
     options.add("peaks_ps",   1,0,g, " PS parameter fr peak finder [pts], default - 1000.");
     options.add("peaks_templ",1,0,g, "FIG template for peaks (default: 2 1 0 3 24 7  57 -1 -1 0.000 0 1 -1 0 0)");
-    options.add("replace",    0,0,g, "remove existing objects before adding new ones");
+    options.add("replace",    0,0,g, "Remove existing objects before adding new ones.");
+    options.add("add_comm",   1,0,g, "Add a comment to all created fig objects.");
   }
 
   void help_impl(HelpPrinter & pr) override {
@@ -274,6 +275,8 @@ public:
     std::string peaks_templ = opts.get("peaks_templ",
       "2 1 0 3 24 7  57 -1 -1 0.000 0 1 -1 0 0");
     bool replace = opts.get("replace",   true);
+    // comment can contain newline, will be splitted properly when writing fig
+    std::string add_comm  = opts.get("add_comm");
 
     double acc=5; // FIG units
 
@@ -309,6 +312,7 @@ public:
           if (l.size() < cnt_minpts) continue;
           FigObj fo = figobj_template(isth? cnt_templ1: cnt_templ2);
           fo.comment.push_back(type_to_str(c.first));
+          if (add_comm!="") fo.comment.push_back(add_comm);
           fo.set_points(l);
           F.push_back(fo);
         }
@@ -340,6 +344,7 @@ public:
       for(auto c = scnt_data.begin(); c!= scnt_data.end(); c++){
         FigObj fo = figobj_template(scnt_templ);
         fo.set_points(*c);
+        if (add_comm!="") fo.comment.push_back(add_comm);
         F.push_back(fo);
       }
       if (v) std::cout << scnt_data.size() << "\n";
@@ -359,6 +364,7 @@ public:
         fo.push_back((iPoint)p);
         auto comm = std::string("(") + type_to_str(pt.second) + ")";
         fo.comment.push_back(comm);
+        if (add_comm!="") fo.comment.push_back(add_comm);
         F.push_back(fo);
       }
       if (v) std::cout << peak_data.size() << "\n";
