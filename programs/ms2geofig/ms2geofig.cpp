@@ -221,6 +221,7 @@ public:
     std::string g = "GEOFIG_SRTM";
     options.add("cnt",        1,0,g, "Make contours (default: 1)");
     options.add("cnt_step",   1,0,g, "Contour step, m (default: 100)");
+    options.add("cnt_vtol",   1,0,g, "Tolerance for smoothing contours, m (default 5.0)");
     options.add("cnt_smult",  1,0,g, "Thick contour multiplier (default: 5, every 5th contour is thick)");
     options.add("cnt_minpts", 1,0,g, "Min.number of points in a contour (default: 6)");
     options.add("cnt_templ1", 1,0,g, "FIG template for contours (default: 2 1 0 1 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0)");
@@ -228,8 +229,8 @@ public:
     options.add("scnt",       1,0,g, "Make large slope contours (default: 1)");
     options.add("scnt_minpts",1,0,g, "Min.number of point in a slope contour (default: 5)");
     options.add("scnt_val",   1,0,g, "Threshold value for slope contour (in degrees, default: 35)");
+    options.add("scnt_vtol",  1,0,g, "Tolerance for smoothing slope contours, deg (default 5.0)");
     options.add("scnt_templ", 1,0,g, "FIG template for large slopes (default: 2 3 0 1 24 24 91 -1 -1 0.000 1 1 7 0 0)");
-    options.add("smooth",     1,0,g, "Smooth data with a given radius when finding altitude and slope contours (default 0.0 - no smoothing)");
     options.add("peaks",      1,0,g, "Make peaks points (default: 1)");
     options.add("peaks_dh",   1,0,g, " DH parameter for peak finder [m], default - 20.");
     options.add("peaks_ps",   1,0,g, " PS parameter fr peak finder [pts], default - 1000.");
@@ -258,12 +259,13 @@ public:
     bool cnt   = opts.get("cnt",   true);
     bool scnt  = opts.get("scnt",  true);
     bool peaks = opts.get("peaks", true);
-    double smooth = opts.get<int>("smooth", 0.0);
     int cnt_step  = opts.get<int>("cnt_step", 100);
+    double cnt_vtol = opts.get<int>("cnt_vtol", 5.0);
     int cnt_smult = opts.get<int>("cnt_smult",  5);
     int cnt_minpts = opts.get<int>("cnt_minpts",  6);
     int scnt_minpts = opts.get<int>("scnt_minpts",  5);
     double scnt_val = opts.get<double>("scnt_val",     35.0);
+    double scnt_vtol = opts.get<int>("scnt_vtol", 5.0);
     auto peaks_dh = opts.get<int>("peaks_dh",   20);
     auto peaks_ps = opts.get<int>("peaks_ps",  1000);
     std::string cnt_templ1 = opts.get("cnt_templ1",
@@ -302,16 +304,17 @@ public:
         fig_remove_templ(F, cnt_templ2);
       }
       if (v) std::cout << "Finding contours\n";
-      auto cnt_data = srtm.find_contours(wgs_range, cnt_step, smooth);
+      auto cnt_data = srtm.find_contours(wgs_range, cnt_step, cnt_vtol);
       for(auto & c:cnt_data){
+        int v0 = rint(c.first);
         cnv.bck(c.second);
-        line_filter_v1(c.second, acc, -1);
-        bool isth = c.first%(cnt_step*cnt_smult); // is it a thin contour
-        if (v) std::cout << c.first << " ";
+//        line_filter_v1(c.second, acc, -1);
+        bool isth = v0%(cnt_step*cnt_smult); // is it a thin contour
+        if (v) std::cout << v0 << " ";
         for (const auto & l:c.second){
           if (l.size() < cnt_minpts) continue;
           FigObj fo = figobj_template(isth? cnt_templ1: cnt_templ2);
-          fo.comment.push_back(type_to_str(c.first));
+          fo.comment.push_back(type_to_str(v0));
           if (add_comm!="") fo.comment.push_back(add_comm);
           fo.set_points(l);
           F.push_back(fo);
@@ -326,7 +329,7 @@ public:
         fig_remove_templ(F, scnt_templ);
 
       if (v) std::cout << "Finding areas with large slope: ";
-      auto scnt_data = srtm.find_slope_contours(wgs_range, scnt_val, 1, smooth);
+      auto scnt_data = srtm.find_slope_contours(wgs_range, scnt_val, scnt_vtol);
       cnv.bck(scnt_data);
 
       // remove small pieces
@@ -338,7 +341,7 @@ public:
       }
 
       // reduce number of points
-      line_filter_v1(scnt_data, acc, -1);
+//      line_filter_v1(scnt_data, acc, -1);
 
       // create fig objects
       for(auto c = scnt_data.begin(); c!= scnt_data.end(); c++){
