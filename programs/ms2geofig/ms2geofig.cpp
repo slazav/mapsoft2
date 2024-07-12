@@ -223,7 +223,7 @@ public:
     options.add("cnt_step",   1,0,g, "Contour step, m (default: 100)");
     options.add("cnt_vtol",   1,0,g, "Tolerance for smoothing contours, m (default 5.0)");
     options.add("cnt_smult",  1,0,g, "Thick contour multiplier (default: 5, every 5th contour is thick)");
-    options.add("cnt_minpts", 1,0,g, "Min.number of points in a contour (default: 6)");
+    options.add("cnt_minpts", 1,0,g, "Min.number of points in a closed contour (default: 6)");
     options.add("cnt_templ1", 1,0,g, "FIG template for contours (default: 2 1 0 1 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0)");
     options.add("cnt_templ2", 1,0,g, "FIG template for thick contours (default: 2 1 0 2 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0)");
     options.add("scnt",       1,0,g, "Make large slope contours (default: 1)");
@@ -312,7 +312,8 @@ public:
         bool isth = v0%(cnt_step*cnt_smult); // is it a thin contour
         if (v) std::cout << v0 << " ";
         for (const auto & l:c.second){
-          if (l.size() < cnt_minpts) continue;
+          if (l.size() < 2) continue;
+          if (l.size() < cnt_minpts && dist(l[0], l[l.size()-1]) < acc) continue;
           FigObj fo = figobj_template(isth? cnt_templ1: cnt_templ2);
           fo.comment.push_back(type_to_str(v0));
           if (add_comm!="") fo.comment.push_back(add_comm);
