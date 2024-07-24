@@ -363,10 +363,10 @@ public:
       auto peak_data = srtm.find_peaks(wgs_range, peaks_dh, peaks_ps);
       for(auto const & pt:peak_data){
         FigObj fo = figobj_template(peaks_templ);
-        dPoint p(flatten(pt.first));
+        dPoint p(flatten(pt));
         cnv.bck(p);
         fo.push_back((iPoint)p);
-        auto comm = std::string("(") + type_to_str(pt.second) + ")";
+        auto comm = std::string("(") + type_to_str((int)pt.z) + ")";
         fo.comment.push_back(comm);
         if (add_comm!="") fo.comment.push_back(add_comm);
         F.push_back(fo);
