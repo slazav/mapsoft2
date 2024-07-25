@@ -33,7 +33,7 @@ for i in $files; do
     continue;
   fi
 
-  if [ "$i" -ot "$vmap" ]; then
+  if [ ! "$i" -nt "$vmap" ]; then
     echo " . skipping old file: $i"
     continue;
   fi

@@ -44,4 +44,5 @@ for i in "$@"; do
     --types "$TYPEINFO" --define "$(vmap_defs "$name")"\
     --fig_enc UTF-8
 
+  touch "$fig_in" -r "$vmap"
 done
