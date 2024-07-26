@@ -6,7 +6,7 @@ Summary:      mapsoft2 - programs for working with maps and geodata
 Group:        Sciences/Geosciences
 Url:          https://slazav.github.io/mapsoft2/
 Packager:     Vladislav Zavjalov <slazav@altlinux.org>
-License:      GPL3.0
+License:      GPL-3.0
 
 Source:        %name-%version.tar
 
