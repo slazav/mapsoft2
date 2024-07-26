@@ -370,6 +370,9 @@ public:
       // reduce number of points
       line_filter_v1(scnt_data, acc, -1);
 
+      // join crossing segments
+      join_cross(scnt_data);
+
       // create fig objects
       for(auto c = scnt_data.begin(); c!= scnt_data.end(); c++){
         FigObj fo = figobj_template(scnt_templ);
