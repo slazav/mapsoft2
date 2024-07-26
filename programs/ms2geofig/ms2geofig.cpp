@@ -219,22 +219,32 @@ public:
     ms2opt_add_srtm(options);
 
     std::string g = "GEOFIG_SRTM";
-    options.add("cnt",        1,0,g, "Make contours (default: 1)");
-    options.add("cnt_step",   1,0,g, "Contour step, m (default: 100)");
-    options.add("cnt_vtol",   1,0,g, "Tolerance for smoothing contours, m (default 5.0)");
-    options.add("cnt_smult",  1,0,g, "Thick contour multiplier (default: 5, every 5th contour is thick)");
-    options.add("cnt_minpts", 1,0,g, "Min.number of points in a closed contour (default: 6)");
-    options.add("cnt_templ1", 1,0,g, "FIG template for contours (default: 2 1 0 1 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0)");
-    options.add("cnt_templ2", 1,0,g, "FIG template for thick contours (default: 2 1 0 2 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0)");
-    options.add("scnt",       1,0,g, "Make large slope contours (default: 1)");
-    options.add("scnt_minpts",1,0,g, "Min.number of point in a slope contour (default: 5)");
-    options.add("scnt_val",   1,0,g, "Threshold value for slope contour (in degrees, default: 35)");
-    options.add("scnt_vtol",  1,0,g, "Tolerance for smoothing slope contours, deg (default 5.0)");
-    options.add("scnt_templ", 1,0,g, "FIG template for large slopes (default: 2 3 0 1 24 24 91 -1 -1 0.000 1 1 7 0 0)");
-    options.add("peaks",      1,0,g, "Make peaks points (default: 1)");
-    options.add("peaks_dh",   1,0,g, " DH parameter for peak finder [m], default - 20.");
-    options.add("peaks_ps",   1,0,g, " PS parameter fr peak finder [pts], default - 1000.");
-    options.add("peaks_templ",1,0,g, "FIG template for peaks (default: 2 1 0 3 24 7  57 -1 -1 0.000 0 1 -1 0 0)");
+    options.add("cnt",        1,0,g, "Make contours, default: 1");
+    options.add("cnt_step",   1,0,g, "  Contour step [m], default: 100");
+    options.add("cnt_vtol",   1,0,g, "  Tolerance for smoothing contours [m], default: 5.0");
+    options.add("cnt_smult",  1,0,g, "  Thick contour multiplier, default: 5, every 5th contour is thick");
+    options.add("cnt_minpts", 1,0,g, "  Min.number of points in a closed contour, default: 6");
+    options.add("cnt_templ1", 1,0,g, "  FIG template for contours, default: 2 1 0 1 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0");
+    options.add("cnt_templ2", 1,0,g, "  FIG template for thick contours, default: 2 1 0 2 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0");
+    options.add("scnt",       1,0,g, "Make large slope contours, default: 1");
+    options.add("scnt_minpts",1,0,g, "  Min.number of point in a slope contour, default: 5");
+    options.add("scnt_val",   1,0,g, "  Threshold value for slope contour, [deg], default: 35");
+    options.add("scnt_vtol",  1,0,g, "  Tolerance for smoothing slope contours [deg], default: 5.0");
+    options.add("scnt_templ", 1,0,g, "  FIG template for large slopes, default: 2 3 0 1 24 24 91 -1 -1 0.000 1 1 7 0 0");
+    options.add("peaks",      1,0,g, "Make peaks points, default: 1");
+    options.add("peaks_dh",   1,0,g, "  DH parameter for peak finder [m], default: 20");
+    options.add("peaks_ps",   1,0,g, "  PS parameter for peak finder [pts], default: 1000");
+    options.add("peaks_templ",1,0,g, "  FIG template for peaks, default: 2 1 0 3 24 7  57 -1 -1 0.000 0 1 -1 0 0");
+    options.add("riv"     ,   1,0,g, "Trace rivers, default: 0");
+    options.add("riv_ps",     1,0,g, "  PS parameter for river tracing [pts], default: 10000");
+    options.add("riv_mina",   1,0,g, "  Sink area threshold for river tracing [mk^2], default: 1.0");
+    options.add("riv_mindh",  1,0,g, "  Elevation threshold for river tracing [m], default: 200");
+    options.add("riv_templ",  1,0,g, "  FIG template for rivers, default: 2 1 0 1 #5066FF 7 86 -1 -1 0.000 1 1 0 0 0");
+    options.add("mnt"     ,   1,0,g, "Trace mountain ridges (default: 0)");
+    options.add("mnt_ps",     1,0,g, "  PS parameter for ridge tracing [pts], default - 10000.");
+    options.add("mnt_mina",   1,0,g, "  Sink area threshold for ridge tracing [mk^2], default: 0.5");
+    options.add("mnt_mindh",  1,0,g, "  Elevation threshold for ridge  tracing [m], default: 200");
+    options.add("mnt_templ",  1,0,g, "  FIG template for ridges, default: 2 1 0 2 26 7 89 -1 -1 0.000 1 1 0 0 0");
     options.add("replace",    0,0,g, "Remove existing objects before adding new ones.");
     options.add("add_comm",   1,0,g, "Add a comment to all created fig objects.");
   }
@@ -259,15 +269,26 @@ public:
     bool cnt   = opts.get("cnt",   true);
     bool scnt  = opts.get("scnt",  true);
     bool peaks = opts.get("peaks", true);
+    bool riv   = opts.get("riv",   false);
+    bool mnt   = opts.get("mnt",   false);
     int cnt_step  = opts.get<int>("cnt_step", 100);
-    double cnt_vtol = opts.get<int>("cnt_vtol", 5.0);
+    double cnt_vtol = opts.get<double>("cnt_vtol", 5.0);
     int cnt_smult = opts.get<int>("cnt_smult",  5);
     int cnt_minpts = opts.get<int>("cnt_minpts",  6);
     int scnt_minpts = opts.get<int>("scnt_minpts",  5);
     double scnt_val = opts.get<double>("scnt_val",     35.0);
-    double scnt_vtol = opts.get<int>("scnt_vtol", 5.0);
+    double scnt_vtol = opts.get<double>("scnt_vtol", 5.0);
     auto peaks_dh = opts.get<int>("peaks_dh",   20);
+
     auto peaks_ps = opts.get<int>("peaks_ps",  1000);
+    auto riv_ps = opts.get<int>("riv_ps",  10000);
+    auto mnt_ps = opts.get<int>("mnt_ps",  10000);
+
+    auto riv_mina = opts.get<double>("riv_mina", 1.0);
+    auto mnt_mina = opts.get<double>("mnt_mina", 0.5);
+    auto riv_mindh = opts.get<double>("riv_mindh", 200);
+    auto mnt_mindh = opts.get<double>("mnt_mindh", 200);
+
     std::string cnt_templ1 = opts.get("cnt_templ1",
       "2 1 0 1 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0");
     std::string cnt_templ2 = opts.get("cnt_templ2",
@@ -276,6 +297,11 @@ public:
       "2 3 0 1 24 24 91 -1 -1 0.000 1 1 7 0 0");
     std::string peaks_templ = opts.get("peaks_templ",
       "2 1 0 3 24 7  57 -1 -1 0.000 0 1 -1 0 0");
+    std::string riv_templ = opts.get("riv_templ",
+      "2 1 0 1 #5066FF 7 86 -1 -1 0.000 1 1 0 0 0");
+    std::string mnt_templ = opts.get("mnt_templ",
+      "2 1 0 2 26 7 89 -1 -1 0.000 1 1 0 0 0");
+
     bool replace = opts.get("replace",   true);
     // comment can contain newline, will be splitted properly when writing fig
     std::string add_comm  = opts.get("add_comm");
@@ -372,6 +398,42 @@ public:
         F.push_back(fo);
       }
       if (v) std::cout << peak_data.size() << "\n";
+    }
+
+    // rivers
+    if (riv) {
+      if (replace) fig_remove_templ(F, riv_templ);
+      if (v) std::cout << "Finding rivers: ";
+      auto data = srtm.trace_map(wgs_range, riv_ps, true, riv_mina, riv_mindh);
+
+      cnv.bck(data);
+      line_filter_v1(data, acc, -1);
+
+      for(const auto & l:data){
+        FigObj fo = figobj_template(riv_templ);
+        if (add_comm!="") fo.comment.push_back(add_comm);
+        fo.set_points(l);
+        F.push_back(fo);
+      }
+      if (v) std::cout << data.size() << " segments, " << data.npts() << "points\n";
+    }
+
+    // mountain ridges
+    if (mnt) {
+      if (replace) fig_remove_templ(F, mnt_templ);
+      if (v) std::cout << "Finding mountain ridges: ";
+      auto data = srtm.trace_map(wgs_range, mnt_ps, false, mnt_mina, mnt_mindh);
+
+      cnv.bck(data);
+      line_filter_v1(data, acc, -1);
+
+      for(const auto & l:data){
+        FigObj fo = figobj_template(mnt_templ);
+        if (add_comm!="") fo.comment.push_back(add_comm);
+        fo.set_points(l);
+        F.push_back(fo);
+      }
+      if (v) std::cout << data.size() << " segments, " << data.npts() << "points\n";
     }
 
     write_fig(ofile, F, opts);
