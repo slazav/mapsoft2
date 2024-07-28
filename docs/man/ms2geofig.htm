@@ -375,6 +375,18 @@ ms2geofig make_ref -- make fig reference using matching geodata</code></pre>
 <p>Directory for raster map tiles (default &lt;filename&gt;.img).</p>
 
 </dd>
+<dt id="compound"><b>--compound</b></dt>
+<dd>
+
+<p>Put all new objects into a fig compound.</p>
+
+</dd>
+<dt id="add_comm-arg"><b>--add_comm &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Add a comment to all created fig objects.</p>
+
+</dd>
 <dt id="map_smooth-arg"><b>--map_smooth &lt;arg&gt;</b></dt>
 <dd>
 
@@ -637,100 +649,190 @@ ms2geofig make_ref -- make fig reference using matching geodata</code></pre>
 <p>Set srtm data folder, default - $HOME/.srtm_data</p>
 
 </dd>
-<dt id="srtm_interp_holes-arg"><b>--srtm_interp_holes &lt;arg&gt;</b></dt>
+<dt id="srtm_use_overlay-arg"><b>--srtm_use_overlay &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Interpolate holes (0|1, default 1).</p>
+<p>Use overlay (0|1, default 1).</p>
+
+</dd>
+<dt id="srtm_interp-arg"><b>--srtm_interp &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Interpolation (nearest, linear, cubic. Default: linear).</p>
 
 </dd>
 <dt id="cnt-arg"><b>--cnt &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Make contours (default: 1)</p>
+<p>Make contours, default: 1</p>
 
 </dd>
 <dt id="cnt_step-arg"><b>--cnt_step &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Contour step, m (default: 100)</p>
+<pre><code>Contour step [m], default: 100</code></pre>
+
+</dd>
+<dt id="cnt_vtol-arg"><b>--cnt_vtol &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Tolerance for smoothing contours [m], default: 5.0</code></pre>
 
 </dd>
 <dt id="cnt_smult-arg"><b>--cnt_smult &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Thick contour multiplier (default: 5, every 5th contour is thick)</p>
+<pre><code>Thick contour multiplier, default: 5, every 5th contour is thick</code></pre>
 
 </dd>
 <dt id="cnt_minpts-arg"><b>--cnt_minpts &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Min.number of points in a contour (default: 6)</p>
+<pre><code>Min.number of points in a closed contour, default: 6</code></pre>
 
 </dd>
 <dt id="cnt_templ1-arg"><b>--cnt_templ1 &lt;arg&gt;</b></dt>
 <dd>
 
-<p>FIG template for contours (default: 2 1 0 1 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0)</p>
+<pre><code>FIG template for contours, default: 2 1 0 1 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0</code></pre>
 
 </dd>
 <dt id="cnt_templ2-arg"><b>--cnt_templ2 &lt;arg&gt;</b></dt>
 <dd>
 
-<p>FIG template for thick contours (default: 2 1 0 2 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0)</p>
+<pre><code>FIG template for thick contours, default: 2 1 0 2 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0</code></pre>
 
 </dd>
 <dt id="scnt-arg"><b>--scnt &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Make large slope contours (default: 1)</p>
+<p>Make large slope contours, default: 1</p>
 
 </dd>
 <dt id="scnt_minpts-arg"><b>--scnt_minpts &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Min.number of point in a slope contour (default: 5)</p>
+<pre><code>Min.number of point in a slope contour, default: 5</code></pre>
 
 </dd>
 <dt id="scnt_val-arg"><b>--scnt_val &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Threshold value for slope contour (in degrees, default: 35)</p>
+<pre><code>Threshold value for slope contour, [deg], default: 35</code></pre>
+
+</dd>
+<dt id="scnt_vtol-arg"><b>--scnt_vtol &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Tolerance for smoothing slope contours [deg], default: 5.0</code></pre>
 
 </dd>
 <dt id="scnt_templ-arg"><b>--scnt_templ &lt;arg&gt;</b></dt>
 <dd>
 
-<p>FIG template for large slopes (default: 2 3 0 0 0 24 91 -1 20 0.000 0 0 -1 0 0)</p>
+<pre><code>FIG template for large slopes, default: 2 3 0 1 24 24 91 -1 -1 0.000 1 1 7 0 0</code></pre>
 
 </dd>
 <dt id="peaks-arg"><b>--peaks &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Make peaks points (default: 1)</p>
+<p>Make peaks points, default: 1</p>
 
 </dd>
 <dt id="peaks_dh-arg"><b>--peaks_dh &lt;arg&gt;</b></dt>
 <dd>
 
-<pre><code>DH parameter for peak finder [m], default - 20.</code></pre>
+<pre><code>DH parameter for peak finder [m], default: 20</code></pre>
 
 </dd>
 <dt id="peaks_ps-arg"><b>--peaks_ps &lt;arg&gt;</b></dt>
 <dd>
 
-<pre><code>PS parameter fr peak finder [pts], default - 1000.</code></pre>
+<pre><code>PS parameter for peak finder [pts], default: 1000</code></pre>
 
 </dd>
 <dt id="peaks_templ-arg"><b>--peaks_templ &lt;arg&gt;</b></dt>
 <dd>
 
-<p>FIG template for peaks (default: 2 1 0 3 24 7 57 -1 -1 0.000 0 1 -1 0 0)</p>
+<pre><code>FIG template for peaks, default: 2 1 0 3 24 7  57 -1 -1 0.000 0 1 -1 0 0</code></pre>
+
+</dd>
+<dt id="riv-arg"><b>--riv &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Trace rivers, default: 0</p>
+
+</dd>
+<dt id="riv_ps-arg"><b>--riv_ps &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>PS parameter for river tracing [pts], default: 10000</code></pre>
+
+</dd>
+<dt id="riv_mina-arg"><b>--riv_mina &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Sink area threshold for river tracing [mk^2], default: 1.0</code></pre>
+
+</dd>
+<dt id="riv_mindh-arg"><b>--riv_mindh &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Elevation threshold for river tracing [m], default: 200</code></pre>
+
+</dd>
+<dt id="riv_templ-arg"><b>--riv_templ &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>FIG template for rivers, default: 2 1 0 1 #5066FF 7 86 -1 -1 0.000 1 1 0 0 0</code></pre>
+
+</dd>
+<dt id="mnt-arg"><b>--mnt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Trace mountain ridges (default: 0)</p>
+
+</dd>
+<dt id="mnt_ps-arg"><b>--mnt_ps &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>PS parameter for ridge tracing [pts], default - 10000.</code></pre>
+
+</dd>
+<dt id="mnt_mina-arg"><b>--mnt_mina &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Sink area threshold for ridge tracing [mk^2], default: 0.5</code></pre>
+
+</dd>
+<dt id="mnt_mindh-arg"><b>--mnt_mindh &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Elevation threshold for ridge  tracing [m], default: 200</code></pre>
+
+</dd>
+<dt id="mnt_templ-arg"><b>--mnt_templ &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>FIG template for ridges, default: 2 1 0 2 26 7 89 -1 -1 0.000 1 1 0 0 0</code></pre>
 
 </dd>
 <dt id="replace"><b>--replace</b></dt>
 <dd>
 
-<p>remove existing objects before adding new ones</p>
+<p>Remove existing objects before adding new ones.</p>
+
+</dd>
+<dt id="compound1"><b>--compound</b></dt>
+<dd>
+
+<p>Put all new objects into a fig compound.</p>
+
+</dd>
+<dt id="add_comm-arg1"><b>--add_comm &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Add a comment to all created fig objects.</p>
 
 </dd>
 </dl>

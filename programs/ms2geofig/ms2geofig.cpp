@@ -246,6 +246,7 @@ public:
     options.add("mnt_mindh",  1,0,g, "  Elevation threshold for ridge  tracing [m], default: 200");
     options.add("mnt_templ",  1,0,g, "  FIG template for ridges, default: 2 1 0 2 26 7 89 -1 -1 0.000 1 1 0 0 0");
     options.add("replace",    0,0,g, "Remove existing objects before adding new ones.");
+    options.add("compound",   0,0,g, "Put all new objects into a fig compound.");
     options.add("add_comm",   1,0,g, "Add a comment to all created fig objects.");
   }
 
@@ -302,7 +303,8 @@ public:
     std::string mnt_templ = opts.get("mnt_templ",
       "2 1 0 2 26 7 89 -1 -1 0.000 1 1 0 0 0");
 
-    bool replace = opts.get("replace",   true);
+    bool replace = opts.get("replace",   false);
+    bool compound  = opts.get("compound", false);
     // comment can contain newline, will be splitted properly when writing fig
     std::string add_comm  = opts.get("add_comm");
 
@@ -322,6 +324,14 @@ public:
 
     // create SRTM interface
     SRTM srtm(opts);
+
+    if (compound) {
+      auto fo = figobj_template("6");
+      dRect rng = cnv.bck_acc(wgs_range, 1);
+      fo.push_back(rng.tlc());
+      fo.push_back(rng.brc());
+      F.push_back(fo);
+    }
 
     // Contours
     if (cnt) {
@@ -439,6 +449,7 @@ public:
       if (v) std::cout << data.size() << " segments, " << data.npts() << "points\n";
     }
 
+    if (compound) F.push_back(figobj_template("-6"));
     write_fig(ofile, F, opts);
   }
 };
