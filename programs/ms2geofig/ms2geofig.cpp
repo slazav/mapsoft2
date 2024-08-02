@@ -238,12 +238,10 @@ public:
     options.add("riv"     ,   1,0,g, "Trace rivers, default: 0");
     options.add("riv_ps",     1,0,g, "  PS parameter for river tracing [pts], default: 10000");
     options.add("riv_mina",   1,0,g, "  Sink area threshold for river tracing [mk^2], default: 1.0");
-    options.add("riv_mindh",  1,0,g, "  Elevation threshold for river tracing [m], default: 200");
     options.add("riv_templ",  1,0,g, "  FIG template for rivers, default: 2 1 0 1 #5066FF 7 86 -1 -1 0.000 1 1 0 0 0");
     options.add("mnt"     ,   1,0,g, "Trace mountain ridges (default: 0)");
     options.add("mnt_ps",     1,0,g, "  PS parameter for ridge tracing [pts], default - 10000.");
     options.add("mnt_mina",   1,0,g, "  Sink area threshold for ridge tracing [mk^2], default: 0.5");
-    options.add("mnt_mindh",  1,0,g, "  Elevation threshold for ridge  tracing [m], default: 200");
     options.add("mnt_templ",  1,0,g, "  FIG template for ridges, default: 2 1 0 2 26 7 89 -1 -1 0.000 1 1 0 0 0");
     options.add("replace",    0,0,g, "Remove existing objects before adding new ones.");
     options.add("compound",   0,0,g, "Put all new objects into a fig compound.");
@@ -287,8 +285,13 @@ public:
 
     auto riv_mina = opts.get<double>("riv_mina", 1.0);
     auto mnt_mina = opts.get<double>("mnt_mina", 0.5);
-    auto riv_mindh = opts.get<double>("riv_mindh", 200);
-    auto mnt_mindh = opts.get<double>("mnt_mindh", 200);
+
+    auto riv_start = TRACE_START_SIDEH2;
+    auto mnt_start = TRACE_START_SIDEH2;
+    auto riv_start_par = 10.0;
+    auto mnt_start_par = 10.0;
+    auto riv_sm = 2;
+    auto mnt_sm = 2;
 
     std::string cnt_templ1 = opts.get("cnt_templ1",
       "2 1 0 1 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0");
@@ -417,7 +420,8 @@ public:
     if (riv) {
       if (replace) fig_remove_templ(F, riv_templ);
       if (v) std::cout << "Finding rivers: ";
-      auto data = srtm.trace_map(wgs_range, riv_ps, true, riv_mina, riv_mindh);
+      auto data = srtm.trace_map(wgs_range, riv_ps, true, riv_mina,
+                                 riv_start, riv_start_par, riv_sm);
 
       cnv.bck(data);
       line_filter_v1(data, acc, -1);
@@ -435,7 +439,8 @@ public:
     if (mnt) {
       if (replace) fig_remove_templ(F, mnt_templ);
       if (v) std::cout << "Finding mountain ridges: ";
-      auto data = srtm.trace_map(wgs_range, mnt_ps, false, mnt_mina, mnt_mindh);
+      auto data = srtm.trace_map(wgs_range, mnt_ps, false, mnt_mina,
+                                 mnt_start, mnt_start_par, mnt_sm);
 
       cnv.bck(data);
       line_filter_v1(data, acc, -1);
