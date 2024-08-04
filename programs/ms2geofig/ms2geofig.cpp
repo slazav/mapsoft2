@@ -286,12 +286,14 @@ public:
     auto riv_mina = opts.get<double>("riv_mina", 1.0);
     auto mnt_mina = opts.get<double>("mnt_mina", 0.5);
 
-    auto riv_start = TRACE_START_SIDEH2;
-    auto mnt_start = TRACE_START_SIDEH2;
-    auto riv_start_par = 10.0;
-    auto mnt_start_par = 10.0;
-    auto riv_sm = 2;
-    auto mnt_sm = 2;
+    int riv_sm = 2;
+    int mnt_sm = 2;
+    int riv_minpt = 3;
+    int mnt_minpt = 3;
+    double riv_mindh = 20.0;
+    double mnt_mindh = 20.0;
+    double riv_dist = 2.0;
+    double mnt_dist = 2.0;
 
     std::string cnt_templ1 = opts.get("cnt_templ1",
       "2 1 0 1 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0");
@@ -421,7 +423,7 @@ public:
       if (replace) fig_remove_templ(F, riv_templ);
       if (v) std::cout << "Finding rivers: ";
       auto data = srtm.trace_map(wgs_range, riv_ps, true, riv_mina,
-                                 riv_start, riv_start_par, riv_sm);
+                                 riv_sm, riv_minpt, riv_mindh, riv_dist);
 
       cnv.bck(data);
       line_filter_v1(data, acc, -1);
@@ -440,7 +442,7 @@ public:
       if (replace) fig_remove_templ(F, mnt_templ);
       if (v) std::cout << "Finding mountain ridges: ";
       auto data = srtm.trace_map(wgs_range, mnt_ps, false, mnt_mina,
-                                 mnt_start, mnt_start_par, mnt_sm);
+                                 mnt_sm, mnt_minpt, mnt_mindh, mnt_dist);
 
       cnv.bck(data);
       line_filter_v1(data, acc, -1);
