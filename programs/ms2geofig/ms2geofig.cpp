@@ -290,8 +290,8 @@ public:
     int mnt_sm = 2;
     int riv_minpt = 3;
     int mnt_minpt = 3;
-    double riv_mindh = 20.0;
-    double mnt_mindh = 20.0;
+    double riv_mindh = 40.0;
+    double mnt_mindh = 40.0;
     double riv_dist = 2.0;
     double mnt_dist = 2.0;
 
