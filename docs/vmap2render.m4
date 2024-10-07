@@ -207,9 +207,9 @@ fill, cap, smooth и т.д.). Координты ориентированы по
 
 RENDER_EXAMPLE(render_examples, 11)
 
-<li><p><tt> move_to &lt;max_distance&gt; (area|line):&lt;tnum&gt;  </tt> --
-Сдвинуть точечный объект к ближайшему линейному объекту или ближайшей границе
-площадного объекта типа type, но не далее max_distance.
+<li><p><tt> move_to &lt;max_distance&gt; (area|line|point):&lt;tnum&gt;  </tt> --
+Сдвинуть точечный объект к ближайшему линейному объекту, или ближайшей границе
+площадного объекта, или ближайшей точке типа type, но не далее max_distance.
 Применимо к шагам типа point.
 
 <li><p><tt> rotate_to &lt;max_distance&gt; (area|line):&lt;tnum&gt; </tt> --
