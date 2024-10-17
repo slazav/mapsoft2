@@ -638,13 +638,18 @@ point:1 stroke 0xFFFF0000 1
 </div><br>
 
 <li><p><tt> move_to &lt;max_distance&gt; (area|line|point):&lt;tnum&gt;  </tt> --
-Сдвинуть точечный объект к ближайшему линейному объекту, или ближайшей границе
+Сдвинуть точки объекта к ближайшему линейному объекту, или ближайшей границе
 площадного объекта, или ближайшей точке типа type, но не далее max_distance.
-Применимо к шагам типа point.
+Применимо к шагам типа point/line/area.
 
 <li><p><tt> rotate_to &lt;max_distance&gt; (area|line):&lt;tnum&gt; </tt> --
 То же, что и move_to, но картинка объекта также поворачивается по направлению
 линии.
+
+<li><p><tt> rotate_from &lt;max_distance&gt; (area|line):&lt;tnum&gt; </tt> --
+Сдвинуть точки объекта от ближайшего линейного объекта, или ближайшей границы
+площадного объекта, или ближайшей точки типа type, на min_distance.
+Применимо к шагам типа point/line/area.
 
 <li><p><tt> rotate &lt;angle,deg&gt; </tt> --
 Повернуть картинку объекта или текст на фиксированный угол (градусы, по часовой стрелке).
@@ -691,6 +696,39 @@ point:1 stroke 0xFF000000 1
 + lines [[0,0],[0,-10],[6,-8],[0,-6]]
 + rotate_to 30 line:1 area:1
 
+
+</div><br>
+
+
+<div style="border-style:solid; border-width:0.5;
+            margin:3px; padding: 3px; color: black;
+            font-family:monospace; white-space:pre">
+<img src=render_move/render1.png align=right>
+# move_to/move_from example
+
+area:1 fill 0xFFA0FFA0
+
+# базовые линии и точки (синий цвет)
+line:1 stroke 0xFF0000FF 2
+line:1 fill 0xFF0000FF
++      circles [0,0,2]
+point:1 stroke 0xFF0000FF 8
+
+# сдвигаемые линии и точки - исходное положение (черный цвет)
+line:2 stroke 0xFF000000 1
+point:2 stroke 0xFF000000 4
+
+# притяжение к базовым линиям и точкам (малиновый цвет)
+line:2 stroke 0xFFFF00FF 1
++ move_to 20 line:1
+point:2 stroke 0xFFFF00FF 4
++ move_to 20 point:1 line:1
+
+# отталкивание от базовых линий и точек (красный цвет)
+line:2 stroke 0xFFFF0000 1
++ move_from 20 line:1
+point:2 stroke 0xFFFF0000 4
++ move_from 20 point:1 line:1
 
 </div><br>
 

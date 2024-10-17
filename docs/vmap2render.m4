@@ -208,13 +208,18 @@ fill, cap, smooth и т.д.). Координты ориентированы по
 RENDER_EXAMPLE(render_examples, 11)
 
 <li><p><tt> move_to &lt;max_distance&gt; (area|line|point):&lt;tnum&gt;  </tt> --
-Сдвинуть точечный объект к ближайшему линейному объекту, или ближайшей границе
+Сдвинуть точки объекта к ближайшему линейному объекту, или ближайшей границе
 площадного объекта, или ближайшей точке типа type, но не далее max_distance.
-Применимо к шагам типа point.
+Применимо к шагам типа point/line/area.
 
 <li><p><tt> rotate_to &lt;max_distance&gt; (area|line):&lt;tnum&gt; </tt> --
 То же, что и move_to, но картинка объекта также поворачивается по направлению
 линии.
+
+<li><p><tt> rotate_from &lt;max_distance&gt; (area|line):&lt;tnum&gt; </tt> --
+Сдвинуть точки объекта от ближайшего линейного объекта, или ближайшей границы
+площадного объекта, или ближайшей точки типа type, на min_distance.
+Применимо к шагам типа point/line/area.
 
 <li><p><tt> rotate &lt;angle,deg&gt; </tt> --
 Повернуть картинку объекта или текст на фиксированный угол (градусы, по часовой стрелке).
@@ -222,6 +227,8 @@ RENDER_EXAMPLE(render_examples, 11)
 Свойство применимо к шагам point, line, area, text. См ниже раздел про повороты объектов.
 
 RENDER_EXAMPLE(render_examples, 12)
+
+RENDER_EXAMPLE(render_move, 1)
 
 <li><p><tt> short_expand &lt;length&gt; </tt> --
 Удлиннить короткие линии до указанной длины, пропорционально удлиннив крайние сегменты.

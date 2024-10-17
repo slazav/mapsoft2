@@ -1,0 +1,49 @@
+#!/bin/sh
+
+# mapsoft2 programs
+MAPDB=../../programs/ms2vmapdb/ms2vmapdb
+RENDER=../../programs/ms2render/ms2render
+CONV=../../programs/ms2conv/ms2conv
+PROJ=../../programs/ms2proj/ms2proj
+
+# remove old databases
+$MAPDB delete tmp
+
+# create map
+$MAPDB create tmp
+
+# Add object to MapDB.
+# Arguments:
+# - type (line:1, etc.)
+# - coordinates in SU3 km, shifted 300 km from zone center (note 1200km prefix)
+#   to have difference between geographic north and map vertical lines.
+# - additional arguments to ms2mapdb
+function add_obj {
+  type="$1"; shift
+  crd_km="$1"; shift
+  #convert to degrees
+  crd_deg=$($PROJ --shift [1200,5000] --scale 1000 --from SU3 --to WGS $crd_km)
+  $MAPDB add_obj tmp "$type" "$crd_deg" "$@"
+}
+
+add_obj area:1 "[[0,0],[1.8,0],[1.8,0.8],[0,0.8]]"
+add_obj line:1  "[[0.1,0.1],[0.2,0.2],[0.4,0.3],[0.8,0.4],[1.0,0.4],[1.2,0.3],[1.4,0.3],[1.6,0.4],[1.7,0.6],[1.7,0.7]]"
+add_obj line:1  "[[0.2,0.2],[0.3,0.45],[0.45,0.60]]"
+add_obj line:2  "[[0.1,0.15],[0.15,0.2],[0.4,0.40],[0.8,0.62],[1.0,0.65],[1.2,0.35],[1.45,0.25],[1.6,0.35],[1.7,0.55],[1.75,0.7]]"
+add_obj point:1 "[0.6,0.2]"
+add_obj point:2 "[0.70,0.18]"
+add_obj point:2 "[1.05,0.32]"
+
+crd_deg=$($PROJ --shift [1200,5000] --scale 1000 --from SU3 --to WGS [[0,0],[1.8,0.8]])
+
+# render
+for i in *.cfg; do
+  echo "rendering $i"
+  $RENDER tmp.vmap2db --out ${i%.cfg}.png --config $i\
+   --mkref proj --coords_wgs $crd_deg --scale 1000 --dpi 300\
+   --proj SU3 --margin 10
+done
+
+#$MAPDB export_vmap tmp a.vmap
+
+$MAPDB delete tmp
