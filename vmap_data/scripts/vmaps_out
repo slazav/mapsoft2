@@ -188,12 +188,15 @@ for brd in $BRD2_DIR/*.gpx; do
   done
   echo "Map list: $list"
 
+  # generate typ
+  $CGPSM typ $TYPSRC TMP.TYP
+
   # make img file
   if [ $img -ot $img_tstamp ]; then
     echo "Making $img"
-    $GMT -j -v -m "slazav-$reg" -f 779,3 -o $img $imgs $TYP
+    $GMT -j -v -m "slazav-$reg" -f 779,3 -o $img $imgs TMP.TYP
   fi
-  rm -f $img_tstamp
+  rm -f $img_tstamp TMP.TYP
 
   # make jpg+htm file
   if [ $htm -ot $png_tstamp -o $jpg -ot $png_tstamp ]; then

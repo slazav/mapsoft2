@@ -24,7 +24,7 @@ TYPEINFO=/usr/share/mapsoft2/types.cfg    # Type information
 HTM_TEMPL=/usr/share/mapsoft2/map_templ.htm;    # template for htm page
 
 # index files (one set per BRD2_DIR/*.gpx)
-TYP=/usr/share/mapsoft2/slazav.typ
+TYPSRC=/usr/share/mapsoft2/typ.txt  # typ file source for garmin IMG
 EXTRA_TRACKS=;    # extra tracks to be added to index image
 JPEG_SCALE=0.2;   # scale for jpeg preview images
 INDEX_SCALE=0.05; # scale for index image (in addition to jpeg_scale)

@@ -17,7 +17,7 @@ pics:
 
 install:
 	install -D -m755 scripts/* $(bindir);\
-	install -D -m644 slazav.typ map_templ.htm render.cfg types.cfg $(datadir)/mapsoft2/
+	install -D -m644 typ.txt map_templ.htm render.cfg types.cfg $(datadir)/mapsoft2/
 	mkdir -p $(datadir)/mapsoft2
 	rm -rf $(datadir)/mapsoft2/pics $(datadir)/xfig/Libraries/{hr,podm}
 	cp -r pics $(datadir)/mapsoft2/pics
@@ -26,3 +26,4 @@ install:
 	cp -r figlib_podm $(datadir)/xfig/Libraries/podm
 clean:
 	rm -rf figlib_hr figlib_podm
+
