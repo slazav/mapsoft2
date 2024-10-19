@@ -43,20 +43,25 @@ for i in $files; do
   # save .bak file
   cp -f "$i" "$i.bak"
 
+  args=""
   # mp has no labels
   if [ "$ext" = "mp" ]; then
-    extra_args="--keep_labels 1"
+    args="$args --keep_labels 1"
   fi
 
   if [ "$ext" = "fig" ]; then
-    extra_args="--fig_enc UTF-8"
+    args="$args --fig_enc UTF-8"
+  fi
+
+  if [ "CROP_NOM" = "1" ]; then
+    args="$args --crop_nom \"$name\""
   fi
 
   # update vmap from the input file
   $MS2VMAP "$i" --out "$vmap"\
     --types "$TYPEINFO" --define "$(vmap_defs "$name")"\
-    --skip_unknown 1 --quite 0 --crop_nom "$name"\
-    --update_labels 1 --fix_rounding 1 $extra_args
+    --skip_unknown 1 --quite 0 \
+    --update_labels 1 --fix_rounding 1 $args
 
   # save fig template
   if [ "$ext" = "fig" ]; then

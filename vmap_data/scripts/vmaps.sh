@@ -2,11 +2,12 @@
 
 VMAP_DIR=vmap;   # Source folder (vmap/vmap2)
 IN_DIR=IN;       # Input folder. Maps are updated from .fig/.mp files in this folder
-OUT_DIR=OUT;     # Output older for raster maps, mp/img files
-DIFF_DIR=diff;   # Difference
+OUT_DIR=OUT;     # Output folder for raster maps, mp/img files
+DIFF_DIR=diff;   # Folder for diff files
 FIG_DIR=fig;     # Fig templates
 BRD_DIR=brd;     # Global borders in gpx format -- for tiles
 BRD2_DIR=brd;    # Global borders in gpx format -- for index files
+CROP_NOM=0;      # crop maps in vmaps_in (only for nomenclature maps)
 
 VMAP_EXT=vmap;       # Extension/format of vector maps
 NOM_MAG=2;           # Scaling of maps. Use NOM_MAP=2 for 1km sheets with 500m maps
