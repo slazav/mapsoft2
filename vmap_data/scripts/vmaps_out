@@ -101,7 +101,7 @@ for i in $files; do
     id=$(echo -e "ibase=16\n$id\n" | bc)
     $MS2VMAP "$vmap" -o "$mp"\
       -t "$TYPEINFO" --define "$(vmap_defs "$name")"\
-      --mp_name "$name" --mp_id "$id"
+      --mp_name "$name" --mp_id "$id" --crop_nom "$name"
 
     # generate IMG
     $CGPSM "$mp" -o "$img"
