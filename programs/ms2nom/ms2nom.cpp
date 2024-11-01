@@ -1,6 +1,7 @@
 #include <cstring>
 #include "geo_nom/geo_nom.h"
 #include "geom/poly_tools.h"
+#include "geom/line_rectcrop.h"
 #include "getopt/getopt.h"
 #include "getopt/help_printer.h"
 #include "geo_data/conv_geo.h"
@@ -16,9 +17,9 @@ void usage(bool pod=false){
   HelpPrinter pr(pod, options, "ms2nom");
   pr.name("Soviet nomenclature map calculations");
 
-  pr.usage("[-E] [-W] --cover <figure> -s <scale> -- maps, covering the figure");
+  pr.usage("[-E] [-W] --cover <figure> -s <scale> -- maps covering the figure");
   pr.usage("[-E] [-W] -n <name> -- map range");
-  pr.usage("[-E] [-W] -n <name> --cover <figure>  -- check if the map touches given figure");
+  pr.usage("[-E] [-W] -n <name> [--cover_ratio] --cover <figure>  -- check if the map touches given figure");
   pr.usage("[-E] -n <name> -g <geodata>  -- check if the map touches geodata (tracks and points)");
   pr.usage("[-E] [-W] -c -n <name> -- map center");
   pr.usage("[-E] -n <name> --shift [x_shift,y_shift] -- adjacent map");
@@ -72,10 +73,14 @@ main(int argc, char **argv){
 
     const char *g = "NONSTD";
     options.add("cover",  1,0,g,
-      "Show maps which cover a given figure. "
+      "If --name and --cover_ratio is given show which part of the map is covered by the figure. "
+      "If only --name is given, check if the figure touches the map. "
+      "Otherwise show map names which cover the figure (--scale should be set). "
       "Figure is a point, rectangle, line, multiline in WGS84 coordinates, "
-      "or a geodata file with tracks or points. "
-      "Option --scale should be set.");
+      "or a geodata file with tracks or points.");
+
+    options.add("cover_ratio",  0,0,g,
+      "See --cover option.");
 
     options.add("scale",  1,'s',g,
       "Set map scale. "
@@ -152,10 +157,9 @@ main(int argc, char **argv){
     }
 
 
-    // get coordinate range if needed
+    // get maps touching a given figure
     if (O.exists("cover")){
 
-      set<string> names_r; // calculated map names for given coordinates
       dMultiLine ml = figure_geo_line(O.get("cover",""));
 
       // convert WGS -> Pulkovo
@@ -171,7 +175,22 @@ main(int argc, char **argv){
       if (O.exists("name")){
         // calculate scale
         auto r = nom_to_range(O.get("name"), sc, ex);
-        return !rect_in_polygon(r, ml);
+
+        if (O.exists("cover_ratio")){
+          dMultiLine crop = rect_crop_multi(r, ml, true);
+          double a = 0.0;
+          for (auto i=crop.begin(); i!=crop.end(); ++i){
+            double da = fabs(i->area());
+            if (i!=crop.begin() && check_hole(*crop.begin(), *i)) da=-da;
+            a+=da;
+          }
+          std::cerr << a / r.w / r.h << "\n";
+          return 0;
+        }
+
+        else {
+          return !rect_in_polygon(r, ml);
+        }
       }
 
       if (!O.exists("scale")) throw Err() << "scale is not set";
@@ -186,7 +205,7 @@ main(int argc, char **argv){
       return 0;
     }
 
-    throw Err() << "--name, --range, or --gdata option expected";
+    throw Err() << "--name, --range, or --cover option expected";
 
   }
   catch (Err & e) {

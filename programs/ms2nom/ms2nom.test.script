@@ -213,3 +213,23 @@ assert_cmd "$P  --name o42-003 --cover test_data/track.gpx" "" 0
 assert_cmd "$P  --name o42-006 --cover test_data/track.gpx" "" 1
 assert_cmd "$P  --name p41-129,130 --cover test_data/track.gpx" "" 0
 assert_cmd "$P  --name q41-129,130 --cover test_data/track.gpx" "" 1
+
+# cover ratio  (4x2 / 6x4 = 1/3)
+assert_cmd "$P  --name o36 --cover [[31,57],[31,59],[35,59],[35,57]] --cover_ratio" "0.333333" 0
+# with hole ((4x2-2x1) / 6x4 = 1/4)
+assert_cmd "$P  --name o36 --cover [[[31,57],[31,59],[35,59],[35,57]],[[32,57.5],[32,58.5],[34,58.5],[34,57.5]]] --cover_ratio" "0.25" 0
+# same with rect
+assert_cmd "$P  --name o36 --cover [31,57,4,2] --cover_ratio" "0.333333" 0
+
+# no coverage
+assert_cmd "$P  --name o38 --cover [[31,57],[31,59],[35,59],[35,57]] --cover_ratio" "0" 0
+assert_cmd "$P  --name o38 --cover [[[31,57],[31,59],[35,59],[35,57]],[[32,57.5],[32,58.5],[34,58.5],[34,57.5]]] --cover_ratio" "0" 0
+
+# empty lines
+assert_cmd "$P  --name o36 --cover [[31,57],[31,59],[35,59],[31,59]] --cover_ratio" "0" 0
+assert_cmd "$P  --name o36 --cover [0,0] --cover_ratio" "0" 0
+
+# full coverage
+assert_cmd "$P  --name o36 --cover [0,0,180,80] --cover_ratio" "1" 0
+
+
