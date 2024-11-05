@@ -184,7 +184,7 @@ main(int argc, char **argv){
             if (i!=crop.begin() && check_hole(*crop.begin(), *i)) da=-da;
             a+=da;
           }
-          std::cerr << a / r.w / r.h << "\n";
+          std::cout << a / r.w / r.h << "\n";
           return 0;
         }
 
