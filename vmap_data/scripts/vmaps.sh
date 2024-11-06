@@ -85,7 +85,32 @@ function vmap_render_map() {
 # Print date of the last commit for a given file
 function vmap_git_date {
   f="$1"
-  [ -f "$f" ] || return 0
+  [ -f "$f" ] || return 1
   t="$(git log --format="%at" -n1 -- "$f" ||:)"
   [ "$t" == "" ] || date -d "@$t" "+%Y-%m-%d"
+}
+
+# Return true if file exists and has clean git status
+function vmap_git_status {
+  f="$1"
+  [ -f $f ] || return 1
+  st="$(git status --porcelain -- "$f")"
+  [ "$st" = "" ]
+}
+
+# Check that git is clean for a list of files
+# (names without paths or extensions are allowed, vmap files are checked)
+function vmap_git_status_list {
+  clean=1
+  for i in "$@"; do
+    name=${i%.*}
+    name=${name##*/}
+    vmap="$VMAP_DIR/$name.$VMAP_EXT"
+
+    if ! vmap_git_status $vmap; then
+      echo "NON-CLEAN GIT STATUS: $name"
+      clean=""
+    fi
+  done
+  [ "$clean" = 1 ]
 }

@@ -33,22 +33,8 @@ fi
 # check that git status is clean for them
 files=${@:-$VMAP_DIR/*.$VMAP_EXT}
 
-# check that git is clean
-git_clean=1
-for i in $files; do
-  name=${i%.*}
-  name=${name##*/}
-  vmap="$VMAP_DIR/$name.$VMAP_EXT"
-  [ -f "$vmap" ] || continue
-
-  st="$(git status --porcelain -- "$vmap")"
-  if [ "$st" != "" ]; then
-    echo "NON-CLEAN GIT STATUS: $st"
-    git_clean=""
-  fi
-done
-
-#if [ "$git_clean" != 1 ]; then exit 1; fi
+# check that git is clean (pring warnings, ignore result)
+vmap_git_status_list $files ||:
 
 ##################################################
 # For each map file
