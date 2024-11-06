@@ -59,12 +59,13 @@ function vmap_update_cmap() {
   name=$1
   cmap=$2
   vmap=$VMAP_DIR/$name.$VMAP_EXT
-  $MS2RENDER $vmap --out tmp_cmap.png\
+  tmppng=$(maketemp vmaps_cmap_XXXXXX.png)
+  $MS2RENDER $vmap --out $tmppng\
     --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs "$name")"\
     --mkref nom --north --name "$name" --dpi $DPI --margins 10 --top_margin 30\
     --title "$name" --title_size 20\
     --cmap_save $cmap --png_format pal --png_format pal
-  rm -rf tmp_cmap.png
+  rm -rf $tmppng
 }
 
 function vmap_render_map() {
