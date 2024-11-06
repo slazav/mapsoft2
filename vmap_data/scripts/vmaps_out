@@ -68,14 +68,9 @@ for i in $files; do
   mpz="$OUT_DIR/$name.mp.zip"
   img="$OUT_DIR/$name.img"
 
-  # timestamp of the last commit
-  git_t="$(git log --format="%at" -n1 -- "$vmap" ||:)"
-  git_d=""
-  if [ "$git_t" != "" ]; then
-    #touch -d "@$git_t" "$vmap"
-    git_d="$(date -d "@$git_t" "+map data: %Y-%m-%d")"
-  fi
-  cur_d="$(date "+render: %Y-%m-%d")"
+  # timestamps
+  git_d="last commit: $(vmap_git_date "$vmap")"
+  cur_d="render: $(date "+%Y-%m-%d")"
 
   # Update PNG and MAP
   if [ "$png" -ot "$vmap" -o "$map" -ot "$vmap" ]; then

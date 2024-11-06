@@ -82,3 +82,10 @@ function vmap_render_map() {
     --cmap_load "$CMAP" --png_format pal ${map:+--map $map}
 }
 
+# Print date of the last commit for a given file
+function vmap_git_date {
+  f="$1"
+  [ -f "$f" ] || return 0
+  t="$(git log --format="%at" -n1 -- "$f" ||:)"
+  [ "$t" == "" ] || date -d "@$t" "+%Y-%m-%d"
+}
