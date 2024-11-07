@@ -5,6 +5,8 @@
 # Usage: make_sqlitedb <tile dir> <out file>
 # Tile format: x-y-z.png, z/x-y.png
 
+# see: https://osmand.net/docs/technical/osmand-file-formats/osmand-sqlite/
+
 # read global configuration and functions
 . vmaps.sh
 
@@ -14,9 +16,14 @@
 # Remove output file if it exists
 rm -f -- "$SQLITEDB"
 
+echo "Creating sqlitedb database"
+
 # Create database
 sqlite3 "$SQLITEDB" 'CREATE TABLE tiles (x int, y int, z int, image blob,
   PRIMARY KEY (x,y,z));'
+
+# create view for SasPlanet (test me!)
+sqlite3 "$SQLITEDB" 'CREATE VIEW t AS SELECT x,y,z as v, image as b FROM tiles;'
 
 # Find all tiles and put them into db
 find -L "$TILE_DIR" -type f -name '*.png' | (

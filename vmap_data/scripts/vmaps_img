@@ -1,0 +1,54 @@
+#!/bin/sh -eu
+
+# Make img+mp files in OUT dir
+#
+# Arguments: names with or without paths.
+# No arguments: process all new vmap files
+# Version for mapsoft2, 2024-11-07
+
+##################################################
+
+# read global configuration and functions
+. vmaps.sh
+
+# read local configuration
+. ./vmaps.conf
+
+##################################################
+# If argument list is empty, find only old files
+files=${@:-$(list_vmap_nt_img)}
+
+# check that git is clean (print warnings, ignore result)
+vmap_git_status_list $files ||:
+
+##################################################
+mkdir -p "$OUT_DIR"
+for i in $files; do
+  name=${i%.*}
+  name=${name##*/}
+  vmap="$VMAP_DIR/$name.$VMAP_EXT"
+  if [ ! -f "$vmap" ]; then
+    echo "can't find file: $vmap"
+    continue
+  fi
+
+  mp="$OUT_DIR/$name.mp"
+  mpz="$OUT_DIR/$name.mp.zip"
+  img="$OUT_DIR/$name.img"
+
+  echo "Making MP and IMG: $name"
+
+  # generate MP
+  id=$(echo $name | md5sum | head -c6 | tr a-z A-Z)
+  id=$(echo -e "ibase=16\n$id\n" | bc)
+  $MS2VMAP "$vmap" -o "$mp"\
+    -t "$TYPEINFO" --define "$(vmap_defs "$name")"\
+    --mp_name "$name" --mp_id "$id" --crop_nom "$name"
+
+  # generate IMG
+  $CGPSM "$mp" -o "$img"
+  # generate mp.zip
+  zip -j "$mpz" "$mp"
+  rm -f "$mp"
+done
+

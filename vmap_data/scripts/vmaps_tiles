@@ -1,13 +1,10 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
-# Make files in OUT dir:
-# * png+map, htm+jpg, mp.zip+img for each vmap file
-# * tiles, tile list, tile databases
-# * img, index htm+jpg for each region
+# Make tiles
 #
 # Arguments: names with or without paths.
-# No arguments: process all vmap files
-# Version for mapsoft2, 2022-11-24
+# No arguments: process all new vmap files
+# Version for mapsoft2, 2024-11-07
 
 ##################################################
 
@@ -26,56 +23,47 @@ if [ ! -f "$CMAP" ]; then
 fi
 
 ##################################################
-# Build list of files (all maps of names from cmdline),
-# check that git status is clean for them
-files=${@:-$VMAP_DIR/*.$VMAP_EXT}
+# If argument list is empty, find only old files
+files=${@:-$(list_vmap_nt_tiles)}
 
-# check that git is clean (pring warnings, ignore result)
+# check that git is clean (print warnings, ignore result)
 vmap_git_status_list $files ||:
 
 ##################################################
-# For each map file
+mkdir -p "$TILE_DIR"
 for i in $files; do
   name=${i%.*}
   name=${name##*/}
   vmap="$VMAP_DIR/$name.$VMAP_EXT"
-  [ -f "$vmap" ] || continue
+  if [ ! -f "$vmap" ]; then
+    echo "can't find file: $vmap"
+    continue
+  fi
 
   # Loop through all regions (brd/<name>.gpx)
-  tiles_updated=0
   for brd in $BRD_DIR/*.gpx; do
     brd_name=$(basename $brd .gpx)
 
     $($MS2NOM --ext --name "$name" --cover "$brd") || continue
 
     # update tiles
-    if [ "$vmap" -nt "$TLIST" ]; then
-      echo "Rendering tiles: $name"
-      $MS2RENDER $vmap\
-        --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs "$name" clip)"\
-        --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png"\
-        --zmin $(($TILE_MAXE+1)) --zmax $TILE_MAXZ\
-        --bgcolor 0 --png_format pal --cmap_load $CMAP\
-        --border_file $brd\
-        --tmap_scale 1 --fit_patt_size;\
+    echo "Rendering tiles: $name"
+    $MS2RENDER $vmap\
+      --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs "$name" clip)"\
+      --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png"\
+      --zmin $(($TILE_MAXE+1)) --zmax $TILE_MAXZ\
+      --bgcolor 0 --png_format pal --cmap_load $CMAP\
+      --border_file $brd\
+      --tmap_scale 1 --fit_patt_size;\
 
-      $MS2RENDER $vmap\
-        --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs "$name" clip)"\
-        --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png"\
-        --zmin 0 --zmax $TILE_MAXE\
-        --bgcolor 0 --png_format pal --cmap_load $CMAP\
-        --border_file $brd\
-        --tmap_scale 1 --vmap_minsc 1;\
-      tiles_updated=1
-    fi
+    $MS2RENDER $vmap\
+      --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs "$name" clip)"\
+      --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png"\
+      --zmin 0 --zmax $TILE_MAXE\
+      --bgcolor 0 --png_format pal --cmap_load $CMAP\
+      --border_file $brd\
+      --tmap_scale 1 --vmap_minsc 1;\
   done
-
+  touch "$TILE_DIR/$name.tstamp"
 done
-
-if [ "$tiles_updated" = 1 ]; then
-  echo "Updating tile list"
-  find $TILE_DIR/ -name '*.png' | xargs md5sum | sed "s| $TILE_DIR/| |" > $TLIST
-  vmaps_mbtiles
-  vmaps_sqlitedb
-fi
 

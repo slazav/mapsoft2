@@ -16,6 +16,8 @@
 # Remove output file if it exists
 rm -f -- "$MBTILES"
 
+echo "Creating mbtiles database"
+
 # Create database
 sqlite3 "$MBTILES" 'CREATE TABLE tiles (tile_column int, tile_row int,
   zoom_level int, tile_data blob,

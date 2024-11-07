@@ -1,13 +1,19 @@
 #!/bin/sh -eu
 
-# Make files in OUT dir:
-# * png+map, htm+jpg, mp.zip+img for each vmap file
-# * tiles, tile list, tile databases
-# * img, index htm+jpg for each region
+# Make files in OUT and TILES dir:
+# - tiles (with vmaps_tiles script)
+# - PNG and MAP (with vmaps_png script)
+# - HTM and JPG (with vmaps_htm script) -- to be removed?
+# - MP.ZIP and IMG (with vmaps_png script)
+# - tile list (if needed)
+# - mbtiles database (with vmaps_mbtiles script, if needed)
+# - sqlitedb database (with vmaps_sqlitedb script, if needed)
+# - index htm+jpg for each region  -- to be removed?
+# - img for each region
 #
 # Arguments: names with or without paths.
 # No arguments: process all vmap files
-# Version for mapsoft2, 2022-11-24
+# Version for mapsoft2, 2024-11-07
 
 ##################################################
 
@@ -17,9 +23,6 @@
 # read local configuration
 . ./vmaps.conf
 
-GMT=gmt
-CGPSM=cgpsmapper-static
-
 ##################################################
 
 # Update colormap if needed
@@ -28,109 +31,25 @@ if [ ! -f "$CMAP" ]; then
   vmap_update_cmap $CMAP_SRC $CMAP
 fi
 
-##################################################
-# Build list of files (all maps of names from cmdline),
-# check that git status is clean for them
-files=${@:-$VMAP_DIR/*.$VMAP_EXT}
+vmaps_tiles $@
+vmaps_png $@
+vmaps_htm $@
+vmaps_img $@
 
-# check that git is clean (pring warnings, ignore result)
-vmap_git_status_list $files ||:
-
-##################################################
-# For each map file
-tiles_updated=0
-for i in $files; do
-  name=${i%.*}
-  name=${name##*/}
-  vmap="$VMAP_DIR/$name.$VMAP_EXT"
-  [ -f "$vmap" ] || continue
-
-  mkdir -p "$OUT_DIR"
-  png="$OUT_DIR/$name.png"
-  map="$OUT_DIR/$name.map"
-  jpg="$OUT_DIR/$name.jpg"
-  htm="$OUT_DIR/$name.htm"
-  mp="$OUT_DIR/$name.mp"
-  mpz="$OUT_DIR/$name.mp.zip"
-  img="$OUT_DIR/$name.img"
-
-  # timestamps
-  git_d="last commit: $(vmap_git_date "$vmap")"
-  cur_d="render: $(date "+%Y-%m-%d")"
-
-  # Update PNG and MAP
-  if [ "$png" -ot "$vmap" -o "$map" -ot "$vmap" ]; then
-    echo "Making PNG+MAP: $name"
-    title="$name   /$git_d, $cur_d/"
-    vmap_render_map "$vmap" "$name" "$png" "$map" "$title"
-  fi
-
-  # Update JPG + HTM
-  if [ -f "$HTM_TEMPL" -a "$jpg" -ot "$png" -o "$htm" -ot "$png" ]; then
-    echo "Making JPG+HTM: $name"
-    pngtopnm "$png" | pnmscale 0.2 | cjpeg -quality 50 > "$jpg"
-    date=`date +"%Y-%m-%d"`;\
-    sed "s|((NAME))|$name|g;s|((DATE))|$date|g" "$HTM_TEMPL" > "$htm"
-  fi
-
-  # update MP + IMG
-  if [ "$img" -ot "$vmap" -o "$mpz" -ot "$vmap" ]; then
-    echo "Making IMG+MP: $name"
-
-    # generate MP
-    id=$(echo $name | md5sum | head -c6 | tr a-z A-Z)
-    id=$(echo -e "ibase=16\n$id\n" | bc)
-    $MS2VMAP "$vmap" -o "$mp"\
-      -t "$TYPEINFO" --define "$(vmap_defs "$name")"\
-      --mp_name "$name" --mp_id "$id" --crop_nom "$name"
-
-    # generate IMG
-    $CGPSM "$mp" -o "$img"
-
-    # generate mp.zip
-    zip -j "$mpz" "$mp"
-    rm -f "$mp"
-  fi
-
-  # Loop through all regions (brd/<name>.gpx)
-  for brd in $BRD_DIR/*.gpx; do
-    brd_name=$(basename $brd .gpx)
-
-    $($MS2NOM --ext --name "$name" --cover "$brd") || continue
-
-    # update tiles
-    if [ "$vmap" -nt "$TLIST" ]; then
-      echo "Rendering tiles: $name"
-      $MS2RENDER $vmap\
-        --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs "$name" clip)"\
-        --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png"\
-        --zmin $(($TILE_MAXE+1)) --zmax $TILE_MAXZ\
-        --bgcolor 0 --png_format pal --cmap_load $CMAP\
-        --border_file $brd\
-        --tmap_scale 1 --fit_patt_size;\
-
-      $MS2RENDER $vmap\
-        --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs "$name" clip)"\
-        --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png"\
-        --zmin 0 --zmax $TILE_MAXE\
-        --bgcolor 0 --png_format pal --cmap_load $CMAP\
-        --border_file $brd\
-        --tmap_scale 1 --vmap_minsc 1;\
-      tiles_updated=1
-    fi
-  done
-
-done
-
-if [ "$tiles_updated" = 1 ]; then
-  echo "Updating tile list and databases"
+if ! check_nt_tiles $TLIST; then
+  echo "Updating tile list"
   find $TILE_DIR/ -name '*.png' | xargs md5sum | sed "s| $TILE_DIR/| |" > $TLIST
-  vmaps_mbtiles
-  vmaps_sqlitedb
 fi
+
+check_nt_tiles "$MBTILES"  || vmaps_mbtiles
+check_nt_tiles "$SQLITEDB" || vmaps_sqlitedb
 
 ##############################################################
 #index files
+
+# generate typ
+$CGPSM typ $TYPSRC TMP.TYP
+
 
 for brd in $BRD2_DIR/*.gpx; do
   [ -f "$brd" ] || continue
@@ -169,15 +88,12 @@ for brd in $BRD2_DIR/*.gpx; do
   done
   echo "Map list: $list"
 
-  # generate typ
-  $CGPSM typ $TYPSRC TMP.TYP
 
   # make img file
   if [ $img -ot $img_tstamp ]; then
     echo "Making $img"
     $GMT -j -v -m "slazav-$reg" -f 779,3 -o $img $imgs TMP.TYP
   fi
-  rm -f $img_tstamp TMP.TYP
 
   # make jpg+htm file
   if [ $htm -ot $png_tstamp -o $jpg -ot $png_tstamp ]; then
@@ -234,3 +150,4 @@ for brd in $BRD2_DIR/*.gpx; do
 
 done
 
+rm -f $img_tstamp TMP.TYP

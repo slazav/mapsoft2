@@ -1,0 +1,50 @@
+#!/bin/sh -eu
+
+# Make img+mp files in OUT dir
+#
+# Arguments: names with or without paths.
+# No arguments: process all new vmap files
+# Version for mapsoft2, 2024-11-07
+
+##################################################
+
+# read global configuration and functions
+. vmaps.sh
+
+# read local configuration
+. ./vmaps.conf
+
+##################################################
+if [ ! -f "$HTM_TEMPL" ]; then
+  echo "skipping JPG and HTM generation: HTM_TEMPL not found"
+  exit 0
+fi
+
+##################################################
+# If argument list is empty, find only old files
+files=${@:-$(list_vmap_nt_htm)}
+
+# check that git is clean (print warnings, ignore result)
+vmap_git_status_list $files ||:
+
+##################################################
+mkdir -p "$OUT_DIR"
+for i in $files; do
+  name=${i%.*}
+  name=${name##*/}
+  vmap="$VMAP_DIR/$name.$VMAP_EXT"
+  if [ ! -f "$vmap" ]; then
+    echo "can't find file: $vmap"
+    continue
+  fi
+
+  png="$OUT_DIR/$name.png"
+  jpg="$OUT_DIR/$name.jpg"
+  htm="$OUT_DIR/$name.htm"
+
+  echo "Making JPG and HTM: $name"
+  pngtopnm "$png" | pnmscale 0.2 | cjpeg -quality 50 > "$jpg"
+  date=`date +"%Y-%m-%d"`;\
+  sed "s|((NAME))|$name|g;s|((DATE))|$date|g" "$HTM_TEMPL" > "$htm"
+
+done
