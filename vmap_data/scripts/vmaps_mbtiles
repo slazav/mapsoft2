@@ -13,20 +13,21 @@
 # read local configuration
 . ./vmaps.conf
 
+[ "$MBTILES" != "" ] || MBTILES="$OUT_DIR/$MAP_NAME.mbtiles"
+
 # Remove output file if it exists
 rm -f -- "$MBTILES"
 
-echo "Creating mbtiles database"
-
-# Create database
-sqlite3 "$MBTILES" 'CREATE TABLE tiles (tile_column int, tile_row int,
-  zoom_level int, tile_data blob,
-  PRIMARY KEY (tile_column, tile_row, zoom_level));'
-sqlite3 "$MBTILES" 'CREATE UNIQUE INDEX tile_index on tiles (zoom_level, tile_column, tile_row);'
+echo "Creating $MBTILES"
 
 # Find all tiles and put them into db
 find -L "$TILE_DIR" -type f -name '*.png' | (
+
+  echo 'CREATE TABLE tiles (tile_column int, tile_row int, zoom_level int, tile_data blob,
+        PRIMARY KEY (tile_column, tile_row, zoom_level));'
+  echo 'CREATE UNIQUE INDEX tile_index on tiles (zoom_level, tile_column, tile_row);'
   echo 'PRAGMA journal_mode = OFF; PRAGMA synchronous = 0;'
+
   while read tile; do
 
     xyz="$(echo "$tile" | sed -rne '
@@ -38,17 +39,19 @@ find -L "$TILE_DIR" -type f -name '*.png' | (
     echo -n "INSERT INTO tiles (tile_column, tile_row, "
     echo -n "zoom_level, tile_data) VALUES "
     echo    "($x, $((2**z-1-y)), $z, readfile('$tile'));"
-done )  | sqlite3 "$MBTILES"
+  done
 
 # Create metadata table
-ver=$(date +%Y-%m-%d)
-sqlite3 "$MBTILES" "CREATE TABLE metadata (name text, value text);"
-sqlite3 "$MBTILES" "INSERT INTO metadata (name, value) VALUES ('name',   '$MBTILES_NAME');"
-sqlite3 "$MBTILES" "INSERT INTO metadata (name, value) VALUES ('attribution', '$MBTILES_ATTR');"
-sqlite3 "$MBTILES" "INSERT INTO metadata (name, value) VALUES ('format', 'png');"
-#sqlite3 "$MBTILES" "INSERT INTO metadata (name, value) VALUES ('bounds', '30.0,54,42,58');"
-#sqlite3 "$MBTILES" "INSERT INTO metadata (name, value) VALUES ('center', '37.6,55.7,8');"
-sqlite3 "$MBTILES" "INSERT INTO metadata (name, value) VALUES ('version', '$ver');"
-sqlite3 "$MBTILES" "INSERT INTO metadata (name, value) VALUES ('type',    'overlay');"
-sqlite3 "$MBTILES" "INSERT INTO metadata (name, value) VALUES ('minzoom', (SELECT min(zoom_level) FROM tiles));"
-sqlite3 "$MBTILES" "INSERT INTO metadata (name, value) VALUES ('maxzoom', (SELECT max(zoom_level) FROM tiles));"
+  ver=$(date +%Y-%m-%d)
+  echo "CREATE TABLE metadata (name text, value text);"
+  echo "INSERT INTO metadata (name, value) VALUES ('name',   '$MAP_NAME');"
+  echo "INSERT INTO metadata (name, value) VALUES ('attribution', '$MAP_ATTR');"
+  echo "INSERT INTO metadata (name, value) VALUES ('format', 'png');"
+#  echo "INSERT INTO metadata (name, value) VALUES ('bounds', '30.0,54,42,58');"
+#  echo "INSERT INTO metadata (name, value) VALUES ('center', '37.6,55.7,8');"
+  echo "INSERT INTO metadata (name, value) VALUES ('version', '$ver');"
+  echo "INSERT INTO metadata (name, value) VALUES ('type',    'overlay');"
+  echo "INSERT INTO metadata (name, value) VALUES ('minzoom', (SELECT min(zoom_level) FROM tiles));"
+  echo "INSERT INTO metadata (name, value) VALUES ('maxzoom', (SELECT max(zoom_level) FROM tiles));"
+)  | sqlite3 "$MBTILES"
+

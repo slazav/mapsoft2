@@ -23,7 +23,9 @@
 # read local configuration
 . ./vmaps.conf
 
-##################################################
+
+##############################################################
+# process individual vmap files
 
 # Update colormap if needed
 if [ ! -f "$CMAP" ]; then
@@ -36,8 +38,18 @@ vmaps_png $@
 vmaps_htm $@
 vmaps_img $@
 
+##############################################################
+# default filenames
+[ "$TLIST" != "" ]    || TLIST="$OUT_DIR/$MAP_NAME.tlist"
+[ "$MBTILES" != "" ]  || MBTILES="$OUT_DIR/$MAP_NAME.mbtiles"
+[ "$SQLITEDB" != "" ] || SQLITEDB="$OUT_DIR/$MAP_NAME.sqlitedb"
+[ "$IMGMAP" != "" ]   || IMGMAP="$OUT_DIR/$MAP_NAME.img"
+
+##############################################################
+# assemble tile list and databases
+
 if ! check_nt_tiles $TLIST; then
-  echo "Updating tile list"
+  echo "Creating $TLIST"
   find $TILE_DIR/ -name '*.png' | xargs md5sum | sed "s| $TILE_DIR/| |" > $TLIST
 fi
 
@@ -45,11 +57,23 @@ check_nt_tiles "$MBTILES"  || vmaps_mbtiles
 check_nt_tiles "$SQLITEDB" || vmaps_sqlitedb
 
 ##############################################################
-#index files
+# create global img file
 
-# generate typ
-$CGPSM typ $TYPSRC TMP.TYP
+# assemble img
+if ! check_nt_img $IMGMAP; then
+  echo "Creating $IMGMAP"
+  # generate typ
+  $CGPSM typ $TYPSRC TMP.TYP
+  imgs=""
+  for vmap in $(list_vmaps); do
+    imgs="$imgs $OUT_DIR/$(basename $vmap .$VMAP_EXT).img"
+  done
+  $GMT -j -v -m "$MAP_NAME" -f 779,3 -o $IMGMAP $imgs TMP.TYP
+  rm -f TMP.TYP
+fi
 
+##############################################################
+# for each region create html index with preview
 
 for brd in $BRD2_DIR/*.gpx; do
   [ -f "$brd" ] || continue
@@ -64,9 +88,7 @@ for brd in $BRD2_DIR/*.gpx; do
   list=""
   imgs=""
   maps=""
-  img_tstamp="$(mktemp -u tmp_XXXXXX.tstamp)"
   png_tstamp="$(mktemp -u tmp_XXXXXX.tstamp)"
-  touch  $img_tstamp -d "1970-01-01"
   touch  $png_tstamp -d "1970-01-01"
 
   for i in $VMAP_DIR/*.$VMAP_EXT; do
@@ -79,21 +101,12 @@ for brd in $BRD2_DIR/*.gpx; do
     imgs="$imgs $OUT_DIR/$name.img"
     maps="$maps $OUT_DIR/$name.map"
 
-    [ $img_tstamp -nt $OUT_DIR/$name.img ] ||
-      touch $img_tstamp -r $OUT_DIR/$name.img
-
     [ $png_tstamp -nt $OUT_DIR/$name.png ] ||
       touch $png_tstamp -r $OUT_DIR/$name.png
 
   done
   echo "Map list: $list"
 
-
-  # make img file
-  if [ $img -ot $img_tstamp ]; then
-    echo "Making $img"
-    $GMT -j -v -m "slazav-$reg" -f 779,3 -o $img $imgs TMP.TYP
-  fi
 
   # make jpg+htm file
   if [ $htm -ot $png_tstamp -o $jpg -ot $png_tstamp ]; then
@@ -150,4 +163,3 @@ for brd in $BRD2_DIR/*.gpx; do
 
 done
 
-rm -f $img_tstamp TMP.TYP

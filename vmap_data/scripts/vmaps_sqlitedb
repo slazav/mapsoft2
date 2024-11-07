@@ -13,20 +13,19 @@
 # read local configuration
 . ./vmaps.conf
 
+[ "$SQLITEDB" != "" ] || SQLITEDB="$OUT_DIR/$MAP_NAME.sqlitedb"
+
 # Remove output file if it exists
 rm -f -- "$SQLITEDB"
 
-echo "Creating sqlitedb database"
-
-# Create database
-sqlite3 "$SQLITEDB" 'CREATE TABLE tiles (x int, y int, z int, image blob,
-  PRIMARY KEY (x,y,z));'
-
-# create view for SasPlanet (test me!)
-sqlite3 "$SQLITEDB" 'CREATE VIEW t AS SELECT x,y,z as v, image as b FROM tiles;'
+echo "Creating $SQLITEDB"
 
 # Find all tiles and put them into db
 find -L "$TILE_DIR" -type f -name '*.png' | (
+
+  echo 'CREATE TABLE tiles (x int, y int, z int, image blob, PRIMARY KEY (x,y,z));'
+  # create view for SasPlanet (test needed!)
+  echo 'CREATE VIEW t AS SELECT x,y,z as v, image as b FROM tiles;'
   echo 'PRAGMA journal_mode = OFF; PRAGMA synchronous = 0;'
   while read tile; do
 
@@ -38,10 +37,10 @@ find -L "$TILE_DIR" -type f -name '*.png' | (
 
     echo -n "INSERT INTO tiles (x, y, z, image) VALUES "
     echo     "($x, $y, $z, readfile('$tile'));"
-  done )  | sqlite3 "$SQLITEDB"
+  done
+  # Create metadata table
+  echo "CREATE TABLE info (tilenumbering text, minzoom int, maxzoom int);"
+  echo "INSERT INTO info (tilenumbering, minzoom, maxzoom)
+        VALUES ('', (SELECT min(z) FROM tiles), (SELECT max(z) FROM tiles))"
+) | sqlite3 "$SQLITEDB"
 
-# Create metadata table
-sqlite3 "$SQLITEDB" "CREATE TABLE info (tilenumbering text, minzoom int,
-  maxzoom int);"
-sqlite3 "$SQLITEDB" "INSERT INTO info (tilenumbering, minzoom, maxzoom)
-  VALUES ('', (SELECT min(z) FROM tiles), (SELECT max(z) FROM tiles))"

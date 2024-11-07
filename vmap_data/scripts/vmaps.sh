@@ -1,5 +1,15 @@
 # configuration file for vector map factory
 
+# Map name. Used in
+# - map name in mbtiles database
+# - map name in img file
+# - default filenames for mbtiles, sqlitedb, img, tilelist
+MAP_NAME="default_map"
+
+# Map attribution. Used in
+# - man attribution in mbtiles database
+MAP_ATTR="mapsoft"
+
 # directories:
 VMAP_DIR=vmap;   # Source folder (vmap/vmap2)
 IN_DIR=IN;       # Input folder. Maps are updated from .fig/.mp files in this folder
@@ -8,6 +18,7 @@ DIFF_DIR=diff;   # Folder for diff files
 FIG_DIR=fig;     # Fig templates
 BRD_DIR=brd;     # map borders in gpx format
 BRD2_DIR=brd;    # borders for region index files (to be removed?)
+TILE_DIR=TILES;  # tiles
 
 CROP_NOM=0;      # crop maps in vmaps_in (only for nomenclature maps)
 VMAP_EXT=vmap;       # Extension/format of vector maps
@@ -37,13 +48,14 @@ INDEX_SCALE=0.05; # scale for index image (in addition to jpeg_scale)
 INDEX_TXT=$OUT_DIR/index.txt
 INDEX_HTM=$OUT_DIR/index.htm
 
-# tiles (single set for all maps)
-TILE_DIR=TILES;
-SQLITEDB=$OUT_DIR/map.sqlitedb;
-MBTILES=$OUT_DIR/map.mbtiles;
-MBTILES_NAME="slazav"
-MBTILES_ATTR="http://slazav.xyz/maps/"
-TLIST=$TILE_DIR/tile.list;
+# Files for sqlitebd, mbtiles, img map, tile list.
+# Use non-empty value to override defaults ($OUT_DIR/$MAP_NAME.{sqlitedb,mbtiles,img,tlist})
+SQLITEDB="";
+MBTILES="";
+IMGMAP="";
+TLIST="";
+
+# rendering tiles
 TILE_MAXZ=14;  # max z-index
 TILE_MAXE=6    # max index for empty map
 
@@ -92,9 +104,13 @@ function vmap_render_map() {
     --cmap_load "$CMAP" --png_format pal ${map:+--map $map}
 }
 
+function list_vmaps {
+ find $VMAP_DIR -maxdepth 1 -name "*.$VMAP_EXT" | sort
+}
+
 # list all vmaps which are newer then png or map
 function list_vmap_nt_png {
-  for vmap in $(find $VMAP_DIR -name "*.$VMAP_EXT" | sort); do
+  for vmap in $(list_vmaps); do
     png="$OUT_DIR/$(basename $vmap .$VMAP_EXT).png"
     map="$OUT_DIR/$(basename $vmap .$VMAP_EXT).map"
     [ "$vmap" -nt "$png" -o "$vmap" -nt "$map" ] && echo "$vmap" ||:
@@ -103,7 +119,7 @@ function list_vmap_nt_png {
 
 # list all vmaps which are newer then img or mp.zip
 function list_vmap_nt_img {
-  for vmap in $(find $VMAP_DIR -name "*.$VMAP_EXT" | sort); do
+  for vmap in $(list_vmaps); do
     img="$OUT_DIR/$(basename $vmap .$VMAP_EXT).img"
     mpz="$OUT_DIR/$(basename $vmap .$VMAP_EXT).mp.zip"
     [ "$vmap" -nt "$img" -o "$vmap" -nt "$mpz" ] && echo "$vmap" ||:
@@ -112,7 +128,7 @@ function list_vmap_nt_img {
 
 # list all vmaps which are newer then htm or jpg (to be removed?)
 function list_vmap_nt_htm {
-  for vmap in $(find $VMAP_DIR -name "*.$VMAP_EXT" | sort); do
+  for vmap in $(list_vmaps); do
     jpg="$OUT_DIR/$(basename $vmap .$VMAP_EXT).jpg"
     htm="$OUT_DIR/$(basename $vmap .$VMAP_EXT).htm"
     [ "$vmap" -nt "$jpg" -o "$vmap" -nt "$htm" ] && echo "$vmap" ||:
@@ -121,7 +137,7 @@ function list_vmap_nt_htm {
 
 # list all vmaps which are newer then tile tstamp file
 function list_vmap_nt_tiles {
-  for vmap in $(find $VMAP_DIR -name "*.$VMAP_EXT" | sort); do
+  for vmap in $(list_vmaps); do
     tst="$TILE_DIR/$(basename $vmap .$VMAP_EXT).tstamp"
     [ "$vmap" -nt "$tst" ] && echo "$vmap" ||:
   done
@@ -130,7 +146,7 @@ function list_vmap_nt_tiles {
 
 # list all vmaps which are newer then index.txt
 function list_vmap_nt_index {
-  for vmap in $(find $VMAP_DIR -name "*.$VMAP_EXT" | sort); do
+  for vmap in $(list_vmaps); do
     [ "$vmap" -nt "$INDEX_TXT" ] && echo "$vmap" ||:
   done
 }
@@ -147,6 +163,16 @@ function check_nt_tiles {
   [ -f "$1" -a "$1" -nt "$n" ]
 }
 
+# check if a file exists and is newer then any img
+# we want to use only img which correspond to vmaps
+function check_nt_img {
+  f="$1"
+  for vmap in $(list_vmaps); do
+    img="$OUT_DIR/$(basename $vmap .$VMAP_EXT).img"
+    [ "$f" -nt "$img" ] || f=$img
+  done
+  [ "$f" = "$1" ]
+}
 
 # Print date of the last commit for a given file
 function vmap_git_date {
