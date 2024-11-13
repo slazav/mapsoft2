@@ -41,10 +41,14 @@ for i in $files; do
   fi
 
   png="$OUT_DIR/$name.png"
+  jpg="$OUT_DIR/$name.jpg"
   map="$OUT_DIR/$name.map"
 
   # Update PNG and MAP
   echo "Making PNG and MAP: $name"
   title="$name  /last commit: $(vmap_git_date "$vmap"), render: $(date "+%Y-%m-%d")"
   vmap_render_map "$vmap" "$name" "$png" "$map" "$title"
+
+  # Update jpeg preview
+  pngtopnm "$png" | pnmscale 0.2 | cjpeg -quality 70 > "$jpg"
 done

@@ -68,6 +68,18 @@ MS2NOM=ms2nom
 GMT=gmt
 CGPSM=cgpsmapper-static
 
+function vmap_read_conf {
+  # read global configuration and functions
+  . vmaps.sh
+  # read local configuration
+  . ./vmaps.conf
+  # set default filenames
+  [ -n "$TLIST" ]   || TLIST="$OUT_DIR/$MAP_NAME.tlist"
+  [ -n "$MBTILES"]  || MBTILES="$OUT_DIR/$MAP_NAME.mbtiles"
+  [ -n "$SQLITEDB"] || SQLITEDB="$OUT_DIR/$MAP_NAME.sqlitedb"
+  [ -n "$IMGMAP"]   || IMGMAP="$OUT_DIR/$MAP_NAME.img"
+}
+
 function vmap_defs() {
   name="$1"
   border_style="${2:-normal}"
@@ -112,8 +124,9 @@ function list_vmaps {
 function list_vmap_nt_png {
   for vmap in $(list_vmaps); do
     png="$OUT_DIR/$(basename $vmap .$VMAP_EXT).png"
+    jpg="$OUT_DIR/$(basename $vmap .$VMAP_EXT).jpg"
     map="$OUT_DIR/$(basename $vmap .$VMAP_EXT).map"
-    [ "$vmap" -nt "$png" -o "$vmap" -nt "$map" ] && echo "$vmap" ||:
+    [ "$vmap" -nt "$png" -o "$vmap" -nt "$map" -o "$vmap" -nt "$jpg" ] && echo "$vmap" ||:
   done
 }
 
@@ -123,15 +136,6 @@ function list_vmap_nt_img {
     img="$OUT_DIR/$(basename $vmap .$VMAP_EXT).img"
     mpz="$OUT_DIR/$(basename $vmap .$VMAP_EXT).mp.zip"
     [ "$vmap" -nt "$img" -o "$vmap" -nt "$mpz" ] && echo "$vmap" ||:
-  done
-}
-
-# list all vmaps which are newer then htm or jpg (to be removed?)
-function list_vmap_nt_htm {
-  for vmap in $(list_vmaps); do
-    jpg="$OUT_DIR/$(basename $vmap .$VMAP_EXT).jpg"
-    htm="$OUT_DIR/$(basename $vmap .$VMAP_EXT).htm"
-    [ "$vmap" -nt "$jpg" -o "$vmap" -nt "$htm" ] && echo "$vmap" ||:
   done
 }
 

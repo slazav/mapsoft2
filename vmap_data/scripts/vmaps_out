@@ -35,7 +35,6 @@ fi
 
 vmaps_tiles $@
 vmaps_png $@
-vmaps_htm $@
 vmaps_img $@
 
 ##############################################################
@@ -108,9 +107,9 @@ for brd in $BRD2_DIR/*.gpx; do
   echo "Map list: $list"
 
 
-  # make jpg+htm file
+  # make jpg+htm index
   if [ $htm -ot $png_tstamp -o $jpg -ot $png_tstamp ]; then
-    echo "Making $htm + $jpg"
+    echo "Making $htm + $jpg index"
 
     # Put all maps in a single json file, use jpeg instead of png
     # (to make conversion faster)
@@ -128,7 +127,7 @@ for brd in $BRD2_DIR/*.gpx; do
     # Fix html map
     [ ! -f "$htm" ] || sed -e '
       /^<area/ {
-        s/"\([^"]*\)\.jpg"/"\1.htm"/
+        s/"\([^"]*\)\.jpg"/"\1.png"/
       }
       s/src="/src="MAPDIR\//
       s|OUT/|MAPDIR/|g
