@@ -1,0 +1,8 @@
+[Desktop Entry]
+Categories=Geography;Geoscience;Science
+Comment=Viewer for geodata and raster maps
+Exec=ms2view
+GenericName=Mapsoft2 viewer
+Name=ms2view
+Type=Application
+Version=1.4
