@@ -48,6 +48,7 @@ export SKIP_IMG_DIFFS=1
 %dir %_datadir/mapsoft2
 %_datadir/mapsoft2/mapsoft2.css
 %_datadir/mapsoft2/maps_menu.json
+%_datadir/applications/ms2view.desktop
 
 %files vmap-data
 %_bindir/vmaps.sh
