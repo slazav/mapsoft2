@@ -54,6 +54,9 @@ export SKIP_IMG_DIFFS=1
 %_bindir/vmaps.sh
 %_bindir/vmaps_get_fig
 %_bindir/vmaps_in
+%_bindir/vmaps_img
+%_bindir/vmaps_png
+%_bindir/vmaps_tiles
 %_bindir/vmaps_mbtiles
 %_bindir/vmaps_out
 %_bindir/vmaps_preview
