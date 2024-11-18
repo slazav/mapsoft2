@@ -7,16 +7,16 @@
 all:
 	make -C programs
 	make -C docs
-	make -C docs/man
+	make -C man
 	make -C vmap_data
 
 install:
 	make -C programs install
-	make -C docs/man install
+	make -C man install
 	make -C vmap_data install
 
 clean:
 	make -C programs clean
 	make -C docs clean
-	make -C docs/man clean
+	make -C man clean
 	make -C vmap_data clean
