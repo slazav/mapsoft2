@@ -42,7 +42,7 @@ clean:
 
 # pages generated from help messages
 $(POD1): %.pod: %.txt foot.txt
-	(../programs/$*/$* --pod; cat $< foot.txt) > $@
+	(../../programs/$*/$* --pod; cat $< foot.txt) > $@
 
 ## separate man-pages
 $(POD5): %.pod: %.txt foot.txt
