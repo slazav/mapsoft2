@@ -281,10 +281,16 @@
 <p>Set srtm data folder, default - $HOME/.srtm_data</p>
 
 </dd>
-<dt id="srtm_interp_holes-arg"><b>--srtm_interp_holes &lt;arg&gt;</b></dt>
+<dt id="srtm_use_overlay-arg"><b>--srtm_use_overlay &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Interpolate holes (0|1, default 1).</p>
+<p>Use overlay (0|1, default 1).</p>
+
+</dd>
+<dt id="srtm_interp-arg"><b>--srtm_interp &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Interpolation (nearest, linear, cubic. Default: linear).</p>
 
 </dd>
 </dl>
@@ -333,18 +339,6 @@
 <p>draw SRTM color surface (default 1).</p>
 
 </dd>
-<dt id="srtm_maxsc-arg"><b>--srtm_maxsc &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Do not draw srtm data out of this scale (default 15).</p>
-
-</dd>
-<dt id="srtm_maxscv-arg"><b>--srtm_maxscv &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Do not draw srtm contours out of this scale (default 1.0).</p>
-
-</dd>
 <dt id="srtm_cnt-arg"><b>--srtm_cnt &lt;arg&gt;</b></dt>
 <dd>
 
@@ -355,6 +349,12 @@
 <dd>
 
 <pre><code>Contour step [m], default 50.</code></pre>
+
+</dd>
+<dt id="srtm_cnt_vtol-arg"><b>--srtm_cnt_vtol &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>altitude tolerance for smoothing contours [m], default 5</code></pre>
 
 </dd>
 <dt id="srtm_cnt_smult-arg"><b>--srtm_cnt_smult &lt;arg&gt;</b></dt>

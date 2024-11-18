@@ -27,11 +27,11 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code>ms2nom [-E] [-W] --cover &lt;figure&gt; -s &lt;scale&gt; -- maps, covering the figure
+<pre><code>ms2nom [-E] [-W] --cover &lt;figure&gt; -s &lt;scale&gt; -- maps covering the figure
 
 ms2nom [-E] [-W] -n &lt;name&gt; -- map range
 
-ms2nom [-E] [-W] -n &lt;name&gt; --cover &lt;figure&gt;  -- check if the map touches given figure
+ms2nom [-E] [-W] -n &lt;name&gt; [--cover_ratio] --cover &lt;figure&gt;  -- check if the map touches given figure
 
 ms2nom [-E] -n &lt;name&gt; -g &lt;geodata&gt;  -- check if the map touches geodata (tracks and points)
 
@@ -48,7 +48,13 @@ ms2nom [-E] -n &lt;name&gt; -s &lt;scale&gt; -- convert map to a different scale
 <dt id="cover-arg"><b>--cover &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Show maps which cover a given figure. Figure is a point, rectangle, line, multiline in WGS84 coordinates, or a geodata file with tracks or points. Option --scale should be set.</p>
+<p>If --name and --cover_ratio is given show which part of the map is covered by the figure. If only --name is given, check if the figure touches the map. Otherwise show map names which cover the figure (--scale should be set). Figure is a point, rectangle, line, multiline in WGS84 coordinates, or a geodata file with tracks or points.</p>
+
+</dd>
+<dt id="cover_ratio"><b>--cover_ratio</b></dt>
+<dd>
+
+<p>See --cover option.</p>
 
 </dd>
 <dt id="s---scale-arg"><b>-s, --scale &lt;arg&gt;</b></dt>

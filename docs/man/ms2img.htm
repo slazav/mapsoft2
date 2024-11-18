@@ -21,6 +21,7 @@
       <li><a href="#Options-for-saving-images">Options for saving images</a></li>
     </ul>
   </li>
+  <li><a href="#FILTER-ORDER">FILTER ORDER</a></li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
 </ul>
@@ -68,13 +69,13 @@
 <dt id="img_out_fmt-arg"><b>--img_out_fmt &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Explicitely set image format: jpeg, png, gif, tiff</p>
+<p>Explicitely set image format: jpeg, png, gif, tiff, pnm</p>
 
 </dd>
 <dt id="tiff_format-arg"><b>--tiff_format &lt;arg&gt;</b></dt>
 <dd>
 
-<p>When writing TIFF, convert image to one of following forms: argb, rgb, grey, pal (default depends on the image).</p>
+<p>When writing TIFF, convert image to one of following forms: argb, rgb, argb64, rgb64, grey, pal (default depends on the image).</p>
 
 </dd>
 <dt id="tiff_compression-arg"><b>--tiff_compression &lt;arg&gt;</b></dt>
@@ -152,10 +153,74 @@
 <dt id="scale-arg"><b>--scale &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Downscaling factor, integer value (default: 1)</p>
+<p>Downscaling factor, double value (default: 1.0)</p>
+
+</dd>
+<dt id="invert"><b>--invert</b></dt>
+<dd>
+
+<p>Invert image</p>
+
+</dd>
+<dt id="autolevel-arg"><b>--autolevel &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Do auto color levels. Color components are transformed as f(x) = a-c/(a-x) in such a way that the darkest color becomes black, lightest one becomes white, average color becomes the value set by the option argument. Argument is one floating-point number (for all components) or three comma-separated numbers in the range 0..1, reasonable value is near 0.5. If --invert option is set then the transformation happens after the inversion. Color min/max/avr values are calculated in the central part determined by the --border option.</p>
+
+</dd>
+<dt id="autolevel_th-arg"><b>--autolevel_th &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Skip some fraction on white/black colors in the autolevel calculation. Argument is one or two (for white and black) numbers in the range 0..1. Default is 0,0.</p>
+
+</dd>
+<dt id="ir_undust-arg"><b>--ir_undust &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Remove dust using IR channel. Argument is a file with the IR channel</p>
+
+</dd>
+<dt id="ir_undust_sh-arg"><b>--ir_undust_sh &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Shift of the IR channel, [x,y] in pixels.</p>
+
+</dd>
+<dt id="ir_undust_th-arg"><b>--ir_undust_th &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Threshold for the IR channel, default 0.06.</p>
+
+</dd>
+<dt id="crop-arg"><b>--crop &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Crop image to a rectangular area (intersection with the image coordinate range). Argument is json array with 4 numbers: [&lt;x&gt;,&lt;y&gt;,&lt;w&gt;,&lt;h&gt;]</p>
+
+</dd>
+<dt id="autocrop"><b>--autocrop</b></dt>
+<dd>
+
+<p>Crop image automatically, remove all &#39;bad&#39; lines from each side within region specified by --border.</p>
+
+</dd>
+<dt id="autocrop_ref-arg"><b>--autocrop_ref &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Use another image for autocrop calculations.</p>
+
+</dd>
+<dt id="border-arg"><b>--border &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Border for --autolevel and --autocrop calculations (pixels, default 50)</p>
 
 </dd>
 </dl>
+
+<h1 id="FILTER-ORDER">FILTER ORDER</h1>
+
+<p>filters are applied in the following order: invert, autolevel, crop, autocrop.</p>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 
