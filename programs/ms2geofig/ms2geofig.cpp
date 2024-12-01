@@ -349,7 +349,7 @@ public:
       for(auto & c:cnt_data){
         int v0 = rint(c.first);
         cnv.bck(c.second);
-        line_filter_v1(c.second, acc, -1);
+        line_filter_rdp(c.second, acc);
         bool isth = v0%(cnt_step*cnt_smult); // is it a thin contour
         if (v) std::cout << v0 << " ";
         for (const auto & l:c.second){
@@ -383,7 +383,7 @@ public:
       }
 
       // reduce number of points
-      line_filter_v1(scnt_data, acc, -1);
+      line_filter_rdp(scnt_data, acc);
 
       // join crossing segments
       join_cross(scnt_data);
