@@ -16,7 +16,7 @@
 ;POLYGON  0x1A кладбище                        0
 ;POLYGON  0x29 водоемы                         1
 ;POLYGON  0x3B большие водоемы                 3
-;POLYGON  0x4b фон карты                       3
+;POLYGON  0x4b поле                            3
 ;POLYGON  0x4C глубокое болото                 0
 ;POLYGON  0x4D ледник                          0
 ;POLYGON  0x4E дачи, сад.уч., д/о, п/л         1
@@ -448,7 +448,7 @@ Xpm="0 0 2 0",
 "2 c #0000FF",
 [end]
 
-;POLYGON  0x4b фон карты
+;POLYGON  0x4b поле
 [_polygon]
 Type=0x4b
 String1=0x19,Поле
