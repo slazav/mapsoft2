@@ -2,7 +2,7 @@
 ;;################ Условные знаки и их типы на карте slazav ######################
 ;;################################################################################
 ; 
-;Kind     Code Desciption                  Visible up to level
+;Kind     Code Description                  Visible up to level
 ; 
 ;POLYGON  0x01 городская застройка             3
 ;POLYGON  0x04 закрытые территории             3
@@ -120,7 +120,7 @@
 ;;################################################################################
 
 [_id]
-PoductCode=1
+ProductCode=1
 FID=779
 CodePage=1251
 [end]
@@ -738,7 +738,7 @@ Xpm="0 0 2 0",
 Type=0x3
 String1=0x19,Обрыв
 String2=0x04,Cliff
-UseOientation=N
+UseOrientation=N
 Xpm="32 9 2 1"
 "* c #BD0000",
 "  c none",
@@ -792,7 +792,7 @@ Xpm="0 0 1 0",
 Type=0x7
 String1=0x19,Непр.грейдер
 String2=0x04,Double ditch
-UseOientation=N
+UseOrientation=N
 Xpm="32 5 2 1"
 "# c #BD0000",
 "$ c none",
@@ -936,7 +936,7 @@ Xpm="0 0 1 0"
 Type=0x19
 String1=0x19,Забор
 String2=0x04,Fence
-UseOientation=N
+UseOrientation=N
 Xpm="32 5 2 1"
 "* c #000000",
 "  c none",
@@ -952,7 +952,7 @@ Xpm="32 5 2 1"
 Type=0x1A
 String1=0x19,Мал.ЛЭП
 String2=0x04,Minor power line
-UseOientation=N
+UseOrientation=N
 Xpm="32 5 2 1"
 "* c #000000",
 "  c none",
@@ -1004,7 +1004,7 @@ Xpm="32 1 2 1"
 Type=0x1E
 String1=0x19,Низ обрыва
 String2=0x04,Cliff bottom
-UseOientation=N
+UseOrientation=N
 Xpm="32 4 2 1"
 "* c #c5c5c5",
 "  c none",
@@ -1058,9 +1058,9 @@ String1=0x19,Жир.горизонталь
 String2=0x04,Major contour
 ExtendedLabels=Y
 FontStyle=SmallFont
-CustomColo=DayAndNight
-DayCustomColo=#BD0000
-NightCustomColo=#BD0000
+CustomColor=DayAndNight
+DayCustomColor=#BD0000
+NightCustomColor=#BD0000
 LineWidth=1
 BorderWidth=0
 Xpm="0 0 1 0"
@@ -1116,7 +1116,7 @@ Xpm="32 2 2 1"
 ;POLYLINE 0x27  железная дорога
 [_line]
 Type=0x27
-UseOientation=N
+UseOrientation=N
 String1=0x19,Железная дорога
 String2=0x04,Railroad
 Xpm="32 4 2 1"
@@ -1133,7 +1133,7 @@ Xpm="32 4 2 1"
 Type=0x28
 String1=0x19,Газопровод
 String2=0x04,Gas
-UseOientation=N
+UseOrientation=N
 Xpm="32 5 2 1"
 "* c #000000",
 "  c none",
@@ -1149,7 +1149,7 @@ Xpm="32 5 2 1"
 Type=0x29
 String1=0x19,ЛЭП
 String2=0x04,Power line
-UseOientation=N
+UseOrientation=N
 Xpm="32 5 2 1"
 "* c #000000",
 "  c none",
@@ -1306,7 +1306,7 @@ Xpm="32 1 2 1"
 Type=0x37
 String1=0x19,Граница ООПТ
 String2=0x04,Protected area 
-UseOientation=N
+UseOrientation=N
 Xpm="32 5 2 1"
 "0 c #BD00BD"
 "1 c none"
@@ -1686,9 +1686,9 @@ String1=0x19,Водопад
 String2=0x04,Waterfall
 ExtendedLabels=Y
 FontStyle=Default
-CustomColo=DayAndNight
-DayCustomColo=#000095
-NightCustomColo=#000095
+CustomColor=DayAndNight
+DayCustomColor=#000095
+NightCustomColor=#000095
 DayXpm="16 16 3 1",
 "  c None",
 "* c #000095",
@@ -1719,9 +1719,9 @@ String1=0x19,Порог
 String2=0x04,Rapid
 ExtendedLabels=Y
 FontStyle=Default
-CustomColo=DayAndNight
-DayCustomColo=#000095
-NightCustomColo=#000095
+CustomColor=DayAndNight
+DayCustomColor=#000095
+NightCustomColor=#000095
 DayXpm="16 16 3 1",
 "  c None",
 "* c #000095",
@@ -1807,9 +1807,9 @@ String1=0x19,Дерево
 String2=0x04,Tree
 ExtendedLabels=Y
 FontStyle=SmallFont
-CustomColo=DayAndNight
-DayCustomColo=#00A500
-NightCustomColo=#00A500
+CustomColor=DayAndNight
+DayCustomColor=#00A500
+NightCustomColor=#00A500
 DayXpm="5 5 2 1",
 "* c #00A500",
 "  c none",
