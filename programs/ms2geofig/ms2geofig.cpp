@@ -468,7 +468,7 @@ public:
 
       cnv.bck(data);
 
-      line_filter_v1(data, acc, -1);
+      line_filter_rdp(data, acc);
 
       for(const auto & l:data){
         FigObj fo = figobj_template(riv_templ);
@@ -490,7 +490,7 @@ public:
 
       cnv.bck(data);
 
-      line_filter_v1(data, acc, -1);
+      line_filter_rdp(data, acc);
 
       for(const auto & l:data){
         FigObj fo = figobj_template(mnt_templ);
