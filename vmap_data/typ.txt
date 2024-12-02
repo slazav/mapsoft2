@@ -171,8 +171,8 @@ Type=0x0D,8
 ;POLYGON  0x01 городская застройка
 [_polygon]
 Type=0x1
-Sting1=0x19,Город
-Sting2=0x04,Town
+String1=0x19,Город
+String2=0x04,Town
 Xpm="0 0 2 0",
 "1 c #FF9500",
 "2 c #FF9500",
@@ -181,8 +181,8 @@ Xpm="0 0 2 0",
 ;POLYGON  0x04 закрытые территории
 [_polygon]
 Type=0x4
-Sting1=0x19,Запретная зона
-Sting2=0x04,Prohibited
+String1=0x19,Запретная зона
+String2=0x04,Prohibited
 Xpm="32 32 2 1",
 "* c #FF0000",
 "  c #ACACAC",
@@ -223,8 +223,8 @@ Xpm="32 32 2 1",
 ;POLYGON  0x08 россыпь
 [_polygon]
 Type=0x8
-Sting1=0x19,Россыпь
-Sting2=0x04,Scree
+String1=0x19,Россыпь
+String2=0x04,Scree
 XPM="32 32 2 1",
 "a c #BD0000",
 "  c none",
@@ -265,8 +265,8 @@ XPM="32 32 2 1",
 ;POLYGON  0x0d пески
 [_polygon]
 Type=0xd
-Sting1=0x19,Пески
-Sting2=0x04,Sand
+String1=0x19,Пески
+String2=0x04,Sand
 XPM="32 32 2 1",
 "a c #ffD296",
 "  c none",
@@ -307,8 +307,8 @@ XPM="32 32 2 1",
 ;POLYGON  0x0E сельская застройка
 [_polygon]
 Type=0xe
-Sting1=0x19,Село
-Sting2=0x04,Willage
+String1=0x19,Село
+String2=0x04,Willage
 Xpm="0 0 2 0",
 "1 c #FF9595",
 "2 c #FF9595",
@@ -317,8 +317,8 @@ Xpm="0 0 2 0",
 ;POLYGON  0x14 редколесье
 [_polygon]
 Type=0x14
-Sting1=0x19,Редколесье
-Sting2=0x04,Semi-open
+String1=0x19,Редколесье
+String2=0x04,Semi-open
 Xpm="32 32 2 1",
 "  c #FFFFFF",
 "* c #00FF00",
@@ -359,8 +359,8 @@ Xpm="32 32 2 1",
 ;POLYGON  0x15 остров леса
 [_polygon]
 Type=0x15
-Sting1=0x19,Лес
-Sting2=0x04,Forest
+String1=0x19,Лес
+String2=0x04,Forest
 Xpm="0 0 2 0",
 "1 c #00FF00",
 "2 c #00FF00",
@@ -369,8 +369,8 @@ Xpm="0 0 2 0",
 ;POLYGON  0x16 лес
 [_polygon]
 Type=0x16
-Sting1=0x19,Лес
-Sting2=0x04,Forest
+String1=0x19,Лес
+String2=0x04,Forest
 Xpm="0 0 2 0",
 "1 c #00FF00",
 "2 c #00FF00",
@@ -379,8 +379,8 @@ Xpm="0 0 2 0",
 ;POLYGON  0x19 скалы
 [_polygon]
 Type=0x19
-Sting1=0x19,Скалы
-Sting2=0x04,Cliff
+String1=0x19,Скалы
+String2=0x04,Cliff
 Xpm="0 0 2 0",
 "1 c #C5C5C5",
 "2 c #C5C5C5",
@@ -389,8 +389,8 @@ Xpm="0 0 2 0",
 ;POLYGON  0x1A кладбище
 [_polygon]
 Type=0x1a
-Sting1=0x19,Кладбище
-Sting2=0x04,Cemetry
+String1=0x19,Кладбище
+String2=0x04,Cemetry
 Xpm="32 32 2 1",
 "  c #000000",
 "* c #00A500",
@@ -431,8 +431,8 @@ Xpm="32 32 2 1",
 ;POLYGON  0x29 водоемы
 [_polygon]
 Type=0x29
-Sting1=0x19,Водоем
-Sting2=0x04,Water
+String1=0x19,Водоем
+String2=0x04,Water
 Xpm="0 0 2 0",
 "1 c #0000FF",
 "2 c #0000FF",
@@ -441,8 +441,8 @@ Xpm="0 0 2 0",
 ;POLYGON  0x3B большие водоемы
 [_polygon]
 Type=0x3B
-Sting1=0x19,Водоем
-Sting2=0x04,Water
+String1=0x19,Водоем
+String2=0x04,Water
 Xpm="0 0 2 0",
 "1 c #0000FF",
 "2 c #0000FF",
@@ -451,8 +451,8 @@ Xpm="0 0 2 0",
 ;POLYGON  0x4b фон карты
 [_polygon]
 Type=0x4b
-Sting1=0x19,Поле
-Sting2=0x04,Field
+String1=0x19,Поле
+String2=0x04,Field
 Xpm="0 0 2 0",
 "1 c #FFFFFF",
 "2 c #FFFFFF",
@@ -461,8 +461,8 @@ Xpm="0 0 2 0",
 ;POLYGON  0x4C глубокое болото
 [_polygon]
 Type=0x4c
-sting1=0x19,Глубокое болото
-Sting2=0x04,Deep swamp
+String1=0x19,Глубокое болото
+String2=0x04,Deep swamp
 XPM="32 32 2 1",
 "!	c #0000FF",
 "#	c none",
@@ -503,8 +503,8 @@ XPM="32 32 2 1",
 ;POLYGON  0x04D ледник
 [_polygon]
 Type=0x4d
-Sting1=0x19,Ледник
-Sting2=0x04,Glacier
+String1=0x19,Ледник
+String2=0x04,Glacier
 Xpm="32 32 2 1",
 "* c #0000FF",
 "  c #FFFFFF",
@@ -545,8 +545,8 @@ Xpm="32 32 2 1",
 ;POLYGON  0x4E дачи, сад.уч., д/о, п/л
 [_polygon]
 Type=0x4e
-Sting1=0x19,Сад.уч
-Sting2=0x04,Cottages
+String1=0x19,Сад.уч
+String2=0x04,Cottages
 Xpm="0 0 2 0",
 "1 c #00A500",
 "2 c #00A500",
@@ -555,8 +555,8 @@ Xpm="0 0 2 0",
 ;POLYGON  0x4F свежая вырубка
 [_polygon]
 Type=0x4f
-Sting1=0x19,Вырубка
-Sting2=0x04,Cutting
+String1=0x19,Вырубка
+String2=0x04,Cutting
 Xpm="32 32 2 1",
 "* c #FFFFFF",
 "  c #00A500",
@@ -597,8 +597,8 @@ Xpm="32 32 2 1",
 ;POLYGON  0x50 стар.вырубка
 [_polygon]
 Type=0x50
-Sting1=0x19,Стар.вырубка
-Sting2=0x04,Old cutting
+String1=0x19,Стар.вырубка
+String2=0x04,Old cutting
 Xpm="32 32 2 1",
 "  c #00FF00",
 "* c #00A500",
@@ -639,8 +639,8 @@ Xpm="32 32 2 1",
 ;POLYGON  0x51 болото
 [_polygon]
 Type=0x51
-Sting1=0x19,Болото
-Sting2=0x04,Swamp
+String1=0x19,Болото
+String2=0x04,Swamp
 XPM="32 32 2 1",
 "!	c #0000FF",
 "#	c none",
@@ -681,8 +681,8 @@ XPM="32 32 2 1",
 ;POLYGON  0x52 поле
 [_polygon]
 Type=0x52
-Sting1=0x19,Поле
-Sting2=0x04,Field
+String1=0x19,Поле
+String2=0x04,Field
 Xpm="0 0 2 0",
 "1 c #FFFFFF",
 "2 c #FFFFFF",
@@ -691,8 +691,8 @@ Xpm="0 0 2 0",
 ;POLYGON  0x53 остров
 [_polygon]
 Type=0x53
-Sting1=0x19,Остров
-Sting2=0x04,Island
+String1=0x19,Остров
+String2=0x04,Island
 Xpm="0 0 2 0",
 "1 c #FFFFFF",
 "2 c #FFFFFF",
@@ -701,8 +701,8 @@ Xpm="0 0 2 0",
 ;POLYLINE 0x00  кривая надпись
 [_line]
 Type=0x0
-Sting1=0x19,Надпись
-Sting2=0x04,Text
+String1=0x19,Надпись
+String2=0x04,Text
 LineWidth=0
 BoderWidth=0
 Xpm="0 0 1 0",
@@ -712,8 +712,8 @@ Xpm="0 0 1 0",
 ;POLYLINE 0x01  автомагистраль
 [_line]
 Type=0x1
-Sting1=0x19,Автомагистраль
-Sting2=0x04,Major highway
+String1=0x19,Автомагистраль
+String2=0x04,Major highway
 LineWidth=5
 BoderWidth=1
 Xpm="0 0 2 0",
@@ -724,8 +724,8 @@ Xpm="0 0 2 0",
 ;POLYLINE 0x02  шоссе
 [_line]
 Type=0x2
-Sting1=0x19,Шоссе
-Sting2=0x04,Highway
+String1=0x19,Шоссе
+String2=0x04,Highway
 LineWidth=1
 BoderWidth=1
 Xpm="0 0 2 0",
@@ -736,8 +736,8 @@ Xpm="0 0 2 0",
 ;POLYLINE 0x03  верх обрыва
 [_line]
 Type=0x3
-Sting1=0x19,Обрыв
-Sting2=0x04,Cliff
+String1=0x19,Обрыв
+String2=0x04,Cliff
 UseOientation=N
 Xpm="32 9 2 1"
 "* c #BD0000",
@@ -756,8 +756,8 @@ Xpm="32 9 2 1"
 ;POLYLINE 0x04  проезжий грейдер
 [_line]
 Type=0x4
-Sting1=0x19,Грейдер
-Sting2=0x04,Improved road
+String1=0x19,Грейдер
+String2=0x04,Improved road
 LineWidth=1
 BoderWidth=1
 Xpm="0 0 2 0",
@@ -768,8 +768,8 @@ Xpm="0 0 2 0",
 ;POLYLINE 0x05  отдельные строения
 [_line]
 Type=0x5
-Sting1=0x19,Дом
-Sting2=0x04,House
+String1=0x19,Дом
+String2=0x04,House
 LineWidth=6
 BoderWidth=0
 Xpm="0 0 1 0",
@@ -779,8 +779,8 @@ Xpm="0 0 1 0",
 ;POLYLINE 0x06  проезжая грунтовка
 [_line]
 Type=0x6
-Sting1=0x19,Грунтовка
-Sting2=0x04,Good road
+String1=0x19,Грунтовка
+String2=0x04,Good road
 LineWidth=2
 BoderWidth=0
 Xpm="0 0 1 0",
@@ -790,8 +790,8 @@ Xpm="0 0 1 0",
 ;POLYLINE 0x07  непроезжий грейдер
 [_line]
 Type=0x7
-Sting1=0x19,Непр.грейдер
-Sting2=0x04,Double ditch
+String1=0x19,Непр.грейдер
+String2=0x04,Double ditch
 UseOientation=N
 Xpm="32 5 2 1"
 "# c #BD0000",
@@ -806,8 +806,8 @@ Xpm="32 5 2 1"
 ;POLYLINE 0x08  мост-1 (пешеходный)
 [_line]
 Type=0x8
-Sting1=0x19,Мост
-Sting2=0x04,Bridge
+String1=0x19,Мост
+String2=0x04,Bridge
 LineWidth=2
 BoderWidth=1
 Xpm="0 0 2 0",
@@ -818,8 +818,8 @@ Xpm="0 0 2 0",
 ;POLYLINE 0x09  мост-2 (автомобильный)
 [_line]
 Type=0x9
-Sting1=0x19,Мост
-Sting2=0x04,Bridge
+String1=0x19,Мост
+String2=0x04,Bridge
 LineWidth=4
 BoderWidth=2
 Xpm="0 0 2 1",
@@ -830,8 +830,8 @@ Xpm="0 0 2 1",
 ;POLYLINE 0x0A  непроезжая грунтовка
 [_line]
 Type=0x0a
-Sting1=0x19,Непр.грунтовка
-Sting2=0x04,Unpaved road
+String1=0x19,Непр.грунтовка
+String2=0x04,Unpaved road
 Xpm="32 2 2 1"
 "* c #000000",
 "  c none",
@@ -842,8 +842,8 @@ Xpm="32 2 2 1"
 ;POLYLINE 0x0B  крупное шоссе
 [_line]
 Type=0x0b
-Sting1=0x19,Крупное шоссе
-Sting2=0x04,Principal highway
+String1=0x19,Крупное шоссе
+String2=0x04,Principal highway
 LineWidth=3
 BoderWidth=1
 Xpm="0 0 2 0",
@@ -854,8 +854,8 @@ Xpm="0 0 2 0",
 ;POLYLINE 0x0C  хребет
 [_line]
 Type=0x0c
-Sting1=0x19,Хребет
-Sting2=0x04,Ridge
+String1=0x19,Хребет
+String2=0x04,Ridge
 LineWidth=3
 BoderWidth=0
 Xpm="0 0 1 0"
@@ -865,8 +865,8 @@ Xpm="0 0 1 0"
 ;POLYLINE 0x0D  УЖД/подъездные пути
 [_line]
 Type=0x0d
-Sting1=0x19,УЖД/Подъездные пути
-Sting2=0x04,Minor railroad
+String1=0x19,УЖД/Подъездные пути
+String2=0x04,Minor railroad
 Xpm="32 3 2 1"
 "# c #000000"
 "$ c #FFFFFF"
@@ -878,8 +878,8 @@ Xpm="32 3 2 1"
 ;POLYLINE 0x0E  мост-5 (на автомагистралях)
 [_line]
 Type=0x0e
-Sting1=0x19,Мост
-Sting2=0x04,Bridge
+String1=0x19,Мост
+String2=0x04,Bridge
 LineWidth=7
 BoderWidth=2
 Xpm="0 0 2 0",
@@ -890,8 +890,8 @@ Xpm="0 0 2 0",
 ;POLYLINE 0x0F  мал.хребет
 [_line]
 Type=0x0F
-Sting1=0x19,Отрог
-Sting2=0x04,Offshoot
+String1=0x19,Отрог
+String2=0x04,Offshoot
 LineWidth=2
 BoderWidth=0
 Xpm="0 0 1 0"
@@ -901,8 +901,8 @@ Xpm="0 0 1 0"
 ;POLYLINE 0x15  река-1
 [_line]
 Type=0x15
-Sting1=0x19,Ручей
-Sting2=0x04,Stream
+String1=0x19,Ручей
+String2=0x04,Stream
 LineWidth=2
 BoderWidth=0
 Xpm="0 0 1 0"
@@ -912,8 +912,8 @@ Xpm="0 0 1 0"
 ;POLYLINE 0x16  просека
 [_line]
 Type=0x16
-Sting1=0x19,Просека
-Sting2=0x04,Clearing
+String1=0x19,Просека
+String2=0x04,Clearing
 Xpm="32 1 2 1"
 "* c #000000",
 "  c none",
@@ -923,8 +923,8 @@ Xpm="32 1 2 1"
 ;POLYLINE 0x18  река-2
 [_line]
 Type=0x18
-Sting1=0x19,Река
-Sting2=0x04,River
+String1=0x19,Река
+String2=0x04,River
 LineWidth=3
 BoderWidth=0
 Xpm="0 0 1 0"
@@ -934,8 +934,8 @@ Xpm="0 0 1 0"
 ;POLYLINE 0x19  забор
 [_line]
 Type=0x19
-Sting1=0x19,Забор
-Sting2=0x04,Fence
+String1=0x19,Забор
+String2=0x04,Fence
 UseOientation=N
 Xpm="32 5 2 1"
 "* c #000000",
@@ -950,8 +950,8 @@ Xpm="32 5 2 1"
 ;POLYLINE 0x1A  малая ЛЭП
 [_line]
 Type=0x1A
-Sting1=0x19,Мал.ЛЭП
-Sting2=0x04,Minor power line
+String1=0x19,Мал.ЛЭП
+String2=0x04,Minor power line
 UseOientation=N
 Xpm="32 5 2 1"
 "* c #000000",
@@ -966,8 +966,8 @@ Xpm="32 5 2 1"
 ;POLYLINE 0x1B  пешеходный тоннель
 [_line]
 Type=0x1B
-Sting1=0x19,Переход
-Sting2=0x04,Tunnel
+String1=0x19,Переход
+String2=0x04,Tunnel
 LineWidth=1
 BoderWidth=1
 Xpm="0 0 2 0",
@@ -978,8 +978,8 @@ Xpm="0 0 2 0",
 ;POLYLINE 0x1C  просека широкая
 [_line]
 Type=0x1C
-Sting1=0x19,Шир.просека
-Sting2=0x04,Wide clearing
+String1=0x19,Шир.просека
+String2=0x04,Wide clearing
 Xpm="32 3 2 1"
 "* c #000000",
 "- c #FFFFFF",
@@ -991,8 +991,8 @@ Xpm="32 3 2 1"
 ;POLYLINE 0x1D  граница областей
 [_line]
 Type=0x1D
-Sting1=0x19,Граница обл.
-Sting2=0x04,Border
+String1=0x19,Граница обл.
+String2=0x04,Border
 Xpm="32 1 2 1"
 "* c #FF0000",
 "  c none",
@@ -1002,8 +1002,8 @@ Xpm="32 1 2 1"
 ;POLYLINE 0x1E  низ обрыва
 [_line]
 Type=0x1E
-Sting1=0x19,Низ обрыва
-Sting2=0x04,Cliff bottom
+String1=0x19,Низ обрыва
+String2=0x04,Cliff bottom
 UseOientation=N
 Xpm="32 4 2 1"
 "* c #c5c5c5",
@@ -1017,8 +1017,8 @@ Xpm="32 4 2 1"
 ;POLYLINE 0x1F  река-5
 [_line]
 Type=0x1F
-Sting1=0x19,Бол.река
-Sting2=0x04,Big river
+String1=0x19,Бол.река
+String2=0x04,Big river
 LineWidth=4
 BoderWidth=0
 Xpm="0 0 1 0"
@@ -1028,8 +1028,8 @@ Xpm="0 0 1 0"
 ;POLYLINE 0x20  пунктирная горизонталь
 [_line]
 Type=0x20
-Sting1=0x19,Доп.горизонталь
-Sting2=0x04,Minor contour
+String1=0x19,Доп.горизонталь
+String2=0x04,Minor contour
 ExtendedLabels=Y
 FontStyle=NoLabel
 Xpm="32 1 2 1"
@@ -1041,8 +1041,8 @@ Xpm="32 1 2 1"
 ;POLYLINE 0x21  горизонтали, бергштрихи
 [_line]
 Type=0x21
-Sting1=0x19,Горизонталь
-Sting2=0x04,Contour
+String1=0x19,Горизонталь
+String2=0x04,Contour
 ExtendedLabels=Y
 FontStyle=NoLabel
 LineWidth=1
@@ -1054,8 +1054,8 @@ Xpm="0 0 1 0"
 ;POLYLINE 0x22  жирная горизонталь
 [_line]
 Type=0x22
-Sting1=0x19,Жир.горизонталь
-Sting2=0x04,Major contour
+String1=0x19,Жир.горизонталь
+String2=0x04,Major contour
 ExtendedLabels=Y
 FontStyle=SmallFont
 CustomColo=DayAndNight
@@ -1070,8 +1070,8 @@ Xpm="0 0 1 0"
 ;POLYLINE 0x23  контур леса
 [_line]
 Type=0x23
-Sting1=0x19,Контур
-Sting2=0x04,Green dots
+String1=0x19,Контур
+String2=0x04,Green dots
 Xpm="32 2 2 1"
 "* c #009500",
 "  c none",
@@ -1082,8 +1082,8 @@ Xpm="32 2 2 1"
 ;POLYLINE 0x24  трещина
 [_line]
 Type=0x24
-Sting1=0x19,Трещина
-Sting2=0x04,Crevasse
+String1=0x19,Трещина
+String2=0x04,Crevasse
 LineWidth=1
 BoderWidth=0
 Xpm="0 0 1 0"
@@ -1093,8 +1093,8 @@ Xpm="0 0 1 0"
 ;POLYLINE 0x25  овраг
 [_line]
 Type=0x25
-Sting1=0x19,Овраг
-Sting2=0x04,Gully
+String1=0x19,Овраг
+String2=0x04,Gully
 LineWidth=2
 BoderWidth=0
 Xpm="0 0 1 0"
@@ -1104,8 +1104,8 @@ Xpm="0 0 1 0"
 ;POLYLINE 0x26  пунктирный ручей
 [_line]
 Type=0x26
-Sting1=0x19,Пересых.ручей
-Sting2=0x04,Int.stream
+String1=0x19,Пересых.ручей
+String2=0x04,Int.stream
 Xpm="32 2 2 1"
 "* c #0000FF",
 "  c none",
@@ -1117,8 +1117,8 @@ Xpm="32 2 2 1"
 [_line]
 Type=0x27
 UseOientation=N
-Sting1=0x19,Железная дорога
-Sting2=0x04,Railroad
+String1=0x19,Железная дорога
+String2=0x04,Railroad
 Xpm="32 4 2 1"
 "# c #000000"
 "$ c #FFFFFF"
@@ -1131,8 +1131,8 @@ Xpm="32 4 2 1"
 ;POLYLINE 0x28  газопровод
 [_line]
 Type=0x28
-Sting1=0x19,Газопровод
-Sting2=0x04,Gas
+String1=0x19,Газопровод
+String2=0x04,Gas
 UseOientation=N
 Xpm="32 5 2 1"
 "* c #000000",
@@ -1147,8 +1147,8 @@ Xpm="32 5 2 1"
 ;POLYLINE 0x29  ЛЭП
 [_line]
 Type=0x29
-Sting1=0x19,ЛЭП
-Sting2=0x04,Power line
+String1=0x19,ЛЭП
+String2=0x04,Power line
 UseOientation=N
 Xpm="32 5 2 1"
 "* c #000000",
@@ -1163,8 +1163,8 @@ Xpm="32 5 2 1"
 ;POLYLINE 0x2A  тропа
 [_line]
 Type=0x2A
-Sting1=0x19,Тропа
-Sting2=0x04,Trail
+String1=0x19,Тропа
+String2=0x04,Trail
 Xpm="32 1 2 1"
 "* c #000000",
 "  c none",
@@ -1174,8 +1174,8 @@ Xpm="32 1 2 1"
 ;POLYLINE 0x2B  сухая канава
 [_line]
 Type=0x2B
-Sting1=0x19,Сухая канава
-Sting2=0x04,Ditch
+String1=0x19,Сухая канава
+String2=0x04,Ditch
 Xpm="32 2 2 1"
 "* c #BD0000",
 "  c none",
@@ -1186,8 +1186,8 @@ Xpm="32 2 2 1"
 ;POLYLINE 0x2C  вал/линия бугров
 [_line]
 Type=0x2C
-Sting1=0x19,Вал
-Sting2=0x04,Knoll line
+String1=0x19,Вал
+String2=0x04,Knoll line
 Xpm="32 3 2 1"
 "* c #BD0000",
 "  c none",
@@ -1199,8 +1199,8 @@ Xpm="32 3 2 1"
 ;POLYLINE 0x2D  Иcчезающая дорога
 [_line]
 Type=0x2d
-Sting1=0x19,Иcчез.дорога
-Sting2=0x04,Int.path
+String1=0x19,Иcчез.дорога
+String2=0x04,Int.path
 Xpm="32 1 2 1"
 "* c #000000",
 "  c none",
@@ -1210,8 +1210,8 @@ Xpm="32 1 2 1"
 ;POLYLINE 0x2E  Заметная дорога
 [_line]
 Type=0x2E
-Sting1=0x19,Заметн.дорога
-Sting2=0x04,Path
+String1=0x19,Заметн.дорога
+String2=0x04,Path
 Xpm="32 1 2 1"
 "* c #000000",
 "  c none",
@@ -1221,8 +1221,8 @@ Xpm="32 1 2 1"
 ;POLYLINE 0x2F  Рамка
 [_line]
 Type=0x2F
-Sting1=0x19,Рамка
-Sting2=0x04,Frame
+String1=0x19,Рамка
+String2=0x04,Frame
 LineWidth=1
 BoderWidth=0
 Xpm="0 0 1 0",
@@ -1232,8 +1232,8 @@ Xpm="0 0 1 0",
 ;POLYLINE 0x32  Проходимость-2
 [_line]
 Type=0x32
-Sting1=0x19,Проходимость-2
-Sting2=0x04,Passable-2
+String1=0x19,Проходимость-2
+String2=0x04,Passable-2
 LineWidth=6
 BoderWidth=1
 Xpm="0 0 2 0",
@@ -1244,8 +1244,8 @@ Xpm="0 0 2 0",
 ;POLYLINE 0x33  Проходимость-3
 [_line]
 Type=0x33
-Sting1=0x19,Проходимость-3
-Sting2=0x04,Passable-3
+String1=0x19,Проходимость-3
+String2=0x04,Passable-3
 Xpm="32 8 2 1"
 "* c #00A500",
 "  c none",
@@ -1262,8 +1262,8 @@ Xpm="32 8 2 1"
 ;POLYLINE 0x34  Проходимость-4
 [_line]
 Type=0x34
-Sting1=0x19,Проходимость-4
-Sting2=0x04,Passable-4
+String1=0x19,Проходимость-4
+String2=0x04,Passable-4
 Xpm="32 8 2 1"
 "* c #FF9500",
 "  c none",
@@ -1280,8 +1280,8 @@ Xpm="32 8 2 1"
 ;POLYLINE 0x35  Проходимость-5
 [_line]
 Type=0x35
-Sting1=0x19,Проходимость-5
-Sting2=0x04,Passable-5
+String1=0x19,Проходимость-5
+String2=0x04,Passable-5
 LineWidth=6
 BoderWidth=1
 Xpm="0 0 2 0",
@@ -1292,8 +1292,8 @@ Xpm="0 0 2 0",
 ;POLYLINE 0x36  граница районов
 [_line]
 Type=0x36
-Sting1=0x19,Граница рай.
-Sting2=0x04,Border
+String1=0x19,Граница рай.
+String2=0x04,Border
 Xpm="32 1 2 1"
 "* c #BD00BD",
 "  c none",
@@ -1303,8 +1303,8 @@ Xpm="32 1 2 1"
 ;POLYLINE 0x37  граница ООПТ
 [_line]
 Type=0x37
-Sting1=0x19,Граница ООПТ
-Sting2=0x04,Protected area 
+String1=0x19,Граница ООПТ
+String2=0x04,Protected area 
 UseOientation=N
 Xpm="32 5 2 1"
 "0 c #BD00BD"
@@ -1319,8 +1319,8 @@ Xpm="32 5 2 1"
 ;POLYLINE 0x40  канал, арык
 [_line]
 Type=0x40
-Sting1=0x19,Арык
-Sting2=0x04,Irrigation
+String1=0x19,Арык
+String2=0x04,Irrigation
 Xpm="32 2 2 1"
 "* c #0000FF",
 "  c none",
@@ -1331,8 +1331,8 @@ Xpm="32 2 2 1"
 ;POLYLINE 0x44  горизонталь на леднике
 [_line]
 Type=0x44
-Sting1=0x19,Ледник
-Sting2=0x04,Glacier
+String1=0x19,Ледник
+String2=0x04,Glacier
 LineWidth=1
 BoderWidth=0
 Xpm="0 0 1 0"
@@ -1342,8 +1342,8 @@ Xpm="0 0 1 0"
 ;POLYLINE 0x45  толстая горизонталь на леднике
 [_line]
 Type=0x45
-Sting1=0x19,Ледник
-Sting2=0x04,Glacier
+String1=0x19,Ледник
+String2=0x04,Glacier
 LineWidth=1
 BoderWidth=0
 Xpm="0 0 1 0"
@@ -1363,8 +1363,8 @@ Xpm="0 0 1 0"
 [_point]
 Type=0x0D
 SubType=0x00
-Sting1=0x19,Отметка высоты малая
-Sting2=0x04,Minor Elevation point
+String1=0x19,Отметка высоты малая
+String2=0x04,Minor Elevation point
 ExtendedLabels=Y
 FontStyle=SmallFont
 DayXpm="4 4 2 1",
@@ -1380,8 +1380,8 @@ DayXpm="4 4 2 1",
 [_point]
 Type=0x0E
 SubType=0x0
-Sting1=0x19,Пик
-Sting2=0x04,Peak
+String1=0x19,Пик
+String2=0x04,Peak
 DayXpm="16 16 3 1",
 "  c none",
 "* c #000000",
@@ -1408,8 +1408,8 @@ DayXpm="16 16 3 1",
 [_point]
 Type=0x0F
 SubType=0x0
-Sting1=0x19,Геод.пункт
-Sting2=0x04,Trig point
+String1=0x19,Геод.пункт
+String2=0x04,Trig point
 DayXpm="16 16 2 1",
 "  c none",
 "* c #000000",
@@ -1435,8 +1435,8 @@ DayXpm="16 16 2 1",
 [_point]
 Type=0x10
 SubType=0x00
-Sting1=0x19,Отметка уреза воды
-Sting2=0x04,Water point
+String1=0x19,Отметка уреза воды
+String2=0x04,Water point
 ExtendedLabels=Y
 FontStyle=SmallFont
 DayXpm="5 5 3 1",
@@ -1454,8 +1454,8 @@ DayXpm="5 5 3 1",
 [_point]
 Type=0x11
 SubType=0x00
-Sting1=0x19,Отметка высоты
-Sting2=0x04,Elevation point
+String1=0x19,Отметка высоты
+String2=0x04,Elevation point
 DayXpm="4 4 2 1",
 "  c none",
 "* c #000000",
@@ -1472,8 +1472,8 @@ DayXpm="4 4 2 1",
 [_point]
 Type=0x2B
 SubType=0x03
-Sting1=0x19,Стоянка
-Sting2=0x4,Camp
+String1=0x19,Стоянка
+String2=0x4,Camp
 DayXPM="16 16 4 1"
 "X c #009500"
 "- c #FFFFFF"
@@ -1501,8 +1501,8 @@ DayXPM="16 16 4 1"
 [_point]
 Type=0x2C
 SubType=0x04
-Sting1=0x19,Памятник
-Sting2=0x04,Memorial
+String1=0x19,Памятник
+String2=0x04,Memorial
 DayXpm="16 16 3 1",
 "  c None",
 "* c #000000",
@@ -1529,8 +1529,8 @@ DayXpm="16 16 3 1",
 [_point]
 Type=0x2C
 SubType=0x0B
-Sting1=0x19,Храм/Мечеть/Синагога
-Sting2=0x04,Place of worship
+String1=0x19,Храм/Мечеть/Синагога
+String2=0x04,Place of worship
 DayXpm="14 14 2 1",
 "  c None",
 "# c #000000",
@@ -1557,8 +1557,8 @@ DayXpm="14 14 2 1",
 [_point]
 Type=0x59
 SubType=0x05
-Sting1=0x19,Станция
-Sting2=0x04,Station
+String1=0x19,Станция
+String2=0x04,Station
 DayXpm="16 16 3 1",
 "* c #BD00BD",
 "- c #FFFFFF",
@@ -1585,8 +1585,8 @@ DayXpm="16 16 3 1",
 [_point]
 Type=0x64
 SubType=0x02
-Sting1=0x19,Дом
-Sting2=0x04,House
+String1=0x19,Дом
+String2=0x04,House
 DayXpm="10 10 2 1",
 "  c none",
 "# c #000000",
@@ -1606,8 +1606,8 @@ DayXpm="10 10 2 1",
 [_point]
 Type=0x64
 SubType=0x03
-Sting1=0x19,Кладбище
-Sting2=0x04,Cemetry
+String1=0x19,Кладбище
+String2=0x04,Cemetry
 DayXpm="16 16 2 1",
 "  c #000000",
 "* c #00A500",
@@ -1639,8 +1639,8 @@ DayXpm="16 16 2 1",
 [_point]
 Type=0x64
 SubType=0x14
-Sting1=0x19,Родник
-Sting2=0x04,Spring
+String1=0x19,Родник
+String2=0x04,Spring
 DayXpm="8 8 2 1",
 "  c none",
 "* c #0000FF",
@@ -1658,8 +1658,8 @@ DayXpm="8 8 2 1",
 [_point]
 Type=0x64
 SubType=0x15
-Sting1=0x19,Развалины
-Sting2=0x04,Ruin
+String1=0x19,Развалины
+String2=0x04,Ruin
 DayXpm="12 12 2 1",
 "  c None",
 "# c #000000",
@@ -1681,8 +1681,8 @@ DayXpm="12 12 2 1",
 [_point]
 Type=0x65
 SubType=0x08
-Sting1=0x19,Водопад
-Sting2=0x04,Waterfall
+String1=0x19,Водопад
+String2=0x04,Waterfall
 ExtendedLabels=Y
 FontStyle=Default
 CustomColo=DayAndNight
@@ -1714,8 +1714,8 @@ DayXpm="16 16 3 1",
 [_point]
 Type=0x65
 SubType=0x0E
-Sting1=0x19,Порог
-Sting2=0x04,Rapid
+String1=0x19,Порог
+String2=0x04,Rapid
 ExtendedLabels=Y
 FontStyle=Default
 CustomColo=DayAndNight
@@ -1747,8 +1747,8 @@ DayXpm="16 16 3 1",
 [_point]
 Type=0x66
 SubType=0x03
-Sting1=0x19,Яма
-Sting2=0x04,Pit
+String1=0x19,Яма
+String2=0x04,Pit
 DayXpm="16 16 3 1",
 "  c None",
 "* c #BD0000",
@@ -1775,8 +1775,8 @@ DayXpm="16 16 3 1",
 [_point]
 Type=0x66
 SubType=0x06
-Sting1=0x19,Охотн.
-Sting2=0x04,Hunt.
+String1=0x19,Охотн.
+String2=0x04,Hunt.
 DayXpm="16 16 2 1",
 "  c None",
 "* c #000000",
@@ -1802,8 +1802,8 @@ DayXpm="16 16 2 1",
 [_point]
 Type=0x66
 SubType=0x0A
-Sting1=0x19,Дерево
-Sting2=0x04,Tree
+String1=0x19,Дерево
+String2=0x04,Tree
 ExtendedLabels=Y
 FontStyle=SmallFont
 CustomColo=DayAndNight
@@ -1823,8 +1823,8 @@ DayXpm="5 5 2 1",
 [_point]
 Type=0x66
 SubType=0x13
-Sting1=0x19,Курган
-Sting2=0x04,Knoll
+String1=0x19,Курган
+String2=0x04,Knoll
 DayXpm="16 16 3 1",
 "  c None",
 "* c #BD0000",
@@ -1851,8 +1851,8 @@ DayXpm="16 16 3 1",
 [_point]
 Type=0x66
 SubType=0x16
-Sting1=0x19,Скала-останец
-Sting2=0x04,Skerry
+String1=0x19,Скала-останец
+String2=0x04,Skerry
 DayXpm="12 12 2 1",
 "  c none",
 "* c #000000",
@@ -1874,8 +1874,8 @@ DayXpm="12 12 2 1",
 [_point]
 Type=0x66
 SubType=0x18
-Sting1=0x19,Завал
-Sting2=0x04,Windfall
+String1=0x19,Завал
+String2=0x04,Windfall
 DayXpm="16 16 3 1",
 "  c None",
 "- c #FFFFFF",
@@ -1902,8 +1902,8 @@ DayXpm="16 16 3 1",
 [_point]
 Type=0x67
 SubType=0x00
-Sting1=0x19,Перевал н/к
-Sting2=0x04,Pass n/c
+String1=0x19,Перевал н/к
+String2=0x04,Pass n/c
 DayXpm="16 16 4 1",
 "  c None",
 "* c #00ff00",
@@ -1931,8 +1931,8 @@ DayXpm="16 16 4 1",
 [_point]
 Type=0x67
 SubType=0x01
-Sting1=0x19,Перевал 1А
-Sting2=0x04,Pass 1A
+String1=0x19,Перевал 1А
+String2=0x04,Pass 1A
 DayXpm="16 16 4 1",
 "  c None",
 "* c #0000ff",
@@ -1960,8 +1960,8 @@ DayXpm="16 16 4 1",
 [_point]
 Type=0x67
 SubType=0x02
-Sting1=0x19,Перевал 1Б
-Sting2=0x04,Pass 1B
+String1=0x19,Перевал 1Б
+String2=0x04,Pass 1B
 DayXpm="16 16 4 1",
 "  c None",
 "* c #0000ff",
@@ -1989,8 +1989,8 @@ DayXpm="16 16 4 1",
 [_point]
 Type=0x67
 SubType=0x03
-Sting1=0x19,Перевал 2А
-Sting2=0x04,Pass 2A
+String1=0x19,Перевал 2А
+String2=0x04,Pass 2A
 DayXpm="16 16 4 1",
 "  c None",
 "* c #ff00ff",
@@ -2018,8 +2018,8 @@ DayXpm="16 16 4 1",
 [_point]
 Type=0x67
 SubType=0x04
-Sting1=0x19,Перевал 2Б
-Sting2=0x04,Pass 2B
+String1=0x19,Перевал 2Б
+String2=0x04,Pass 2B
 DayXpm="16 16 4 1",
 "  c None",
 "* c #ff00ff",
@@ -2047,8 +2047,8 @@ DayXpm="16 16 4 1",
 [_point]
 Type=0x67
 SubType=0x05
-Sting1=0x19,Перевал 3А
-Sting2=0x04,Pass 3A
+String1=0x19,Перевал 3А
+String2=0x04,Pass 3A
 DayXpm="16 16 4 1",
 "  c None",
 "* c #ff0000",
@@ -2076,8 +2076,8 @@ DayXpm="16 16 4 1",
 [_point]
 Type=0x67
 SubType=0x06
-Sting1=0x19,Перевал 3Б
-Sting2=0x04,Pass 3B
+String1=0x19,Перевал 3Б
+String2=0x04,Pass 3B
 DayXpm="16 16 4 1",
 "  c None",
 "* c #ff0000",
