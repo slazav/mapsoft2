@@ -12,7 +12,7 @@
 ;POLYGON  0x14 редколесье                      1
 ;POLYGON  0x15 остров леса                     3
 ;POLYGON  0x16 лес                             3
-;POLYGON  0x19 скалы                           1
+;POLYGON  0x19 крутой склон                    1
 ;POLYGON  0x1A кладбище                        0
 ;POLYGON  0x29 водоемы                         1
 ;POLYGON  0x3B большие водоемы                 3
@@ -56,7 +56,7 @@
 ;POLYLINE 0x21  горизонтали, бергштрихи        0
 ;POLYLINE 0x22  жирна€ горизонталь             1
 ;POLYLINE 0x23  контур леса                    0
-;POLYLINE 0x24  болото                         2
+;POLYLINE 0x24  ледниковые трещины             2
 ;POLYLINE 0x25  овраг                          0
 ;POLYLINE 0x26  пунктирный ручей               0
 ;POLYLINE 0x27  железна€ дорога                3
@@ -65,7 +65,7 @@
 ;POLYLINE 0x2A  тропа                          0
 ;POLYLINE 0x2B  суха€ канава                   0
 ;POLYLINE 0x2C  вал/лини€ бугров               0
-;POLYLINE 0x2D  cчезающа€ дорога               0
+;POLYLINE 0x2D  иcчезающа€ дорога              0
 ;POLYLINE 0x2E  заметна€ дорога                0
 ;POLYLINE 0x2F  рамка                          3
 ;POLYLINE 0x32  ѕроходимость-2                 0
@@ -74,6 +74,7 @@
 ;POLYLINE 0x35  ѕроходимость-5                 0
 ;POLYLINE 0x36  граница районов                2
 ;POLYLINE 0x37  граница заповедников, парков   2
+;POLYLINE 0x40  арык, небольшой канал          0
 ;POLYLINE 0x44  горизонталь на леднике         0
 ;POLYLINE 0x45  толста€ горизонталь на леднике 1
 ;
@@ -145,7 +146,7 @@ Type=0x4,4
 Type=0xe,4
 ;россыпь
 Type=0x8,5
-;скалы
+;крутые склоны
 Type=0x19,5
 ;кладбище
 Type=0x1A,5
@@ -1078,11 +1079,11 @@ Xpm="32 2 2 1"
 " **  **  **  **  **  **  **  ** ",
 [end]
 
-;POLYLINE 0x24  болото
+;POLYLINE 0x24  трещина
 [_line]
 Type=0x24
-Sting1=0x19,Ѕолото
-Sting2=0x04,Swamp
+Sting1=0x19,“рещина
+Sting2=0x04,Crevasse
 LineWidth=1
 BoderWidth=0
 Xpm="0 0 1 0"
@@ -1313,6 +1314,18 @@ Xpm="32 5 2 1"
 "00000000000000000000000000000000"
 "11111111111101111111111111110111"
 "11111111111101111111111111110111"
+[end]
+
+;POLYLINE 0x40  канал, арык
+[_line]
+Type=0x40
+Sting1=0x19,јрык
+Sting2=0x04,Irrigation
+Xpm="32 2 2 1"
+"* c #0000FF",
+"  c none",
+" **  **  **  **  **  **  **  ** ",
+" **  **  **  **  **  **  **  ** ",
 [end]
 
 ;POLYLINE 0x44  горизонталь на леднике
