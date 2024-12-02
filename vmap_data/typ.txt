@@ -704,7 +704,7 @@ Type=0x0
 String1=0x19,Надпись
 String2=0x04,Text
 LineWidth=0
-BoderWidth=0
+BorderWidth=0
 Xpm="0 0 1 0",
 "1 c #FFFFFF",
 [end]
@@ -715,7 +715,7 @@ Type=0x1
 String1=0x19,Автомагистраль
 String2=0x04,Major highway
 LineWidth=5
-BoderWidth=1
+BorderWidth=1
 Xpm="0 0 2 0",
 "1 c #FF0000",
 "2 c #000000",
@@ -727,7 +727,7 @@ Type=0x2
 String1=0x19,Шоссе
 String2=0x04,Highway
 LineWidth=1
-BoderWidth=1
+BorderWidth=1
 Xpm="0 0 2 0",
 "1 c #FF0000",
 "2 c #000000",
@@ -759,7 +759,7 @@ Type=0x4
 String1=0x19,Грейдер
 String2=0x04,Improved road
 LineWidth=1
-BoderWidth=1
+BorderWidth=1
 Xpm="0 0 2 0",
 "1 c #FFFFFF",
 "2 c #000000",
@@ -771,7 +771,7 @@ Type=0x5
 String1=0x19,Дом
 String2=0x04,House
 LineWidth=6
-BoderWidth=0
+BorderWidth=0
 Xpm="0 0 1 0",
 "1 c #000000",
 [end]
@@ -782,7 +782,7 @@ Type=0x6
 String1=0x19,Грунтовка
 String2=0x04,Good road
 LineWidth=2
-BoderWidth=0
+BorderWidth=0
 Xpm="0 0 1 0",
 "1 c #000000",
 [end]
@@ -809,7 +809,7 @@ Type=0x8
 String1=0x19,Мост
 String2=0x04,Bridge
 LineWidth=2
-BoderWidth=1
+BorderWidth=1
 Xpm="0 0 2 0",
 "1 c #BD00BD",
 "2 c #000000",
@@ -821,7 +821,7 @@ Type=0x9
 String1=0x19,Мост
 String2=0x04,Bridge
 LineWidth=4
-BoderWidth=2
+BorderWidth=2
 Xpm="0 0 2 1",
 "1 c #BD00BD",
 "2 c #000000",
@@ -845,7 +845,7 @@ Type=0x0b
 String1=0x19,Крупное шоссе
 String2=0x04,Principal highway
 LineWidth=3
-BoderWidth=1
+BorderWidth=1
 Xpm="0 0 2 0",
 "1 c #FF0000",
 "2 c #000000",
@@ -857,7 +857,7 @@ Type=0x0c
 String1=0x19,Хребет
 String2=0x04,Ridge
 LineWidth=3
-BoderWidth=0
+BorderWidth=0
 Xpm="0 0 1 0"
 "1 c #BD0000",
 [end]
@@ -881,7 +881,7 @@ Type=0x0e
 String1=0x19,Мост
 String2=0x04,Bridge
 LineWidth=7
-BoderWidth=2
+BorderWidth=2
 Xpm="0 0 2 0",
 "1 c #BD00BD",
 "2 c #000000",
@@ -893,7 +893,7 @@ Type=0x0F
 String1=0x19,Отрог
 String2=0x04,Offshoot
 LineWidth=2
-BoderWidth=0
+BorderWidth=0
 Xpm="0 0 1 0"
 "1 c #BD0000",
 [end]
@@ -904,7 +904,7 @@ Type=0x15
 String1=0x19,Ручей
 String2=0x04,Stream
 LineWidth=2
-BoderWidth=0
+BorderWidth=0
 Xpm="0 0 1 0"
 "1 c #0000FF",
 [end]
@@ -926,7 +926,7 @@ Type=0x18
 String1=0x19,Река
 String2=0x04,River
 LineWidth=3
-BoderWidth=0
+BorderWidth=0
 Xpm="0 0 1 0"
 "1 c #0000FF",
 [end]
@@ -969,7 +969,7 @@ Type=0x1B
 String1=0x19,Переход
 String2=0x04,Tunnel
 LineWidth=1
-BoderWidth=1
+BorderWidth=1
 Xpm="0 0 2 0",
 "1 c #FF00FF",
 "2 c #959595",
@@ -1020,7 +1020,7 @@ Type=0x1F
 String1=0x19,Бол.река
 String2=0x04,Big river
 LineWidth=4
-BoderWidth=0
+BorderWidth=0
 Xpm="0 0 1 0"
 "1 c #0000FF",
 [end]
@@ -1046,7 +1046,7 @@ String2=0x04,Contour
 ExtendedLabels=Y
 FontStyle=NoLabel
 LineWidth=1
-BoderWidth=0
+BorderWidth=0
 Xpm="0 0 1 0"
 "1 c #BD956A",
 [end]
@@ -1062,7 +1062,7 @@ CustomColo=DayAndNight
 DayCustomColo=#BD0000
 NightCustomColo=#BD0000
 LineWidth=1
-BoderWidth=0
+BorderWidth=0
 Xpm="0 0 1 0"
 "1 c #BD0000",
 [end]
@@ -1085,7 +1085,7 @@ Type=0x24
 String1=0x19,Трещина
 String2=0x04,Crevasse
 LineWidth=1
-BoderWidth=0
+BorderWidth=0
 Xpm="0 0 1 0"
 "1 c #0000FF",
 [end]
@@ -1096,7 +1096,7 @@ Type=0x25
 String1=0x19,Овраг
 String2=0x04,Gully
 LineWidth=2
-BoderWidth=0
+BorderWidth=0
 Xpm="0 0 1 0"
 "1 c #BD0000",
 [end]
@@ -1225,7 +1225,7 @@ Type=0x2F
 String1=0x19,Рамка
 String2=0x04,Frame
 LineWidth=1
-BoderWidth=0
+BorderWidth=0
 Xpm="0 0 1 0",
 "1 c #FF00FF",
 [end]
@@ -1236,7 +1236,7 @@ Type=0x32
 String1=0x19,Проходимость-2
 String2=0x04,Passable-2
 LineWidth=6
-BoderWidth=1
+BorderWidth=1
 Xpm="0 0 2 0",
 "1 c #00A500",
 "2 c #00A500",
@@ -1284,7 +1284,7 @@ Type=0x35
 String1=0x19,Проходимость-5
 String2=0x04,Passable-5
 LineWidth=6
-BoderWidth=1
+BorderWidth=1
 Xpm="0 0 2 0",
 "1 c #FF9500",
 "2 c #FF9500",
@@ -1335,7 +1335,7 @@ Type=0x44
 String1=0x19,Ледник
 String2=0x04,Glacier
 LineWidth=1
-BoderWidth=0
+BorderWidth=0
 Xpm="0 0 1 0"
 "1 c #0000FF",
 [end]
@@ -1346,7 +1346,7 @@ Type=0x45
 String1=0x19,Ледник
 String2=0x04,Glacier
 LineWidth=1
-BoderWidth=0
+BorderWidth=0
 Xpm="0 0 1 0"
 "1 c #0000FF",
 [end]
