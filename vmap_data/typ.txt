@@ -696,9 +696,11 @@ String1=0x19,Автомагистраль
 String2=0x04,Major highway
 LineWidth=5
 BorderWidth=1
-Xpm="0 0 2 0",
+Xpm="0 0 4 0",
 "1 c #FF0000",
 "2 c #000000",
+"3 c #FF0000",
+"4 c #000000",
 [end]
 
 ;POLYLINE 0x02  шоссе
@@ -708,9 +710,11 @@ String1=0x19,Шоссе
 String2=0x04,Highway
 LineWidth=1
 BorderWidth=1
-Xpm="0 0 2 0",
+Xpm="0 0 4 0",
 "1 c #FF0000",
 "2 c #000000",
+"3 c #FF0000",
+"4 c #000000",
 [end]
 
 ;POLYLINE 0x03  верх обрыва
@@ -719,9 +723,11 @@ Type=0x3
 String1=0x19,Обрыв
 String2=0x04,Cliff
 UseOrientation=N
-Xpm="32 9 2 1"
+Xpm="32 9 4 1"
 "* c #BD0000",
 "  c none",
+"3 c #BD0000",
+"4 c none",
 "    **      **      **      **  ",
 "    **      **      **      **  ",
 "    **      **      **      **  ",
@@ -740,9 +746,11 @@ String1=0x19,Грейдер
 String2=0x04,Improved road
 LineWidth=1
 BorderWidth=1
-Xpm="0 0 2 0",
+Xpm="0 0 4 0",
 "1 c #FFFFFF",
 "2 c #000000",
+"3 c #FFFFFF",
+"4 c #000000",
 [end]
 
 ;POLYLINE 0x05  отдельные строения
@@ -752,8 +760,11 @@ String1=0x19,Дом
 String2=0x04,House
 LineWidth=6
 BorderWidth=0
-Xpm="0 0 1 0",
+Xpm="0 0 4 0",
 "1 c #000000",
+"2 c none",
+"3 c #000000",
+"4 c none",
 [end]
 
 ;POLYLINE 0x06  проезжая грунтовка
@@ -763,8 +774,11 @@ String1=0x19,Грунтовка
 String2=0x04,Good road
 LineWidth=2
 BorderWidth=0
-Xpm="0 0 1 0",
+Xpm="0 0 4 0",
 "1 c #000000",
+"2 c none",
+"3 c #000000",
+"4 c none",
 [end]
 
 ;POLYLINE 0x07  непроезжий грейдер
@@ -773,14 +787,16 @@ Type=0x7
 String1=0x19,Непр.грейдер
 String2=0x04,Double ditch
 UseOrientation=N
-Xpm="32 5 2 1"
-"# c #BD0000",
-"$ c none",
-"##$$##$$##$$##$$##$$##$$##$$##$$",
-"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",
-"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",
-"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",
-"##$$##$$##$$##$$##$$##$$##$$##$$",
+Xpm="32 5 4 1"
+"* c #BD0000",
+"  c none",
+"3 c #BD0000",
+"4 c none",
+"**  **  **  **  **  **  **  **  ",
+"                                ",
+"                                ",
+"                                ",
+"**  **  **  **  **  **  **  **  ",
 [end]
 
 ;POLYLINE 0x08  мост-1 (пешеходный)
@@ -790,9 +806,11 @@ String1=0x19,Мост
 String2=0x04,Bridge
 LineWidth=2
 BorderWidth=1
-Xpm="0 0 2 0",
+Xpm="0 0 4 0",
 "1 c #BD00BD",
 "2 c #000000",
+"3 c #BD00BD",
+"4 c #000000",
 [end]
 
 ;POLYLINE 0x09  мост-2 (автомобильный)
@@ -802,9 +820,11 @@ String1=0x19,Мост
 String2=0x04,Bridge
 LineWidth=4
 BorderWidth=2
-Xpm="0 0 2 1",
+Xpm="0 0 4 1",
 "1 c #BD00BD",
 "2 c #000000",
+"3 c #BD00BD",
+"4 c #000000",
 [end]
 
 ;POLYLINE 0x0A  непроезжая грунтовка
@@ -812,9 +832,11 @@ Xpm="0 0 2 1",
 Type=0x0a
 String1=0x19,Непр.грунтовка
 String2=0x04,Unpaved road
-Xpm="32 2 2 1"
+Xpm="32 2 4 1"
 "* c #000000",
 "  c none",
+"3 c #000000",
+"4 c none",
 "  ************    ************  ",
 "  ************    ************  ",
 [end]
@@ -826,9 +848,11 @@ String1=0x19,Крупное шоссе
 String2=0x04,Principal highway
 LineWidth=3
 BorderWidth=1
-Xpm="0 0 2 0",
+Xpm="0 0 4 0",
 "1 c #FF0000",
 "2 c #000000",
+"3 c #FF0000",
+"4 c #000000",
 [end]
 
 ;POLYLINE 0x0C  хребет
@@ -838,8 +862,11 @@ String1=0x19,Хребет
 String2=0x04,Ridge
 LineWidth=3
 BorderWidth=0
-Xpm="0 0 1 0"
+Xpm="0 0 4 0"
 "1 c #BD0000",
+"2 c none",
+"3 c #BD0000",
+"4 c none",
 [end]
 
 ;POLYLINE 0x0D  УЖД/подъездные пути
@@ -847,11 +874,13 @@ Xpm="0 0 1 0"
 Type=0x0d
 String1=0x19,УЖД/Подъездные пути
 String2=0x04,Minor railroad
-Xpm="32 3 2 1"
+Xpm="32 3 4 1"
 "# c #000000"
-"$ c #FFFFFF"
+"  c #FFFFFF"
+"3 c #000000"
+"4 c #FFFFFF"
 "################################"
-"$$$$########$$$$$$$$########$$$$"
+"    ########        ########    "
 "################################"
 [end]
 
@@ -862,9 +891,11 @@ String1=0x19,Мост
 String2=0x04,Bridge
 LineWidth=7
 BorderWidth=2
-Xpm="0 0 2 0",
+Xpm="0 0 4 0",
 "1 c #BD00BD",
 "2 c #000000",
+"3 c #BD00BD",
+"4 c #000000",
 [end]
 
 ;POLYLINE 0x0F  мал.хребет
@@ -874,8 +905,11 @@ String1=0x19,Отрог
 String2=0x04,Offshoot
 LineWidth=2
 BorderWidth=0
-Xpm="0 0 1 0"
+Xpm="0 0 4 0"
 "1 c #BD0000",
+"2 c none",
+"3 c #BD0000",
+"4 c none",
 [end]
 
 ;POLYLINE 0x15  река-1
@@ -885,8 +919,11 @@ String1=0x19,Ручей
 String2=0x04,Stream
 LineWidth=2
 BorderWidth=0
-Xpm="0 0 1 0"
+Xpm="0 0 4 0"
 "1 c #0000FF",
+"2 c none",
+"3 c #0000FF",
+"4 c none",
 [end]
 
 ;POLYLINE 0x16  просека
@@ -894,9 +931,11 @@ Xpm="0 0 1 0"
 Type=0x16
 String1=0x19,Просека
 String2=0x04,Clearing
-Xpm="32 1 2 1"
+Xpm="32 1 4 1"
 "* c #000000",
 "  c none",
+"3 c #000000",
+"4 c none",
 "  ************    ************  ",
 [end]
 
@@ -907,8 +946,11 @@ String1=0x19,Река
 String2=0x04,River
 LineWidth=3
 BorderWidth=0
-Xpm="0 0 1 0"
+Xpm="0 0 4 0"
 "1 c #0000FF",
+"2 c none",
+"3 c #0000FF",
+"4 c none",
 [end]
 
 ;POLYLINE 0x19  забор
@@ -917,9 +959,11 @@ Type=0x19
 String1=0x19,Забор
 String2=0x04,Fence
 UseOrientation=N
-Xpm="32 5 2 1"
+Xpm="32 5 4 1"
 "* c #000000",
 "  c none",
+"3 c #000000",
+"4 c none",
 "*   *           *   *           ",
 " * *             * *            ",
 "********************************",
@@ -933,7 +977,9 @@ Type=0x1A
 String1=0x19,Мал.ЛЭП
 String2=0x04,Minor power line
 UseOrientation=N
-Xpm="32 5 2 1"
+Xpm="32 5 4 1"
+"* c #000000",
+"  c none",
 "* c #000000",
 "  c none",
 "                        *       ",
@@ -950,9 +996,11 @@ String1=0x19,Переход
 String2=0x04,Tunnel
 LineWidth=1
 BorderWidth=1
-Xpm="0 0 2 0",
+Xpm="0 0 4 0",
 "1 c #FF00FF",
 "2 c #959595",
+"3 c #FF00FF",
+"4 c #959595",
 [end]
 
 ;POLYLINE 0x1C  просека широкая
@@ -960,9 +1008,11 @@ Xpm="0 0 2 0",
 Type=0x1C
 String1=0x19,Шир.просека
 String2=0x04,Wide clearing
-Xpm="32 3 2 1"
+Xpm="32 3 4 1"
 "* c #000000",
 "- c #FFFFFF",
+"3 c #000000",
+"4 c #FFFFFF",
 "--------------------------------",
 "--------------------------------",
 "--------------------------------",
@@ -973,9 +1023,11 @@ Xpm="32 3 2 1"
 Type=0x1D
 String1=0x19,Граница обл.
 String2=0x04,Border
-Xpm="32 1 2 1"
+Xpm="32 1 4 1"
 "* c #FF0000",
 "  c none",
+"3 c #FF0000",
+"4 c none",
 " **   *******************   **  ",
 [end]
 
@@ -985,9 +1037,11 @@ Type=0x1E
 String1=0x19,Низ обрыва
 String2=0x04,Cliff bottom
 UseOrientation=N
-Xpm="32 4 2 1"
+Xpm="32 4 4 1"
 "* c #c5c5c5",
 "  c none",
+"3 c #c5c5c5",
+"4 c none",
 "**      **      **      **      ",
 "****  ******  ******  ******  **",
 "  ******  ******  ******  ***** ",
@@ -1001,8 +1055,11 @@ String1=0x19,Бол.река
 String2=0x04,Big river
 LineWidth=4
 BorderWidth=0
-Xpm="0 0 1 0"
+Xpm="0 0 4 0"
 "1 c #0000FF",
+"2 c none",
+"3 c #0000FF",
+"4 c none",
 [end]
 
 ;POLYLINE 0x20  пунктирная горизонталь
@@ -1012,9 +1069,11 @@ String1=0x19,Доп.горизонталь
 String2=0x04,Minor contour
 ExtendedLabels=Y
 FontStyle=NoLabel
-Xpm="32 1 2 1"
+Xpm="32 1 4 1"
 "* c #BD956A",
 "  c none",
+"3 c #BD956A",
+"4 c none",
 "  ************    ************  ",
 [end]
 
@@ -1027,8 +1086,11 @@ ExtendedLabels=Y
 FontStyle=NoLabel
 LineWidth=1
 BorderWidth=0
-Xpm="0 0 1 0"
+Xpm="0 0 4 0"
 "1 c #BD956A",
+"2 c none",
+"3 c #BD956A",
+"4 c none",
 [end]
 
 ;POLYLINE 0x22  жирная горизонталь
@@ -1043,8 +1105,11 @@ DayCustomColor=#BD0000
 NightCustomColor=#BD0000
 LineWidth=1
 BorderWidth=0
-Xpm="0 0 1 0"
+Xpm="0 0 4 0"
 "1 c #BD0000",
+"2 c none",
+"3 c #BD0000",
+"4 c none",
 [end]
 
 ;POLYLINE 0x23  контур леса
@@ -1052,9 +1117,11 @@ Xpm="0 0 1 0"
 Type=0x23
 String1=0x19,Контур
 String2=0x04,Green dots
-Xpm="32 2 2 1"
+Xpm="32 2 4 1"
 "* c #009500",
 "  c none",
+"3 c #009500",
+"4 c none",
 " **  **  **  **  **  **  **  ** ",
 " **  **  **  **  **  **  **  ** ",
 [end]
@@ -1066,8 +1133,11 @@ String1=0x19,Трещина
 String2=0x04,Crevasse
 LineWidth=1
 BorderWidth=0
-Xpm="0 0 1 0"
+Xpm="0 0 4 0"
 "1 c #0000FF",
+"2 c none",
+"3 c #0000FF",
+"4 c none",
 [end]
 
 ;POLYLINE 0x25  овраг
@@ -1077,8 +1147,11 @@ String1=0x19,Овраг
 String2=0x04,Gully
 LineWidth=2
 BorderWidth=0
-Xpm="0 0 1 0"
+Xpm="0 0 4 0"
 "1 c #BD0000",
+"2 c none",
+"3 c #BD0000",
+"4 c none",
 [end]
 
 ;POLYLINE 0x26  пунктирный ручей
@@ -1086,9 +1159,11 @@ Xpm="0 0 1 0"
 Type=0x26
 String1=0x19,Пересых.ручей
 String2=0x04,Int.stream
-Xpm="32 2 2 1"
+Xpm="32 2 4 1"
 "* c #0000FF",
 "  c none",
+"3 c #0000FF",
+"4 c none",
 "  ************    ************  ",
 "  ************    ************  ",
 [end]
@@ -1099,12 +1174,14 @@ Type=0x27
 UseOrientation=N
 String1=0x19,Железная дорога
 String2=0x04,Railroad
-Xpm="32 4 2 1"
+Xpm="32 4 4 1"
 "# c #000000"
-"$ c #FFFFFF"
+"  c #FFFFFF"
+"3 c #000000"
+"4 c #FFFFFF"
 "################################"
-"$$$$########$$$$$$$$########$$$$"
-"$$$$########$$$$$$$$########$$$$"
+"    ########        ########    "
+"    ########        ########    "
 "################################"
 [end]
 
@@ -1114,9 +1191,11 @@ Type=0x28
 String1=0x19,Газопровод
 String2=0x04,Gas
 UseOrientation=N
-Xpm="32 5 2 1"
+Xpm="32 5 4 1"
 "* c #000000",
 "  c none",
+"3 c #000000",
+"4 c none",
 "              ***               ",
 "             *   *              ",
 "**************   ***************",
@@ -1130,9 +1209,11 @@ Type=0x29
 String1=0x19,ЛЭП
 String2=0x04,Power line
 UseOrientation=N
-Xpm="32 5 2 1"
+Xpm="32 5 4 1"
 "* c #000000",
 "  c none",
+"3 c #000000",
+"4 c none",
 "        **            ***       ",
 "        **              ***     ",
 "********************************",
@@ -1145,9 +1226,11 @@ Xpm="32 5 2 1"
 Type=0x2A
 String1=0x19,Тропа
 String2=0x04,Trail
-Xpm="32 2 2 1"
+Xpm="32 2 4 1"
 "* c #000000",
 "  c none",
+"3 c #000000",
+"4 c none",
 "*** *** *** *** *** *** *** *** ",
 "*** *** *** *** *** *** *** *** ",
 [end]
@@ -1157,9 +1240,11 @@ Xpm="32 2 2 1"
 Type=0x2B
 String1=0x19,Сухая канава
 String2=0x04,Ditch
-Xpm="32 2 2 1"
+Xpm="32 2 4 1"
 "* c #BD0000",
 "  c none",
+"3 c #BD0000",
+"4 c none",
 " *****   *****   *****   *****  ",
 " *****   *****   *****   *****  ",
 [end]
@@ -1169,9 +1254,11 @@ Xpm="32 2 2 1"
 Type=0x2C
 String1=0x19,Вал
 String2=0x04,Knoll line
-Xpm="32 3 2 1"
+Xpm="32 3 4 1"
 "* c #BD0000",
 "  c none",
+"3 c #BD0000",
+"4 c none",
 "  ***     ***     ***     ***   ",
 "********************************",
 "  ***     ***     ***     ***   ",
@@ -1182,9 +1269,11 @@ Xpm="32 3 2 1"
 Type=0x2d
 String1=0x19,Иcчез.дорога
 String2=0x04,Int.path
-Xpm="32 1 2 1"
+Xpm="32 1 4 1"
 "* c #000000",
 "  c none",
+"3 c #000000",
+"4 c none",
 "   ****  ****      ****  ****   ",
 [end]
 
@@ -1193,9 +1282,11 @@ Xpm="32 1 2 1"
 Type=0x2E
 String1=0x19,Заметн.дорога
 String2=0x04,Path
-Xpm="32 1 2 1"
+Xpm="32 1 4 1"
 "* c #000000",
 "  c none",
+"3 c #000000",
+"4 c none",
 "  ************    ************  ",
 [end]
 
@@ -1206,8 +1297,11 @@ String1=0x19,Рамка
 String2=0x04,Frame
 LineWidth=1
 BorderWidth=0
-Xpm="0 0 1 0",
+Xpm="0 0 4 0",
 "1 c #FF00FF",
+"2 c none",
+"3 c #FF00FF",
+"4 c none",
 [end]
 
 ;POLYLINE 0x32  Проходимость-2
@@ -1217,9 +1311,11 @@ String1=0x19,Проходимость-2
 String2=0x04,Passable-2
 LineWidth=6
 BorderWidth=1
-Xpm="0 0 2 0",
+Xpm="0 0 4 0",
 "1 c #00A500",
 "2 c #00A500",
+"3 c #00A500",
+"4 c #00A500",
 [end]
 
 ;POLYLINE 0x33  Проходимость-3
@@ -1227,9 +1323,11 @@ Xpm="0 0 2 0",
 Type=0x33
 String1=0x19,Проходимость-3
 String2=0x04,Passable-3
-Xpm="32 8 2 1"
+Xpm="32 8 4 1"
 "* c #00A500",
 "  c none",
+"3 c #00A500",
+"4 c none",
 "****    ****    ****    ****    ",
 "****    ****    ****    ****    ",
 "****    ****    ****    ****    ",
@@ -1245,9 +1343,11 @@ Xpm="32 8 2 1"
 Type=0x34
 String1=0x19,Проходимость-4
 String2=0x04,Passable-4
-Xpm="32 8 2 1"
+Xpm="32 8 4 1"
 "* c #FF9500",
 "  c none",
+"3 c #FF9500",
+"4 c none",
 "****    ****    ****    ****    ",
 "****    ****    ****    ****    ",
 "****    ****    ****    ****    ",
@@ -1265,9 +1365,11 @@ String1=0x19,Проходимость-5
 String2=0x04,Passable-5
 LineWidth=6
 BorderWidth=1
-Xpm="0 0 2 0",
+Xpm="0 0 4 0",
 "1 c #FF9500",
 "2 c #FF9500",
+"3 c #FF9500",
+"4 c #FF9500",
 [end]
 
 ;POLYLINE 0x36  граница районов
@@ -1275,9 +1377,11 @@ Xpm="0 0 2 0",
 Type=0x36
 String1=0x19,Граница рай.
 String2=0x04,Border
-Xpm="32 1 2 1"
+Xpm="32 1 4 1"
 "* c #BD00BD",
 "  c none",
+"3 c #BD00BD",
+"4 c none",
 "  *********    **    *********  ",
 [end]
 
@@ -1287,9 +1391,11 @@ Type=0x37
 String1=0x19,Граница ООПТ
 String2=0x04,Protected area 
 UseOrientation=N
-Xpm="32 5 2 1"
+Xpm="32 5 4 1"
 "* c #BD00BD"
 "  c none"
+"3 c #BD00BD"
+"4 c none"
 "    *               *           "
 "    *               *           "
 "********************************"
@@ -1302,9 +1408,11 @@ Xpm="32 5 2 1"
 Type=0x40
 String1=0x19,Арык
 String2=0x04,Irrigation
-Xpm="32 2 2 1"
+Xpm="32 2 4 1"
 "* c #0000FF",
 "  c none",
+"3 c #0000FF",
+"4 c none",
 " **  **  **  **  **  **  **  ** ",
 " **  **  **  **  **  **  **  ** ",
 [end]
@@ -1316,8 +1424,11 @@ String1=0x19,Ледник
 String2=0x04,Glacier
 LineWidth=1
 BorderWidth=0
-Xpm="0 0 1 0"
+Xpm="0 0 4 0"
 "1 c #0000FF",
+"2 c none",
+"3 c #0000FF",
+"4 c none",
 [end]
 
 ;POLYLINE 0x45  толстая горизонталь на леднике
@@ -1327,8 +1438,11 @@ String1=0x19,Ледник
 String2=0x04,Glacier
 LineWidth=1
 BorderWidth=0
-Xpm="0 0 1 0"
+Xpm="0 0 4 0"
 "1 c #0000FF",
+"2 c none",
+"3 c #0000FF",
+"4 c none",
 [end]
 
 ;POI 0x0700  город
