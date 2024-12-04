@@ -223,9 +223,8 @@ public:
     std::string g = "GEOFIG_SRTM";
     options.add("cnt",        1,0,g, "Make contours, default: 1");
     options.add("cnt_step",   1,0,g, "  Contour step [m], default: 100");
-    options.add("cnt_smooth_dh", 1,0,g, "  Smooth image before contour finding, limit height [m], default: 0.0");
-    options.add("cnt_smooth_dr", 1,0,g, "  Smooth image before contour finding, radius [srtm grid units], default: 0.0");
     options.add("cnt_vtol",   1,0,g, "  Tolerance for smoothing contours [m], default: 5.0");
+    options.add("cnt_rmin",   1,0,g, "  Radius for smoothing contours [srtm grid units], default: 10.0");
     options.add("cnt_smult",  1,0,g, "  Thick contour multiplier, default: 5, every 5th contour is thick");
     options.add("cnt_minpts", 1,0,g, "  Min.number of points in a closed contour, default: 6");
     options.add("cnt_templ1", 1,0,g, "  FIG template for contours, default: 2 1 0 1 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0");
@@ -233,9 +232,8 @@ public:
     options.add("scnt",       1,0,g, "Make large slope contours, default: 1");
     options.add("scnt_minpts",1,0,g, "  Min.number of point in a slope contour, default: 5");
     options.add("scnt_val",   1,0,g, "  Threshold value for slope contour, [deg], default: 35");
-    options.add("scnt_smooth_dh", 1,0,g, "  Smooth image before slope contour finding, limit height [m], default: 0.0");
-    options.add("scnt_smooth_dr", 1,0,g, "  Smooth image before slope contour finding, radius [srtm grid units], default: 0.0");
     options.add("scnt_vtol",  1,0,g, "  Tolerance for smoothing slope contours [deg], default: 5.0");
+    options.add("scnt_rmin",  1,0,g, "  Radius for smoothing slope contours [srtm grid units], default: 10.0");
     options.add("scnt_templ", 1,0,g, "  FIG template for large slopes, default: 2 3 0 1 24 24 91 -1 -1 0.000 1 1 7 0 0");
     options.add("peaks",      1,0,g, "Make peaks points, default: 1");
     options.add("peaks_dh",   1,0,g, "  DH parameter for peak finder [m], default: 20");
@@ -282,13 +280,13 @@ public:
     double cnt_smooth_dh  = opts.get<double>("cnt_smooth_dh", 0.0);
     double cnt_smooth_dr  = opts.get<double>("cnt_smooth_dr", 0.0);
     double cnt_vtol = opts.get<double>("cnt_vtol", 5.0);
+    double cnt_rmin = opts.get<double>("cnt_rmin", 10.0);
     int cnt_smult = opts.get<int>("cnt_smult",  5);
     int cnt_minpts = opts.get<int>("cnt_minpts",  6);
     int scnt_minpts = opts.get<int>("scnt_minpts",  5);
     double scnt_val = opts.get<double>("scnt_val",     35.0);
-    double scnt_smooth_dh  = opts.get<double>("scnt_smooth_dh", 0.0);
-    double scnt_smooth_dr  = opts.get<double>("scnt_smooth_dr", 0.0);
     double scnt_vtol = opts.get<double>("scnt_vtol", 5.0);
+    double scnt_rmin = opts.get<double>("scnt_rmin", 10.0);
     auto peaks_dh = opts.get<int>("peaks_dh",   20);
 
     auto peaks_ps = opts.get<int>("peaks_ps",  1000);
@@ -365,7 +363,7 @@ public:
       }
 
       // find contours
-      auto cnt_data = srtm.find_contours(wgs_range, cnt_step, cnt_vtol, cnt_smooth_dh, cnt_smooth_dr);
+      auto cnt_data = srtm.find_contours(wgs_range, cnt_step, cnt_vtol, cnt_rmin);
 
       for(auto & c:cnt_data){
         int v0 = rint(c.first);
@@ -403,7 +401,7 @@ public:
       if (replace) fig_remove_templ(F, scnt_templ);
 
       // find slope contours
-      auto scnt_data = srtm.find_slope_contours(wgs_range, scnt_val, scnt_vtol, scnt_smooth_dh, scnt_smooth_dr);
+      auto scnt_data = srtm.find_slope_contours(wgs_range, scnt_val, scnt_vtol, scnt_rmin);
 
       // crop
       if (crop_rect) scnt_data = rect_crop_multi(crop_rect, scnt_data, 1);
