@@ -333,7 +333,8 @@ public:
     ConvMap cnv(ref);
 
     // FIG range in WGS coords
-    dRect wgs_range = cnv.frw_acc(ref.bbox(), 1e-7);
+    dRect wgs_range;
+    for (const auto & i:ref.ref) wgs_range.expand(i.second);
 
     // create SRTM interface
     SRTM srtm(opts);
