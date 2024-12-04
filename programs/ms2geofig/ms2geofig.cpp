@@ -226,11 +226,9 @@ public:
     options.add("cnt_vtol",   1,0,g, "  Tolerance for smoothing contours [m], default: 5.0");
     options.add("cnt_rmin",   1,0,g, "  Radius for smoothing contours [srtm grid units], default: 10.0");
     options.add("cnt_smult",  1,0,g, "  Thick contour multiplier, default: 5, every 5th contour is thick");
-    options.add("cnt_minpts", 1,0,g, "  Min.number of points in a closed contour, default: 6");
     options.add("cnt_templ1", 1,0,g, "  FIG template for contours, default: 2 1 0 1 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0");
     options.add("cnt_templ2", 1,0,g, "  FIG template for thick contours, default: 2 1 0 2 #D0B090 7 90 -1 -1 0.000 1 1 0 0 0");
     options.add("scnt",       1,0,g, "Make large slope contours, default: 1");
-    options.add("scnt_minpts",1,0,g, "  Min.number of point in a slope contour, default: 5");
     options.add("scnt_val",   1,0,g, "  Threshold value for slope contour, [deg], default: 35");
     options.add("scnt_vtol",  1,0,g, "  Tolerance for smoothing slope contours [deg], default: 5.0");
     options.add("scnt_rmin",  1,0,g, "  Radius for smoothing slope contours [srtm grid units], default: 10.0");
@@ -283,8 +281,6 @@ public:
     double cnt_vtol = opts.get<double>("cnt_vtol", 5.0);
     double cnt_rmin = opts.get<double>("cnt_rmin", 10.0);
     int cnt_smult = opts.get<int>("cnt_smult",  5);
-    int cnt_minpts = opts.get<int>("cnt_minpts",  6);
-    int scnt_minpts = opts.get<int>("scnt_minpts",  5);
     double scnt_val = opts.get<double>("scnt_val",     35.0);
     double scnt_vtol = opts.get<double>("scnt_vtol", 5.0);
     double scnt_rmin = opts.get<double>("scnt_rmin", 10.0);
@@ -382,7 +378,6 @@ public:
 
         for (const auto & l:c.second){
           if (l.size() < 2) continue;
-          if (l.size() < cnt_minpts && dist(l[0], l[l.size()-1]) < line_flt) continue;
           FigObj fo = figobj_template(isth? cnt_templ1: cnt_templ2);
           fo.comment.push_back(type_to_str(v0));
           if (add_comm!="") fo.comment.push_back(add_comm);
@@ -408,14 +403,6 @@ public:
 
       // convert wgs -> fig
       cnv.bck(scnt_data);
-
-      // remove small pieces
-      for(auto c = scnt_data.begin(); c!= scnt_data.end(); c++){
-        if (c->size() < scnt_minpts) {
-          scnt_data.erase(c--);
-          continue;
-        }
-      }
 
       // reduce number of points
       line_filter_rdp(scnt_data, line_flt);
