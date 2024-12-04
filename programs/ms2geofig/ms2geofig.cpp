@@ -276,8 +276,6 @@ public:
     bool riv   = opts.get("riv",   false);
     bool mnt   = opts.get("mnt",   false);
     int cnt_step  = opts.get<int>("cnt_step", 100);
-    double cnt_smooth_dh  = opts.get<double>("cnt_smooth_dh", 0.0);
-    double cnt_smooth_dr  = opts.get<double>("cnt_smooth_dr", 0.0);
     double cnt_vtol = opts.get<double>("cnt_vtol", 5.0);
     double cnt_rmin = opts.get<double>("cnt_rmin", 10.0);
     int cnt_smult = opts.get<int>("cnt_smult",  5);
