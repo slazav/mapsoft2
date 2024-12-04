@@ -252,6 +252,7 @@ public:
     options.add("add_comm",   1,0,g, "Add a comment to all created fig objects.");
     options.add("crop_nom",   1,0,g, "Crop objects to nomenclature region.");
     options.add("crop_rect",  1,0,g, "Crop objects to a rectangle.");
+    options.add("line_flt",   1,0,g, "tolerance for RDP line filtering [fig units], default 5.");
   }
 
   void help_impl(HelpPrinter & pr) override {
@@ -326,8 +327,7 @@ public:
     opts.check_conflict({"crop_rect", "crop_nom"});
     dRect crop_rect(opts.get("crop_rect", dRect()));
     if (opts.exists("crop_nom"))  crop_rect = nom_to_wgs(opts.get("crop_nom"));
-
-    double acc=5; // FIG units
+    auto line_flt = opts.get<double>("line_flt", 5.0);
 
     // read fig file
     Fig F;
@@ -375,14 +375,14 @@ public:
         cnv.bck(c.second);
 
         // filter points
-        line_filter_rdp(c.second, acc);
+        line_filter_rdp(c.second, line_flt);
 
         bool isth = v0%(cnt_step*cnt_smult); // is it a thin contour?
         if (v) std::cout << v0 << " ";
 
         for (const auto & l:c.second){
           if (l.size() < 2) continue;
-          if (l.size() < cnt_minpts && dist(l[0], l[l.size()-1]) < acc) continue;
+          if (l.size() < cnt_minpts && dist(l[0], l[l.size()-1]) < line_flt) continue;
           FigObj fo = figobj_template(isth? cnt_templ1: cnt_templ2);
           fo.comment.push_back(type_to_str(v0));
           if (add_comm!="") fo.comment.push_back(add_comm);
@@ -418,7 +418,7 @@ public:
       }
 
       // reduce number of points
-      line_filter_rdp(scnt_data, acc);
+      line_filter_rdp(scnt_data, line_flt);
 
       // join crossing segments
       join_cross(scnt_data);
@@ -466,7 +466,7 @@ public:
 
       cnv.bck(data);
 
-      line_filter_rdp(data, acc);
+      line_filter_rdp(data, line_flt);
 
       for(const auto & l:data){
         FigObj fo = figobj_template(riv_templ);
@@ -488,7 +488,7 @@ public:
 
       cnv.bck(data);
 
-      line_filter_rdp(data, acc);
+      line_filter_rdp(data, line_flt);
 
       for(const auto & l:data){
         FigObj fo = figobj_template(mnt_templ);
