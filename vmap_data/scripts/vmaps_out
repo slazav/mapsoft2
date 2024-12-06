@@ -55,6 +55,8 @@ fi
 check_nt_tiles "$MBTILES"  || vmaps_mbtiles
 check_nt_tiles "$SQLITEDB" || vmaps_sqlitedb
 
+[ "$INDEX_TXT" = "" ] || vmaps_index
+
 ##############################################################
 # create global img file
 

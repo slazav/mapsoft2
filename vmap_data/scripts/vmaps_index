@@ -1,0 +1,86 @@
+#!/bin/bash -eu
+
+# update txt and hmtl index files
+##################################################
+
+# read global configuration and functions
+. vmaps.sh
+
+# read local configuration
+. ./vmaps.conf
+
+##################################################
+# update index.txt (only for new vmap files)
+
+[ "$INDEX_TXT" != "" -a "$INDEX_HTM" != "" ] || exit
+echo "Creating $INDEX_HTM"
+
+files=${@:-$(list_vmaps)}
+for vmap in $files; do
+  name=${vmap%.*}
+  name=${name##*/}
+
+  # Timestamp of the last commit
+  t=$(vmap_git_date $vmap)
+
+  # Detect if the information is up-to-date
+  # (file exists in index.txt and commit timestamp is same)
+  inf=$(awk "\$1==\"$name\" && \$2==\"$t\" {print \"1\"}" < index.txt)
+  [ "$inf" = "" ] || continue
+
+  # Calculate cover ratio
+  r="0"
+  for brd in $BRD_DIR/*.gpx; do
+    r="$r+$(ms2nom -E --name $name --cover $brd --cover_ratio 2>&1)"
+  done
+  r="$(awk "BEGIN{print int(($r)*100.0+0.5)}")" #"
+  [ "$r" != "" ] || r=0
+
+
+  if grep -q "^$name" $INDEX_TXT; then
+    echo "update index: $name"
+    ii=$(printf "%-12s %10s %3d" $name $t $r)
+    sed -i -r "s/^$name +[0-9-]+ +[0-9]+/$ii/" $INDEX_TXT
+  else
+    echo "update index: add $name"
+    printf "%-12s %10s %3d" $name $t $r >> $INDEX_TXT
+  fi
+done
+
+##################################################
+# update index.htm (only for new vmap files)
+
+cat > $INDEX_HTM <<EOF
+<table cellspacing=1 border=0 cellpadding=3>
+<tr>
+<th>name</th>
+<th>% ready</th>
+<th>last commit</th>
+<th>refs</th>
+</tr>
+EOF
+
+
+cat $INDEX_TXT |
+while read name tstamp ratio descr; do
+  color="#B0FFB0"
+  [ "$ratio" = "100" ] && color="#80FF80" ||:
+  [ "$ratio" = "0" ] && color="#E0E0E0" ||:
+
+cat >> $INDEX_HTM <<EOF
+<tr bgcolor=$color>
+<td><tt><b>$name</b></tt>&nbsp;&nbsp;$descr</td>
+<td align=right>$ratio%</td>
+<td>$tstamp</td>
+<td>
+  <a href="$name.png">[PNG]</a>
+  <a href="$name.map">[MAP]</a>
+  <a href="$name.mp.zip">[MP.ZIP]</a>
+</td>
+</tr>
+EOF
+done
+
+cat >> $INDEX_HTM <<EOF
+</table>
+EOF
