@@ -53,8 +53,8 @@ for i in $files; do
     args="$args --fig_enc UTF-8"
   fi
 
-  if [ "CROP_NOM" = "1" ]; then
-    args="$args --crop_nom \"$name\""
+  if [ "$CROP_NOM" = "1" ]; then
+    args="$args --crop_nom $name"
   fi
 
   # update vmap from the input file
