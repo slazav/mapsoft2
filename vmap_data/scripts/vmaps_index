@@ -15,6 +15,8 @@
 [ "$INDEX_TXT" != "" -a "$INDEX_HTM" != "" ] || exit
 echo "Creating $INDEX_HTM"
 
+[ -f "$INDEX_TXT" ] || touch "$INDEX_TXT"
+
 files=${@:-$(list_vmaps)}
 for vmap in $files; do
   name=${vmap%.*}
@@ -25,7 +27,7 @@ for vmap in $files; do
 
   # Detect if the information is up-to-date
   # (file exists in index.txt and commit timestamp is same)
-  inf=$(awk "\$1==\"$name\" && \$2==\"$t\" {print \"1\"}" < index.txt)
+  inf=$(awk "\$1==\"$name\" && \$2==\"$t\" {print \"1\"}" < $INDEX_TXT)
   [ "$inf" = "" ] || continue
 
   # Calculate cover ratio
@@ -43,7 +45,7 @@ for vmap in $files; do
     sed -i -r "s/^$name +[0-9-]+ +[0-9]+/$ii/" $INDEX_TXT
   else
     echo "update index: add $name"
-    printf "%-12s %10s %3d" $name $t $r >> $INDEX_TXT
+    printf "%-12s %10s %3d\n" $name $t $r >> $INDEX_TXT
   fi
 done
 
@@ -63,6 +65,7 @@ EOF
 
 cat $INDEX_TXT |
 while read name tstamp ratio descr; do
+  [ "$name" != "" ] || continue
   color="#B0FFB0"
   [ "$ratio" = "100" ] && color="#80FF80" ||:
   [ "$ratio" = "0" ] && color="#E0E0E0" ||:
