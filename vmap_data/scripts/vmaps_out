@@ -81,7 +81,7 @@ for brd in $BRD2_DIR/*.gpx; do
   reg=$(basename $brd .gpx)
   echo "Updating region: $reg"
 
-  htm=$OUT_DIR/all_$reg.htm
+  htm=$OUT_DIR/all_$reg.htm.in
   jpg=$OUT_DIR/all_$reg.jpg
   img=$OUT_DIR/all_$reg.img
 
