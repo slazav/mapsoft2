@@ -92,7 +92,7 @@ function vmap_update_cmap() {
   name=$1
   cmap=$2
   vmap=$VMAP_DIR/$name.$VMAP_EXT
-  tmppng=$(maketemp vmaps_cmap_XXXXXX.png)
+  tmppng=$(mktemp vmaps_cmap_XXXXXX.png)
   $MS2RENDER $vmap --out $tmppng\
     --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs "$name")"\
     --mkref nom --north --name "$name" --dpi $DPI --margins 10 --top_margin 30\
