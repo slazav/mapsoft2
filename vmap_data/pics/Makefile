@@ -3,7 +3,7 @@ PICS := avt kladb cross cerkov pam ohotn bash shaht razv dom trig trig_hr kan\
         v2_per v2_per1a v2_per1b v2_per2a v2_per2b v2_per3a v2_per3b v2_pernk\
         ldp  kladb pupyr yama skala\
         bol_l bol_h zd ur_vod por vdp pesch\
-        rossip1 rossip2 sand_ov camp\
+        rossip1 rossip2 sand_ov camp gate\
         ledn redk vyr_n vyr_o sand
 
 
