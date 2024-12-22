@@ -120,6 +120,16 @@ function vmap_render_map() {
     --cmap_load "$CMAP" --png_format pal ${map:+--map $map}
 }
 
+function vmap_render_mp() {
+  name=$1
+  mp=$2
+  mp_id=$3
+  vmap="$VMAP_DIR/$name.$VMAP_EXT"
+  $MS2VMAP "$vmap" -o "$mp"\
+    -t "$TYPEINFO" --define "$(vmap_defs "$name")"\
+    --mp_name "$name" --mp_id "$mp_id" --crop_nom "$name"
+}
+
 function list_vmaps {
  find $VMAP_DIR -maxdepth 1 -name "*.$VMAP_EXT" | sort
 }

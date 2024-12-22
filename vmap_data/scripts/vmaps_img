@@ -39,11 +39,9 @@ for i in $files; do
   echo "Making MP and IMG: $name"
 
   # generate MP
-  id=$(echo $name | md5sum | head -c6 | tr a-z A-Z)
-  id=$(echo -e "ibase=16\n$id\n" | bc)
-  $MS2VMAP "$vmap" -o "$mp"\
-    -t "$TYPEINFO" --define "$(vmap_defs "$name")"\
-    --mp_name "$name" --mp_id "$id" --crop_nom "$name"
+  mp_id=$(echo $name | md5sum | head -c6 | tr a-z A-Z)
+  mp_id=$(echo -e "ibase=16\n$mp_id\n" | bc)
+  vmap_render_mp "$name" "$mp" "$mp_id"
 
   # generate IMG
   $CGPSM "$mp" -o "$img"
