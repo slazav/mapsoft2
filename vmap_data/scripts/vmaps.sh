@@ -120,6 +120,27 @@ function vmap_render_map() {
     --cmap_load "$CMAP" --png_format pal ${map:+--map $map}
 }
 
+function vmap_render_tiles() {
+  name=$1
+  brd=$2
+  vmap=$VMAP_DIR/$name.$VMAP_EXT
+  $MS2RENDER $vmap\
+    --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs "$name" clip)"\
+    --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png"\
+    --zmin $(($TILE_MAXE+1)) --zmax $TILE_MAXZ\
+    --bgcolor 0 --png_format pal --cmap_load $CMAP\
+    --border_file $brd\
+    --tmap_scale 1 --fit_patt_size;\
+
+  $MS2RENDER $vmap\
+    --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs "$name" clip)"\
+    --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png"\
+    --zmin 0 --zmax $TILE_MAXE\
+    --bgcolor 0 --png_format pal --cmap_load $CMAP\
+    --border_file $brd\
+    --tmap_scale 1 --vmap_minsc 1;\
+}
+
 function vmap_render_mp() {
   name=$1
   mp=$2
