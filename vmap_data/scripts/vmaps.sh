@@ -101,7 +101,7 @@ function vmap_update_cmap() {
     --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs "$name")"\
     --mkref nom --north --name "$name" --dpi $DPI --margins 10 --top_margin 30\
     --title "$name" --title_size 20\
-    --cmap_save $cmap --png_format pal --png_format pal
+    --cmap_save $cmap --png_format pal --cmap_add 0 --cmap_colors 254
   rm -rf $tmppng
 }
 
