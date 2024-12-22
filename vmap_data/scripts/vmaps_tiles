@@ -39,16 +39,13 @@ for i in $files; do
     echo "can't find file: $vmap"
     continue
   fi
+  brd=$(mktemp vmaps_tiles_XXXX.gpx)
+  ms2conv $BRD_DIR/*.gpx -o "$brd"
 
-  # Loop through all regions (brd/<name>.gpx)
-  for brd in $BRD_DIR/*.gpx; do
-
-    $($MS2NOM --ext --name "$name" --cover "$brd") || continue
-
-    # update tiles
-    echo "Rendering tiles: $name"
-    vmap_render_tiles "$name" "$brd"
-  done
+  # update tiles
+  echo "Rendering tiles: $name"
+  vmap_render_tiles "$name" "$brd"
   touch "$TILE_DIR/$name.tstamp"
+  rm -f "$brd"
 done
 
