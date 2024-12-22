@@ -2,13 +2,26 @@
 
 # Обновить перевалы.
 # Перевалы скачиваются с сайта Вестры в виде KML, преобразуются в MP+TXT.
-# Обновляется VMAP, если есть файл wpasses/<name>_wp.sed, то vmap фильтруется.
+# Обновляется VMAP, если устновлена переменная WPASS_PREF и
+# есть файл ${WPASS_PREF}.sed, то vmap фильтруется.
 # Если в директории IN есть fig-файл, то он обновляется.
-
+#
 # vmaps_wp_update -- update passes
 # example: vmaps_wp_update j43-061 j43-062
 # Data is stored in ./wpasses/ dir
 
+# Arguments:
+# * Map names to update.
+#   Should be nomenclature names.
+#   Extensions and paths will be ignored.
+#
+# Parameters from vmaps.sh or ./vmaps.conf:
+#  * VMAP_DIR
+#  * VMAP_EXT
+#  * TYPEINFO
+#  * IN_DIR (optional) -- if fig file exists there, run vmaps_get_fig
+#  * WPASS_DIR  -- directory for keeping data
+#  * WPASS_PREF (optional) - for ${WPASS_PREF}.sed and old-style ${WPASS_PREF}_${name}.sed files
 ##################################################
 
 # read global configuration and functions
@@ -18,6 +31,7 @@
 . ./vmaps.conf
 
 ##################################################
+
 
 # get url for downloading data from westra pass catalog
 # usage:  ll2wp <wgs lonlat geom>
@@ -43,10 +57,10 @@ function get_conv(){
     [ "${map%%#*}" != '' ] || continue
     [ "$map" = '*' -o "$map" = "$name" ] || continue
     echo "$re"
-  done < "wpasses.cnv"
+  done < "${WPASS_PREF}.cnv"
 }
 
-mkdir -p -- wpasses
+mkdir -p -- ${WPASS_DIR}
 for i in "$@"; do
   # name without directory and extension:
   name=${i%.*}
@@ -58,38 +72,44 @@ for i in "$@"; do
   g="$(ms2nom --wgs --ext --name "$name")"
 
   # download
-  wget "$(ll2wp "$g")" -O - > "wpasses/${name}_wp.kml"
+  wget "$(ll2wp "$g")" -O - > "${WPASS_DIR}/${name}_wp.kml"
 
   # kml -> mp, txt
-  vmaps_wp_parse "wpasses/${name}_wp.kml"
-
-  if [ -f "wpasses.cnv" ]; then
-    echo "$(get_conv $name)" > wpasses_${name}.sed
-  fi
+  vmaps_wp_parse "${WPASS_DIR}/${name}_wp.kml"
 
   # merge into vmap
-  ms2vmap wpasses/${name}_wp.mp -o "$vmap"\
+  ms2vmap ${WPASS_DIR}/${name}_wp.mp -o "$vmap"\
     --types "$TYPEINFO" --define "$(vmap_defs $name)"\
     --replace_tag westra_passes --fix_rounding 1\
     --update_labels 1
 
-  # old-style sed conversion
-  sed_args=''
-  if [ -f "wpasses.sed" ];            then sed_args="$sed_args --file wpasses.sed"; fi
-  if [ -f "wpasses/${name}_wp.sed" ]; then sed_args="$sed_args --file wpasses/${name}_wp.sed"; fi
-  if [ -f "wpasses_${name}.sed" ];    then sed_args="$sed_args --file wpasses_${name}.sed"; fi
-  if [ -n "$sed_args" -a "$VMAP_EXT" = "vmap" ]; then
-    sed -r -i -e '/^OBJECT\t0x(67..|64..|1100)/,/^ +DATA/{' $sed_args -e "}" "$vmap"
-  fi
-  if [ -n "$sed_args" -a "$VMAP_EXT" = "vmap2" ]; then
-    sed -r -i -e '/^point:0x(67..|64..|1100)/,/^$/{/^name /{' $sed_args -e "}}" "$vmap"
-  fi
+  rm -f -- "${WPASS_DIR}/${name}_wp.mp"
 
-  rm -f -- "wpasses/${name}_wp.mp"
-  rm -f -- "wpasses_${name}.sed"
+  # convert names
+  if [ "$WPASS_PREF" != ""]; then
+    tmpsed=$(mktemp -u vmaps_wp_${name}_XXXX.sed)
+    if [ -f "${WPASS_PREF}.cnv" ]; then
+      echo "$(get_conv $name)" > ${tmpsed}
+    fi
+
+    sed_args=''
+    if [ -f "${tmpsed:-}" ]; then sed_args="$sed_args --file ${tmpsed}"; fi
+
+    # old-style sed conversion
+    if [ -f "${WPASS_DIR}/${name}_wp.sed" ]; then sed_args="$sed_args --file ${WPASS_DIR}/${name}_wp.sed"; fi
+    if [ -f "${WPASS_PREF}_${name}.sed" ];  then sed_args="$sed_args --file ${WPASS_PREF}_${name}.sed"; fi
+
+    if [ -n "$sed_args" -a "$VMAP_EXT" = "vmap" ]; then
+      sed -r -i -e '/^OBJECT\t0x(67..|64..|1100)/,/^ +DATA/{' $sed_args -e "}" "$vmap"
+    fi
+    if [ -n "$sed_args" -a "$VMAP_EXT" = "vmap2" ]; then
+      sed -r -i -e '/^point:0x(67..|64..|1100)/,/^$/{/^name /{' $sed_args -e "}}" "$vmap"
+    fi
+    rm -f -- "${tmpsed}"
+  fi
 
   # update fig if needed
-  if [ -f IN/$name.fig ]; then
+  if [ -f $IN_DIR/$name.fig ]; then
     vmaps_get_fig "$name.fig"
   fi
 

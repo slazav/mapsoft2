@@ -59,6 +59,10 @@ TLIST="";
 TILE_MAXZ=14;  # max z-index
 TILE_MAXE=6    # max index for empty map
 
+# vmaps_wp_update
+WPASS_DIR=wpasses
+WPASS_PREF=wpasses
+
 # programs (can be redifined in the local configuration)
 MS2VMAP=ms2vmap
 MS2RENDER=ms2render
