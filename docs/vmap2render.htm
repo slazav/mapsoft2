@@ -570,6 +570,7 @@ fill, cap, smooth и т.д.). Координты ориентированы по
 
 <li><p><tt>draw_pos (point|begin|end) </tt>
 <li><p><tt>draw_pos (dist|edist) &lt;dist&gt; [&lt;dist_b&gt;] [&lt;dist_e&gt;]</tt>
+<li><p><tt>draw_pos fill &lt;w&gt; &lt;h&gt; </tt>
 -- Место рисования элементов lines и circles: point -- в каждом узле
 объекта (значение по умолчанию и единственное возможное значение для
 точечных объектов); begin/end -- в начальной/конечной точке; dist, edist
@@ -580,7 +581,10 @@ fill, cap, smooth и т.д.). Координты ориентированы по
 второй параметр имеет значение dist, то начальное расстояние и период
 отсчитывюаются точно, а конечное расстояние получается не менее &lt;dist_e&gt;.
 Если edist -- то период подстраивается так, чтобы конечное расстояние было
-равно в точности &lt;dist_e&gt;.
+равно в точности &lt;dist_e&gt;; Если место рисования -- fill &lt;w&gt; &lt;h&gt,
+то создается картинка указанного размера, рисование происходит на ней (координаты
+отсчитываются от левого-верхнего угла), с помощью этой картинки закрашивается площадь.
+
 
 
 <div style="border-style:solid; border-width:0.5;
@@ -642,6 +646,27 @@ point:1 stroke 0xFFFF0000 1
 +       lines [[-3,1],[0,-4],[3,1],[-3,1]]\
               [[-6,2],[0,-8],[6,2],[-6,2]]\
 
+
+</div><br>
+
+
+<div style="border-style:solid; border-width:0.5;
+            margin:3px; padding: 3px; color: black;
+            font-family:monospace; white-space:pre">
+<img src=render_examples/render17.png align=right>
+# Того же эффекта можно добиться с помощью свойства operator.
+# Однaко, в более сложных случаях clip может быть удобнее.
+
+# контур + заливка
+area:1 stroke 0xFF007F00 2
++ fill 0xFFAAFFAA
+
+# заливка нарисованным паттерном
+area:1 draw_pos fill 16 16
++ circles [8,6,4]
++ lines [[8,10],[8,14],[10,14]]
++ stroke 0xFF000000 2
++ fill 0xFF007F00
 
 </div><br>
 
