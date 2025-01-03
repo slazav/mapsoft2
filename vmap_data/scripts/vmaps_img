@@ -1,10 +1,10 @@
 #!/bin/sh -eu
 
-# Make img+mp files in OUT dir
+# Make img+mp files in IMG_DIR dir
 #
 # Arguments: names with or without paths.
 # No arguments: process all new vmap files
-# Version for mapsoft2, 2024-11-07
+# Version for mapsoft2, 2025-01-03
 
 ##################################################
 
@@ -14,6 +14,11 @@
 # read local configuration
 . ./vmaps.conf
 
+if [ "$IMG_DIR" = "" ]; then
+  echo "vmaps_tiles: IMG_DIR is not set, exiting"
+  exit
+fi
+
 ##################################################
 # If argument list is empty, find only old files
 files=${@:-$(list_vmap_nt_img)}
@@ -22,7 +27,7 @@ files=${@:-$(list_vmap_nt_img)}
 vmap_git_status_list $files ||:
 
 ##################################################
-mkdir -p "$OUT_DIR"
+mkdir -p "$IMG_DIR"
 for i in $files; do
   name=${i%.*}
   name=${name##*/}
@@ -32,9 +37,9 @@ for i in $files; do
     continue
   fi
 
-  mp="$OUT_DIR/$name.mp"
-  mpz="$OUT_DIR/$name.mp.zip"
-  img="$OUT_DIR/$name.img"
+  mp="$IMG_DIR/$name.mp"
+  mpz="$IMG_DIR/$name.mp.zip"
+  img="$IMG_DIR/$name.img"
 
   echo "Making MP and IMG: $name"
 

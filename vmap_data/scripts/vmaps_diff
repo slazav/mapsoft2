@@ -1,0 +1,51 @@
+#!/bin/sh -eu
+
+##################################################
+# Render difference between two git revitions of a file
+
+# read global configuration and functions
+. vmaps.sh
+
+# read local configuration
+. ./vmaps.conf
+
+# name without directory and extension:
+name=${1%.*}
+name=${name##*/}
+vmap="$VMAP_DIR/$name.$VMAP_EXT"
+if [ ! -f "$vmap" ]; then
+  echo "can't find $vmap"
+  exit 1
+fi
+
+v1=${2:-}
+v2=${3:-}
+
+mkdir -p "$DIFF_DIR"
+new="$DIFF_DIR/${name}_n.png"
+old="$DIFF_DIR/${name}_o.png"
+dif="$DIFF_DIR/${name}_d.png"
+
+title1="$name   /${v1:-$(date +"%Y-%m-%d")}/"
+title2="$name   /${v2:-$(date +"%Y-%m-%d")}/"
+
+v1_vmap="$DIFF_DIR/tmp1.$VMAP_EXT"
+v2_vmap="$DIFF_DIR/tmp2.$VMAP_EXT"
+
+if [ "$v1" = "" ]; then
+  cp $vmap $v1_vmap
+else
+  git show "$v1:$vmap" > "$v1_vmap"
+fi
+
+if [ "$v2" = "" ]; then
+  cp $vmap $v2_vmap
+else
+  git show "$v2:$vmap" > "$v2_vmap"
+fi
+
+vmap_render_map "$v1_vmap" "$name" "$old" "" "$title1" "$DPI_DIFF"
+vmap_render_map "$v2_vmap" "$name" "$new" "" "$title2" "$DPI_DIFF"
+rm -rf $v1_vmap $v2_vmap
+
+[ -s "$old" -a -s "$new" ] && compare -matte "$old" "$new" "PNG8:$dif" ||:

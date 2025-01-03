@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# Make files in OUT and TILES dir:
+# Render everything:
 # - tiles (with vmaps_tiles script)
 # - PNG and MAP (with vmaps_png script)
 # - HTM and JPG (with vmaps_htm script) -- to be removed?
@@ -13,7 +13,7 @@
 #
 # Arguments: names with or without paths.
 # No arguments: process all vmap files
-# Version for mapsoft2, 2024-11-07
+# Version for mapsoft2, 2025-01-03
 
 ##################################################
 
@@ -33,61 +33,50 @@ if [ ! -f "$CMAP" ]; then
   vmap_update_cmap $CMAP_SRC $CMAP
 fi
 
-vmaps_tiles $@
-vmaps_png $@
-vmaps_img $@
-
-##############################################################
-# default filenames
-[ "$TLIST" != "" ]    || TLIST="$OUT_DIR/$MAP_NAME.tlist"
-[ "$MBTILES" != "" ]  || MBTILES="$OUT_DIR/$MAP_NAME.mbtiles"
-[ "$SQLITEDB" != "" ] || SQLITEDB="$OUT_DIR/$MAP_NAME.sqlitedb"
-[ "$IMGMAP" != "" ]   || IMGMAP="$OUT_DIR/$MAP_NAME.img"
+[ "$TILE_DIR" = "" ] || vmaps_tiles $@
+[ "$OUT_DIR" = "" ]  || vmaps_png $@
+[ "$IMG_DIR" = "" ]  || vmaps_img $@
 
 ##############################################################
 # assemble tile list and databases
 
-if ! check_nt_tiles $TLIST; then
-  echo "Creating $TLIST"
-  find $TILE_DIR/ -name '*.png' | xargs md5sum | sed "s| $TILE_DIR/| |" > $TLIST
+if [ -n "$TILE_DIR" ]; then
+  if [ -n "$TLIST" ]; then
+    check_nt_tiles "$TLIST" || vmaps_tlist
+  fi
+  if [ -n "$MBTILES" ]; then
+    check_nt_tiles "$MBTILES" || vmaps_pack_mbtiles
+  fi
+else
+  # if TILE_DIR not set, render MBTILES directly
+  [ "$MBTILES" = "" ] || vmaps_rend_mbtiles
 fi
 
-check_nt_tiles "$MBTILES"  || vmaps_mbtiles
-check_nt_tiles "$SQLITEDB" || vmaps_sqlitedb
+if [ -n "$SQLITEDB" -a "$SQLITEDB" -ot "$MBTILES" ]; then
+  vmaps_mbtiles_to_sqlitedb "$MBTILES" "$SQLITEDB"
+fi
 
+# assemble img file
+if [ -n "$IMG_DIR" -a -n "$IMGMAP" ]; then
+  check_nt_img $IMGMAP || vmaps_pack_img
+fi
+
+# new-style index
 [ "$INDEX_TXT" = "" ] || vmaps_index
-
-##############################################################
-# create global img file
-
-# assemble img
-if ! check_nt_img $IMGMAP; then
-  echo "Creating $IMGMAP"
-  # generate typ
-  $CGPSM typ $TYPSRC TMP.TYP
-  imgs=""
-  for vmap in $(list_vmaps); do
-    imgs="$imgs $OUT_DIR/$(basename $vmap .$VMAP_EXT).img"
-  done
-  $GMT -j -v -m "$MAP_NAME" -f 779,3 -o $IMGMAP $imgs TMP.TYP
-  rm -f TMP.TYP
-fi
 
 ##############################################################
 # for each region create html index with preview
 
-for brd in $BRD2_DIR/*.gpx; do
+for brd in $REG_DIR/*.gpx; do
   [ -f "$brd" ] || continue
   reg=$(basename $brd .gpx)
   echo "Updating region: $reg"
 
   htm=$OUT_DIR/all_$reg.htm.in
   jpg=$OUT_DIR/all_$reg.jpg
-  img=$OUT_DIR/all_$reg.img
 
   # Build list of map files, update timestamps
   list=""
-  imgs=""
   maps=""
   png_tstamp="$(mktemp -u tmp_XXXXXX.tstamp)"
   touch  $png_tstamp -d "1970-01-01"
@@ -99,7 +88,6 @@ for brd in $BRD2_DIR/*.gpx; do
     # Is the file touches the border?
     $MS2NOM --ext --name "$name" --cover "$brd" || continue
     list="$list $name"
-    imgs="$imgs $OUT_DIR/$name.img"
     maps="$maps $OUT_DIR/$name.map"
 
     [ $png_tstamp -nt $OUT_DIR/$name.png ] ||
@@ -150,15 +138,8 @@ for brd in $BRD2_DIR/*.gpx; do
       echo "  <a href=\"MAPDIR/$name.png\">[PNG]</a>"
       echo "  <a href=\"MAPDIR/$name.map\">[MAP]</a>"
       echo "  <a href=\"MAPDIR/$name.mp.zip\">[MP.ZIP]</a>"
-      #echo "  <a href=\"MAPDIR/$name.img\">[IMG]</a>"
     done >> "$htm"
     echo "</ul>" >> "$htm"
-
-    # Add link to img file
-    echo "<p><a href=\"MAPDIR/all_$reg.img\">
-      <span class=ru>Векторная карта всего района в формате IMG (для Garmin).</span>
-      <span class=en>Vector map of the whole region in IMG format (for Garmin).</span>
-      </a>" >> "$htm"
   fi
   rm -f $png_tstamp
 

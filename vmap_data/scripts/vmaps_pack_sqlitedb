@@ -1,8 +1,7 @@
 #!/bin/bash -eu
 
-# Pack tiles into sqlitedb database
+# Pack tiles into Osmand sqlitedb database
 # Based on script written by @ioctl
-# Usage: make_sqlitedb <tile dir> <out file>
 # Tile format: x-y-z.png, z/x-y.png
 
 # see: https://osmand.net/docs/technical/osmand-file-formats/osmand-sqlite/
@@ -13,7 +12,15 @@
 # read local configuration
 . ./vmaps.conf
 
-[ "$SQLITEDB" != "" ] || SQLITEDB="$OUT_DIR/$MAP_NAME.sqlitedb"
+if [ "$TILE_DIR" = "" ]; then
+  echo "vmaps_pack_sqlitedb: TILE_DIR is not set, exiting"
+  exit
+fi
+
+if [ "$SQLITEDB" = "" ]; then
+  echo "vmaps_pack_sqlitedb: SQLITEDB is not set, exiting"
+  exit
+fi
 
 # Remove output file if it exists
 rm -f -- "$SQLITEDB"
@@ -24,8 +31,6 @@ echo "Creating $SQLITEDB"
 find -L "$TILE_DIR" -type f -name '*.png' | (
 
   echo 'CREATE TABLE tiles (x int, y int, z int, image blob, PRIMARY KEY (x,y,z));'
-  # create view for SasPlanet (test needed!)
-  echo 'CREATE VIEW t AS SELECT x,y,z as v, image as b FROM tiles;'
   echo 'PRAGMA journal_mode = OFF; PRAGMA synchronous = 0;'
   while read tile; do
 

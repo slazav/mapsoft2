@@ -1,67 +1,81 @@
 # configuration file for vector map factory
 
+# put vmaps.sh file in your map folder to overwrite some of these settings
+
 # Map name. Used in
 # - map name in mbtiles database
 # - map name in img file
-# - default filenames for mbtiles, sqlitedb, img, tilelist
 MAP_NAME="default_map"
 
 # Map attribution. Used in
 # - man attribution in mbtiles database
 MAP_ATTR="mapsoft"
 
-# directories:
-VMAP_DIR=vmap;   # Source folder (vmap/vmap2)
-IN_DIR=IN;       # Input folder. Maps are updated from .fig/.mp files in this folder
-OUT_DIR=OUT;     # Output folder for raster maps, mp/img files
-DIFF_DIR=diff;   # Folder for diff files
-FIG_DIR=fig;     # Fig templates
-BRD_DIR=brd;     # map borders in gpx format
-BRD2_DIR=brd;    # borders for region index files (to be removed?)
-TILE_DIR=TILES;  # tiles
+############################################################
+## Map source configuration
+VMAP_DIR=vmap;   # Source folder
+VMAP_EXT=vmap;   # Extension/format of vector maps (could be vmap2, vmap, or even mp)
 
-CROP_NOM=0;      # crop maps in vmaps_in (only for nomenclature maps)
-VMAP_EXT=vmap;       # Extension/format of vector maps
-NOM_MAG=2;           # Scaling of maps. Use NOM_MAP=2 for 1km sheets with 500m maps
-DPI=400;             # DPI for rendering images
-DPI_PR=150;          # DPI for rendering preview images
-
-# render parameters:
-DPI_MAP=200;         # DPI for "original" map reference (normally 200 or 100)
-STYLE_HR=0;          # hr variable to be used in render.cfg and types.cfg
-STYLE_V2_PER=0;      # new style of passes
-GRID=0;              # draw grid
-
-CMAP=conf/cmap.png;        # Colormap
-CMAP_SRC=                  # nomenclatere name used for colormap source
 REND_CFG=/usr/share/mapsoft2/render.cfg;  # Render configuration
 TYPEINFO=/usr/share/mapsoft2/types.cfg    # Type information
-HTM_TEMPL=/usr/share/mapsoft2/map_templ.htm;    # template for htm page (to be removed)
 
-# generating index files:
-TYPSRC=/usr/share/mapsoft2/typ.txt  # typ file source for garmin IMG
+############################################################
+## Image rendering
+BRD_DIR=brd;     # map borders in gpx format
+CMAP=cmap.png;   # Colormap
+CMAP_SRC=        # map name used as colormap source
+
+# render parameters:
+DPI_MAP=200;     # DPI for "original" map reference (normally 200 or 100)
+DPI=400;         # DPI for rendering images
+STYLE_HR=0;      # hr variable to be used in render.cfg and types.cfg
+STYLE_V2_PER=1;  # new style of passes
+GRID=1;          # draw grid
+
+# png files
+OUT_DIR=OUT;     # Output folder for raster maps (if empty then raster images are not rendered)
+
+# tiles
+TILE_DIR=TILES;  # tiles (if empty, tiles are not rendered)
+TILE_MAXZ=14;    # max z-index
+TILE_MAXE=6      # max index for empty map
+SQLITEDB="";
+MBTILES="";
+TLIST="";
+
+############################################################
+## IMG rendering (see vmaps_img script)
+IMG_DIR=OUT;   # img files (if empty, img files are not rendered)
+TYPSRC=/usr/share/mapsoft2/typ.txt;  # typ file source for garmin IMG
+GMT=gmt;                             # gmt program
+CGPSM=cgpsmapper-static              # cgpsmapper program
+IMGMAP="";                           # combined img file
+
+############################################################
+## Map editing
+IN_DIR=IN;       # Input folder. Maps are updated from .fig/.mp files in this folder
+FIG_DIR=fig;     # Folder for Fig templates
+CROP_NOM=0;      # crop maps in vmaps_in (only for nomenclature maps)
+NOM_MAG=2;       # Scaling of maps. Use NOM_MAP=2 for 1km sheets with 500m maps
+
+DIFF_DIR=diff;   # Folder for diff files
+DPI_DIFF=150;    # DPI for rendering diff images
+
+REG_DIR=;        # borders for region index files (to be removed?)
+
+# vmaps_wp_update
+WPASS_DIR=wpasses
+WPASS_PREF=wpasses
+
+############################################################
+## Generating index files:
 EXTRA_TRACKS=;    # extra tracks to be added to index image
 JPEG_SCALE=0.2;   # scale for jpeg preview images
 INDEX_SCALE=0.05; # scale for index image (in addition to jpeg_scale)
 
 # new index files (not used yet)
-INDEX_TXT=$OUT_DIR/index.txt
-INDEX_HTM=$OUT_DIR/index.htm
-
-# Files for sqlitebd, mbtiles, img map, tile list.
-# Use non-empty value to override defaults ($OUT_DIR/$MAP_NAME.{sqlitedb,mbtiles,img,tlist})
-SQLITEDB="";
-MBTILES="";
-IMGMAP="";
-TLIST="";
-
-# rendering tiles
-TILE_MAXZ=14;  # max z-index
-TILE_MAXE=6    # max index for empty map
-
-# vmaps_wp_update
-WPASS_DIR=wpasses
-WPASS_PREF=wpasses
+INDEX_TXT="";
+INDEX_HTM="";
 
 # programs (can be redifined in the local configuration)
 MS2VMAP=ms2vmap
@@ -69,20 +83,8 @@ MS2RENDER=ms2render
 MS2GEOFIG=ms2geofig
 MS2CONV=ms2conv
 MS2NOM=ms2nom
-GMT=gmt
-CGPSM=cgpsmapper-static
 
-function vmap_read_conf {
-  # read global configuration and functions
-  . vmaps.sh
-  # read local configuration
-  . ./vmaps.conf
-  # set default filenames
-  [ -n "$TLIST" ]   || TLIST="$OUT_DIR/$MAP_NAME.tlist"
-  [ -n "$MBTILES"]  || MBTILES="$OUT_DIR/$MAP_NAME.mbtiles"
-  [ -n "$SQLITEDB"] || SQLITEDB="$OUT_DIR/$MAP_NAME.sqlitedb"
-  [ -n "$IMGMAP"]   || IMGMAP="$OUT_DIR/$MAP_NAME.img"
-}
+######################################################################
 
 function vmap_defs() {
   name="$1"
@@ -127,18 +129,23 @@ function vmap_render_tiles() {
   $MS2RENDER $vmap\
     --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs "$name" clip)"\
     --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png"\
-    --zmin $(($TILE_MAXE+1)) --zmax $TILE_MAXZ\
-    --bgcolor 0 --png_format pal --cmap_load $CMAP\
+    --zmin 0 --zfill $TILE_MAXE --zmax $TILE_MAXZ --fillcolor 0xFFBF6000\
+    --png_format pal --cmap_load $CMAP\
     --border_file $brd\
     --tmap_scale 1 --fit_patt_size;\
+}
 
+function vmap_render_mbtiles() {
+  name=$1
+  brd=$2
+  vmap=$VMAP_DIR/$name.$VMAP_EXT
   $MS2RENDER $vmap\
     --config "$REND_CFG" -t "$TYPEINFO" --define "$(vmap_defs "$name" clip)"\
-    --tmap --add --out "$TILE_DIR/{x}-{y}-{z}.png"\
-    --zmin 0 --zmax $TILE_MAXE\
-    --bgcolor 0 --png_format pal --cmap_load $CMAP\
+    --add --out "$MBTILES"\
+    --zmin 0 --zfill $TILE_MAXE --zmax $TILE_MAXZ --fillcolor 0xFFBF6000\
+    --png_format pal --cmap_load $CMAP\
     --border_file $brd\
-    --tmap_scale 1 --vmap_minsc 1;\
+    --tmap_scale 1 --fit_patt_size;\
 }
 
 function vmap_render_mp() {
@@ -168,8 +175,8 @@ function list_vmap_nt_png {
 # list all vmaps which are newer then img or mp.zip
 function list_vmap_nt_img {
   for vmap in $(list_vmaps); do
-    img="$OUT_DIR/$(basename $vmap .$VMAP_EXT).img"
-    mpz="$OUT_DIR/$(basename $vmap .$VMAP_EXT).mp.zip"
+    img="$IMG_DIR/$(basename $vmap .$VMAP_EXT).img"
+    mpz="$IMG_DIR/$(basename $vmap .$VMAP_EXT).mp.zip"
     [ "$vmap" -nt "$img" -o "$vmap" -nt "$mpz" ] && echo "$vmap" ||:
   done
 }
@@ -182,8 +189,14 @@ function list_vmap_nt_tiles {
   done
 }
 
+# list all vmaps which are newer then MBTILES
+function list_vmap_nt_mbtiles {
+  for vmap in $(list_vmaps); do
+    [ "$vmap" -nt "$MBTILES" ] && echo "$vmap" ||:
+  done
+}
 
-# list all vmaps which are newer then index.txt
+# list all vmaps which are newer then INDEX_TXT
 function list_vmap_nt_index {
   for vmap in $(list_vmaps); do
     [ "$vmap" -nt "$INDEX_TXT" ] && echo "$vmap" ||:
@@ -207,7 +220,7 @@ function check_nt_tiles {
 function check_nt_img {
   f="$1"
   for vmap in $(list_vmaps); do
-    img="$OUT_DIR/$(basename $vmap .$VMAP_EXT).img"
+    img="$IMG_DIR/$(basename $vmap .$VMAP_EXT).img"
     [ "$f" -nt "$img" ] || f=$img
   done
   [ "$f" = "$1" ]

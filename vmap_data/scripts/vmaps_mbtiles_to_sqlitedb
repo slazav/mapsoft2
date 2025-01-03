@@ -1,0 +1,25 @@
+#!/bin/bash -eu
+
+# Convert mbtiles to Osmand sqlitedb
+#   https://github.com/mapbox/mbtiles-spec/blob/master/1.3/spec.md
+#   https://osmand.net/docs/technical/osmand-file-formats/osmand-sqlite/
+# Usage: vmaps_mbtiles_to_sqlitedb <mbtiles> <sqlitedb>
+
+mbtiles="$1"
+sqlitedb="$2"
+
+echo "Creating $sqlitedb"
+> "$sqlitedb"
+
+sqlite3 "$sqlitedb" <<EOF
+PRAGMA journal_mode = OFF; PRAGMA synchronous = 0;
+ATTACH DATABASE '$mbtiles' as 'src';
+
+CREATE TABLE tiles (x int, y int, z int, image blob, PRIMARY KEY (x,y,z));
+INSERT INTO tiles (x, y, z, image)
+  SELECT tile_column, (1<<zoom_level)-1-tile_row, zoom_level, tile_data FROM src.tiles;
+
+CREATE TABLE info (tilenumbering text, minzoom int, maxzoom int);
+INSERT INTO info (tilenumbering, minzoom, maxzoom)
+       VALUES ('', (SELECT min(z) FROM tiles), (SELECT max(z) FROM tiles));
+EOF

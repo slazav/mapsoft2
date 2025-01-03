@@ -1,6 +1,6 @@
 #!/bin/sh -efu
 
-# Get fig files for editing in DIR_ID.
+# Get fig files for editing in DIR_IN.
 # Fig templates are stored in FIG_DIR folder,
 # they are created if missing.
 # Arguments: names (with or without path or extension).

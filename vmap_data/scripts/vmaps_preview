@@ -54,11 +54,11 @@ for i in $files; do
   elif [ "$have_old" = 1 ]; then
     o_vmap="$DIFF_DIR/tmp.$VMAP_EXT"
     git show "HEAD:$vmap" > "$o_vmap"
-    vmap_render_map "$o_vmap" "$name" "$old" "" "$title" "$DPI_PR"
+    vmap_render_map "$o_vmap" "$name" "$old" "" "$title" "$DPI_DIFF"
     rm -rf $o_vmap
   fi
 
-  vmap_render_map "$vmap" "$name" "$new" "" "$title" "$DPI_PR"
+  vmap_render_map "$vmap" "$name" "$new" "" "$title" "$DPI_DIFF"
 
   [ -s "$old" -a -s "$new" ] && compare -matte "$old" "$new" "PNG8:$dif" ||:
 done

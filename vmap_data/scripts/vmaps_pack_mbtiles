@@ -2,7 +2,6 @@
 
 # Pack tiles into mbtiles database
 # Based on script written by @ioctl
-# Usage: make_sqlitedb <tile dir> <out file>
 # Tile format: x-y-z.png, z/x-y.png
 
 # see https://github.com/mapbox/mbtiles-spec/blob/master/1.3/spec.md
@@ -13,7 +12,15 @@
 # read local configuration
 . ./vmaps.conf
 
-[ "$MBTILES" != "" ] || MBTILES="$OUT_DIR/$MAP_NAME.mbtiles"
+if [ "$TILE_DIR" = "" ]; then
+  echo "vmaps_pack_mbtiles: TILE_DIR is not set, exiting"
+  exit
+fi
+
+if [ "$MBTILES" = "" ]; then
+  echo "vmaps_pack_mbtiles: MBTILES is not set, exiting"
+  exit
+fi
 
 # Remove output file if it exists
 rm -f -- "$MBTILES"

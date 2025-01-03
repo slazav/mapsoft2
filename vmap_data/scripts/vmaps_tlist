@@ -1,0 +1,22 @@
+#!/bin/bash -eu
+
+# Create list of tiles
+
+# read global configuration and functions
+. vmaps.sh
+
+# read local configuration
+. ./vmaps.conf
+
+if [ "$TILE_DIR" = "" ]; then
+  echo "vmaps_tlist: TILE_DIR is not set, exiting"
+  exit
+fi
+
+if [ "$TLIST" = "" ]; then
+  echo "vmaps_tlist: TLIST is not set, exiting"
+  exit
+fi
+
+echo "Creating $TLIST"
+find $TILE_DIR/ -name '*.png' | xargs md5sum | sed "s| $TILE_DIR/| |" > $TLIST

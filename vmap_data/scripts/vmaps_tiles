@@ -4,7 +4,7 @@
 #
 # Arguments: names with or without paths.
 # No arguments: process all new vmap files
-# Version for mapsoft2, 2024-11-07
+# Version for mapsoft2, 2025-01-03
 
 ##################################################
 
@@ -15,6 +15,11 @@
 . ./vmaps.conf
 
 ##################################################
+
+if [ "$TILE_DIR" = "" ]; then
+  echo "vmaps_tiles: TILE_DIR is not set, exiting"
+  exit
+fi
 
 # Update colormap if needed
 if [ ! -f "$CMAP" ]; then

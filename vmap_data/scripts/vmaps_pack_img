@@ -1,0 +1,40 @@
+#!/bin/bash -eu
+
+# Pack all img files and typ into IMGMAP
+
+##################################################
+
+# read global configuration and functions
+. vmaps.sh
+
+# read local configuration
+. ./vmaps.conf
+
+if [ "$IMG_DIR" = "" ]; then
+  echo "vmaps_pack_img: IMG_DIR is not set, exiting"
+  exit
+fi
+
+if [ "$IMGMAP" = "" ]; then
+  echo "vmaps_pack_img: IMGMAP is not set, exiting"
+  exit
+fi
+
+##################################################
+
+echo "Creating $IMGMAP"
+
+typ=""
+if [ -n "$TYPSRC" ]; then
+  typ=TMP.TYP
+  $CGPSM typ $TYPSRC $typ
+fi
+
+imgs=""
+for vmap in $(list_vmaps); do
+  imgs="$imgs $IMG_DIR/$(basename $vmap .$VMAP_EXT).img"
+done
+
+$GMT -j -v -m "$MAP_NAME" -f 779,3 -o "$IMGMAP" $imgs $typ
+
+[ "$typ" = "" ] || rm -f "$typ"
