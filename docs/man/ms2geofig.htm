@@ -122,7 +122,7 @@ ms2geofig make_ref -- make fig reference using matching geodata</code></pre>
 <dt id="mkref-arg"><b>--mkref &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Choose map type (nom, google_tile, tms_tile, proj)</p>
+<p>Choose map type (nom, nom_fi, google_tile, tms_tile, proj)</p>
 
 </dd>
 <dt id="name-arg"><b>--name &lt;arg&gt;</b></dt>
@@ -294,7 +294,7 @@ ms2geofig make_ref -- make fig reference using matching geodata</code></pre>
 <dt id="in_fmt-arg"><b>--in_fmt &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip).</p>
+<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip, mbtiles).</p>
 
 </dd>
 <dt id="gu_enc-arg"><b>--gu_enc &lt;arg&gt;</b></dt>
@@ -679,16 +679,16 @@ ms2geofig make_ref -- make fig reference using matching geodata</code></pre>
 <pre><code>Tolerance for smoothing contours [m], default: 5.0</code></pre>
 
 </dd>
+<dt id="cnt_rmin-arg"><b>--cnt_rmin &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Radius for smoothing contours [srtm grid units], default: 10.0</code></pre>
+
+</dd>
 <dt id="cnt_smult-arg"><b>--cnt_smult &lt;arg&gt;</b></dt>
 <dd>
 
 <pre><code>Thick contour multiplier, default: 5, every 5th contour is thick</code></pre>
-
-</dd>
-<dt id="cnt_minpts-arg"><b>--cnt_minpts &lt;arg&gt;</b></dt>
-<dd>
-
-<pre><code>Min.number of points in a closed contour, default: 6</code></pre>
 
 </dd>
 <dt id="cnt_templ1-arg"><b>--cnt_templ1 &lt;arg&gt;</b></dt>
@@ -709,12 +709,6 @@ ms2geofig make_ref -- make fig reference using matching geodata</code></pre>
 <p>Make large slope contours, default: 1</p>
 
 </dd>
-<dt id="scnt_minpts-arg"><b>--scnt_minpts &lt;arg&gt;</b></dt>
-<dd>
-
-<pre><code>Min.number of point in a slope contour, default: 5</code></pre>
-
-</dd>
 <dt id="scnt_val-arg"><b>--scnt_val &lt;arg&gt;</b></dt>
 <dd>
 
@@ -725,6 +719,12 @@ ms2geofig make_ref -- make fig reference using matching geodata</code></pre>
 <dd>
 
 <pre><code>Tolerance for smoothing slope contours [deg], default: 5.0</code></pre>
+
+</dd>
+<dt id="scnt_rmin-arg"><b>--scnt_rmin &lt;arg&gt;</b></dt>
+<dd>
+
+<pre><code>Radius for smoothing slope contours [srtm grid units], default: 10.0</code></pre>
 
 </dd>
 <dt id="scnt_templ-arg"><b>--scnt_templ &lt;arg&gt;</b></dt>
@@ -823,6 +823,24 @@ ms2geofig make_ref -- make fig reference using matching geodata</code></pre>
 <p>Add a comment to all created fig objects.</p>
 
 </dd>
+<dt id="crop_nom-arg"><b>--crop_nom &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Crop objects to nomenclature region.</p>
+
+</dd>
+<dt id="crop_rect-arg"><b>--crop_rect &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Crop objects to a rectangle.</p>
+
+</dd>
+<dt id="line_flt-arg"><b>--line_flt &lt;arg&gt;</b></dt>
+<dd>
+
+<p>tolerance for RDP line filtering [fig units], default 5.</p>
+
+</dd>
 </dl>
 
 <h2 id="Options-for-writing-fig-file3">Options for writing fig file:</h2>
@@ -860,7 +878,7 @@ ms2geofig make_ref -- make fig reference using matching geodata</code></pre>
 <dt id="in_fmt-arg1"><b>--in_fmt &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip).</p>
+<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip, mbtiles).</p>
 
 </dd>
 <dt id="gu_enc-arg2"><b>--gu_enc &lt;arg&gt;</b></dt>

@@ -81,7 +81,7 @@
 <dt id="in_fmt-arg"><b>--in_fmt &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip).</p>
+<p>Geodata input format (json, gu, gpx, kml, kmz, ozi, zip, mbtiles).</p>
 
 </dd>
 <dt id="xml_compr-arg"><b>--xml_compr &lt;arg&gt;</b></dt>
@@ -165,7 +165,7 @@
 <dt id="mkref-arg"><b>--mkref &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Choose map type (nom, google_tile, tms_tile, proj)</p>
+<p>Choose map type (nom, nom_fi, google_tile, tms_tile, proj)</p>
 
 </dd>
 <dt id="name-arg"><b>--name &lt;arg&gt;</b></dt>
@@ -877,7 +877,13 @@
 <dt id="bgcolor-arg"><b>--bgcolor &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Image background color (default 0xFFFFFFFF).</p>
+<p>Image background color (default 0xFFFFFFFF for normal maps, 0 for tiled maps).</p>
+
+</dd>
+<dt id="fillcolor-arg"><b>--fillcolor &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Color to be used at tiled map with z&lt;zfill level (default 0xFFFF0000).</p>
 
 </dd>
 <dt id="m---map-arg"><b>-m, --map &lt;arg&gt;</b></dt>
@@ -922,10 +928,22 @@
 <p>Max zoom for tiled maps.</p>
 
 </dd>
+<dt id="zfill-arg"><b>--zfill &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Starting from this zoom level tiled map will be filled with fillcolor</p>
+
+</dd>
 <dt id="tmap_scale-arg"><b>--tmap_scale &lt;arg&gt;</b></dt>
 <dd>
 
-<p>When creating tiles with multiple zoom levels scale larger tiles to create smaller ones (instead of rendering all tiles separately). Tile is created only if at least one source tile is newer then the destination tile (or destination does not exist). Default: 0.</p>
+<p>When creating tiles with multiple zoom levels scale larger tiles to create smaller ones (instead of rendering all tiles separately). Default: 0.</p>
+
+</dd>
+<dt id="swapy"><b>--swapy</b></dt>
+<dd>
+
+<p>Normally tiled maps are saved in Google row counting; This will switch to TMS</p>
 
 </dd>
 <dt id="skip_empty"><b>--skip_empty</b></dt>
