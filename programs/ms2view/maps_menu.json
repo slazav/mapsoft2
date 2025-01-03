@@ -79,7 +79,7 @@
     { "type":"FeatureCollection",
       "ms2maps_name": "slazav podm",
       "ms2maps":[{
-          "image":"https://{[abc]}.tiles.nakarte.me/map_podm/{z}/{x}/{y}",
+          "image":"https://tiles.slazav.xyz/podm/{z}/{x}/{y}.png",
           "image_size":[ 256.0, 256.0 ],
           "is_tiled":1,
           "tile_maxz":14,
@@ -94,14 +94,14 @@
     },
 
     { "type":"FeatureCollection",
-      "ms2maps_name": "NorwayPaper",
+      "ms2maps_name": "slazav hr",
       "ms2maps":[{
-
-          "image":"https://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=toporaster4&zoom={z}&x={x}&y={y}",
+          "image":"https://tiles.slazav.xyz/hr/{z}/{x}/{y}.png",
           "image_size":[ 256.0, 256.0 ],
           "is_tiled":1,
           "tile_maxz":14,
-          "name":"NorwayPaper",
+          "tile_swapy":1,
+          "name":"slazav hr",
           "proj":"WEB",
           "ref":[[ 0.0,     0.0, -180.0,  85.0511288 ],
                  [ 0.0,   256.0, -180.0, -85.0511288 ],
@@ -109,6 +109,7 @@
                  [ 256.0, 256.0,  180.0, -85.0511288 ]]
       }]
     }
+
 
   ]
 }
