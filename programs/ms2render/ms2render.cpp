@@ -13,6 +13,7 @@
 #include "geo_render/gobj_wpts.h"
 #include "geo_render/gobj_maps.h"
 #include "geo_render/gobj_srtm.h"
+#include "downloader/downloader.h"
 //#include "draw_pulk_grid.h"
 #include "srtm/srtm.h"
 #include "viewer/gobj_multi.h"
