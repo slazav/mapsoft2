@@ -7,7 +7,7 @@
 #include "geo_data/geo_io.h"
 #include "geo_data/filters.h"
 #include "geo_data/conv_geo.h"
-#include "geo_mkref/geo_mkref.h"
+#include "geo_data/geo_mkref.h"
 #include "geo_render/write_geoimg.h"
 #include "geo_render/gobj_trk.h"
 #include "geo_render/gobj_wpts.h"

@@ -3,7 +3,7 @@
 #include "getopt/getopt.h"
 #include "getopt/help_printer.h"
 #include "filename/filename.h"
-#include "geo_mkref/geo_mkref.h"
+#include "geo_data/geo_mkref.h"
 #include "geo_data/conv_geo.h"
 #include "geo_data/geo_io.h"
 
