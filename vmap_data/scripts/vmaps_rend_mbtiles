@@ -9,10 +9,10 @@
 ##################################################
 
 # read global configuration and functions
-. vmaps.sh
+. vmaps.sh ||:
 
 # read local configuration
-. ./vmaps.conf
+. ./vmaps.conf ||:
 
 if [ "$MBTILES" = "" ]; then
   echo "vmaps_rend_mbtiles: MBTILES is not set, exiting"

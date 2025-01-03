@@ -4,10 +4,10 @@
 # Render difference between two git revitions of a file
 
 # read global configuration and functions
-. vmaps.sh
+. vmaps.sh ||:
 
 # read local configuration
-. ./vmaps.conf
+. ./vmaps.conf ||:
 
 # name without directory and extension:
 name=${1%.*}

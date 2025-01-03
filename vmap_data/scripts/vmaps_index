@@ -4,17 +4,26 @@
 ##################################################
 
 # read global configuration and functions
-. vmaps.sh
+. vmaps.sh ||:
 
 # read local configuration
-. ./vmaps.conf
+. ./vmaps.conf ||:
 
 ##################################################
 # update index.txt (only for new vmap files)
 
-[ "$INDEX_TXT" != "" -a "$INDEX_HTM" != "" ] || exit
-echo "Creating $INDEX_HTM"
 
+if [ "$INDEX_TXT" = "" ]; then
+  echo "vmaps_index: INDEX_TXT is not set, exiting"
+  exit
+fi
+
+if [ "$INDEX_HTM" = "" ]; then
+  echo "vmaps_index: INDEX_HTM is not set, exiting"
+  exit
+fi
+
+echo "Creating $INDEX_HTM"
 [ -f "$INDEX_TXT" ] || touch "$INDEX_TXT"
 
 files=${@:-$(list_vmaps)}

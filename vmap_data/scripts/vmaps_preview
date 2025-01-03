@@ -3,10 +3,10 @@
 ##################################################
 
 # read global configuration and functions
-. vmaps.sh
+. vmaps.sh ||:
 
 # read local configuration
-. ./vmaps.conf
+. ./vmaps.conf ||:
 
 ##################################################
 

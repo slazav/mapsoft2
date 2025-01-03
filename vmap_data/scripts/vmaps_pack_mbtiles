@@ -7,10 +7,10 @@
 # see https://github.com/mapbox/mbtiles-spec/blob/master/1.3/spec.md
 
 # read global configuration and functions
-. vmaps.sh
+. vmaps.sh ||:
 
 # read local configuration
-. ./vmaps.conf
+. ./vmaps.conf ||:
 
 if [ "$TILE_DIR" = "" ]; then
   echo "vmaps_pack_mbtiles: TILE_DIR is not set, exiting"
