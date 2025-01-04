@@ -42,7 +42,6 @@ public:
     if (args.size()>0) throw Err() << "wrong argument: " << args[0];
     if (!opts.exists("out")) throw Err() << "no output files";
     std::string ofile = opts.get<std::string>("out");
-    bool v = opts.get("verb", false);
 
     Opt opts1(opts);
     opts1.put("dpi", 1200/1.05);
@@ -91,7 +90,7 @@ public:
 
     if (!opts.exists("out")) throw Err() << "no output files";
     std::string ofile = opts.get<std::string>("out");
-    bool v = opts.get("verb", false);
+    bool v = opts.get("verbose", false);
 
     GeoData data;
     for (auto const & f:args) read_geo(f, data, opts);
@@ -144,7 +143,6 @@ public:
     if (args.size()>0) throw Err() << "wrong argument: " << args[0];
     if (!opts.exists("out")) throw Err() << "no output files";
     std::string ofile = opts.get<std::string>("out");
-    bool v = opts.get("verb", false);
 
     Fig F;
     read_fig(ofile, F, opts);
@@ -190,7 +188,6 @@ public:
     if (!opts.exists("out")) throw Err() << "no output files";
     std::string ifile = args[0];
     std::string ofile = opts.get<std::string>("out");
-    bool v = opts.get("verb", false);
 
     Fig F;
     read_fig(ifile, F, opts);
@@ -267,7 +264,7 @@ public:
     if (args.size()>0) throw Err() << "wrong argument: " << args[0];
     if (!opts.exists("out")) throw Err() << "no output files";
     std::string ofile = opts.get<std::string>("out");
-    bool v = opts.get("verb", false);
+    bool v = opts.get("verbose", false);
 
     // get parameters
     bool cnt   = opts.get("cnt",   true);
@@ -527,7 +524,7 @@ public:
 
     if (!opts.exists("out")) throw Err() << "no output files";
     std::string ofile = opts.get<std::string>("out");
-    bool v = opts.get("verb", false);
+    bool v = opts.get("verbose", false);
 
     GeoData data;
     for (auto const & f:args) read_geo(f, data, opts);
