@@ -35,6 +35,19 @@ for vmap in $(list_vmaps); do
   imgs="$imgs $IMG_DIR/$(basename $vmap .$VMAP_EXT).img"
 done
 
-$GMT -j -v -m "$MAP_NAME" -f 779,3 -o "$IMGMAP" $imgs $typ
+# Extract FID and codepage from TYPSRC
+FID="$(sed -r -n '/\[_id\]/,/\[end\]/s/^ *FID=([0-9]+).*/\1/ip' "$TYPSRC")"
+CP="$(sed -r -n '/\[_id\]/,/\[end\]/s/^ *CodePage=([0-9]+).*/\1/ip' "$TYPSRC")"
+if [ "$FID" = "" ]; then
+  echo "vmaps_pack_img: can't get FID from TYP file"
+  exit
+fi
+if [ "$CP" = "" ]; then
+  echo "vmaps_pack_img: can't get CodePage from TYP file"
+  exit
+fi
+
+$GMT -j -v -m "$MAP_NAME" -f $FID,1 -o "$IMGMAP" $imgs $typ
+$GMT -w -y $FID,1,$CP "$IMGMAP"
 
 [ "$typ" = "" ] || rm -f "$typ"
