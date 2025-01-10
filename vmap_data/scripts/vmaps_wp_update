@@ -80,7 +80,7 @@ for i in "$@"; do
   # merge into vmap
   ms2vmap ${WPASS_DIR}/${name}_wp.mp -o "$vmap"\
     --types "$TYPEINFO" --define "$(vmap_defs $name)"\
-    --replace_tag westra_passes --fix_rounding 1\
+    --replace_source westra_passes --fix_rounding 1\
     --update_labels 1
 
   rm -f -- "${WPASS_DIR}/${name}_wp.mp"
