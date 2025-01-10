@@ -24,7 +24,6 @@ main(int argc, char **argv){
   try {
 
     ms2opt_add_std(options, {"OUT", "HELP", "POD"});
-    ms2opt_add_mp_io(options);
 
     if (argc<2) usage();
     vector<string> files;
@@ -36,10 +35,10 @@ main(int argc, char **argv){
     MP data;
     for (auto const &f: files){
       std::ifstream s(f);
-      read_mp(s, data, O);
+      read_mp(s, data);
     }
 
-    write_mp(std::cout, data, O);
+    write_mp(std::cout, data);
 
   }
   catch (Err & e) {

@@ -19,13 +19,6 @@ assert_cmd "$prog test_data/f_lvl4.mp" 'Error: read_mp: wrong level number: [Dat
 assert_cmd "$prog test_data/f_lvl5.mp" 'Error: read_mp: Levels setting 2..10 is expected: [Levels=12]' 1
 assert_cmd "$prog test_data/f_lvl6.mp" 'Error: read_mp: not all levels are set in the header' 1
 
-# encoding
-$prog --mp_out_enc UTF-8 test_data/f_enc1.mp > tmp.mp
-assert_diff test_data/f_enc1a.mp tmp.mp
-
-$prog --mp_in_enc UTF-8 test_data/f_enc1a.mp > tmp.mp
-assert_diff test_data/f_enc1b.mp tmp.mp
-
 # join maps
 $prog test_data/f_join1.mp test_data/f_join2.mp > tmp.mp
 assert_diff test_data/f_join3.mp tmp.mp
