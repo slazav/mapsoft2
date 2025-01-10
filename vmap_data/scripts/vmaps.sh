@@ -50,6 +50,8 @@ TYPSRC=/usr/share/mapsoft2/typ.txt;  # typ file source for garmin IMG
 GMT=gmt;                             # gmt program
 CGPSM=cgpsmapper-static              # cgpsmapper program
 IMGMAP="";                           # combined img file
+IMG_FID=891;                         # FID parameter for IMG files
+IMG_CP=1251;                         # CodePage parameter for MP/TYP/IMG files
 
 ############################################################
 ## Map editing
@@ -155,7 +157,7 @@ function vmap_render_mp() {
   vmap="$VMAP_DIR/$name.$VMAP_EXT"
   $MS2VMAP "$vmap" -o "$mp"\
     -t "$TYPEINFO" --define "$(vmap_defs "$name")"\
-    --mp_name "$name" --mp_id "$mp_id" --crop_nom "$name"
+    --mp_name "$name" --mp_id "$mp_id" --mp_cp "$IMG_CP" --crop_nom "$name"
 }
 
 function list_vmaps {
