@@ -10,15 +10,16 @@ point:0x2
 crds 37.728950 55.395573
 
 line:0x1
-tags S1
+opts Source: S1
 crds 37.500000 55.390000 37.510000 55.380000
 
 line:0x1
-tags S1
+opts Source: S1
 crds 37.519034 55.392272 37.519373 55.387914
 
 line:0x2
-tags S1 S2
+opts S2
+opts Source: S1
 crds 37.519034 55.392272 37.519373 55.387914 37.520366 55.387606
 
 line:0x2
