@@ -848,6 +848,65 @@ text:1 font 10 "DejaVu Sans:Bold:semicondensed:rgba=none"
 <li><p><tt> group &lt;name&gt; </tt> -- Название группы для данного шага.
 Группа может включать несколько шагов.
 
+<li><p><tt> save_to_stack &lt;name&gt; </tt> -- Сохранить шаг рисования
+в стек с указанным именем (ничего нарисовано не будет).
+После можно нарисовать весь стек с помощью команды stack_render (см.ниже).
+
+
+<div style="border-style:solid; border-width:0.5;
+            margin:3px; padding: 3px; color: black;
+            font-family:monospace; white-space:pre">
+<img src=render_examples/render18.png align=right>
+# Сохраняю шаги рисования в три стека:
+# - по умолчанию
+# - внутри многоугольника
+# - вокруг текста
+
+define myfont "DejaVu Sans:Bold:semicondensed:rgba=none"
+
+# фон:
+map fill 0xFFFFFFFF
+ + save_to_stack in_polygon
+map fill 0xFFFFFFFF
+ + save_to_stack near_text
+
+# зеленый многоугольник
+area:1 fill 0xFFAAFFAA
+ + save_to_stack in_polygon
+area:1 fill 0xFFAAFFAA
+ + save_to_stack near_text
+
+# линия, разным цветом
+line:1 stroke 0xFF0000FF 8
+ + save_to_stack normal
+line:1 stroke 0xFF008000 8
+ + save_to_stack in_polygon
+line:1 stroke 0xFF80A0FF 8
+ + save_to_stack near_text
+
+text:1 font 10 ${myfont}
+ + write 0xFF000000
+ + save_to_stack near_text
+
+#### а теперь все рендерю
+
+render_stack normal
+
+# вырезаю дырку в многоугольнике
+area:1 fill 0
++      operator clear
+
+render_stack in_polygon dest_over
+
+# вырезаю дырку вокруг текста
+text:1 font 10 ${myfont}
+ + stroke 0 4
+ + fill 0
+ + operator clear
+
+render_stack near_text dest_over
+
+</div><br>
 
 
 </ul>
@@ -965,6 +1024,16 @@ join.
 <li><p><tt> fit_patt_size 0|1</tt> -- подстраивать размер паттернов
 под размер картинки. Это полезно при генерации плиточных карт.
 То же, что параметр командной строки --fit_patt_size.
+
+<li><p><tt> stack_render &lt;name&gt; [&lt;operator&gt;]</tt> --
+выполнить в этом месте последовательность шагов, сохраненных ранее с
+помощью свойства <tt>save_to_stack</tt>. Используется указанный оператор
+рисования (по умолчанию "over"), операторы, указанные в шагах
+игнорируются. Если оператор - "dest_over", то шаги выполняются в
+обратном порядке. После команды stack_render в этот стек можно
+продолжить добавлять объекты и потом опять его использовать.
+
+<li><p><tt> stack_clear &lt;name&gt;</tt> -- очистить стек с указанным именем.
 
 </ul>
 
