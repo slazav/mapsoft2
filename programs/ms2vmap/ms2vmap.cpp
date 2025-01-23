@@ -61,7 +61,8 @@ main(int argc, char *argv[]){
     options.add("typ_fid",   1, 0, "TYP", "FID number for TYP file (by default it's not written)");
     options.add("typ_cp",    1, 0, "TYP", "CodePage setting for TYP file (default:1251)");
     options.add("type_list", 0, 0, "TYP", "Print list of all known types to stdout");
-    options.add("type_info", 1, 0, "TYP", "Print information about type");
+    options.add("type_info", 1, 0, "TYP", "Print information about type; if argument is empty"
+                                          " print information for all types");
     options.remove("verbose");
 
     // general options -- up to first non-option argument
@@ -77,9 +78,13 @@ main(int argc, char *argv[]){
     if (O.get("typ")!="")
       types.write_typ(O.get("typ"), O.get<int>("typ_cp", 1251), O.get<int>("typ_fid", -1));
 
-    if (O.exists("type_list")) types.print_type_list();
+    if (O.exists("type_list")) types.print_type_list(false);
 
-    if (O.exists("type_info")) types.print_type_info(O.get("type_info"));
+    if (O.exists("type_info")){
+      auto t = O.get("type_info");
+      if (t == "") types.print_type_list(true);
+      else types.print_type_info(VMap2obj::make_type(t));
+    }
 
     // move to import? how to avoid copying of vmap?
     VMap2 vmap;
