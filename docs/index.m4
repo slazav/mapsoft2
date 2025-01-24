@@ -72,6 +72,10 @@ ENRU(`Discussions (google group).', `Обсуждения (гугл-группа
 <li><a href="diff.htm">
     ENRU(`Differences between mapsoft1 and mapsoft2 (RU)',
          `Различия mapsoft1 и mapsoft2')</a>
+
+<li><a href="vmap2types.htm">
+    ENRU(`Default map types in mapsoft2 (RU)',
+         `Система знаков mapsoft2')</a>
 </ul>
 
 <p>ENRU(`man-pages', `man-страницы (EN)')</h2>

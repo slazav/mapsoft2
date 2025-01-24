@@ -1,0 +1,91 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+my $group = "forest";
+my $type_info = "types.cfg";
+my $ms2vmap = "../programs/ms2vmap/ms2vmap";
+
+
+
+###################################
+
+my @types;
+
+########################################
+sub print_table{
+return if $#types<0;
+print qq*
+<table cellspacing=0 cellpadding=3 border=1 width="100%">
+<tr>
+<th rowspan=2 width=12en>тип</th>
+<th rowspan=2 width="20%">название</th>
+<th colspan=2>MP/TYP/IMG</th>
+<th rowspan=2 width=80px>рендер</th>
+<th rowspan=2>комментарий</td>
+</tr>
+
+<tr>
+<th width=12en>уровни</th>
+<th width=12en>порядок</th>
+</tr>
+*;
+  foreach (@types){
+    my $t       = lc($_->{type}) || "";
+    my $name    = $_->{name} || "";
+    my $name_ru = $_->{name_ru} || "";
+    my $comm    = $_->{comm} || "";
+
+    my $mp_s  = $_->{mp_start} || 0;
+    my $mp_e  = $_->{mp_end} || 0;
+    my $order = $_->{typ_order} || 1;
+    $order = "" if $t!~/^area:/;
+
+    my $tc = "#ffffff";
+    $tc = "#b0ffff" if $t=~/^area:/;
+    $tc = "#b0ffb0" if $t=~/^line:/;
+    $tc = "#ffb0ff" if $t=~/^point:/;
+
+    print qq*<tr>
+<td style="background-color: $tc;">$t</span></td>
+<td>$name<br>$name_ru</td>
+<td>$mp_s - $mp_e</td>
+<td>$order</td>
+<td><img src="types_render/$t.png"></td>
+<td>$comm</td>
+</tr>
+*;
+  }
+print qq*
+</table>
+*;
+  @types = ();
+}
+
+########################################
+
+foreach my $line (<>){
+
+  if ($line=~/^#> (.*)/){
+    print_table();
+    print $1, "\n";
+    next;
+  }
+
+  if ($line=~/^\s*type\s+(.*)/){
+    push @types, {'type' => $1};
+    next;
+  }
+
+  if ($line=~/^\s*\+\s+(\S+)\s+(.*)/){
+    next if $#types<0;
+    my ($k,$v) = ($1,$2);
+    $v = $1 if $v =~ /^\"(.*)\"$/;
+    $types[$#types]->{$k} = $v if $#types>=0;
+    next;
+  }
+
+}
+
+print_table();
