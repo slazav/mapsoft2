@@ -14,6 +14,7 @@
 #include "vmap2/vmap2.h"
 #include "vmap2/vmap2io.h"
 #include "vmap2/vmap2tools.h"
+#include "vmap2/vmap2gobj.h"
 #include "geo_data/geo_utils.h"
 #include "geo_data/geo_mkref.h"
 #include "fig_geo/fig_geo.h"
@@ -30,7 +31,6 @@ class ActionListTypes : public Action{
 public:
   ActionListTypes():
     Action("list", "list all known types"){
-    ms2opt_add_std(options, {"OUT"});
     ms2opt_add_vmap2t(options);
     options.add("mode", 1, 'm', "VMAP2", "Print mode: minimal, names (default), full");
   }
@@ -38,7 +38,7 @@ public:
   void help_impl(HelpPrinter & pr) override {
     pr.usage("[<options>]");
     pr.head(2, "Options:");
-    pr.opts({"OUT", "VMAP2"});
+    pr.opts({"VMAP2"});
   }
 
 
@@ -243,6 +243,64 @@ public:
   }
 };
 
+/**********************************************************/
+// Render all types
+class ActionRender : public Action{
+public:
+  ActionRender():
+    Action("render", "render type examples"){
+    ms2opt_add_std(options, {"OUT"});
+    ms2opt_add_vmap2t(options);
+    options.remove("define");
+    ms2opt_add_vmap2_render(options);
+  }
+
+  void help_impl(HelpPrinter & pr) override {
+    pr.usage("[<options>]");
+    pr.head(2, "Options:");
+    pr.opts({"OUT", "VMAP2", "VMAP2_RENDER"});
+  }
+
+  virtual void run_impl(const std::vector<std::string> & args,
+                   const Opt & opts) override {
+
+    std::string odir = opts.get("out", "");
+    if (odir == "") throw Err()
+      << "non-empty output directory expected (use -o option)";
+
+    // make directory if needed
+    file_mkdir(odir);
+
+    VMap2 vmap;
+    GObjVMap2 gobj(vmap, opts);
+    std::shared_ptr<ConvBase> cnv(new ConvBase);
+    //cnv->set_scale_src(0.5);
+    gobj.set_cnv(cnv);
+
+    ImageR img(80,40, IMAGE_32ARGB);
+    CairoWrapper cr;
+    cr.set_surface_img(img);
+
+    for (const auto & t:VMap2types(opts)){
+      VMap2obj obj(t.first);
+      obj.name = "text";
+      switch (obj.get_class()){
+        case VMAP2_POINT:   obj.set_coords("[30,20]"); break;
+        case VMAP2_LINE:    obj.set_coords("[[10,20],[30,30],[50,10],[70,20]]"); break;
+        case VMAP2_POLYGON: obj.set_coords("[[10,30],[20,10],[70,20],[70,30]]"); break;
+        case VMAP2_TEXT:    obj.set_coords("[10,30]"); break;
+      }
+
+      auto id = vmap.add(obj);
+      img.fill32(0xFFFFFFFF);
+      gobj.draw(cr, cr.bbox());
+      auto fname = odir + "/" + obj.print_type() + ".png";
+      cr->save_png(fname.c_str());
+      vmap.del(id);
+    }
+  }
+};
+
 
 using namespace std;
 
@@ -253,6 +311,7 @@ main(int argc, char *argv[]){
     std::shared_ptr<Action>(new ActionListTypes),
     std::shared_ptr<Action>(new ActionFigLib),
     std::shared_ptr<Action>(new ActionTyp),
+    std::shared_ptr<Action>(new ActionRender),
   });
 }
 
