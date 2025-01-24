@@ -19,7 +19,8 @@ install:
 	install -D -m755 scripts/* $(bindir);\
 	install -D -m644 typ.txt map_templ.htm render.cfg types.cfg $(datadir)/mapsoft2/
 	mkdir -p $(datadir)/mapsoft2
-	rm -rf $(datadir)/mapsoft2/pics $(datadir)/xfig/Libraries/{hr,podm}
+	rm -rf $(datadir)/mapsoft2/{pics,render} $(datadir)/xfig/Libraries/{hr,podm}
+	cp -r render $(datadir)/mapsoft2/render
 	cp -r pics $(datadir)/mapsoft2/pics
 	mkdir -p $(datadir)/xfig/Libraries
 	cp -r figlib_hr $(datadir)/xfig/Libraries/hr
