@@ -1,4 +1,4 @@
-P = ../programs/ms2vmapdb/ms2vmapdb
+P = ../programs/ms2vmaptypes/ms2vmaptypes
 
 prefix  ?= /usr
 bindir  ?= $(prefix)/bin
