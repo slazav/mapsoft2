@@ -98,6 +98,14 @@
 <td></td>
 </tr>
 <tr>
+<td style="background-color: #b0ffb0;">line:0x49</span></td>
+<td>forest strip<br>лесополоса</td>
+<td>0 - 0</td>
+<td></td>
+<td><img src="types_render/line:0x49.png"></td>
+<td>знак введен 24.01.2025</td>
+</tr>
+<tr>
 <td style="background-color: #b0ffb0;">line:0x23</span></td>
 <td>vegetation boundary<br>контур растительности</td>
 <td>0 - 0</td>
@@ -123,7 +131,6 @@
 </tr>
 
 </table>
-<p>TODO: добавить отдельный линейный знак "лесополоса".
 <p>В картах Подмосковья/ММБ используется белая подложка. Поверх нее
 рисуется зеленый лес: где-то он покрывает всю площадь листа, где-то
 рисуются только лесные участки. Поверх леса рисуются открытые места.
@@ -131,9 +138,9 @@
 леса. Такая схема была сделана, чтобы избежать полигонов с дырками и
 резки полигонов, рисовать все небольшими, удобными для редактирования
 кусками. Лесополосы иногда рисовались знаком "контур растительности",
-хотя я старался использовать узкую полосу знака "остров леса" - надо ввести отдельный линейный знак.
-Отдельные деревья и завалы рисовались только
-на картах ММБ.
+хотя я старался использовать узкую полосу знака "остров леса" - теперь
+введен отдельный линейный знак.
+Отдельные деревья и завалы рисовались только на картах ММБ.
 <h3>Рельеф</h3>
 
 <table cellspacing=0 cellpadding=3 border=1 width="100%">
@@ -167,7 +174,7 @@
 </tr>
 <tr>
 <td style="background-color: #b0ffb0;">line:0x21</span></td>
-<td>горизонтали<br></td>
+<td>contour<br>горизонтали</td>
 <td>0 - 1</td>
 <td></td>
 <td><img src="types_render/line:0x21.png"></td>
@@ -175,14 +182,14 @@
 </tr>
 <tr>
 <td style="background-color: #b0ffb0;">line:0x22</span></td>
-<td>жирная горизонталь<br></td>
+<td>thick contour<br>жирная горизонталь</td>
 <td>0 - 1</td>
 <td></td>
 <td><img src="types_render/line:0x22.png"></td>
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffb0;">line:0xc</span></td>
+<td style="background-color: #b0ffb0;">line:0x0c</span></td>
 <td>mountain ridge<br>хребет</td>
 <td>0 - 2</td>
 <td></td>
@@ -190,16 +197,16 @@
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffb0;">line:0xf</span></td>
-<td>малый хребет<br></td>
+<td style="background-color: #b0ffb0;">line:0x0f</span></td>
+<td>small mountain ridge<br>малый хребет</td>
 <td>0 - 1</td>
 <td></td>
 <td><img src="types_render/line:0xf.png"></td>
 <td>не используется</td>
 </tr>
 <tr>
-<td style="background-color: #b0ffb0;">line:0x3</span></td>
-<td>верхний край обрыва<br></td>
+<td style="background-color: #b0ffb0;">line:0x03</span></td>
+<td>top edge of steep slope<br>верхний край обрыва</td>
 <td>0 - 1</td>
 <td></td>
 <td><img src="types_render/line:0x3.png"></td>
@@ -207,14 +214,14 @@
 </tr>
 <tr>
 <td style="background-color: #b0ffb0;">line:0x1e</span></td>
-<td>нижний край обрыва<br></td>
+<td>bottom edge of steep slope<br>нижний край обрыва</td>
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/line:0x1e.png"></td>
-<td></td>
+<td>не используется</td>
 </tr>
 <tr>
-<td style="background-color: #ffb0ff;">point:0xf00</span></td>
+<td style="background-color: #ffb0ff;">point:0x0f00</span></td>
 <td>triangulation point<br>триангуляционный знак</td>
 <td>0 - 0</td>
 <td></td>
@@ -230,7 +237,7 @@
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #ffb0ff;">point:0xd00</span></td>
+<td style="background-color: #ffb0ff;">point:0x0d00</span></td>
 <td>hight mark<br>отметка высоты</td>
 <td>0 - 0</td>
 <td></td>
@@ -539,7 +546,7 @@
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffff;">area:0x8</span></td>
+<td style="background-color: #b0ffff;">area:0x08</span></td>
 <td>scree<br>осыпь</td>
 <td>0 - 1</td>
 <td>5</td>
@@ -547,7 +554,7 @@
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffff;">area:0xd</span></td>
+<td style="background-color: #b0ffff;">area:0x0d</span></td>
 <td>sand<br>песок</td>
 <td>0 - 1</td>
 <td>8</td>
@@ -579,7 +586,7 @@
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffb0;">line:0x7</span></td>
+<td style="background-color: #b0ffb0;">line:0x07</span></td>
 <td>дорожная насыпь<br></td>
 <td>0 - 1</td>
 <td></td>
@@ -672,7 +679,7 @@
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffb0;">line:0xd</span></td>
+<td style="background-color: #b0ffb0;">line:0x0d</span></td>
 <td>УЖД и подъездные пути<br></td>
 <td>0 - 2</td>
 <td></td>
@@ -680,7 +687,7 @@
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffb0;">line:0x1</span></td>
+<td style="background-color: #b0ffb0;">line:0x01</span></td>
 <td>автомагистраль<br></td>
 <td>0 - 4</td>
 <td></td>
@@ -688,7 +695,7 @@
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffb0;">line:0xb</span></td>
+<td style="background-color: #b0ffb0;">line:0x0b</span></td>
 <td>большое шоссе<br></td>
 <td>0 - 3</td>
 <td></td>
@@ -696,7 +703,7 @@
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffb0;">line:0x2</span></td>
+<td style="background-color: #b0ffb0;">line:0x02</span></td>
 <td>шоссе<br></td>
 <td>0 - 3</td>
 <td></td>
@@ -704,7 +711,7 @@
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffb0;">line:0x4</span></td>
+<td style="background-color: #b0ffb0;">line:0x04</span></td>
 <td>проезжий грейдер<br></td>
 <td>0 - 2</td>
 <td></td>
@@ -712,7 +719,7 @@
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffb0;">line:0x6</span></td>
+<td style="background-color: #b0ffb0;">line:0x06</span></td>
 <td>проезжая грунтовка<br></td>
 <td>0 - 2</td>
 <td></td>
@@ -720,7 +727,7 @@
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffb0;">line:0xa</span></td>
+<td style="background-color: #b0ffb0;">line:0x0a</span></td>
 <td>непроезжая грунтовка<br></td>
 <td>0 - 1</td>
 <td></td>
@@ -768,7 +775,7 @@
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffb0;">line:0x8</span></td>
+<td style="background-color: #b0ffb0;">line:0x08</span></td>
 <td>мост-1 (пешеходный)<br></td>
 <td>0 - 1</td>
 <td></td>
@@ -776,7 +783,7 @@
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffb0;">line:0x9</span></td>
+<td style="background-color: #b0ffb0;">line:0x09</span></td>
 <td>мост-2 (автомобильный)<br></td>
 <td>0 - 2</td>
 <td></td>
@@ -784,7 +791,7 @@
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffb0;">line:0xe</span></td>
+<td style="background-color: #b0ffb0;">line:0x0e</span></td>
 <td>мост-5 (на автомагистралях)<br></td>
 <td>0 - 2</td>
 <td></td>
@@ -931,7 +938,7 @@ TODO: попробовать добавить площадные красные/
 <th width=12en>порядок</th>
 </tr>
 <tr>
-<td style="background-color: #b0ffff;">area:0x4</span></td>
+<td style="background-color: #b0ffff;">area:0x04</span></td>
 <td>закрытые территории<br></td>
 <td>0 - 1</td>
 <td>4</td>
@@ -939,7 +946,7 @@ TODO: попробовать добавить площадные красные/
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffff;">area:0xe</span></td>
+<td style="background-color: #b0ffff;">area:0x0e</span></td>
 <td>деревни<br></td>
 <td>0 - 2</td>
 <td>4</td>
@@ -947,7 +954,7 @@ TODO: попробовать добавить площадные красные/
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffff;">area:0x1</span></td>
+<td style="background-color: #b0ffff;">area:0x01</span></td>
 <td>города<br></td>
 <td>0 - 4</td>
 <td>4</td>
@@ -971,7 +978,7 @@ TODO: попробовать добавить площадные красные/
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #b0ffb0;">line:0x5</span></td>
+<td style="background-color: #b0ffb0;">line:0x05</span></td>
 <td>building<br>строение</td>
 <td>0 - 1</td>
 <td></td>
@@ -987,7 +994,7 @@ TODO: попробовать добавить площадные красные/
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #ffb0ff;">point:0x700</span></td>
+<td style="background-color: #ffb0ff;">point:0x0700</span></td>
 <td>big town<br>большой населенный пункт, город</td>
 <td>0 - 4</td>
 <td></td>
@@ -995,7 +1002,7 @@ TODO: попробовать добавить площадные красные/
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #ffb0ff;">point:0x800</span></td>
+<td style="background-color: #ffb0ff;">point:0x0800</span></td>
 <td>small town<br>средний населенный пункт</td>
 <td>0 - 2</td>
 <td></td>
@@ -1003,7 +1010,7 @@ TODO: попробовать добавить площадные красные/
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #ffb0ff;">point:0x900</span></td>
+<td style="background-color: #ffb0ff;">point:0x0900</span></td>
 <td>village<br>маленький населенный пункт, деревня</td>
 <td>0 - 2</td>
 <td></td>
@@ -1011,11 +1018,11 @@ TODO: попробовать добавить площадные красные/
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #ffb0ff;">point:0x2a04</span></td>
+<td style="background-color: #ffb0ff;">point:0x2c04</span></td>
 <td>monument<br>памятник</td>
 <td>0 - 0</td>
 <td></td>
-<td><img src="types_render/point:0x2a04.png"></td>
+<td><img src="types_render/point:0x2c04.png"></td>
 <td></td>
 </tr>
 <tr>
@@ -1175,7 +1182,7 @@ TODO: попробовать добавить площадные красные/
 <th width=12en>порядок</th>
 </tr>
 <tr>
-<td style="background-color: #b0ffff;">area:0xa</span></td>
+<td style="background-color: #b0ffff;">area:0x0a</span></td>
 <td>дырка в DEM-данных<br></td>
 <td>0 - 1</td>
 <td>1</td>
@@ -1183,7 +1190,7 @@ TODO: попробовать добавить площадные красные/
 <td>не нужен?</td>
 </tr>
 <tr>
-<td style="background-color: #b0ffb0;">line:0x0</span></td>
+<td style="background-color: #b0ffb0;">line:0x00</span></td>
 <td>кривая надпись<br></td>
 <td>0 - 0</td>
 <td></td>
@@ -1232,7 +1239,7 @@ TODO: попробовать добавить площадные красные/
 <th width=12en>порядок</th>
 </tr>
 <tr>
-<td style="background-color: #ffffff;">text:0x1</span></td>
+<td style="background-color: #ffffff;">text:0x01</span></td>
 <td>значение по умолчанию<br></td>
 <td>0 - 0</td>
 <td></td>
@@ -1240,7 +1247,7 @@ TODO: попробовать добавить площадные красные/
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #ffffff;">text:0x2</span></td>
+<td style="background-color: #ffffff;">text:0x02</span></td>
 <td>черный жирный прямой шрифт: города, деревни<br></td>
 <td>0 - 0</td>
 <td></td>
@@ -1248,7 +1255,7 @@ TODO: попробовать добавить площадные красные/
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #ffffff;">text:0x3</span></td>
+<td style="background-color: #ffffff;">text:0x03</span></td>
 <td>черный курсив: урочища, дачи и т.п.<br></td>
 <td>0 - 0</td>
 <td></td>
@@ -1256,7 +1263,7 @@ TODO: попробовать добавить площадные красные/
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #ffffff;">text:0x4</span></td>
+<td style="background-color: #ffffff;">text:0x04</span></td>
 <td>синий курсив: реки, озера, ледники<br></td>
 <td>0 - 0</td>
 <td></td>
@@ -1264,7 +1271,7 @@ TODO: попробовать добавить площадные красные/
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #ffffff;">text:0x5</span></td>
+<td style="background-color: #ffffff;">text:0x05</span></td>
 <td>вершины<br></td>
 <td>0 - 0</td>
 <td></td>
@@ -1272,7 +1279,7 @@ TODO: попробовать добавить площадные красные/
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #ffffff;">text:0x6</span></td>
+<td style="background-color: #ffffff;">text:0x06</span></td>
 <td>мелкие вершины<br></td>
 <td>0 - 0</td>
 <td></td>
@@ -1280,7 +1287,7 @@ TODO: попробовать добавить площадные красные/
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #ffffff;">text:0x7</span></td>
+<td style="background-color: #ffffff;">text:0x07</span></td>
 <td>перевалы<br></td>
 <td>0 - 0</td>
 <td></td>
@@ -1288,7 +1295,7 @@ TODO: попробовать добавить площадные красные/
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #ffffff;">text:0x8</span></td>
+<td style="background-color: #ffffff;">text:0x08</span></td>
 <td>отметки уреза воды<br></td>
 <td>0 - 0</td>
 <td></td>
@@ -1296,7 +1303,7 @@ TODO: попробовать добавить площадные красные/
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #ffffff;">text:0x9</span></td>
+<td style="background-color: #ffffff;">text:0x09</span></td>
 <td>номер ледника<br></td>
 <td>0 - 0</td>
 <td></td>
@@ -1306,5 +1313,144 @@ TODO: попробовать добавить площадные красные/
 
 </table>
 TODO: полностью переделать
+
+<hr><h3>Список знаков по порядку номеров</h3>
+<table cellspacing=0 cellpadding=2 border=0>
+<tr><td><b>area:0x01</b></td><td>города / </td></tr>
+<tr><td><b>area:0x04</b></td><td>закрытые территории / </td></tr>
+<tr><td><b>area:0x08</b></td><td>scree / осыпь</td></tr>
+<tr><td><b>area:0x0a</b></td><td>дырка в DEM-данных / </td></tr>
+<tr><td><b>area:0x0d</b></td><td>sand / песок</td></tr>
+<tr><td><b>area:0x0e</b></td><td>деревни / </td></tr>
+<tr><td><b>area:0x14</b></td><td>semi-open area / редколесье</td></tr>
+<tr><td><b>area:0x15</b></td><td>forest island / остров леса</td></tr>
+<tr><td><b>area:0x16</b></td><td>forest / лес</td></tr>
+<tr><td><b>area:0x19</b></td><td>steep slope / крутой склон</td></tr>
+<tr><td><b>area:0x1a</b></td><td>кладбище / </td></tr>
+<tr><td><b>area:0x29</b></td><td>водоемы / </td></tr>
+<tr><td><b>area:0x3b</b></td><td>крупные водоемы / </td></tr>
+<tr><td><b>area:0x4c</b></td><td>swamp / болото</td></tr>
+<tr><td><b>area:0x4d</b></td><td>glacier, snow, river icing / ледник, снежник, наледь</td></tr>
+<tr><td><b>area:0x4e</b></td><td>дачи, сад.уч., д/о, п/л / </td></tr>
+<tr><td><b>area:0x4f</b></td><td>deforestation area / свежая вырубка</td></tr>
+<tr><td><b>area:0x50</b></td><td>old deforestation area / старая вырубка</td></tr>
+<tr><td><b>area:0x51</b></td><td>marsh / заболоченность</td></tr>
+<tr><td><b>area:0x52</b></td><td>open area / открытое пространство, поле</td></tr>
+<tr><td><b>area:0x53</b></td><td>остров / </td></tr>
+<tr><td><b>area:0x58</b></td><td>mining/deposition area / карьеры и отвалы грунта</td></tr>
+<tr><td><b>line:0x00</b></td><td>кривая надпись / </td></tr>
+<tr><td><b>line:0x01</b></td><td>автомагистраль / </td></tr>
+<tr><td><b>line:0x02</b></td><td>шоссе / </td></tr>
+<tr><td><b>line:0x03</b></td><td>top edge of steep slope / верхний край обрыва</td></tr>
+<tr><td><b>line:0x04</b></td><td>проезжий грейдер / </td></tr>
+<tr><td><b>line:0x05</b></td><td>building / строение</td></tr>
+<tr><td><b>line:0x06</b></td><td>проезжая грунтовка / </td></tr>
+<tr><td><b>line:0x07</b></td><td>дорожная насыпь / </td></tr>
+<tr><td><b>line:0x08</b></td><td>мост-1 (пешеходный) / </td></tr>
+<tr><td><b>line:0x09</b></td><td>мост-2 (автомобильный) / </td></tr>
+<tr><td><b>line:0x0a</b></td><td>непроезжая грунтовка / </td></tr>
+<tr><td><b>line:0x0b</b></td><td>большое шоссе / </td></tr>
+<tr><td><b>line:0x0c</b></td><td>mountain ridge / хребет</td></tr>
+<tr><td><b>line:0x0d</b></td><td>УЖД и подъездные пути / </td></tr>
+<tr><td><b>line:0x0e</b></td><td>мост-5 (на автомагистралях) / </td></tr>
+<tr><td><b>line:0x0f</b></td><td>small mountain ridge / малый хребет</td></tr>
+<tr><td><b>line:0x15</b></td><td>река-1 / </td></tr>
+<tr><td><b>line:0x16</b></td><td>просека / </td></tr>
+<tr><td><b>line:0x18</b></td><td>река-2 / </td></tr>
+<tr><td><b>line:0x19</b></td><td>fence / забор</td></tr>
+<tr><td><b>line:0x1a</b></td><td>small power line / маленькая ЛЭП</td></tr>
+<tr><td><b>line:0x1b</b></td><td>пешеходный тоннель / </td></tr>
+<tr><td><b>line:0x1c</b></td><td>просека широкая / </td></tr>
+<tr><td><b>line:0x1d</b></td><td>граница стран, областей / </td></tr>
+<tr><td><b>line:0x1e</b></td><td>bottom edge of steep slope / нижний край обрыва</td></tr>
+<tr><td><b>line:0x1f</b></td><td>река-3 / </td></tr>
+<tr><td><b>line:0x20</b></td><td>dashed contour / пунктирная горизонталь</td></tr>
+<tr><td><b>line:0x21</b></td><td>contour / горизонтали</td></tr>
+<tr><td><b>line:0x22</b></td><td>thick contour / жирная горизонталь</td></tr>
+<tr><td><b>line:0x23</b></td><td>vegetation boundary / контур растительности</td></tr>
+<tr><td><b>line:0x24</b></td><td>glacier crevasse / ледниковая трещина</td></tr>
+<tr><td><b>line:0x25</b></td><td>овраг / </td></tr>
+<tr><td><b>line:0x26</b></td><td>пересыхающий ручей / </td></tr>
+<tr><td><b>line:0x27</b></td><td>железная дорога / </td></tr>
+<tr><td><b>line:0x28</b></td><td>pipeline / трубопровод</td></tr>
+<tr><td><b>line:0x29</b></td><td>power line / ЛЭП</td></tr>
+<tr><td><b>line:0x2a</b></td><td>тропа / </td></tr>
+<tr><td><b>line:0x2b</b></td><td>сухая канава / </td></tr>
+<tr><td><b>line:0x2c</b></td><td>вал / </td></tr>
+<tr><td><b>line:0x2d</b></td><td>заросшая дорога / </td></tr>
+<tr><td><b>line:0x2e</b></td><td>заросшая заметная дорога (знак ММБ) / </td></tr>
+<tr><td><b>line:0x32</b></td><td>плохой путь / </td></tr>
+<tr><td><b>line:0x33</b></td><td>удовлетворительный путь / </td></tr>
+<tr><td><b>line:0x34</b></td><td>хороший путь / </td></tr>
+<tr><td><b>line:0x35</b></td><td>отличный путь / </td></tr>
+<tr><td><b>line:0x36</b></td><td>граница областей, районов / </td></tr>
+<tr><td><b>line:0x37</b></td><td>граница заповедников, парков / </td></tr>
+<tr><td><b>line:0x40</b></td><td>irrigation channel / канава, арык</td></tr>
+<tr><td><b>line:0x41</b></td><td>canal / канал</td></tr>
+<tr><td><b>line:0x42</b></td><td>ferry / паром</td></tr>
+<tr><td><b>line:0x43</b></td><td>cable way, ski lift / канатная дорога, лыжный подъемник</td></tr>
+<tr><td><b>line:0x44</b></td><td>runway / асфальтовая ВВП</td></tr>
+<tr><td><b>line:0x45</b></td><td>sod runway / грунтовая ВВП</td></tr>
+<tr><td><b>line:0x46</b></td><td>water boundary / четкая береговая линия</td></tr>
+<tr><td><b>line:0x47</b></td><td>uncertain water boundary / нечеткая береговая линия</td></tr>
+<tr><td><b>line:0x48</b></td><td>rapids / пороги</td></tr>
+<tr><td><b>line:0x49</b></td><td>forest strip / лесополоса</td></tr>
+<tr><td><b>line:0x50</b></td><td>bad route /не использовать!/ / </td></tr>
+<tr><td><b>line:0x7e</b></td><td>border object / </td></tr>
+<tr><td><b>line:0x7f</b></td><td>text object / </td></tr>
+<tr><td><b>point:0x0700</b></td><td>big town / большой населенный пункт, город</td></tr>
+<tr><td><b>point:0x0800</b></td><td>small town / средний населенный пункт</td></tr>
+<tr><td><b>point:0x0900</b></td><td>village / маленький населенный пункт, деревня</td></tr>
+<tr><td><b>point:0x0d00</b></td><td>hight mark / отметка высоты</td></tr>
+<tr><td><b>point:0x0f00</b></td><td>triangulation point / триангуляционный знак</td></tr>
+<tr><td><b>point:0x1000</b></td><td>water altitude mark / отметка уреза воды</td></tr>
+<tr><td><b>point:0x1100</b></td><td>summit / вершина</td></tr>
+<tr><td><b>point:0x2800</b></td><td>reference point for land objects / точка привязки текста</td></tr>
+<tr><td><b>point:0x2b03</b></td><td>camping place, fireplace / место стоянки, место для костра</td></tr>
+<tr><td><b>point:0x2b04</b></td><td>open hut, shelter for tourists / открытая изба, навес для ночевки</td></tr>
+<tr><td><b>point:0x2c04</b></td><td>monument / памятник</td></tr>
+<tr><td><b>point:0x2c0b</b></td><td>church / церковь</td></tr>
+<tr><td><b>point:0x2e00</b></td><td>shop / магазин</td></tr>
+<tr><td><b>point:0x2f08</b></td><td>bus stop / остановка автобуса</td></tr>
+<tr><td><b>point:0x5905</b></td><td>railway station / ж/д станция</td></tr>
+<tr><td><b>point:0x6401</b></td><td>gate / ворота, проход в заборе</td></tr>
+<tr><td><b>point:0x6402</b></td><td>building / дом, строение</td></tr>
+<tr><td><b>point:0x6403</b></td><td>cemetery / кладбище</td></tr>
+<tr><td><b>point:0x6406</b></td><td>перевал неизвестной сложности / </td></tr>
+<tr><td><b>point:0x640c</b></td><td>mine / шахта</td></tr>
+<tr><td><b>point:0x6411</b></td><td>башня, труба / tower, chimney, mast</td></tr>
+<tr><td><b>point:0x6414</b></td><td>spring, water source / родник, источник воды</td></tr>
+<tr><td><b>point:0x6415</b></td><td>ruins, archeological place / развалины, археологический объект</td></tr>
+<tr><td><b>point:0x6508</b></td><td>waterfall / водопад</td></tr>
+<tr><td><b>point:0x650a</b></td><td>icefall / ледопад</td></tr>
+<tr><td><b>point:0x650b</b></td><td>small hydrography reference point / мелкая точка объекта гидрографии</td></tr>
+<tr><td><b>point:0x650c</b></td><td>hydrography reference point / точка для объекта гидрографии</td></tr>
+<tr><td><b>point:0x650e</b></td><td>rapid / порог</td></tr>
+<tr><td><b>point:0x6601</b></td><td>cave / пещера</td></tr>
+<tr><td><b>point:0x6603</b></td><td>pit, sinkhole / яма</td></tr>
+<tr><td><b>point:0x6606</b></td><td>watch tower, hunting structure, shepperds camp / смотровая башня, охотничья вышка, кормушка, стоянка пастухов</td></tr>
+<tr><td><b>point:0x660a</b></td><td>tree, group of trees / дерево, группа деревьев</td></tr>
+<tr><td><b>point:0x660b</b></td><td>canyon / каньон</td></tr>
+<tr><td><b>point:0x6613</b></td><td>knoll, mound / холм, курган</td></tr>
+<tr><td><b>point:0x6616</b></td><td>rock pillar, big boulder / скала-останец, камень</td></tr>
+<tr><td><b>point:0x6618</b></td><td>logjam / завал</td></tr>
+<tr><td><b>point:0x6700</b></td><td>simple pass / перевал н/к</td></tr>
+<tr><td><b>point:0x6701</b></td><td>1A pass / перевал 1А</td></tr>
+<tr><td><b>point:0x6702</b></td><td>1B pass / перевал 1Б</td></tr>
+<tr><td><b>point:0x6703</b></td><td>2A pass / перевал 2А</td></tr>
+<tr><td><b>point:0x6704</b></td><td>2B pass / перевал 2Б</td></tr>
+<tr><td><b>point:0x6705</b></td><td>3A pass / перевал 3А</td></tr>
+<tr><td><b>point:0x6706</b></td><td>3B pass / перевал 3Б</td></tr>
+<tr><td><b>text:0x01</b></td><td>значение по умолчанию / </td></tr>
+<tr><td><b>text:0x02</b></td><td>черный жирный прямой шрифт: города, деревни / </td></tr>
+<tr><td><b>text:0x03</b></td><td>черный курсив: урочища, дачи и т.п. / </td></tr>
+<tr><td><b>text:0x04</b></td><td>синий курсив: реки, озера, ледники / </td></tr>
+<tr><td><b>text:0x05</b></td><td>вершины / </td></tr>
+<tr><td><b>text:0x06</b></td><td>мелкие вершины / </td></tr>
+<tr><td><b>text:0x07</b></td><td>перевалы / </td></tr>
+<tr><td><b>text:0x08</b></td><td>отметки уреза воды / </td></tr>
+<tr><td><b>text:0x09</b></td><td>номер ледника / </td></tr>
+
+</table>
 </body>
 </html>

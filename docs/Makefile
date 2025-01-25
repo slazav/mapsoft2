@@ -20,7 +20,7 @@ mapdb_ru.htm: defs.m4 mapdb_ru.m4
 vmap2types.m4: ../vmap_data/types.cfg types2html
 	./types2html ../vmap_data/types.cfg > vmap2types.m4
 
-types_render: ../vmap_data/types.cfg
+types_render: ../vmap_data/types.cfg ../vmap_data/render.cfg
 	../programs/ms2vmaptypes/ms2vmaptypes render --types ../vmap_data/types.cfg\
 	  --config ../vmap_data/render.cfg --obj_scale 2 -o types_render
 

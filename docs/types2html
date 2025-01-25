@@ -12,6 +12,7 @@ my $ms2vmap = "../programs/ms2vmap/ms2vmap";
 ###################################
 
 my @types;
+my %sorted;
 
 ########################################
 sub print_table{
@@ -32,7 +33,8 @@ print qq*
 </tr>
 *;
   foreach (@types){
-    my $t       = lc($_->{type}) || "";
+
+
     my $name    = $_->{name} || "";
     my $name_ru = $_->{name_ru} || "";
     my $comm    = $_->{comm} || "";
@@ -40,15 +42,28 @@ print qq*
     my $mp_s  = $_->{mp_start} || 0;
     my $mp_e  = $_->{mp_end} || 0;
     my $order = $_->{typ_order} || 1;
-    $order = "" if $t!~/^area:/;
+
+    # normalize type:
+    my $t       = lc($_->{type}) || "";
+    my ($cl,$num) = ('none', 0);
+    if ($t=~/(\S+):(0x)?([0-9a-f]+)/){
+      $cl = $1;
+      $num = $2? hex($3): int($3);
+    }
+    my $t1 = $num>255? sprintf("$cl:0x%04x", $num):
+                       sprintf("$cl:0x%02x", $num);
+    $sorted{$t1} = "$name / $name_ru";
 
     my $tc = "#ffffff";
-    $tc = "#b0ffff" if $t=~/^area:/;
-    $tc = "#b0ffb0" if $t=~/^line:/;
-    $tc = "#ffb0ff" if $t=~/^point:/;
+    $tc = "#b0ffff" if $cl eq 'area';
+    $tc = "#b0ffb0" if $cl eq 'line';
+    $tc = "#ffb0ff" if $cl eq 'point';
+
+    $order = "" if $t!~/^area:/;
+
 
     print qq*<tr>
-<td style="background-color: $tc;">$t</span></td>
+<td style="background-color: $tc;">$t1</span></td>
 <td>$name<br>$name_ru</td>
 <td>$mp_s - $mp_e</td>
 <td>$order</td>
@@ -89,3 +104,15 @@ foreach my $line (<>){
 }
 
 print_table();
+
+print qq*
+<hr><h3>Список знаков по порядку номеров</h3>
+<table cellspacing=0 cellpadding=2 border=0>
+*;
+foreach (sort keys %sorted){
+  print "<tr><td><b>$_</b></td><td>$sorted{$_}</td></tr>\n";
+}
+print qq*
+</table>
+*;
+
