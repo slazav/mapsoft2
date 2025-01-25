@@ -1,0 +1,6 @@
+../../programs/ms2render/ms2render\
+  --types ../../vmap_data/types.cfg\
+  --config ../../vmap_data/render.cfg\
+  --mkref proj --proj SU03 --coords '[0,6000000,4000,3000]'\
+  --dpi 200 --obj_scale=2\
+  $1 -o $2

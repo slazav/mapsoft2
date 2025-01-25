@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# 4x3 km map, Gauss-Kruger projection, 1:100'000
+../../programs/ms2geofig/ms2geofig create\
+  --mkref proj --proj SU03 --coords '[0,6000000,4000,3000]'\
+  -o templ.fig
