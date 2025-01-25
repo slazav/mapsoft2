@@ -86,8 +86,7 @@ each <tt>&lt;name&gt;</tt> a source file <tt>&lt;name&gt;.test.cpp</tt> and a sc
 
 <li><tt>OTHER_TESTS</tt> -- Any programs or scripts which should be run after building.
 
-<li><tt>PKG_CONFIG</tt>   -- External libraries used in this module (for <a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a>). Local pkg-config
-files can be put in <tt>$(MODDIR)/pc/</tt>.
+<li><tt>PKG_CONFIG</tt>   -- External libraries used in this module (for <a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a>).
 
 <li><tt>LDLIBS, LDFLAGS, CXXFLAGS</tt> -- standard Makefile variables.
 
@@ -130,17 +129,15 @@ which I also use for drawing maps.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/fig_opt">fig_opt</a></b></td><td> Extension for FIG format for keeping data in object comments.</td></tr>
 
-<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/filename">filename</a></b></td><td> Functions for working with filenames.</td></tr>
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/filename">filename</a></b></td><td> Functions for working with files and filenames.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/geo_data">geo_data</a></b></td><td> Classes for geodata handling. Functions for reading and writing geodata
 (GPX, KML, KMZ, GeoJson, OziExplorer formats). Great-circle distance (Haversine
-formula). Geo-conversions (<a href="https://proj4.org/">libproj</a> wrapper).
+formula). Geo-conversions (<a href="https://proj4.org/">libproj</a> wrapper). Making map references.
 <br><a href="https://github.com/slazav/mapsoft2-libs/blob/master/geo_data/Formats.md">https://github.com/slazav/mapsoft2-libs/blob/master/geo_data/Formats.md</a>.
 </td></tr>
 
-<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/geo_mkref">geo_mkref</a></b></td><td> Making map references.</td></tr>
-
-<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/geo_nom">geo_nom</a></b></td><td> Functions for working with Soviet nomenclature map names.</td></tr>
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/geo_nom">geo_nom</a></b></td><td> Functions for working with Soviet and Finnish nomenclature map names.</td></tr>
 
 <tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/geo_render">geo_render</a></b></td><td> Rendering geodata, map grids, raster maps...</td></tr>
 
@@ -153,6 +150,8 @@ working with them.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/getopt">getopt</a></b></td><td> getopt wrapper for building complicated command-line interfaces.</td></tr>
 
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/gis">gis</a></b></td><td> Reading some GIS formats (GeoPackage etc.)</td></tr>
+
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/iconv">iconv</a></b></td><td> Character encoding converter, a wrapper for <a href="https://www.gnu.org/software/libiconv/">libiconv</a>.</td></tr>
 
 <tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/image">image</a></b></td><td> 2d array of data for raster images. Reading and writing raster images
@@ -160,7 +159,14 @@ working with them.</td></tr>
 <br><a href="https://github.com/slazav/mapsoft2-libs/blob/master/image/Readme.md">https://github.com/slazav/mapsoft2-libs/blob/master/image/Readme.md</a>
 </td></tr>
 
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/image_cnt">image_cnt</a></b></td><td> Tracing contours, rivers etc.</td></tr>
+
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/image_tiles">image_tiles</a></b></td><td> Tiled images (local, remote, mbtiles).</td></tr>
+
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/iofilter">iofilter</a></b></td><td> Filtering <tt>std::stream</tt> through external program.</td></tr>
+
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/jnx">jnx</a></b></td><td> JNX map format
+Формат карт JNX</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/jsonxx">jsonxx</a></b></td><td> Simple C++ wrapper for libjansson library.</td></tr>
 
@@ -171,11 +177,14 @@ working with them.</td></tr>
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/mp">mp</a></b></td><td> Reading and writing of MP files. MP is a vector map format used for
 compiling Garmin GPS maps.</td></tr>
 
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/ocad">ocad</a></b></td><td> OCAD map format
+Формат карт OCAD</td></tr>
+
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/opt">opt</a></b></td><td> A <tt>map&lt;string,string&gt;</tt> container with functions for
 getting/putting values of arbitrary types. Used widely in
 <tt>mapsoft</tt>.</td></tr>
 
-<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/osmxml">osmxml</a></b></td><td> Reading OSM XML files.</td></tr>
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/osmxml">osmxml</a></b></td><td> Reading OSM XML files.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/rainbow">rainbow</a></b></td><td> Convert double values into RGB color gradients. Useful code which I use
 in many places.</td></tr>
@@ -184,7 +193,7 @@ in many places.</td></tr>
 separated by spaces. Comments, quoting, escape symbols are supported.
 Similar to reading shell argument list.</td></tr>
 
-<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/shape">shape</a></b></td><td> Reading and writing of Shape-files, wrapper for <a href="http://shapelib.maptools.org/">shapelib</a>.</td></tr>
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/shape">shape</a></b></td><td> Reading and writing of Shape-files, wrapper for <a href="http://shapelib.maptools.org/">shapelib</a>.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/srtm">srtm</a></b></td><td> Working with digital elevation models (hgt anf tiff formats).</td></tr>
 
@@ -203,6 +212,8 @@ in <tt>viewer/examples</tt> folder.</td></tr>
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/vmap">vmap</a></b></td><td> Reading and writing of VMAP, old mapsoft format for vector maps.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/vmap2">vmap2</a></b></td><td> VMAP2 vector maps, new format (text/database), all operations with this format.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/vxi">vxi</a></b></td><td> Access to VXI devices</td></tr>
 
 </table>
 

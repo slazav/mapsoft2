@@ -93,7 +93,6 @@
 <li><tt>OTHER_TESTS</tt> -- Программы или скрипты, которые должны быть запущены после окончания сборки.
 
 <li><tt>PKG_CONFIG</tt>   -- Внешние библиотеки используемые в этом модуле (подключаются с помощью <a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a>).
-Локальные файлы для pkg-config можно положить в директорию <tt>$(MODDIR)/pc/</tt>.
 
 <li><tt>LDLIBS, LDFLAGS, CXXFLAGS</tt> -- стандартные переменные make.
 
@@ -136,19 +135,17 @@
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/fig_opt">fig_opt</a></b></td><td> Расширение формата FIG для хранения данных в комментариях объектов.</td></tr>
 
-<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/filename">filename</a></b></td><td> Функции для работы с именами файлов.</td></tr>
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/filename">filename</a></b></td><td> Функции для работы с файлами и именами файлов.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/geo_data">geo_data</a></b></td><td> Классы для работы с геоданными. Чтение и запись (форматы GPX,
 KML, KMZ, GeoJson, OziExplorer). Расстояния между точками на поверхности Земли
 (формула Гаверсинуса). Геодезические преобразования (обертка для
-библиотеки <a href="https://proj4.org/">libproj</a>).
+библиотеки <a href="https://proj4.org/">libproj</a>).Изготовление
+привязок карт.
 <br><a href="https://github.com/slazav/mapsoft2-libs/blob/master/geo_data/Formats.md">https://github.com/slazav/mapsoft2-libs/blob/master/geo_data/Formats.md</a>
 </td></tr>
 
-<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/geo_mkref">geo_mkref</a></b></td><td> Изготовление
-привязок карт.</td></tr>
-
-<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/geo_nom">geo_nom</a></b></td><td> Функции для работы с именами советских номенклатурных карт.</td></tr>
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/geo_nom">geo_nom</a></b></td><td> Функции для работы с именами советских и финских номенклатурных карт.</td></tr>
 
 <tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/geo_render">geo_render</a></b></td><td> Рисование геоданных, сеток, растровых карт на растровых картинках.</td></tr>
 
@@ -161,6 +158,8 @@ KML, KMZ, GeoJson, OziExplorer). Расстояния между точками 
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/getopt">getopt</a></b></td><td> Обертка getopt для изготовления сложных интерфейсов командной строки.</td></tr>
 
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/gis">gis</a></b></td><td> Чтение некоторых форматов данных GIS (GeoPackage и т.п.</td></tr>
+
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/iconv">iconv</a></b></td><td> Преобразование кодировок, обертка <a href="https://www.gnu.org/software/libiconv/">libiconv</a>.</td></tr>
 
 <tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/image">image</a></b></td><td> Двухмерный массив данных для хранения растровых изображений. Чтение и
@@ -169,7 +168,15 @@ KML, KMZ, GeoJson, OziExplorer). Расстояния между точками 
 <br><a href="https://github.com/slazav/mapsoft2-libs/blob/master/image/Readme.md">https://github.com/slazav/mapsoft2-libs/blob/master/image/Readme.md</a>
 </td></tr>
 
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/image_cnt">image_cnt</a></b></td><td> Трассировка контуров, рек и т.п.
+</td></tr>
+
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/image_tiles">image_tiles</a></b></td><td> Тайловые картинки (локальные, удаленные, mbtiles).
+</td></tr>
+
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/iofilter">iofilter</a></b></td><td> Перенаправление <tt>std::stream</tt> через внешнюю программу.</td></tr>
+
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/jnx">jnx</a></b></td><td> </td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/jsonxx">jsonxx</a></b></td><td> Простая C++ обертка для библиотеки libjansson.</td></tr>
 
@@ -180,10 +187,12 @@ KML, KMZ, GeoJson, OziExplorer). Расстояния между точками 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/mp">mp</a></b></td><td> Чтение и запись MP-файлов. MP -- это формат векторных карт, используемый для
 компиляции карт для Garmin GPS.</td></tr>
 
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/ocad">ocad</a></b></td><td> </td></tr>
+
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/opt">opt</a></b></td><td> Контейнер <tt>map&lt;string,string&gt;</tt> с функциями для записи и
 чтения различных типов данных. Широко используется в <tt>mapsoft</tt>.</td></tr>
 
-<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/osmxml">osmxml</a></b></td><td> Чтение файлов OSM XML.</td></tr>
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/osmxml">osmxml</a></b></td><td> Чтение файлов OSM XML.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/rainbow">rainbow</a></b></td><td> Преобразовать вещественное число в цвет в соответствии с некоторым
 заданным градиентом. Полезная библиотека, которую я использую в разных
@@ -193,7 +202,7 @@ KML, KMZ, GeoJson, OziExplorer). Расстояния между точками 
 разделенные пробелами. Понимает комментарии, кавычки, escape-символ \.
 Похоже на чтение строки параметров в shell.</td></tr>
 
-<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/shape">shape</a></b></td><td> Чтение и запись SHAPE-файлов, обертка для <a href="http://shapelib.maptools.org/">shapelib</a>.</td></tr>
+<tr><td valign=top><img src="img/unstable.png" alt="unstable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/shape">shape</a></b></td><td> Чтение и запись SHAPE-файлов, обертка для <a href="http://shapelib.maptools.org/">shapelib</a>.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/srtm">srtm</a></b></td><td> Работа с картами высот (форматы hgt и tiff).</td></tr>
 
@@ -212,6 +221,8 @@ KML, KMZ, GeoJson, OziExplorer). Расстояния между точками 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/vmap">vmap</a></b></td><td> Чтение и запись VMAP, старого формата mapsoft для векторных карт.</td></tr>
 
 <tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/vmap2">vmap2</a></b></td><td> VMAP2, новый формат векторных карт (текстовый или база данных) и все операции с ним.</td></tr>
+
+<tr><td valign=top><img src="img/stable.png" alt="stable">&nbsp;<b><a href="https://github.com/slazav/mapsoft2-libs/tree/master/modules/vxi">vxi</a></b></td><td> Доступ к устройствам VXI</td></tr>
 
 </table>
 

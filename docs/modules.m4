@@ -121,12 +121,11 @@ NAME(.test.script). Программа будет собрана, после с�
 `Программы или скрипты, которые должны быть запущены после окончания сборки.')
 
 <li><tt>PKG_CONFIG</tt>   -- ENRU(
-`External libraries used in this module (for _PKGCONFIG_). Local pkg-config
-files can be put in <tt>$(MODDIR)/pc/</tt>.',
-`Внешние библиотеки используемые в этом модуле (подключаются с помощью _PKGCONFIG_).
-Локальные файлы для pkg-config можно положить в директорию <tt>$(MODDIR)/pc/</tt>.')
+`External libraries used in this module (for _PKGCONFIG_).',
+`Внешние библиотеки используемые в этом модуле (подключаются с помощью _PKGCONFIG_).')
 
-<li><tt>LDLIBS, LDFLAGS, CXXFLAGS</tt> -- ENRU(`standard Makefile variables',
+<li><tt>LDLIBS, LDFLAGS, CXXFLAGS</tt> -- ENRU(
+`standard Makefile variables',
 `стандартные переменные make').
 
 </ul>
@@ -187,30 +186,28 @@ _MODTAB_(fig_opt, STABLE,
 `Расширение формата FIG для хранения данных в комментариях объектов.')
 
 _MODTAB_(filename, STABLE,
-`Functions for working with filenames.',
-`Функции для работы с именами файлов.')
+`Functions for working with files and filenames.',
+`Функции для работы с файлами и именами файлов.')
 
 _MODTAB_(geo_data, STABLE,
 `Classes for geodata handling. Functions for reading and writing geodata
 (GPX, KML, KMZ, GeoJson, OziExplorer formats). Great-circle distance (Haversine
-formula). Geo-conversions (_LIBPROJ_ wrapper).
+formula). Geo-conversions (_LIBPROJ_ wrapper). Making map references.
 <br>WWW(`https://github.com/slazav/mapsoft2-libs/blob/master/geo_data/Formats.md',
 `-> Mapsoft2 geodata, supported file formats').
 ',
 `Классы для работы с геоданными. Чтение и запись (форматы GPX,
 KML, KMZ, GeoJson, OziExplorer). Расстояния между точками на поверхности Земли
 (формула Гаверсинуса). Геодезические преобразования (обертка для
-библиотеки _LIBPROJ_).
+библиотеки _LIBPROJ_).Изготовление
+привязок карт.
 <br>WWW(`https://github.com/slazav/mapsoft2-libs/blob/master/geo_data/Formats.md',
 `-> форматы геоданных в Mapsoft2')
 ')
 
-_MODTAB_(geo_mkref, STABLE, `Making map references.',`Изготовление
-привязок карт.')
-
 _MODTAB_(geo_nom, STABLE,
-`Functions for working with Soviet nomenclature map names.',
-`Функции для работы с именами советских номенклатурных карт.')
+`Functions for working with Soviet and Finnish nomenclature map names.',
+`Функции для работы с именами советских и финских номенклатурных карт.')
 
 _MODTAB_(geo_render, UNSTABLE,
 `Rendering geodata, map grids, raster maps...',
@@ -234,6 +231,10 @@ _MODTAB_(getopt, STABLE,
 `getopt wrapper for building complicated command-line interfaces.',
 `Обертка getopt для изготовления сложных интерфейсов командной строки.')
 
+_MODTAB_(gis, UNSTABLE,
+`Reading some GIS formats (GeoPackage etc.)',
+`Чтение некоторых форматов данных GIS (GeoPackage и т.п.')
+
 _MODTAB_(iconv, STABLE,
 `Character encoding converter, a wrapper for _LIBICONV_.',
 `Преобразование кодировок, обертка _LIBICONV_.')
@@ -251,9 +252,23 @@ _MODTAB_(image, UNSTABLE,
 `-> Mapsoft2 image, supported file formats')
 ')
 
+_MODTAB_(image_cnt, UNSTABLE,
+`Tracing contours, rivers etc.',
+`Трассировка контуров, рек и т.п.'
+)
+
+_MODTAB_(image_tiles, UNSTABLE,
+`Tiled images (local, remote, mbtiles).',
+`Тайловые картинки (локальные, удаленные, mbtiles).'
+)
+
 _MODTAB_(iofilter, STABLE,
 `Filtering <tt>std::stream</tt> through external program.',
 `Перенаправление <tt>std::stream</tt> через внешнюю программу.')
+
+_MODTAB_(jnx, UNSTABLE,
+`JNX map format'
+`Формат карт JNX')
 
 _MODTAB_(jsonxx, STABLE,
 `Simple C++ wrapper for libjansson library.',
@@ -273,6 +288,10 @@ compiling Garmin GPS maps.',
 `Чтение и запись MP-файлов. MP -- это формат векторных карт, используемый для
 компиляции карт для Garmin GPS.')
 
+_MODTAB_(ocad, UNSTABLE,
+`OCAD map format'
+`Формат карт OCAD')
+
 _MODTAB_(opt, STABLE,
 `A <tt>map&lt;string,string&gt;</tt> container with functions for
 getting/putting values of arbitrary types. Used widely in
@@ -280,7 +299,7 @@ getting/putting values of arbitrary types. Used widely in
 `Контейнер <tt>map&lt;string,string&gt;</tt> с функциями для записи и
 чтения различных типов данных. Широко используется в <tt>mapsoft</tt>.')
 
-_MODTAB_(osmxml, STABLE,
+_MODTAB_(osmxml, UNSTABLE,
 `Reading OSM XML files.',
 `Чтение файлов OSM XML.')
 
@@ -299,7 +318,7 @@ Similar to reading shell argument list.',
 разделенные пробелами. Понимает комментарии, кавычки, escape-символ \.
 Похоже на чтение строки параметров в shell.')
 
-_MODTAB_(shape, STABLE,
+_MODTAB_(shape, UNSTABLE,
 `Reading and writing of Shape-files, wrapper for _SHAPELIB_.',
 `Чтение и запись SHAPE-файлов, обертка для _SHAPELIB_.')
 
@@ -338,6 +357,10 @@ _MODTAB_(vmap, STABLE,
 _MODTAB_(vmap2, STABLE,
 `VMAP2 vector maps, new format (text/database), all operations with this format.',
 `VMAP2, новый формат векторных карт (текстовый или база данных) и все операции с ним.')
+
+_MODTAB_(vxi, STABLE,
+`Access to VXI devices',
+`Доступ к устройствам VXI')
 
 </table>
 
