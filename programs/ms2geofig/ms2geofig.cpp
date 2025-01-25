@@ -44,7 +44,7 @@ public:
     std::string ofile = opts.get<std::string>("out");
 
     Opt opts1(opts);
-    opts1.put("dpi", 1200/1.05);
+    opts1.put("dpi", 1143.0); // 450 dots per cm - xfig resolution in metric mode
     GeoMap ref = geo_mkref_opts(opts1);
 
     geo_mkref_brd(ref, opts);
