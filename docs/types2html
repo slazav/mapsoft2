@@ -20,16 +20,16 @@ return if $#types<0;
 print qq*
 <table cellspacing=0 cellpadding=3 border=1 width="100%">
 <tr>
-<th rowspan=2 width=12en>тип</th>
-<th rowspan=2 width="20%">название</th>
+<th rowspan=2 style="width:7em;">тип</th>
+<th rowspan=2 style="width:20%;">название</th>
 <th colspan=2>MP/TYP/IMG</th>
-<th rowspan=2 width=80px>рендер</th>
+<th rowspan=2 style="width: 80px;">рендер</th>
 <th rowspan=2>комментарий</td>
 </tr>
 
 <tr>
-<th width=12en>уровни</th>
-<th width=12en>порядок</th>
+<th style="width:5em;">уровни</th>
+<th style="width:5em;">порядок</th>
 </tr>
 *;
   foreach (@types){
