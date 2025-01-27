@@ -10,6 +10,7 @@ PROGRAMS :=\
   ms2view\
   ms2vmap\
   ms2vmapdb\
+  ms2vmaptypes\
   ms2xyz\
 
 prefix  ?= /usr
