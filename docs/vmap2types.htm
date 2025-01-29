@@ -378,7 +378,7 @@
 </tr>
 <tr>
 <td style="background-color: #b0ffff;">area:0x3b</span></td>
-<td>крупный водоем<br></td>
+<td>big water body<br>крупный водоем</td>
 <td>0 - 3</td>
 <td>6</td>
 <td><img src="types_render/area:0x3b.png"></td>
@@ -398,7 +398,7 @@
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/line:0x46.png"></td>
-<td></td>
+<td>Если в конфигурации рендера use_coastline=1, то этот знак рисуется вместо контуров area:0x29 и area:0x3B</td>
 </tr>
 <tr>
 <td style="background-color: #b0ffb0;">line:0x47</span></td>
@@ -430,7 +430,7 @@
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/point:0x650e.png"></td>
-<td>постоянная путаница со знаком водопад 0x6508</td>
+<td>Постоянная путаница со знаком водопад 0x6508. При рисовании притягивается к ближайшей реке (line:0x1F line:0x18 line:0x15 line:0x26)</td>
 </tr>
 <tr>
 <td style="background-color: #ffb0ff;">point:0x6508</span></td>
@@ -438,7 +438,7 @@
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/point:0x6508.png"></td>
-<td></td>
+<td>при рисовании притягивается и поворачивается к ближайшей реке (line:0x1F line:0x18 line:0x15 line:0x26)</td>
 </tr>
 <tr>
 <td style="background-color: #ffb0ff;">point:0x6414</span></td>
@@ -454,7 +454,7 @@
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/point:0x1000.png"></td>
-<td></td>
+<td>при рисовании притягивается к ближайшей реке/озеру/острову (line:0x1F line:0x18 line:0x15 line:0x26 area:0x29 area:0x3B area:0x53)</td>
 </tr>
 
 </table>
@@ -795,7 +795,7 @@ TODO: попробовать добавить площадные полупро�
 </tr>
 <tr>
 <td style="background-color: #b0ffb0;">line:0x44</span></td>
-<td>runway<br>асфальтовая ВВП</td>
+<td>runway<br>асфальтовая ВПП</td>
 <td>0 - 1</td>
 <td></td>
 <td><img src="types_render/line:0x44.png"></td>
@@ -803,7 +803,7 @@ TODO: попробовать добавить площадные полупро�
 </tr>
 <tr>
 <td style="background-color: #b0ffb0;">line:0x45</span></td>
-<td>sod runway<br>грунтовая ВВП</td>
+<td>sod runway<br>грунтовая ВПП</td>
 <td>0 - 1</td>
 <td></td>
 <td><img src="types_render/line:0x45.png"></td>
@@ -915,7 +915,7 @@ TODO: попробовать добавить площадные полупро�
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/point:0x6618.png"></td>
-<td>Знак на картах ММБ</td>
+<td>Введен 2025.01, до этого использовался на картах ММБ</td>
 </tr>
 <tr>
 <td style="background-color: #ffb0ff;">point:0x660a</span></td>
@@ -926,12 +926,12 @@ TODO: попробовать добавить площадные полупро�
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #ffb0ff;">point:0x0f00</span></td>
-<td>triangulation point<br>триангуляционный знак</td>
+<td style="background-color: #ffb0ff;">point:0x0d00</span></td>
+<td>hight mark<br>отметка высоты</td>
 <td>0 - 0</td>
 <td></td>
-<td><img src="types_render/point:0xf00.png"></td>
-<td></td>
+<td><img src="types_render/point:0xd00.png"></td>
+<td>взятая автоматически из srtm и т.п.</td>
 </tr>
 <tr>
 <td style="background-color: #ffb0ff;">point:0x1100</span></td>
@@ -942,12 +942,12 @@ TODO: попробовать добавить площадные полупро�
 <td></td>
 </tr>
 <tr>
-<td style="background-color: #ffb0ff;">point:0x0d00</span></td>
-<td>hight mark<br>отметка высоты</td>
+<td style="background-color: #ffb0ff;">point:0x0f00</span></td>
+<td>triangulation point<br>триангуляционный знак</td>
 <td>0 - 0</td>
 <td></td>
-<td><img src="types_render/point:0xd00.png"></td>
-<td>взятая автоматически из srtm и т.п.</td>
+<td><img src="types_render/point:0xf00.png"></td>
+<td></td>
 </tr>
 <tr>
 <td style="background-color: #ffb0ff;">point:0x650a</span></td>
@@ -1055,7 +1055,7 @@ TODO: попробовать добавить площадные полупро�
 </tr>
 <tr>
 <td style="background-color: #ffb0ff;">point:0x6606</span></td>
-<td>watch tower, hunting structure, shepperds camp<br>смотровая башня, охотничья вышка, кормушка, стоянка пастухов</td>
+<td>watch tower, hunting structure, shepherds camp<br>смотровая башня, охотничья вышка, кормушка, стоянка пастухов</td>
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/point:0x6606.png"></td>
@@ -1075,10 +1075,12 @@ TODO: попробовать добавить площадные полупро�
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/point:0x2b04.png"></td>
-<td></td>
+<td>введен 2024.12</td>
 </tr>
 
 </table>
+<p>Надо либо вообще убрать знаки "каньон" и "ледопад", либо сделать
+их коричневыми/синими кружками с категорями, как перевалы.
 <h3>Перевалы</h3>
 
 <table cellspacing=0 cellpadding=3 border=1 width="100%">
@@ -1599,7 +1601,7 @@ TODO: полностью переделать
 <tr><td><b>area:0x19</b></td><td>steep slope / крутой склон</td></tr>
 <tr><td><b>area:0x1a</b></td><td>cemetery / кладбище</td></tr>
 <tr><td><b>area:0x29</b></td><td>water body / водоем</td></tr>
-<tr><td><b>area:0x3b</b></td><td>крупный водоем / </td></tr>
+<tr><td><b>area:0x3b</b></td><td>big water body / крупный водоем</td></tr>
 <tr><td><b>area:0x4c</b></td><td>swamp / болото</td></tr>
 <tr><td><b>area:0x4d</b></td><td>glacier, snow, river icing / ледник, снежник, наледь</td></tr>
 <tr><td><b>area:0x4e</b></td><td>summer houses, etc. / дачи, сад.уч., д/о, п/л</td></tr>
@@ -1666,8 +1668,8 @@ TODO: полностью переделать
 <tr><td><b>line:0x41</b></td><td>canal / канал</td></tr>
 <tr><td><b>line:0x42</b></td><td>ferry / паром</td></tr>
 <tr><td><b>line:0x43</b></td><td>cable way, ski lift / канатная дорога, лыжный подъемник</td></tr>
-<tr><td><b>line:0x44</b></td><td>runway / асфальтовая ВВП</td></tr>
-<tr><td><b>line:0x45</b></td><td>sod runway / грунтовая ВВП</td></tr>
+<tr><td><b>line:0x44</b></td><td>runway / асфальтовая ВПП</td></tr>
+<tr><td><b>line:0x45</b></td><td>sod runway / грунтовая ВПП</td></tr>
 <tr><td><b>line:0x46</b></td><td>coastline / четкая береговая линия</td></tr>
 <tr><td><b>line:0x47</b></td><td>uncertain coastline / нечеткая береговая линия</td></tr>
 <tr><td><b>line:0x48</b></td><td>rapids / пороги</td></tr>
@@ -1711,7 +1713,7 @@ TODO: полностью переделать
 <tr><td><b>point:0x650e</b></td><td>rapid / порог</td></tr>
 <tr><td><b>point:0x6601</b></td><td>cave / пещера</td></tr>
 <tr><td><b>point:0x6603</b></td><td>pit, sinkhole / яма</td></tr>
-<tr><td><b>point:0x6606</b></td><td>watch tower, hunting structure, shepperds camp / смотровая башня, охотничья вышка, кормушка, стоянка пастухов</td></tr>
+<tr><td><b>point:0x6606</b></td><td>watch tower, hunting structure, shepherds camp / смотровая башня, охотничья вышка, кормушка, стоянка пастухов</td></tr>
 <tr><td><b>point:0x660a</b></td><td>tree, group of trees / дерево, группа деревьев</td></tr>
 <tr><td><b>point:0x660b</b></td><td>canyon / каньон</td></tr>
 <tr><td><b>point:0x6613</b></td><td>knoll, mound / холм, курган</td></tr>

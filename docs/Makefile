@@ -22,7 +22,7 @@ vmap2types.m4: ../vmap_data/types.cfg types2html
 
 types_render: ../vmap_data/types.cfg ../vmap_data/render.cfg
 	../programs/ms2vmaptypes/ms2vmaptypes render --types ../vmap_data/types.cfg\
-	  --define '{"color_bg": "0xFFF5DEB3", "hr": "1"}'\
+	  --define '{"color_bg": "0xFFF5DEB3", "hr": "1", "grid": "0"}'\
 	  --config ../vmap_data/render.cfg --obj_scale 2 -o types_render
 
 clean:
