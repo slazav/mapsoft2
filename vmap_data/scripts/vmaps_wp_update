@@ -86,7 +86,7 @@ for i in "$@"; do
   rm -f -- "${WPASS_DIR}/${name}_wp.mp"
 
   # convert names
-  if [ "$WPASS_PREF" != ""]; then
+  if [ "$WPASS_PREF" != "" ]; then
     tmpsed=$(mktemp -u vmaps_wp_${name}_XXXX.sed)
     if [ -f "${WPASS_PREF}.cnv" ]; then
       echo "$(get_conv $name)" > ${tmpsed}
