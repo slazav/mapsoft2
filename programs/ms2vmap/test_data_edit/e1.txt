@@ -1,0 +1,4 @@
+if type==point:0x1     then set_type point:0x11
+if ref_type==point:0x1 then set_ref_type point:0x11
+if type==line          then delete
+if type==area          then crop_rect [37.52,55.39,0.05,0.05]

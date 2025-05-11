@@ -1,0 +1,16 @@
+#!/bin/bash -efu
+
+# General interface and option tests
+# See also getopt module tests
+
+P=${1:-./ms2vmap}
+IN="test_data_edit/in.vmap2"
+OUT="tmp.vmap2"
+TYP="test_data_edit/types.cfg"
+
+. ../../modules/test_lib.sh
+
+assert_cmd "$P $IN -o $OUT -t $TYP --edit test_data_edit/e1.txt" "" 0
+assert_diff test_data_edit/e1.vmap2 $OUT
+
+

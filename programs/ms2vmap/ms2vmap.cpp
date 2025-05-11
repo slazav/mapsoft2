@@ -11,6 +11,7 @@
 #include "getopt/getopt.h"
 #include "getopt/help_printer.h"
 #include "vmap2/vmap2io.h"
+#include "vmap2edit/vmap2edit.h"
 
 #include "filename/filename.h"
 
@@ -55,7 +56,9 @@ main(int argc, char *argv[]){
     ms2opt_add_std(options, {"HELP","POD","VERB","OUT"});
     ms2opt_add_vmap2t(options);
     ms2opt_add_vmap2(options, 1, 1);
+    options.add("edit",1, 0, "VMAP2", "Edit map using a file with commands");
     options.remove("verbose");
+
 
     // general options -- up to first non-option argument
     vector<string> infiles;
@@ -72,6 +75,8 @@ main(int argc, char *argv[]){
       vmap = VMap2(infiles[0]); // open vmap2 database (no need to read!)
     else
       vmap2_import(infiles, types, vmap, O); // read all files (incl databases)
+
+    if (O.exists("edit")) vmap2edit(vmap, O.get("edit"));
 
     if (O.get("out")!="") vmap2_export(vmap, types, O.get("out"), O);
   }
