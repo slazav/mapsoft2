@@ -52,6 +52,7 @@ CGPSM=cgpsmapper-static              # cgpsmapper program
 IMGMAP="";                           # combined img file
 IMG_FID=891;                         # FID parameter for IMG files
 IMG_CP=1251;                         # CodePage parameter for MP/TYP/IMG files
+MP_EDIT='';                          # command file for editing map when converting to mp
 
 ############################################################
 ## Map editing
@@ -59,6 +60,8 @@ IN_DIR=IN;       # Input folder. Maps are updated from .fig/.mp files in this fo
 FIG_DIR=fig;     # Folder for Fig templates
 CROP_NOM=0;      # crop maps in vmaps_in (only for nomenclature maps)
 NOM_MAG=2;       # Scaling of maps. Use NOM_MAP=2 for 1km sheets with 500m maps
+IN_MP_EDIT='';   # command file for editing input mp files
+IN_FIG_EDIT='';  # command file for editing input fig files
 
 DIFF_DIR=diff;   # Folder for diff files
 DPI_DIFF=150;    # DPI for rendering diff images
@@ -68,6 +71,7 @@ REG_DIR=;        # borders for region index files (to be removed?)
 # vmaps_wp_update
 WPASS_DIR=wpasses
 WPASS_PREF=wpasses
+WPASS_EDIT='';      # command file for editing passes
 
 ############################################################
 ## Generating index files:
@@ -157,6 +161,7 @@ function vmap_render_mp() {
   vmap="$VMAP_DIR/$name.$VMAP_EXT"
   $MS2VMAP "$vmap" -o "$mp"\
     -t "$TYPEINFO" --define "$(vmap_defs "$name")"\
+    "${MP_EDIT:+--edit $MP_EDIT}"\
     --mp_name "$name" --mp_id "$mp_id" --mp_cp "$IMG_CP" --crop_nom "$name"
 }
 

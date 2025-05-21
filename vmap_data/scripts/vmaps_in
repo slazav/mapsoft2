@@ -46,15 +46,15 @@ for i in $files; do
   args=""
   # mp has no labels
   if [ "$ext" = "mp" ]; then
-    args="$args --keep_labels 1"
+    args="$args --keep_labels 1 ${IN_MP_EDIT:+--edit $IN_MP_EDIT}"
   fi
 
   if [ "$ext" = "fig" ]; then
-    args="$args --fig_enc UTF-8"
+    args="$args --fig_enc UTF-8 ${IN_FIG_EDIT:+--edit $IN_FIG_EDIT}"
   fi
 
   if [ "$CROP_NOM" = "1" ]; then
-    args="$args --crop_nom $name"
+    args="$args --crop_nom $name "
   fi
 
   # update vmap from the input file
