@@ -63,12 +63,6 @@
       <li><a href="#Options-for-writing-FIG-format">Options for writing FIG format:</a></li>
     </ul>
   </li>
-  <li><a href="#FIG_LIB----MAKE-FIG-LIBRARY-USING-TYPEINFO-FILE">FIG_LIB -- MAKE FIG LIBRARY USING TYPEINFO FILE</a></li>
-  <li><a href="#SYNOPSIS13">SYNOPSIS</a>
-    <ul>
-      <li><a href="#Options4">Options:</a></li>
-    </ul>
-  </li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
 </ul>
@@ -127,9 +121,7 @@ ms2vmapdb crop_rect -- crop to rectangular range
 
 ms2vmapdb import -- import objects to vmap2 database
 
-ms2vmapdb export -- export vector map to a different format
-
-ms2vmapdb fig_lib -- make fig library using typeinfo file</code></pre>
+ms2vmapdb export -- export vector map to a different format</code></pre>
 
 <h1 id="CREATE----CREATE-VMAP2-DATABASE">CREATE -- CREATE VMAP2 DATABASE</h1>
 
@@ -357,16 +349,6 @@ ms2vmapdb fig_lib -- make fig library using typeinfo file</code></pre>
 
 <h2 id="Options-for-reading-MP-format">Options for reading MP format:</h2>
 
-<dl>
-
-<dt id="mp_enc-arg"><b>--mp_enc &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Override encoding for reading MP-files (does not change CodePage setting)</p>
-
-</dd>
-</dl>
-
 <h2 id="Options-for-reading-FIG-format">Options for reading FIG format:</h2>
 
 <dl>
@@ -517,10 +499,10 @@ ms2vmapdb fig_lib -- make fig library using typeinfo file</code></pre>
 <p>Keep old labels. Values: 0 or 1, default: 0.</p>
 
 </dd>
-<dt id="replace_tag-arg"><b>--replace_tag &lt;arg&gt;</b></dt>
+<dt id="replace_source-arg"><b>--replace_source &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Replace objects with a given tag.</p>
+<p>Replace objects with a given Source=&lt;src&gt; option.</p>
 
 </dd>
 <dt id="replace_type-arg"><b>--replace_type &lt;arg&gt;</b></dt>
@@ -601,10 +583,10 @@ ms2vmapdb fig_lib -- make fig library using typeinfo file</code></pre>
 <p>set mp data levels (comma-separated integers), default: &quot;24,22,20,18,17,15&quot;.</p>
 
 </dd>
-<dt id="mp_enc-arg1"><b>--mp_enc &lt;arg&gt;</b></dt>
+<dt id="mp_cp-arg"><b>--mp_cp &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Override encoding for writing MP-files (does not change CodePage setting)</p>
+<p>codepage for MP files (default 1251)</p>
 
 </dd>
 </dl>
@@ -629,36 +611,6 @@ ms2vmapdb fig_lib -- make fig library using typeinfo file</code></pre>
 <dd>
 
 <p>Encoding for reading/writing fig files (default: KOI8-R). When reading utf8 files with a special comment (made by xfig&gt;3.2.9) this option is ignored.</p>
-
-</dd>
-</dl>
-
-<h1 id="FIG_LIB----MAKE-FIG-LIBRARY-USING-TYPEINFO-FILE">FIG_LIB -- MAKE FIG LIBRARY USING TYPEINFO FILE</h1>
-
-<h1 id="SYNOPSIS13">SYNOPSIS</h1>
-
-<pre><code>ms2vmap fig_lib [&lt;options&gt;]</code></pre>
-
-<h2 id="Options4">Options:</h2>
-
-<dl>
-
-<dt id="o---out-arg2"><b>-o, --out &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Output file.</p>
-
-</dd>
-<dt id="t---types-arg3"><b>-t, --types &lt;arg&gt;</b></dt>
-<dd>
-
-<p>File with type information. Default: /usr/share/mapsoft2/types.cfg</p>
-
-</dd>
-<dt id="D---define-arg3"><b>-D, --define &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Define variables for type information file.</p>
 
 </dd>
 </dl>

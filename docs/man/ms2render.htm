@@ -165,25 +165,25 @@
 <dt id="mkref-arg"><b>--mkref &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Choose map type (nom, nom_fi, google_tile, tms_tile, proj)</p>
+<p>Choose map type (nom, nom_fi, google_tile, tms_tile, proj, file)</p>
 
 </dd>
 <dt id="name-arg"><b>--name &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Set map name. For --mkref=&quot;nom&quot; it should contain a valid Soviet nomenclature name. For --mkref=&quot;file&quot; it should contain map-file name.</p>
+<p>Set map name. For nom and nom_fi maps it should contain a valid nomenclature name. For --mkref=&quot;file&quot; it should contain map-file name.</p>
 
 </dd>
 <dt id="dpi-arg"><b>--dpi &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Map resolution, pixels per inch (&quot;nom&quot; and &quot;proj&quot; maps)</p>
+<p>Map resolution, pixels per inch (nom, nom_fi and proj maps)</p>
 
 </dd>
 <dt id="north"><b>--north</b></dt>
 <dd>
 
-<p>Orient map to north (&quot;nom&quot; maps)</p>
+<p>Orient map to north (nom and nom_fi maps)</p>
 
 </dd>
 <dt id="margins-arg"><b>--margins &lt;arg&gt;</b></dt>
@@ -548,12 +548,6 @@
 <dd>
 
 <p>When reading VMAP file, set type number for labels which are not defined in typeinfo file. Use -1 to skip unknown labels (default). If skip_unknown is set then labels are skipped with unknown objects.</p>
-
-</dd>
-<dt id="mp_enc-arg"><b>--mp_enc &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Override encoding for reading MP-files (does not change CodePage setting)</p>
 
 </dd>
 <dt id="c---config-arg"><b>-c, --config &lt;arg&gt;</b></dt>

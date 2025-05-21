@@ -145,10 +145,10 @@ ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 <p>Keep old labels. Values: 0 or 1, default: 0.</p>
 
 </dd>
-<dt id="replace_tag-arg"><b>--replace_tag &lt;arg&gt;</b></dt>
+<dt id="replace_source-arg"><b>--replace_source &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Replace objects with a given tag.</p>
+<p>Replace objects with a given Source=&lt;src&gt; option.</p>
 
 </dd>
 <dt id="replace_type-arg"><b>--replace_type &lt;arg&gt;</b></dt>
@@ -205,6 +205,12 @@ ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 <p>Accuracy for point filtering in meters. Default: 10</p>
 
 </dd>
+<dt id="edit-arg"><b>--edit &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Edit map using a file with commands</p>
+
+</dd>
 </dl>
 
 <h2 id="Options-for-MP-format">Options for MP format:</h2>
@@ -229,16 +235,10 @@ ms2vmap &lt;file&gt; ... -o &lt;out file&gt; [&lt;options&gt;]</code></pre>
 <p>set mp data levels (comma-separated integers), default: &quot;24,22,20,18,17,15&quot;.</p>
 
 </dd>
-<dt id="mp_in_enc-arg"><b>--mp_in_enc &lt;arg&gt;</b></dt>
+<dt id="mp_cp-arg"><b>--mp_cp &lt;arg&gt;</b></dt>
 <dd>
 
-<p>Override input encoding for MP-files (does not change CodePage setting)</p>
-
-</dd>
-<dt id="mp_out_enc-arg"><b>--mp_out_enc &lt;arg&gt;</b></dt>
-<dd>
-
-<p>Override output encoding for MP-files (does not change CodePage setting)</p>
+<p>codepage for MP files (default 1251)</p>
 
 </dd>
 </dl>
