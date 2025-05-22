@@ -22,6 +22,7 @@
 #  * IN_DIR (optional) -- if fig file exists there, run vmaps_get_fig
 #  * WPASS_DIR  -- directory for keeping data
 #  * WPASS_PREF (optional) - for ${WPASS_PREF}.sed and old-style ${WPASS_PREF}_${name}.sed files
+#  * WPASS_EDIT -- command file for --edit option
 ##################################################
 
 # read global configuration and functions
@@ -80,8 +81,9 @@ for i in "$@"; do
   # merge into vmap
   ms2vmap ${WPASS_DIR}/${name}_wp.mp -o "$vmap"\
     --types "$TYPEINFO" --define "$(vmap_defs $name)"\
-    --replace_source westra_passes --fix_rounding 1\
-    --update_labels 1
+    --replace_source westra_passes\
+    ${WPASS_EDIT:+--edit "$WPASS_EDIT"}\
+    --fix_rounding 1 --update_labels 1
 
   rm -f -- "${WPASS_DIR}/${name}_wp.mp"
 

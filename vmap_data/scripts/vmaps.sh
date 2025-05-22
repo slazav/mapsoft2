@@ -161,7 +161,7 @@ function vmap_render_mp() {
   vmap="$VMAP_DIR/$name.$VMAP_EXT"
   $MS2VMAP "$vmap" -o "$mp"\
     -t "$TYPEINFO" --define "$(vmap_defs "$name")"\
-    "${MP_EDIT:+--edit $MP_EDIT}"\
+    ${MP_EDIT:+--edit "$MP_EDIT"}\
     --mp_name "$name" --mp_id "$mp_id" --mp_cp "$IMG_CP" --crop_nom "$name"
 }
 
