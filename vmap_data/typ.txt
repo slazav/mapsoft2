@@ -106,6 +106,9 @@
 ;POI 0x6613  курган                            0
 ;POI 0x6616  скала-останец                     0
 ;POI 0x6618  завал                             0
+;POI 0x6620  стоянка пастухов 1                0
+;POI 0x6620  стоянка пастухов 2                0
+;POI 0x6620  стоянка пастухов 3                0
 ;POI 0x6700  перевал н/к                       1
 ;POI 0x6701  перевал 1А                        1
 ;POI 0x6702  перевал 1Б                        1
@@ -1993,7 +1996,98 @@ DayXpm="16 16 3 1"
 "                "
 "                "
 [end]
+;POI 0x6620  стоянка пастухов 1
+[_point]
+Type=0x66
+SubType=0x20
+String1=0x19,паст.1
+String2=0x04,sheph.1
+ExtendedLabels=Y
+CustomColor=DayAndNight
+DayCustomColor=#000000
+NightCustomColor=#000000
+Xpm="16 16 2 1"
+"  c None"
+"* c #000000"
+"                "
+"                "
+"                "
+"                "
+"                "
+"    *     *     "
+"   *       *    "
+"   * ***** *    "
+"    *     *     "
+"   * *   * *    "
+"   *       *    "
+"   **     **    "
+"    **   **     "
+"      ***       "
+"                "
+"                "
+[end]
+;POI 0x6621  стоянка пастухов 2
+[_point]
+Type=0x66
+SubType=0x21
+String1=0x19,паст.2
+String2=0x04,sheph.2
+ExtendedLabels=Y
+CustomColor=DayAndNight
+DayCustomColor=#000000
+NightCustomColor=#000000
+Xpm="16 16 2 1"
+"  c None"
+"* c #000000"
+"                "
+"                "
+"                "
+"                "
+"                "
+"*   *     *   * "
+"*  *       *  * "
+"*  * ***** *  * "
+"*   *     *   * "
+"*  * *   * *  * "
+"*  *       *  * "
+"*  **     **  * "
+"*   **   **   * "
+"      ***       "
+"                "
+"                "
+[end]
 
+[end]
+;POI 0x6622  стоянка пастухов 3
+[_point]
+Type=0x66
+SubType=0x22
+String1=0x19,паст.3
+String2=0x04,sheph.3
+ExtendedLabels=Y
+CustomColor=DayAndNight
+DayCustomColor=#000000
+NightCustomColor=#000000
+Xpm="16 16 2 1"
+"  c None"
+"* c #000000"
+"                "
+"       **       "
+"     **  **     "
+"   **      **   "
+" **          ** "
+"*   *     *   * "
+"*  *       *  * "
+"*  * ***** *  * "
+"*   *     *   * "
+"*  * *   * *  * "
+"*  *       *  * "
+"*  **     **  * "
+"*   **   **   * "
+"      ***       "
+"                "
+"                "
+[end]
 ;POI 0x6700  перевал н/к
 [_point]
 Type=0x67
