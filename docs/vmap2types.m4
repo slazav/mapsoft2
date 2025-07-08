@@ -38,7 +38,7 @@ HEADER(mapdb,`
 </tr>
 <tr>
 <td style="background-color: #b0ffff;">area:0x52</span></td>
-<td>open area<br>открытое пространство, поле</td>
+<td>open area<br>открытое пространство</td>
 <td>0 - 1</td>
 <td>2</td>
 <td><img src="types_render/area:0x52.png"></td>
@@ -136,6 +136,14 @@ HEADER(mapdb,`
 <td></td>
 </tr>
 <tr>
+<td style="background-color: #b0ffff;">area:0x54</span></td>
+<td>open rock<br>открытые скалы</td>
+<td>0 - 1</td>
+<td>5</td>
+<td><img src="types_render/area:0x54.png"></td>
+<td>Введен 2025.07 для финской карты. Пока не используется</td>
+</tr>
+<tr>
 <td style="background-color: #b0ffff;">area:0x08</span></td>
 <td>scree<br>осыпь</td>
 <td>0 - 1</td>
@@ -150,6 +158,14 @@ HEADER(mapdb,`
 <td>8</td>
 <td><img src="types_render/area:0xd.png"></td>
 <td></td>
+</tr>
+<tr>
+<td style="background-color: #b0ffff;">area:0x13</span></td>
+<td>field, orchard<br>сельхозугодья (поля, сады)</td>
+<td>0 - 1</td>
+<td>8</td>
+<td><img src="types_render/area:0x13.png"></td>
+<td>Добавлен 2025.07. Попробовать использовать и для лесопосадок?</td>
 </tr>
 <tr>
 <td style="background-color: #b0ffff;">area:0x51</span></td>
@@ -172,8 +188,6 @@ HEADER(mapdb,`
 <p>Рисуются поверх леса, под рельефом. Через некоторые знаки может просвечивать лес
 (например, болото может быть лесное или открытое). На фоне "крутого склона" знак "ледник"
 становится темнее (надо бы сделать то же с лесом).
-<p>TODO: добавить знак "сельхозугодья (поля, сады)", который может накладываться на лес/поле
-<p>TODO: добавить знак "скалы" (сейчас вместо него используется знак "крутой склон")
 <h3>Искуственные площадные объекты</h3>
 
 <table cellspacing=0 cellpadding=3 border=1 width="100%">
@@ -279,10 +293,16 @@ HEADER(mapdb,`
 <td><img src="types_render/line:0x22.png"></td>
 <td></td>
 </tr>
+<tr>
+<td style="background-color: #ffb0ff;">point:0x6600</span></td>
+<td>hachure<br>бергштрих</td>
+<td>0 - 0</td>
+<td></td>
+<td><img src="types_render/point:0x6600.png"></td>
+<td>Добавлен 2025.07. Ориентируется по горизонтали (сейчас это не очень красиво выглядит на углах, надо исправить)</td>
+</tr>
 
 </table>
-<p>TODO: добавить точечный знак "бергштрих", который при рисовании будет
-ориентироваться по ближайшей горизонтали.
 <h3>Гидрография</h3>
 
 <table cellspacing=0 cellpadding=3 border=1 width="100%">
@@ -360,7 +380,7 @@ HEADER(mapdb,`
 <td>0 - 3</td>
 <td>6</td>
 <td><img src="types_render/area:0x3b.png"></td>
-<td></td>
+<td>Предполагается, что в img крупные водоемы показываются на более мелких масштабах</td>
 </tr>
 <tr>
 <td style="background-color: #b0ffff;">area:0x53</span></td>
@@ -408,7 +428,7 @@ HEADER(mapdb,`
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/point:0x650e.png"></td>
-<td>Постоянная путаница со знаком водопад 0x6508. При рисовании притягивается к ближайшей реке (line:0x1F line:0x18 line:0x15 line:0x26)</td>
+<td>Постоянная путаница со знаком водопад 0x6508. При рисовании притягивается к ближайшей реке/озеру/острову (line:0x26 line:0x15 line:0x18 line:0x1F area:0x29 area:0x3B area:0x53)</td>
 </tr>
 <tr>
 <td style="background-color: #ffb0ff;">point:0x6508</span></td>
@@ -416,7 +436,7 @@ HEADER(mapdb,`
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/point:0x6508.png"></td>
-<td>при рисовании притягивается и поворачивается к ближайшей реке (line:0x1F line:0x18 line:0x15 line:0x26)</td>
+<td>при рисовании притягивается и поворачивается к ближайшей реке/озеру/острову (line:0x26 line:0x15 line:0x18 line:0x1F area:0x29 area:0x3B area:0x53)</td>
 </tr>
 <tr>
 <td style="background-color: #ffb0ff;">point:0x6414</span></td>
@@ -432,7 +452,7 @@ HEADER(mapdb,`
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/point:0x1000.png"></td>
-<td>при рисовании притягивается к ближайшей реке/озеру/острову (line:0x1F line:0x18 line:0x15 line:0x26 area:0x29 area:0x3B area:0x53)</td>
+<td>при рисовании притягивается к ближайшей реке/озеру/острову (line:0x26 line:0x15 line:0x18 line:0x1F area:0x29 area:0x3B area:0x53)</td>
 </tr>
 
 </table>
@@ -453,7 +473,7 @@ HEADER(mapdb,`
 </tr>
 <tr>
 <td style="background-color: #b0ffb0;">line:0x32</span></td>
-<td>плохой путь<br></td>
+<td>route quality 1<br></td>
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/line:0x32.png"></td>
@@ -461,7 +481,7 @@ HEADER(mapdb,`
 </tr>
 <tr>
 <td style="background-color: #b0ffb0;">line:0x33</span></td>
-<td>удовлетворительный путь<br></td>
+<td>route quality 2<br></td>
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/line:0x33.png"></td>
@@ -469,7 +489,7 @@ HEADER(mapdb,`
 </tr>
 <tr>
 <td style="background-color: #b0ffb0;">line:0x34</span></td>
-<td>хороший путь<br></td>
+<td>route quality 3<br></td>
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/line:0x34.png"></td>
@@ -477,7 +497,7 @@ HEADER(mapdb,`
 </tr>
 <tr>
 <td style="background-color: #b0ffb0;">line:0x35</span></td>
-<td>отличный путь<br></td>
+<td>route quality 4<br></td>
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/line:0x35.png"></td>
@@ -520,7 +540,7 @@ HEADER(mapdb,`
 </tr>
 <tr>
 <td style="background-color: #b0ffb0;">line:0x25</span></td>
-<td>овраг<br></td>
+<td>gulley<br>овраг</td>
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/line:0x25.png"></td>
@@ -528,7 +548,7 @@ HEADER(mapdb,`
 </tr>
 <tr>
 <td style="background-color: #b0ffb0;">line:0x2c</span></td>
-<td>вал<br></td>
+<td>levee<br>вал</td>
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/line:0x2c.png"></td>
@@ -536,15 +556,23 @@ HEADER(mapdb,`
 </tr>
 <tr>
 <td style="background-color: #b0ffb0;">line:0x2b</span></td>
-<td>сухая канава<br></td>
+<td>dry ditch<br>сухая канава</td>
 <td>0 - 1</td>
 <td></td>
 <td><img src="types_render/line:0x2b.png"></td>
 <td></td>
 </tr>
 <tr>
+<td style="background-color: #b0ffb0;">line:0x51</span></td>
+<td>moraine boundary<br>граница морен</td>
+<td>0 - 1</td>
+<td></td>
+<td><img src="types_render/line:0x51.png"></td>
+<td>добавлен 2025.07, раньше использовался знак line:0x2B</td>
+</tr>
+<tr>
 <td style="background-color: #b0ffb0;">line:0x07</span></td>
-<td>дорожная насыпь<br></td>
+<td>road embankment<br>дорожная насыпь</td>
 <td>0 - 1</td>
 <td></td>
 <td><img src="types_render/line:0x7.png"></td>
@@ -580,7 +608,7 @@ HEADER(mapdb,`
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/point:0x6401.png"></td>
-<td></td>
+<td>при рисовании притягивается к знаку забора</td>
 </tr>
 <tr>
 <td style="background-color: #ffb0ff;">point:0x6603</span></td>
@@ -598,10 +626,16 @@ HEADER(mapdb,`
 <td><img src="types_render/point:0x6613.png"></td>
 <td></td>
 </tr>
+<tr>
+<td style="background-color: #ffb0ff;">point:0x6608</span></td>
+<td>crater<br>кратер</td>
+<td>0 - 0</td>
+<td></td>
+<td><img src="types_render/point:0x6608.png"></td>
+<td>добавлен 2025.07 для синхронизации с системой знаков О.Власенко</td>
+</tr>
 
 </table>
-<p>TODO: добавить знак "граница морен" (сейчас на хребтовках используется знак "канава").
-После этого канаву можно не сглаживать.
 <h3>Границы и территории</h3>
 
 <table cellspacing=0 cellpadding=3 border=1 width="100%">
@@ -619,7 +653,7 @@ HEADER(mapdb,`
 </tr>
 <tr>
 <td style="background-color: #b0ffb0;">line:0x1d</span></td>
-<td>граница стран, областей<br></td>
+<td>national boundaries<br>граница стран, областей</td>
 <td>1 - 4</td>
 <td></td>
 <td><img src="types_render/line:0x1d.png"></td>
@@ -627,7 +661,7 @@ HEADER(mapdb,`
 </tr>
 <tr>
 <td style="background-color: #b0ffb0;">line:0x36</span></td>
-<td>граница областей, районов<br></td>
+<td>district boundaries<br>граница областей, районов</td>
 <td>0 - 2</td>
 <td></td>
 <td><img src="types_render/line:0x36.png"></td>
@@ -1033,11 +1067,19 @@ TODO: попробовать добавить площадные полупро�
 </tr>
 <tr>
 <td style="background-color: #ffb0ff;">point:0x6606</span></td>
-<td>watch tower, hunting structure, shepherds camp<br>смотровая башня, охотничья вышка, кормушка, стоянка пастухов</td>
+<td>watch tower, hunting structure, shepherds camp<br>смотровая башня, охотничья вышка, кормушка</td>
 <td>0 - 0</td>
 <td></td>
 <td><img src="types_render/point:0x6606.png"></td>
 <td></td>
+</tr>
+<tr>
+<td style="background-color: #ffb0ff;">point:0x6607</span></td>
+<td>shepherds camp<br>стоянка пастухов</td>
+<td>0 - 0</td>
+<td></td>
+<td><img src="types_render/point:0x6607.png"></td>
+<td>'введен 2024.07. Отталкивается от знаков "дом", "развалины"'</td>
 </tr>
 <tr>
 <td style="background-color: #ffb0ff;">point:0x2b03</span></td>
@@ -1573,6 +1615,7 @@ TODO: полностью переделать
 <tr><td><b>area:0x0a</b></td><td>дырка в DEM-данных / </td></tr>
 <tr><td><b>area:0x0d</b></td><td>sand / песок</td></tr>
 <tr><td><b>area:0x0e</b></td><td>village area / деревни</td></tr>
+<tr><td><b>area:0x13</b></td><td>field, orchard / сельхозугодья (поля, сады)</td></tr>
 <tr><td><b>area:0x14</b></td><td>semi-open area / редколесье</td></tr>
 <tr><td><b>area:0x15</b></td><td>forest island / остров леса</td></tr>
 <tr><td><b>area:0x16</b></td><td>forest / лес</td></tr>
@@ -1586,8 +1629,9 @@ TODO: полностью переделать
 <tr><td><b>area:0x4f</b></td><td>deforestation area / свежая вырубка</td></tr>
 <tr><td><b>area:0x50</b></td><td>old deforestation area / старая вырубка</td></tr>
 <tr><td><b>area:0x51</b></td><td>marsh / заболоченность</td></tr>
-<tr><td><b>area:0x52</b></td><td>open area / открытое пространство, поле</td></tr>
+<tr><td><b>area:0x52</b></td><td>open area / открытое пространство</td></tr>
 <tr><td><b>area:0x53</b></td><td>island / остров</td></tr>
+<tr><td><b>area:0x54</b></td><td>open rock / открытые скалы</td></tr>
 <tr><td><b>area:0x58</b></td><td>mining/deposition area / карьеры и отвалы грунта</td></tr>
 <tr><td><b>area:0xff01</b></td><td>test area R / тестовая площадь R</td></tr>
 <tr><td><b>area:0xff02</b></td><td>test area G / тестовая площадь G</td></tr>
@@ -1602,7 +1646,7 @@ TODO: полностью переделать
 <tr><td><b>line:0x04</b></td><td>проезжий грейдер / </td></tr>
 <tr><td><b>line:0x05</b></td><td>building / строение</td></tr>
 <tr><td><b>line:0x06</b></td><td>проезжая грунтовка / </td></tr>
-<tr><td><b>line:0x07</b></td><td>дорожная насыпь / </td></tr>
+<tr><td><b>line:0x07</b></td><td>road embankment / дорожная насыпь</td></tr>
 <tr><td><b>line:0x08</b></td><td>мост-1 (пешеходный) / </td></tr>
 <tr><td><b>line:0x09</b></td><td>мост-2 (автомобильный) / </td></tr>
 <tr><td><b>line:0x0a</b></td><td>непроезжая грунтовка / </td></tr>
@@ -1618,7 +1662,7 @@ TODO: полностью переделать
 <tr><td><b>line:0x1a</b></td><td>small power line / маленькая ЛЭП</td></tr>
 <tr><td><b>line:0x1b</b></td><td>пешеходный тоннель / </td></tr>
 <tr><td><b>line:0x1c</b></td><td>просека широкая / </td></tr>
-<tr><td><b>line:0x1d</b></td><td>граница стран, областей / </td></tr>
+<tr><td><b>line:0x1d</b></td><td>national boundaries / граница стран, областей</td></tr>
 <tr><td><b>line:0x1e</b></td><td>bottom edge of steep slope / нижний край обрыва</td></tr>
 <tr><td><b>line:0x1f</b></td><td>river-3 / река-3</td></tr>
 <tr><td><b>line:0x20</b></td><td>dashed contour / пунктирная горизонталь</td></tr>
@@ -1626,21 +1670,21 @@ TODO: полностью переделать
 <tr><td><b>line:0x22</b></td><td>thick contour / жирная горизонталь</td></tr>
 <tr><td><b>line:0x23</b></td><td>vegetation boundary / контур растительности</td></tr>
 <tr><td><b>line:0x24</b></td><td>glacier crevasse / ледниковая трещина</td></tr>
-<tr><td><b>line:0x25</b></td><td>овраг / </td></tr>
+<tr><td><b>line:0x25</b></td><td>gulley / овраг</td></tr>
 <tr><td><b>line:0x26</b></td><td>пересыхающий ручей / </td></tr>
 <tr><td><b>line:0x27</b></td><td>железная дорога / </td></tr>
 <tr><td><b>line:0x28</b></td><td>pipeline / трубопровод</td></tr>
 <tr><td><b>line:0x29</b></td><td>power line / ЛЭП</td></tr>
 <tr><td><b>line:0x2a</b></td><td>тропа / </td></tr>
-<tr><td><b>line:0x2b</b></td><td>сухая канава / </td></tr>
-<tr><td><b>line:0x2c</b></td><td>вал / </td></tr>
+<tr><td><b>line:0x2b</b></td><td>dry ditch / сухая канава</td></tr>
+<tr><td><b>line:0x2c</b></td><td>levee / вал</td></tr>
 <tr><td><b>line:0x2d</b></td><td>заросшая дорога / </td></tr>
 <tr><td><b>line:0x2e</b></td><td>заросшая заметная дорога (знак ММБ) / </td></tr>
-<tr><td><b>line:0x32</b></td><td>плохой путь / </td></tr>
-<tr><td><b>line:0x33</b></td><td>удовлетворительный путь / </td></tr>
-<tr><td><b>line:0x34</b></td><td>хороший путь / </td></tr>
-<tr><td><b>line:0x35</b></td><td>отличный путь / </td></tr>
-<tr><td><b>line:0x36</b></td><td>граница областей, районов / </td></tr>
+<tr><td><b>line:0x32</b></td><td>route quality 1 / </td></tr>
+<tr><td><b>line:0x33</b></td><td>route quality 2 / </td></tr>
+<tr><td><b>line:0x34</b></td><td>route quality 3 / </td></tr>
+<tr><td><b>line:0x35</b></td><td>route quality 4 / </td></tr>
+<tr><td><b>line:0x36</b></td><td>district boundaries / граница областей, районов</td></tr>
 <tr><td><b>line:0x37</b></td><td>граница заповедников, парков / </td></tr>
 <tr><td><b>line:0x40</b></td><td>irrigation channel / канава, арык</td></tr>
 <tr><td><b>line:0x41</b></td><td>canal / канал</td></tr>
@@ -1653,6 +1697,7 @@ TODO: полностью переделать
 <tr><td><b>line:0x48</b></td><td>rapids / пороги</td></tr>
 <tr><td><b>line:0x49</b></td><td>forest strip / лесополоса</td></tr>
 <tr><td><b>line:0x50</b></td><td>bad route /не использовать!/ / </td></tr>
+<tr><td><b>line:0x51</b></td><td>moraine boundary / граница морен</td></tr>
 <tr><td><b>line:0x7e</b></td><td>border object / </td></tr>
 <tr><td><b>line:0x7f</b></td><td>text object / </td></tr>
 <tr><td><b>line:0xff01</b></td><td>test line R / тестовая линия R</td></tr>
@@ -1689,9 +1734,12 @@ TODO: полностью переделать
 <tr><td><b>point:0x650b</b></td><td>small hydrography reference point / мелкая точка объекта гидрографии</td></tr>
 <tr><td><b>point:0x650c</b></td><td>hydrography reference point / точка для объекта гидрографии</td></tr>
 <tr><td><b>point:0x650e</b></td><td>rapid / порог</td></tr>
+<tr><td><b>point:0x6600</b></td><td>hachure / бергштрих</td></tr>
 <tr><td><b>point:0x6601</b></td><td>cave / пещера</td></tr>
 <tr><td><b>point:0x6603</b></td><td>pit, sinkhole / яма</td></tr>
-<tr><td><b>point:0x6606</b></td><td>watch tower, hunting structure, shepherds camp / смотровая башня, охотничья вышка, кормушка, стоянка пастухов</td></tr>
+<tr><td><b>point:0x6606</b></td><td>watch tower, hunting structure, shepherds camp / смотровая башня, охотничья вышка, кормушка</td></tr>
+<tr><td><b>point:0x6607</b></td><td>shepherds camp / стоянка пастухов</td></tr>
+<tr><td><b>point:0x6608</b></td><td>crater / кратер</td></tr>
 <tr><td><b>point:0x660a</b></td><td>tree, group of trees / дерево, группа деревьев</td></tr>
 <tr><td><b>point:0x660b</b></td><td>canyon / каньон</td></tr>
 <tr><td><b>point:0x6613</b></td><td>knoll, mound / холм, курган</td></tr>
