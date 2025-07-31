@@ -303,6 +303,48 @@ HEADER(mapdb,`
 </tr>
 
 </table>
+<h3>Границы и территории</h3>
+
+<table cellspacing=0 cellpadding=3 border=1 width="100%">
+<tr>
+<th rowspan=2 style="width:7em;">тип</th>
+<th rowspan=2 style="width:20%;">название</th>
+<th colspan=2>MP/TYP/IMG</th>
+<th rowspan=2 style="width: 80px;">рендер</th>
+<th rowspan=2>комментарий</td>
+</tr>
+
+<tr>
+<th style="width:5em;">уровни</th>
+<th style="width:5em;">порядок</th>
+</tr>
+<tr>
+<td style="background-color: #b0ffb0;">line:0x1d</span></td>
+<td>national boundaries<br>граница стран, областей</td>
+<td>1 - 4</td>
+<td></td>
+<td><img src="types_render/line:0x1d.png"></td>
+<td></td>
+</tr>
+<tr>
+<td style="background-color: #b0ffb0;">line:0x36</span></td>
+<td>district boundaries<br>граница областей, районов</td>
+<td>0 - 2</td>
+<td></td>
+<td><img src="types_render/line:0x36.png"></td>
+<td></td>
+</tr>
+<tr>
+<td style="background-color: #b0ffb0;">line:0x37</span></td>
+<td>граница заповедников, парков<br></td>
+<td>0 - 3</td>
+<td></td>
+<td><img src="types_render/line:0x37.png"></td>
+<td></td>
+</tr>
+
+</table>
+TODO: попробовать добавить площадные полупрозрачные красные/зеленые территории
 <h3>Гидрография</h3>
 
 <table cellspacing=0 cellpadding=3 border=1 width="100%">
@@ -437,14 +479,6 @@ HEADER(mapdb,`
 <td></td>
 <td><img src="types_render/point:0x6508.png"></td>
 <td>при рисовании притягивается и поворачивается к ближайшей реке/озеру/острову (line:0x26 line:0x15 line:0x18 line:0x1F area:0x29 area:0x3B area:0x53)</td>
-</tr>
-<tr>
-<td style="background-color: #ffb0ff;">point:0x6414</span></td>
-<td>spring, water source<br>родник, источник воды</td>
-<td>0 - 0</td>
-<td></td>
-<td><img src="types_render/point:0x6414.png"></td>
-<td></td>
 </tr>
 <tr>
 <td style="background-color: #ffb0ff;">point:0x1000</span></td>
@@ -636,48 +670,6 @@ HEADER(mapdb,`
 </tr>
 
 </table>
-<h3>Границы и территории</h3>
-
-<table cellspacing=0 cellpadding=3 border=1 width="100%">
-<tr>
-<th rowspan=2 style="width:7em;">тип</th>
-<th rowspan=2 style="width:20%;">название</th>
-<th colspan=2>MP/TYP/IMG</th>
-<th rowspan=2 style="width: 80px;">рендер</th>
-<th rowspan=2>комментарий</td>
-</tr>
-
-<tr>
-<th style="width:5em;">уровни</th>
-<th style="width:5em;">порядок</th>
-</tr>
-<tr>
-<td style="background-color: #b0ffb0;">line:0x1d</span></td>
-<td>national boundaries<br>граница стран, областей</td>
-<td>1 - 4</td>
-<td></td>
-<td><img src="types_render/line:0x1d.png"></td>
-<td></td>
-</tr>
-<tr>
-<td style="background-color: #b0ffb0;">line:0x36</span></td>
-<td>district boundaries<br>граница областей, районов</td>
-<td>0 - 2</td>
-<td></td>
-<td><img src="types_render/line:0x36.png"></td>
-<td></td>
-</tr>
-<tr>
-<td style="background-color: #b0ffb0;">line:0x37</span></td>
-<td>граница заповедников, парков<br></td>
-<td>0 - 3</td>
-<td></td>
-<td><img src="types_render/line:0x37.png"></td>
-<td></td>
-</tr>
-
-</table>
-TODO: попробовать добавить площадные полупрозрачные красные/зеленые территории
 <h3>Транспортная сеть</h3>
 
 <table cellspacing=0 cellpadding=3 border=1 width="100%">
@@ -1096,6 +1088,14 @@ TODO: попробовать добавить площадные полупро�
 <td></td>
 <td><img src="types_render/point:0x2b04.png"></td>
 <td>введен 2024.12</td>
+</tr>
+<tr>
+<td style="background-color: #ffb0ff;">point:0x6414</span></td>
+<td>spring, water source<br>родник, источник воды</td>
+<td>0 - 0</td>
+<td></td>
+<td><img src="types_render/point:0x6414.png"></td>
+<td></td>
 </tr>
 
 </table>
