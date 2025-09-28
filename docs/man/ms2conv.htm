@@ -243,6 +243,12 @@
 <p>Shift image part of map references by some (x,y) vector.</p>
 
 </dd>
+<dt id="trk_join_segments"><b>--trk_join_segments</b></dt>
+<dd>
+
+<p>Join track segments</p>
+
+</dd>
 <dt id="trk_reduce_acc-arg"><b>--trk_reduce_acc &lt;arg&gt;</b></dt>
 <dd>
 
@@ -253,6 +259,24 @@
 <dd>
 
 <p>Reduce number of track points. Argument is maximum point number, default: 0. Both --trk_reduce_acc and --trk_reduce_num can exist. Works separately for each track segment.</p>
+
+</dd>
+<dt id="trk_filter_short-arg"><b>--trk_filter_short &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Remove short segments. Argument: length limit [m]</p>
+
+</dd>
+<dt id="trk_filter_clouds-arg"><b>--trk_filter_clouds &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Remove stops (point clouds) from tracks. Argument: max cloud radius (m)</p>
+
+</dd>
+<dt id="trk_mark_stops-arg"><b>--trk_mark_stops &lt;arg&gt;</b></dt>
+<dd>
+
+<p>Add points for each stop. Argument: time limit in seconds</p>
 
 </dd>
 </dl>
