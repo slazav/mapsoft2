@@ -3,9 +3,11 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <memory>
 #include "getopt/getopt.h"
 #include "getopt/help_printer.h"
 #include "geo_data/conv_geo.h"
+#include "geo_data/geo_io.h"
 
 using namespace std;
 
@@ -83,6 +85,7 @@ main(int argc, char *argv[]){
       "(e.g. \"+datum=WGS84 +proj=lonlat\") "
       "or mapsoft2 alias (\"WGS\", \"WEB\", \"FI\", \"CH\", \"SU39\", etc.). "
       "Default: \"WGS\"");
+    options.add("from_map", 1, 'm', g, "use map reference file to convert frim map pixels (--from and --alt options are ignored )");
     options.add("to", 1, 't', g, "Destination coordinate system. Default: \"WGS\"");
 
     options.add("back", 0, 'b', g, "Do inverse conversion, destination -> source.");
@@ -104,12 +107,32 @@ main(int argc, char *argv[]){
     double sc   = O.get("scale", 1.0);
     dPoint sh   = O.get("shift", dPoint(0,0));
 
-    ConvGeo cnv(
-      O.get("from", "WGS"),
-      O.get("to",   "WGS"),
-      !O.get("alt",   false)
-    );
+    std::string src = O.get("from", "WGS");
+    std::string dst = O.get("to", "WGS");
+    bool use_alt = O.get("alt",   false);
 
+    // make conversion
+    std::shared_ptr<ConvBase> cnv;
+
+    if (O.exists("from_map")){
+      std::string fname = O.get("from_map");
+      GeoData data;
+      read_geo(fname, data, O);
+      // find first map
+      for (const auto ml: data.maps){
+        for (const auto m: ml){
+          cnv.reset(new ConvMap(m, dst));
+          break;
+        }
+        if (cnv) break;
+      }
+      if (!cnv) throw Err() << "no map references in " << fname;
+    }
+    else {
+      cnv.reset(new ConvGeo(src, dst, !use_alt));
+    }
+
+    // do conversion
     for (auto & f: forms){
       // We want to ignore parse errors (to try points,lines,rects),
       // but throw errors during conversions
@@ -119,8 +142,8 @@ main(int argc, char *argv[]){
         dPoint pt(f);
         parse_done = true;
         pt = (pt+sh)*sc;
-        if (back) cnv.bck(pt);
-        else cnv.frw(pt);
+        if (back) cnv->bck(pt);
+        else cnv->frw(pt);
         std::cout << pt << "\n";
         continue;
       }
@@ -131,8 +154,8 @@ main(int argc, char *argv[]){
         dLine l0(f), l1;
         parse_done = true;
         l0 = (l0+sh)*sc;
-        if (back) l1 = cnv.bck_acc(l0, acc);
-        else l1 = cnv.frw_acc(l0, acc);
+        if (back) l1 = cnv->bck_acc(l0, acc);
+        else l1 = cnv->frw_acc(l0, acc);
         std::cout << l1 << "\n";
         continue;
       }
@@ -143,8 +166,8 @@ main(int argc, char *argv[]){
         dMultiLine ml0(f), ml1;
         parse_done = true;
         ml0 = (ml0+sh)*sc;
-        if (back) ml1 = cnv.bck_acc(ml0, acc);
-        else ml1 = cnv.frw_acc(ml0, acc);
+        if (back) ml1 = cnv->bck_acc(ml0, acc);
+        else ml1 = cnv->frw_acc(ml0, acc);
         std::cout << ml1 << "\n";
         continue;
       }
@@ -155,8 +178,8 @@ main(int argc, char *argv[]){
         dRect r0(f), r1;
         parse_done = true;
         r0 = (r0+sh)*sc;
-        if (back) r1 = cnv.bck_acc(r0, acc);
-        else r1 = cnv.frw_acc(r0, acc);
+        if (back) r1 = cnv->bck_acc(r0, acc);
+        else r1 = cnv->frw_acc(r0, acc);
         std::cout << r1 << "\n";
         continue;
       }
